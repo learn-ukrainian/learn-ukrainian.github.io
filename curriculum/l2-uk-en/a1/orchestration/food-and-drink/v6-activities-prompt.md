@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-z-chunks -->`
 - `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->`
-- `<!-- INJECT_ACTIVITY: match-food-drink -->`
+- `<!-- INJECT_ACTIVITY: match-up-food-vocab -->`
 - `<!-- INJECT_ACTIVITY: group-sort-food-drinks -->`
+- `<!-- INJECT_ACTIVITY: fill-in-chunks -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -148,168 +148,102 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-It's a weekday morning. Oksana and her roommate Daria are in the kitchen, deciding what to eat. In Ukrainian homes, breakfast is a ritual — every person has their go-to combination of food and drink, and they say it as a single phrase: **кава з молоком** (coffee with milk), **хліб з маслом** (bread with butter). Listen to how naturally these pairings flow.
+A typical Saturday morning in a Ukrainian home is a lively and sensory experience. The kitchen smells of fresh herbs, earthy vegetables, and warm bread. An older woman, a **бабуся** (grandma), is standing by the stove, preparing to cook. Her granddaughter, an **онучка** (granddaughter), comes in for a morning meal. They are about to cook the national dish, but first, they need to eat.
 
-> **Оксана:** Що ти хочеш на сніданок? *(What do you want for breakfast?)*
-> **Дарія:** Каву з молоком і хліб з маслом. *(Coffee with milk and bread with butter.)*
-> **Оксана:** А я хочу чай з цукром і кашу. *(And I want tea with sugar and porridge.)*
-> **Дарія:** Кашу з молоком чи без? *(Porridge with milk or without?)*
-> **Оксана:** З молоком, звичайно! *(With milk, of course!)*
-> **Дарія:** Добре. Я теж хочу яйце. *(Good. I also want an egg.)*
+They begin their day with a conversation about food. Notice how they use the preposition **з** (with) to describe food pairings as they decide what to eat. 
 
-The key words here: **кава** (coffee, f), **молоко** (milk, n), **хліб** (bread, m), **масло** (butter, n), **чай** (tea, m), **цукор** (sugar, m), **каша** (porridge, f), **яйце** (egg, n). Notice how Daria doesn't say "I want coffee, and then I want milk" — she says **каву з молоком** as one unit, like a single word. That's how Ukrainians order food.
+> **Бабуся:** Що ти хочеш на сніданок? *(What do you want for breakfast?)*
+> **Онучка:** Каву з молоком і хліб з маслом. *(Coffee with milk and bread with butter.)*
+> **Бабуся:** А я хочу чай з цукром і кашу. *(And I want tea with sugar and porridge.)*
 
-Ukrainians eat three meals a day: **сніданок** (breakfast, m), **обід** (lunch, m), **вечеря** (dinner, f). Each meal has its own character — сніданок is light and quick, обід is the biggest meal, and вечеря is relaxed. The next dialogue shows how Ukrainians talk about обід and вечеря.
+Then, they prepare the fresh ingredients for their soup. Grandma uses this moment to explain that every single ingredient has a grammatical gender, reinforcing a core rule of the language while they cook. 
 
-> **Марко:** Що ти зазвичай їси на обід? *(What do you usually eat for lunch?)*
-> **Соломія:** Суп і салат. Іноді м'ясо з картоплею. *(Soup and salad. Sometimes meat with potatoes.)*
-> **Марко:** Яке м'ясо ти любиш? *(What meat do you like?)*
-> **Соломія:** Курку або рибу. А ти? *(Chicken or fish. And you?)*
-> **Марко:** Я теж люблю рибу з рисом. *(I also like fish with rice.)*
-> **Соломія:** А на вечерю? *(And for dinner?)*
-> **Марко:** Зазвичай суп або омлет. *(Usually soup or an omelette.)*
-> **Соломія:** А ти п'єш каву чи чай? *(Do you drink coffee or tea?)*
-> **Марко:** Ввечері — чай з лимоном. *(In the evening — tea with lemon.)*
-
-New vocabulary: **суп** (soup, m), **салат** (salad, m), **м'ясо** (meat, n), **картопля** (potato, f), **курка** (chicken, f), **риба** (fish, f), **рис** (rice, m), **лимон** (lemon, m). The word **зазвичай** means "usually" — it's how you talk about habits.
-
-:::tip Chunk Pattern
-Notice **кава з молоком**, **чай з цукром**, **риба з рисом** — all use the same pattern: **[food/drink] з [addition]**. Learn these as whole phrases for now, like single words. You'll learn the grammar reason behind the endings (-ом, -ою) in A2.
-:::
-
-<!-- INJECT_ACTIVITY: fill-in-z-chunks -->
-
-## Їжа (Food)
-
-Ukrainian food vocabulary falls into six clear categories. Once you know these groups, you can describe almost any meal. Think of them as your food toolkit — six drawers, each with essential items.
-
-**Хліб і каша** (Bread and porridge): **хліб** (bread, m), **каша** (porridge, f), **рис** (rice, m), **макарони** (pasta, pl)
-- «Я їм кашу щоранку.» — *I eat porridge every morning.*
-
-**М'ясо і риба** (Meat and fish): **м'ясо** (meat, n), **курка** (chicken, f), **риба** (fish, f)
-- «Вона їсть курку на обід.» — *She eats chicken for lunch.*
-
-**Овочі** (Vegetables): **картопля** (potato, f), **морква** (carrot, f), **цибуля** (onion, f), **помідор** (tomato, m), **огірок** (cucumber, m)
-- «Картопля — популярний овоч в Україні.» — *Potato is a popular vegetable in Ukraine.*
-
-**Фрукти** (Fruit): **яблуко** (apple, n), **банан** (banana, m), **апельсин** (orange, m)
-- «Він їсть яблуко щодня.» — *He eats an apple every day.*
-
-**Молочне** (Dairy): **молоко** (milk, n), **сир** (cheese, m), **масло** (butter, n), **сметана** (sour cream, f), **йогурт** (yogurt, m)
-- «Сметана — важливий продукт.» — *Sour cream is an important product.*
-
-**Інше** (Other): **яйце** (egg, n), **цукор** (sugar, m), **сіль** (salt, f), **олія** (oil, f)
-- «Без солі їжа несмачна.» — *Without salt, food is tasteless.*
-
-### Ukrainian iconic dishes
-
-These four dishes are not just vocabulary — they are cultural identity. When a Ukrainian hears a foreigner name these dishes correctly, it signals respect.
-
-**Борщ** (m) — Ukraine's national soup, made with **буряк** (beetroot), **картопля**, **капуста** (cabbage), **м'ясо**, **морква**, **цибуля**, and always served with a spoonful of **сметана**. Ukrainian Grade 1 textbooks already teach children to name its ingredients: «Вибери продукти для борщу.» Борщ is a symbol of home.
-
-:::note Cultural Identity
-Борщ is Ukrainian — not "Eastern European" and not Russian. In 2022, UNESCO recognized Ukrainian borshch culture as intangible cultural heritage. When you say **борщ**, you say something deeply Ukrainian.
-:::
-
-**Вареники** (pl, **вареник** m) — filled dumplings made from **тісто** (dough), stuffed with **картопля і сир** or cherries. Always eaten with **сметана**. As the textbook says: «Вареники в українській культурі — символ заможного, щасливого життя.» They are a symbol of a prosperous, happy life.
-
-**Сало** (n) — cured pork fat, eaten with **хліб**. Iconic, deeply embedded in Ukrainian cultural humor and everyday life. If you want to make a Ukrainian smile, mention **сало з хлібом**.
-
-**Деруни** (pl) — potato pancakes made from grated **картопля**, often served with **сметана**.
-
-Now imagine a real kitchen moment — **Бабуся** (grandma) teaching her **онучка** (granddaughter) to make борщ:
-
-> **Бабуся:** Давай варити борщ. Буряк, картопля, капуста... *(Let's make borshch. Beetroot, potato, cabbage...)*
+> **Бабуся:** Для борщу потрібен буряк. Це він. *(For borshch, beetroot is needed. It is a "he".)*
+> **Онучка:** А картопля і капуста? *(And potato and cabbage?)*
+> **Бабуся:** Це вона. Морква і цибуля — теж вона. *(That is a "she". Carrot and onion are also "she".)*
 > **Онучка:** А м'ясо? *(And meat?)*
-> **Бабуся:** Так! І морква, цибуля, сметана. *(Yes! And carrot, onion, sour cream.)*
+> **Бабуся:** М'ясо — воно. А в кінці буде сметана! *(Meat is an "it". And at the end there will be sour cream!)*
+
+Food structures our entire day. Ukrainians divide their daily eating habits into three main meals:
+* **сніданок** — breakfast
+* **обід** — lunch
+* **вечеря** — dinner
+
+In the morning, you eat a **сніданок**. In the middle of the day, usually early afternoon, you eat an **обід**, which is traditionally the largest meal. In the evening, you gather with family for a **вечеря**. The verb meaning "to eat" is **їсти**. Learning to talk about these meals helps you describe your daily routine.
+
+:::note Culture
+Ukrainian hospitality is deeply connected to food. Being invited to share a meal, whether it is a simple **сніданок** or a festive **вечеря**, is a true sign of friendship and respect.
+:::
+
+People frequently talk about their food preferences and ask what others eat. When ordering or asking for food, you use the accusative case for the direct object. Combinations like meat with potatoes form memorized phrases that you can use immediately. 
+
+> **Онучка:** Що ти зазвичай їш на обід? *(What do you usually eat for lunch?)*
+> **Бабуся:** Суп і салат. *(Soup and salad.)*
+> **Онучка:** А на вечерю? *(And for dinner?)*
+> **Бабуся:** М'ясо з картоплею або рибу з рисом. *(Meat with potatoes or fish with rice.)*
 
 <!-- INJECT_ACTIVITY: quiz-meals-dishes -->
 
-## Напої (Drinks)
+## Їжа (Food)
 
-Ukrainian drinks split into four groups: **гарячі** (hot), **холодні** (cold), **молочні** (dairy), and **алкогольні** (alcoholic — for recognition only). At a Ukrainian table, you will always find **чай**, **кава**, **компот**, or **вода**.
+The general word for food is **їжа** (food). Grains and bakery products are fundamental to the Ukrainian diet. The most sacred and respected food on the table is **хліб** (bread). It accompanies almost every meal, and offering bread is a traditional sign of hospitality. You will also frequently eat **каша** (porridge or cereal), which is a common dish for breakfast or served as a warm side dish. Other staple carbohydrates that you will find in any pantry include **рис** (rice) and **макарони** (pasta). 
 
-**Гарячі** (Hot): **кава** (coffee, f), **чай** (tea, m)
-- «Я п'ю каву вранці, чай ввечері.» — *I drink coffee in the morning, tea in the evening.*
+For proteins and dairy, the Ukrainian kitchen offers many rich options. The general word for meat is **м'ясо** (meat), and a very common, affordable type is **курка** (chicken). If you prefer seafood, you can eat **риба** (fish). A basic ingredient used for a quick breakfast or for baking is an **яйце** (egg). Dairy products are also essential to everyday meals. You will often drink **молоко** (milk) or eat **йогурт** (yogurt). You spread **масло** (butter) on your bread, and you add a spoonful of **сметана** (sour cream) to your soup. 
 
-**Холодні** (Cold): **вода** (water, f), **сік** (juice, m), **компот** (compote, m) <!-- A2-word -->, **лимонад** (lemonade, m)
-- «Компот — домашній напій з фруктів.» — *Compote is a homemade drink from fruit.*
-
-**Молочні** (Dairy): **молоко** (milk, n), **кефір** (kefir, m)
-- «Кефір корисний для здоров'я.» — *Kefir is good for health.*
-
-**Алкогольні** (Alcoholic — recognition only): **пиво** (beer, n), **вино** (wine, n)
-
-:::caution Компот ≠ Western Compote
-Ukrainian **компот** is not the thick fruit stew you might know. It's a drink — fruit boiled in water with sugar, then served warm or cold. Every Ukrainian grandmother makes it. You'll find it in school canteens, at home, and at celebrations. It's closer to fruit punch than to jam.
+:::caution Russianisms
+Never use the Russian word «творог» for cottage cheese or quark. The authentic Ukrainian word for all types of cheese, both yellow hard cheese and soft farmer's cheese, is **сир** (cheese). Context will always tell you which one a person means.
 :::
 
-### The з + noun pattern — chunks, not grammar
+A Ukrainian garden provides abundant and fresh produce. Common **овочі** (vegetables) form the base for many salads and hearty soups. You will frequently cook with **картопля** (potato), **морква** (carrot), **цибуля** (onion), **помідор** (tomato), and **огірок** (cucumber). For a sweet snack or dessert, you eat **фрукти** (fruits). Popular choices include a **яблуко** (apple), a **банан** (banana), or an **апельсин** (orange). For basic cooking, your pantry needs **цукор** (sugar) for sweetness, **сіль** (salt) for flavor, and liquid **олія** (oil) for frying.
 
-When you say **кава з молоком**, the word **молоком** ends in **-ом**. When you say **чай з лимоном**, the word **лимоном** ends in **-ом**. When you say **вода з газом**, the word **газом** ends in **-ом**. This ending comes from the instrumental case — a grammar concept you will study properly in A2.
+Cultural spotlight: iconic Ukrainian dishes. The absolute national symbol of Ukrainian cuisine is **борщ** (beet soup). It is recognized as a UNESCO intangible cultural heritage and serves as a point of immense national pride. Borshch is definitively Ukrainian, not a generic Eastern European soup. Another beloved favorite is **вареники** (filled dumplings), which cooks stuff with potato, cabbage, meat, or sweet cherries. A highly traditional and culturally significant ingredient is **сало** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Finally, **деруни** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream. For a modern, quick meal, many people simply order a hot **піца** (pizza), or they prepare a light **суп** (soup) and a fresh **салат** (salad).
 
-For now, treat these as memorized phrases, like single words. Say **кавазмолоком** as one chunk. You don't need to know WHY **молоко** becomes **молоком** — just remember the whole phrase. Ukrainian Grade 1 textbooks use exactly this approach: «Тато пив чай із пиріжками. Мама пила чай із печивом.» Children memorize the whole phrase first, grammar comes later.
+<!-- INJECT_ACTIVITY: match-up-food-vocab -->
 
-Your chunk list to memorize:
+## Напої (Drinks)
 
-- **кава з молоком** — coffee with milk
-- **чай з цукром** — tea with sugar
-- **чай з лимоном** — tea with lemon
-- **вода з газом** — sparkling water (lit. water with gas)
-- **хліб з маслом** — bread with butter
-- **м'ясо з картоплею** — meat with potatoes
-- **риба з рисом** — fish with rice
+Daily hydration involves both hot and cold choices. The general word for a drink is a **напій** (drink). For a hot drink, many people start the day with a strong **кава** (coffee). Alternatively, you can drink a warm **чай** (tea). For cold drinks, the most basic necessity is **вода** (water) or a sweet fruit **сік** (juice). If you order water in a cafe, a waiter might ask if you want **вода з газом** (sparkling water, literally "water with gas") or **вода без газу** (still water).
 
-### Reading Practice
+:::caution Russianisms
+Do not use the Russian word «кофе». The correct Ukrainian word for coffee is always **кава**.
+:::
 
-Read each sentence aloud. What does each person drink?
+Traditional beverages and milk-based drinks hold a special place on the table. A very popular homemade sweet drink is **компот** (fruit water), made by boiling fresh berries or fruits. In a modern restaurant, you might order a cold **лимонад** (lemonade). During winter holidays, families prepare **узвар** (dried fruit drink), which has a rich, slightly smoky flavor and deep cultural roots. For dairy drinks, the most common choice is **молоко** (milk), but many people also drink **кефір** (a fermented milk drink) for its health benefits. Adults might also recognize alcoholic options like **пиво** (beer) and **вино** (wine).
 
-1. «Я п'ю каву з молоком щоранку.» — *I drink coffee with milk every morning.*
-2. «Вона любить чай з лимоном.» — *She likes tea with lemon.*
-3. «Діти п'ють компот або воду.» — *Children drink compote or water.*
-4. «Він не п'є каву — тільки чай.» — *He doesn't drink coffee — only tea.*
-5. «На столі є сік, вода і кефір.» — *On the table there is juice, water, and kefir.*
+The 'з + Noun' formula is your key to describing what goes into your drink or meal. In Ukrainian, you often describe drinks and dishes with additions using the preposition **з** (with). At this early stage of learning, you should treat these combinations as single, memorized chunks rather than complex grammar rules. You simply memorize the ending **-ом** for masculine or neuter additions, and **-ою** for feminine additions. By treating the preposition and the noun as a single unit representing the flavor profile, you can speak fluently now without worrying about the full instrumental case table. 
 
-Now try: what do YOU drink in the morning? And in the evening?
-
-<!-- INJECT_ACTIVITY: match-food-drink -->
+Learn these common combinations as fixed phrases:
+* **кава з молоком** — coffee with milk
+* **чай з цукром** — tea with sugar
+* **вода з газом** — sparkling water
+* **чай з лимоном** — tea with lemon (using the word **лимон**, lemon)
+* **м'ясо з картоплею** — meat with potatoes
 
 <!-- INJECT_ACTIVITY: group-sort-food-drinks -->
+<!-- INJECT_ACTIVITY: fill-in-chunks -->
 
 ## Підсумок — Summary
 
-Two question patterns cover almost any food conversation at A1:
+You now possess the fundamental vocabulary to name what you eat and drink in a Ukrainian kitchen. You know that the day revolves around three main meals: **сніданок** (breakfast), **обід** (lunch), and **вечеря** (dinner). When someone asks **Що ти хочеш?** (What do you want?), you can confidently reply with your preferences. You can use the preposition **з** to describe additions as memorized chunks, saying **кава з молоком** or **чай з цукром**. Beyond just words, you recognize the deep cultural weight of Ukrainian cuisine, understanding that dishes like borshch and varenyky are an essential part of national identity and heritage. Food brings people together, and knowing these terms helps you connect with Ukrainians on a personal level.
 
-- «Що ти хочеш?» → **Каву з молоком.** / **Хліб з маслом.** / **Суп і салат.**
-- «Що ти їси на сніданок / обід / вечерю?» → **На сніданок — кашу і чай.** **На обід — суп.** **На вечерю — рибу з рисом.**
+To test your reading comprehension, read these short texts about daily routines:
 
-Practice saying these aloud — swap in your own favorite foods from the vocabulary above.
+> **Я снідаю вдома. Я їм хліб з сиром. Я п'ю каву з молоком. На обід я їм суп і салат. На вечерю я готую рибу. Це дуже смачно!**
+> *(I have breakfast at home. I eat bread with cheese. I drink coffee with milk. For lunch I eat soup and salad. For dinner I cook fish. It is very tasty!)*
 
-### Three meals — quick reference
+> **Я люблю холодний компот. Мій друг любить гарячий чай з лимоном. У кафе ми замовляємо воду з газом.**
+> *(I love cold fruit water. My friend loves hot tea with lemon. In a cafe we order sparkling water.)*
 
-| Час | Прийом їжі | Що типово їдять |
-|-----|-----------|----------------|
-| Вранці | **сніданок** | каша, яйце, хліб, кава/чай |
-| Вдень | **обід** | суп, м'ясо, салат, сік/вода |
-| Ввечері | **вечеря** | риба, омлет, сир, чай |
+Before moving forward, verify that you can confidently answer the following questions:
+* Name 5 foods you have in your kitchen right now (for example: **хліб**, **яйце**, **сир**, **морква**, **яблуко**).
+* Name 3 drinks you like (for example: **кава**, **чай**, **сік**).
+* Translate the phrase: "What do you want?" — "I want coffee with milk and bread with butter" (**Що ти хочеш? — Каву з молоком і хліб з маслом**).
+* Translate the question: "What do you eat for breakfast, lunch, and dinner?" (**Що ти їш на сніданок, обід і вечерю?**)
+* Explain the difference between **сніданок** and **вечеря**, and name a typical food you might eat for each meal.
+* Why is **борщ** important to Ukrainians? (It is a powerful symbol of identity and cultural heritage).
+* Name one traditional Ukrainian cold drink (**компот** or **узвар**).
 
-The time words **вранці** (in the morning), **вдень** (during the day), **ввечері** (in the evening) appeared throughout both dialogues. Now they are connected to the three meals. When someone asks «Що ти їси вранці?», you know they mean **сніданок**.
-
-:::tip Your Cultural Passport
-A learner who knows **борщ**, **вареники**, **сало**, **деруни** is not just vocabulary-trained — they carry a signal of respect. Every Ukrainian who hears a foreigner name these dishes correctly will respond warmly. Quick summary: **борщ** = буряк + картопля + сметана. **Вареники** = тісто + картопля або сир. **Сало** = свинина + хліб. **Деруни** = картопля + сметана.
-:::
-
-### Self-check
-
-Before moving on, test yourself:
-
-- Can you name 5 foods? (e.g., **хліб**, **м'ясо**, **риба**, **картопля**, **яйце**)
-- Can you name 3 drinks? (e.g., **кава**, **чай**, **вода**)
-- Can you say what you eat at each meal? → «На сніданок я їм...» / «На обід я їм...» / «На вечерю я їм...»
-- Can you say one **з + noun** chunk from memory? (**кава з молоком** / **чай з цукром**)
-- Can you name one Ukrainian dish and one ingredient it contains? (e.g., **борщ** — **буряк**)
-
-If you answered yes to all five — you have a solid food and drink toolkit in Ukrainian. Next up: **M37 — I Eat, I Drink**, where you'll learn the full present tense conjugation of **їсти** (to eat) and **пити** (to drink).
+If you can answer these questions and name your favorite foods, you are ready to continue your culinary journey and start ordering in Ukrainian cafes.
 
 </module_content>
 
@@ -550,68 +484,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

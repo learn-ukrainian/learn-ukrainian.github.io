@@ -1,0 +1,247 @@
+vocabulary:
+- word: стіл
+  translation: table
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: телефо́н
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: комп'ю́тер
+  translation: computer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ключ
+  translation: key
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́жка
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ла́мпа
+  translation: lamp
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ру́чка
+  translation: pen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́мка
+  translation: bag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: крі́сло
+  translation: armchair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: фо́то
+  translation: photo
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вона́
+  translation: she / it (feminine gender marker)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: воно́
+  translation: it (neuter gender marker)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: моя́
+  translation: my (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моє́
+  translation: my (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: рід
+  translation: grammatical gender
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: чоловічий рід
+  translation: masculine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: жіночий рід
+  translation: feminine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: середній рід
+  translation: neuter gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: три групи
+  translation: three groups
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дерев'я́ний
+  translation: wooden
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ціка́вий
+  translation: interesting
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зру́чний
+  translation: comfortable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ній
+  translation: blue
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́кий
+  translation: big
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Класно!
+  translation: Cool!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дивись!
+  translation: Look!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ще є?
+  translation: What else is there?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У тебе є?
+  translation: Do you have?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де мій / моя / моє...?
+  translation: Where is my...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ось він / вона / воно
+  translation: Here it is
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це мій / моя / моє...
+  translation: This is my...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Якого роду...?
+  translation: What gender is...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

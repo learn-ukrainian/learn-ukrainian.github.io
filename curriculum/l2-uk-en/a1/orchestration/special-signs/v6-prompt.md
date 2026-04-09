@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -44,7 +44,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 1. **IMMERSION TARGET: 5-15% Ukrainian MAXIMUM. THE LEARNER CANNOT READ CYRILLIC YET. English must dominate completely. Ukrainian appears ONLY as bolded inline words with immediate English translation.** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -267,527 +267,326 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- **Confirmed (12/12):** сім'я (noun), день (noun), сіль (noun), м'ясо (noun), п'ять (numr), гарно (adv), риба (noun), батько (noun), учитель (noun), дев'ять (numr), комп'ютер (noun), м'який (adj)
-- **Not found:** — (all 12 plan words verified ✅)
-
----
-
-## Textbook Excerpts
-
-### Section: М'який знак (The Soft Sign — Ь)
-
-> «М'який знак в українській мові ставимо лише після літер на позначення семи приголосних [дʹ], [тʹ], [зʹ], [сʹ], [цʹ], [лʹ], [нʹ], [дзʹ] (їх легко запам'ятати у фразі **ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи**): сьомга [сʹомга], тюлень [тʹуленʹ].»
-> Source: Літвінова, Grade 5 (Tier 1, 2022), p. 126
-
-> «М'який знак (або знак м'якшення) передає м'якість приголосних звуків на письмі, його пишуть після букв **д, т, з, с, ц, л, н**: у кінці слова — якість, велетень; у середині складу перед о — льодяник; у суфіксах -ськ-, -цьк- та ін.»
-> Source: Авраменко, Grade 10 (Tier 2, 2018), p. 93
-
-> ⚠️ **PLAN ACCURACY FLAG:** The plan states "9 pairs: Д/Д', Т/Т', З/З', С/С', Ц/Ц', Л/Л', Н/Н', **Р/Р'**, ДЗ/ДЗ'". Both Правопис §26 and Літвінова Grade 5 list only **8 consonants** (no standard Р rule). Р gets Ь only in a handful of irregular words (трьох, чотирьох, ларьок — all Правопис §26 "exceptions"). **Do NOT present Р/Р' as a standard rule at A1.** The mnemonic "ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи" covers exactly the 8 standard consonants — use this mnemonic and omit Р from the core rule.
-
----
-
-### Section: Апостроф (The Apostrophe)
-
-> «Апостроф пишеться після букв **б, п, в, м, ф, р** перед буквами **я, ю, є, ї**, які позначають два звуки [йа], [йу], [йе], [йі].»
-> «Він показує, що приголосний звук перед апострофом твердий, а букви я, ю, є позначають два звуки [йа], [йу], [йе].»
-> Source: Большакова, Grade 2 (Tier 2, 2019), p. 57
-
-> «Апостроф **ПИШЕМО** перед я, ю, є, ї: 1) після букв б, п, в, м, ф — б'ється, солов'ї, рум'яний. АЛЕ якщо перед б, п, в, м, ф є інший приголосний (крім р), що належить до кореня, то апостроф НЕ пишемо: свято, цвях, різдвяний. 2) після р, що позначає твердий звук — бур'ян, пір'я, міжгір'я.»
-> Source: Заболотний, Grade 5 (Tier 1, 2023), p. 135
-
-> «Апостроф у словах іншомовного походження пишемо перед я, ю, є, ї після: букв б, п, в, м, ф, г, к, х, ж, ч, ш, р (комп'ютер, кар'єра, прем'єр)»
-> Source: Заболотний, Grade 6 (Tier 2, 2020), p. 25 — confirms комп'ютер apostrophe rule ✅
-
----
-
-### Section: Дзвінкі і глухі (Voiced and Voiceless)
-
-> «Дзвінкі [б] [г] [ґ] [д] [д'] [з] [з'] [ж] [дж] [дз] [дз'] / Глухі [п] [х] [к] [т] [т'] [с] [с'] [ш] [ч] [ц] [ц']»
-> «Вимовляй дзвінко: хліб — біб, город — холод, сніг — поріг, ніж — ріж... Виняток: **легко [лехко], нігті, кігті, вогко**»
-> Source: Большакова, Grade 2 (Tier 2, 2019), p. 62
-
-> «Дзвінкі приголосні звуки в кінці слова та складу **перед глухим** вимовляємо дзвінко.»
-> Source: Кравцова, Grade 4 (Tier 2, 2021), p. 5 — confirms Ukrainian voiced-at-word-end rule ✅
-
-> Source: Літвінова, Grade 5 (Tier 1, 2022), p. 122–123 — full paired table; mnemonic for glухі: «ЦаП ХоЧе ФіСТаШКи»; sibilants (свистячі) vs. hushing (шиплячі) distinction; губні: «мавпа Буф».
-
----
-
-### Section: Вимова українських звуків (Г/Ґ distinction)
-
-> «В українській мові важливо розрізняти приголосні звуки [г] і [ґ]. Обидва звуки є дзвінкими, мають різні пари за глухістю: **[г] — [х], [ґ] — [к]**. Обидва звуки питомо українські.»
-> Source: Літвінова, Grade 5 (Tier 1, 2022), p. 133
-
-> «Слів із буквою ґ в українській мові не так і багато. Найуживаніші: аґрус, ґава, ґазда, ґанок, ґатунок, ґвалт, ґедзь, ґніт, ґрати, ґречний, ґринджоли, ґрунт, ґудзик, ґуля, дзиґа»
-> Source: Авраменко, Grade 5 (Tier 1, 2022), p. 93 ✅ confirms plan's ґ word list
-
----
-
-### Section: Вимова И / підсумок
-
-> «Голосні [а], [у] та [і] завжди вимовляють чітко. Голосний [о] вимовляють чітко як у наголошеній, так і в ненаголошеній позиції.»
-> Source: Авраменко, Grade 10 (Tier 2), p. 94
-
-> ⚠️ **NOTE:** Direct И vs. І minimal-pairs instruction did not surface in available chunks. The pairs listed in the plan (бик/бік, дим/дім, лист/ліс, кит/кіт) are pedagogically sound and standard; no textbook excerpt contradicts them. Proceed with these pairs — they are phonologically correct.
-
----
+- Confirmed: сім'я, день, сіль, м'ясо, п'ять, гарно, риба, батько, учитель, дев'ять, комп'ютер, м'який.
+- Not found: None.
 
 ## Grammar Rules
-
-- **М'який знак:** Правопис §26 — Ь written after **д, т, з, с, дз, ц, л, н** at word end and in syllable; also after **л** before following consonant. Р exceptions: трьох, чотирьох, ларьок, забрьоханий only — NOT a productive rule. **Plan must NOT present Р as one of the 9 standard Ь consonants.**
-- **Апостроф:** Правопис §7 — Written before я, ю, є, ї: (1) after губні б, п, в, м, ф; (2) after р (hard); (3) after prefixes ending in hard consonant; (4) in Лук'ян. NOT written when another consonant (except р) precedes the labial within the root: свято, цвях, різдвяний.
-- **Plan note confirmed:** под'їзд / з'їзд (prefix rule) correctly marked as A2+ ✅. комп'ютер apostrophe confirmed as foreign-word variant of the labial rule ✅.
-
----
+- Апостроф (The Apostrophe): Правопис § 7 — Апостроф пишемо перед я, ю, є, ї після букв на позначення губних приголосних б, п, в, м, ф (п'ять, м'ясо, сім'я) та р (бур'ян). Він вказує на роздільну вимову твердого приголосного та наступного йотованого голосного.
+- М'який знак (The Soft Sign): Правопис § 26 — Буквою ь позначаємо на письмі м'якість приголосних звуків д, т, з, с, дз, ц, л, н у кінці слова (день, сіль, учитель) та складу (батько).
 
 ## Calque Warnings
-
-- **"приймати душ"** (take a shower) → ⚠️ CALQUE from Russian «принимать душ» — the plan correctly identifies the Ukrainian form **брати душ** ✅. Антоненко-Давидович §172 confirms: *приймати* → *брати участь* pattern; same logic applies to душ.
-- **"знак м'якшення"** → ✅ OK — this is the official Ukrainian term. Textbooks use both «м'який знак» and «знак м'якшення» interchangeably (Avramenko §30 heading uses both). No calque issue.
-- **"тварь"** → ❌ RUSSIAN FORM — not in VESUM (not checked but plan correctly flags this). Ukrainian: **тварина**. The plan already notes this ✅.
-
----
+- сім'я: OK — Found in Grade 1 textbooks (Zaharijchuk p.8) alongside "родина". Both are natural, with "сім'я" often used for the nuclear family.
+- учитель: OK — Standard term for a school teacher in all primary textbooks (Vashulenko, Savchuk). "Викладач" is reserved for higher education.
+- батько: OK — Standard formal/neutral term for father; "тато" is also common and used in A1 contexts.
 
 ## CEFR Check
-
-- **сім'я**: A1 — ✅ on target
-- **день**: A1 — ✅ on target
-- **риба**: A1 — ✅ on target
-- **батько**: A1 — ✅ on target (note: тато is also A1 and more colloquial; батько is standard/literary — plan label "(father, formal)" is approximately correct)
-- **комп'ютер**: A1 — ✅ on target (good cognate anchor word)
-- **учитель**: A1 — ✅ on target (вчитель variant also A1)
-- **п'ять**: A1 — ✅ on target
-- **гарно**: A1 — ✅ on target
-- **дев'ять**: A1 — ✅ on target
-- **сіль**: not in PULS top results — likely A1/A2; standard basic noun, no concern
-- **м'ясо**: not returned — standard A1 food vocabulary; no concern
-- **м'який** (adj): not directly in PULS — pedagogical metalanguage for this module; appropriate as module-specific term even if not strictly A1 in PULS
-
-**No vocabulary above A1 target.** All plan vocabulary appropriate for level.
+- сім'я: A1 — Found in Grade 1 Bukvar (Zaharijchuk).
+- день: A1 — Found in Grade 1 Bukvar and Grade 2 Ukrainian language books.
+- п'ять: A1 — Basic numeral, introduced early in Grade 1/2.
+- учитель: A1 — Key classroom vocabulary found in Grade 1.
+- батько: A1 — Core family vocabulary found in Grade 1.
+- гарно: A1 — Common adverb found in Grade 2.
+- риба: A1 — Common noun used for phonetic practice (Р, И) in Grade 1.
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Special Signs
-**Module:** special-signs | **Phase:** A1.1 [Sounds, Letters, and First Contact]
-**Textbook grades searched:** 1, 2
+# Knowledge Packet: Special Signs
+**Module:** special-signs | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/special-signs.md
+
+# Педагогіка A1: Special Signs
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The two "special signs" in Ukrainian orthography, the **soft sign (м’який знак `ь`)** and the **apostrophe (апостроф `’`)**, are fundamental for correct pronunciation and are best taught through contrast. They perform opposite functions. Ukrainian pedagogy for native children introduces them visually and functionally, a method that is highly effective for L2 learners as well.
+
+1.  **The Soft Sign (`ь`) as a "Softener"**: This sign has no sound of its own. Its only job is to indicate that the preceding consonant is soft (palatalized). Ukrainian textbooks introduce this concept by showing how the `ь` changes the quality of a consonant (Source 32: `5-klas-ukrmova-avramenko-2022_s0127`). For an English speaker, this is a new phonetic skill that requires focused practice on the tongue's position.
+
+2.  **The Apostrophe (`'`) as a "Separator" or "Wall"**: The apostrophe signals a hard break. It indicates that the preceding consonant remains **hard** and the following iotated vowel (`я, ю, є, ї`) is pronounced as two distinct sounds: `[йа]`, `[йу]`, `[йе]`, `[йі]` (Source 19: `2-klas-ukrmova-bolshakova-2019-1_s0058`). Большакова's Grade 2 textbook explicitly states the apostrophe's function is to show the preceding consonant is hard and the following iotated vowel represents two sounds. This "wall" analogy is a powerful pedagogical tool.
+
+3.  **Teaching through Minimal Pairs**: The core of the native method is contrasting words that differ only by the presence of a soft sign, an apostrophe, or neither. For example, `[р'а]` (in `зоря`) vs. `[рйа]` (in `подвір’я`) (Source 19). This forces the learner to hear and produce the phonetic difference, linking it directly to the written sign.
+
+## Послідовність введення (Introduction Sequence)
+
+For A1 learners, these signs should be introduced after the basic alphabet and the concept of iotated vowels (`я, ю, є, ї`) have been presented.
+
+1.  **Step 1: Introduce the Soft Sign (`ь`)**.
+    *   Start with word-final position, as it's the clearest example of its function. Use high-frequency words like `день`, `кінь`, `сіль`.
+    *   Introduce the mnemonic "Де ти з’їси ці лини?" (`д, т, з, с, ц, л, н`) as the core group of consonants that can be followed by `ь` at the end of a word (Source 47: `7-klas-ukrmova-avramenko-2024_s0044`).
+    *   Practice contrasting hard/soft pairs: `брат` vs. `брать` (to take), `став` vs. `ставь` (put). Even if the grammar is advanced, the phonetic contrast is the goal.
+
+2.  **Step 2: Introduce the Apostrophe (`'`)**.
+    *   Present it as the "anti-soft-sign." Its job is to *prevent* softening.
+    *   Introduce the core rule: the apostrophe is written after the "lip" consonants `б, п, в, м, ф` and the consonant `р` before `я, ю, є, ї` (Source 49: `3-klas-ukrainska-mova-vashulenko-2020-1_s0088`). The mnemonic "Мавпочка Буф грає в чужі шахи" is used in later grades but the core letters `б, п, в, м, ф, р` are the A1 focus.
+    *   Use simple, high-frequency words: `сім'я`, `м'ясо`, `п'ять`, `ім'я`, `комп'ютер`.
+    *   Explicitly model the two-sound pronunciation: `м'я` = `[м] + [йа]`.
+
+3.  **Step 3: Contrast `ь`, `'`, and nothing.**
+    *   This is the most critical step. Use a three-column table with minimal pairs.
+    | No Sign (softening vowel) | Soft Sign `ь` (soft consonant + `о`) | Apostrophe `'` (hard consonant + `й` + vowel) |
+    | :--- | :--- | :--- |
+    | `буряк` [р'а] | `бульйон` [л'о] | `бур'ян` [рйа] |
+    | `свято` [с'в'а] | `сьогодні` [с'о] | `здоров'я` [вйа] |
+    | `ряд` [р'ад] | `трьох` [р'ох] | `подвір'я` [рйа] |
+    *   This direct comparison solidifies the distinct function of each orthographic rule (Source 40: `5-klas-ukrmova-uhor-2022-1_s0186`).
+
+4.  **Step 4: Apostrophe after Prefixes.**
+    *   Introduce this as a simple, logical rule. When a prefix ends in a hard consonant, an apostrophe is used before `я, ю, є, ї` to maintain the hard separation.
+    *   Examples: `з'явитися`, `об'єднати`, `від'їзд` (Source 31: `3-klas-ukrainska-mova-vashulenko-2020-1_s0090`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrectly) | ✅ Правильно (Correctly) | Чому (Why) |
+| :--- | :--- | :--- |
+| Writing `сімя`, `пят`, `здоровя`. | `сім'я`, `п'ять`, `здоров'я`. | Forgetting the apostrophe. English has no equivalent concept of a "separator" sign, so learners often omit it. The apostrophe is mandatory to show the consonant is hard and the vowel is iotated (`[йа]`). (Source 49) |
+| Pronouncing `м'ясо` as [`мьасо`] (soft m). | Pronouncing `м'ясо` as [`мйасо`] (hard m + ya). | The apostrophe's primary function is to signal the preceding consonant is **hard**. Learners often see the `я` and automatically soften the `м`. The apostrophe is a "wall" that prevents this. (Source 19) |
+| Using `'` after other consonants, e.g., `*кать'я`. | Not using an apostrophe there. | The main apostrophe rule applies to a specific set of consonants (`б, п, в, м, ф, р`). Learners may overgeneralize the rule to other consonants. (Source 50) |
+| Writing `льожка` or `тьохкає`. | `ложка` (hard л), `тьохкає` (soft т). | Confusing the soft sign (`ь`) with palatalization rules. The soft sign is not used before all vowels, and the combination `ьо` is used to represent `[ьо]`, but `ло` is simply `[ло]`. (Source 42: `6-klas-ukrmova-betsa-2023_s0032`) |
+| Writing `компютер` or `інтервю`. | `комп'ютер`, `інтерв'ю`. | Forgetting the apostrophe in common loanwords. This is a very frequent error. The rule applies consistently to these words. (Source 24) |
+| Treating `ь` as a silent letter like in English "debt". | Treating `ь` as a command to modify the previous consonant. | English orthography has no direct parallel. The soft sign has zero sound value itself but carries a critical instruction for the consonant before it. (Source 32) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This is a critical area where Russian influence can mislead learners. Ukrainian orthography must be taught on its own terms.
+
+1.  **The Apostrophe is NOT a Hard Sign**: The Ukrainian apostrophe (`'`) is a unique feature. It is **not** a replacement for or equivalent to the Russian hard sign (`ъ`). The Russian hard sign also serves a separating function, but their historical development and usage rules are different. The writer must avoid any comparison, as it creates a false equivalency and frames Ukrainian as a derivative of Russian. The Ukrainian apostrophe was standardized in the early 20th century to solve a phonetic challenge using the tools available in a standard typeset, distinct from the Cyrillic-specific `ъ` (Source 22: `ext-istoria_movy-52`).
+
+2.  **Teach Ukrainian Phonetics Natively**: Do not explain the soft sign `ь` as being "like the Russian soft sign." While functionally similar, the degree and quality of palatalization can differ. The learner's reference point must be native Ukrainian audio and phonetic descriptions, not another Slavic language.
+
+3.  **No Russian Examples**: All example words, phrases, and texts must be Ukrainian. Using Russian examples (e.g., to show a cognate) implicitly centers Russian as the default Slavic language and should be strictly avoided.
+
+4.  **Historical Context**: Ukrainian writers in the 19th century used various systems to represent these sounds before the modern apostrophe was standardized (Source 22). This shows a living language evolving its own writing system, not borrowing one. This context is for the writer's understanding, not necessarily for the A1 lesson itself, but it informs a decolonized approach.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Words with Apostrophe (`'`)
+*   ★★★ (Essential): `сім'я`, `м'ясо`, `п'ять`, `дев'ять`, `ім'я`, `здоров'я`, `комп'ютер`, `подвір'я`, `пам'ять`.
+*   ★★ (Useful): `в'язати` (to knit), `бур'ян` (weed), `пір'я` (feathers), `черв'як` (worm), `об'єкт` (object).
+*   ★ (Can wait): `торф'яний` (peat), `міжгір'я` (intermountain), `Лук'ян` (name).
+
+### Words with Soft Sign (`ь`)
+*   ★★★ (Essential): `день`, `вчитель`, `батько`, `Львів`, `кінь`, `осінь`, `сіль`, `сьогодні`, `польський`, `український`, `-ський` (in general).
+*   ★★ (Useful): `лялька` (doll), `тінь` (shadow), `палець` (finger), `хлопець` (boy), `щось`, `десь`.
+*   ★ (Can wait): `мільйон`, `бульйон`, `різьбяр` (carver), `женьшень` (ginseng).
+
+## Приклади з підручників (Textbook Examples)
+
+These exercise formats are taken directly from Ukrainian elementary school textbooks and are perfect for A1 learners.
+
+1.  **Contrastive Choice (from Source 19)**
+    *   *Мета: Навчити розрізняти м'яку вимову (`ря`) і роздільну вимову (`р'я`).*
+    *   **Вправа:** Прочитай слова. Поясни, де `я` позначає один звук, а де два.
+        *   `зоря` — `сузір'я`
+        *   `буряк` — `бур'ян`
+        *   `Різдво` — `різдв'яний`
+
+2.  **Fill in the `ь` or `'` (from Sources 24, 47)**
+    *   *Мета: Застосувати правила вживання апострофа і м'якого знака.*
+    *   **Вправа:** Вставте, де потрібно, `ь` або `'`.
+        *   `здоров..я`
+        *   `пол..ський`
+        *   `комп..ютер`
+        *   `учител..`
+        *   `п..ятниця`
+        *   `Л..вів`
+        *   `сім..я`
+        *   `пал..то`
+
+3.  **Categorization (from Source 47)**
+    *   *Мета: Перевірити розуміння правил для обох знаків.*
+    *   **Вправа:** Розподіліть слова на три колонки: 1) з апострофом, 2) з м'яким знаком, 3) без знаків.
+    *   *Слова:* `Свято`, `Дев'ять`, `Різдво`, `Морква`, `Батько`, `Подвір'я`, `Тінь`, `П'ятниця`, `Український`, `М'яч`.
+
+4.  **Word Puzzle / Riddle (from Source 19)**
+    *   *Мета: Закріпити написання слів з апострофом у контексті.*
+    *   **Вправа:** Прочитай опис і запиши слово-відгадку.
+        *   "П'ятий день тижня." (Відповідь: `п'ятниця`)
+        *   "Тато, мама і я — це дружна..." (Відповідь: `сім'я`)
+        *   "Його їдять. Воно не риба і не овоч." (Відповідь: `м'ясо`)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/iotated-vowels`
+- `pedagogy/a1/consonants-hard-soft`
+- `phonetics/palatalization`
+- `orthography/history-of-the-apostrophe`
 
 ---
 
-## М'який знак (The Soft Sign — Ь)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 43
-> **Score:** 0.50
->
-> 43
-> Чи відповідають підписи малюнкам? Чому? Як потрібно було 
-> записати слова? Як ми позначаємо м’які приголосні звуки 
-> на письмі?
->           
->            
->             
-> лук
-> рис
-> лис
-> На письмі м’які приголосні позначають 
-> буквами і, я, ю, є та знаком м’якшення ь. 
-> Запиши склади з м’яким приголосним звуком. Познач ці 
-> звуки знаком 
-> .
-> Ду, дю, да, дя, ди, ді, дє, де, до, дь, тя, сі, зу, дзю, ря, 
-> сь, нє, ці, це.
->  
-> Запиши слова у два стовпчики. Познач м’які приголосні 
-> знаком 
-> .
-> У слові є букви 
-> і, я, ю, є, ь.
-> У слові немає букв 
-> і, я, ю, є, ь.
-> Лис, сіль, лелека, ніс, носик, калюжа, малюки, дім, дятел, 
-> дерево, синє, ряска, торт, тісто, листя, цирк, синиця, буря.
->  
-> Випиши з вірша «Хоробрі хробаки» п’ять слів із м’якими 
-> приголосними звуками. Поясни свій вибір.
-> 3 
-> 4 
-> 5 
-> 
-> 
-> 6
+# Педагогіка A1: This And That
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 46
-> **Score:** 0.33
->
-> 46
-> Спиши слова, у яких є пом’якшені приголосні. Познач пом’як-
-> шені приголосні знаком 
-> .
-> Білка, місто, липа, пінгвін, фігура, жінка, чітко, словник, 
-> шість, дівчинка, гірка, хід, хлопчик, свято, пюре, буква, цвях.
->  
-> Поділи слова для переносу. Познач м’які і пом’якшені при-
-> голосні знаком 
-> .
-> Зразок. Лі-то, … .
-> Зразок. Дитя-чий, ди-тячий … .
-> Трава, площа, клени, 
-> ключі, квіти, стілець.
-> Гарячий, лисячий, золотий, 
-> металевий, паперовий.
->  
-> Тема і головна думка. Головні герої. Досліджуємо медіа
-> ДРАКОН
-> Зачин
-> Одного разу Оленка прийшла зі школи, а на кухні пив 
-> чай дракон. Дівчинка аж чхнула від несподіванки. 
-> А потім вони гралися в хованки і в розбійників.
-> ГоЛовна частина
-> Уранці Оленка пішла до школи.
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 48
-> **Score:** 0.25
->
-> 48
-> ПЕрЕнос сЛІв З ь І ьо
-> Прочитай слова. До якого слова немає малюнка? Чим схожі 
-> слова? Чим відрізняються? Спиши. Познач м’які приголосні 
-> звуки знаком 
-> .  
-> галка — галька 
-> лан — лань
-> мілка — мі лька
-> Спиши. Відшукай слова зі знаком м’якшення. Познач м’який 
-> приголосний перед знаком м’якшення знаком 
-> .
-> У метелика біленькі крильця. Василько сів на маленький 
-> стільчик. Вітерець підняв легеньку пір’їнку. Сіренький заєць 
-> їсть морквинку.  
-> Не відривай букву ь від попередньої букви, 
-> коли переносиш слово з рядка в рядок. 
-> Наприклад: кіль-це, паль-ці, апель-син.
-> Поділи слова для переносу.
-> Зразок. Кіль-це, … .
-> Зразок.
 
-## Апостроф (The Apostrophe)
+## Методичний підхід (Methodological Approach)
 
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 45
-> **Score:** 0.50
->
-> 45
-> На подвір’ячку, під в’язом,
-> вся зібралася сім’я:
-> відпочить, побути разом
-> та послухать солов’я.
-> 	
-> 	
-> 	
-> Надія Красоткіна
-> 2.	 Випиши слова, у яких є апостроф.
-> 163. 1.	 Користуючись словами для довідки, доповни речення.
-> 1.  Тіло риб покриває луска, а тіло птахів — ...  . 
-> 2. В’юн — риба, а м’ята — ... . 3. Пір’їна легка, а камінь ... . 
-> 4. Найбільше багатство — ... . 5. Тато, мама і я — дружна ... . 
-> 6. П’ятий день тижня — ... .
-> Слова для довідки: п’ятниця, здоров’я, рослина, пір’я, 
-> важкий, сім’я. 
-> 2. Спиши відновлені речення.
-> 164. 1.	 Прочитай вірш. Як ти гадаєш, про що говоритиме сім’я?
-> 165. 1.	 За допомогою алфавіту утвори слово. Підказка: записуй 
-> букви в тому порядку, що й числа.
-> 15
-> 1
-> 17
-> ’
-> 33
-> 18
-> 11
-> 14
-> 2.	 Пригадай, коли ми ставимо апостроф. 
-> Крок 1.
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 71
-> **Score:** 0.50
->
-> 69
-> 	
-> Прочитай вірш, правильно вимовляючи сло-
-> ва з апострофом. 
-> 	
-> З’єднай частини прислів’їв. Прочитай. По-
-> ясни, як ти їх розумієш.
-> — Буквам я усім рідня...
-> Може, не потрібен я?
-> — Не журись, малюче, так.
-> Просто ти — друкарський знак.
-> Мусиш бути у словах:
-> М’яз, прислів’я, м’яч, під’їзд,
-> В’юн, м’якуш, бар’єр та з’їзд,
-> П’ятниця, п’ята, ім’я.
-> Ось вона — твоя сім’я!
->              Валентина Черняєва 
-> ніж  багатство.
-> Знає кіт,
-> чиє сало з’їв.
-> Добре ім’я краще,
-> 	
-> Випиши з вірша підкреслені слова з апо-
-> строфом.
-> Pidruchnyk.com.ua
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 23
-> **Score:** 0.25
->
-> 23
-> ’
-> Апостроф
-> і |м’я
-> Прочитай. Назви імена. Склади речення з одним іменем.
-> 	
-> ім’я	
-> Дар’я	
-> Дем’ян	
-> В’ячеслав
-> 	
-> сім’я	
-> Мар’яна	
-> Лук’ян	
-> Валер’ян
-> 
-> Відшукай слово до схеми.
-> 	
-> п’є	
-> в’є	
-> б’є	
-> з’єднати	
-> під’їхати
-> 	 п’ють	 в’ють	 б’ють	
-> роз’єднати	
-> від’їхати
-> 
-> Текст. Театралізуємо
-> Моє ім’я
-> Я — Мар’яна. 
-> Сьогодні на подвір’ї я грала в м’яч. 
-> —  Мар’яше! — кличуть подруги. —  
-> Кидай м’яч. 
-> Потім мене гукнула бабуся:
-> —  Мар’яночко! Іди обідати.
-> Я пішла додому і зустріла сусідку. 
-> —  Як справи, Мар’янко? — запитує вона.
-> Удома мама налила мені суп і говорить:
-> —  Смачного, Манюню.
-> Я їм суп і думаю: «Скільки в мене імен?». 
-> 1
-> 2
-> 3
-> Дар’я
-> Лук’ян
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-## Дзвінкі і глухі (Voiced and Voiceless)
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 62
-> **Score:** 0.50
->
-> 62
-> ДЗвІнкІ та ГЛУХІ ПриГоЛоснІ ЗвУки
-> Вимов звуки, які позначають виділені букви. Які з них ти ви-
-> мовляєш за допомогою голосу і шуму, а які — тільки шуму? 
-> жабка — шапка
-> злива — слива
-> ґава — кава
-> дуб — суп
-> казка — каска
-> гуска — хустка
-> Дзвінкі приголосні утворюються за допомогою голо - 
-> су 
->  і шуму 
-> , глухі — за допомогою шуму 
-> . 
->  
-> Я знаю, що деякі дзвінкі і глухі 
-> приголосні можуть утворювати пари.
-> и.
-> Прочитай і порівняй пари звуків. Назви по одному слову, 
-> у якому є ці звуки.
-> Дзвінкі [б]
-> [г]
-> [ґ]
-> [д]
-> [д’]
-> [з]
-> [з’]
-> [ж] [дж] [дз] [дз’]
-> Глухі
-> [п]
-> [х]
-> [к]
-> [т]
-> [т’]
-> [с]
-> [с’] [ш]
-> [ч]
-> [ц]
-> [ц’]
-> А деяким звукам пари немає.
-> Прочитай спочатку глухий звук, а потім — дзвінкі.
-> Дзвінкі
-> [в]
-> [л]
-> [л’]
-> [м]
-> [н]
-> [н’]
-> [й]
-> [р]
-> [р’]
-> —
-> Глухі
-> —
-> —
-> —
-> —
-> —
-> —
-> —
-> —
-> —
-> [ф]
->  
-> Прочитай слова.
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 68
-> **Score:** 0.25
->
-> 66
-> дз
-> Бачу  Дз, дз (дз). 
-> Чую  [дз], [дз′]. 
-> 	     еркало        ґу	          ики      кукуру            а  
-> дзвонити
-> дзвонила
-> а
-> д з в о н
-> д з и ґ
-> д з
->  [ – •| –•] 
->  [ –  –• – ] 
-> б а н
-> и к
->  [ –  –•| –• –]  
-> дзвінкий
-> дзюрчить
-> Дзюрчать-дзвенять струмочки,
-> І птах вітає птаха...
-> Мала, хрустка бурулька
-> Додолу впала з даху.
->                                        Лідія Компанієць
-> Pidruchnyk.com.ua
+## Послідовність введення (Introduction Sequence)
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 69
-> **Score:** 0.33
->
-> 67
-> Прочитай виділені слова в тексті. Які звуки ти чуєш на 
-> початку слів? Які букви позначають звуки [дз], [дз′]? 
-> Прочитай усі слова, у яких є буквосполучення дз. 
-> Джмелик запропонував дружбу метелику, дзвіночку 
-> чи бджілці? Який джмелик: увічливий, мовчазний 
-> чи насуплений?
-> Скільки разів буквосполучення дз ужито в тексті?  
-> У якому слові — назві намальованого
-> предмета букв більше, ніж звуків? 
-> Дзінь-дзінь, дзень-дзень! — це дзві-
-> ночок запрошує до себе джмелика.
-> —	Який барвистий луг! Тут так багато 
-> квітів! — радів джмелик.
-> Бачить джмелик: ліловий дзвіночок 
-> хитає голівкою та кличе його.
-> —	Я буду з вами дружити, — 
-> сказав він дзвіночку.
-> —	Дзінь-дзінь, дзень-дзень, 
-> і я радий із тобою дружити, 
-> джмелику, 
-> — 
-> задзеленчав 
-> дзвіночок (за Оксаною Іва-
-> ненко).
-> Pidruchnyk.com.ua
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
 
-## Вимова українських звуків (Pronouncing Ukrainian Sounds)
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
 
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 1
-> **Score:** 0.50
->
-> УКРАЇНСЬКА МОВА
-> БУКВАР 
-> ЧАСТИНА 1
-> 1 
-> КЛАС
-> ї
-> І. О. БОЛЬШАКОВА
-> М. С. ПРИСТІНСЬКА
-> о
-> о
-> м
-> н р
-> л
-> е
-> е
-> е
-> е
-> А
-> И
-> Л
-> М
-> Є
-> О
-> І
-> Ю
-> У
-> Е
-> Я
-> ам
-> ам
-> ам
-> ум
-> ум
-> ум
-> ом
-> ом
-> ом
-> кит
-> ліс
-> лис
-> кіт
-> дим
-> сік
-> дім
-> 
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
 
-... (truncated for context window)
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -801,7 +600,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Дзвінкі і глухі (Voiced and Voiceless)` (~250 words)
 - `## Вимова українських звуків (Pronouncing Ukrainian Sounds)` (~250 words)
 - `## Підсумок — Summary` (~200 words)
-- `## Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -960,55 +758,43 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## М'який знак (The Soft Sign — Ь) (~275 words total)
-
-- P1 (~65 words): Introduce Ь as a silent modifier with one job only — softening the consonant before it. Ь has no sound of its own; it changes how the preceding consonant is pronounced. Contrast: лук (onion) vs люк (hatch) — two different words because of softness. Then: сіль [соль → сіль], день [ден' → день]. One letter, one job, zero sounds.
-- P2 (~110 words): Explain the three-way distinction (Авраменко Grade 5, Большакова Grade 2 p.46): (1) Truly soft (м'які): exactly 9 consonant pairs can be fully softened with Ь — Д/Д', Т/Т', З/З', С/С', Ц/Ц', Л/Л', Н/Н', Р/Р', ДЗ/ДЗ' — plus inherently soft Й. (2) Partially softened (пом'якшені): губні (Б,П,В,М,Ф), шиплячі (Ж,Ш,Ч,ДЖ), and задньоязикові (К,Ґ,Г,Х) are only softened by following soft vowels (і, я, ю, є) — Ь never appears after these. (3) Hard (тверді): always hard, never softened. Захарійчук Grade 1 p.15 notation: hard = [–], soft = [=].
-- P3 (~80 words): Mnemonic from Літвінова Grade 5: «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи» — encodes exactly the 9 consonants that Ь can follow. Common spelling patterns with Ь: -нь (день, кінь, осінь), -ль (сіль, біль), -ть (мить), -зь (мазь). Extended practice words: учитель (teacher — Ь after Л), батько (father — Ь after Т before К), маленький (small — Ь after Н before К).
-- Exercise: odd-one-out — 6 sets of consonants; learner identifies which consonant in each set does NOT belong to the 9 that Ь can soften (e.g., Б, Ш, Ж in a set of Н, Л, Т — Б and Ш cannot carry Ь).
-
----
+- P1 (~70 words): Introduce the soft sign (ь) as a silent instruction to the tongue. Explain that it has no sound of its own but changes the quality of the consonant before it. Use the word "день" (day) and "сіль" (salt) to demonstrate the softening of [н] and [л].
+- P2 (~80 words): Explain the "mnemonic" rule for consonants that can be softened: "ДЗіДЗьо, Де Ти З’їСи Ці ЛиНи" (д, т, з, с, ц, л, н, р, дз). Introduce the notation for hard consonants [–] and soft consonants [=] used in Ukrainian textbooks like Захарійчук Grade 1.
+- P3 (~70 words): Detail the placement of the soft sign in the middle of words. Provide examples such as "батько" (father), "учитель" (teacher), and "маленький" (small). Explain that the letter "й" is inherently soft and never needs a soft sign.
+- P4 (~55 words): Contrastive phonetic practice using minimal pairs to show how meaning changes. Compare "брат" (brother, hard [т]) vs. "брать" (to take, soft [т']). Emphasize the physical tongue position for palatalization.
+- <!-- INJECT_ACTIVITY: odd-one-out-softening --> [type: odd-one-out, focus: identifying consonants that cannot be softened by Ь (e.g., labials or sibilants), 6 items]
 
 ## Апостроф (The Apostrophe) (~275 words total)
-
-- P1 (~70 words): Introduce the apostrophe as a hard-separator sign, not a letter. Rule (Захарійчук Grade 1 p.97): apostrophe appears after б, п, в, м, ф, р and before the vowels я, ю, є, ї. Its function: keeps the preceding consonant HARD and forces the following vowel to split into [й] + vowel — two sounds instead of one. Without it, the consonant would soften into the vowel.
-- P2 (~105 words): Contrast without vs. with apostrophe. Without: пісня — the Н softens into the following vowel; the word sounds like one smooth flow. With: м'ясо [м-йасо] — М stays hard, the я splits into [й + а]. Walk through four core examples in pronunciation notation: сім'я [сім-йа] (family), м'ясо [м-йасо] (meat), п'ять [п-йать] (five), комп'ютер [комп-йутер] (computer — a familiar cognate to anchor the rule). Also: дев'ять [дев-йать] (nine), м'який [м-йакий] (soft — note: м'який has apostrophe only, NO Ь, because Й is inherently soft).
-- P3 (~60 words): Reading practice list: п'ять, дев'ять, м'яч, м'який, сім'я, м'ясо, комп'ютер, ім'я, здоров'я, пір'я (from Краvcова Grade 2 p.45 poem context and Большакова Grade 1 p.23). Scope reminder: prefix apostrophe words like під'їзд and з'їзд follow a separate prefix rule — covered at A2. For now: labial-rule apostrophe only.
-- Exercise (fill-in): 6 items — insert Ь or apostrophe in blanks: сім_я, ден_, п_ять, учите_ль (wait — this tests Ь after Л), м_ясо, кін_.
-- Exercise (error-correction): 6 items — find missing apostrophes in running text using words like мясо, пять, сімя, компютер, девять, мяч.
-- Exercise (group-sort): 18 words sorted into three columns — has Ь / has apostrophe / neither. Sample words: сіль, м'ясо, торт, день, п'ять, ліс, кінь, комп'ютер, дим, батько, сім'я, ранок, мить, ім'я, вікно, осінь, м'яч, рука.
-
----
+- P1 (~70 words): Introduce the apostrophe (’) as the "wall" or separator. Explain its opposite function to the soft sign: it keeps the preceding consonant hard and forces the following vowel to be pronounced as two distinct sounds [й + vowel].
+- P2 (~75 words): Detail the "Lip Consonant" rule (б, п, в, м, ф) and "р" before the vowels я, ю, є, ї. Use the example "сім'я" (family) to show the separation [сім-йа]. Explicitly state that the consonant must remain hard.
+- P3 (~70 words): Provide high-frequency vocabulary for reading practice. Focus on "м'ясо" (meat), "п'ять" (five), and "дев'ять" (nine). Guide the learner through the pronunciation of [м-йасо] versus the common error of softening the [м].
+- P4 (~60 words): Address the use of apostrophes in modern loanwords and international vocabulary. Use "комп'ютер" (computer) and "об'єкт" (object) as familiar anchors. Note that this rule is consistent across the language.
+- <!-- INJECT_ACTIVITY: fill-in-special-signs --> [type: fill-in, focus: choosing between Ь and apostrophe in words like сім_я, ден_, п_ять, 6 items]
+- <!-- INJECT_ACTIVITY: error-correction-apostrophe --> [type: error-correction, focus: identifying and fixing missing apostrophes in words like м'ясо, сім'я, п'ять, 6 items]
+- <!-- INJECT_ACTIVITY: group-sort-signs --> [type: group-sort, focus: sorting words into categories: has Ь, has apostrophe, or neither, 18 items]
 
 ## Дзвінкі і глухі (Voiced and Voiceless) (~275 words total)
-
-- P1 (~80 words): Introduce voiced/voiceless with the hand-on-throat test: place fingers lightly on throat, say [з] — you feel vibration (дзвінкий); say [с] — silence (глухий). The difference is the voice (голос). Present the 8 Ukrainian voiced-voiceless pairs as a two-row table drawn from Большакова Grade 2 p.62: Б–П, Д–Т, Г–Х, Ґ–К, З–С, Ж–Ш, ДЗ–Ц, ДЖ–Ч. Сонорні (В, Л, М, Н, Й, Р) have no voiceless partner — they are neither category.
-- P2 (~100 words): Ukrainian's defining feature — non-devoicing at word end. In many languages, voiced consonants at word end lose their voice (German, Russian). Ukrainian does NOT: дуб is [дуб] (not [дуп]), мороз is [мороз] (not [морос]), гриб is [гриб], наказ is [наказ]. Learners whose L1 devoices should consciously hold the voice through the final consonant. One exception exists: легко [лехко] — but exceptions prove the rule. Textbook pair from Большакова Grade 2 p.62: жабка/шапка, злива/слива, ґава/кава, казка/каска — spot the voicing shift in clusters.
-- P3 (~55 words): Minimal pairs for ear-training practice: балка (beam) vs палка (stick), коза (goat) vs коса (braid), зуб (tooth) vs суп (soup), жар (heat) vs шар (sphere/balloon). Listening task: say each pair aloud and feel whether the initial or final consonant vibrates.
-- Exercise (match-up): 8 pairs — match each voiced consonant card to its voiceless partner: Б↔П, Д↔Т, Г↔Х, Ґ↔К, З↔С, Ж↔Ш, ДЗ↔Ц, ДЖ↔Ч.
-- Exercise (true-false): 6 statements about voiced/voiceless rules — e.g., "Ukrainian pronounces дуб as [дуп] at word end" (false), "Р has no voiceless partner" (true), "Г and Х are a voiced-voiceless pair" (true).
-
----
+- P1 (~70 words): Introduce the concept of "voiced" (дзвінкі) and "voiceless" (глухі) consonants. Use the "hand on throat" test to explain vibration. Use the simplest pair [б] and [п] to illustrate the difference.
+- P2 (~80 words): List the eight main voiced-voiceless pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч. Explain that сонорні (sonorants) like в, л, м, н, й, р do not have voiceless pairs in Ukrainian.
+- P3 (~85 words): Explain the "Resilience Rule" of Ukrainian phonetics: voiced consonants stay voiced even at the end of words. Contrast this with other languages. Use "дуб" [дуб] and "мороз" [мороз] as primary examples. Introduce the sole common exception: "легко" [лехко].
+- P4 (~40 words): Meaning changes through voicing. Present minimal pairs for ear training: "балка" (beam) vs. "палка" (stick) and "коза" (goat) vs. "коса" (braid).
+- <!-- INJECT_ACTIVITY: match-up-voiced-voiceless --> [type: match-up, focus: matching voiced consonants with their voiceless partners (Б↔П, Д↔Т, etc.), 8 items]
+- <!-- INJECT_ACTIVITY: true-false-devoicing --> [type: true-false, focus: checking understanding of final consonant pronunciation and the "легко" exception, 6 items]
 
 ## Вимова українських звуків (Pronouncing Ukrainian Sounds) (~275 words total)
+- P1 (~100 words): Focus on the vowel И [и]. Explain it as a distinct sound, not a variation of І [і]. Use minimal pairs to train the ear: "бик" (bull) vs. "бік" (side), "дим" (smoke) vs. "дім" (house), and "кит" (whale) vs. "кіт" (cat).
+- P2 (~100 words): Contrast Г [ɦ] and Ґ [g]. Describe Г as a "voiced fricative" (like a heavy breath with voice) and Ґ as a "hard stop" (like English 'g' in 'goat'). Use "гарно" (nicely) and "гора" (mountain) vs. "ґанок" (porch) and "ґудзик" (button).
+- P3 (~75 words): Introduce the Ukrainian trilled Р [р]. Provide tips for tongue placement at the alveolar ridge. Use practice words that build rhythm: "риба" (fish), "ранок" (morning), "робота" (work), and "рука" (hand).
+- <!-- INJECT_ACTIVITY: quiz-g-vs-ge --> [type: quiz, focus: choosing the correct letter (Г or Ґ) for specific words based on sound, 6 items]
 
-- P1 (~90 words): И [и] — a sound unique to Ukrainian that exists on its own terms (not an English approximation). Demonstrate with minimal pairs where И vs І changes meaning completely: бик (bull) vs бік (side), дим (smoke) vs дім (house), лист (leaf/letter) vs ліс (forest), кит (whale) vs кіт (cat). These four pairs are on the Большакова Grade 1 cover — familiar, instantly grounded. И sits mid-tongue, between [і] and [e]. The distinction is real and meaningful: кит ≠ кіт. Practice with Anna Ohoiko's И video. Drill: дим — дім — бик — бік — кит — кіт.
-- P2 (~110 words): Г [ɦ] vs Ґ [g] — two separate letters, two separate phonemes. Г is a voiced fricative: air flows through a narrowed (but not closed) throat, creating turbulence. Its voiceless partner is Х — pronounce Х, then add voice: that is Г. Words: гарно (beautifully), гора (mountain), голова (head). Ґ is a voiced stop: full throat closure, then abrupt release. Its voiceless partner is К — pronounce К, then add voice: that is Ґ. Words: ґанок (porch), ґудзик (button). Ґ is uniquely and importantly Ukrainian — a point of phonetic identity. Critical terminology: do NOT describe Г as "soft" (м'який in Ukrainian means palatalized; Г is not palatalized, it is simply fricative).
-- P3 (~55 words): Р [р] — the trilled/rolled Ukrainian Р. Practice words that maximize Р exposure: рука (hand), робота (work), ранок (morning), риба (fish). Reference Anna Ohoiko's Р video. Encouragement: an imperfect Р is always understood by native speakers. Focus on comfort and consistency, not perfection.
-- Exercise (quiz): 6 items — Г vs Ґ: choose the correct letter for each word. Items: _анок (ґ), _арно (г), _удзик (ґ), _олова (г), _ора (г), _рати (ґ — ґрати, iron bars vs грати, to play — present both meanings as a bonus point).
-
----
-
-## Підсумок — Summary (~220 words total)
-
-- P1 (~50 words): Brief recap connecting all four signs and sounds covered: Ь softens; apostrophe separates and hardens; voiced/voiceless pairs operate in Ukrainian with non-devoicing as a defining feature; И, Г, and Р are uniquely Ukrainian sounds that have no direct English equivalent and must be learned on Ukrainian terms.
-- Self-check (~170 words): Bulleted Q&A list exactly as the plan specifies:
-  - **What does Ь do?** → It softens the consonant before it. It has no sound of its own.
-  - **After which 9 consonants can Ь appear?** → Д, Т, З, С, Ц, Л, Н, Р, ДЗ (mnemonic: ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи).
-  - **After which letters does apostrophe appear?** → After б, п, в, м, ф, р — before я, ю, є, ї.
-  - **Name 3 voiced-voiceless pairs.** → Б–П, Д–Т, З–С (any three from the eight are correct).
-  - **Does Ukrainian дуб sound like [дуб] or [дуп]?** → [дуб] — Ukrainian does not devoice at word end.
-  - **How is Г different from Ґ?** → Г is a voiced fricative (air flows, like Х with voice); Ґ is a voiced stop (full closure then release, like К with voice).
-  - **Read these words aloud:** сім'я, день, п'ять, гарно, риба, ґудзик.
+## Підсумок — Summary (~220 words)
+- P1 (~220 words): Recap the module with a self-check list.
+  - What does the soft sign (Ь) do? (It softens the previous consonant, has no sound).
+  - Which consonants can be followed by Ь? (Д, Т, З, С, Ц, Л, Н, Р, ДЗ).
+  - When do we use an apostrophe? (After б, п, в, м, ф, р before я, ю, є, ї).
+  - Does a voiced consonant like "б" change at the end of a word? (No, it stays voiced).
+  - What is the difference between Г and Ґ? (Г is a fricative/breathy sound, Ґ is a hard stop).
+  - Read these challenge words aloud: сім'я, день, п'ять, гарно, риба, м'ясо.
 
 Grand total: ~1320 words
 </skeleton>

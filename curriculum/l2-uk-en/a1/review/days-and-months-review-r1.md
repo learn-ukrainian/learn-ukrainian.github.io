@@ -1,42 +1,35 @@
 ## Linguistic Scan
-No linguistic errors found. The Ukrainian text is natural, accurately uses prepositional chunks for time, and correctly explains the etymologies of days and months without Russianisms or calques.
+No linguistic errors found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-days-order -->`: Matches plan (fill-in, order of days), logically placed after the days of the week are introduced.
-- `<!-- INJECT_ACTIVITY: match-months-seasons -->`: Matches plan (match-up, months to seasons), placed directly after the months table.
-- `<!-- INJECT_ACTIVITY: fill-in-chunks -->`: Matches plan (fill-in, in/on chunks), placed after the seasons and examples. 
-All activities are present, logically sequenced, and align perfectly with the plan's `activity_hints`.
+- `<!-- INJECT_ACTIVITY: fill-in-days-order -->` is placed correctly after the days of the week are taught. It matches the plan's `fill-in` focus.
+- `<!-- INJECT_ACTIVITY: match-up-months-seasons -->` is placed correctly after the seasons and months are introduced. It matches the plan's `match-up` focus.
+- `<!-- INJECT_ACTIVITY: fill-in-day-month-chunks -->` is placed correctly after the prepositions for days, months, and seasons have been fully explained. It matches the plan's `fill-in` focus.
+All markers align perfectly with the plan's `activity_hints`.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | All outline points (Dialogues, Days, Months, Summary) are covered. Both dialogues (Planning, Birthday) are present. Word count is healthy. |
-| 2. Linguistic accuracy | 10/10 | Excellent. Etymologies (четвер/четвертий, березень/береза) are factually correct. Cases in time chunks (у понеділок, в серпні) are correctly formed. |
-| 3. Pedagogical quality | 10/10 | Introduces temporal prepositions as chunks ("у/в + day combination as a fixed phrase") as instructed by the plan, avoiding overwhelming A1 learners with locative/accusative grammar rules. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (days, months, seasons, week, birthday) are smoothly integrated into prose and examples. |
-| 5. Exercise quality | 10/10 | Appropriate marker distribution targeting exactly what was just taught in the preceding section. |
-| 6. Engagement & tone | 9/10 | Generally warm and engaging with great cultural notes ("nature calendar"), but the summary opens with slightly cliché meta-commentary ("You now have the full Ukrainian calendar at your fingertips."). |
-| 7. Structural integrity | 10/10 | Clean markdown, precise adherence to the plan's H2 structure, no stray artifacts. |
-| 8. Cultural accuracy | 10/10 | Effectively emphasizes the decolonized/authentic aspect of Ukrainian months originating from nature rather than Roman gods. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are practical, natural, and accurately model everyday contexts for time (scheduling and birthdays). |
+| 1. Plan adherence | 9/10 | Covered almost all points, including specific textbook references and vocabulary. However, it missed the explicit instruction from the plan to state that "All months are masculine" (`12 months... All months are masculine`). |
+| 2. Linguistic accuracy | 10/10 | Excellent. Correct grammatical explanations for fleeting vowels (`-е-` dropping out) and case endings for days (`субота → в суботу`, `січень → у січні`). No Russianisms or Surzhyk. |
+| 3. Pedagogical quality | 10/10 | Clear PPP structure. The rules are taught not as abstract grammatical tables, but as actionable vocabulary chunks (e.g., simplifying the accusative shift to "final vowel shifts to an -у or -ю sound" for A1 learners). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are introduced naturally within the text. |
+| 5. Exercise quality | 10/10 | Markers are placed optimally immediately after their respective instructional sections. |
+| 6. Engagement & tone | 10/10 | The tone is encouraging and informative without being overly conversational. Phrases like "Let us focus specifically on the word..." establish a great teacher persona. |
+| 7. Structural integrity | 10/10 | All sections from the outline are present with exact H2 headings. The word count is 1286, successfully exceeding the 1200-word target. |
+| 8. Cultural accuracy | 10/10 | Highlights the Slavic etymology of the months (`березень ← birch`, `листопад ← leaf fall`) and correctly points out that the Ukrainian calendar strict starts on Monday. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are practical, contextualized, and feature natural multi-turn exchanges with appropriately named speakers (Олена, Марко, Андрій, Софія). |
 
 ## Findings
-[Engagement & tone] [Minor]
-Location: Підсумок — Summary ("You now have the full Ukrainian calendar at your fingertips. Here is everything organized...")
-Issue: The opening sentence of the summary falls into "telling instead of showing" and reads like generic course commentary.
-Fix: Remove the cliché transition for a more direct, professional summary.
-
-[Structural integrity] [Minor]
-Location: Діалоги (Dialogues) ("Tаras uses **у понеділок**")
-Issue: There is a minor typo with mixed Cyrillic/Latin characters in the English spelling of Taras's name ("Tаras").
-Fix: Standardize to the pure English spelling "Taras" within the English explanatory prose.
+[1. Plan adherence] [major]
+Location: `Місяці і пори року — Months and Seasons`
+Issue: The plan explicitly requires stating that "All months are masculine" under the points for this section. The text failed to mention their grammatical gender, which is important for learners when applying adjectives later.
+Fix: Add a clause explicitly stating that all months are grammatically masculine.
 
 ## Verdict: REVISE
-The module is of exceptionally high quality, pedagogically precise, and culturally resonant. It requires only two minor string replacements (a character typo and a line of meta-commentary) before it is ready to ship.
+The module is exceptionally well-written, accurate, and highly pedagogical. It only requires a minor text injection to strictly adhere to the plan's point regarding the grammatical gender of the months. 
 
 <fixes>
-- find: "Tаras uses **у понеділок**"
-  replace: "Taras uses **у понеділок**"
-- find: "You now have the full Ukrainian calendar at your fingertips. Here is everything organized for quick reference and self-testing."
-  replace: "Here is everything organized for quick reference and self-testing."
+- find: "The twelve months organized by their respective season are listed below. All are written in lowercase letters."
+  replace: "The twelve months organized by their respective season are listed below. All are written in lowercase letters, and all of them are grammatically masculine."
 </fixes>

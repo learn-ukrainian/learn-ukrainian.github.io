@@ -1,28 +1,303 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 97,
+  "grounded_items": 49,
+  "ungrounded": [
+    {
+      "word": "завтра",
+      "exercise_type": "fill-in",
+      "context": "— _____ на концерт завтра! — Чудова ідея!",
+      "role": "context"
+    },
+    {
+      "word": "чудова",
+      "exercise_type": "fill-in",
+      "context": "— _____ на концерт завтра! — Чудова ідея!",
+      "role": "context"
+    },
+    {
+      "word": "ідея",
+      "exercise_type": "fill-in",
+      "context": "— _____ на концерт завтра! — Чудова ідея!",
+      "role": "context"
+    },
+    {
+      "word": "робите",
+      "exercise_type": "fill-in",
+      "context": "— Що ви робите _____? — Ми граємо у теніс.",
+      "role": "context"
+    },
+    {
+      "word": "граємо",
+      "exercise_type": "fill-in",
+      "context": "— Що ви робите _____? — Ми граємо у теніс.",
+      "role": "context"
+    },
+    {
+      "word": "музеї",
+      "exercise_type": "fill-in",
+      "context": "— _____ в музей! — Я не люблю музеї.",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "fill-in",
+      "context": "Я маю вільний _____, ходімо гуляти!",
+      "role": "context"
+    },
+    {
+      "word": "гуляти",
+      "exercise_type": "fill-in",
+      "context": "Я маю вільний _____, ходімо гуляти!",
+      "role": "context"
+    },
+    {
+      "word": "слухати",
+      "exercise_type": "match-up",
+      "context": "слухати",
+      "role": "answer"
+    },
+    {
+      "word": "дивитися",
+      "exercise_type": "match-up",
+      "context": "дивитися",
+      "role": "answer"
+    },
+    {
+      "word": "фільми",
+      "exercise_type": "match-up",
+      "context": "фільми",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "match-up",
+      "context": "книгу",
+      "role": "context"
+    },
+    {
+      "word": "грає",
+      "exercise_type": "error-correction",
+      "context": "не грає",
+      "role": "answer"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "fill-in",
+      "context": "Я хочу ходити _____ концерт.",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "fill-in",
+      "context": "Вони ходять _____ театр раз на місяць.",
+      "role": "context"
+    },
+    {
+      "word": "ходять",
+      "exercise_type": "fill-in",
+      "context": "Вони ходять _____ театр раз на місяць.",
+      "role": "context"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "fill-in",
+      "context": "Діти грають _____ теніс.",
+      "role": "context"
+    },
+    {
+      "word": "грають",
+      "exercise_type": "fill-in",
+      "context": "Діти грають _____ теніс.",
+      "role": "context"
+    },
+    {
+      "word": "працюю",
+      "exercise_type": "fill-in",
+      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "role": "context"
+    },
+    {
+      "word": "неділю",
+      "exercise_type": "fill-in",
+      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "role": "context"
+    },
+    {
+      "word": "бо",
+      "exercise_type": "fill-in",
+      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "fill-in",
+      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "role": "context"
+    },
+    {
+      "word": "вихідний",
+      "exercise_type": "fill-in",
+      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "role": "context"
+    },
+    {
+      "word": "тому",
+      "exercise_type": "fill-in",
+      "context": "Я люблю спорт, тому _____ граю у баскетбол.",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "fill-in",
+      "context": "Я не маю часу, тому _____ читаю книги.",
+      "role": "context"
+    },
+    {
+      "word": "слухає",
+      "exercise_type": "fill-in",
+      "context": "Він _____ слухає таку музику.",
+      "role": "context"
+    },
+    {
+      "word": "таку",
+      "exercise_type": "fill-in",
+      "context": "Він _____ слухає таку музику.",
+      "role": "context"
+    },
+    {
+      "word": "гуляємо",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
+      "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
+      "role": "context"
+    },
+    {
+      "word": "гарна",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
+      "role": "context"
+    },
+    {
+      "word": "погода",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
+      "role": "context"
+    },
+    {
+      "word": "музичні",
+      "exercise_type": "group-sort",
+      "context": "Музичні інструменти (грати на)",
+      "role": "context"
+    },
+    {
+      "word": "інструменти",
+      "exercise_type": "group-sort",
+      "context": "Музичні інструменти (грати на)",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «грати на футбол».",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "role": "context"
+    },
+    {
+      "word": "має",
+      "exercise_type": "true-false",
+      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "role": "context"
+    },
+    {
+      "word": "бути",
+      "exercise_type": "true-false",
+      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "role": "context"
+    },
+    {
+      "word": "частка",
+      "exercise_type": "true-false",
+      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "role": "context"
+    },
+    {
+      "word": "запрошення",
+      "exercise_type": "true-false",
+      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "role": "context"
+    },
+    {
+      "word": "щось",
+      "exercise_type": "true-false",
+      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "role": "context"
+    },
+    {
+      "word": "зробити",
+      "exercise_type": "true-false",
+      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "role": "context"
+    },
+    {
+      "word": "разом",
+      "exercise_type": "true-false",
+      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "role": "context"
+    },
+    {
+      "word": "щодня",
+      "exercise_type": "error-correction",
+      "context": "Я граю в гітарі щодня.",
+      "role": "context"
+    },
+    {
+      "word": "дуже",
+      "exercise_type": "error-correction",
+      "context": "Він грає у скрипці дуже гарно.",
+      "role": "context"
+    },
+    {
+      "word": "гарно",
+      "exercise_type": "error-correction",
+      "context": "Він грає у скрипці дуже гарно.",
+      "role": "context"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "error-correction",
+      "context": "Ходімо на кіно сьогодні!",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "вихідні",
       "давай",
-      "завжди",
-      "зазвичай",
-      "концерт",
-      "кіно",
-      "музей",
-      "ніколи",
-      "раз",
-      "рідко",
-      "спорт",
-      "театр",
-      "футбол",
-      "ходімо",
-      "часто",
       "іноді"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

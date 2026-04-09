@@ -1,0 +1,323 @@
+version: '1.0'
+module: around-the-city
+level: a1
+inline:
+- id: fill-in-directions
+  type: fill-in
+  instruction: 'Вставте правильне слово (Fill in the correct direction word: прямо,
+    направо, or наліво)'
+  items:
+  - sentence: Ідіть прямо, потім ____. Бібліотека на розі.
+    answer: направо
+    options:
+    - прямо
+    - направо
+    - наліво
+  - sentence: Вибачте, як дістатися до музею? — Ідіть ____.
+    answer: наліво
+    options:
+    - прямо
+    - направо
+    - наліво
+  - sentence: Аптека близько. Ідіть ____ п'ять хвилин.
+    answer: прямо
+    options:
+    - прямо
+    - направо
+    - наліво
+  - sentence: Потім ідіть ____, школа там.
+    answer: направо
+    options:
+    - прямо
+    - направо
+    - наліво
+  - sentence: Йдіть ____, а потім наліво.
+    answer: прямо
+    options:
+    - прямо
+    - направо
+    - наліво
+  - sentence: Ресторан поруч. Ідіть прямо і ____.
+    answer: направо
+    options:
+    - прямо
+    - направо
+    - наліво
+- id: quiz-de-kudy
+  type: quiz
+  instruction: Оберіть правильну форму (Choose the correct form — Де? means you are
+    there; Куди? means you are going there)
+  items:
+  - question: Я зараз... (Де? — I am here now)
+    options:
+    - в парку
+    - в парк
+    - з парку
+    correct: 0
+  - question: Я йду... (Куди? — I am walking there)
+    options:
+    - в магазині
+    - в магазин
+    - з магазину
+    correct: 1
+  - question: Магазин на... (Де? — the store is located here)
+    options:
+    - вулицю
+    - вулиці
+    - вулиця
+    correct: 1
+  - question: Потім їду на... (Куди? — I am riding there)
+    options:
+    - роботі
+    - роботою
+    - роботу
+    correct: 2
+  - question: Ми зараз у... (Де? — we are here now)
+    options:
+    - центрі
+    - центр
+    - центру
+    correct: 0
+  - question: Вона йде в... (Куди? — she is walking there)
+    options:
+    - офісі
+    - офісу
+    - офіс
+    correct: 2
+- id: fill-in-transport
+  type: fill-in
+  instruction: 'Вставте правильне слово (Fill in the correct transport word: на метро,
+    пішки, or автобусом)'
+  items:
+  - sentence: Я їду в центр ____.
+    answer: на метро
+    options:
+    - на метро
+    - пішки
+    - автобусом
+  - sentence: Потім іду ____ п'ять хвилин.
+    answer: пішки
+    options:
+    - на метро
+    - пішки
+    - автобусом
+  - sentence: Вона їде на роботу ____.
+    answer: автобусом
+    options:
+    - на метро
+    - пішки
+    - автобусом
+  - sentence: Школа далеко, треба їхати ____.
+    answer: на метро
+    options:
+    - на метро
+    - пішки
+    - автобусом
+  - sentence: Парк близько, ми йдемо ____.
+    answer: пішки
+    options:
+    - на метро
+    - пішки
+    - автобусом
+  - sentence: Ми їдемо в ресторан ____.
+    answer: автобусом
+    options:
+    - на метро
+    - пішки
+    - автобусом
+- id: match-navigation
+  type: match-up
+  instruction: З'єднайте запитання з відповіддю (Match each question to its correct
+    response)
+  pairs:
+  - left: Вибачте, як дістатися до бібліотеки?
+    right: Ідіть прямо, потім направо.
+  - left: Де музей?
+    right: Він у центрі.
+  - left: Як ти дістаєшся на роботу?
+    right: Їду автобусом.
+  - left: Школа далеко?
+    right: Ні, близько. П'ять хвилин пішки.
+  - left: Куди ви йдете?
+    right: У магазин.
+  - left: Де ти живеш?
+    right: На вулиці Франка.
+workbook:
+- type: group-sort
+  instruction: Розподіліть фрази (Sort the phrases — Де? means you are there now;
+    Куди? means you are going there)
+  groups:
+  - label: Де? (where you are now)
+    items:
+    - у парку
+    - в офісі
+    - на площі
+    - на вулиці
+    - у центрі
+    - в театрі
+  - label: Куди? (where you are going)
+    items:
+    - у парк
+    - в офіс
+    - на площу
+    - на вулицю
+    - до центру
+    - в театр
+- type: true-false
+  instruction: Правда чи ні? (True or false? Based on the dialogues in this module)
+  items:
+  - statement: Турист запитує дорогу до бібліотеки.
+    correct: true
+    explanation: 'Так. Турист каже: ''Вибачте, як дістатися до бібліотеки?'''
+  - statement: Бібліотека далеко — треба їхати на метро.
+    correct: false
+    explanation: Ні. Бібліотека близько — вона на розі.
+  - statement: Музей знаходиться у центрі.
+    correct: true
+    explanation: 'Так. Перехожий каже: ''Їдьте на метро до центру'' — музей там.'
+  - statement: Тарас їде на роботу на метро.
+    correct: false
+    explanation: 'Ні. Тарас їде автобусом: ''Потім їду автобусом до центру.'''
+  - statement: Тарас іде пішки п'ять хвилин до офісу.
+    correct: true
+    explanation: 'Так. Тарас каже: ''Потім іду пішки п''ять хвилин.'''
+  - statement: Робота Тараса в офісі на вулиці.
+    correct: false
+    explanation: 'Ні. Тарас каже: ''Робота в офісі на площі'' — на площі, не на вулиці.'
+- type: error-correction
+  instruction: Знайдіть і виправте помилку у відмінку (Find and fix the case error)
+  items:
+  - sentence: Я зараз в магазин.
+    error: магазин
+    correction: магазині
+    error_type: word
+    options:
+    - магазин
+    - магазині
+    - магазину
+    explanation: 'Де? (static location) → locative case: в магазині.'
+  - sentence: Я йду в парку.
+    error: парку
+    correction: парк
+    error_type: word
+    options:
+    - парку
+    - парком
+    - парк
+    explanation: 'Куди? (motion toward) → accusative case: в парк.'
+  - sentence: Вона живе на вулицю Франка.
+    error: вулицю
+    correction: вулиці
+    error_type: word
+    options:
+    - вулицю
+    - вулиці
+    - вулиця
+    explanation: 'Де? (static location — she lives there) → locative case: на вулиці.'
+  - sentence: Їду автобус до центру.
+    error: автобус
+    correction: автобусом
+    error_type: word
+    options:
+    - автобус
+    - на автобус
+    - автобусом
+    explanation: 'Transport mode uses instrumental case: автобусом (by bus).'
+  - sentence: Офіс на площу.
+    error: площу
+    correction: площі
+    error_type: word
+    options:
+    - площу
+    - площа
+    - площі
+    explanation: 'Де? (the office is located there) → locative case: на площі.'
+  - sentence: Ми йдемо в театрі.
+    error: театрі
+    correction: театр
+    error_type: word
+    options:
+    - театрі
+    - театром
+    - театр
+    explanation: 'Куди? (motion toward) → accusative case: в театр.'
+- type: fill-in
+  instruction: 'Вставте правильну форму (Fill in the correct word form — think: Де?
+    or Куди?)'
+  items:
+  - sentence: Марія живе у ____.
+    answer: Львові
+    options:
+    - Львів
+    - Львові
+    - Львову
+  - sentence: Сьогодні вона йде в ____.
+    answer: театр
+    options:
+    - театрі
+    - театром
+    - театр
+  - sentence: Театр на ____.
+    answer: площі
+    options:
+    - площа
+    - площу
+    - площі
+  - sentence: Потім вона їде на метро до ____.
+    answer: центру
+    options:
+    - центр
+    - центрі
+    - центру
+  - sentence: Спочатку вона іде на ____.
+    answer: зупинку
+    options:
+    - зупинка
+    - зупинці
+    - зупинку
+  - sentence: Від центру іде ____ три хвилини.
+    answer: пішки
+    options:
+    - пішки
+    - автобусом
+    - на метро
+- type: quiz
+  instruction: 'Яке питання підходить? (Which question word fits the situation: Де?
+    Куди? or Як?)'
+  items:
+  - question: Я зараз в парку. — ___?
+    options:
+    - Де?
+    - Куди?
+    - Як?
+    correct: 0
+  - question: Я йду в магазин. — ___?
+    options:
+    - Де?
+    - Куди?
+    - Як?
+    correct: 1
+  - question: Їду автобусом. — ___?
+    options:
+    - Де?
+    - Куди?
+    - Як?
+    correct: 2
+  - question: Школа на вулиці Шевченка. — ___?
+    options:
+    - Де?
+    - Куди?
+    - Як?
+    correct: 0
+  - question: Вона іде в офіс. — ___?
+    options:
+    - Де?
+    - Куди?
+    - Як?
+    correct: 1
+  - question: Тарас їде на роботу автобусом. — ___?
+    options:
+    - Де?
+    - Куди?
+    - Як?
+    correct: 2

@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 5 content_outline sections present with correct ordering. Three-way
+    consonant distinction (м'які/пом'якшені/тверді) covered per plan with Авраменко
+    Grade 5 and Большакова Grade 2 citations. Mnemon
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian words VESUM-verified. Правопис 2019 §26 confirms Ь rules
+    as presented. §7 confirms apostrophe rule. Phonetic descriptions of Г [ɦ] (fricative)
+    vs Ґ [g] (stop) match Karaman Grade 10 clas
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: each section introduces concept → demonstrates with
+    examples → provides practice markers. Multiple examples per concept: Ь section
+    has 4 pattern groups (-нь, -ль, -ть, -зь) with 3+ wo'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 7 required vocab words appear naturally in prose: сім''я (apostrophe
+    section, 3 occurrences), день (Ь section, 2 occurrences), сіль (Ь section, 2 occurrences),
+    м''ясо (apostrophe section, 3 occurren'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 7 plan activity hints have corresponding markers. Types match exactly
+    (odd-one-out, fill-in, error-correction, group-sort, match-up, true-false, quiz).
+    Each marker appears after the relevant teach
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Opens with a specific hook: "Now meet a letter that breaks that rule:
+    Ь." Uses concrete experiential teaching: "Place your fingers lightly on your throat.
+    Say з — you feel vibration." Punchy phrasing:'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 5 H2 sections present and correctly ordered (М'який знак → Апостроф
+    → Дзвінкі і глухі → Вимова → Підсумок). Clean markdown with proper :::tip, :::note,
+    :::caution blocks. Table formatting correct.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: '"Ґ is uniquely Ukrainian — an important part of Ukrainian phonetic identity."
+    Ukrainian sounds presented on their own terms: "И sits in a mid-tongue position"
+    — no "like English X." Non-devoicing pres'
+- dimension: 9
+  name: Dialogue quality
+  score: 8
+  evidence: No formal dialogues present. This is a phonetics module focused on sound
+    system mechanics — the plan contains no dialogue hints or conversation activities.
+    The self-check Q&A in Підсумок provides inte
+findings: []

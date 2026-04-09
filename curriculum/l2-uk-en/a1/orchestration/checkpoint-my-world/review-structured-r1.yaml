@@ -2,49 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers all 6 points and themes from the plan. Deducting 1 point because
-    the deterministic word count (1483) is >20% over the target (1200).
+  score: 10
+  evidence: Covers all 6 grammar/review points from the plan. Adapts the dialogue
+    perfectly to the `dialogue_situations` setting (market, crafts) rather than the
+    generic placeholder text.
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Good use of target grammar. Deducting 1 point for a minor stylistic calque
-    ("На столі є лампа") and a missing typological dash in parallel syntax ("Та біла.
-    А ця — синя").
+  score: 10
+  evidence: No Russianisms, calques, or grammatical errors. Correct use of plurals
+    with numbers (два стільці, три сині книги) and adjectives (мале, білі).
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: Excellent summary format for a Checkpoint. Clear patterns, strong rule
-    definitions, and highly contextual examples that stick strictly to M08-M13 limits.
+  evidence: Excellent PPP flow. The grammar section clearly breaks down noun endings
+    by gender with immediate examples (стіл, ручка, дзеркало) before explaining adjective
+    agreement.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: Required cultural vocab (вишиванка, глечик, писанки, намисто) effectively
-    contextualized in the market dialogue. Good reuse of colors and numbers.
+  evidence: All core cultural items mentioned in the plan's dialogue setting (вишиванка,
+    глечик, намисто, писанки) are used naturally in the dialogue.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: All 4 activity markers injected at the correct logical points (after instruction/review
-    blocks).
+  evidence: Four activity markers are present, mapped precisely to the correct concepts,
+    and placed immediately after the relevant teaching sections.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Conversational and supportive tone. A little bit of "telling instead of
-    showing" at the end ("Your vocabulary milestone is real..."), but acceptable for
-    a checkpoint milestone.
+  score: 8
+  evidence: 'Generally encouraging, but the opener uses gamified/cliché phrasing:
+    "You have reached a significant milestone in your Ukrainian learning journey."'
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Clean Markdown and good flow, but deducting 1 point due to exceeding the
-    word count budget significantly (+283 words).
+  score: 8
+  evidence: 'The module is structurally sound and well over the word count target
+    (1514 words), but contains a dangling, incomplete sentence fragment: "If you answered
+    yes to these questions,  To truly consolidate'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Excellent authentic cultural details regarding ярмарки, вишиванки, and
-    глечики.
+  evidence: The dialogue authentically references a Ukrainian "ярмарок" and specific
+    cultural crafts, teaching numbers and colors within a culturally accurate context.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Natural shopping interaction. Good illustration of "цей" vs "той" distance
-    mechanics in practice.
+  score: 9
+  evidence: The conversation at the market is natural, using appropriate demonstratives
+    and prices in a realistic shopping scenario ("Одне намисто — двісті гривень. У
+    мене є триста гривень. Купуємо!").
 findings: []

@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 20: My Morning (A1, A1.3 [Actions])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -125,119 +125,130 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
-It's Monday morning. Лі́на and На́стя share an apartment. They're both in the kitchen — one is already dressed, the other still half-asleep. Their conversation is about to teach you one of the most useful verb patterns in Ukrainian.
-### Діало́г 1 — Ра́нок у бу́дні (Weekday morning)
-> — **Настя:** Лі́но, коли́ ти прокида́єшся? *(Lina, when do you wake up?)*
-> — **Ліна:** Я прокида́юся о сьо́мій. *(I wake up at seven.)*
-> — **Настя:** А що ти ро́биш по́тім? *(And what do you do next?)*
-> — **Ліна:** Споча́тку вмива́юся, потім одяга́юся і сні́даю. *(First I wash up, then I get dressed and have breakfast.)*
-> — **Настя:** А коли йдеш на робо́ту? *(And when do you go to work?)*
-> — **Ліна:** О во́сьмій. А ти? *(At eight. And you?)*
-> — **Настя:** Я прокидаюся о шо́стій. До́вго збира́юся! *(I wake up at six. I take a long time getting ready!)*
-> — **Ліна:** О шостій? Це ра́но! *(At six? That's early!)*
+## Діалоги — Dialogues
 
-Look at the verbs Ліна uses to describe her morning: **прокидаюся** (I wake up), **вмиваюся** (I wash up), **одягаюся** (I get dressed), **збираюся** (I get ready). Every single one ends in **-ся**. That's not a coincidence — it's a pattern, and it's the grammar heart of this module.
-### Діалог 2 — Вихідни́й ранок (Weekend morning)
-> — **Ліна:** У субо́ту я не поспіша́ю. *(On Saturday I don't rush.)*
-> — **Настя:** А що ти робиш? *(And what do you do?)*
-> — **Ліна:** Прокидаюся пі́зно, лежу́, дивлю́ся в телефо́н. *(I wake up late, lie around, look at my phone.)*
-> — **Настя:** А я навча́юся вра́нці. Снідаю, потім гуля́ю. *(And I study in the morning. I have breakfast, then go for a walk.)*
-> — **Ліна:** Ти навча́єшся у суботу? *(You study on Saturday?)*
-> — **Настя:** Так! Я поверта́юся додо́му о дру́гій. *(Yes! I come back home at two.)*
+Every morning has a distinct rhythm. We use specific verbs to describe daily routines, and in Ukrainian, many of these share a special feature because they describe actions performed on ourselves. Consider a typical morning scenario. Two roommates, **Ліна** (Lina) and **Настя** (Nastia), are in their shared kitchen on a Tuesday morning. The time is early, and the sun is just coming up. Lina is an early bird; she is already sitting at the table and drinking her morning coffee. Nastia, however, is just starting her daily routine and walks into the kitchen looking a bit sleepy. Lina asks Nastia about her timing, wanting to know exactly when her day begins. Nastia explains her sequence clearly.
 
-This dialogue mixes two kinds of verbs. Some end in **-ся**: **прокидаюся**, **дивлюся**, **навчаюся** (I study), **повертаюся** (I return). Others don't: **снідаю** (I have breakfast), **гуляю** (I walk), **лежу** (I lie down). Notice the difference? Verbs with **-ся** describe actions you do *to yourself* or *for yourself*. Verbs without it describe actions directed outward. The next section explains exactly how this works.
-## Дієслова́ на -ся (Reflexive Verbs)
-Ukrainian textbooks call these **зворо́тні дієслова** — verbs where the action turns back onto the person doing it. The suffix **-ся** (short for the old pronoun **себе́**, meaning "oneself") attaches to the end of the verb and changes its direction.
-Compare these pairs:
-- **вмива́ти** (to wash someone) → **вмива́тися** (to wash oneself)
-- **одяга́ти** (to dress someone) → **одяга́тися** (to dress oneself)
-A mother washes her child: **Ма́ма вмива́є дити́ну.** *(Mom washes the child.)* But when you wash your own face in the morning: **Я вмиваюся.** *(I wash up.)* The action loops back — that's what **-ся** signals.
-### How to conjugate reflexive verbs
-The good news: reflexive verbs use the same endings as regular Group I verbs. You just add **-ся** after every ending. Here is **вмиватися** (to wash up) in the present tense:
-| | вмиватися |
-|---|---|
-| я | вмиваюся |
-| ти | вмива́єшся |
-| він/вона́ | вмива́ється |
-| ми | вмива́ємося |
-| ви | вмива́єтеся |
-| вони́ | вмива́ються |
-The pattern is identical for **прокидатися** (to wake up): **я прокидаюся, ти прокидаєшся, він прокидається**. Once you know how to conjugate one reflexive verb, you can conjugate them all.
-### Pronunciation secret
-Here's something that trips up learners: the way you *write* these endings and the way you *say* them are different.
-- **-шся** (written) sounds like a long, soft "с" — say it quickly and your mouth naturally makes the right sound. So **вмиваєшся** sounds like "вмиваєс':а" in fast speech.
-- **-ться** (written) sounds like a long, soft "ц" — so **вмивається** sounds like "вмиваєц':а."
-:::tip
-Don't overthink the pronunciation. Spell it correctly on paper: **вмиваєшся**, **вмивається**. When you say it aloud at normal speed, the sounds merge naturally. Ukrainian children learn this the same way — Kravtsova's Grade 4 textbook has students whisper the endings quickly to discover the sound shift themselves.
+> **Ліна:** Коли ти прокидаєшся? *(When do you wake up?)*
+> **Настя:** Я прокидаюся о сьомій. *(I wake up at seven.)*
+> **Ліна:** Що ти робиш потім? *(What do you do then?)*
+> **Настя:** Вмиваюся, одягаюся і снідаю. *(I wash up, get dressed, and have breakfast.)*
+> **Ліна:** А коли ти йдеш на роботу? *(And when do you go to work?)*
+> **Настя:** О восьмій. *(At eight.)*
+
+Notice the specific verbs Nastia uses to describe her routine. She says **прокидаюся** (I wake up), **вмиваюся** (I wash up), and **одягаюся** (I get dressed). These verbs all end in the same distinct suffix. However, when she mentions eating, she simply says **снідаю** (I have breakfast) without that special ending. The first three verbs reflect actions Nastia is doing to her own body, while having breakfast is an external action.
+
+Their conversation continues as they compare this busy weekday routine to their typical weekend habits. The pace of a weekend morning is entirely different.
+
+> **Настя:** У суботу ти теж поспішаєш? *(Do you also hurry on Saturday?)*
+> **Ліна:** У суботу я не поспішаю. Прокидаюся пізно, лежу, читаю новини. *(On Saturday I do not hurry. I wake up late, lie down, read the news.)*
+> **Настя:** А я навчаюся вранці. Потім гуляю. *(And I study in the morning. Then I walk.)*
+
+In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular, non-reflexive verbs like **лежу** (I lie down) and **читаю** (I read). Nastia mentions another verb with that special ending: **навчаюся** (I study). Mixing these different verb types is how you naturally describe your day in Ukrainian.
+
+## Дієслова на -ся — Reflexive Verbs
+
+The special verbs you saw in the dialogue are called reflexive verbs. As explained in the textbook *Караман Grade 10 (p. 176)*, the core rule is straightforward: «Дієслова із суфіксом -ся(-сь) означають дію, спрямовану на себе». This means verbs with the suffix **-ся** (or **-сь**) indicate an action directed at oneself. Think of this suffix as the English equivalent of the words "oneself" or "myself." If you take a standard verb and attach this suffix, you instantly change the target of the action from an external object back to the speaker.
+
+*   **вмивати** (to wash someone) → **вмиватися** (to wash oneself)
+*   **одягати** (to dress someone) → **одягатися** (to dress oneself)
+
+Conjugating these verbs is simple because the core mechanics do not change. You take the standard verb endings you already know from Group I and simply attach **-ся** to the very end. The reflexive suffix acts like a fixed addition hooked to the end of the conjugated form. The conjugation paradigm for the present tense demonstrates this consistent pattern.
+
+| Займенник | Дієслово | Переклад |
+| --- | --- | --- |
+| Я | **вмиваю-ся** | I wash myself |
+| Ти | **вмиваєш-ся** | You wash yourself |
+| Він / Вона | **вмиває-ться** | He / She washes himself/herself |
+
+Notice that the core endings (**-ю**, **-єш**, **-є**) remain perfectly regular. You just add the **-ся** (or **-ться** for "він / вона") suffix to the end.
+
+While the spelling is perfectly regular, the pronunciation holds a secret. According to the textbook *Кравцова Grade 4 (p. 113)*, there is a crucial pronunciation note you must memorize to sound natural. The letters combine to create completely new sounds, hiding the original consonants.
+
+:::caution
+*   The combination **-шся** sounds like a long, soft **[с':а]**: **вмиваєшся** is pronounced **[вмиваєс':а]**.
+*   The combination **-ться** sounds like a long, soft **[ц':а]**: **вмивається** is pronounced **[вмиваєц':а]**.
 :::
-<!-- INJECT_ACTIVITY: fill-in-add-sya -->
-<!-- INJECT_ACTIVITY: quiz-reflexive-or-not -->
-## Мій ранок (My Morning)
-Now you have the tools to describe an entire morning. Let's build your vocabulary in two groups: reflexive verbs (actions on yourself) and non-reflexive verbs (actions on the world around you).
-### Reflexive morning verbs
-Each of these describes something you do to or for yourself:
-- **прокидатися** (to wake up) — Я прокидаюся о сьомій годи́ні. *(I wake up at seven o'clock.)*
-- **вмиватися** (to wash face/hands) — Вона вмивається у ва́нній. *(She washes up in the bathroom.)*
-- **одягатися** (to get dressed) — Він одяга́ється шви́дко. *(He gets dressed quickly.)*
-- **збира́тися** (to get ready) — Ти збира́єшся довго! *(You take a long time getting ready!)*
-- **навча́тися** (to study) — Ми навча́ємося ра́зом. *(We study together.)*
-- **поверта́тися** (to return) — Я повертаюся додому о шостій. *(I return home at six.)*
-### Non-reflexive morning verbs
-These describe actions directed at something else — food, coffee, the outside world:
-- **сні́дати** (to have breakfast) — Я снідаю о восьмій. *(I have breakfast at eight.)*
-- **пи́ти ка́ву** (to drink coffee) — Він п'є каву. *(He drinks coffee.)*
-- **гуля́ти** (to walk/stroll) — Вона гуля́є вранці. *(She takes a walk in the morning.)*
-No **-ся** here — because you eat breakfast, you don't "breakfast yourself." The action goes outward.
-### The irregular verb йти (to go)
-One essential morning verb breaks the rules. **Йти** (to go on foot) has its own conjugation that doesn't follow Group I or Group II patterns. Memorize these forms:
-| | йти |
-|---|---|
-| я | йду |
-| ти | йдеш |
-| він/вона | йде |
-| ми | йдемо́ |
-| ви | йдете́ |
-| вони | йдуть |
-- Я йду на роботу о восьмій. *(I go to work at eight.)*
-- Вона йде до шко́ли. *(She goes to school.)*
-- Ти йдеш за́раз? *(Are you going now?)*
-### Telling your morning as a story
-Four words let you string your morning into a sequence:
-- **спочатку** (first, at first)
-- **потім** (then, next)
-- **пі́сля цього́** (after this)
-- **наре́шті** (finally)
-Put them together and you get a complete mini-narrative:
-- Спочатку я прокидаюся о сьомій. *(First I wake up at seven.)*
-- Потім вмиваюся і одягаюся. *(Then I wash up and get dressed.)*
-- Після цього снідаю і п'ю каву. *(After this I have breakfast and drink coffee.)*
-- Нарешті йду на роботу о восьмій. *(Finally I go to work at eight.)*
-These sequence words typically stand at the beginning of the sentence. They're the glue that turns isolated actions into a real story.
-<!-- INJECT_ACTIVITY: fill-in-morning-order -->
+
+The spelling and pronunciation differ significantly here. You must write the distinct letters precisely, but you must pronounce the merged, soft sounds. This rule is fundamental to fluent Ukrainian speech, and native children practice it extensively in primary school.
+
+It is important to know exactly when to use these reflexive forms. A reflexive verb is always intransitive, meaning it cannot take a direct object. You cannot use a reflexive verb to act upon something else. If you are getting a child ready for school, you use the non-reflexive form **одягати дитину** (to dress a child). But if you are getting dressed yourself, you must use the reflexive form **одягатися** (to get dressed). Understanding this distinction between acting on others and acting on yourself is the key to mastering Ukrainian morning routines.
+
+<!-- INJECT_ACTIVITY: fill-in-reflexive-endings -->
+
+<!-- INJECT_ACTIVITY: quiz-reflexive-choice -->
+
+## Мій ранок — My Morning
+
+With an understanding of how reflexive verbs work, we can build a complete morning timeline. The vocabulary for your morning routine relies heavily on these reflexive verbs, but it also includes some standard verbs for contrast.
+
+*   **прокидатися** (to wake up)
+*   **вмиватися** (to wash face/hands)
+*   **одягатися** (to get dressed)
+*   **збиратися** (to get ready)
+*   **повертатися** (to return home)
+
+There is a conceptual difference between the first actions of the day. The verb **прокидатися** means to wake up, specifically the moment you open your eyes and become conscious. A different verb, **вставати**, means to physically get out of bed. Another essential daily action is **чистити зуби** (to brush teeth), which is a common non-reflexive routine phrase. We also use non-reflexive verbs for consuming our morning food and drinks: **снідати** (to have breakfast) and **пити каву** (to drink coffee).
+
+Once you are ready, you have to leave the house. To describe this, we use the verb **йти** (to go). This is an irregular verb, meaning it does not perfectly follow the standard Group I or Group II patterns. You simply have to memorize its forms.
+
+| Займенник | Дієслово | Переклад |
+| --- | --- | --- |
+| Я | **йду** | I go |
+| Ти | **йдеш** | You go |
+| Він / Вона | **йде** | He / She goes |
+| Ми | **йдемо** | We go |
+| Ви | **йдете** | You (pl/formal) go |
+| Вони | **йдуть** | They go |
+
+This verb is used constantly when talking about daily schedules, specifically for leaving the house to go to work or study.
+
+When you tell someone about your day, you do not just recite a random list of verbs. You connect your actions into a logical sequence. We use specific sequence words for telling a story smoothly.
+
+*   **спочатку** (first)
+*   **потім** (then)
+*   **після цього** (after this)
+*   **нарешті** (finally)
+
+These sequence words act as the structural glue holding your narrative together. They turn a disconnected list of verbs into a coherent description of your morning. A complete paragraph combines reflexive verbs, regular verbs, and sequence words naturally. Here is a model narrative showing a realistic timeline:
+
+*   **Спочатку я прокидаюся.** (First, I wake up.)
+*   **Потім вмиваюся і одягаюся.** (Then I wash up and get dressed.)
+*   **Після цього снідаю.** (After this, I have breakfast.)
+*   **Нарешті йду на роботу.** (Finally, I go to work.)
+
+This simple structure is exactly how a native speaker outlines their basic routine. Practice sequencing your own actions using these identical words.
+
+<!-- INJECT_ACTIVITY: order-morning-sequence -->
+
+<!-- INJECT_ACTIVITY: write-morning-routine -->
+
 ## Підсумок — Summary
-### Grammar recap
-Reflexive verbs = a regular verb + the suffix **-ся**. The suffix never changes — it attaches after every personal ending: **-юся, -єшся, -ється, -ємося, -єтеся, -ються** (Group I pattern). The action turns back onto the person doing it: **вмивати** (to wash someone else) versus **вмиватися** (to wash yourself).
-Two pronunciation rules to keep in mind: **-шся** sounds like a long soft "с," and **-ться** sounds like a long soft "ц." Write the full spelling, say the short form.
-One irregular verb to know by heart: **я йду, ти йдеш, він йде, ми йдемо, ви йдете, вони йдуть**.
-### Your morning vocabulary
-Here's the full chain for describing a morning routine:
-**Reflexive chain:** прокидатися (to wake up) → вмиватися (to wash up) → одягатися (to get dressed) → збиратися (to get ready) → йти на роботу (to go to work)
-**Return:** повертатися додому (to return home)
-**Non-reflexive:** снідати (to have breakfast), пити каву (to drink coffee), гуляти (to walk)
-**Supporting words:** вранці (in the morning), пізно (late), поспіша́ти (to hurry), навчатися (to study)
-**Sequence glue:** спочатку (first), потім (then), після цього (after this), нарешті (finally)
-### The reflexive test
-### Self-check: Your turn
-Now it's your turn to put it all together. Can you describe your own morning routine in 3-4 sentences? Use the sequence words (**спочатку**, **потім**, **після цього**, **нарешті**) and a mix of reflexive and non-reflexive verbs.
-<!-- INJECT_ACTIVITY: fill-in-describe-morning -->
-:::note
-How do you know if a verb is reflexive? Ask: can I do this action *to another person*? If yes, the non-reflexive form exists and means something different. **Вмивати когось** (to wash someone) ≠ **вмиватися** (to wash oneself). **Одягати дитину** (to dress a child) ≠ **одягатися** (to get dressed). The **-ся** signals the action loops back to the subject.
+
+The core concepts of this module follow a clear pattern. The fundamental formula for creating reflexive verbs is simple: regular verb plus **ся** at the end. These verbs are essential because they describe actions directed at the speaker, which is exactly what a morning routine involves. The conjugation follows the standard Group I pattern with the suffix attached securely to the end.
+
+*   **я** ending: **-юся**
+*   **ти** ending: **-єшся**
+*   **він / вона** ending: **-ється**
+
+The sequence of a standard morning routine flows logically through these verbs: **прокидатися** → **вмиватися** → **одягатися** → **снідати** → **йти**. To connect these actions into a fluent story, you must use the sequencing adverbs: **спочатку**, **потім**, **після цього**, and **нарешті**.
+
+:::tip
+Phonetics play a massive role in making your speech sound natural. The written letters and the spoken sounds are entirely different for the **ти** and **він/вона** forms of reflexive verbs. The ending **-шся** must always be pronounced as a long, soft **[с':а]**. The ending **-ється** must always be pronounced as a long, soft **[ц':а]**. Focus heavily on these soft, merged sounds to develop an authentic Ukrainian accent.
 :::
 
-**Deterministic word count: 1339 words** (calculated by pipeline, do NOT estimate manually)
+To ensure you have mastered this material, perform a quick self-check. Try to answer the following questions mentally or aloud. Use full sentences and incorporate the sequencing words where possible.
 
+*   **О котрій годині ти прокидаєшся?** (At what time do you wake up?)
+*   **Що ти робиш спочатку?** (What do you do first?)
+*   **Ти п'єш каву чи чай вранці?** (Do you drink coffee or tea in the morning?)
+*   **Коли ти йдеш на роботу або навчання?** (When do you go to work or study?)
+*   **Ти одягаєшся швидко чи повільно?** (Do you get dressed quickly or slowly?)
+
+Describe your morning in four to five sentences using the sequence words. If you can confidently answer these questions and build that short narrative, you are successfully mastering the mechanics of Ukrainian reflexive verbs.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1521 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -325,8 +336,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -413,53 +424,22 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 93 words | Not found: 42 words
+Verified: 86 words | Not found: 11 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Вихідни — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
+  ✗ Караман — NOT IN VESUM
+  ✗ Кравцова — NOT IN VESUM
   ✗ Ліна — NOT IN VESUM
   ✗ Настя — NOT IN VESUM
-  ✗ Споча — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ вго — NOT IN VESUM
   ✗ вмиваєс — NOT IN VESUM
   ✗ вмиваєц — NOT IN VESUM
-  ✗ вра — NOT IN VESUM
-  ✗ годи — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ гій — NOT IN VESUM
-  ✗ дко — NOT IN VESUM
-  ✗ додо — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ зворо — NOT IN VESUM
-  ✗ зно — NOT IN VESUM
-  ✗ зом — NOT IN VESUM
-  ✗ наре — NOT IN VESUM
-  ✗ нній — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нці — NOT IN VESUM
-  ✗ сля — NOT IN VESUM
-  ✗ стя — NOT IN VESUM
-  ✗ субо — NOT IN VESUM
-  ✗ сьмій — NOT IN VESUM
-  ✗ сьо — NOT IN VESUM
-  ✗ телефо — NOT IN VESUM
-  ✗ тися — NOT IN VESUM
-  ✗ тку — NOT IN VESUM
-  ✗ тні — NOT IN VESUM
   ✗ ться — NOT IN VESUM
-  ✗ шко — NOT IN VESUM
   ✗ шся — NOT IN VESUM
-  ✗ шті — NOT IN VESUM
   ✗ юся — NOT IN VESUM
-  ✗ ються — NOT IN VESUM
-  ✗ ємося — NOT IN VESUM
-  ✗ єтеся — NOT IN VESUM
   ✗ ється — NOT IN VESUM
   ✗ єшся — NOT IN VESUM
 
-All 93 other words are confirmed to exist in VESUM.
+All 86 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

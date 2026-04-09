@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 27: Checkpoint: Time and Nature (A1, A1.4 [Time and Nature])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -125,109 +125,106 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що ми зна́ємо? (What Do We Know?)
+## Що ми знаємо? (What Do We Know?)
 
-Це підсумковий мо́дуль фа́зи A1.4. Over the past five modules, you learned to tell time, name days and months, describe the weather, talk about your daily routine, and discuss hobbies. This checkpoint brings everything together — let's see what you already know.
+You have reached a significant milestone in your Ukrainian journey. The last five modules introduced the foundational vocabulary of daily communication: time, the calendar, weather, and your daily routine. You started by learning to read the clock, moving from numbers to formal time expressions. Then, you expanded your vocabulary to include the days of the week and the months of the year, allowing you to discuss schedules in broader strokes. You discovered how to describe the world outside your window with precise weather expressions and seasonal vocabulary. Finally, you brought all these elements together to narrate your own daily schedule and discuss your hobbies. A checkpoint is an opportunity to pause, reflect, and consolidate these foundational skills before moving forward.
 
-Try answering each question below out loud before reading the model answer. If you can answer confidently, you remember the pattern well. If you hesitate — that's exactly what this module is for.
+Take a moment to ask yourself a few essential questions about your progress. Can you confidently ask a stranger **Котра година?** (What time is it?) on the street? When scheduling a meeting, can you specify **о п'ятій годині** (at five o'clock)? Do you remember all seven days of the week, starting sequentially from **понеділок** (Monday)? Look outside right now—can you describe the current weather using impersonal constructions like **сонячно** (sunny) or **іде дощ** (it is raining)? Can you talk about what you usually do in the morning, afternoon, and evening? Can you talk about your hobbies, like what you do on the weekend? If you can answer yes to these questions, you have built a solid grammatical and lexical foundation.
 
-**1. Час (Time) — M22:**
-**Котра за́раз годи́на?** (What time is it now?) → **Зараз тре́тя година дня.** (It's three o'clock in the afternoon.)
-
-**2. Календа́р (Calendar) — M23:**
-**Коли у тебе́ зу́стріч?** (When is your meeting?) → **У се́реду, о пів на дру́гу.** (On Wednesday, at half past one.)
-
-**3. Пого́да (Weather) — M24:**
-**Яка сього́дні погода?** (What's the weather today?) → **Хмарно й іде́ дощ.** (It's cloudy and it's raining.)
-
-**4. Розпоря́док дня (Daily routine) — M25:**
-**Що ти ро́биш зра́нку?** (What do you do in the morning?) → **Спочатку сні́даю, по́тім іду́ на робо́ту.** (First I have breakfast, then I go to work.)
-
-**5. Хо́бі (Hobbies) — M26:**
-**Як ча́сто ти займа́єшся спо́ртом?** (How often do you exercise?) → **Іноді — у вівто́рок і четве́р.** (Sometimes — on Tuesday and Thursday.)
-
-If you answered three or more without hesitation, your A1.4 foundation is solid. If some felt shaky, pay close attention to those patterns as we review them below.
-
-## Чита́ння (Reading Practice)
-
-Read the following text carefully. As you read, look for: time expressions, days of the week, seasons, weather descriptions, and hobbies. Try to understand the overall meaning before checking the translations below.
-
-> **Мій ти́ждень почина́ється ра́но.** *(My week starts early.)* **У понеді́лок я прокида́юся о сьо́мій ра́нку.** *(On Monday I wake up at seven in the morning.)* **Спочатку снідаю, потім іду на роботу.** *(First I have breakfast, then I go to work.)* **Я працю́ю з дев'я́тої до п'я́тої.** *(I work from nine to five.)* **У середу вве́чері я вивча́ю украї́нську.** *(On Wednesday evening I study Ukrainian.)* **В субо́ту я за́вжди́ гуля́ю в парку.** *(On Saturday I always walk in the park.)* **Іноді гра́ю у футбо́л.** *(Sometimes I play football.)* **Взимку іде сніг, і я рі́дко гуляю.** *(In winter it snows, and I rarely walk.)* **Навесні те́пло і со́нячно — я часто ходжу́ в кіно́.** *(In spring it's warm and sunny — I often go to the cinema.)* **Нарешті вече́ряю о пів на во́сьму.** *(Finally I have dinner at half past seven.)*
-
-Now check your comprehension — can you answer these two questions based on the text?
-
-- **Яку по́ру ро́ку зга́дує а́втор?** (Which seasons does the author mention?)
-- **Коли він/вона́ займа́ється хобі?** (When does he/she do hobbies?)
-
-The author mentions two seasons: **взимку** (in winter) and **навесні** (in spring). Hobbies happen **в суботу** (on Saturday) — walking and football — and **навесні** — going to the cinema.
-
-<!-- INJECT_ACTIVITY: fill-in-day-paragraph -->
-
-## Грама́тика (Grammar Summary)
-
-Here are seven language patterns from A1.4. Study them — with these seven patterns, you can describe any day, any week, any season.
-
-**Pattern 1 — Time:** Two key questions. **Котра година?** (What time is it?) uses nominative: **Третя година.** (Three o'clock.) **О котрі́й?** (At what time?) uses locative chunks: **Зустріч о пе́ршій.** (Meeting at one.) **Фільм о дев'я́тій ве́чора.** (Movie at nine in the evening.)
-
-**Pattern 2 — Days of the week:** Use **у/в** + accusative as a memorized chunk. **У понеділок** (on Monday), **у середу** (on Wednesday), **у неділю** (on Sunday). Remember: the choice between **у** and **в** follows a phonetic rule you'll study in M28 — for now, memorize each form as a chunk.
-
-**Pattern 3 — Months:** Use **у/в** + locative chunk. **У січні** (in January), **у березні** (in March), **в серпні** (in August), **у жовтні** (in October). The pattern: **у/в** + month with the ending **-і**.
-
-**Pattern 4 — Seasons:** These are adverbs — no preposition needed. **Взимку** (in winter), **навесні** (in spring), **влітку** (in summer), **восени** (in autumn). Example: **Влітку тепло.** (It's warm in summer.) **Взимку хо́лодно.** (It's cold in winter.)
-
-**Pattern 5 — Weather:** Impersonal constructions with no subject. **Тепло.** (It's warm.) **Холодно.** (It's cold.) **Сонячно.** (It's sunny.) **Хмарно.** (It's cloudy.) For precipitation: **Іде дощ.** (It's raining.) **Іде сніг.** (It's snowing.)
-
-**Pattern 6 — Sequence:** Three adverbs that order events. **Спочатку** (first) → **потім** (then) → **нарешті** (finally). Example: **Спочатку снідаю, потім працюю.**
-
-**Pattern 7 — Frequency:** A scale from always to never. **Завжди** (always) → **часто** (often) → **іноді** (sometimes) → **рідко** (rarely) → **ніколи** (never).
-
-<!-- INJECT_ACTIVITY: fill-in-time-weather -->
-
-## Діало́г (Connected Dialogue)
-
-Оля phones her friend Дмитро́. They're planning a weekend outing — park, cinema, a full day together. Notice how one conversation naturally combines time, days, weather, hobbies, and invitations.
-
-> — **Оля:** Приві́т, Дмитре! Яка за́втра погода? *(Hi, Dmytro! What's the weather tomorrow?)*
-> — **Дмитро:** Привіт! Тепло і сонячно, без дощу́! *(Hi! Warm and sunny, no rain!)*
-> — **Оля:** Чудо́во! Ході́мо в парк у суботу? *(Wonderful! Let's go to the park on Saturday?)*
-> — **Дмитро:** До́бре! Я завжди гуляю в суботу. *(OK! I always walk on Saturday.)*
-> — **Оля:** О котрій зустрі́немося? *(At what time shall we meet?)*
-> — **Дмитро:** О деся́тій ранку бі́ля метро́. *(At ten in the morning near the metro.)*
-> — **Оля:** Люблю́ весну́. Навесні так га́рно! *(I love spring. It's so beautiful in spring!)*
-> — **Дмитро:** Я теж! Взимку сиди́ш вдо́ма... *(Me too! In winter you sit at home...)*
-> — **Оля:** А потім пі́демо в кіно? *(And then shall we go to the cinema?)*
-> — **Дмитро:** О котрій починається фільм? *(What time does the movie start?)*
-> — **Оля:** О п'я́тій три́дцять. *(At five thirty.)*
-> — **Дмитро:** Добре, я часто ходжу в кіно ввечері. *(Good, I often go to the cinema in the evening.)*
-> — **Оля:** Як часто ти ди́вишся фі́льми? *(How often do you watch movies?)*
-> — **Дмитро:** Іноді — раз на тиждень. *(Sometimes — once a week.)*
-> — **Оля:** Чудово! До субо́ти! *(Wonderful! See you Saturday!)*
-> — **Дмитро:** До зу́стрічі! *(See you!)*
-
-:::tip Мо́вні шабло́ни в діало́зі
-Notice the four key patterns at work:
-
-- **Weather question:** **Яка погода?** → **Тепло і сонячно.**
-- **Invitation:** **Ходімо** + destination — **Ходімо в парк!**
-- **Meeting time:** **О котрій?** → **О десятій ранку.**
-- **Frequency words:** **завжди**, **часто**, **іноді** — all three appear naturally in the conversation.
+:::note
+You do not need to memorize every single word perfectly right now. A checkpoint is about recognizing your progress. If you can understand the main ideas and patterns in this review, you are exactly where you need to be!
 :::
 
-<!-- INJECT_ACTIVITY: match-questions-answers -->
+These tools are absolutely essential for a vibrant social life in any Ukrainian-speaking environment. You need this specific vocabulary to make concrete plans with friends, understand local transport schedules, and simply talk about the world around you. Time and nature are universal topics of conversation. Mastering them allows you to move beyond basic greetings and start participating in real, practical exchanges. Whether you are arranging a coffee date, checking when a museum opens, or deciding if you need an umbrella today, these vocabulary sets work together constantly.
+
+## Читання (Reading Practice)
+
+The following short narrative describes a typical week for a person living and working in Ukraine. It combines time expressions, days of the week, weather vocabulary, and daily routine actions. Reading it aloud helps practice pronunciation, while highlighting how the sentences transition smoothly from one idea to the next.
+
+**Мій робочий тиждень** (My work week)
+
+*   **Сьогодні понеділок.** (Today is Monday.)
+*   **Вранці я прокидаюся о сьомій годині.** (In the morning I wake up at seven o'clock.)
+*   **Спочатку я снідаю.** (First I eat breakfast.)
+*   **Потім я йду на роботу.** (Then I go to work.)
+*   **Я завжди працюю з дев'ятої до п'ятої.** (I always work from nine to five.)
+*   **У середу ввечері я часто гуляю в парку.** (On Wednesday evening I often walk in the park.)
+*   **Зараз весна.** (It is spring now.)
+*   **На вулиці дуже тепло і сонячно.** (Outside it is very warm and sunny.)
+*   **У суботу я ніколи не працюю.** (On Saturday I never work.)
+*   **Взимку я люблю дивитися кіно.** (In winter I like to watch movies.)
+*   **Влітку я часто ходжу на річку.** (In summer I often go to the river.)
+*   **Нарешті я відпочиваю вдома.** (Finally I rest at home.)
+
+The linguistic structure of this text relies on specific grammatical patterns. Notice the choice of prepositions when talking about time. For days of the week, speakers use the preposition **у** or **в** followed by the accusative case, as seen in **у середу** (on Wednesday) and **у суботу** (on Saturday). However, when we talk about seasons, we do not use a preposition with a noun. Instead, we use a single seasonal adverb like **взимку** (in winter) or **влітку** (in summer). You can also see the sequence words **спочатку** (first), **потім** (then), and **нарешті** (finally) used to create a chronological order of the day's events. These small connective words are what transform a disjointed list of sentences into a natural, flowing narrative. By adding frequency adverbs like **завжди** (always) or **часто** (often), the speaker provides a clear picture of their consistent habits.
+
+## Граматика (Grammar Summary)
+
+Telling time requires understanding the difference between two key questions. When you want to know the current time, you ask **Котра година?** (What time is it?). When you want to know the timing of a specific event, you ask **О котрій годині?** (At what time?). In both cases, Ukrainian uses ordinal numbers in the feminine form to match the feminine noun **година** (hour). 
+
+*   **Котра година?** — What time is it?
+*   **Зараз перша година.** — It is now one o'clock.
+*   **О котрій зустріч?** — At what time is the meeting?
+*   **Зустріч о п'ятій годині.** — The meeting is at five o'clock.
+
+Your calendar vocabulary relies heavily on specific prepositions and case endings. To say that an event happens on a specific day, use **у** or **в** with the accusative case. To say an event happens in a specific month, use the locative case ending. The four seasons operate differently; they function as standalone adverbs without adding any extra prepositions. 
+
+*   **Я працюю у п'ятницю.** — I work on Friday.
+*   **Мій день народження у січні.** — My birthday is in January.
+*   **Взимку дуже холодно.** — In winter it is very cold.
+*   **Навесні гарна погода.** — In spring the weather is beautiful.
+
+:::tip
+Remember the Ukrainian euphony rules for **у** and **в**. You should use **у** before words starting with consonants like **в** or **ф**, and before consonant clusters (like **у вівторок** or **у п'ятницю**). You use **в** when it sits between two vowels. This alternation makes your Ukrainian sound smooth and natural.
+:::
+
+Describing the weather often involves impersonal constructions. You do not need a subject like "it" in Ukrainian. You simply state the condition using an adverb. For precipitation, use the verb **іде** (goes) combined with the noun. Finally, you can describe how often these weather patterns or your own habits occur using frequency adverbs.
+
+*   **Сьогодні дуже тепло і сонячно.** — Today it is very warm and sunny.
+*   **Восени часто іде дощ.** — In autumn it often rains.
+*   **Я завжди читаю ввечері.** — I always read in the evening.
+*   **Вона ніколи не п'є каву.** — She never drinks coffee.
+
+<!-- INJECT_ACTIVITY: fill-in-mixed-review -->
+
+## Діалог (Connected Dialogue)
+
+These rules apply directly to real-world situations. Two friends, Олена (Olena) and Марко (Marko), are planning a weekend trip to a nearby city. They need to check the weather forecast, agree on a departure time, and decide what activities they will do. They use the present tense and direct invitations to discuss their scheduled plans, which is a very common and natural way to speak in Ukrainian.
+
+> **Марко:** Привіт! Яка завтра погода? *(Hi! What is the weather tomorrow?)*
+> **Олена:** Привіт! У суботу тепло і сонячно. *(Hi! On Saturday it is warm and sunny.)*
+> **Марко:** Чудово! Ходімо в музей! О котрій? *(Great! Let's go to the museum! At what time?)*
+> **Олена:** О дев'ятій ранку. *(At nine in the morning.)*
+> **Марко:** Добре. А що ми робимо в неділю? *(Good. And what do we do on Sunday?)*
+> **Олена:** У неділю іноді йде дощ. Ходімо в кіно. *(On Sunday it sometimes rains. Let's go to the movies.)*
+
+This dialogue is packed with highly useful communicative chunks. The phrase **Ходімо!** (Let's go!) is a standard invitation. Notice how Olena specifies the exact part of the day by adding **ранку** (of the morning) after the time: **о дев'ятій ранку** (at nine in the morning). You can do the same with **вечора** (of the evening) to clarify your schedule, for example saying **о п'ятій вечора** (at five in the evening). The friends confirm their actions using the present tense, making their planning sound immediate and certain.
+
+:::caution
+A common false friend! The word **неділя** (Sunday) refers specifically to the seventh day of the week. Do not confuse it with the word **тиждень** (week), which represents the entire seven-day period. 
+:::
+
+There is an important cultural and linguistic distinction to reinforce here. Remember that a work week is **робочий тиждень**, while the day of rest is **неділя**. When Marko and Olena discuss their plans, they clearly separate their Saturday activities from their Sunday expectations based on the weather forecast. 
+
+<!-- INJECT_ACTIVITY: match-up-logical-logic -->
+<!-- INJECT_ACTIVITY: fill-in-routine-sequence -->
 
 ## Підсумок — Summary
 
-You've completed phase A1.4 — Time and Nature. This is a real milestone. Look at what you can now do in Ukrainian:
+You have reached the end of the Time and Nature phase! This is a major accomplishment that significantly expands your ability to communicate in everyday situations. Here is what you can now do confidently in Ukrainian:
 
-You can tell the time using two question patterns — **Котра година?** for stating the time, and **О котрій?** for saying when something happens — with ordinal chunks like **о третій** and **о пів на дев'яту**. You know all seven days of the week and use them with the right preposition: **у понеділок**, **у середу**, **в суботу**. You can name every month and place it in a sentence: **у листопаді**, **у січні**, **в серпні**. The four seasons come naturally as adverbs: **взимку**, **навесні**, **влітку**, **восени**. You describe the weather with impersonal constructions: **Тепло і сонячно**, **Іде дощ**, **Хмарно**. You tell stories about your day using sequence words — **спочатку**, **потім**, **нарешті** — and you talk about hobbies with frequency: **Я часто читаю**, **Іноді ходжу в кіно**, **Рідко дивлю́ся телевізор**.
+*   Tell time using hours (**Котра година? Перша, друга...**).
+*   Use time expressions for appointments (**О котрій? О п'ятій...**).
+*   Navigate the calendar: name all 7 days and 12 months with correct prepositions (**у вівторок**, **у березні**).
+*   Use seasonal adverbs (**взимку**, **навесні**, **влітку**, **восени**).
+*   Describe the weather and state of the environment using impersonal adverbs (**тепло**, **сонячно**, **іде дощ**).
+*   Sequence your actions using chronological adverbs like **спочатку**, **потім**, and **нарешті**.
+*   Describe your lifestyle with frequency words (**завжди**, **часто**, **іноді**).
 
-The next phase is A1.5 — Places and the City. You'll learn to ask for directions, name places around town, and buy a **квиток** (ticket). But first comes a short lesson on one of Ukrainian's most distinctive features: **евфонія** (euphony) in M28. Why do we say **у парку** but **в кіно**? You'll find out soon.
-
-**Мова** (language) is more than grammar. When you say **навесні**, **взимку**, **іде дощ** — you're thinking in Ukrainian. That's exactly how people speak every day across Ukraine. Keep going — **у тебе виходить!** (you're doing great!)
-
-**Deterministic word count: 1270 words** (calculated by pipeline, do NOT estimate manually)
-
+Review these points and practice building your own sentences that combine weather, time, and routine. The next phase, A1.5, introduces navigation around the city, giving directions, and using transport. Your knowledge of time and days will be essential to read bus schedules and plan your visits!
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1468 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -315,8 +312,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -403,61 +400,12 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 132 words | Not found: 58 words
+Verified: 95 words | Not found: 1 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Дмитре — NOT IN VESUM
-  ✗ Дмитро — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Календа — NOT IN VESUM
-  ✗ Оля — NOT IN VESUM
-  ✗ Пого — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Розпоря — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ вдо — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ вжди — NOT IN VESUM
-  ✗ вишся — NOT IN VESUM
-  ✗ вні — NOT IN VESUM
-  ✗ втра — NOT IN VESUM
-  ✗ вівто — NOT IN VESUM
-  ✗ годи — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ дев'я — NOT IN VESUM
-  ✗ деся — NOT IN VESUM
-  ✗ дко — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ діало — NOT IN VESUM
-  ✗ ждень — NOT IN VESUM
-  ✗ зга — NOT IN VESUM
-  ✗ зра — NOT IN VESUM
-  ✗ зустрі — NOT IN VESUM
-  ✗ лодно — NOT IN VESUM
-  ✗ лок — NOT IN VESUM
-  ✗ льми — NOT IN VESUM
-  ✗ немося — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ ння — NOT IN VESUM
-  ✗ нську — NOT IN VESUM
-  ✗ нячно — NOT IN VESUM
-  ✗ п'я — NOT IN VESUM
-  ✗ пло — NOT IN VESUM
-  ✗ понеді — NOT IN VESUM
-  ✗ реду — NOT IN VESUM
-  ✗ рно — NOT IN VESUM
-  ✗ ртом — NOT IN VESUM
-  ✗ ршій — NOT IN VESUM
-  ✗ ряю — NOT IN VESUM
-  ✗ спо — NOT IN VESUM
-  ✗ субо — NOT IN VESUM
-  ✗ сьму — NOT IN VESUM
-  ✗ сьо — NOT IN VESUM
-  ✗ украї — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
 
-All 132 other words are confirmed to exist in VESUM.
+All 95 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

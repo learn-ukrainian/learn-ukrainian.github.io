@@ -1,0 +1,55 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The writer flawlessly hit every outline point and word budget. The references
+    were integrated beautifully, e.g., "В українських шкільних підручниках з мови,
+    наприклад, у відомому підручнику Ніни Голуб
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Deducted 3 points for two critical errors. 1) Claiming "повз" takes "Родовий
+    відмінок" (Genitive) instead of Знахідний. 2) Using the Russian calque "перевести
+    гроші" as an example of correct Ukrainian
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow and spatial/metaphorical explanations. However, explicitly
+    teaching the wrong grammatical case ("Родовий відмінок" instead of Accusative)
+    for a preposition while using it in Accusat
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are naturally
+    integrated into the text (e.g., "перехрестя", "наскрізь", "пішохідний перехід",
+    "переплисти").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 planned exercise hints are accurately represented by correctly formatted
+    injection markers placed exactly where they test the just-taught material.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and highly engaging. The writer uses excellent
+    spatial imagery ("Уявіть собі яскраві візуальні вектори", "справжня просторова
+    хореографія") that suits the topic perfectl
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4783 words (comfortably above the 4000-word target). Clean
+    markdown, correct H2 headers, no formatting artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Rich with authentic Ukrainian geography (Dnipro, Kyiv, Kharkiv, Khreshchatyk,
+    Maidan, Zhytomyr). The note about the cultural significance of the phrase "перейти
+    на українську мову" is a brilliant addi
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The driving instructor dialogue effectively models the natural spoken
+    contrast between `пере-` and `про-` navigation ("проїдьте два перехрестя... переїдьте
+    міст") in a realistic scenario.
+findings: []

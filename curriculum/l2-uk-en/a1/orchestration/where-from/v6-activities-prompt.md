@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-zvidky -->`
-- `<!-- INJECT_ACTIVITY: group-sort-location-trio -->`
-- `<!-- INJECT_ACTIVITY: quiz-prepositions -->`
-- `<!-- INJECT_ACTIVITY: fill-in-location-vs-origin -->`
+- `<!-- INJECT_ACTIVITY: answer-zvidky -->`
+- `<!-- INJECT_ACTIVITY: location-trio-sort -->`
+- `<!-- INJECT_ACTIVITY: preposition-quiz -->`
+- `<!-- INJECT_ACTIVITY: location-contrast -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -127,143 +127,115 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Dialogues
 
-It's the first week of the semester, and students from all over the world are meeting at a Kyiv university. Everyone wants to know the same thing: **Звідки ти?** (Where are you from?) Here's how that conversation sounds in Ukrainian — using **з** (from) plus a country or city name.
+An international student mixer at a university in Kyiv is the perfect place to hear a symphony of languages and accents. When people from different backgrounds gather in one room, the most natural icebreaker is finding out where everyone comes from. In Ukrainian, asking about someone's origin is a direct, essential communicative skill. You will hear the question **Звідки ти?** (Where are you from?) echoing across the room as students connect, share their stories, and learn about each other's homes. The ability to state your origin confidently is your passport to deeper conversations. 
 
-### Діалог 1 — На зустрічі студентів (At a student mixer)
+> **Джон:** Звідки ти? *(Where are you from?)*
+> **Максим:** Я з України, з Києва. А ти? *(I am from Ukraine, from Kyiv. And you?)*
+> **Джон:** Я з Канади, із Торонто. *(I am from Canada, from Toronto.)*
+> **Максим:** Давно тут? *(Have you been here long?)*
+> **Джон:** Ні, я приїхав місяць тому. *(No, I arrived a month ago.)*
 
-> **Тарас:** Привіт! Мене звати Тарас. Звідки ти? *(Hi! My name is Taras. Where are you from?)*
-> **Лена:** Я з України, з Києва. А ти? *(I'm from Ukraine, from Kyiv. And you?)*
-> **Тарас:** Я з Канади, із Торонто. *(I'm from Canada, from Toronto.)*
-> **Лена:** Давно тут? *(Been here long?)*
-> **Тарас:** Ні, я приїхав місяць тому. А ти, Кенджі? *(No, I arrived a month ago. And you, Kenji?)*
-> **Кенджі:** Я з Японії, з Токіо. *(I'm from Japan, from Tokyo.)*
-> **Тарас:** Як цікаво! *(How interesting!)*
+The core interaction for stating your origin revolves around the question **Звідки ти?** (Where are you from?). Notice how the response is constructed: **Я з...** (I am from...). In Ukrainian, the present tense verb for "to be" is almost always omitted in these standard phrases. You do not need to say "I am," you simply state your pronoun, the preposition, and the place. The structure **Я з України** (I am from Ukraine) is a complete, grammatically correct sentence that you can use immediately. When talking about a specific city, you simply add it to the phrase, such as **Я з України, з Києва** (I am from Ukraine, from Kyiv).
 
-:::tip
-**Я приїхав** (I arrived) — memorize this as a ready-made chunk. The full verb **приїхати** belongs to A2. For now, just use **я приїхав** (masculine) or **я приїхала** (feminine) when you need to say "I arrived."
-:::
+> **Анна:** Звідки ти йдеш? *(Where are you coming from?)*
+> **Марко:** Я йду з роботи. *(I am coming from work.)*
+> **Анна:** А Олена? *(And Olena?)*
+> **Марко:** Вона йде зі школи. *(She is coming from school.)*
+> **Анна:** Куди вона йде? *(Where is she going?)*
+> **Марко:** Додому. *(Home.)*
 
-Notice how Dialogue 1 uses **з** (from) with both countries and cities. The same question — **Звідки ти?** — works for both. When Lena answers **Я з України, з Києва**, she's layering: country first, then city. Think of it as zooming in: "from Ukraine, from Kyiv." Tomas does the same: **Я з Канади, із Торонто** — from Canada, from Toronto.
+This second conversation highlights a shorter exchange about physical movement. We are contrasting the origin point — coming from work or from school — with the destination. You use the exact same preposition to describe walking away from a building as you do when stating the country you were born in.
 
-### Діалог 2 — На вулиці (On the street)
+## Звідки? — Where From?
 
-> **Оксана:** Звідки ти йдеш? *(Where are you coming from?)*
-> **Микола:** Я йду з роботи. А ти? *(I'm coming from work. And you?)*
-> **Оксана:** Я зі школи. Куди ти зараз? *(From school. Where are you headed now?)*
-> **Микола:** Додому. А Олена де? *(Home. And where's Olena?)*
-> **Оксана:** Вона ще в магазині. Але скоро йде з магазину додому. *(She's still at the store. But she's heading home from the store soon.)*
-> **Микола:** Добре. Бувай! *(Okay. Bye!)*
+Ukrainian categorizes spatial relations and movement into three distinct, logical questions: **Де?** (Where are you?), **Куди?** (Where are you going?), and **Звідки?** (Where are you from?). Think of this as the "Location Trio." If we take a country like **Україна** (Ukraine), it changes its shape depending on which of the three questions you are answering. At this A1 level, you will learn to use these combinations as memorized chunks, while the full grammatical rules of the genitive case will be covered in A2.
+
+*   **Де ти? — В Україні.** (Where are you? — In Ukraine.) This uses the locative case to show exactly where you ARE.
+*   **Куди ти їдеш? — В Україну.** (Where are you traveling to? — To Ukraine.) This uses the accusative case to show where you are GOING.
+*   **Звідки ти? — З України.** (Where are you from? — From Ukraine.) This is a genitive chunk, showing the point where you are FROM.
+
+To express this origin, you need a preposition. Just as you learned in Module 28, Ukrainian applies euphony rules to make speech flow smoothly. The basic preposition for "from" is **з**, and you will use it before most vowels and consonants, like **з Канади** (from Canada). If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv).
 
 :::note
-**з роботи** = from work | **зі школи** = from school | **додому** = homeward (direction)
+You do not need to memorize complex euphony rules for **з**, **із**, and **зі** right now. Focus on learning the correct combinations as single blocks of vocabulary, like **зі США** (from the USA).
 :::
 
-Look at what both dialogues share. **Звідки?** always triggers **з/із/зі** plus a place name: **з Японії** (from Japan), **з роботи** (from work), **зі школи** (from school). But notice two different uses: (1) **Звідки ти?** asks about your origin or nationality — **Я з Японії**; (2) **Звідки ти йдеш?** asks where you're physically coming from right now — **з роботи**, **зі школи**. Both use the same preposition family. Up next: the full direction trio **Де?–Куди?–Звідки?** — the three questions every Ukrainian speaker uses constantly.
+When you use this preposition, the noun that follows it must change its ending. Feminine nouns ending in **-а** change to **-и**: **Україна** becomes **з України**, **Канада** becomes **з Канади**, and **Одеса** becomes **з Одеси**. Feminine nouns ending in **-я** change to **-ї**: **Англія** becomes **з Англії**. Masculine place names ending in a consonant usually add an **-а**: **Київ** becomes **з Києва**, and **Харків** becomes **з Харкова**. These predictable patterns allow you to comfortably form the origin phrase for most common locations without needing to memorize a complex table.
 
-<!-- INJECT_ACTIVITY: fill-in-zvidky -->
+:::caution
+English relies heavily on the verb "to be" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean "I am from Ukraine" — always use **з** for your origin.
+:::
 
-## Звідки? (Where From?)
+<!-- INJECT_ACTIVITY: answer-zvidky -->
 
-You already know two of the three essential location questions. **Де ти?** (Where are you?) appeared in M05. **Куди ти їдеш?** (Where are you going?) came in M33. Now the trio is complete with **Звідки ти?** (Where are you from?). Here's the whole system — one country, three different forms, three different questions:
+The question **Звідки?** is used for much more than just international geography. You will use it constantly in your daily life to explain your routine movements. The same exact pattern applies to everyday locations in your city. When you finish your shift, you are walking **з роботи** (from work). After buying groceries, you are coming **з магазину** (from the store). When you finish your financial tasks, you step out **з банку** (from the bank). And when classes end, a student walks **зі школи** (from school).
 
-- **Де ти?** — **В Україні.** (locative — where you ARE right now)
-- **Куди ти їдеш?** — **В Україну.** (accusative — direction TO)
-- **Звідки ти?** — **З України.** (genitive chunk — origin FROM)
+<!-- INJECT_ACTIVITY: location-trio-sort -->
 
-See how **Україна** changes shape each time? **В Україні**, **В Україну**, **З України** — three different endings for three different situations. Native speakers switch between them automatically. We learn the pattern now and the full grammar of these endings (**відмінки**) in A2.
+## Країни і міста — Countries and Cities
 
-### З / із / зі — the euphony rule
+Major Ukrainian cities provide excellent practice for forming these origin phrases. The capital city is **Київ** (Kyiv), so you would say **з Києва** (from Kyiv). The cultural hub of the west is **Львів** (Lviv), which becomes **зі Львова** (from Lviv). The southern port is **Одеса** (Odesa), forming **з Одеси** (from Odesa). In the east, we have **Харків** (Kharkiv), which changes to **з Харкова** (from Kharkiv). The central city of **Дніпро** (Dnipro) becomes **з Дніпра** (from Dnipro), and the southeastern industrial center **Запоріжжя** (Zaporizhzhia) becomes **із Запоріжжя** (from Zaporizhzhia).
 
-Remember the euphony patterns from M28? The preposition **з** (from) follows the same logic. It has three forms to keep Ukrainian sounding smooth:
+:::tip
+The name **Україна** historically means "land," "region," or "our country." It is not a "borderland," as Russian imperialist myths have tried to claim. And its capital, **Київ**, has always been the historical heart of this land.
+:::
 
-**With Ukrainian cities:**
-- **з Києва**, **з Одеси**, **з Харкова**, **з Дніпра**
-- **зі Львова** — **зі** before the лв- cluster
+When interacting in international environments, you will also need to recognize common country names. If someone asks where you are from, you might need to say you are from Canada: **Канада** (Canada) becomes **з Канади** (from Canada). The United States is usually abbreviated, giving us **зі США** (from the USA) or occasionally **зі Штатів** (from the States). Other frequent European nations include **Англія** (England), which forms **з Англії** (from England), and **Німеччина** (Germany), which becomes **з Німеччини** (from Germany). You might also meet people from neighboring **Польща** (Poland), saying **з Польщі** (from Poland), or from further away like **Франція** (France), making **із Франції** (from France), **Італія** (Italy), making **з Італії** (from Italy), and **Японія** (Japan), which changes to **з Японії** (from Japan).
 
-**With countries:**
-- **з Канади**, **з Англії**, **з Польщі**, **з Франції**, **з Японії**, **з Німеччини**
-- **зі США** / **зі Штатів** — **зі** before the шт- cluster
+Your origin is deeply connected to your identity and the language you speak. We can review concepts from Module 05 and link them to the new origin pattern. Notice how these phrases flow together in a logical sequence.
 
-**With everyday places:**
-- **з роботи**, **з магазину**, **з банку**, **з парку**
-- **зі школи** — **зі** before шк-
+*   **Мене звати Петро.** (My name is Petro.)
+*   **Я з України.** (I am from Ukraine.)
+*   **Я українець.** (I am a Ukrainian man.)
+*   **Я говорю українською.** (I speak Ukrainian.)
 
-The pattern: **з** before most consonants and vowels; **із** between awkward consonant clusters; **зі** before combinations starting with з-, с-, ш-. At A1, don't calculate — just recognize the pattern and memorize the fixed phrases from the lists above.
+We can contrast this with someone from a different background:
 
-### Memorize as chunks
+*   **Мене звати Джон.** (My name is John.)
+*   **Я з Англії.** (I am from England.)
+*   **Я англієць.** (I am an Englishman.)
+*   **Я говорю англійською.** (I speak English.)
 
-Treat **з** + place as sealed units, the same way you learned **в Україні** as a single phrase back in M30. English speakers don't think "in + Ukraine" as separate words — they say "in Ukraine" as one chunk. Do the same here. **Я з України**, **з Києва**, **з роботи** — three set phrases to know by heart. Why does **Київ** become **Києва** and **Україна** become **України**? Those are genitive case endings — full A2 grammar. For now, recognize and reproduce the forms from this module's vocabulary. If you can say **Я з Києва** without hesitating, you're doing it right.
+<!-- INJECT_ACTIVITY: preposition-quiz -->
 
-<!-- INJECT_ACTIVITY: group-sort-location-trio -->
+Often, where you are from is not where you are right now. You can combine your origin and your current location in a single sentence to tell a richer story about yourself. To do this, use the conjunction **але** (but) and the adverb **зараз** (now). This is an excellent way to practice both the "from" pattern and the "in" pattern together. 
 
-## Країни і міста (Countries and Cities)
+*   **Я живу в Києві, але я зі Львова.** (I live in Kyiv, but I am from Lviv.)
+*   **Вона з Канади, але зараз вона живе в Україні.** (She is from Canada, but now she lives in Ukraine.)
 
-### Українські міста (Ukrainian cities)
-
-Here are six major Ukrainian cities with their **з**-forms — the shape they take after **Звідки?**:
-
-| Місто (City) | Звідки? (From where?) |
-|---|---|
-| **Київ** (Kyiv) | **з Києва** |
-| **Львів** (Lviv) | **зі Львова** |
-| **Одеса** (Odesa) | **з Одеси** |
-| **Харків** (Kharkiv) | **з Харкова** |
-| **Дніпро** (Dnipro) | **з Дніпра** |
-| **Запоріжжя** (Zaporizhzhia) | **із Запоріжжя** |
-
-Ukrainian city names carry history. **Київ** takes its name from Кий, a legendary Polanian prince. **Львів** is named for Prince Лев Данилович — Lev, son of Danylo. When you say **зі Львова**, you're using a form shaped by centuries of Ukrainian language. Notice **зі Львова** specifically — the **зі** form prevents an awkward зл- consonant cluster.
-
-### Країни (Countries)
-
-Countries follow the same pattern. Here are the ones you'll use most often:
-
-**Nearby:** **Польща** → **з Польщі** | **Угорщина** (Hungary) → **з Угорщини** | **Румунія** (Romania) → **з Румунії**
-
-**Further away:** **Канада** → **з Канади** | **США** → **зі США** (**зі Штатів**) | **Англія** (England) → **з Англії** | **Німеччина** (Germany) → **з Німеччини** | **Франція** (France) → **з Франції** | **Японія** (Japan) → **з Японії** | **Італія** (Italy) → **з Італії**
-
-One important note: these are Ukrainian names, not transliterations of English. Germany is **Німеччина** (not "Германія"). Japan is **Японія**. Canada is **Канада** (not "Кенада"). Always use the Ukrainian forms.
-
-### Національність і мова (Nationality and language)
-
-Back in M05, you learned to introduce yourself. Now extend that chain with origin:
-
-- **Я з України** → **Я українець** (m) / **українка** (f) → **Я говорю українською.**
-- **Я з Польщі** → **Я поляк** (m) / **полька** (f) → **Я говорю польською.**
-
-And here's a new contrast — where you live now versus where you're originally from:
-
-- **Я живу в Києві, але я зі Львова.** (I live in Kyiv, but I'm from Lviv.)
-- **Вона живе в Канаді, але вона з України.** (She lives in Canada, but she's from Ukraine.)
-
-The pattern: **живу в** [place — locative] + **але я з** [place — genitive chunk]. This is how diaspora Ukrainians talk about themselves every day.
-
-<!-- INJECT_ACTIVITY: quiz-prepositions -->
-
-<!-- INJECT_ACTIVITY: fill-in-location-vs-origin -->
+<!-- INJECT_ACTIVITY: location-contrast -->
 
 ## Підсумок — Summary
 
-You now have all three direction questions that Ukrainian speakers use constantly. Here's the complete trio — three questions, three preposition families, three memorized chunk sets:
+You now have a complete, functional system for describing spatial relations and movement in Ukrainian. A review of the three core questions will solidify this system. 
 
-| Питання (Question) | Прийменник (Preposition) | Приклад (Example) | Meaning |
-|---|---|---|---|
-| **Де?** | в/на + locative chunk | **В Україні. У Києві. На роботі.** | where you ARE |
-| **Куди?** | в/на + accusative chunk | **В Україну. У Київ. На роботу.** | where you're GOING |
-| **Звідки?** | з/із/зі + genitive chunk | **З України. З Києва. З роботи.** | where you're FROM |
+When you want to express a static location, you ask **Де?** (Where?). The answer usually requires the prepositions **в** or **на** and the locative case, such as **в Україні** (in Ukraine). 
 
-Why does **Київ** become **Києва** in one column and **Києві** in another? Those are different case endings — the genitive and locative. Full case grammar arrives in A2. For now: recognize the pattern, memorize the fixed forms from this module. You already have all three direction questions. Use them.
+When you want to talk about a destination, you ask **Куди?** (Where to?). The answer also uses **в** or **на** but with the accusative case, such as **в Україну** (to Ukraine). 
 
-### Перевір себе (Self-check)
+Finally, when you are talking about an origin, you ask **Звідки?** (Where from?). The answer requires the prepositions **з**, **із**, or **зі** plus a genitive chunk, like **з України** (from Ukraine).
 
-Answer these three questions out loud in Ukrainian. Switch the prepositions correctly for each:
+Here is a summary of the most frequent city and country changes you learned in this module:
+*   **Україна** → **з України**
+*   **Канада** → **з Канади**
+*   **Німеччина** → **з Німеччини**
+*   **Київ** → **з Києва**
+*   **Львів** → **зі Львова**
+*   **Харків** → **з Харкова**
 
-- **Звідки ти?** (З якої країни? З якого міста?)
-- **Де ти зараз?** (В якому місті? В якій країні?)
-- **Куди ти йдеш після цього уроку?** (Додому? На роботу? В магазин?)
+To ensure you have mastered these concepts, try to answer the following self-check questions out loud. Use your own real-world information where possible.
 
-If you can answer all three — switching smoothly between **з/із/зі**, **в/на**, and **в/на** — the **Де?/Куди?/Звідки?** trio is yours.
+*   **Звідки ти?** (Where are you from?) → **Я з...**
+*   **Звідки твій друг?** (Where is your male friend from?) → **Він з...**
+*   **Звідки твоя подруга?** (Where is your female friend from?) → **Вона з...**
+*   **Ти зараз у Києві чи у Львові?** (Are you in Kyiv or in Lviv right now?) → **Я зараз у...**
+*   **Звідки ти йдеш зараз?** (Where are you coming from right now?) → **Я йду з...**
+*   **Де ти живеш?** (Where do you live now?) → **Я живу в...**
+*   **Куди ти йдеш після уроку?** (Where are you going after this lesson?) → **Я йду в/на...**
+
+By mastering the question **Звідки?**, you have unlocked the final piece of the basic location puzzle. You can now confidently describe where you are, where you are heading, and where you came from. In the next module, Checkpoint — Places, you will review and consolidate all of this spatial vocabulary before moving on to new topics.
 
 </module_content>
 
@@ -353,30 +325,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -396,28 +408,46 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-cases
-- **fill-in** — Який відмінок?: Fill in the correct case ending for a noun in context
+### Pattern: phonetics-stress [§4.1.5]
+**Наголос** (Word stress)
+- **quiz** — Де наголос?: Обрати правильне місце наголосу — критично для української вимови / Choose the correct stress position — critical for Ukrainian pronunciation
+  - Instruction: *Оберіть слово з правильним наголосом*
+- **odd-one-out** — Четверте зайве за наголосом: Обрати слово з іншою моделлю наголосу / Pick the word with different stress pattern
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in: Наголос — це вимова, не написання. Тестувати через вибір, не вписування
+
+### Pattern: grammar-cases [§4.2.3.1, §4.2.3.2, §4.2.3.3]
+**Відмінки іменників** (Noun cases)
+- **fill-in** — Який відмінок?: Вставити іменник у правильній відмінковій формі / Fill in the correct case ending for a noun in context
   - Instruction: *Вставте іменник у правильній формі*
-- **quiz** — Визнач відмінок: Identify which case a highlighted noun is in
-- **group-sort** — Розподіли за відмінками: Sort noun forms by their case
-- **error-correction** — Знайди помилку у відмінку: Find wrong case ending and correct it
+- **quiz** — Визнач відмінок: Визначити, у якому відмінку стоїть виділений іменник / Identify which case a highlighted noun is in
+- **group-sort** — Розподіли за відмінками: Розподілити форми іменників за відмінками / Sort noun forms by their case
+- **error-correction** — Знайди помилку у відмінку: Знайти неправильне відмінкове закінчення та виправити / Find wrong case ending and correct it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Учні мають ПРОДУКУВАТИ форми, а не тільки розпізнавати. Обов'язково fill-in
+- ❌ translate: Англійська не має відмінків — переклад не тестує відмінювання
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -449,68 +479,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

@@ -1,54 +1,58 @@
 ## Linguistic Scan
-1. **Critical Linguistic Error:** In the section **"Чергування задньоязикових у дієсловах: [г]->[ж], [к]->[ч], [х]->[ш]"**, under the heading **"Перехід твердого [к] у м'який [ч]"**, the example for *текти* contains a case error: "Глибока річка **тече** через усьому місту." The preposition *через* requires the **Accusative case**. For the neuter noun *місто* and the pronoun *увесь*, the correct form is **"через усе місто"**.
-2. **Non-Standard/Major Error:** The text uses **"махати — машу"** as a standard example of [х]→[ш] alternation. While historically attested and used in older literature, modern standard Ukrainian (VESUM, GRAC) overwhelmingly prefers **"махати — махаю"**. `mcp_rag_query_grac` shows *махаю* is ~10 times more frequent than *машу*. For a B1 level module, teaching the non-standard form as a primary rule is confusing and potentially a Russianism influence (where *машу* is the only standard form).
-3. **No Russian characters (ы, э, ё, ъ) found.**
-4. **No Surzhyk found.**
-5. **No common calques found.**
+Found one active participle calque ("палаталізуючий"). Found one English word that leaked into the Ukrainian prose without translation ("pairs"). Found a mood mismatch in a sentence ("Візьмімо... і провідміняємо" instead of "провідміняймо"). "Свідомість" is awkwardly used in the context of learning a motor phonetic skill; "мозок" is better.
 
 ## Exercise Check
-- **fill-in** (я-form II conj): Marker present after "Звук [д] переходить у [дж]" etc. Matches plan (10 items).
-- **quiz** (alternation type): Marker present after "Чергування задньоязикових". Matches plan (8 items).
-- **group-sort** (alternation type): Marker present after "Чергування губних". Matches plan (10 items).
-- **fill-in** (imperfective formation): Marker present after "Чергування при утворенні недоконаних". Matches plan (6 items).
-- **match-up** (infinitive to 1st person): Marker present after "Повна парадигма". Matches plan (10 items).
-- **error-correction** (fix errors): Marker present after "Підсумок". Matches plan (6 items).
-
-All markers are logically placed and match the plan's `activity_hints`.
+All 6 activity markers from the plan are present and placed correctly after their respective teaching sections.
+- `fill-in-1st-person` and `match-infinitive-1st-sg` are placed logically after section 2.
+- `quiz-identify-which-alternation-type-applies-to-a-given-verb-dental-velar-or-labial` and `sort-alternation-groups` are placed after section 4.
+- `fill-in-imperfective` is placed after section 5.
+- `error-correction-find-and-fix-conjugation-errors-in-sentences` is placed after section 6.
+No issues found with the exercises or marker placements.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 7 sections from the plan, including the historical explanation and imperfective formation. Word count (3733) is within the 10% tolerance of the 4000 target. |
-| 2. Linguistic accuracy | 7/10 | Contains a critical case error ("через усьому місту") and uses a non-standard form ("машу") as a rule example. |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow. The historical explanation of the [j] (yod) trigger is clear and explains why the alternation is restricted to the 1st person singular. |
-| 4. Vocabulary coverage | 10/10 | Integrates all required terms (чергування, дієвідміна, африката, etc.) naturally into the text. |
-| 5. Exercise quality | 10/10 | Placeholders match the plan perfectly in type, count, and pedagogical focus. |
-| 6. Engagement & tone | 10/10 | Professional yet engaging. The "TV Cooking Show" intro provides a natural context for the alternations. |
-| 7. Structural integrity | 10/10 | Clean Markdown structure. H2 headings exactly match the plan's content outline. |
-| 8. Cultural accuracy | 10/10 | Correct references to Ukrainian textbooks (Глазова, Заболотний). Decolonized perspective (explaining Slavic phonetic evolution). |
-| 9. Dialogue & conversation quality | 10/10 | Natural-sounding dialogue in the introduction that demonstrates the grammar point without being robotic. |
+| 1. Plan adherence | 10/10 | The text beautifully covers all points, including historical context, alternation groups, imperfective formation, and complete paradigms. |
+| 2. Linguistic accuracy | 8/10 | English word "pairs" leaked into text: "базові звукові pairs". Active participle calque: "палаталізуючий елемент j" (verified not in VESUM). Mood mismatch: "Візьмімо знайоме нам дієслово «водити» і повністю провідміняємо його". |
+| 3. Pedagogical quality | 9/10 | Excellent PPP flow with concrete examples. However, "Ваша свідомість (brain/mind) повинна навчитися" is slightly unnatural for learning phonetic recognition; it should be "мозок" (brain). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items are naturally integrated into the prose. |
+| 5. Exercise quality | 10/10 | 6 required markers are present in logical locations corresponding to the concepts just taught. |
+| 6. Engagement & tone | 10/10 | Warm, natural teacher phrasing ("Ми з вами щойно побачили", "Пропонуємо вам запам'ятати", "діяти як справжній мовний детектив") without gamified filler. |
+| 7. Structural integrity | 10/10 | Word count is 4747 (exceeding the 4000 target). Clean formatting and all sections present. |
+| 8. Cultural accuracy | 10/10 | Accurate and detailed discussion of historical phonetics and Ukrainian euphony. |
+| 9. Dialogue & conversation quality | 10/10 | Highly creative TV cooking show dialogue that naturally uses the target phonetic alternations ("ходжу", "печу", "махає", "дихаю"). |
 
 ## Findings
-1. [LINGUISTIC] [CRITICAL]
-   Location: Section "Перехід твердого [к] у м'який [ч]", example "Глибока річка **тече** через усьому місту."
-   Issue: Incorrect case after the preposition "через". It requires Accusative, not Dative/Locative.
-   Fix: "Глибока річка **тече** через усе місто."
+[2. Linguistic accuracy] [CRITICAL]
+Location: "Вам потрібно лише запам'ятати ці базові звукові pairs, щоб говорити вільно та максимально впевнено."
+Issue: English word "pairs" leaked into the Ukrainian sentence instead of the translation.
+Fix: Change "pairs" to "пари".
 
-2. [LINGUISTIC] [MAJOR]
-   Location: Section "Перехід глухого [х] у шиплячий [ш]", example "колихати — колишу, махати — машу."
-   Issue: "Машу" is non-standard/archaic in modern Ukrainian (though common in Russian). Standard Ukrainian prefers "махаю". Teaching it as a regular [х]→[ш] rule is misleading.
-   Fix: Remove "махати — машу" from the rule list or replace with a clearer example like "дихати — дишу" (which is accepted in VESUM and used later) or just stick to "колихати — колишу" and "брехати — брешу".
+[2. Linguistic accuracy] [CRITICAL]
+Location: "Форма «я воджу» історично мала закінчення, що містило палаталізуючий елемент j."
+Issue: "Палаталізуючий" is an active participle ending in -учий/-ючий, which is a grammatical calque. Verified via VESUM that it is not a standard form.
+Fix: Change to the adjective "палаталізаційний".
+
+[2. Linguistic accuracy] [CRITICAL]
+Location: "Візьмімо знайоме нам дієслово «водити» і повністю провідміняємо його за всіма особами."
+Issue: Mood mismatch. "Візьмімо" is imperative (1st person plural), so the following verb in the coordinated clause should also be imperative ("провідміняймо"), not indicative future ("провідміняємо").
+Fix: Change "провідміняємо" to "провідміняймо".
+
+[3. Pedagogical quality] [MAJOR]
+Location: "Ваша свідомість (brain/mind) повинна навчитися миттєво розпізнавати ці цільові звуки"
+Issue: "Свідомість" means consciousness. Learning to recognize phonetic sounds is a function of the brain ("мозок") or simply "Ви".
+Fix: Change "Ваша свідомість" to "Ваш мозок", and adjust the verb agreement accordingly.
 
 ## Verdict: REVISE
-The module is high-quality, but the critical linguistic error in case endings (Accusative after "через") and the non-standard form "машу" (Russian-like) must be corrected before publication.
+The module is incredibly comprehensive, engaging, and hits all plan points perfectly. However, there are four specific linguistic and stylistic errors (an English word leak, an active participle calque, a mood mismatch, and an unnatural use of "свідомість") that must be fixed before publishing.
 
 <fixes>
-- find: "Глибока річка **тече** через усьому місту."
-  replace: "Глибока річка **тече** через усе місто."
-- find: "колихати — колишу, махати — машу. Ці"
-  replace: "колихати — колишу, дихати — дишу. Ці"
-- find: "Ти **машеш** рукою."
-  replace: "Ти **махаєш** рукою."
-- find: "[х] -> [ш]: колихати — колишу, махати — машу. Ці"
-  replace: "[х] -> [ш]: колихати — колишу, брехати — брешу. Ці"
+- find: "Вам потрібно лише запам'ятати ці базові звукові pairs, щоб говорити вільно та максимально впевнено."
+  replace: "Вам потрібно лише запам'ятати ці базові звукові пари, щоб говорити вільно та максимально впевнено."
+- find: "Форма «я воджу» історично мала закінчення, що містило палаталізуючий елемент j."
+  replace: "Форма «я воджу» історично мала закінчення, що містило палаталізаційний елемент j."
+- find: "Візьмімо знайоме нам дієслово «водити» і повністю провідміняємо його за всіма особами."
+  replace: "Візьмімо знайоме нам дієслово «водити» і повністю провідміняймо його за всіма особами."
+- find: "Ваша свідомість (brain/mind) повинна навчитися миттєво розпізнавати ці цільові звуки"
+  replace: "Ваш мозок (brain/mind) повинен навчитися миттєво розпізнавати ці цільові звуки"
 </fixes>

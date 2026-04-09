@@ -1,0 +1,314 @@
+{
+  "total_items": 171,
+  "grounded_items": 123,
+  "ungrounded": [
+    {
+      "word": "довго",
+      "exercise_type": "fill-in",
+      "context": "Вчора я довго _____ книгу.",
+      "role": "context"
+    },
+    {
+      "word": "дав",
+      "exercise_type": "fill-in",
+      "context": "Я _____ книгу і дав її другу.",
+      "role": "context"
+    },
+    {
+      "word": "другу",
+      "exercise_type": "fill-in",
+      "context": "Я _____ книгу і дав її другу.",
+      "role": "context"
+    },
+    {
+      "word": "готували",
+      "exercise_type": "fill-in",
+      "context": "готували",
+      "role": "answer"
+    },
+    {
+      "word": "зателефонувала",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ обід, коли зателефонувала мама.",
+      "role": "context"
+    },
+    {
+      "word": "купив",
+      "exercise_type": "fill-in",
+      "context": "купив",
+      "role": "answer"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "fill-in",
+      "context": "Ти вже _____ квитки на поїзд?",
+      "role": "context"
+    },
+    {
+      "word": "хочете",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви хочете дізнатися, чи готовий обід. Ти вже _____",
+      "role": "context"
+    },
+    {
+      "word": "дізнатися",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви хочете дізнатися, чи готовий обід. Ти вже _____",
+      "role": "context"
+    },
+    {
+      "word": "описуєте",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте свою щоденну ранкову рутину в минулому",
+      "role": "context"
+    },
+    {
+      "word": "свою",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте свою щоденну ранкову рутину в минулому",
+      "role": "context"
+    },
+    {
+      "word": "щоденну",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте свою щоденну ранкову рутину в минулому",
+      "role": "context"
+    },
+    {
+      "word": "ранку",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте свою щоденну ранкову рутину в минулому",
+      "role": "context"
+    },
+    {
+      "word": "розповідаєте",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви розповідаєте про дії, які відбулися одна за одн",
+      "role": "context"
+    },
+    {
+      "word": "відбулися",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви розповідаєте про дії, які відбулися одна за одн",
+      "role": "context"
+    },
+    {
+      "word": "одною",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви розповідаєте про дії, які відбулися одна за одн",
+      "role": "context"
+    },
+    {
+      "word": "довгий",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте довгий процес, який був перерваний. Я ",
+      "role": "context"
+    },
+    {
+      "word": "був",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте довгий процес, який був перерваний. Я ",
+      "role": "context"
+    },
+    {
+      "word": "перерваний",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте довгий процес, який був перерваний. Я ",
+      "role": "context"
+    },
+    {
+      "word": "телевізор",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви описуєте довгий процес, який був перерваний. Я ",
+      "role": "context"
+    },
+    {
+      "word": "намагалися",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви кажете, що намагалися щось зробити, але не дося",
+      "role": "context"
+    },
+    {
+      "word": "зрозумів",
+      "exercise_type": "unjumble",
+      "context": "зрозумів",
+      "role": "answer"
+    },
+    {
+      "word": "радісно",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви радісно повідомляєте, що нарешті знайшли загубл",
+      "role": "context"
+    },
+    {
+      "word": "повідомляєте",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви радісно повідомляєте, що нарешті знайшли загубл",
+      "role": "context"
+    },
+    {
+      "word": "знайшли",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви радісно повідомляєте, що нарешті знайшли загубл",
+      "role": "context"
+    },
+    {
+      "word": "загублену",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви радісно повідомляєте, що нарешті знайшли загубл",
+      "role": "context"
+    },
+    {
+      "word": "річ",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви радісно повідомляєте, що нарешті знайшли загубл",
+      "role": "context"
+    },
+    {
+      "word": "ура",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви радісно повідомляєте, що нарешті знайшли загубл",
+      "role": "context"
+    },
+    {
+      "word": "питаєте",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви питаєте друга про його плани на завтра, акценту",
+      "role": "context"
+    },
+    {
+      "word": "акцентуючи",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви питаєте друга про його плани на завтра, акценту",
+      "role": "context"
+    },
+    {
+      "word": "результаті",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви питаєте друга про його плани на завтра, акценту",
+      "role": "context"
+    },
+    {
+      "word": "пояснюєте",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви пояснюєте, що ніколи навіть не починали певну д",
+      "role": "context"
+    },
+    {
+      "word": "певну",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви пояснюєте, що ніколи навіть не починали певну д",
+      "role": "context"
+    },
+    {
+      "word": "статтю",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви пояснюєте, що ніколи навіть не починали певну д",
+      "role": "context"
+    },
+    {
+      "word": "бачив",
+      "exercise_type": "quiz",
+      "context": "Ситуація: Ви пояснюєте, що ніколи навіть не починали певну д",
+      "role": "context"
+    },
+    {
+      "word": "дві",
+      "exercise_type": "error-correction",
+      "context": "Вчора я зробив уроки дві години.",
+      "role": "context"
+    },
+    {
+      "word": "готувала",
+      "exercise_type": "error-correction",
+      "context": "готувала",
+      "role": "answer"
+    },
+    {
+      "word": "телефонував",
+      "exercise_type": "error-correction",
+      "context": "Коли ти телефонував, я приготувала вечерю.",
+      "role": "context"
+    },
+    {
+      "word": "приготувала",
+      "exercise_type": "error-correction",
+      "context": "Коли ти телефонував, я приготувала вечерю.",
+      "role": "context"
+    },
+    {
+      "word": "вечерю",
+      "exercise_type": "error-correction",
+      "context": "Коли ти телефонував, я приготувала вечерю.",
+      "role": "context"
+    },
+    {
+      "word": "говорив",
+      "exercise_type": "error-correction",
+      "context": "говорив",
+      "role": "answer"
+    },
+    {
+      "word": "приємні",
+      "exercise_type": "error-correction",
+      "context": "Він часто сказав мені приємні слова.",
+      "role": "context"
+    },
+    {
+      "word": "купував",
+      "exercise_type": "error-correction",
+      "context": "Я вже купував квитки на концерт, вони у мене.",
+      "role": "context"
+    },
+    {
+      "word": "концерт",
+      "exercise_type": "error-correction",
+      "context": "Я вже купував квитки на концерт, вони у мене.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "error-correction",
+      "context": "Я вже купував квитки на концерт, вони у мене.",
+      "role": "context"
+    },
+    {
+      "word": "зустріч",
+      "exercise_type": "error-correction",
+      "context": "Ми починали зустріч о десятій годині вчора.",
+      "role": "context"
+    },
+    {
+      "word": "десятій",
+      "exercise_type": "error-correction",
+      "context": "Ми починали зустріч о десятій годині вчора.",
+      "role": "context"
+    },
+    {
+      "word": "годині",
+      "exercise_type": "error-correction",
+      "context": "Ми починали зустріч о десятій годині вчора.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 23,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "видова",
+      "давати",
+      "дати",
+      "закінчити",
+      "закінчувати",
+      "класти",
+      "морфологія",
+      "пара",
+      "покласти",
+      "префікс",
+      "суфікс",
+      "тільки",
+      "утворення"
+    ]
+  },
+  "all_grounded": false
+}

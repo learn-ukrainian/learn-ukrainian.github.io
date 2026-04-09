@@ -2,6 +2,12 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [],
-  "timestamp": "2026-03-30T13:20:27.179775+00:00"
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/6 required vocab: з/із/зі (from — + genitive chunk)"
+    }
+  ],
+  "timestamp": "2026-04-08T23:16:16.318634+00:00"
 }

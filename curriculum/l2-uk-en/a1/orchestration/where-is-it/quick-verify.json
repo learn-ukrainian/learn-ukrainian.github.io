@@ -1,13 +1,13 @@
 {
   "attempt": 3,
-  "passed": false,
-  "errors": [
+  "passed": true,
+  "errors": [],
+  "warnings": [
     {
       "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 6/6 required vocab: школа → в школі (school), робота → на роботі (work), банк → у банку (bank), магазин → у/в магазині (shop), вулиця → на вулиці (street)"
+      "severity": "WARNING",
+      "message": "Missing 1/6 required vocab: місто → у/в місті (city)"
     }
   ],
-  "warnings": [],
-  "timestamp": "2026-03-30T19:18:37.569888+00:00"
+  "timestamp": "2026-04-09T16:24:50.943528+00:00"
 }

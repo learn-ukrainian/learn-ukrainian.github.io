@@ -7,238 +7,200 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import OddOneOut from '@site/src/components/OddOneOut';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
 import Translate from '@site/src/components/Translate';
-import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Ра́нок (Morning)
+## Ра́нок: Поча́ток дня у Ки́єві
 
-Сьома ра́нку. Ти **проки́нувся** (woke up, masc.) — або́ **проки́нулася** (woke up, fem.) — у **готе́лі** (hotel) в Ки́єві. Ти **відчини́в/відчини́ла** (opened) вікно́. **Надво́рі** (outside) тепло́ і со́нячно — бли́зько двадцяти́ гра́дусів. **До́брого ранку!** Час **сні́дати** (to have breakfast). Ти одяга́єшся і йдеш у кафе́ на пе́ршому по́версі.
+You love to **подорожува́ти** (travel). This is the culmination of all your hard work. You are living a day in a Ukrainian city. The past tense forms immediately root us in the reality of completed actions. 
 
-Notice the past tense forms: **прокинувся** for masculine, **прокинулася** for feminine. This is how Ukrainian marks gender in the past tense — a pattern you learned in M48. Throughout this module, you'll see both forms separated by a slash. Pick the one that fits you.
+**Ти проки́нувся в готе́лі.** (You woke up in a hotel, masculine).
+Or for feminine: **Ти проки́нулася в готелі.** (You woke up in a hotel).
+
+You look out the window of your **готе́ль** (hotel) and check the weather to start planning your day.
+- **До́брого ра́нку!** (Good morning!)
+- **Яка сього́дні пого́да?** (What is the weather today?)
+- **Сьогодні те́пло і со́нячно.** (Today it is warm and sunny.)
+
+Down in the cafe, you use your survival skills. **Ти сні́даєш у кафе́.** (You eat breakfast in a cafe).
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Доброго ранку! *(Good morning!)*</div>
+<div class="dialogue-line"><span class="speaker">Ти:</span> Будь ла́ска, ка́ву з молоко́м і круаса́н. *(Please, coffee with milk and a croissant.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Бариста:</span> Смачно́го! *(Enjoy your meal!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> Доброго ранку! Що бажа́єте? *(Good morning! What would you like?)*</div>
+<div class="dialogue-line"><span class="speaker">Ти:</span> Скі́льки ко́шту́є? *(How much does it cost?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Бариста:</span> Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Будь ла́ска, ка́ву з молоко́м і **круаса́н** (croissant). *(A coffee with milk and a croissant, please.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Звича́йно. Щось іще́? *(Of course. Anything else?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую, це все. **Скі́льки ко́шту́є?** *(Thanks, that's all. How much does it cost?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ось, будь ласка. *(Here you go.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Дякую! **Смачно́го!** *(Thanks! Enjoy your meal!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую! До поба́чення! *(Thank you! Goodbye!)*</div>
 
 </div>
 
-Everything here is review: greetings from M01, café ordering from M28, food from M36, numbers from M10, and **будь ласка** — the polite formula from M43. The phrase **смачного** literally means "of tasty" — it's the standard Ukrainian way to say "bon appétit."
+:::tip
+The question **Скільки коштує?** (How much does it cost?) is arguably your most important A1 survival tool. Memorize it well—you will use it every single day for everything from ordering a quick snack to purchasing train tickets.
+:::
 
-Пі́сля сніда́нку ти **виходиш** (go out) із готе́лю. **То́бі потрі́бна** (you need) зеле́на **лі́нія** (line) метро́ — ста́нція Хреща́тик. Ти **купу́єш** (buy) оди́н **квито́к** (ticket). Transport vocabulary from M34, colors from M22 — all coming together now.
+You step outside and need to find the city center.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ви́бачте, де тут метро? *(Excuse me, where is the metro here?)*</div>
+<div class="dialogue-line"><span class="speaker">Ти:</span> Ви́бачте, як діста́тися до Хреща́тика? *(Excuse me, how to get to Khreshchatyk?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Перехо́жий:</span> Іді́ть пря́мо, по́тім **ліво́руч** (to the left). *(Go straight, then left.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую! *(Thanks!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Будь ласка, га́рного дня! *(You're welcome, have a good day!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Перехо́жий:</span> Ї́дьте на метро́, ста́нція Хреща́тик. *(Go by metro, Khreshchatyk station.)*</div>
 
 </div>
 
-Directions from M31, polite phrases from M43 — short and natural.
+You listen for the imperative **їдьте** (go/drive) to follow instructions. At the station, you handle the purchase. **Ти купу́єш квито́к.** (You buy a ticket).
+**Оди́н квиток, будь ласка.** (One ticket, please). 
+Knowing how to use polite imperatives and direct requests makes navigating transit systems surprisingly manageable.
 
-**Зра́нку** (in the morning) ти **сні́дав/сні́дала** (had breakfast) у кафе, потім **ї́хав/ї́хала** (rode) на метро. У́се до́бре! Ти вже в це́нтрі Ки́єва. **Хрещатик** — головна́ ву́лиця мі́ста. Тут га́рні магази́ни, кафе і парки. Notice how the narration switches between tenses: **зранку ти снідав** (past — what already happened) and **ти вже в центрі** (present — where you are now). Ukrainian does this naturally when recapping events.
+Underground, you navigate visually. **В метро ти ди́вишся на ка́рту.** (In the metro you look at a map). You use an impersonal chunk to state a need:
+**То́бі потрі́бна зеле́на лі́нія.** (You need the green line).
+You are connecting different moments in time using your grammar skills.
+**Зра́нку я сні́дав.** (In the morning I ate breakfast).
+**За́раз я ї́ду в метро.** (Now I am riding the metro).
+This shift from the past to the present shows you are narrating your own life. 
 
-<Quiz client:only="react" questions={[{"question": "How do you ask about the price of a ticket?", "options": [{"text": "Скільки коштує квиток?", "correct": true}, {"text": "Де тут квиток?", "correct": false}, {"text": "Дайте один квиток.", "correct": false}]}, {"question": "You are inviting a friend to a cafe. What do you say?", "options": [{"text": "Ходімо в кафе!", "correct": true}, {"text": "Я був у кафе.", "correct": false}, {"text": "Де кафе?", "correct": false}]}, {"question": "How do you say 'My head hurts'?", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "У мене температура.", "correct": false}, {"text": "Я хворий.", "correct": false}]}, {"question": "Someone asks 'Де ви?'. How do you answer?", "options": [{"text": "Я на вулиці Хрещатик.", "correct": true}, {"text": "Мене звати Адам.", "correct": false}, {"text": "Я з Канади.", "correct": false}]}, {"question": "What tense is 'Завтра я буду читати книгу'?", "options": [{"text": "Future", "correct": true}, {"text": "Past", "correct": false}, {"text": "Present", "correct": false}]}, {"question": "What does 'Смачного!' mean?", "options": [{"text": "Enjoy your meal!", "correct": true}, {"text": "Good morning!", "correct": false}, {"text": "Thank you!", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+## День: Прогу́лянка та нові́ дру́зі
 
-## День (Daytime)
+You emerge from the underground into the bright sunlight. **Ти гуля́єш по Хреща́тику.** (You are walking along Khreshchatyk). 
+**Яка га́рна ву́лиця!** (What a beautiful street!). 
+You see the sweeping architecture and point out landmarks.
+- **Ця буді́вля — ме́рія.** (This building is the city hall.)
+- **Цей магази́н — ЦУМ.** (This store is TSUM.)
 
-Ти **гуля́єш** (stroll) по Хреща́тику. Яка га́рна вулиця! Ти **ба́чиш** (see) вели́кий магази́н — і захо́диш. На сті́нах — **виши́ва́нки** (embroidered shirts). Виши́ва́нка — це і тради́ція, і суча́сна мо́да. Елеме́нти ви́шивки сього́дні но́сять не ті́льки в Украї́ні. Га́рний **сувені́р** (souvenir)!
+Using demonstratives like **цей** (this, masculine) and **ця** (this, feminine) instantly makes your speech more precise. You can evaluate the entire scene around you. 
+
+You spot a vibrant shop. **Ти ба́чиш вели́кий магазин.** (You see a large store). **Ти захо́диш і купуєш сувені́ри.** (You enter and buy souvenirs).
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Скільки коштує **ця** (this) вишиванка? *(How much does this vyshyvanka cost?)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ти:</span> Скільки коштує ця виши́ва́нка? *(How much does this vyshyvanka cost?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Продаве́ць:</span> Ти́сяча дві́сті гривень. *(One thousand two hundred hryvnias.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> О, до́рого! А **ця**? *(Oh, expensive! And this one?)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ти:</span> До́рого! А ця? *(Expensive! And this one?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Продавець:</span> Ця — вісімсо́т. *(This one is eight hundred.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Добре, я **беру́** (I'll take it)! *(Alright, I'll take it!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Будь ласка. Чудо́вий ви́бір! *(Here you go. Wonderful choice!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ти:</span> До́бре, я беру́! *(Good, I'll take it!)*</div>
 
 </div>
 
-The demonstrative pronoun **ця** (this, feminine) points to a specific item — review from M12. The seller says **чудовий вибір** (wonderful choice) — a phrase you'll hear in real Ukrainian shops. Notice the register: this is casual, friendly **розмо́вний** (colloquial) Ukrainian.
+:::note
+In Ukrainian, we simply say **сувені́р** (souvenir). Do not say "пам'ятний сувенір" (memorable souvenir) as you might in English, because the word itself already implies that it is a memory of a place.
+:::
 
-Ти виходиш із магази́ну з паке́том. На годи́ннику — **двана́дцята** (twelve o'clock). Час **обі́дати** (to have lunch)! Time-telling from M26 helps you plan the day naturally.
+In a quiet place, you strike up a conversation. **В кафе ти зустріча́єш Оле́ну.** (In a cafe you meet Olena).
 
-You walk into a café nearby і **зустріча́єш** (meet) Олену.
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оле́на:</span> Приві́т! Зві́дки ти? *(Hi! Where are you from?)*</div>
+<div class="dialogue-line"><span class="speaker">Оле́на:</span> Приві́т! Ти зві́дки? *(Hi! Where are you from?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Ти:</span> Я з Кана́ди. *(I am from Canada.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Я з Кана́ди. А ти? *(I'm from Canada. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> Що ти тут ро́биш? *(What are you doing here?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Ти:</span> Я вивча́ю украї́нську! *(I am studying Ukrainian!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Я з Ха́ркова. Ме́не зва́ти Олена. *(I'm from Kharkiv. My name is Olena.)*</div>
+</div>
 
+You seamlessly use present tense verbs to explain your current state. You have moved past basic drills and are forming genuine connections with locals. Olena smiles at your impressive progress.
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ду́же приє́мно! *(Very nice to meet you!)*</div>
+<div class="dialogue">
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> Як ціка́во! Ході́мо обі́дати! *(How interesting! Let's go have lunch!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> **Ході́мо** (let's go) обідати! *(Let's have lunch!)*</div>
+</div>
 
+You use the imperative **Ходімо** (Let's go) to accept the invitation. You settle at a table and order a warm meal. **Ти замовля́єш борщ і варе́ники.** (You order borscht and varenyky). **Олена замовля́є сала́т.** (Olena orders a salad).
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Із задово́ленням! *(With pleasure!)*</div>
+<div class="dialogue">
 
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Що **замовля́єш** (are you ordering)? *(What are you ordering?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Борщ і варе́ники. Тут дуже сма́чно! *(Borshch and varenyky. It's very tasty here!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Я теж борщ! *(I'll have borshch too!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Смачно! *(Delicious!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ти:</span> Сма́чно! *(Tasty!)*</div>
 
 <div class="dialogue-line"><span class="speaker">Олена:</span> Ти добре гово́риш украї́нською! *(You speak Ukrainian well!)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую! Я вивча́ю вже три місяці́. *(Thanks! I've been learning for three months.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ти:</span> Дякую! *(Thank you!)*</div>
 
 </div>
 
-This dialogue packs in: introductions (M06), the imperative **ходімо** (M43), food ordering (M36), and a genuine compliment. The verb **замовля́ти** (to order food) is the correct Ukrainian word — never use the Russian-influenced *заказа́ти* for ordering at a restaurant.
+<MatchUp client:only="react" pairs={[{"left": "Ordering coffee", "right": "Будь ласка, каву з молоком."}, {"left": "Asking for directions", "right": "Вибачте, як дістатися до метро?"}, {"left": "Buying a souvenir", "right": "Скільки коштує ця вишиванка?"}, {"left": "Meeting someone new", "right": "Привіт! Звідки ти?"}, {"left": "Emergency", "right": "Допоможіть! Викличте швидку!"}, {"left": "At the pharmacy", "right": "Дайте, будь ласка, таблетки від головного болю."}, {"left": "Saying goodbye", "right": "Дякую! До побачення!"}]} instruction={"З'єднайте ситуацію з фразою (Match the situation to the correct phrase)"} />
 
-**Вдень** (during the day) ти **познайо́мився/познайо́милася** (got acquainted) з Оле́ною і **пообі́дав/пообі́дала** (had lunch) у кафе. Гарний день! The verb **познайо́митися** (to get acquainted) is a preview of A2 vocabulary — you'll use it a lot at the next level.
+## Ве́чір: Кіно́ та рефле́ксія
 
-<MatchUp client:only="react" pairs={[{"left": "Ordering coffee", "right": "Будь ласка, каву з молоком."}, {"left": "Asking for directions", "right": "Вибачте, як дістатися до метро?"}, {"left": "Buying a souvenir", "right": "Скільки коштує ця вишиванка?"}, {"left": "Meeting someone new", "right": "Привіт! Звідки ти?"}, {"left": "Emergency", "right": "Допоможіть! Викличте швидку!"}, {"left": "At the pharmacy", "right": "Дайте, будь ласка, таблетки від головного болю."}, {"left": "Saying goodbye", "right": "Дякую! До побачення!"}]} instruction={"З'єднайте ситуацію з правильною фразою (Match the situation to the correct phrase)"} />
+The day is winding down, but the city is still alive. You switch to the compound future tense to make plans.
 
-## Ве́чір (Evening)
-
-After lunch, you and Olena walk through the city together. Evening is approaching — time to make plans.
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Що **бу́демо роби́ти** (will we do) вве́чері? *(What are we going to do this evening?)*</div>
+<div class="dialogue-line"><span class="speaker">Ти:</span> Що бу́демо роби́ти вве́чері? *(What will we do in the evening?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> Ходімо в кіно! *(Let's go to the cinema!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ходімо в кіно́! Є гарний украї́нський **фільм** (film). *(Let's go to the cinema! There's a good Ukrainian film.)*</div>
+<div class="dialogue-line"><span class="speaker">Ти:</span> Добре! О котрі́й? *(Good! At what time?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> О котрі́й? *(At what time?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> О сьо́мій. *(At seven.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Чудо́во! Де **зустрі́немося** (will we meet)? *(Great! Where shall we meet?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Бі́ля **кінотеа́тру** (cinema) о шо́стій п'ятдеся́т. *(Near the cinema at six fifty.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Олена:</span> О сьо́мій. *(At seven.)*</div>
 
 </div>
 
-The future tense **будемо робити** (we will do) — the analytical form you learned in M50. And **ходімо** appears again — this imperative for suggestions is one of the most useful words in spoken Ukrainian.
+You use the critical structure of **о** plus the locative case to pinpoint the exact hour for your evening entertainment.
 
-Ви сидите́ в кінотеа́трі. **Фільм** почина́ється. Ти не все розумі́єш, але́ бага́то слів вже знайо́мі: **роди́на** (family), **мі́сто** (city), **Украї́на**. Це приємно! After sixty-four modules, Ukrainian on screen is no longer just noise — you catch real words, real phrases. Ukrainian cinema is vibrant and growing. Remember this feeling.
-<div class="dialogue">
+You are sitting in the dark theater, listening to the actors. **Ви ди́витеся украї́нський фільм.** (You watch a Ukrainian film). At this stage, integrated communication and getting the gist are much more important than grammatical perfection.
+- **Ти не все розумі́єш.** (You do not understand everything.)
+- **Але́ бага́то!** (But a lot!)
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Ну, як фільм? *(So, how was the film?)*</div>
+You use linking words to describe the sequence of events to yourself later. **Споча́тку ми купи́ли квитки́.** (First we bought tickets). **По́тім ми диви́лися фільм.** (Then we watched a film).
 
+The movie ends, and you step back onto the street. **Пі́сля кіно ви йдете́ в рестора́н.** (After the cinema you go to a restaurant). You reflect on the hours you have spent together. You express your feelings clearly using past and present forms. **Я ду́же задово́лений.** (I am very satisfied, masculine). **Я дуже задово́лена.** (I am very satisfied, feminine). It feels incredible to navigate an entire evening exclusively in Ukrainian.
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Дуже ціка́во! *(Very interesting!)*</div>
+Back in your room, you summarize your day. **Ввечері в готелі ти ду́маєш про свій день.** (In the evening in the hotel you think about your day).
+- **Сьогодні був чудо́вий день!** (Today was a wonderful day!)
+- **Зранку я снідав у кафе.** (In the morning I ate breakfast in a cafe. — or **сні́дала** for feminine)
+- **Потім я гуля́в по мі́сту.** (Then I walked around the city. — or **гуля́ла**)
+- **Я познайо́мився з Оле́ною.** (I got acquainted with Olena. — or **познайо́милася**)
+- **Ввечері ми ходи́ли в кіно і ресторан.** (In the evening we went to the cinema and a restaurant.)
 
+Looking ahead, you make a plan:
+- **За́втра я бу́ду ї́здити по Ки́єву.** (Tomorrow I will ride around Kyiv.)
+- **Я хо́чу поба́чити Лавру!** (I want to see the Lavra!)
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> (сміє́ться) Ходімо в рестора́н! *((laughs) Let's go to a restaurant!)*</div>
+<Order client:only="react" items={["Зранку я прокинувся в готелі.", "Потім я снідав у кафе.", "Після сніданку я їхав на метро в центр.", "Я гуляв по місту і купив сувеніри.", "Вдень я обідав з новою подругою Оленою.", "Ввечері ми ходили в кіно.", "Потім ми вечеряли в ресторані.", "Вночі я повернувся в готель і відпочивав."]} correct_order={[0, 1, 2, 3, 4, 5, 6, 7]} instruction={"Розставте події в хронологічному порядку (Put the events of the day in chronological order)"} />
+<FillIn client:only="react" items={[{"sentence": "_____ я снідав у кафе.", "answer": "Зранку", "options": ["Зранку", "Завтра", "Ввечері"]}, {"sentence": "Зараз я _____ по Хрещатику, тут дуже гарно!", "answer": "гуляю", "options": ["гуляю", "гуляв", "буду гуляти"]}, {"sentence": "Учора я _____ квиток на поїзд.", "answer": "купив", "options": ["купив", "купую", "буду купувати"]}, {"sentence": "Завтра я _____ по Україні.", "answer": "буду подорожувати", "options": ["буду подорожувати", "подорожував", "подорожую"]}, {"sentence": "Ввечері ми _____ в кіно.", "answer": "ходили", "options": ["ходили", "ходимо", "будемо ходити"]}, {"sentence": "Зараз Олена _____ борщ і салат.", "answer": "замовляє", "options": ["замовляє", "замовляла", "замовить"]}, {"sentence": "Учора була гарна погода, і ми _____ в парку.", "answer": "гуляли", "options": ["гуляли", "гуляємо", "будемо гуляти"]}, {"sentence": "Я вже _____ до рівня А2! Вітаю!", "answer": "готовий", "options": ["готовий", "початок", "сувенір"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
+## Підсумок: Ти гото́вий до А2!
 
-<div class="dialogue-line"><span class="speaker">Ти:</span> Добре! Де тут ресторан? *(Sure! Where's a restaurant here?)*</div>
+Take a moment to realize how far you have come. You can now greet people, introduce yourself, and proudly say where you are from (A1.1). You can describe your friends, your family, and everyday objects (A1.2). You talk easily about your daily habits, your likes, and your actions (A1.3). You know how to tell the time, discuss the weather, and name the days and months (A1.4). You can successfully navigate a major city, give directions, and use public transport (A1.5). You can order food in a restaurant, shop in a market, and handle money (A1.6). You know how to address people politely, give basic instructions, and connect ideas (A1.7). And finally, you can confidently talk about what happened in the past, handle emergencies, and make plans for the future (A1.8).
 
+**Віта́ю! Ти ви́вчив рі́вень А1.** (Congratulations! You learned the A1 level). Or for feminine: **Ти ви́вчила рівень А1.** (You learned the A1 level). You should be incredibly proud. But the journey continues! In A2, you will unlock the true engine of the language: **відмі́нки** (cases), which change word endings to show their role in a sentence. You will explore **доко́наний і недоко́наний вид** (perfective and imperfective aspect) to distinguish between ongoing and completed actions. You will learn the elegant synthetic future tense, like saying **прочита́ю** (I will read) instead of just using **буду чита́ти**. You will master subordinate clauses to build complex thoughts. **Це ті́льки початок!** (This is only the **початок** — beginning!). You can now truly live in a Ukrainian city.
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Он там, за ро́гом. *(Over there, around the corner.)*</div>
+Before you turn the page, test yourself with these real-world questions:
+- Can you describe YOUR day in a Ukrainian city in 10 or more sentences?
+- Can you walk into a cafe and order a full meal without using any English?
+- Can you ask a stranger for directions to the metro and understand their answer?
 
-
-<div class="dialogue-line"><span class="speaker">Ти:</span> Ідемо́! *(Let's go!)*</div>
-
-
-</div>
-
-Short, punchy, completely natural — this is how two friends talk after a movie. **За рогом** (around the corner) — a useful location phrase from M31.
-
-**Ввечері** (in the evening) в готелі ти ду́маєш про свій день. **Сьогодні був чудовий день!** Зранку я снідав/снідала у кафе і їхав/їхала на метро. Потім я гуля́в/гуля́ла по Хрещатику і купи́в/купи́ла **сувенір**. Вдень я познайомився/познайомилася з Оленою і пообідав/пообідала. Ввечері ми ходи́ли в кіно і ресторан. **За́втра я бу́ду ї́здити по Ки́єву.** Я хо́чу поба́чити **Лавру** (Lavra — the famous Kyiv monastery)!
-
-This paragraph is the grammatical heart of the module. Three tenses appear naturally: **past** (зранку я снідав, я гуляв, ми ходили), **present** (я ду́маю, я хочу), and **future** (завтра я буду їздити). Masculine and feminine pairs throughout — pick your set. You are already combining all three tenses the way native speakers do: telling what happened, feeling something now, planning for tomorrow.
+If you can do these things, you are **готовий** (ready). You have built a solid, unbreakable foundation. Celebrate this incredible milestone. 
 
 :::tip
-**Зверни́ ува́гу** (pay attention): in that reflection paragraph, three tenses work together. **Мину́лий час** (past): я снідав, я гуляв. **Тепе́рішній час** (present): я думаю, я хочу. **Майбу́тній час** (future): я буду їздити. You're already using all three naturally. Це А1!
+Celebrate your progress! The phrase **Ти вже мо́жеш жи́ти в украї́нському мі́сті** (You can already live in a Ukrainian city) is not an exaggeration. The A1 level gives you all the fundamental building blocks to survive, connect, and thrive.
 :::
 
-<Quiz client:only="react" questions={[{"question": "What did the narrator do immediately after waking up?", "options": [{"text": "Went to the cinema", "correct": false}, {"text": "Had breakfast at the café on the first floor", "correct": true}, {"text": "Bought a souvenir on Khreshchatyk", "correct": false}]}, {"question": "What did the narrator do after breakfast?", "options": [{"text": "Had lunch with Olena", "correct": false}, {"text": "Rode the metro to the city centre", "correct": true}, {"text": "Watched a film", "correct": false}]}, {"question": "When did the narrator meet Olena?", "options": [{"text": "Зранку (in the morning)", "correct": false}, {"text": "Вночі (at night)", "correct": false}, {"text": "Вдень (during the day)", "correct": true}]}, {"question": "Where did the narrator and Olena go first in the evening?", "options": [{"text": "В ресторан (to a restaurant)", "correct": false}, {"text": "В кіно (to the cinema)", "correct": true}, {"text": "В готель (to the hotel)", "correct": false}]}, {"question": "What happened after the cinema?", "options": [{"text": "The narrator went back to the hotel", "correct": false}, {"text": "They rode the metro", "correct": false}, {"text": "They had dinner at a restaurant", "correct": true}]}, {"question": "What does the narrator plan to see tomorrow?", "options": [{"text": "Хрещатик (Khreshchatyk)", "correct": false}, {"text": "Метро (the metro)", "correct": false}, {"text": "Лавру (the Lavra)", "correct": true}]}]} instruction={"Що сталося першим? (What happened first?)"} />
+**До зу́стрічі на рі́вні А2!** (See you at the A2 level!)
 
-## Підсумок: ти гото́вий/гото́ва! (You're Ready!)
-
-Fifty-five modules. Hundreds of words. And today — a whole day in Kyiv, entirely in Ukrainian. Here is everything you can now do:
-
-- **Привіта́тися й познайомитися** (greet and introduce yourself) — «Привіт! Мене звати Адам. Я з Канади.» (A1.1)
-- **Описа́ти люди́ну, сім'ю́, ре́чі** (describe people, family, things) — «Моя́ ма́ма висо́ка і до́бра. У мене є сестра́.» (A1.2)
-- **Розпові́сти́ про ді́ї та зви́чки** (talk about actions and habits) — «Я люблю́ чита́ти. Щодня́ я ходжу́ в парк.» (A1.3)
-- **Говори́ти про час і пого́ду** (talk about time and weather) — «Сьогодні вівто́рок, дванадцята годи́на. Надворі хо́лодно.» (A1.4)
-- **Орієнтува́тися в мі́сті** (navigate a city) — «Ї́дьте на метро, станція Хрещатик.» (A1.5)
-- **Замовляти ї́жу, робити поку́пки** (order food, shop) — «Будь ласка, борщ і каву. Скільки коштує?» (A1.6)
-- **Зверта́тися вві́чливо** (address people politely) — «Вибачте, допоможі́ть, будь ласка.» (A1.7)
-- **Розповіда́ти про мину́ле, робити пла́ни** (talk about the past, make plans) — «Учо́ра я був у кіно. Завтра буду вдо́ма. Допоможіть! Ви́кличте швидку́!» (A1.8)
-
-At **A2**, you'll discover **відмі́нки** (cases — how words change form depending on their role in a sentence), **вид дієслова́** (verb aspect — perfective and imperfective), the **синтети́чний майбутній час** (synthetic future: **прочита́ю**, **скажу́** instead of **буду читати**), and more complex sentences. The grammar deepens — but the foundation is solid. **Святку́й!** (Celebrate!) Ти ви́вчив/ви́вчила А1. **Віта́ю!** (Congratulations!) Ти вже мо́жеш жи́ти в украї́нському місті. Це тільки **поча́ток** (beginning)!
-
-**Переві́р себе́** (check yourself): can you describe your day in a Ukrainian city in ten or more sentences? Use past, present, and future tense. Start like this: «Сьогодні вра́нці я прокинувся/прокинулася…» If you can — ти **готовий/готова** (ready) до А2. **Впере́д!** (Forward!)
-
-<FillIn client:only="react" items={[{"sentence": "{___} я снідав у кафе.", "answer": "Зранку", "options": ["Зранку", "Завтра", "Ввечері"]}, {"sentence": "Зараз я {___} по Хрещатику, тут дуже гарно!", "answer": "гуляю", "options": ["гуляю", "гуляв", "буду гуляти"]}, {"sentence": "Учора я {___} квиток на поїзд.", "answer": "купив", "options": ["купив", "купую", "буду купувати"]}, {"sentence": "Завтра я {___} по Україні.", "answer": "буду подорожувати", "options": ["буду подорожувати", "подорожував", "подорожую"]}, {"sentence": "Ввечері ми {___} в кіно.", "answer": "ходили", "options": ["ходили", "ходимо", "будемо ходити"]}, {"sentence": "Зараз Олена {___} борщ і салат.", "answer": "замовляє", "options": ["замовляє", "замовляла", "замовить"]}, {"sentence": "Учора була гарна погода, і ми {___} в парку.", "answer": "гуляли", "options": ["гуляли", "гуляємо", "будемо гуляти"]}, {"sentence": "Я вже {___} до рівня А2! Вітаю!", "answer": "готовий", "options": ["готовий", "початок", "сувенір"]}]} instruction={"Оберіть правильне слово (Choose the correct word)"} />
-
-Дякуємо, що ти вивча́єш украї́нську. Ця мо́ва — жива́, краси́ва і важли́ва. Вона́ звучи́ть у пісня́х, у книжка́х, на ву́лицях Києва, Льво́ва, Харкова. Тепе́р вона тро́хи твоя́ теж. **До зу́стрічі на А2!** (See you at A2!)
-
-Хрещатик, метро, борщ, вишиванка, **Ла́вра** — за цей мо́дуль ти **прові́в/провела́** (spent) ці́лий день у Києві. Ці слова́ бі́льше не про́сто слова — це твій до́свід. Україна — це не тільки мова. Це культу́ра, лю́ди, міста. Ти тільки почина́єш **відкрива́ти** (to discover) для себе цю краї́ну. А попе́реду — ще так багато ціка́вого.
+<Quiz client:only="react" questions={[{"question": "Як запитати про ціну квитка? (How do you ask about the price of a ticket?)", "options": [{"text": "Скільки коштує квиток?", "correct": true}, {"text": "Де тут квиток?", "correct": false}, {"text": "Дайте один квиток.", "correct": false}, {"text": "Який це квиток?", "correct": false}]}, {"question": "Ви запрошуєте друга в кафе. Що ви скажете? (You are inviting a friend to a cafe. What do you say?)", "options": [{"text": "Ходімо в кафе!", "correct": true}, {"text": "Я був у кафе.", "correct": false}, {"text": "Де кафе?", "correct": false}, {"text": "Це кафе.", "correct": false}]}, {"question": "Як сказати 'My head hurts'? (How do you say 'My head hurts'?)", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "У мене температура.", "correct": false}, {"text": "Я хворий.", "correct": false}, {"text": "У мене є голова.", "correct": false}]}, {"question": "Хтось питає 'Де ви?'. Як ви відповісте? (Someone asks 'Де ви?'. How do you answer?)", "options": [{"text": "Я на вулиці Хрещатик.", "correct": true}, {"text": "Мене звати Адам.", "correct": false}, {"text": "Я з Канади.", "correct": false}, {"text": "Я йду туди.", "correct": false}]}, {"question": "Який час у реченні 'Завтра я буду читати книгу'? (What tense is 'Завтра я буду читати книгу'?)", "options": [{"text": "Майбутній час (Future)", "correct": true}, {"text": "Минулий час (Past)", "correct": false}, {"text": "Теперішній час (Present)", "correct": false}, {"text": "Немає часу (No tense)", "correct": false}]}, {"question": "Як запитати про погоду? (How do you ask about the weather?)", "options": [{"text": "Яка сьогодні погода?", "correct": true}, {"text": "Сьогодні тепло.", "correct": false}, {"text": "Де погода?", "correct": false}, {"text": "Що ти робиш?", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
 </TabItem>
 <TabItem label="Словник">
@@ -247,68 +209,55 @@ At **A2**, you'll discover **відмі́нки** (cases — how words change fo
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **готе́ль** | hotel | ім. | ч. |
-| **проки́нувся / проки́нулася** | woke up (masc. / fem.) |  |  |
-| **надво́рі** | outside | присл. |  |
-| **сні́дати** | to have breakfast | дієсл. |  |
-| **офіціа́нт** | waiter | ім. | ч. |
 | **круаса́н** | croissant | ім. | ч. |
-| **лі́нія** | line (e.g. metro line) | ім. | ж. |
-| **квито́к** | ticket | ім. | ч. |
-| **ліво́руч** | to the left | присл. |  |
-| **зра́нку** | in the morning | присл. |  |
-| **гуля́ти** | to stroll / to walk around | дієсл. |  |
-| **виши́ва́нка** | Ukrainian embroidered shirt | ім. | ж. |
-| **до́рого** | expensive | ім. | ж. |
-| **сувені́р** | souvenir | ім. | ч. |
-| **розмо́вний** | colloquial / conversational | прикм. |  |
-| **обі́дати** | to have lunch | дієсл. |  |
-| **познайо́митися** | to get acquainted / to meet someone | дієсл. |  |
-| **замовля́ти** | to order (food or services) | дієсл. |  |
-| **зустрі́ти** | to meet / to encounter | дієсл. |  |
-| **кінотеа́тр** | cinema / movie theater | ім. | ч. |
-| **вве́чері** | in the evening | присл. |  |
-| **відкрива́ти** | to discover / to open up | дієсл. |  |
-| **прові́в / провела́** | spent (time) (masc. / fem.) |  |  |
-| **Ла́вра** | Lavra — the famous Kyiv Monastery of the Caves | ім. | ч. |
+| **ка́рта** | map | ім. | ж. |
+| **лі́нія** | line | ім. | ж. |
+| **познайо́митися** | to get acquainted | дієсл. |  |
+| **подорожува́ти** | to travel | дієсл. |  |
+| **Ла́вра** | Lavra (Kyiv monastery) | ім. | ч. |
+| **гото́вий** | ready | прикм. |  |
+| **віта́ю** | congratulations | дієсл. |  |
 | **поча́ток** | beginning | ім. | ч. |
-| **гото́вий / гото́ва** | ready (masc. / fem.) |  |  |
-| **віта́ю** | congratulations / I greet you | дієсл. |  |
+| **сувені́р** | souvenir | ім. | ч. |
+| **квито́к** | ticket | ім. | ч. |
+| **зустрі́ти** | to meet | дієсл. |  |
+| **тепло́** | warm | присл. |  |
+| **со́нячно** | sunny | присл. |  |
+| **виши́ва́нка** | vyshyvanka (embroidered shirt) | ім. | ж. |
+| **до́рого** | expensive | ім. | ж. |
+| **споча́тку** | first | присл. |  |
+| **по́тім** | then | присл. |  |
+| **пі́сля** | after | присл. |  |
+| **задово́лений** | satisfied | прикм. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Чудовий вибір!** | Wonderful choice! |
-| **Із задоволенням!** | With pleasure! |
-| **Зверни увагу** | Pay attention / Note |
-| **Перевір себе** | Check yourself / Test yourself |
-| **Святкуй!** | Celebrate! |
-| **Вперед!** | Forward! / Onwards! |
-| **До зустрічі на А2!** | See you at A2! |
-| **Гарного дня!** | Have a good day! |
+| **Доброго ранку!** | Good morning! |
+| **До побачення!** | Goodbye! |
+| **як дістатися до...** | how to get to... |
+| **я беру** | I'll take [it] |
+| **О котрій?** | At what time? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "проки́нувся / проки́нулася", back: "woke up (masc. / fem.)" }, { front: "надво́рі", back: "outside", subtitle: "присл." }, { front: "сні́дати", back: "to have breakfast", subtitle: "дієсл." }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "круаса́н", back: "croissant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́нія", back: "line (e.g. metro line)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "квито́к", back: "ticket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ліво́руч", back: "to the left", subtitle: "присл." }, { front: "зра́нку", back: "in the morning", subtitle: "присл." }, { front: "гуля́ти", back: "to stroll / to walk around", subtitle: "дієсл." }, { front: "виши́ва́нка", back: "Ukrainian embroidered shirt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "до́рого", back: "expensive", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сувені́р", back: "souvenir", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "розмо́вний", back: "colloquial / conversational", subtitle: "прикм." }, { front: "обі́дати", back: "to have lunch", subtitle: "дієсл." }, { front: "познайо́митися", back: "to get acquainted / to meet someone", subtitle: "дієсл." }, { front: "замовля́ти", back: "to order (food or services)", subtitle: "дієсл." }, { front: "зустрі́ти", back: "to meet / to encounter", subtitle: "дієсл." }, { front: "кінотеа́тр", back: "cinema / movie theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }, { front: "відкрива́ти", back: "to discover / to open up", subtitle: "дієсл." }, { front: "прові́в / провела́", back: "spent (time) (masc. / fem.)" }, { front: "Ла́вра", back: "Lavra — the famous Kyiv Monastery of the Caves", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "поча́ток", back: "beginning", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гото́вий / гото́ва", back: "ready (masc. / fem.)" }, { front: "віта́ю", back: "congratulations / I greet you", subtitle: "дієсл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "круаса́н", back: "croissant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́рта", back: "map", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́нія", back: "line", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "познайо́митися", back: "to get acquainted", subtitle: "дієсл." }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "Ла́вра", back: "Lavra (Kyiv monastery)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гото́вий", back: "ready", subtitle: "прикм." }, { front: "віта́ю", back: "congratulations", subtitle: "дієсл." }, { front: "поча́ток", back: "beginning", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сувені́р", back: "souvenir", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "квито́к", back: "ticket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зустрі́ти", back: "to meet", subtitle: "дієсл." }, { front: "тепло́", back: "warm", subtitle: "присл." }, { front: "со́нячно", back: "sunny", subtitle: "присл." }, { front: "виши́ва́нка", back: "vyshyvanka (embroidered shirt)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "до́рого", back: "expensive", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "споча́тку", back: "first", subtitle: "присл." }, { front: "по́тім", back: "then", subtitle: "присл." }, { front: "пі́сля", back: "after", subtitle: "присл." }, { front: "задово́лений", back: "satisfied", subtitle: "прикм." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "Зранку я {___} у готелі в Києві.", "answer": "прокинувся", "options": ["прокинувся", "снідав", "гуляв"]}, {"sentence": "Я купив {___} на метро.", "answer": "квиток", "options": ["квиток", "сувенір", "фільм"]}, {"sentence": "Ця вишиванка — гарний {___} з України.", "answer": "сувенір", "options": ["сувенір", "квиток", "готель"]}, {"sentence": "Ввечері ми дивилися {___} в кінотеатрі.", "answer": "фільм", "options": ["фільм", "карту", "лінію"]}, {"sentence": "Я зупинився в {___} біля метро.", "answer": "готелі", "options": ["готелі", "кафе", "ресторані"]}, {"sentence": "Ти вже {___} до рівня А2. Вітаю!", "answer": "готовий", "options": ["готовий", "початок", "сувенір"]}, {"sentence": "Ми вирішили {___} по Україні потягом.", "answer": "подорожувати", "options": ["подорожувати", "познайомитися", "зустріти"]}, {"sentence": "Мій друг хотів {___} мене біля метро о шостій.", "answer": "зустріти", "options": ["зустріти", "познайомитися", "подорожувати"]}]} instruction={"Вставте правильне слово (Fill in the missing word)"} />
+<MatchUp client:only="react" pairs={[{"left": "круасан", "right": "croissant"}, {"left": "карта", "right": "map"}, {"left": "фільм", "right": "film"}, {"left": "готель", "right": "hotel"}, {"left": "сувенір", "right": "souvenir"}, {"left": "квиток", "right": "ticket"}, {"left": "початок", "right": "beginning"}]} instruction={"З'єднайте українські слова з перекладом (Match Ukrainian words with their translation)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "квиток", "right": "ticket"}, {"left": "сувенір", "right": "souvenir"}, {"left": "готель", "right": "hotel"}, {"left": "фільм", "right": "film"}, {"left": "початок", "right": "beginning"}, {"left": "вітаю", "right": "congratulations"}, {"left": "готовий", "right": "ready"}, {"left": "лінія", "right": "line"}]} instruction={"З'єднайте слово з його значенням (Match the word to its English meaning)"} />
+<OddOneOut client:only="react" items={[{"words": ["готель", "кафе", "ресторан", "квиток"], "correct": 3, "explanation": "Квиток (ticket) is not a place, the others are places."}, {"words": ["снідати", "обідати", "вечеряти", "сувенір"], "correct": 3, "explanation": "Сувенір (souvenir) is a noun, the others are verbs for eating."}, {"words": ["сьогодні", "завтра", "зранку", "круасан"], "correct": 3, "explanation": "Круасан (croissant) is food, the others are time words."}, {"words": ["фільм", "кіно", "театр", "вулиця"], "correct": 3, "explanation": "Вулиця (street) is not entertainment."}, {"words": ["мій", "твоя", "наш", "готовий"], "correct": 3, "explanation": "Готовий (ready) is an adjective, the others are possessive pronouns."}, {"words": ["метро", "автобус", "таксі", "карта"], "correct": 3, "explanation": "Карта (map) is not a form of transport."}]} instruction={"Знайдіть четверте зайве (Find the odd one out)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "У минулому часі українські дієслова мають форми чоловічого і жіночого роду: снідав (чол.) / снідала (жін.).", "isTrue": true, "explanation": "Так, у минулому часі дієслово змінюється за родом. Чоловічий рід: -в (снідав, гуляв). Жіночий рід: -ла (снідала, гуляла)."}, {"statement": "Аналітичний майбутній час утворюється за схемою: буду + інфінітив (наприклад: буду подорожувати).", "isTrue": true, "explanation": "Так, це аналітична форма майбутнього часу. Приклад: буду їздити, буду читати, буду подорожувати."}, {"statement": "Слово 'заказати' є нейтральним стилістичним варіантом слова 'замовити' для замовлення їжі.", "isTrue": false, "explanation": "Ні. 'Заказати' є русизмом і не рекомендується в літературній українській мові. Правильно: замовити / замовляти."}, {"statement": "Лавра — це знаменитий монастирський комплекс у Києві.", "isTrue": true, "explanation": "Так, Києво-Печерська Лавра — один з найстаріших монастирів України, заснований у XI столітті."}, {"statement": "'Смачного' походить від прикметника 'смачний' (tasty) і є стандартним українським побажанням перед їжею.", "isTrue": true, "explanation": "Так, 'смачного' — це форма родового відмінку від 'смачний'. Відповідає французькому 'bon appétit'."}, {"statement": "Станція метро Хрещатик знаходиться на зеленій лінії київського метро.", "isTrue": true, "explanation": "Так, станція Хрещатик — на Святошинсько-Броварській (зеленій) лінії київського метро."}]} instruction={"Правда чи ні? (True or false?)"} />
+<Anagram client:only="react" items={[{"scrambled": "г о т е л ь", "answer": "готель", "hint": "hotel"}, {"scrambled": "к в и т о к", "answer": "квиток", "hint": "ticket"}, {"scrambled": "к а р т а", "answer": "карта", "hint": "map"}, {"scrambled": "ф і л ь м", "answer": "фільм", "hint": "film"}, {"scrambled": "л і н і я", "answer": "лінія", "hint": "line"}, {"scrambled": "п о ч а т о к", "answer": "початок", "hint": "beginning"}]} instruction={"Складіть слово з літер (Rearrange the letters to form a word)"} />
 
-<GroupSort client:only="react" groups={{"Минулий час (Past)": ["снідав", "гуляв", "купив", "ходили", "прокинувся", "познайомився"], "Теперішній час (Present)": ["гуляю", "замовляє", "думаю", "бачиш", "виходиш", "купуєш"], "Майбутній час (Future)": ["буду їздити", "буду подорожувати", "будемо робити", "зустрінемося", "буду читати", "буду вдома"]}} instruction={"Розподіліть дієслова за часом (Sort the verb forms by tense)"} />
+<Translate client:only="react" questions={[{"source": "I am ready.", "options": [{"text": "Я готовий.", "correct": true}, {"text": "Я готов.", "correct": false}, {"text": "Мені готовий.", "correct": false}]}, {"source": "Congratulations!", "options": [{"text": "Вітаю!", "correct": true}, {"text": "Дякую!", "correct": false}, {"text": "Будь ласка.", "correct": false}]}, {"source": "This is a souvenir.", "options": [{"text": "Це сувенір.", "correct": true}, {"text": "Там сувенір.", "correct": false}, {"text": "Тут сувенір.", "correct": false}]}, {"source": "I want to travel.", "options": [{"text": "Я хочу подорожувати.", "correct": true}, {"text": "Я подорожую.", "correct": false}, {"text": "Я буду подорожувати.", "correct": false}]}, {"source": "Let's go to the cinema!", "options": [{"text": "Ходімо в кіно!", "correct": true}, {"text": "Я йду в кіно.", "correct": false}, {"text": "Ми були в кіно.", "correct": false}]}, {"source": "How much does the ticket cost?", "options": [{"text": "Скільки коштує квиток?", "correct": true}, {"text": "Де квиток?", "correct": false}, {"text": "Дайте квиток.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
-<Quiz client:only="react" questions={[{"question": "Учора я ___ борщ у ресторані.", "options": [{"text": "їв", "correct": true}, {"text": "їм", "correct": false}, {"text": "буду їсти", "correct": false}]}, {"question": "Зараз Олена ___ каву в кафе.", "options": [{"text": "п'є", "correct": true}, {"text": "пила", "correct": false}, {"text": "буде пити", "correct": false}]}, {"question": "Завтра ми ___ до Лаври.", "options": [{"text": "поїдемо", "correct": true}, {"text": "їхали", "correct": false}, {"text": "їдемо", "correct": false}]}, {"question": "Вчора ми ___ в кіно разом.", "options": [{"text": "ходили", "correct": true}, {"text": "ходимо", "correct": false}, {"text": "будемо ходити", "correct": false}]}, {"question": "Зранку я ___ у готелі.", "options": [{"text": "прокинувся", "correct": true}, {"text": "прокидаюся", "correct": false}, {"text": "прокинуся", "correct": false}]}, {"question": "Зараз я ___ на метро в центр.", "options": [{"text": "їду", "correct": true}, {"text": "їхав", "correct": false}, {"text": "буду їхати", "correct": false}]}]} instruction={"Оберіть правильну форму дієслова (Choose the correct verb form)"} />
+<FillIn client:only="react" items={[{"sentence": "_____ читаю цікаву книгу.", "answer": "Я", "options": ["Я", "Ти", "Він"]}, {"sentence": "_____ працюємо в офісі.", "answer": "Ми", "options": ["Ми", "Ви", "Вони"]}, {"sentence": "Що _____ робиш?", "answer": "ти", "options": ["ти", "ви", "він"]}, {"sentence": "_____ гуляє в парку з собакою.", "answer": "Вона", "options": ["Вона", "Я", "Ми"]}, {"sentence": "_____ дивляться український фільм.", "answer": "Вони", "options": ["Вони", "Ми", "Ви"]}, {"sentence": "Де _____ живете?", "answer": "ви", "options": ["ви", "ти", "ми"]}]} instruction={"Вставте правильний займенник (Insert the correct pronoun)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я хочу заказати борщ, будь ласка.", "errorWord": "заказати", "correctForm": "замовити", "options": ["замовити", "забронювати", "придбати"], "explanation": "'Заказати' — русизм, не рекомендований у літературній мові. Правильно: замовити (to order)."}, {"sentence": "Учора ми ходимо в кіно разом.", "errorWord": "ходимо", "correctForm": "ходили", "options": ["ходили", "підемо", "ідемо"], "explanation": "'Учора' вимагає минулого часу. Правильно: ходили."}, {"sentence": "Завтра я подорожував по Україні.", "errorWord": "подорожував", "correctForm": "буду подорожувати", "options": ["буду подорожувати", "подорожую", "подорожую вже"], "explanation": "'Завтра' вимагає майбутнього часу. Правильно: буду подорожувати."}, {"sentence": "Зранку я снідаю в кафе вчора.", "errorWord": "снідаю", "correctForm": "снідав", "options": ["снідав", "буду снідати", "поснідаю"], "explanation": "'Вчора' вимагає минулого часу. Правильно: снідав."}, {"sentence": "Скільки коштую ця вишиванка?", "errorWord": "коштую", "correctForm": "коштує", "options": ["коштує", "коштуєш", "коштуємо"], "explanation": "Вишиванка — 3-тя особа однини. Правильне закінчення: коштує."}, {"sentence": "Привіт! Я хочу познайомити з тобою.", "errorWord": "познайомити", "correctForm": "познайомитися", "options": ["познайомитися", "познайомлю", "познайомив"], "explanation": "Правильна рефлексивна форма: познайомитися (to get acquainted with someone)."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
-
-<Translate client:only="react" questions={[{"source": "How much does this vyshyvanka cost?", "options": [{"text": "Скільки коштує ця вишиванка?", "correct": true}, {"text": "Де ця вишиванка?", "correct": false}, {"text": "Дайте цю вишиванку.", "correct": false}]}, {"source": "Let's go to a restaurant!", "options": [{"text": "Ходімо в ресторан!", "correct": true}, {"text": "Я в ресторані.", "correct": false}, {"text": "Де ресторан?", "correct": false}]}, {"source": "I got acquainted with Olena today.", "options": [{"text": "Сьогодні я познайомився з Оленою.", "correct": true}, {"text": "Я знаю Олену сьогодні.", "correct": false}, {"text": "Олена моя подруга.", "correct": false}]}, {"source": "Tomorrow I will travel around Ukraine.", "options": [{"text": "Завтра я буду подорожувати по Україні.", "correct": true}, {"text": "Вчора я подорожував по Україні.", "correct": false}, {"text": "Зараз я подорожую по Україні.", "correct": false}]}, {"source": "Congratulations! You are ready for A2!", "options": [{"text": "Вітаю! Ти готовий до А2!", "correct": true}, {"text": "Дякую! Ти вже на початку.", "correct": false}, {"text": "Привіт! Ти знаєш А2.", "correct": false}]}, {"source": "This is just the beginning!", "options": [{"text": "Це тільки початок!", "correct": true}, {"text": "Це вже кінець.", "correct": false}, {"text": "Це дуже добре!", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
-
+<GroupSort client:only="react" groups={{"Неформально (Ти - Informal)": ["Привіт!", "Як твої справи?", "Бувай!", "Звідки ти?"], "Ввічливо (Ви - Polite)": ["Добрий день!", "Як ваші справи?", "До побачення!", "Звідки ви?"]}} instruction={"Розподіліть фрази (Sort the phrases into categories)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -317,19 +266,19 @@ At **A2**, you'll discover **відмі́нки** (cases — how words change fo
 
 - [ULP Season 1, Episodes 36-40](https://www.ukrainianlessons.com/episode36/)
   _Consolidation episodes — daily life in Ukrainian._
-- State Standard 2024
-  _A1 completion — all thematic areas covered._
+
+## Підручники (Textbooks)
+
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=69), стор. 69
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=122), стор. 122
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=202), стор. 202
+- [Ворон А. А. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-voron-2019.pdf#page=248), стор. 248
+- [Вашуленко М. С. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-vashulenko-2019-1.pdf#page=35), стор. 35
 
 **Статті — Articles**
 
 - [Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) (Master Cyrillic)
 - [Ukrainian Daily Routine Vocabulary](https://www.ukrainianlessons.com/daily-routine/) (Review common verbs and nouns for daily activities)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Future Tense](https://www.ukrainianlessons.com/future-tense/)
-- [Ukrainian Tenses (Overview)](https://www.ukrainianlessons.com/ukrainian-tenses/)
 
 </TabItem>
 </Tabs>

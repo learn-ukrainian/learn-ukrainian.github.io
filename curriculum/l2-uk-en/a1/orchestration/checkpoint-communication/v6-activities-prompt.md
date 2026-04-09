@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: activity-1 -->`
-- `<!-- INJECT_ACTIVITY: activity-2 -->`
-- `<!-- INJECT_ACTIVITY: activity-3 -->`
-- `<!-- INJECT_ACTIVITY: activity-4 -->`
+- `<!-- INJECT_ACTIVITY: vocative-imperative-practice -->`
+- `<!-- INJECT_ACTIVITY: conjunctions-quiz -->`
+- `<!-- INJECT_ACTIVITY: complex-sentences-fill-in -->`
+- `<!-- INJECT_ACTIVITY: holiday-greeting-match -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -75,101 +75,91 @@ required: []
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-Welcome to the communication checkpoint. This is not a test, but a chance to look back and see how far your skills have developed. Over the last few modules, you have learned to interact actively with others. Here are five questions to check your knowledge from this phase:
+Welcome to the A1.7 Checkpoint. This module serves as your "Communication Hub", where we integrate all the social skills you have acquired in the previous five lessons. Language is a tool for connection, and in a real-world scenario, you do not just recite vocabulary; you use it to achieve a specific goal. Your mission in this module is practical: you are helping your friends organize a lively school event. This task requires addressing people directly, giving clear orders or polite requests, and explaining your plans with logical reasons.
 
-1. Can I address a friend directly using the vocative case? (Like **Тарасе!** (Taras!))
-2. Can I make requests and give instructions using the imperative? (Like **Принеси!** (Bring!))
-3. Can I connect ideas using coordinating conjunctions? (**і** (and), **але** (but), **бо** (because))
-4. Can I build complex sentences? (using **що** (that), **де** (where), **коли** (when))
-5. Can I talk about holidays and greet people? (**З Різдвом!** (Merry Christmas!))
+:::note
+**Checkpoint Modules**
+A Checkpoint module does not introduce new grammar rules. Instead, it tests your ability to combine what you already know into natural, flowing conversation.
+:::
 
-If you remember the patterns, you have the answers. For the vocative case, names change their endings: **Олена** (Olena) becomes **Олено**, **Тарас** (Taras) becomes **Тарасе**, and **Андрій** (Andriy) becomes **Андрію**. For the imperative mood, you form direct commands like **читай** / **читайте** (read) or **дай** / **дайте** (give). You connect your thoughts with **і** / **та** (and), **а** (and/but), **але** (but), and **бо** (because). You link dependent clauses with **що** (that), **де** (where), and **коли** (when), always remembering to add a comma before them. Finally, you greet people using **З** plus the instrumental case, like **З Різдвом!** (Merry Christmas!) or **З Великоднем!** (Happy Easter!).
-
-If you can confidently tick each box, you now possess the complete A1.7 communication toolkit. You can address real people by their names, politely tell them what to do, explain why, and build longer, natural thoughts. Together, these five tools make you sound like someone who actually speaks Ukrainian, rather than someone just reading words from a phrasebook.
+Do you remember how to call a friend by name? You cannot just say their name in the basic dictionary form. You must adapt it using the vocative case, such as **Тарасе!** (Taras!) or **Олено!** (Olena!). Do you remember how to ask for help? You need the commanding forms of the imperative mood, such as **Дай!** (Give!) or **Принеси!** (Bring!). Can you explain your reasons clearly? You need conjunctions to link your thoughts, such as **бо я не знаю...** (because I do not know...) or **тому що...** (because...). Finally, we integrate the cultural context of holiday greetings, such as **З Різдвом!** (Merry Christmas!), to ensure your speech is authentic. These elements combine to build real, effective conversations.
 
 ## Читання (Reading Practice)
 
-Read the text below. Notice how all five A1.7 communication tools appear naturally together in one single realistic situation.
+Observe how these essential communication tools work together in a single, natural flow. Imagine the scene: Olena is contacting her friend Taras to plan a community Christmas gathering at the school. They are organizing a small fair, and she needs to coordinate the details quickly. She needs him to arrive early, bring specific items, and she needs to explain the reasons behind her requests clearly. This short reading text demonstrates how the vocative case, the imperative mood, and linking conjunctions function simultaneously in real Ukrainian communication.
 
-> **Олена телефонує Тарасу напередодні Різдва.** (Olena calls Taras on the eve of Christmas.) Вона радісно каже: (She happily says:) «**Тарасе**, прийди до мене, бо ми святкуємо разом! (Taras, come to me, because we are celebrating together!) І я вже маю свічки, але я не знаю, коли ти вільний. (And I already have candles, but I do not know when you are free.) Я думаю, що це буде дуже гарне свято. (I think that it will be a very beautiful holiday.) Принеси **кутю**, будь ласка!» (Bring kutia, please!)
->
-> Тарас уважно слухає. (Taras listens carefully.) Він усміхається і каже: (He smiles and says:) «Привіт, **Олено**! (Hi, Olena!) Добре, принесу! (Good, I will bring it!) Скажи, де ти будеш двадцять четвертого. (Tell me where you will be on the twenty-fourth.) Ми можемо співати разом. (We can sing together.) І я маю дуже гарні **колядки**! (And I have very beautiful carols!) **З Різдвом!**» (Merry Christmas!)
+Read the message below carefully. Pay attention to how Olena builds her message and connects her ideas using short, precise sentences.
 
-Let's check your understanding. Answer these questions in a single sentence:
-1. **Що просить Олена?** (What does Olena ask for?)
-2. **Коли Тарас вільний?** (When is Taras free?)
+**Лист Олени** (Olena's letter)
 
-<!-- INJECT_ACTIVITY: activity-1 -->
+* **Тарасе, привіт!** (Taras, hello!)
+* **Прийди раніше, будь ласка.** (Come earlier, please.)
+* **Принеси плакати і квитки.** (Bring the posters and tickets.)
+* **Я знаю, що ти маєш напої.** (I know that you have the drinks.)
+* **Але нам потрібні стільці, бо людей буде багато.** (But we need chairs, because there will be many people.)
+* **Я хочу, щоб ми святкували Різдво разом.** (I want us to celebrate Christmas together.)
+* **Скажи, коли ти будеш у школі.** (Tell me when you will be at school.)
+
+Notice the specific nouns she uses for the event: **плакат** (poster), **квиток** (ticket), **напій** (drink), and **стілець** (chair). She begins with the vocative **Тарасе!** to capture his attention immediately. She relies on the imperative verb forms **прийди** (come), **принеси** (bring), and **скажи** (tell) to issue direct instructions. Finally, she structures her thoughts smoothly using the conjunctions **і** (and), **що** (that), **але** (but), **бо** (because), and **коли** (when). Every grammatical tool serves a clear purpose.
 
 ## Граматика (Grammar Summary)
 
-Use the vocative case whenever you call someone directly.
+In Ukraine, calling someone by their name in the basic Nominative case (like "Оксана!") sounds like you are reading a list. For real communication, you must use the Vocative case. Review the three main patterns for A1 names. Feminine names ending in **-а** change to **-о**: **Оксана** becomes **Оксано**, and **Олена** becomes **Олено**. Masculine names ending in a hard consonant add **-е**: **Петро** becomes **Петре**, **Тарас** becomes **Тарасе**, and **друг** (friend) becomes **друже**. Names with a soft ending or ending in **-й** change to **-ю**: **Андрій** becomes **Андрію**, and **матуся** (mommy) becomes **матусю**.
 
-| Називний (Nominative) | Кличний (Vocative) | English |
-|---|---|---|
-| **Олена** | **Олено!** | Olena! (-а → -о) |
-| **мама** | **мамо!** | Mom! (-а → -о) |
-| **Тарас** | **Тарасе!** | Taras! (hard consonant → -е) |
-| **друг** | **друже!** | Friend! (hard consonant → -е) |
-| **Андрій** | **Андрію!** | Andriy! (soft/й → -ю) |
-| **учитель** | **учителю!** | Teacher! (soft/й → -ю) |
+When you ask someone to do something, you rely on the Imperative mood. For informal situations speaking to one person (**ти**), use forms like **читай** (read), **пиши** (write), and **роби** (do). For formal or plural situations (**ви**), add the plural ending: **читайте** (read), **пишіть** (write), and **робіть** (do). Always add **будь ласка** (please) for politeness. Notice the difference between the informal **Дай!** (Give!) and the formal **Дайте!** (Give!).
 
-Use the imperative to give instructions or make requests. The **ти** (you, informal) form is for a friend or child, and the **ви** (you, formal/plural) form is for an adult or group. The phrase **будь ласка** (please) softens any request.
+<!-- INJECT_ACTIVITY: vocative-imperative-practice -->
 
-| Дієслово (Verb) | ти (informal) | ви (formal/plural) |
-|---|---|---|
-| **читати** (to read) | **читай!** | **читайте!** |
-| **писати** (to write) | **пиши!** | **пишіть!** |
-| **дати** (to give) | **дай!** | **дайте!** |
-| **принести** (to bring) | **принеси!** | **принесіть!** |
+To make your speech flow naturally, you need coordinating conjunctions: **і** or **та** (and) for addition, **а** (and/but) for mild contrast, **але** (but) for strong contrast, and **бо** or **тому що** (because) for a reason. Use **а** when comparing two different things.
 
-Conjunctions connect your thoughts. Coordinating conjunctions link equal parts:
-- **і** / **та** (and — adds)
-- **а** (and/but — contrasts: **Олена йде, а Тарас залишається.** - Olena goes, but Taras stays.)
-- **але** (but — contradicts: **Я хочу прийти, але я хворий.** - I want to come, but I am sick.)
-- **бо** (because: **Принеси кутю, бо я не вмію варити.** - Bring kutia, because I don't know how to cook.)
+* **Мій чай гарячий, а твій холодний.** (My tea is hot, and yours is cold.)
 
-Subordinating conjunctions link a dependent clause to a main clause, and always require a comma before them:
-- **що** (**Я знаю, що ти тут.** - I know that you are here.)
-- **де** (**Скажи, де ти.** - Tell me where you are.)
-- **коли** (**Я не знаю, коли ти вільний.** - I don't know when you are free.)
+<!-- INJECT_ACTIVITY: conjunctions-quiz -->
 
-<!-- INJECT_ACTIVITY: activity-2 -->
+You also need subordinating conjunctions to build complex sentences: **що** (that), **де** (where), and **коли** (when). 
 
-The holiday greeting formula uses **З** (with) plus a noun in the instrumental case. Just take the holiday name, put it in the instrumental (**Різдво** → **Різдвом**, **Великдень** → **Великоднем**), and add **З** before it. This formula works for every Ukrainian celebration: **З Різдвом!** (Merry Christmas!), **З Великоднем!** (Happy Easter!), **З Новим роком!** (Happy New Year!), **З днем народження!** (Happy Birthday!).
+:::caution
+**The Mandatory Comma**
+In English, the comma before "because" or "that" is optional or stylistic. In Ukrainian, placing a comma before **що**, **де**, **коли**, and **бо** is a strict grammatical rule. Never skip it!
+:::
 
-<!-- INJECT_ACTIVITY: activity-3 -->
+* **Я думаю, що...** (I think that...)
+* **Вона знає, де...** (She knows where...)
+* **Скажи, коли...** (Tell me when...)
+
+<!-- INJECT_ACTIVITY: complex-sentences-fill-in -->
 
 ## Діалог (Connected Dialogue)
 
-**Організатор готує шкільний ярмарок.** (An organizer is preparing a school fair.) **Він розподіляє завдання між волонтерами.** (He distributes tasks among volunteers.)
+Now Taras and Olena are finalizing their plans for the holiday gathering. They need to confirm the time, the place, and exactly what items to bring. Listen to how they use all the grammar rules we just reviewed in a realistic, connected conversation.
 
-> **Організатор:** **Олено**, принеси, будь ласка, плакати, бо стіл уже готовий. *(Olena, bring the posters, please, because the table is already ready.)*
-> **Олена:** Добре, принесу! Скажи, де покласти їх. *(Good, I will bring them! Tell me where to put them.)*
-> **Організатор:** Ось біля входу. **Тарасе**, постав столи, але спочатку перевір стільці. *(Here near the entrance. Taras, place the tables, but first check the chairs.)*
-> **Тарас:** Я вже знаю, де вони. І я маю квитки та напої — все готово. *(I already know where they are. And I have the tickets and drinks — everything is ready.)*
-> **Організатор:** Чудово! Я думаю, що ярмарок буде гарний, бо ми добре підготувалися. *(Wonderful! I think that the fair will be beautiful, because we prepared well.)*
-> **Волонтери:** З ярмарком! *(Happy fair!)*
+> **Тарас:** Олено, привіт! Ти знаєш, що скоро Різдво? *(Olena, hello! Do you know that Christmas is soon?)*
+> **Олена:** Так, Тарасе! Я думаю, що ми можемо святкувати разом. *(Yes, Taras! I think that we can celebrate together.)*
+> **Тарас:** Добре! Скажи, коли ти вільна, бо я хочу запросити друзів. *(Good! Tell me when you are free, because I want to invite friends.)*
+> **Олена:** Я вільна двадцять четвертого. Але я не знаю, де ми будемо. *(I am free on the twenty-fourth. But I do not know where we will be.)*
+> **Тарас:** Ходімо до мене! Принеси кутю, будь ласка. *(Let's go to my place! Bring kutia, please.)*
+> **Олена:** Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом! *(Good, I will bring it! And I know where to buy beautiful candles. Merry Christmas!)*
 
-Read through the dialogue again and circle every vocative case, imperative verb, conjunction, and subordinating clause you see. You should find at least two vocatives, three imperatives, three coordinating conjunctions, and three subordinating clauses. This is exactly what natural A1.7 Ukrainian looks like in action.
+When Ukrainians celebrate holidays, they use a specific grammatical formula. The greeting always begins with the preposition **З** (With) followed by the holiday name in the Instrumental case. For example, you say **З Різдвом!** (Merry Christmas!), **З Великоднем!** (Happy Easter!), and **З Новим роком!** (Happy New Year!). 
 
-<!-- INJECT_ACTIVITY: activity-4 -->
+:::tip
+**Responding to Greetings**
+If you forget the specific greeting for a holiday, the phrase **Навзаєм!** (Likewise!) or **Вас також!** (You too!) is your universal, safe response to almost any positive wish in Ukrainian.
+:::
+
+<!-- INJECT_ACTIVITY: holiday-greeting-match -->
 
 ## Підсумок — Summary
 
-You have worked hard through this checkpoint phase. Let's review the concrete communication skills you have successfully built:
+You have successfully reached the end of the A1.7 Communication phase. This is a major milestone in your Ukrainian journey. Review your new capabilities:
 
-- ✅ **Ти можеш звертатися до людей по імені:** (You can address people by name:) **Олено! Тарасе! Андрію!**
-- ✅ **Ти можеш попросити когось щось зробити:** (You can ask someone to do something:) **Принеси! Напиши! Дайте, будь ласка!**
-- ✅ **Ти можеш з'єднувати думки:** (You can connect thoughts:) **і**, **а**, **але**, **бо** — чотири різні зв'язки.
-- ✅ **Ти можеш будувати складні речення:** (You can build complex sentences:) **Я знаю, що… Скажи, де… Я не знаю, коли…**
-- ✅ **Ти можеш говорити про українські свята та вітати людей:** (You can talk about Ukrainian holidays and greet people:) **З Різдвом! З Великоднем!**
+* You can address people correctly using the vocative case (**Олено! Тарасе!**).
+* You can give instructions and make requests using the imperative mood (**Читай! Дайте!**).
+* You can connect your ideas into longer sentences using conjunctions (**і, а, але, бо**).
+* You can build complex sentences with the words **що**, **де**, and **коли** (and you remember to use the mandatory comma!).
+* You know how to greet people for major Ukrainian holidays using the Instrumental case.
 
-## Підсумок
-
-This checkpoint concludes the communication phase of your A1 journey. You are no longer just naming objects; you are actively engaging with people, giving instructions, and linking your ideas into fluent, multi-part sentences.
-
-👉 **Далі:** (Next:) A1.8 — минулий і майбутній час, і фінальний випускний модуль A1. (Past and future tense, and the final A1 graduation module.)
+You are now ready for A1.8, the final stage of this level, where we tackle the Past and Future tenses. These new tenses will unlock your ability to tell stories and plan your future in Ukrainian!
 
 </module_content>
 
@@ -259,30 +249,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -302,21 +332,39 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -348,68 +396,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

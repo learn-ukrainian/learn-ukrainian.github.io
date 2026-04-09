@@ -1,0 +1,295 @@
+vocabulary:
+- word: кни́га
+  translation: book (feminine noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ла́мпа
+  translation: lamp (feminine noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: карти́на
+  translation: painting (feminine noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window (neuter noun)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: две́рі
+  translation: door (plural noun)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: кімна́та
+  translation: room (feminine noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: куто́к
+  translation: corner (masculine noun)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стіна́
+  translation: wall (feminine noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: виши́ва́нка
+  translation: embroidered shirt (feminine noun, symbol of Ukrainian identity)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гле́чик
+  translation: clay jug (masculine noun)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: нами́сто
+  translation: necklace (neuter noun)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пи́санка
+  translation: decorated egg (feminine noun, ancient Ukrainian tradition)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: я́рмарок
+  translation: street market, open-air market (masculine noun)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гри́вня
+  translation: hryvnia (Ukrainian currency, feminine noun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зо́шит
+  translation: notebook (masculine noun)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: земля́
+  translation: land, earth (feminine noun with soft stem)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: си́ній
+  translation: 'dark blue (soft-stem adjective: синій/синя/синє)'
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: блаки́тний
+  translation: 'sky blue, light blue (hard-stem adjective: блакитний/блакитна/блакитне)'
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: черво́ний
+  translation: red (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бі́лий
+  translation: white (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жо́втий
+  translation: yellow (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кори́чневий
+  translation: brown (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зеле́ний
+  translation: green (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́кий
+  translation: 'big, large (hard-stem adjective: великий/велика/велике/великі)'
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ціка́вий
+  translation: interesting (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: га́рний
+  translation: nice, beautiful (hard-stem adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вона́
+  translation: she / it (feminine gender pronoun)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: воно́
+  translation: it (neuter gender pronoun)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: оди́н
+  translation: one (1)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: де́сять
+  translation: ten (10)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: два́дцять
+  translation: twenty (20)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: двадцять п'ять
+  translation: twenty-five (25)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ятдеся́т
+  translation: fifty (50)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: сто п'ятдесят
+  translation: one hundred fifty (150)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дві́сті
+  translation: two hundred (200)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: чоти́риста
+  translation: four hundred (400)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: ко́шту́є
+  translation: costs (3rd person singular of коштувати)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стої́ть
+  translation: stands (3rd person singular of стояти)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́си́ть
+  translation: hangs (3rd person singular of висіти)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: до́бре
+  translation: good, OK
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ду́же
+  translation: very
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пра́вда
+  translation: right, true (used in tag questions)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: будь ласка
+  translation: please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що це таке?
+  translation: What is this?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки коштує ця...?
+  translation: How much does this... cost?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Гарна, правда?
+  translation: Beautiful, right?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Хочеш...?
+  translation: Do you want...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

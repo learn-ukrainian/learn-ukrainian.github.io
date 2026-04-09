@@ -1,36 +1,50 @@
 ## Linguistic Scan
-No linguistic errors found.
+No linguistic errors found. All Ukrainian text is grammatically correct and uses natural phrasing.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-currency-forms -->` matches hint 2 (Choose correct: 23 гривня/гривні/гривень) and is placed logically after the currency explanation.
-- `<!-- INJECT_ACTIVITY: fill-in-prices -->` matches hint 1 (Скільки коштує ___? — ___ гривень.) and is placed directly after the section practicing prices.
-- `<!-- INJECT_ACTIVITY: fill-in-quantities -->` matches hint 3 (At the market: Дайте ___ ___) and is placed effectively after the quantity words.
-- `<!-- INJECT_ACTIVITY: match-shop-types -->` matches hint 4 (Where do you buy it?) and is placed at the end of the location section.
-All exercises test what was just taught and match the plan perfectly.
+- `<!-- INJECT_ACTIVITY: quiz-currency-choice -->`: Placed correctly after the currency explanation.
+- `<!-- INJECT_ACTIVITY: fill-in-prices -->`: Placed correctly after the price agreement patterns.
+- `<!-- INJECT_ACTIVITY: fill-in-quantities -->`: Placed correctly after the quantity words.
+- `<!-- INJECT_ACTIVITY: match-up-shops -->`: Placed correctly after the shop locations vocabulary.
+All 4 plan-mandated activity markers are present, appropriately distributed, and logically placed after the relevant instructional content.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | All outline points are covered with specific examples. Textbook references are integrated naturally into the pedagogical flow. |
-| 2. Linguistic accuracy | 10/10 | All Ukrainian text is correct. Case endings for quantities (буханку хліба, пляшку води) and currency agreement (сорок дві гривні) are flawless. |
-| 3. Pedagogical quality | 10/10 | Excellent breakdown of the "ends in 1/2-4/5+" rule for absolute beginners. Good PPP flow and clear explanations. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are introduced naturally in the dialogues and examples. |
-| 5. Exercise quality | 10/10 | Markers are placed strategically after each concept is introduced, matching the plan's hints perfectly. |
-| 6. Engagement & tone | 10/10 | Direct, instructional tone without fluff or meta-commentary. Concrete examples and clear takeaways. |
-| 7. Structural integrity | 9/10 | Markdown is clean, all sections are present and ordered correctly. |
-| 8. Cultural accuracy | 10/10 | Authentic shopping locations mentioned, including the distinct Ukrainian word "крамниця". |
-| 9. Dialogue & conversation quality | 5/10 | Dialogues are natural, but there is a major logic/math error in Dialogue 1. The vendor asks for 75 UAH for items that cost 110 UAH, which will confuse learners trying to follow the math. |
+| 1. Plan adherence | 9/10 | The module covers all required sections and topics. However, it claims that certain words appeared in the dialogues when they did not ("ковбаса" and "масло"). |
+| 2. Linguistic accuracy | 10/10 | All Ukrainian text is correct. No Russianisms, Surzhyk, or calques were detected. |
+| 3. Pedagogical quality | 8/10 | The explanation of currency pluralization is slightly imprecise ("For the number five and any number above it" instead of specifying the final digit), which could confuse learners about numbers like 21 or 32. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are integrated naturally into the text. |
+| 5. Exercise quality | 10/10 | The injected markers align perfectly with the plan's activity hints and are positioned exactly where they should be. |
+| 6. Engagement & tone | 10/10 | Excellent, encouraging tone. The cultural notes about the market atmosphere and the use of diminutives (картопелька, яблучка) are fantastic. |
+| 7. Structural integrity | 10/10 | Clean markdown, appropriate use of callouts, and the word count exceeds the target. |
+| 8. Cultural accuracy | 10/10 | The distinction between "ринок" and "супермаркет", as well as the historical note about the "шаг" coin, are highly accurate and culturally enriching. |
+| 9. Dialogue & conversation quality | 7/10 | The dialogues are natural and communicative, but the first dialogue contains a mathematical error in the total price calculation (75 instead of 110). |
 
 ## Findings
-[Dimension 9] [critical]
-Location: `> — **Продавець:** Сімдеся́т п'ять гривень, будь ласка. *(Seventy-five hryvnias, please.)*`
-Issue: Math/logic error in the dialogue. Tomatoes are 35 UAH/kg (2 kg = 70 UAH), apples are 40 UAH/kg (1 kg = 40 UAH). The total should be 110 UAH, but the vendor says 75 UAH (which is the sum of 1 kg of each, ignoring the requested quantity).
-Fix: Change `Сімдеся́т п'ять гривень` to `Сто де́сять гривень` and update the English translation to `One hundred ten hryvnias`.
+[Plan adherence] [minor]
+Location: `The core food items that appeared in these conversations are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter).`
+Issue: The text claims all these items appeared in the conversations, but "ковбаса" and "масло" were actually omitted from the dialogues.
+Fix: Adjust the sentence to acknowledge that some items are additional.
+
+[Pedagogical quality] [major]
+Location: `For the number five and any number above it, including all the tens and teens (11-19), we use the "many" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias).`
+Issue: The phrasing "any number above it" is inaccurate because it implies numbers like 21 or 32 take the "many" form, unless the reader infers "ending in". It should explicitly state numbers ending in 5, 6, 7, 8, 9, or 0.
+Fix: Update the sentence to clarify it applies to the last digit.
+
+[Dialogue & conversation quality] [critical]
+Location: `> **Продавець:** Сімдесят п'ять гривень. *(Seventy-five hryvnias.)*`
+Issue: Math error. The buyer asks for 2 kg of tomatoes (35 грн/kg) and 1 kg of apples (40 грн/kg). The total should be 2*35 + 40 = 110 грн. The seller asks for 75, which is factually incorrect.
+Fix: Change the total to 110 (Сто десять гривень).
 
 ## Verdict: REVISE
-The module is high-quality, linguistically accurate, and pedagogically sound, but contains a critical math error in the first dialogue. Learners using the dialogue to practice numbers will be confused by the incorrect total. Must be revised to fix the calculation.
+The module is beautifully written with excellent cultural and pedagogical notes, but contains a critical mathematical error in a dialogue and a major imprecision in a grammar rule. These must be corrected.
 
 <fixes>
-- find: "> — **Продавець:** Сімдеся́т п'ять гривень, будь ласка. *(Seventy-five hryvnias, please.)*"
-  replace: "> — **Продавець:** Сто де́сять гривень, будь ласка. *(One hundred ten hryvnias, please.)*"
+- find: "The core food items that appeared in these conversations are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter)."
+  replace: "The core food items that appeared in these conversations, along with a few others, are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter)."
+- find: "For the number five and any number above it, including all the tens and teens (11-19), we use the \"many\" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias)."
+  replace: "For numbers ending in 5, 6, 7, 8, 9, or 0, as well as all the teens (11-19), we use the \"many\" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias)."
+- find: "> **Продавець:** Сімдесят п'ять гривень. *(Seventy-five hryvnias.)*"
+  replace: "> **Продавець:** Сто десять гривень. *(One hundred ten hryvnias.)*"
 </fixes>

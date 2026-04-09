@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->`
-- `<!-- INJECT_ACTIVITY: fill-in-family-friends -->`
-- `<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->`
-- `<!-- INJECT_ACTIVITY: quiz-accusative-animate -->`
+- `<!-- INJECT_ACTIVITY: sort-animate-inanimate -->`
+- `<!-- INJECT_ACTIVITY: fill-in-animate-transform -->`
+- `<!-- INJECT_ACTIVITY: quiz-ending-choice -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -159,124 +159,145 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-A bride is showing wedding photos to a friend, pointing out family members and guests in the pictures.
+We have spent recent modules learning how to buy food, order drinks, and talk about objects in our daily environment. The Ukrainian language treats objects in a specific way. However, our world is mostly filled with people. We interact with family members, meet friends, and speak to professionals. When we talk about people rather than objects, Ukrainian grammar shifts its focus. The rules change because the language makes a sharp distinction between a living person and an inanimate object. We must now learn how to name the people around us when they are the target of our actions.
 
-> **Наречена:** Дивись, це наше весілля! Бачиш маму? *(Look, this is our wedding! Do you see Mom?)*
-> **Друг:** Так, бачу маму. А хто це поруч? *(Yes, I see Mom. And who is this next to her?)*
-> **Наречена:** Це тато. Бачиш тата? *(That's Dad. Do you see Dad?)*
-> **Друг:** Так, бачу тата! А хто це? *(Yes, I see Dad! And who is this?)*
-> **Наречена:** Це мій брат. Ти знаєш мого брата? *(This is my brother. Do you know my brother?)*
-> **Друг:** Ні, я не знаю твого брата. *(No, I don't know your brother.)*
-> **Наречена:** Ходімо, я тебе познайомлю! *(Come on, I'll introduce you!)*
+Read this conversation between a bride and her friend at a wedding reception. They are showing wedding photos and identifying people. Pay close attention to the word endings for people.
 
-Notice the forms: **маму** (not мама), **тата** (not тато), **брата** (not брат). Every time the bride says "do you see" or "do you know" someone, the person's name changes its ending.
+> **Друг:** Кого ти бачиш? *(Who do you see?)*
+> **Наречена:** Я бачу маму і тата. *(I see mom and dad.)*
+> **Друг:** А хто це? *(And who is this?)*
+> **Наречена:** Це мій дядько. А це тітка. *(This is my uncle. And this is the aunt.)*
+> **Друг:** Знаєш Олену? *(Do you know Olena?)*
+> **Наречена:** Так. А це мій брат. Ти знаєш мого брата? *(Yes. And this is my brother. Do you know my brother?)*
+> **Друг:** Ні, я не знаю твого брата. *(No, I do not know your brother.)*
+> **Наречена:** Ходімо! Я тебе познайомлю! *(Let's go! I will introduce you!)*
+> **Друг:** Ось наречена і наречений. *(Here is the bride and the groom.)*
 
-Here is a second conversation — two colleagues at work:
+Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **мама** (mom) and **тато** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
 
-> **Марія:** Ти знаєш нашу вчительку? *(Do you know our teacher?)*
-> **Андрій:** Так, я знаю Олену Петрівну. *(Yes, I know Olena Petrivna.)*
-> **Марія:** А нового лікаря? *(And the new doctor?)*
-> **Андрій:** Ні, я ще не знаю лікаря. *(No, I don't know the doctor yet.)*
-> **Марія:** Він дуже добрий. Я чекаю його зараз. *(He's very kind. I'm waiting for him now.)*
-> **Андрій:** Добре, я теж чекаю Олену. *(OK, I'm also waiting for Olena.)*
+This rule applies to all people around you, including professionals and colleagues. Read this short exchange between two colleagues at a school.
 
-Again: **вчительку** (not вчителька), **Олену** (not Олена), **лікаря** (not лікар). What do you notice? Every time someone talks about a person using **бачити** (to see), **знати** (to know), or **чекати** (to wait for), the person's name or title changes form.
+> **Колега 1:** Ти знаєш нашу вчительку? *(Do you know our teacher?)*
+> **Колега 2:** Так, я знаю Олену Петрівну. *(Yes, I know Olena Petrivna.)*
+> **Колега 1:** А нового лікаря? *(And the new doctor?)*
+> **Колега 2:** Ні, я ще не знаю лікаря. *(No, I do not know the doctor yet.)*
+> **Колега 1:** Він дуже добрий. *(He is very kind.)*
+> **Колега 1:** Я чекаю його зараз. *(I am waiting for him right now.)*
 
-The pattern comes down to two question words: **що?** (what?) for things and **кого?** (whom?) for people. When you see or know a *person*, Ukrainian asks **кого?** — and that question triggers a special ending. This is the **знахідний відмінок** (accusative case) with animate nouns — **кого?**
+The word for a female teacher is **вчителька**. It changes to **вчительку**. The female name **Олена Петрівна** becomes **Олену Петрівну**. The masculine word for a doctor is **лікар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
 
 ## Кого? (Whom?)
 
-When a verb takes a direct object, Ukrainian asks one of two questions. For things, you ask **що?** (what?). For people and animals, you ask **кого?** (whom?). The answer to each question follows a different pattern.
+The Ukrainian language categorizes nouns into two groups based on whether they are living or not. We call these groups animate and inanimate. The Accusative case is the grammatical form we use for the direct object of an action. An object receives the action. Animate nouns represent people or animals. Inanimate nouns represent objects, concepts, or places. We learned the Accusative case for inanimate objects in Module 37.
 
-With **що?** (inanimate things), masculine nouns stay in their base form — no ending changes at all:
+You already know how to talk about food. You say **Я їм хліб** (I eat what? bread). For inanimate nouns, there is no change for the masculine. The masculine objects like **хліб** (bread) kept their dictionary form. Contrast those food items with a person. When you see your brother, you say **Я бачу брата** (I see whom? the brother). For animate nouns, the masculine changes! The masculine person changes, while the masculine object stays exactly the same.
 
-- Я їм **хліб** (що?) — I eat bread (хліб stays хліб)
-- Я бачу **стіл** (що?) — I see the table (стіл stays стіл)
-- Я п'ю **чай** (що?) — I drink tea (чай stays чай)
+To know which rule to follow, we rely on question words. The question word is the key. The word **що?** (what?) indicates inanimate things, and the masculine stays the same. When you hold an apple, you ask **Що це?** (What is this?). The word **кого?** (whom?) indicates animate people or animals, and the masculine changes. When you see your colleague, the correct question is **Кого ти бачиш?** (Whom do you see?). Your choice of question word dictates the ending of the masculine noun.
 
-You already know this from Module 37 — inanimate masculine accusative equals nominative.
+:::note
+**The Grammar Question Test**
+Ukrainian grammar is deeply connected to question words. When you learn a new grammatical case, memorize its question word. Asking **кого?** (whom?) instantly reminds your brain to apply the animate rule.
+:::
 
-Now switch to **кого?** (animate — people). Watch what happens to the masculine nouns:
+Ukrainian children learn this logic early in Grade 4. Their teachers use a specific mnemonic device based on the school approach. The children memorize the phrase: **Бачу кого? що?** (I see whom? what?). They ask both questions together. By asking these two questions simultaneously, students learn to identify the two patterns. If the noun is an object, the answer to **що?** (what?) confirms there is no change. The question **кого?** triggers the animate rule. The masculine animate in the Accusative case equals the Genitive form.
 
-- Я бачу **брата** (кого?) — I see my brother (not брат!)
-- Я знаю **друга** (кого?) — I know my friend (not друг!)
-- Я чекаю **лікаря** (кого?) — I'm waiting for the doctor (not лікар!)
+We have a reliable pattern for these masculine people. For a masculine person, we use the exact same ending we will later use to show possession. This is the key distinction for L2 learners. The object receives the action, and the ending marks the object as a living person. Observe how the words change:
 
-The contrast is stark. Compare side by side: **Я бачу хліб** — but **Я бачу брата**. **Я бачу стіл** — but **Я бачу тата**. Inanimate masculine = no change. Animate masculine = the ending changes.
+*   **брат** → **брата** (brother)
+*   **друг** → **друга** (friend)
+*   **тато** → **тата** (dad)
+*   **лікар** → **лікаря** (doctor)
 
-This is exactly how Ukrainian schoolchildren learn it in Grade 4 (Заболотний): the verb **бачити** takes two questions — **кого?** for people and **що?** for things. **Кого?** triggers the animate rule: the masculine noun changes ending. **Що?** does not — masculine stays the same. The mnemonic is simple: **кого?** → the noun changes; **що?** → masculine stays.
+This is why animate accusative matters — it changes masculine nouns.
 
-Why does Ukrainian make this distinction? Ukrainian grammar separates all nouns into two categories: **живі** (animate — living beings) and **неживі** (inanimate — things). Animate nouns answer **кого?**; inanimate nouns answer **що?**. This is a deep grammatical logic — Ukrainian treats *seeing a person* differently from *seeing a thing*, not just in meaning, but in form. And the animate masculine accusative isn't random: it uses the same ending as the **родовий відмінок** (genitive case) you already learned. The accusative of **брат** is **брата** — exactly like **нема брата** (there is no brother). The next section shows this pattern in full.
-
-<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->
+<!-- INJECT_ACTIVITY: sort-animate-inanimate -->
 
 ## Знахідний відмінок — живе (Accusative Animate)
 
-Feminine animate nouns hold no surprises. They follow the exact same ending as inanimate feminine nouns: **-а → -у**, **-я → -ю**. You already know this from Module 37 (кава → каву). The same pattern applies to people:
+Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **кава** changes to **каву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
 
-- **мама** → **маму** (Я бачу маму) — I see Mom
-- **сестра** → **сестру** (Я знаю сестру) — I know my sister
-- **Олена** → **Олену** (Я чекаю Олену) — I'm waiting for Olena
-- **подруга** → **подругу** (Я люблю подругу) — I love my friend
-- **тітка** → **тітку** (Я бачу тітку) — I see my aunt
-- **наречена** → **наречену** (Я знаю наречену) — I know the bride
+*   **мама** → **маму** (mom)
+*   **сестра** → **сестру** (sister)
+*   **Олена** → **Олену** (Olena)
+*   **подруга** → **подругу** (female friend)
+*   **Я бачу маму.** (I see mom.)
+*   **Я знаю сестру.** (I know the sister.)
+*   **Я чекаю Олену.** (I wait for Olena.)
+*   **Я люблю подругу.** (I love the female friend.)
 
-Compare: **кава → каву**, **мама → маму** — identical ending. Feminine animate accusative requires no new rule at all.
+Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусід** (male neighbor) becomes **сусіда**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
 
-<!-- INJECT_ACTIVITY: fill-in-family-friends -->
+*   **брат** → **брата** (brother)
+*   **друг** → **друга** (male friend)
+*   **тато** → **тата** (dad)
+*   **сусід** → **сусіда** (male neighbor)
+*   **Я бачу брата.** (I see the brother.)
+*   **Я знаю друга.** (I know the friend.)
+*   **Я люблю тата.** (I love dad.)
+*   **Я бачу сусіда.** (I see the neighbor.)
 
-Now the rule that matters most in this module. Masculine animate accusative equals genitive. The textbook (Карамань, Grade 10) states it directly: *«Форма знахідного відмінка однини чоловічого роду назв істот збігається з родовим однини.»* In plain terms: to form the accusative of a masculine animate noun, use its genitive form.
+:::caution
+**Don't Forget the Men!**
+English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефон** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
+:::
 
-Here are six masculine animate nouns with their accusative (= genitive) forms:
+Some masculine nouns end in a soft consonant or the suffix **-ар**. These words require a soft vowel ending. They take the **-я** ending instead of the hard **-а**. Many professions fall into this category.
 
-- **брат** → **брата** (Я бачу брата) — I see my brother
-- **друг** → **друга** (Я знаю друга) — I know my friend
-- **тато** → **тата** (Я люблю тата) — I love Dad
-- **лікар** → **лікаря** (Я чекаю лікаря) — I'm waiting for the doctor
-- **вчитель** → **вчителя** (Я знаю вчителя) — I know the teacher
-- **сусід** → **сусіда** (Я бачу сусіда) — I see the neighbor
+*   **лікар** → **лікаря** (doctor)
+*   **вчитель** → **вчителя** (male teacher)
+*   **продавець** → **продавця** (male seller)
+*   **колега** → **колегу** (colleague)
+*   **Я чекаю лікаря.** (I wait for the doctor.)
+*   **Я знаю вчителя.** (I know the teacher.)
+*   **Я бачу продавця.** (I see the seller.)
+*   **Я знаю колегу.** (I know the colleague.)
 
-The connection to prior learning: **бачу брата** uses the same form as **нема брата** — the genitive ending you already know.
-
-Now the critical contrast — animate versus inanimate masculine, side by side. **Що?** (inanimate) — no change: Я бачу **хліб**, Я бачу **стіл**, Я бачу **борщ**. **Кого?** (animate) — genitive form: Я бачу **брата**, Я бачу **тата**, Я бачу **друга**. The test you should apply every time: before writing the form, ask the question. **Кого?** → take the genitive form. **Що?** → leave masculine as is.
-
-<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->
+<!-- INJECT_ACTIVITY: fill-in-animate-transform -->
 
 ## Підсумок — Summary
 
-The **знахідний відмінок** (accusative case) has two sub-patterns, determined by one question: **кого?** or **що?**
+The complete picture of the Accusative case organizes these rules into a clear visual breakdown. You now have the tools to talk about objects and people. This Accusative summary provides the full picture.
 
-**Inanimate (що?):** Masculine stays the same — **хліб → хліб**, **стіл → стіл**. Feminine changes **-а → -у** — **кава → каву**, **вода → воду**. Neuter stays the same — **молоко → молоко**.
+| | Inanimate (що?) | Animate (кого?) |
+| :--- | :--- | :--- |
+| **Masculine** | = nominative (**хліб**) | = genitive (**брата**) |
+| **Feminine** | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
+| **Neuter** | = nominative (**молоко**) | (rare at A1) |
 
-**Animate (кого?):** Feminine still changes **-а → -у** — **мама → маму**, **Олена → Олену**. Masculine equals genitive — **брат → брата**, **лікар → лікаря**.
+The feminine nouns always change the final vowel. They change **-а** to **-у** and **-я** to **-ю**. The masculine nouns remain unchanged for inanimate objects. They adopt the genitive ending for living people. The neuter nouns do not change.
 
-The single most important rule from this module: *Знахідний відмінок чоловічого роду живих істот = родовий відмінок.*
+Certain verbs appear constantly in social interactions. These key verbs with animate accusative require the change to identify the target of the action. You must memorize these words.
 
-Five key verbs that take animate accusative at A1, each with a full example:
+*   **бачити** (to see)
+*   **знати** (to know)
+*   **любити** (to love)
+*   **чекати** (to wait for)
+*   **шукати** (to look for)
 
-- **бачити** (to see) — Я бачу маму і тата.
-- **знати** (to know) — Ти знаєш мого друга Тараса?
-- **любити** (to love) — Я дуже люблю бабусю.
-- **чекати** (to wait for) — Вона чекає лікаря.
-- **шукати** (to look for) — Ми шукаємо нашого сусіда.
+These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шукаю сусіда** (I look for the neighbor).
 
-Memorize these five verbs — they are the most common contexts where animate accusative appears in daily speech.
+You can practice these patterns with simple questions and answers. Read the questions and notice the noun endings in the responses.
 
-## Підсумок
+*   **Кого ти любиш?** (Whom do you love?)
+    **Я люблю маму і тата.** (I love mom and dad.)
+*   **Кого ти чекаєш?** (Whom are you waiting for?)
+    **Я чекаю друга.** (I am waiting for a friend.)
+*   **Кого ти знаєш у школі?** (Whom do you know at school?)
+    **Я знаю вчителя.** (I know the teacher.)
+*   **Кого ти бачиш?** (Whom do you see?)
+    **Я бачу покупця.** (I see the buyer.)
+*   **Кого ти шукаєш?** (Whom are you looking for?)
+    **Я шукаю викладача.** (I am looking for the lecturer.)
 
-Test yourself. Fill in the correct accusative form:
+:::tip
+**Colleagues and Professions**
+The word **колега** (colleague) looks feminine but can describe a man or a woman. Because it ends in **-а**, you always change it to **колегу**, regardless of the person's gender.
+:::
 
-- *Я бачу ___* (мама) → **маму** ✓ (not мамо, not мами)
-- *Я знаю ___* (брат) → **брата** ✓ (not брат, not братом)
-- *Я чекаю ___* (лікар) → **лікаря** ✓ (not лікар, not лікарем)
-- *Я люблю ___* (подруга) → **подругу** ✓ (not подруга, not подруги)
-- *Я шукаю ___* (вчитель) → **вчителя** ✓ (not вчитель, not вчителю)
-- *Я бачу ___* (стіл) → **стіл** ✓ (inanimate — що? → no change!)
-- *Я знаю ___* (Олена) → **Олену** ✓ (not Олена, not Олени)
+Check your understanding of the pattern. Let us complete this Self-check: **Я бачу ___**. For the word **мама**, the correct form is **маму**. For the word **брат**, the correct form is **брата**. Remember the core rule. If the noun is a person and it is masculine, you must add the ending. The action transfers directly to the living person.
 
-Module 40 closes the Food and Shopping phase (A1.6). Module 41 is the checkpoint — it tests accusative (both animate and inanimate), shopping vocabulary, and food items together. Come prepared: Я бачу маму, знаю Олену, чекаю лікаря.
-
-<!-- INJECT_ACTIVITY: quiz-accusative-animate -->
+<!-- INJECT_ACTIVITY: quiz-ending-choice -->
+<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->
 
 </module_content>
 
@@ -366,30 +387,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -409,36 +470,61 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-gender
-- **group-sort** — Він, вона чи воно?: Sort nouns by grammatical gender using ending rules
+### Pattern: grammar-gender [§4.2.1.1, §4.2.2]
+**Рід іменників** (Noun gender)
+- **group-sort** — Він, вона чи воно?: Розподілити іменники за граматичним родом за закінченням / Sort nouns by grammatical gender using ending rules
   - Instruction: *Розподіліть слова за родами*
-- **quiz** — Який рід?: Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
-- **fill-in** — Мій, моя чи моє?: Choose possessive that matches noun gender
+- **quiz** — Який рід?: Визначити рід за закінченням: приголосний=чол., -а/-я=жін., -о/-е=серед. / Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
+- **fill-in** — Мій, моя чи моє?: Обрати присвійний займенник, що узгоджується з родом іменника / Choose possessive that matches noun gender
   - Instruction: *Вставте правильне слово*
-- **match-up** — Іменник + займенник: Match nouns to він/вона/воно
+- **match-up** — Іменник + займенник: Зіставити іменники з він/вона/воно / Match nouns to він/вона/воно
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: На рівні A1 завжди давати варіанти для вибору
 
-### Pattern: grammar-cases
-- **fill-in** — Який відмінок?: Fill in the correct case ending for a noun in context
+### Pattern: grammar-cases [§4.2.3.1, §4.2.3.2, §4.2.3.3]
+**Відмінки іменників** (Noun cases)
+- **fill-in** — Який відмінок?: Вставити іменник у правильній відмінковій формі / Fill in the correct case ending for a noun in context
   - Instruction: *Вставте іменник у правильній формі*
-- **quiz** — Визнач відмінок: Identify which case a highlighted noun is in
-- **group-sort** — Розподіли за відмінками: Sort noun forms by their case
-- **error-correction** — Знайди помилку у відмінку: Find wrong case ending and correct it
+- **quiz** — Визнач відмінок: Визначити, у якому відмінку стоїть виділений іменник / Identify which case a highlighted noun is in
+- **group-sort** — Розподіли за відмінками: Розподілити форми іменників за відмінками / Sort noun forms by their case
+- **error-correction** — Знайди помилку у відмінку: Знайти неправильне відмінкове закінчення та виправити / Find wrong case ending and correct it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Учні мають ПРОДУКУВАТИ форми, а не тільки розпізнавати. Обов'язково fill-in
+- ❌ translate: Англійська не має відмінків — переклад не тестує відмінювання
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -470,68 +556,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

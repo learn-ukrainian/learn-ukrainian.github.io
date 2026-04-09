@@ -1,56 +1,26 @@
 ## Що ми знаємо? (~220 words total)
-- P1 (~60 words): Opening self-check framing — "You've covered 7 modules in A1.5. Before moving forward, let's see what you can do." Present a checklist-style intro: Can you apply euphony? Can you say where things are? Can you say where you're going? Can you say where you're from? Can you name city places and transport?
-- P2 (~80 words): Quick self-check questions in Q&A format — learner tests themselves: (1) Де ти живеш? — У Києві. (2) Куди ти йдеш? — У магазин. (3) Звідки ти? — Я з Канади. (4) Як ти їдеш? — Автобусом. (5) Де музей? — Музей у центрі. (6) Скажи: "і" чи "й"? Брат ___ сестра. (7) Скажи: "у" чи "в"? Я живу ___ Львові.
-- P3 (~80 words): Encouragement + orientation — "If these feel natural, you're ready. If some felt tricky, this checkpoint will help you see the full picture. We'll review all the patterns together — euphony (M28), location (M29), city vocabulary (M30), direction (M31), transport (M32), directions (M33), and origin (M34) — in one connected practice."
+- P1 (~100 words): [Introduction to the A1.5 "Places" checkpoint. Motivation on why being able to navigate a city is the first real "survival" skill. Mentioning the transition from single words to connected urban navigation using examples like "у центрі" and "на метро".]
+- P2 (~120 words): [A structured self-check list covering M28-M34. Questions: "Чи можу я вибрати між 'у' та 'в'?" (Euphony), "Чи знаю я, як сказати, де я?" (Locative), "Чи можу я запитати дорогу?" (Directions), "Чи можу я сказати, звідки я приїхав?" (Genitive chunks).]
+- <!-- INJECT_ACTIVITY: quiz-question-choice --> [quiz, focus: Choose the correct question: Де? Куди? Звідки?, 8 items]
 
-## Читання (~280 words total)
-- P1 (~40 words): Setup — "Read this short text about a tourist navigating Kyiv. Notice how all the A1.5 patterns appear together in natural Ukrainian."
-- P2 (~200 words): Reading text — tourist narrative in Ukrainian:
-  «Мене звати Томас. Я з Канади, але зараз я у Києві.
-  Сьогодні я хочу побачити місто. Вранці я їду на метро до станції Хрещатик. Метро у Києві дуже зручне.
-  Я виходжу зі станції й іду направо. Попереду — Хрещатик, головна вулиця міста. Я йду прямо і бачу красивий парк. У парку є фонтани й лавки.
-  Потім я питаю перехожого: "Вибачте, де Національний музей?" Він відповідає: "Музей на площі Свободи. Ідіть прямо, потім наліво."
-  Після музею я хочу їхати у Лавру. Я сідаю в автобус і їду до зупинки "Арсенальна". Від зупинки до Лаври пішки — п'ять хвилин.
-  Увечері я телефоную другові в Канаду: "Я зараз у готелі. Сьогодні я був у музеї, в парку і в Лаврі. Завтра хочу поїхати у Львів!"»
-- P3 (~40 words): Comprehension check — three quick questions: (1) Звідки Томас? (2) Куди він їде вранці? (3) Де музей? — "Did you understand all three? Good — you're reading Ukrainian!"
+## Читання (~270 words total)
+- P1 (~120 words): [Contextual introduction to the reading text. We follow a traveler named Марк who arrives in Kyiv. Explain the logic of the narrative: arriving at the station (вокзал), looking for a hotel (готель), and navigating to a famous landmark (Золоті ворота).]
+- P2 (~150 words): [The reading text itself. Narrative prose incorporating: "Я зараз у Києві. Я з Польщі. Мій готель у центрі. Я йду пішки...". Use of "на метро", "направо", and "біля музею" to demonstrate integrated A1.5 vocabulary and grammar.]
 
-## Граматика (~220 words total)
-- P1 (~40 words): Framing — "Here are the 7 key patterns from A1.5. Think of this as your personal grammar card for navigating Ukrainian cities."
-- P2 (~50 words): Pattern 1 — Euphony. Rule: у/в alternates based on surrounding sounds; і/й alternates the same way; з/із/зі for consonant clusters. Examples: Я у школі. / Він в офісі. / Брат і сестра. / Він й вона. / Я з України. / Зі США.
-- P3 (~40 words): Pattern 2 & 3 — Де? vs Куди? contrast. Де? → в/на + locative: у школі, на роботі, в центрі, на площі. Куди? → в/на + accusative: у школу, на роботу, у Львів, на площу.
-- P4 (~40 words): Pattern 4 & 5 — Звідки? and transport. Звідки? → з/із/зі + genitive: з України, зі США, з роботи, з Канади. Transport: їхати автобусом/метро/трамваєм; на метро до станції Хрещатик.
-- P5 (~50 words): Pattern 6 & 7 — Directions and city places. Directions: іди/йдіть прямо, направо, наліво; вийдіть, потім поверніть. City nouns with prepositions: у музеї, на вокзалі, в парку, на ринку, у бібліотеці, на площі, у готелі.
+## Граматика (~240 words total)
+- P1 (~110 words): [Euphony synthesis. Summary of у/в, і/й, and з/із/зі. Provide clear binary examples: "Він у Львові" vs "Вона в Одесі", "брат і сестра" vs "тато й мама", "зі школи" vs "з роботи". Focus on the sound flow as a signature of Ukrainian.]
+- P2 (~130 words): [Tri-directional case comparison. Explaining the semantic difference between "Де?" (Locative: в аптеці), "Куди?" (Accusative: в аптеку), and "Звідки?" (Genitive: з аптеки). Contrast "на роботі" (location) with "на роботу" (direction) to clarify the preposition "на" usage for events/open spaces.]
+- <!-- INJECT_ACTIVITY: group-sort-cases --> [group-sort, focus: Sort phrases by case/function (Locative, Accusative, Genitive chunks), 9 items]
+- <!-- INJECT_ACTIVITY: quiz-euphony-check --> [quiz, focus: Euphony rules check: у/в, і/й, з/із/зі, 8 items]
 
-## Діалог (~330 words total)
-- P1 (~30 words): Context-setting — "Марко is visiting Kyiv for the first time. He stops a local (Оксана) to ask for help. Notice how all A1.5 patterns appear in this one conversation."
-- Dialogue (~200 words):
-  — Вибачте! Ви місцева?
-  — Так, я з Києва. Можу допомогти?
-  — Дякую! Я з Канади, я тут уперше. Де Національний музей?
-  — Музей у центрі, на вулиці Грушевського. Звідси — на метро до станції Арсенальна, потім пішки.
-  — А де станція метро?
-  — Ось тут, за рогом. Підете прямо, потім направо — і побачите вхід.
-  — Чудово! А після музею я хочу їхати у Львів. Де вокзал?
-  — Центральний вокзал далеко звідси. Найкраще їхати на метро до станції Вокзальна. Це пряма гілка.
-  — Скільки їхати?
-  — Хвилин двадцять. Вокзал прямо біля станції, не заблукаєте.
-  — А де можна поїсти поблизу?
-  — Є кафе на площі Незалежності. Це одна зупинка метро — станція Майдан Незалежності.
-  — Ви дуже допомогли! Дякую!
-  — Будь ласка! Гарної подорожі до Львова!
-- P2 (~50 words): Post-dialogue analysis — "Look at the patterns Марко used: Де музей? (locative) → у центрі. Куди їхати? (accusative) → у Львів. Звідки? → з Канади. Transport → на метро до станції. Directions → прямо, направо. All 7 patterns in one natural conversation."
-- P3 (~50 words): Speaking prompt — "Now try it yourself. You're visiting Одеса. Video-call a friend and describe: Я зараз на Дерибасівській вулиці. Іду до порту. Потім хочу на пляж. Я приїхав з [your city]. Use at least 5 of the 7 patterns."
+## Діалог (~320 words total)
+- P1 (~100 words): [Setting the scene for the interaction. A tourist from Canada arrives at a Kyiv metro station and asks a local for directions to a museum and then to the train station (вокзал). Emphasize the polite register using "Вибачте" and "Скажіть, будь ласка".]
+- P2 (~140 words): [Multi-turn connected dialogue. Tourist: "Вибачте, я з Канади. Де тут музей?". Local: "Музей у центрі. Ідіть на метро...". Incorporation of "направо", "наліво", "станція Хрещатик", and "у Львів".]
+- P3 (~80 words): [Functional language note on "дістатися" (to get to) vs "йти/їхати". Explain how to use "від метро" (from the metro) and "до вокзалу" (to the station) in real-world requests.]
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-forms --> [fill-in, focus: Complete the connected dialogue with correct forms, 6 items]
 
-## Підсумок (~220 words total)
-- P1 (~50 words): Achievement header — "You've completed A1.5 — Places. Here's what you can now do in Ukrainian:"
-- P2 (~100 words): Bulleted achievement list:
-  • ✅ Euphony (M28) — You choose у/в, і/й, з/із/зі automatically based on surrounding sounds
-  • ✅ Location (M29) — Де? → в/на + locative: у школі, на роботі, в центрі
-  • ✅ City vocabulary (M30) — вулиця, площа, парк, музей, вокзал, ринок, аптека, бібліотека
-  • ✅ Direction (M31) — Куди? → в/на + accusative: у школу, у Львів, на площу
-  • ✅ Transport (M32) — їхати автобусом, трамваєм; на метро до станції Хрещатик
-  • ✅ Giving directions (M33) — ідіть прямо, поверніть направо/наліво, вийдіть
-  • ✅ Origin (M34) — Звідки? → з/із/зі + genitive: з України, зі США, з Канади
-- P3 (~70 words): What's coming next — "In A1.6 — Food and Shopping, you'll learn how to order food, buy things at a market, and use the accusative case for objects (not just directions). You'll say: Я хочу каву. Дайте мені хліб. Скільки коштує? The accusative you practiced for direction (у школу) now works for objects too — a natural extension of what you already know."
+## Підсумок (~270 words total)
+- P1 (~150 words): [A1.5 Phase achievement summary. A bulleted "Я тепер можу..." (I can now...) list: 1. Use euphony (у/в, і/й) for natural speech. 2. State my location (Де? — в готелі). 3. Indicate my direction (Куди? — у парк). 4. Use city transport (на автобусі, на метро). 5. Give and follow directions (направо, прямо). 6. State my origin (Звідки? — з України).]
+- P2 (~120 words): [Transition to A1.6. Explain that now that we can find our way to a shop or restaurant, we need the language to act inside them. Teaser for "Food and Shopping" (M36+), focusing on ordering, buying, and the Accusative case for direct objects (Я хочу каву).]
 
-Grand total: ~1270 words
+Grand total: ~1320 words

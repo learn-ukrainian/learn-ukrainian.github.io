@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and ordered correctly. Dialogue
+    1 matches plan verbatim (ordering borshch, bread, coffee). Dialogue 2 covers paying
+    (рахунок, карткою, compliment). "Як замовити"
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: All Ukrainian verified against VESUM (95/95 content words confirmed).
+    Accusative paradigm correctly explained and exemplified. "замовляти" confirmed
+    correct by Антоненко-Давидович (not *заказати*). On
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: dialogues present situation → ordering patterns extract
+    rules with 2+ examples each → activities practice. Accusative is grounded in M37
+    prerequisite ("the same endings you learned'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 7 required vocab used naturally in context: кафе (throughout), меню
+    (dialogue + section), рахунок (dialogue 2 + culture), замовляти (section title
+    "Як замовити"), офіціант (dialogue speaker), смач'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 activity markers matching all 4 plan hints. Types varied: 2× fill-in,
+    1× quiz, 1× match-up. Inline self-check after dialogues is pedagogically sound
+    (tests comprehension of what was just read). Self'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no meta-commentary, no gamified language. Opens
+    with a concrete scene (Ростик and Іванка walking into a Lviv café). Cultural enrichment
+    is specific and earned: post-Euromaidan'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 headings match plan section names exactly. No duplicate sections,
+    no meta-commentary, no stray tags. Word count 1211/1200 target — in range. Clean
+    markdown throughout.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized — Ukrainian presented on its own terms, no Russian comparisons.
+    Кафе/ресторан/кав'ярня distinction is accurate. Tipping culture (10%, not obligatory,
+    often cash) is correct. Рахунок etique
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Two multi-turn dialogues with named speakers (Ростик, Іванка, Офіціант).
+    Natural flow: greeting → recommendation → ordering → waiting → paying → complimenting
+    → farewell. Not transactional — Ростик as'
+findings: []

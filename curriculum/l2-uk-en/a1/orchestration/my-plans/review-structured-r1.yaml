@@ -2,56 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 plan sections present with correct headings. Both dialogues follow
-    plan content_outline closely. All required vocabulary used in context (план, тиждень,
-    вільний, зустріч, відпочивати, прибирати,
+  score: 10
+  evidence: All elements (Dialogues, Планування, Мій тиждень, Summary) are present,
+    pacing is excellent, and all grammar/planning patterns are covered exactly as
+    specified.
 - dimension: 2
   name: Linguistic accuracy
-  score: 6
-  evidence: All Ukrainian word forms verified against VESUM (93/93 ✓, 5 not-found
-    are proper nouns). No Russianisms, Surzhyk, or calques. However, the у/в euphony
-    explanation is factually wrong — teaches an incor
+  score: 7
+  evidence: 'Critical error: The text states: "Do not use the direct English translation
+    ''Я маю плани''". This is factually incorrect, as the verb "мати" is a fully correct
+    Ukrainian verb of possession.'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: 'Good PPP flow: dialogues present situations → Планування extracts patterns
-    → Мій тиждень practices application. Multiple examples per grammar point (7 days
-    × буду + infinitive in Taras''s week). The "e'
+  score: 9
+  evidence: Excellent breakdown of temporal accusative endings for days of the week
+    ("у середу") and locative time telling ("о третій"). Minor deduction for the "я
+    маю" hypercorrection.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 7 required words used naturally in prose (not as bare lists): план
-    in Планування intro, тиждень in dialogue 2 and Мій тиждень, вільний/вільна in
-    invitation section, зустріч in dialogue 2, відпочив'
+  evidence: All required (план, тиждень, вільний, зустріч, відпочивати, прибирати,
+    вечірка) and recommended words are seamlessly integrated.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '3 markers matching 3 plan activity_hints. Types match (fill-in, matching,
-    fill-in). Placement follows teaching sequence. Focus areas align with plan: hint
-    1 = days+time+future, hint 2 = invitation→res'
+  score: 10
+  evidence: The three exercise markers directly test what was just taught (days/time,
+    invitations, and weekly plans).
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: No motivational openers, no "Let us explore," no gamified language. Tone
-    is direct and instructional. Named speakers with distinct voices in dialogues
-    (Olya is social, Taras is practical, Anna is busy
+  score: 7
+  evidence: Deductions for gamified, corporate fluff at the start of sections ("As
+    we approach the end of our A1 journey, our ability to communicate moves beyond...",
+    "You now possess...").
 - dimension: 7
   name: Structural integrity
   score: 9
-  evidence: 'All 4 H2 sections present and correctly ordered (Dialogues, Планування,
-    Мій тиждень, Summary). Clean markdown, no stray tags. 1852 words vs 1200 target.
-    No duplicate summaries. One issue: the кіно ref'
+  evidence: Word count is 1593 (well above 1200 target). Clean formatting, but deducted
+    for a prompt artifact leaked into the prose ("asks... in the plan context").
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Ukrainian presented on its own terms. No "like Russian but..." comparisons.
-    The euphony concept introduced as a Ukrainian-specific phenomenon. Weekend activities
-    are culturally appropriate (прибирати '
+  evidence: Accurately contrasts Western usage of "on the weekend" with natural Ukrainian
+    usage ("на вихідних").
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: Dialogue 1 is natural and multi-turn with a real situation (planning a
-    weekend meetup). Named speakers with distinct voices. However, Dialogue 2 has
-    a **critical speaker attribution error** — the intr
+  score: 10
+  evidence: The opening group chat dialogue perfectly mimics a real-world scenario
+    of friends making weekend plans.
 findings: []

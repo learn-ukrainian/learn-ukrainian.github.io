@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 29: Where Is It? (A1, A1.5 [Places])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -126,97 +126,139 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги — Dialogues
 
-The question **Де?** (Where?) is one of the most important words you will use every day, and today we are going to learn how to answer it with real Ukrainian places using the locative case.
+Moving to a new city means asking questions about where things are. During your first week in a new neighborhood, you quickly learn to rely on local residents. A friendly neighbor is often the best guide for practical navigation. You need to know the location of essential services like an **аптека** (pharmacy) for medicine, a **пошта** (post office) for packages, and a **банк** (bank) for financial tasks. Knowing how to ask about these places and understanding the answers helps you settle into the rhythm of daily life.
 
-> — **Мари́нка:** Приві́т, Оле́же! Скажи́, будь ла́ска, **де** Оле́на? *(Hi, Oleh! Tell me please, where is Olena?)*
-> — **Оле́г:** Привіт! Вона́ за́раз **в шко́лі**. *(Hi! She is currently at school.)*
-> — **Маринка:** Зрозумі́ло. А Тара́с? Він вдо́ма? *(Understood. And Taras? Is he at home?)*
-> — **Олег:** Ні, він **на робо́ті**. *(No, he is at work.)*
-> — **Маринка:** А ді́ти? Вони́ гра́ються **на ву́лиці**? *(And the kids? Are they playing on the street?)*
-> — **Олег:** Ні, вони **в парку**. *(No, they are in the park.)*
-> — **Маринка:** А кі́шка? Я її не ба́чу. *(And the cat? I don't see her.)*
-> — **Олег:** О, кішка спить **на дива́ні**! *(Oh, the cat is sleeping on the sofa!)*
+> **Сусід:** Привіт! Ти тут живеш? *(Hi! Do you live here?)*  
+> **Новий мешканець:** Так, я новий сусід. *(Yes, I am a new neighbor.)*  
+> **Сусід:** Дуже приємно! *(Very nice to meet you!)*  
+> **Новий мешканець:** Де Олена? Вона тут? *(Where is Olena? Is she here?)*  
+> **Сусід:** Ні, вона **в школі**. *(No, she is at school.)*  
+> **Новий мешканець:** А Тарас? *(And Taras?)*  
+> **Сусід:** Він **на роботі**. *(He is at work.)*  
+> **Новий мешканець:** А діти де? *(And where are the children?)*  
+> **Сусід:** Вони **в парку**. *(They are in the park.)*  
+> **Новий мешканець:** А кішка? *(And the cat?)*  
+> **Сусід:** Вона **на дивані**! *(She is on the sofa!)*
 
-Notice the clear pattern emerging here: the base dictionary word **шко́ла** (school) becomes **в школі**, and the base word **робо́та** (work) becomes **на роботі**. The noun changed its ending to answer the question **Де?** (Where?).
+Notice the clear contrast between the small words **в** and **на** in the dialogue above. Both translate broadly to English "in" or "at", but they sound distinct in Ukrainian and carry different spatial meanings.
 
-> — **Наза́р:** Привіт, Емі́лі! **Де** ти живе́ш зараз? *(Hi, Emily! Where do you live now?)*
-> — **Емілі:** Я живу́ **в Ки́єві**, **на вулиці** Хреща́тик. *(I live in Kyiv, on Khreshchatyk street.)*
-> — **Назар:** Чудо́во! А **де** ти працю́єш? *(Wonderful! And where do you work?)*
-> — **Емілі:** Я працю́ю **в о́фісі**, на дру́гому по́версі. *(I work in an office, on the second floor.)*
-> — **Назар:** А **де** ти навча́єшся? Ти студе́нтка? *(And where do you study? Are you a student?)*
-> — **Емілі:** Так. Я навча́юся в університе́ті, **в це́нтрі** мі́ста. *(Yes. I study at the university, in the city center.)*
+> **Сусід:** А де ти працюєш? *(And where do you work?)*  
+> **Новий мешканець:** Я працюю **в офісі**. *(I work in an office.)*  
+> **Сусід:** Це далеко? *(Is it far?)*  
+> **Новий мешканець:** Ні. Я живу **в Києві**, **на вулиці** Хрещатик. *(No. I live in Kyiv, on Khreshchatyk street.)*  
+> **Сусід:** Це дуже близько. *(That is very close.)*  
+> **Новий мешканець:** Так! Офіс **на другому поверсі**. *(Yes! The office is on the second floor.)*
 
-Both of these dialogues show the exact same grammatical structure: to answer the question **Де?**, you must use a preposition (either **в** or **на**) followed by a changed noun. So how exactly does the noun change? And when do you use **в** versus **на**?
+Notice the hierarchy of location used in the second dialogue. When talking about a city, we use **в** (as in **в Києві**). When narrowing down to a street, we switch to **на** (as in **на вулиці**). Finally, for a specific room or building, we use **в** or **у** again. You can also see that the ends of the nouns change: the basic word **школа** becomes **в школі**, **парк** turns into **у парку**, and **робота** changes to **на роботі**. This predictable change is called the **Місцевий відмінок** (Locative case). 
 
-## Місце́вий відмі́нок (The Locative Case)
+## Місцевий відмінок — The Locative Case
 
-Every Ukrainian noun belongs to one of seven **відмі́нки** (cases), which change the ending of the word depending on its grammatical role in the sentence. The locative case — known as **місцевий відмінок** or **М.в.** — is used specifically to show where something is located. It always answers the question **на ко́му?** (on who?) or **на чому́?** (on what?) and **у кому? / у чому?** (in who? / in what?). Crucially, the locative case ALWAYS requires a preposition; it never stands alone in a sentence.
+The core function of the Locative case is to describe static location—where something is situated or where an action takes place without any movement toward a destination. It is the grammatical tool that specifically answers the question **Де?** (Where?). There is one crucial rule that makes this case unique among all Ukrainian grammatical cases: the Locative case *always* requires a preposition. You cannot use it on its own; it must be attached to **в**, **у**, or **на**.
 
-:::note
-**М. (на, у) — на/у кому? на/у чому?**
+Ukrainian primary school textbooks teach a very practical method to identify and form the Locative case. In Grade 4 (Захарійчук p.74), students learn the "helper question" method for the **Місцевий відмінок**. You memorize the helper questions: **на кому? у чому?** (on whom? in what?). By asking these questions, you naturally prompt the correct case ending for the noun.
+* стіл → **у чому?** → **у столі** (in the table)
+* стіл → **на чому?** → **на столі** (on the table)
+* місто → **у чому?** → **у місті** (in the city)
+
+Feminine and neuter nouns form the Locative case very consistently. The dominant ending for almost all of them is **-і**. You simply replace the final vowel of the base word.
+* школа → в школі (school)
+* робота → на роботі (work)
+* пошта → на пошті (at the post office)
+* вулиця → на вулиці (street)
+* місто → у місті (in the city)
+* вікно → на вікні (on the window)
+
+Some borrowed neuter nouns are indeclinable, meaning their endings never change regardless of the grammar rules. These are easy wins for learners: **кафе** always stays **кафе**, so you just say **в кафе** (in the café).
+
+Masculine nouns are slightly more complex because they split into two groups. Many standard masculine nouns take the same **-і** ending as feminine and neuter words.
+* офіс → в офісі (office)
+* театр → у театрі (in the theater)
+* стіл → на столі (on the table)
+
+However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
+* парк → у парку (park)
+* банк → у банку (bank)
+* сад → у саду (in the orchard)
+* магазин → у/в магазині (shop)
+
+<!-- INJECT_ACTIVITY: match-nom-loc -->
+
+<!-- INJECT_ACTIVITY: quiz-loc-form -->
+
+## В чи на? — В or На?
+
+The basic logic for choosing between **в** and **на** comes down to the physical space you are describing. **В** (or its phonetic twin **у**) is used for enclosed spaces—places that have walls, boundaries, or a clear "inside."
+* **в офісі** (in the office)
+* **у магазині** (in the store)
+* **в аптеці** (in the pharmacy)
+* **у лікарні** (in the hospital)
+
+Conversely, **на** is generally used for open spaces, flat surfaces, or when something is physically "atop" something else.
+* **на вулиці** (on the street)
+* **на площі** (on the square)
+* **на столі** (on the table)
+* **на дивані** (on the sofa)
+
+Beyond physical spaces, **на** is also used in a more abstract way for events and specific statuses. When you attend an activity or event, you are **на**. Furthermore, for the concept of being "at work," Ukrainian always uses **на**.
+* **на концерті** (at the concert)
+* **на уроці** (at the lesson)
+* **на футболі** (at the football game)
+* **на роботі** (at work)
+
+:::note 
+Remember that English uses "in the office," but Ukrainian separates the physical building (**в офісі**) from the abstract status of working (**на роботі**).
 :::
 
-The preposition **в / у** (in / at) is used for enclosed spaces — when you are physically inside a building, a room, or the borders of a city. Let's look at five model nouns changing from their base dictionary form (nominative) to the locative case:
-- **школа** (school) → **в школі** (in/at school)
-- **банк** (bank) → **у ба́нку** (in/at the bank)
-- **магази́н** (shop) → **у/в магази́ні** (in/at the shop)
-- **ліка́рня** (hospital) → **у ліка́рні** (in/at the hospital)
-- **мі́сто** (city) → **у/в мі́сті** (in the city)
+There are some conventional places that always use **на** regardless of whether they have walls or seem like an enclosed space. These must simply be learned as fixed phrases.
+* **на пошті** (at the post office)
+* **на вокзалі** (at the train station)
+* **на станції** (at the station)
 
-*Brief rule:* Use **в** before a vowel, and use **у** before a consonant or to avoid awkward consonant clusters. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**.
+The rule for countries and cities is very strict: always use **в** or **у**. It does not matter if a country is an island or a continent.
+* **в Україні** (in Ukraine)
+* **у Києві** (in Kyiv)
+* **у Львові** (in Lviv)
+* **в Одесі** (in Odesa)
 
-The preposition **на** (on / at) is used when something is on a surface, situated in an open area, or simply by pure convention for certain places. Here are five model nouns for this specific pattern:
-- **робота** (work) → **на роботі** (at work)
-- **ву́лиця** (street) → **на вулиці** (on the street)
-- **пло́ща** (square) → **на пло́щі** (on the square)
-- **уро́к** (lesson) → **на уроці** (at the lesson)
-- **мо́ре** (sea) → **на мо́рі** (at the sea)
-
-*Emphasis:* Using **на** is not "wrong" or illogical — it is simply the specific preposition that a particular place travels with. You must learn the place and its preposition together as a single unit, just as English speakers say "at work" rather than "in work."
-
-You may have noticed that the noun endings change in predictable ways. Here are the three most common locative endings for familiar nouns. Masculine nouns usually take **-у** (like **у банку**, **у парку**) or **-і** (like **в офісі**, **на уроці**, **на вокза́лі**). Feminine nouns almost everywhere take **-і** (like **в школі**, **на роботі**, **у лікарні**, **на вулиці**). Neuter nouns also take **-і** (like **у місті**, **на морі**). For practical advice right now: simply learn the twelve required vocabulary nouns as fixed phrases. The grammatical pattern will emerge naturally as you use them more often.
-
-<!-- INJECT_ACTIVITY: fill-in -->
-
-## В чи на? (В or На?)
-
-How do you choose between the prepositions? **В / у** signals an enclosed, bounded space where you are physically inside something. Think of our prototype examples from the introductory dialogues: **в школі** (inside the school building), **у банку** (inside the bank walls), **в магазині** (inside the shop), and **у лікарні** (inside the hospital). There is a very important special case: **в кафе́** (in the café). The word **кафе** (café) is an indeclinable neuter noun because it is a borrowed foreign word ending in a vowel. The noun itself never changes its ending; only the preposition marks the location. Therefore, it is always **в кафе** (or **у кафе**), never changing its ending.
-
-The preposition **на** signals an open area, a surface, or — most importantly — a conventional cultural association. Prototype open spaces include **на вулиці** (on the street, outdoors), **на пло́щі** (on the square), and **на морі** (at the sea). It is also used for events, like **на конце́рті** (at the concert). Then there are the tricky conventional ones: **на роботі** (at work — you are not inside a single "work" building, but rather at the concept of work), **на вокзалі** (at the train station — this is a linguistic convention, not pure spatial logic), and **на по́шті** (at the post office — also conventional). As a reliable rule of thumb, when you are in doubt, learn each place with its preposition as a fixed, inseparable phrase.
-
-There is a strict and unbreakable rule for countries and cities — they always take **в / у**: **в Украї́ні** (in Ukraine), **у Києві** (in Kyiv), **у Льво́ві** (in Lviv), **в Оде́сі** (in Odesa), **у Харко́ві** (in Kharkiv). However, there is a special case for streets: you use **на** plus the street name, such as **на вулиці** Хрещатик (on Khreshchatyk street) or **на Майда́ні** Незале́жності (on Independence Square).
-
-:::caution
-**Cultural Note:**
-НІКОЛИ не кажи́ «на Україні» — ЗА́ВЖДИ́ «**в Україні**». (NEVER say «на Україні» — ALWAYS «**в Україні**».)
-This is not just a simple grammar rule; it directly reflects Ukraine's recognition as a sovereign, independent state, not a regional borderland. Russian imperial usage deliberately promoted «на Україні» to diminish this status. Modern Ukrainian firmly and completely rejects it.
+:::caution Decolonization Note
+You will sometimes hear Russian speakers say "на Украине" (on Ukraine). This is historically incorrect and politically offensive. Using "на" implies that Ukraine is merely a geographic territory or a region of an empire, rather than a sovereign state. A country always takes "в/у". You must always say **в Україні**.
 :::
 
-<!-- INJECT_ACTIVITY: quiz -->
+<!-- INJECT_ACTIVITY: quiz-v-na -->
 
-Let's summarize the contrast to make it memorable. Use **в / у** for: school, bank, shop, hospital, café, city, and country. Use **на** for: street, square, station, post office, work, sea, and lesson. The pattern check is simple: if you can easily picture yourself being physically enclosed inside a space, it is usually **в**. If it is a flat surface, an open area, or an expression set by tradition, it is usually **на**. When unsure, look up the place and check whether it naturally pairs with **в** or **на**.
-
-<!-- INJECT_ACTIVITY: match-up -->
+<!-- INJECT_ACTIVITY: fill-in-de -->
 
 ## Підсумок — Summary
 
-Let's consolidate everything we have learned. The locative case (**місцевий відмінок**, **М.в.**) answers exactly one core question: **Де?** (Where?). It tells us where something IS right now, indicating a static location. It never stands alone in a sentence; it always needs the preposition **в / у** or **на** directly in front of it. You can always use the Grade 4 helper-word test: can you ask **на кому?** (on who?) or **на чому?** (on what?) before the noun? If the answer is yes, you are dealing with the locative case. Examples include answering (на/у чому?) with **на вулиці**, **у банку**, **в школі**, and **на роботі**. Every noun on today's vocabulary list has been shown in its locative form. Review them as pairs: **школа** / **в школі**, **банк** / **у банку**.
+The Locative case is your primary tool for expressing static location. Whenever you need to answer the question **Де?** (Where?), you will use this case. Here is a final recap of the logic:
 
-Here is a quick recap of **в / у** versus **на**. Use **в / у** for an enclosed space, a city, or a country (**в школі**, **у банку**, **в Україні**, **у Києві**). Use **на** for an open area, a surface, or by pure convention (**на вулиці**, **на роботі**, **на пошті**, **на вокзалі**). Remember the sovereign rule: it is **в Україні** — always, without any exception. Conventional forms like **на пошті** and **на вокзалі** must simply be learned as fixed phrases, just as learners of English memorize the phrase "at work" rather than trying to derive it from a spatial rule.
+* **Question:** Де? (Where?)
+* **Prepositions:**
+  * **В/У** is for enclosed spaces, countries, and cities.
+  * **На** is for open spaces, surfaces, events, and specific concepts like work.
+* **Endings:**
+  * **-і** is the most common ending for almost all nouns (feminine, neuter, and many masculine).
+  * **-у** is used for a specific group of masculine nouns like **банк** and **парк**.
+* **Key Phrases to remember:**
+  * Я **в Україні**. (I am in Ukraine.)
+  * Я **у Києві**. (I am in Kyiv.)
+  * Я **на роботі**. (I am at work.)
 
-To summarize the endings: most feminine nouns take **-і** in the locative (school → **в школі**, street → **на вулиці**). Most masculine nouns take **-у** or **-і** (bank → **у банку**, park → **у парку**, office → **в офісі**, lesson → **на уроці**). Neuter nouns generally take **-і** (city → **у місті**, sea → **на морі**). Indeclinable foreign nouns do not change their endings at all (café → **в кафе**). For now, practicing with these twelve vocabulary nouns is enough. The patterns will solidify as you get more reading and speaking practice.
+Now it is time to practice by applying these patterns to your own life. Answer the following questions about yourself, either aloud or in writing, using the Locative case:
 
-*   **Де ти зараз?** *(Where are you now?)* → Я зараз вдома / в кімна́ті / **у кафе**.
-*   **Де ти працюєш?** *(Where do you work?)* → Я працюю **в офісі** / навчаюся в університеті.
-*   **Де живе́ твоя́ сім'я́?** *(Where does your family live?)* → Вони живу́ть **у Києві** / у Ло́ндоні / у мале́нькому **місті**.
-
-<!-- INJECT_ACTIVITY: quiz -->
-
-**Deterministic word count: 1581 words** (calculated by pipeline, do NOT estimate manually)
-
+* **Де ви зараз?** (Where are you now?)
+  * Я **в**... / Я **на**...
+* **Де ви працюєте?** (Where do you work?)
+  * Я працюю **в**... / **на**...
+* **Де ви живете?** (Where do you live?)
+  * Я живу **в**... **на вулиці**...
+* **Де ваш телефон?** (Where is your phone?)
+  * Він **на**... / Він **у**...
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1279 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -304,8 +346,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -392,61 +434,18 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 66 words | Not found: 51 words
+Verified: 76 words | Not found: 7 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Діало — NOT IN VESUM
-  ✗ Емі — NOT IN VESUM
-  ✗ Емілі — NOT IN VESUM
-  ✗ Зрозумі — NOT IN VESUM
-  ✗ Льво — NOT IN VESUM
-  ✗ Майда — NOT IN VESUM
-  ✗ Наза — NOT IN VESUM
-  ✗ Назар — NOT IN VESUM
-  ✗ Незале — NOT IN VESUM
-  ✗ Оде — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Олег — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Украї — NOT IN VESUM
-  ✗ Харко — NOT IN VESUM
-  ✗ Хреща — NOT IN VESUM
+  ✗ Захарійчук — NOT IN VESUM
+  ✗ Львові — NOT IN VESUM
+  ✗ Одесі — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
+  ✗ Украине — NOT IN VESUM
   ✗ Хрещатик — NOT IN VESUM
-  ✗ вдо — NOT IN VESUM
-  ✗ вокза — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ гому — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ жності — NOT IN VESUM
-  ✗ конце — NOT IN VESUM
-  ✗ кімна — NOT IN VESUM
-  ✗ ліка — NOT IN VESUM
-  ✗ магази — NOT IN VESUM
-  ✗ ндоні — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нки — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нтка — NOT IN VESUM
-  ✗ нтрі — NOT IN VESUM
-  ✗ нькому — NOT IN VESUM
-  ✗ пло — NOT IN VESUM
-  ✗ рня — NOT IN VESUM
-  ✗ рні — NOT IN VESUM
-  ✗ рті — NOT IN VESUM
-  ✗ студе — NOT IN VESUM
-  ✗ сті — NOT IN VESUM
-  ✗ університе — NOT IN VESUM
-  ✗ уро — NOT IN VESUM
-  ✗ фісі — NOT IN VESUM
-  ✗ шка — NOT IN VESUM
-  ✗ шко — NOT IN VESUM
-  ✗ шті — NOT IN VESUM
-  ✗ юся — NOT IN VESUM
-  ✗ ються — NOT IN VESUM
-  ✗ єві — NOT IN VESUM
 
-All 66 other words are confirmed to exist in VESUM.
+All 76 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

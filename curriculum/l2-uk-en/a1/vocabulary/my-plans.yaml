@@ -1,6 +1,12 @@
 vocabulary:
-- word: бу́ду
-  translation: I will (future auxiliary verb)
+- word: ти́ждень
+  translation: week
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зу́стріч
+  translation: meeting
   expression: false
   pos: ім.
   gender: ж.
@@ -11,77 +17,11 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: кварти́ра
-  translation: apartment
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: відпочива́ти
-  translation: to rest
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: кафе́
-  translation: cafe
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: план
-  translation: plan
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ти́ждень
-  translation: week
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ві́льний
-  translation: free (available)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: зу́стріч
-  translation: meeting
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: вечі́рка
   translation: party
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: допі́зна
-  translation: until late
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: звича́йно
-  translation: of course
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: кіно́
-  translation: cinema
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: вчи́ти
-  translation: to study/learn
-  expression: false
-  pos: дієсл.
-  gender: ''
   verified: true
 - word: зустрі́немося
   translation: let's meet
@@ -99,6 +39,30 @@ vocabulary:
   translation: unfortunately
   expression: true
   pos: ''
+  gender: ''
+  verified: true
+- word: допі́зна
+  translation: until late
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: звича́йно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кварти́ра
+  translation: apartment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вчи́ти
+  translation: to study / to learn
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
 - word: понеді́лок
@@ -131,17 +95,59 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: субо́та
+  translation: Saturday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: неді́ля
+  translation: Sunday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на вихідних
+  translation: on the weekend
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зра́нку
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: мо́же
   translation: maybe
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: задово́лення
-  translation: pleasure, satisfaction
+- word: пі́демо
+  translation: we will go / let's go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вече́ря
+  translation: dinner
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
+  verified: true
+- word: гуля́ти
+  translation: to walk / to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: спа́ти
   translation: to sleep
@@ -149,22 +155,10 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: вдо́ма
-  translation: at home
+- word: до́вго
+  translation: long / a long time
   expression: false
   pos: присл.
-  gender: ''
-  verified: true
-- word: сам / сама
-  translation: alone (m/f)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Може, підемо?
-  translation: Maybe we'll go?
-  expression: true
-  pos: ''
   gender: ''
   verified: true
 - word: Давай зустрінемося!
@@ -173,8 +167,8 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: На жаль, не можу.
-  translation: Unfortunately, I cannot.
+- word: не можу
+  translation: I cannot
   expression: true
   pos: ''
   gender: ''

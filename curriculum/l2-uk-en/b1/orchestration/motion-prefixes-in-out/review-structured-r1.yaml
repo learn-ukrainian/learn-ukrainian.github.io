@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the explicit error correction examples (`*Зайшов у друга`, `*Вийшов
+    від магазину`) in Section 5, substituting them with a general warning. Added unauthorized
+    activity markers. All required/reco
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent paradigms and explanations. Deducted slightly for the two calques
+    («за вітамінами», «за гарячим горнятком») which mimic Russian purpose-of-motion
+    patterns.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb "PPP" flow. The spatial dilemmas in Section 4 (parking lot, grocery
+    store, rain shelter) are phenomenal examples of contextualized grammar teaching.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Perfectly integrated all 12 required and 10 recommended verbs/nouns naturally
+    into stories, dialogues, and explanations.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Generated 8 markers for a 6-activity plan. The extra markers (`match-up-match-idiomatic-and-literal-phrases-with`
+    and `free-write-describe-a-morning-routine-using-imperfective-verbs`) break pipeline
+    i
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Masterful tone. Very encouraging but substantial. "Ваша мовна «дверна
+    ручка»" is a brilliant metaphor.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Exceeds the 4000-word target significantly (5292 words) adding rich depth.
+    Clean markdown. Deducted for duplicating the exact same cultural explanation of
+    "вийти заміж" in both Section 3 and Section 5
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The explanation of «вийти заміж» (going to live behind the husband's family)
+    is a beautiful decolonized historical touch that anchors the grammar in culture.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The phone dialogue between the secretary and Maksym perfectly demonstrates
+    a natural, practical chain of motion verbs without feeling forced.
+findings: []

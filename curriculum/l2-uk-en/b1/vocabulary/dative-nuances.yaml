@@ -1,0 +1,385 @@
+vocabulary:
+- word: нале́жить
+  translation: is supposed to / is incumbent upon
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пощасти́ло
+  translation: was lucky
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доведе́ться
+  translation: will have to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заважа́ти
+  translation: to bother / to disturb
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: завдя́чувати
+  translation: to owe gratitude
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: суб'єкт стану
+  translation: experiencer of a state
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: безособо́вий
+  translation: impersonal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: адреса́т
+  translation: recipient / addressee
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: потрі́бно
+  translation: necessary
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ва́рто
+  translation: it is worth / one should
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вдало́ся
+  translation: succeeded
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довело́ся
+  translation: had to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́йду́же
+  translation: indifferent
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: со́ромно
+  translation: ashamed
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хо́лодно
+  translation: cold
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тепло́
+  translation: warm
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: жа́рко
+  translation: hot / sweaty
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: гаря́че
+  translation: hot / burning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бо́ляче
+  translation: painful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: запа́морочливо
+  translation: dizzy
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: мло́сно
+  translation: faint / nauseous
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: су́мно
+  translation: sad
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ве́село
+  translation: fun / cheerful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: стра́шно
+  translation: scared
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ну́дно
+  translation: bored
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зрозумі́ло
+  translation: clear / understandable
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: незрозумі́ло
+  translation: unclear
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ціка́во
+  translation: interesting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ва́жко
+  translation: hard / difficult
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ле́гко
+  translation: easy
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: не працюється
+  translation: cannot work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: не хочеться
+  translation: do not want to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: не віриться
+  translation: cannot believe
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки вам років?
+  translation: How old are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ма́йже
+  translation: almost
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тре́ба
+  translation: need to
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: мо́жна
+  translation: may / can / allowed
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: не мо́жна
+  translation: not allowed / must not
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дарува́ти
+  translation: to gift
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відповіда́ти
+  translation: to answer
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: телефонува́ти
+  translation: to call
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шко́дити
+  translation: to harm
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сприя́ти
+  translation: to facilitate / to promote
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: па́м'ятник
+  translation: monument
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Слава Україні!
+  translation: Glory to Ukraine!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: присвя́та
+  translation: dedication
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: завдяки́
+  translation: thanks to
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: наперекі́р
+  translation: despite / in defiance of
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наперері́з
+  translation: across / intercepting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: навсупроти
+  translation: contrary to
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: на зло
+  translation: to spite
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: че́рез
+  translation: because of / due to (negative cause)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: потребува́ти
+  translation: to need / to require
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: викликати
+  translation: to call for / to summon
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: навча́тися
+  translation: to study / to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: навча́ти
+  translation: to teach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́тися
+  translation: to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ві́рити
+  translation: to believe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довіря́ти
+  translation: to trust
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за́здрити
+  translation: to envy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співчува́ти
+  translation: to sympathize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: усміха́тися
+  translation: to smile at
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

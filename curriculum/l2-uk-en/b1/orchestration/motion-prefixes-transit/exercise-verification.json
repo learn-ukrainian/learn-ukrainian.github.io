@@ -1,0 +1,591 @@
+{
+  "total_items": 295,
+  "grounded_items": 199,
+  "ungrounded": [
+    {
+      "word": "перетнути",
+      "exercise_type": "match-up",
+      "context": "перейти (перетнути пішки)",
+      "role": "answer"
+    },
+    {
+      "word": "минути",
+      "exercise_type": "match-up",
+      "context": "пройти (минути пішки)",
+      "role": "context"
+    },
+    {
+      "word": "транспортом",
+      "exercise_type": "match-up",
+      "context": "переїхати (перетнути транспортом)",
+      "role": "answer"
+    },
+    {
+      "word": "бар'єр",
+      "exercise_type": "match-up",
+      "context": "перенести (перемістити об'єкт через бар'єр)",
+      "role": "answer"
+    },
+    {
+      "word": "допомогти",
+      "exercise_type": "match-up",
+      "context": "перевести (допомогти перетнути дорогу)",
+      "role": "answer"
+    },
+    {
+      "word": "бути",
+      "exercise_type": "match-up",
+      "context": "провести (бути гідом крізь територію)",
+      "role": "context"
+    },
+    {
+      "word": "доставити",
+      "exercise_type": "match-up",
+      "context": "перевезти (доставити вантаж на інший бік)",
+      "role": "answer"
+    },
+    {
+      "word": "транспортувати",
+      "exercise_type": "match-up",
+      "context": "провезти (транспортувати вантаж наскрізь)",
+      "role": "context"
+    },
+    {
+      "word": "подолати",
+      "exercise_type": "match-up",
+      "context": "перелетіти (подолати літаком перешкоду)",
+      "role": "answer"
+    },
+    {
+      "word": "літаком",
+      "exercise_type": "match-up",
+      "context": "перелетіти (подолати літаком перешкоду)",
+      "role": "answer"
+    },
+    {
+      "word": "повітрям",
+      "exercise_type": "match-up",
+      "context": "пролетіти (минути повітрям)",
+      "role": "context"
+    },
+    {
+      "word": "музею",
+      "exercise_type": "fill-in",
+      "context": "Щоб потрапити до музею, вам потрібно ____ широку вулицю на п",
+      "role": "context"
+    },
+    {
+      "word": "зупинилися",
+      "exercise_type": "fill-in",
+      "context": "Випадково ми не зупинилися і дуже швидко ____ нашу вулицю.",
+      "role": "context"
+    },
+    {
+      "word": "нашу",
+      "exercise_type": "fill-in",
+      "context": "Випадково ми не зупинилися і дуже швидко ____ нашу вулицю.",
+      "role": "context"
+    },
+    {
+      "word": "повернула",
+      "exercise_type": "fill-in",
+      "context": "Машина не повернула, а просто швидко ____ це велике перехрес",
+      "role": "context"
+    },
+    {
+      "word": "велике",
+      "exercise_type": "fill-in",
+      "context": "Машина не повернула, а просто швидко ____ це велике перехрес",
+      "role": "context"
+    },
+    {
+      "word": "провів",
+      "exercise_type": "fill-in",
+      "context": "провів",
+      "role": "answer"
+    },
+    {
+      "word": "розповідав",
+      "exercise_type": "fill-in",
+      "context": "Екскурсовод цікаво розповідав, поки ____ туристів по всьому ",
+      "role": "context"
+    },
+    {
+      "word": "бачу",
+      "exercise_type": "fill-in",
+      "context": "Я часто бачу, як вони швидко проїжджають ____ цей високий бу",
+      "role": "context"
+    },
+    {
+      "word": "проїжджають",
+      "exercise_type": "fill-in",
+      "context": "Я часто бачу, як вони швидко проїжджають ____ цей високий бу",
+      "role": "context"
+    },
+    {
+      "word": "високий",
+      "exercise_type": "fill-in",
+      "context": "Я часто бачу, як вони швидко проїжджають ____ цей високий бу",
+      "role": "context"
+    },
+    {
+      "word": "оперний",
+      "exercise_type": "fill-in",
+      "context": "Щоб побачити оперний театр, нам треба було обов'язково пройт",
+      "role": "context"
+    },
+    {
+      "word": "театр",
+      "exercise_type": "fill-in",
+      "context": "Щоб побачити оперний театр, нам треба було обов'язково пройт",
+      "role": "context"
+    },
+    {
+      "word": "треба",
+      "exercise_type": "fill-in",
+      "context": "Щоб побачити оперний театр, нам треба було обов'язково пройт",
+      "role": "context"
+    },
+    {
+      "word": "знаєш",
+      "exercise_type": "fill-in",
+      "context": "Ти не знаєш, чи вони вже ____ кордон на своєму автомобілі?",
+      "role": "context"
+    },
+    {
+      "word": "швидше",
+      "exercise_type": "fill-in",
+      "context": "Щоб швидше опинитися вдома, він вирішив небезпечно ____ доро",
+      "role": "context"
+    },
+    {
+      "word": "вдома",
+      "exercise_type": "fill-in",
+      "context": "Щоб швидше опинитися вдома, він вирішив небезпечно ____ доро",
+      "role": "context"
+    },
+    {
+      "word": "червоне",
+      "exercise_type": "fill-in",
+      "context": "Щоб швидше опинитися вдома, він вирішив небезпечно ____ доро",
+      "role": "context"
+    },
+    {
+      "word": "світло",
+      "exercise_type": "fill-in",
+      "context": "Щоб швидше опинитися вдома, він вирішив небезпечно ____ доро",
+      "role": "context"
+    },
+    {
+      "word": "аптека",
+      "exercise_type": "quiz",
+      "context": "Ти не знаєш, де аптека? Здається, ми її щойно...",
+      "role": "context"
+    },
+    {
+      "word": "здається",
+      "exercise_type": "quiz",
+      "context": "Ти не знаєш, де аптека? Здається, ми її щойно...",
+      "role": "context"
+    },
+    {
+      "word": "інтенсивний",
+      "exercise_type": "quiz",
+      "context": "Обережно, тут інтенсивний трафік! Нам треба безпечно...",
+      "role": "context"
+    },
+    {
+      "word": "трафік",
+      "exercise_type": "quiz",
+      "context": "Обережно, тут інтенсивний трафік! Нам треба безпечно...",
+      "role": "context"
+    },
+    {
+      "word": "швидкісний",
+      "exercise_type": "quiz",
+      "context": "Наш швидкісний поїзд не зупинявся на маленьких станціях, він",
+      "role": "context"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "quiz",
+      "context": "Наш швидкісний поїзд не зупинявся на маленьких станціях, він",
+      "role": "context"
+    },
+    {
+      "word": "зупинявся",
+      "exercise_type": "quiz",
+      "context": "Наш швидкісний поїзд не зупинявся на маленьких станціях, він",
+      "role": "context"
+    },
+    {
+      "word": "маленьких",
+      "exercise_type": "quiz",
+      "context": "Наш швидкісний поїзд не зупинявся на маленьких станціях, він",
+      "role": "context"
+    },
+    {
+      "word": "станціях",
+      "exercise_type": "quiz",
+      "context": "Наш швидкісний поїзд не зупинявся на маленьких станціях, він",
+      "role": "context"
+    },
+    {
+      "word": "минулого",
+      "exercise_type": "quiz",
+      "context": "Минулого літа мій брат зміг самостійно...",
+      "role": "context"
+    },
+    {
+      "word": "літа",
+      "exercise_type": "quiz",
+      "context": "Минулого літа мій брат зміг самостійно...",
+      "role": "context"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "quiz",
+      "context": "Минулого літа мій брат зміг самостійно...",
+      "role": "context"
+    },
+    {
+      "word": "зміг",
+      "exercise_type": "quiz",
+      "context": "Минулого літа мій брат зміг самостійно...",
+      "role": "context"
+    },
+    {
+      "word": "звернув",
+      "exercise_type": "quiz",
+      "context": "Великий собака не звернув на нас уваги і дуже швидко...",
+      "role": "context"
+    },
+    {
+      "word": "планує",
+      "exercise_type": "quiz",
+      "context": "Мій найкращий друг завтра планує...",
+      "role": "context"
+    },
+    {
+      "word": "лівому",
+      "exercise_type": "quiz",
+      "context": "Щоб опинитися на лівому березі Дніпра, вам обов'язково потрі",
+      "role": "context"
+    },
+    {
+      "word": "дніпра",
+      "exercise_type": "quiz",
+      "context": "Щоб опинитися на лівому березі Дніпра, вам обов'язково потрі",
+      "role": "context"
+    },
+    {
+      "word": "замислився",
+      "exercise_type": "quiz",
+      "context": "Я глибоко замислився, не помітив потрібний будинок і випадко",
+      "role": "context"
+    },
+    {
+      "word": "помітив",
+      "exercise_type": "quiz",
+      "context": "Я глибоко замислився, не помітив потрібний будинок і випадко",
+      "role": "context"
+    },
+    {
+      "word": "потрібний",
+      "exercise_type": "quiz",
+      "context": "Я глибоко замислився, не помітив потрібний будинок і випадко",
+      "role": "context"
+    },
+    {
+      "word": "неуважно",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже неуважно читала книгу, тому випадково переїхала св",
+      "role": "context"
+    },
+    {
+      "word": "читала",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже неуважно читала книгу, тому випадково переїхала св",
+      "role": "context"
+    },
+    {
+      "word": "автобусну",
+      "exercise_type": "unjumble",
+      "context": "автобусну",
+      "role": "answer"
+    },
+    {
+      "word": "пробігли",
+      "exercise_type": "error-correction",
+      "context": "пробігли",
+      "role": "answer"
+    },
+    {
+      "word": "студенти",
+      "exercise_type": "error-correction",
+      "context": "Студенти швидко перебігли повз мене у коридорі та не привіта",
+      "role": "context"
+    },
+    {
+      "word": "перебігли",
+      "exercise_type": "error-correction",
+      "context": "Студенти швидко перебігли повз мене у коридорі та не привіта",
+      "role": "context"
+    },
+    {
+      "word": "коридорі",
+      "exercise_type": "error-correction",
+      "context": "Студенти швидко перебігли повз мене у коридорі та не привіта",
+      "role": "context"
+    },
+    {
+      "word": "привіталися",
+      "exercise_type": "error-correction",
+      "context": "Студенти швидко перебігли повз мене у коридорі та не привіта",
+      "role": "context"
+    },
+    {
+      "word": "маленька",
+      "exercise_type": "error-correction",
+      "context": "Маленька дитина злякалася і не змогла самостійно пройти на і",
+      "role": "context"
+    },
+    {
+      "word": "дитина",
+      "exercise_type": "error-correction",
+      "context": "Маленька дитина злякалася і не змогла самостійно пройти на і",
+      "role": "context"
+    },
+    {
+      "word": "злякалася",
+      "exercise_type": "error-correction",
+      "context": "Маленька дитина злякалася і не змогла самостійно пройти на і",
+      "role": "context"
+    },
+    {
+      "word": "змогла",
+      "exercise_type": "error-correction",
+      "context": "Маленька дитина злякалася і не змогла самостійно пройти на і",
+      "role": "context"
+    },
+    {
+      "word": "туристи",
+      "exercise_type": "error-correction",
+      "context": "Туристи швидко пройшли через кордон без жодних проблем із до",
+      "role": "context"
+    },
+    {
+      "word": "жодних",
+      "exercise_type": "error-correction",
+      "context": "Туристи швидко пройшли через кордон без жодних проблем із до",
+      "role": "context"
+    },
+    {
+      "word": "проблем",
+      "exercise_type": "error-correction",
+      "context": "Туристи швидко пройшли через кордон без жодних проблем із до",
+      "role": "context"
+    },
+    {
+      "word": "документами",
+      "exercise_type": "error-correction",
+      "context": "Туристи швидко пройшли через кордон без жодних проблем із до",
+      "role": "context"
+    },
+    {
+      "word": "приїхати",
+      "exercise_type": "group-sort",
+      "context": "приїхати",
+      "role": "answer"
+    },
+    {
+      "word": "доїхати",
+      "exercise_type": "group-sort",
+      "context": "доїхати",
+      "role": "answer"
+    },
+    {
+      "word": "прийти",
+      "exercise_type": "group-sort",
+      "context": "прийти",
+      "role": "answer"
+    },
+    {
+      "word": "від'їхати",
+      "exercise_type": "group-sort",
+      "context": "від'їхати",
+      "role": "answer"
+    },
+    {
+      "word": "піти",
+      "exercise_type": "group-sort",
+      "context": "піти",
+      "role": "answer"
+    },
+    {
+      "word": "вхід",
+      "exercise_type": "group-sort",
+      "context": "Інтер'єр (вхід або вихід)",
+      "role": "context"
+    },
+    {
+      "word": "вихід",
+      "exercise_type": "group-sort",
+      "context": "Інтер'єр (вхід або вихід)",
+      "role": "context"
+    },
+    {
+      "word": "зайти",
+      "exercise_type": "group-sort",
+      "context": "зайти",
+      "role": "answer"
+    },
+    {
+      "word": "виїхати",
+      "exercise_type": "group-sort",
+      "context": "виїхати",
+      "role": "answer"
+    },
+    {
+      "word": "занести",
+      "exercise_type": "group-sort",
+      "context": "занести",
+      "role": "answer"
+    },
+    {
+      "word": "винести",
+      "exercise_type": "group-sort",
+      "context": "винести",
+      "role": "answer"
+    },
+    {
+      "word": "ранку",
+      "exercise_type": "quiz",
+      "context": "Кожного ранку я ____ цю вулицю дорогою на роботу.",
+      "role": "context"
+    },
+    {
+      "word": "помітили",
+      "exercise_type": "quiz",
+      "context": "Вчора ми дуже швидко ____ через густий ліс і навіть не поміт",
+      "role": "context"
+    },
+    {
+      "word": "міські",
+      "exercise_type": "quiz",
+      "context": "Ці міські автобуси завжди ____ рівно кожні десять хвилин.",
+      "role": "context"
+    },
+    {
+      "word": "склав",
+      "exercise_type": "quiz",
+      "context": "Мій колега успішно склав іспит і вирішив повністю ____ на ук",
+      "role": "context"
+    },
+    {
+      "word": "іспит",
+      "exercise_type": "quiz",
+      "context": "Мій колега успішно склав іспит і вирішив повністю ____ на ук",
+      "role": "context"
+    },
+    {
+      "word": "зелене",
+      "exercise_type": "error-correction",
+      "context": "Завтра я обов'язково перейдемо цю небезпечну вулицю на зелен",
+      "role": "context"
+    },
+    {
+      "word": "проходимо",
+      "exercise_type": "error-correction",
+      "context": "проходимо",
+      "role": "answer"
+    },
+    {
+      "word": "проходиш",
+      "exercise_type": "error-correction",
+      "context": "Ми щодня проходиш повз цей історичний музей.",
+      "role": "context"
+    },
+    {
+      "word": "переїдуть",
+      "exercise_type": "error-correction",
+      "context": "переїдуть",
+      "role": "answer"
+    },
+    {
+      "word": "переїде",
+      "exercise_type": "error-correction",
+      "context": "Ти вже знаєш, коли вони переїде до нового великого офісу?",
+      "role": "context"
+    },
+    {
+      "word": "великого",
+      "exercise_type": "error-correction",
+      "context": "Ти вже знаєш, коли вони переїде до нового великого офісу?",
+      "role": "context"
+    },
+    {
+      "word": "переводить",
+      "exercise_type": "error-correction",
+      "context": "переводить",
+      "role": "answer"
+    },
+    {
+      "word": "переведіть",
+      "exercise_type": "error-correction",
+      "context": "Зараз вона обережно переведіть літню людину через перехрестя",
+      "role": "context"
+    },
+    {
+      "word": "проїжджаємо",
+      "exercise_type": "error-correction",
+      "context": "проїжджаємо",
+      "role": "answer"
+    },
+    {
+      "word": "рідне",
+      "exercise_type": "error-correction",
+      "context": "Ми проїжджаю ваше рідне місто сьогодні ввечері.",
+      "role": "context"
+    },
+    {
+      "word": "перенесемо",
+      "exercise_type": "error-correction",
+      "context": "Ви зможете перенесемо нашу ділову зустріч на наступний тижде",
+      "role": "context"
+    },
+    {
+      "word": "ділову",
+      "exercise_type": "error-correction",
+      "context": "Ви зможете перенесемо нашу ділову зустріч на наступний тижде",
+      "role": "context"
+    },
+    {
+      "word": "пройшла",
+      "exercise_type": "unjumble",
+      "context": "пройшла",
+      "role": "answer"
+    },
+    {
+      "word": "перелітають",
+      "exercise_type": "unjumble",
+      "context": "перелітають",
+      "role": "answer"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "unjumble",
+      "context": "хочу",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 23,
+    "tested_in_exercises": 21,
+    "not_tested": [
+      "переходити",
+      "проходити"
+    ]
+  },
+  "all_grounded": false
+}

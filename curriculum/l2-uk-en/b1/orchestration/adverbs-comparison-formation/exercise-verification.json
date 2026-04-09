@@ -1,0 +1,259 @@
+{
+  "total_items": 185,
+  "grounded_items": 145,
+  "ungrounded": [
+    {
+      "word": "якої",
+      "exercise_type": "quiz",
+      "context": "Від якої частини мови утворено прислівник «зранку»?",
+      "role": "context"
+    },
+    {
+      "word": "утворено",
+      "exercise_type": "quiz",
+      "context": "Від якої частини мови утворено прислівник «зранку»?",
+      "role": "context"
+    },
+    {
+      "word": "яким",
+      "exercise_type": "quiz",
+      "context": "Яким способом утворився прислівник «праворуч»?",
+      "role": "context"
+    },
+    {
+      "word": "способом",
+      "exercise_type": "quiz",
+      "context": "Яким способом утворився прислівник «праворуч»?",
+      "role": "context"
+    },
+    {
+      "word": "утворився",
+      "exercise_type": "quiz",
+      "context": "Яким способом утворився прислівник «праворуч»?",
+      "role": "context"
+    },
+    {
+      "word": "утворити",
+      "exercise_type": "quiz",
+      "context": "Що потрібно додати до прикметника «швидкий», щоб утворити пр",
+      "role": "context"
+    },
+    {
+      "word": "спортсмен",
+      "exercise_type": "fill-in",
+      "context": "Цей спортсмен біжить ____ за всіх.",
+      "role": "context"
+    },
+    {
+      "word": "вправу",
+      "exercise_type": "fill-in",
+      "context": "Цю вправу виконувати набагато ____.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Моя сестра співає значно ____ за мене.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "fill-in",
+      "context": "Моя сестра співає значно ____ за мене.",
+      "role": "context"
+    },
+    {
+      "word": "пояснив",
+      "exercise_type": "fill-in",
+      "context": "Він пояснив матеріал ____ детально.",
+      "role": "context"
+    },
+    {
+      "word": "матеріал",
+      "exercise_type": "fill-in",
+      "context": "Він пояснив матеріал ____ детально.",
+      "role": "context"
+    },
+    {
+      "word": "слугує",
+      "exercise_type": "match-up",
+      "context": "слугує основою для утворення більшості прислівників",
+      "role": "context"
+    },
+    {
+      "word": "більшості",
+      "exercise_type": "match-up",
+      "context": "слугує основою для утворення більшості прислівників",
+      "role": "context"
+    },
+    {
+      "word": "частку",
+      "exercise_type": "match-up",
+      "context": "має префікс най- або частку якнай-",
+      "role": "context"
+    },
+    {
+      "word": "якнай",
+      "exercise_type": "match-up",
+      "context": "має префікс най- або частку якнай-",
+      "role": "context"
+    },
+    {
+      "word": "глибоко",
+      "exercise_type": "group-sort",
+      "context": "глибоко",
+      "role": "answer"
+    },
+    {
+      "word": "автомобіль",
+      "exercise_type": "error-correction",
+      "context": "Цей автомобіль їде набагато найшвидше.",
+      "role": "context"
+    },
+    {
+      "word": "їде",
+      "exercise_type": "error-correction",
+      "context": "Цей автомобіль їде набагато найшвидше.",
+      "role": "context"
+    },
+    {
+      "word": "виконав",
+      "exercise_type": "error-correction",
+      "context": "Вчора я виконав завдання поганіше, ніж сьогодні.",
+      "role": "context"
+    },
+    {
+      "word": "утворений",
+      "exercise_type": "quiz",
+      "context": "Який із цих прислівників утворений способом складання?",
+      "role": "context"
+    },
+    {
+      "word": "якому",
+      "exercise_type": "quiz",
+      "context": "У якому реченні виділене слово є прислівником?",
+      "role": "context"
+    },
+    {
+      "word": "виділене",
+      "exercise_type": "quiz",
+      "context": "У якому реченні виділене слово є прислівником?",
+      "role": "context"
+    },
+    {
+      "word": "суплетивну",
+      "exercise_type": "quiz",
+      "context": "Від якого слова утворено суплетивну форму «краще»?",
+      "role": "context"
+    },
+    {
+      "word": "працюєш",
+      "exercise_type": "unjumble",
+      "context": "працюєш,",
+      "role": "answer"
+    },
+    {
+      "word": "закінчиш",
+      "exercise_type": "unjumble",
+      "context": "закінчиш.",
+      "role": "answer"
+    },
+    {
+      "word": "мені",
+      "exercise_type": "unjumble",
+      "context": "мені",
+      "role": "answer"
+    },
+    {
+      "word": "змагання",
+      "exercise_type": "unjumble",
+      "context": "Змагання",
+      "role": "answer"
+    },
+    {
+      "word": "показали",
+      "exercise_type": "unjumble",
+      "context": "показали,",
+      "role": "answer"
+    },
+    {
+      "word": "летіти",
+      "exercise_type": "unjumble",
+      "context": "летіти",
+      "role": "answer"
+    },
+    {
+      "word": "вирішив",
+      "exercise_type": "unjumble",
+      "context": "вирішив",
+      "role": "answer"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "unjumble",
+      "context": "жити",
+      "role": "answer"
+    },
+    {
+      "word": "відтепер",
+      "exercise_type": "unjumble",
+      "context": "Відтепер",
+      "role": "answer"
+    },
+    {
+      "word": "закінчити",
+      "exercise_type": "unjumble",
+      "context": "закінчити",
+      "role": "answer"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "unjumble",
+      "context": "роботу",
+      "role": "answer"
+    },
+    {
+      "word": "кращий",
+      "exercise_type": "fill-in",
+      "context": "Чим більше працюєш, ____ кращий результат.",
+      "role": "context"
+    },
+    {
+      "word": "результат",
+      "exercise_type": "fill-in",
+      "context": "Чим більше працюєш, ____ кращий результат.",
+      "role": "context"
+    },
+    {
+      "word": "виконано",
+      "exercise_type": "fill-in",
+      "context": "Цей проєкт виконано ____ вдало з усіх.",
+      "role": "context"
+    },
+    {
+      "word": "завершити",
+      "exercise_type": "fill-in",
+      "context": "Потрібно завершити це важливе завдання ____.",
+      "role": "context"
+    },
+    {
+      "word": "важливе",
+      "exercise_type": "fill-in",
+      "context": "Потрібно завершити це важливе завдання ____.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "мимоволі",
+      "незмінний",
+      "префіксальний",
+      "суфіксальний",
+      "суфіксально",
+      "творення"
+    ]
+  },
+  "all_grounded": false
+}

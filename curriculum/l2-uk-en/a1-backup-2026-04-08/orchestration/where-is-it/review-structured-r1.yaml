@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct headings. Dialogue
+    1 follows ULP Ep17 pattern (Де Олена? → Вона в школі) exactly as planned. Dialogue
+    2 covers Kyiv/Khreshchatyk/office/floor as pla
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: All locative forms VESUM-verified (школі, роботі, банку, магазині, лікарні,
+    місті, вулиці, площі, вокзалі, уроці, морі, парку, офісі, кафе, дивані, поверсі
+    — all confirmed). No Russianisms, Surzhyk, o
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present locative in context → grammar section
+    explains the pattern → exercises practice. Grade 4 helper word method properly
+    cited. Every grammar rule accompanied by 5+ exam'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 6 required vocab (школа→в школі, робота→на роботі, банк→у банку, магазин→у/в
+    магазині, вулиця→на вулиці, місто→у/в місті) appear naturally in prose. All 6
+    recommended vocab (парк, лікарня, кафе, п
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching all 4 plan hints by type (quiz, fill-in, match-up,
+    quiz). Well-placed after relevant teaching. No clustering. Cannot evaluate item
+    count or distractor quality (YAML generated downst
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Dialogues are natural and engaging — Маринка/Олег conversation about family
+    members feels authentic, Emily/Nazar conversation about living in Kyiv is realistic.
+    The кішка на дивані punchline adds humo
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections match plan: Діалоги, Місцевий відмінок, В чи на?, Підсумок.
+    No duplicate summaries, no stray tags, no meta-commentary sections. Word count
+    1575 vs 1200 target (131%) — comfortably ov'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Decolonized: "NEVER say «на Україні» — ALWAYS «в Україні»". Explicitly
+    states: "Russian imperial usage deliberately promoted «на Україні» to diminish
+    this status. Modern Ukrainian firmly and completel'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Dialogue 1: natural multi-turn (Маринка asks about 4 people/cat, Олег
+    answers with different locations — each demonstrating a different locative form).
+    Ends with humor (кішка на дивані). Named speaker'
+findings: []

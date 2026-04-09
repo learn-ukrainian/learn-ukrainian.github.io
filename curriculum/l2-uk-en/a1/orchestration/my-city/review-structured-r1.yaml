@@ -2,56 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'All four `content_outline` sections present with correct headings. Vocabulary
-    coverage strong (17/17 planned city places appear). **Deductions:** (a) театр
-    and церква listed as vocabulary but missing '
+  score: 10
+  evidence: All outline points are covered. Dialogues exactly mirror the plan's requirements
+    (e.g., asking for directions, describing a neighborhood with `є` and `біля`).
+    All required and recommended vocabulary w
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All 26 locative forms verified against VESUM — all correct. Gender assignments
-    correct (кафе neuter confirmed). No Russianisms, Surzhyk, or calques found. Avramenko
-    reference verified against RAG. `че
+  score: 8
+  evidence: '"кінотеатр" is erroneously classified under neuter nouns despite being
+    masculine and ending in a consonant. Otherwise, case endings (e.g., `в аптеці`,
+    `у банку`), prepositions, and phonetic rules are '
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Strong PPP flow: dialogues (presentation) → vocabulary lists with locative
-    forms (pattern) → verb+place combinations (practice) → self-check. Each grammar
-    point has 3+ examples. Locative forms taught '
+  score: 10
+  evidence: 'Excellent PPP flow. Rules are explained clearly with contextual examples
+    (e.g., contrasting `близько` as an adverb vs `біля` requiring the Genitive case).
+    The `Чергування` note on `к -> ц` is a great '
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: 'All 8 required vocab present in prose: аптека, бібліотека, магазин, ресторан,
-    готель, вокзал, тут, там ✓. All 8 recommended vocab present: лікарня, супермаркет,
-    пошта, музей, церква, далеко, близько, '
+  score: 10
+  evidence: All 16 required and recommended vocabulary items from the plan are successfully
+    integrated and introduced within context.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 5 markers covering all 4 plan activity_hints plus a bonus review quiz.
-    Well-placed after relevant teaching. Self-check in Summary adds 6 interactive
-    questions. **Minor:** Cannot verify distractor qual
+  score: 10
+  evidence: All 4 exercise markers correspond to the requested plan hints and are
+    logically distributed after their respective teaching material.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no "Let us explore," no gamified language. Concrete
-    cultural details: Хрещатик, Майдан Незалежності, площа Ринок, вулиця Лесі Українки.
-    Natural dialogue scenarios (asking a st'
+  score: 10
+  evidence: Warm, practical, and highly engaging tone. Explanations like "This is
+    exactly how you get a stranger's attention on the street politely" feel natural
+    and avoid corporate filler.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: All 4 H2 headings from plan present in correct order ✓. Word count 1583/1200
-    ✓. Clean markdown ✓. **Deduction:** Summary на-list is inconsistent with teaching
-    section (площі appears in Summary but not
+  score: 10
+  evidence: Word count is 1400 (exceeds the 1200 target). Headings match the plan
+    exactly. Markdown formatting is clean.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. No "like Russian" comparisons. Kyiv
-    landmarks used naturally (Хрещатик, Майдан Незалежності). Lviv's площа Ринок mentioned.
-    Street named after Леся Українка. No d
+  evidence: The distinction between `вокзал` (train station) and `автовокзал` (bus
+    station) is a very useful and practical cultural detail.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Dialogue 1: natural direction-asking with a stranger, polite register
-    (Вибачте), multi-turn with follow-up questions ✓. Dialogue 2: friends discussing
-    neighborhoods, natural flow with є construction ✓'
+  score: 10
+  evidence: Conversations are highly natural, polite, and effectively model the target
+    grammar. Raising intonation for yes/no questions (`Це далеко?`) is explicitly
+    modeled and explained well.
 findings: []

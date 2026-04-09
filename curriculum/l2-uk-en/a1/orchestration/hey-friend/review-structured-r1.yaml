@@ -2,56 +2,48 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: All 4 content_outline sections present with correct topics. Dialogues
-    match plan scenarios. **Deduction:** Required vocabulary **пані** (Mrs./Ms.) is
-    completely absent from prose — plan lists it as re
+  score: 10
+  evidence: Covers all grammar points and sections outlined in the plan perfectly.
+    The 2069-word narrative comfortably exceeds the 1200-word target.
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Every vocative form verified against VESUM. All 13 vocative forms batch-verified
-    ✅. Consonant alternation rules (г→ж, к→ч) confirmed by VESUM (друже, козаче).
-    Textbook references verified against Litv
+  score: 8
+  evidence: Excellent explanation of vowel shifts, but contains a critical factual
+    error regarding the vocative of "син" (incorrectly claiming the `-у` ending creates
+    "синку" directly from "син").
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Excellent PPP flow: dialogues first (situation), then explicit rule explanation
-    (pattern), then practice markers. The nominative-vs-vocative contrast ("Олена
-    прийшла" vs "Олено, ходи сюди!") is an eff'
+  score: 10
+  evidence: Exceptional use of the Grade 4 helper word "Кл. (!)". The PPP sequence
+    from dialogues to explicit pattern breakdown is flawless.
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: 'All required vocab present EXCEPT **пані** — a required word that is
-    never used or explained. This matters pedagogically: пані is невідмінюване (invariable),
-    so its vocative = називний, which is a use'
+  score: 10
+  evidence: All required and recommended words (друг, подруга, брат, сестра, пан,
+    пані, синку, дочко, козак, вчитель, бабуся, дідусь) are used in natural contexts.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 4 markers for 4 plan hints — correct count. Types roughly match plan (quiz,
-    fill-in, group-sort). Markers placed after relevant teaching content. **Minor
-    deduction:** 2 of 4 markers clustered in the s
+  score: 10
+  evidence: All 4 activities from the plan are injected via markers exactly after
+    the concepts they test.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no "Let us explore...", no gamified language.
-    The birthday party setting is concrete and engaging. Good cultural framing: "the
-    vocative is one of the ways Ukrainian encodes hu'
+  score: 10
+  evidence: Warm, encouraging teacher tone without being overly gamified. Examples
+    like "feels as awkward as saying 'Hey, him!'" are brilliant.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: All 4 H2 headings from plan present and correctly ordered. Clean markdown.
-    Word count 1204 meets 1200 target. **Deduction:** The raw English aside in Dialogue
-    2 ("— he's talking to Марко's sister") br
+  score: 10
+  evidence: Clean markdown, precise headings, no meta-commentary. Word count (2069)
+    is well above the minimum.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Fully decolonized — Ukrainian presented on its own terms. No "like Russian
-    but..." comparisons. The description of vocative as "alive and vibrant in modern
-    Ukrainian" is accurate and culturally respec
+  evidence: Strongly frames the vocative case as a decolonized feature unique to Ukrainian
+    identity compared to standard Russian.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: 'Dialogue 1 is excellent — natural multi-turn, named speakers, realistic
-    party setting, each vocative form used organically. **Dialogue 2 has a logic problem:**
-    Марко asks "Тату, а де ключі?" but Тато '
+  score: 10
+  evidence: Very natural exchanges ("Мамо, де мій телефон? / На столі, синку.") grounded
+    in a relatable party scenario with named speakers.
 findings: []

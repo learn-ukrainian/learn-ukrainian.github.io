@@ -1,32 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Числа 1-20 (Numbers 1-20)'
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -59,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок — Summary`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -255,465 +238,320 @@ references:
 
 ---
 
-## Pre-Verified Facts (from MCP tools — use these, do NOT guess)
-
-A verification step already called VESUM, textbooks, Правопис, and style guide tools. The results below are GROUND TRUTH. Use them:
-- If a word is marked ❌ NOT IN VESUM — do NOT use it
-- If a textbook excerpt is provided — use that pedagogy
-- If a calque is flagged — use the correct alternative
-- If CEFR says a word is above target — find a simpler synonym
-
-You do NOT need to call tools yourself — the facts are already verified.
-
-<pre_verified_facts>
-## VESUM Verification
-
-**Confirmed (50/50 — 100% pass rate):**
-
-Core numbers: один ✅, два ✅, три ✅, чотири ✅, п'ять ✅, шість ✅, сім ✅, вісім ✅, дев'ять ✅, десять ✅
-
-Teens: одинадцять ✅, дванадцять ✅, тринадцять ✅, чотирнадцять ✅, п'ятнадцять ✅, шістнадцять ✅, сімнадцять ✅, вісімнадцять ✅, дев'ятнадцять ✅, двадцять ✅
-
-Tens: тридцять ✅, сорок ✅, п'ятдесят ✅, шістдесят ✅, сімдесят ✅, вісімдесят ✅, дев'яносто ✅, сто ✅, тисяча ✅
-
-Hundreds: двісті ✅, триста ✅, чотириста ✅, п'ятсот ✅
-
-Key vocab: скільки ✅, коштує ✅, коштувати ✅, гривня ✅, гривні ✅, гривень ✅, рік ✅, роки ✅, років ✅, копійка ✅, номер ✅, нуль ✅, сумка ✅, маленька ✅, мій ✅
-
-**Not found:** none — all plan vocabulary confirmed in VESUM.
-
-**⚠️ VESUM flag — сім:** Returns 5 matches including archaic `се(noun)` and `сей(adj)`. The numeral `сім(numr)` is confirmed. No action needed, but writer should be aware of homograph.
-
----
-
-## Textbook Excerpts
-
-### Section: Числа 1-20 (stress on -надцять)
-> "У числівниках від одинадцяти до дев'ятнадцяти наголошується склад -на-: дванадцять, тринадцять, чотирнадцять, п'ятнадцять, шістнадцять, сімнадцять, вісімнадцять, дев'ятнадцять."
-> Source: **Захарійчук, Grade 4** (chunk `4-klas-ukrmova-zaharijchuk_s0111`) — confirms the plan's stress instruction precisely.
-
-> "Потрібно правильно вживати числівники в сполученні з іменниками: дві, три, чотири фірми; п'ять, шість, сім, вісім, дев'ять, десять фірм"
-> Source: **Захарійчук, Grade 4** (chunk `4-klas-ukrmova-zaharijchuk_s0110`) — confirms the noun-case chunk pattern (2-4 = Nom.pl., 5+ = Gen.pl.) taught without naming the grammar rule.
-
-### Section: Діалог — Скільки коштує (market shopping)
-> "Картку можна оформити безкоштовно. Якщо ви бажаєте індивідуальний дизайн, це коштує додаткових витрат — від 99 грн. Деякі банки пропонують дитячу картку з фото, за це доведеться заплатити від 50 грн."
-> Source: **Литвинова, Grade 6** (chunk `6-klas-ukrmova-litvinova-2023_s0251`) — real-price context with коштує + гривні; also contains the critical гривна/гривня paronym warning (see Grammar Rules below).
-
-### Section: Десятки і сотні — irregulars сорок / дев'яносто
-> "Про походження числівника сорок відомо кілька гіпотез. У давні часи «сорок» означало традиційно встановлену кількісну міру — мішок із сорока білячих або соболиних шкурок… Згодом слово «сорок» втратило своє первісне значення, з іменника перетворилося на кількісний числівник."
-> Source: **Голуб, Grade 6** (chunk `6-klas-ukrmova-golub-2023_s0164`) — excellent cultural note: сорок is irregular because it was a trading unit, not arithmetic. The module can use this for memorable teaching.
-
-> "Числівники сорок, дев'яносто, сто в усіх відмінках, крім називного й знахідного, мають закінчення -а."
-> Source: **Заболотний, Grade 6** (chunk `6-klas-ukrmova-zabolotnyi-2020_s0176`) — confirms both irregulars.
-
-> "У числівниках на позначення десятків (п'ятдесят, шістдесят, сімдесят, вісімдесят) відмінюємо лише другу частину."
-> Source: **Заболотний, Grade 6** (chunk `6-klas-ukrmova-zabolotnyi-2020_s0176`) — confirms pattern for 50–80.
-
-### Section: Діалог — Скільки тобі років (age formula)
-> "Через один рік мені виповниться ? років… Через два роки мені буде ? років… Через три роки, коли мені стане ? років, я…"
-> Source: **Вашуленко, Grade 2** (chunk `2-klas-ukrmova-vashulenko-2019-1_s0090`) — confirms the age chunk pattern Мені + number + рік/роки/років introduced as early as Grade 2. Textbook-standard.
-
-> "У якому році ти народився (-лася)? Скільки буде, якщо до десяти додати один?"
-> Source: **Заболотний, Grade 6** (chunk `6-klas-ukrmova-zabolotnyi-2020_s0169`) — confirms числівники used in conversational pair-work at school level.
-
-### Section: Підсумок — phone number format
-> "Телефонна розмова — це теж важливий різновид спілкування."
-> Source: **Захарійчук, Grade 4** (chunk `4-klas-ukrmova-zaharijchuk_s0178`) — confirms phone context is taught in Ukrainian schools. Phone numbers read as grouped pairs is standard practice.
-
----
-
-## Grammar Rules
-
-- **Апостроф після губних (б, п, в, м, ф):** Правопис §7 — "Апостроф пишемо перед я, ю, є, ї: після букв на позначення губних приголосних б, п, в, м, ф: п'ять, в'язи…"
-  - Confirmed correct: **п'ять, дев'ять, п'ятдесят, п'ятнадцять, п'ятсот, дев'яносто, дев'ятнадцять** — all require apostrophe. ✅
-
-- **Числівники з іменниками** (Антоненко-Давидович, ad-195 + Захарійчук Grade 4):
-  - два/три/чотири → Nominative plural: *два стільці, три книги, чотири гривні*
-  - п'ять і вище → Genitive plural: *п'ять гривень, шість гривень, двадцять гривень*
-  - The plan correctly introduces these as **chunks**, not grammar rules — this is the textbook approach for early levels. ✅
-
-- **Наголос у -надцять числівниках:** stress always on **-НА-** syllable (Захарійчук Grade 4):
-  - одинáдцять, дванáдцять, тринáдцять, чотирнáдцять, п'ятнáдцять, шістнáдцять, сімнáдцять, вісімнáдцять, дев'ятнáдцять ✅
-
----
-
-## Calque Warnings
-
-- **"скільки коштує"** — ✅ Natural Ukrainian. Style guide returned no warning for this phrase. Confirmed standard retail expression.
-
-- **"дякую"** (standalone exclamation) — ✅ Natural. Антоненко-Давидович (ad-124) confirms дякувати governs Dative (дякую КОМУ), but "Дякую!" with no object is perfectly correct Ukrainian.
-
-- **"мій номер — нуль дев'яносто сім…"** — ✅ No calque. Reading phone numbers in Ukrainian uses cardinal numbers in sequence. Style guide returned no warning. This is standard.
-
-- **⚠️ PARONYM ALERT — гривня vs гривна:** Two separate textbooks (Литвинова Gr6, Заболотний Gr10) explicitly flag this:
-  - **гривня** = Ukrainian currency (correct) ✅
-  - **гривна** = neck ornament (wrong if used for money ❌)
-  - Inflection: дві **гривні** (NOT гривни), п'ять **гривень** (NOT гривен), гривнею (NOT гривнами)
-  - The plan uses гривня correctly. Writer must apply correct inflection throughout.
-
----
-
-## CEFR Check
-
-- **скільки** — A1 (PULS: adv) ✅ — appropriate
-- **гривня** — A1 (PULS: noun) ✅ — appropriate
-- **коштувати** — A1 (PULS: verb impf) ✅ — appropriate
-- **номер** — A1 (PULS: noun) ✅ — appropriate
-- **копійка** — A1 (PULS: noun) ✅ — appropriate
-- **нуль** — A1 (PULS: noun) ✅ — appropriate (listed as A1 despite being less frequent — correct for numbers module)
-- **рік** — A1 confirmed (not returned as direct hit but universally A1; PULS confirms **година** A1, годинних time vocab cluster is A1)
-- **один** (numeral) — A1 by universal consensus (PULS returned related adj forms; cardinal numerals are A1 by definition)
-
-**No vocabulary above A1 level found in the core plan vocabulary.**
-
-> Note: **тисяча** is PULS A2-boundary but essential for prices (1000 грн) and introduced as a passive recognition chunk, not productive use. Acceptable at A1.2 if presented as a single memorized form.
-</pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: How Many?
-**Module:** how-many | **Phase:** A1.2 [My World]
-**Textbook grades searched:** 1, 2, 3
+# Knowledge Packet: How Many?
+**Module:** how-many | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/how-many.md
+
+# Педагогіка A1: How Many
+
+
+
+## Методичний підхід (Methodological Approach)
+
+Навчання кількісних числівників на рівні A1 має бути зосереджено на негайному практичному застосуванні. Українські підручники для початкових класів демонструють підхід, що базується на поступовому ускладненні: від простого рахунку до вирішення елементарних математичних прикладів і практичних завдань, як-от відповіді на питання "Скільки тобі років?".
+
+Основний принцип — зв'язок числівника з конкретним іменником. На відміну від англійської, де числівник є статичним, в українській мові він "живе" і впливає на форму іменника, з яким він пов'язаний. Тому вправи повинні з першого дня вводити числівники у словосполученнях, а не ізольовано (Джерело: `6-klas-ukrmova-litvinova-2023_s0248`).
+
+Педагогічний підхід для L2-учнів має імітувати цей природний процес:
+1.  **Візуальна асоціація:** Починати з рахунку предметів на малюнках (Джерело: `ext-article-4`).
+2.  **Аудіо-повторення:** Багаторазове прослуховування та повторення числівників для закріплення вимови та наголосу (Джерело: `ext-article-5`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0138`).
+3.  **Контекстуалізація:** Введення числівників через діалоги та практичні ситуації: вік, час, номер телефону, ціна (Джерело: `ext-other_blogs-10`, `5-klas-ukrmova-uhor-2022-1_s0037`).
+4.  **Ігрові елементи:** Використання простих математичних прикладів (`два плюс два дорівнює чотири`) як вправи на повторення (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0092`, `5-klas-ukrmova-uhor-2022-1_s0037`).
+5.  **Чітке правило:** Явно і багаторазово пояснювати правило "1, 2-4, 5+" для узгодження іменників, оскільки це є найбільшою трудністю для англомовних учнів (Джерело: `ext-article-1`).
+
+Кінцева мета на рівні A1 — не знання всіх відмінкових форм, а впевнене використання числівників у називному відмінку для базового рахунку та в сталих виразах (вік, час).
+
+## Послідовність введення (Introduction Sequence)
+
+Порядок введення числівників має бути логічним і відповідати зростанню складності як самих чисел, так і граматичних правил, що їх супроводжують.
+
+1.  **Step 1: Numbers 0-10.** Це основа. Вводяться числівники `нуль`, `один`, `два`, `три`, `чотири`, `п'ять`, `шість`, `сім`, `вісім`, `дев'ять`, `десять`. На цьому етапі основна увага приділяється правильній вимові та наголосу (Джерело: `5-klas-ukrmova-uhor-2022-1_s0036`).
+
+2.  **Step 2: Gender Agreement for 1 and 2.** Відразу після введення базових числівників необхідно пояснити родові форми:
+    *   `один` (чоловічий рід, напр., *один стіл*)
+    *   `одна` (жіночий рід, напр., *одна книга*)
+    *   `одне` (середній рід, напр., *одне вікно*)
+    *   `два` (чоловічий/середній рід, напр., *два столи, два вікна*)
+    *   `дві` (жіночий рід, напр., *дві книги*)
+    Це фундаментальне правило, яке відрізняє українську від англійської, і його потрібно закріпити до переходу до складніших тем (Джерело: `10-klas-ukrmova-karaman-2018_s0299`, `6-klas-ukrmova-zabolotnyi-2020_s0164`).
+
+3.  **Step 3: The "1, 2-4, 5+" Noun Agreement Rule.** Це найважливіше граматичне правило при вивченні числівників для L2-учнів.
+    *   **1 + Іменник у Н.в. однини:** `один рік` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0037`).
+    *   **2, 3, 4 + Іменник у Н.в. множини:** `два роки`, `три студенти`, `чотири гривні` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0037`, `6-klas-ukrmova-litvinova-2023_s0248`). Важливо наголосити, що для англомовних учнів це виглядає як "чотири студенти" (Nom.Pl), хоча історично це форма двоїни.
+    *   **5+ (до 20) + Іменник у Р.в. множини:** `п'ять років`, `десять студентів`, `двадцять гривень` (Джерело: `6-klas-ukrmova-litvinova-2023_s0248`). Це вимагає знання закінчень родового відмінка множини.
+
+4.  **Step 4: Numbers 11-20 and Tens.** Після засвоєння базових правил вводяться числівники на `-надцять` та круглі десятки (`двадцять`, `тридцять`...).
+    *   `одинадцять` - `дев'ятнадцять` (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0138`).
+    *   `двадцять`, `тридцять`, `сорок`, `п'ятдесят` і т.д. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0036`). Пояснити, що ці числівники також керують іменником у родовому відмінку множини.
+
+5.  **Step 5: Practical Application - "How much/many?" and Age.** Вводиться питальне слово `Скільки?` та структура для відповіді про вік.
+    *   `Скільки тобі років?`
+    *   `Мені ... років/рік/роки.`
+    Це знайомить учнів із давальним відмінком займенників (`мені`, `тобі`) у фіксованому, високочастотному контексті (Джерело: `ext-other_blogs-10`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+Англомовні учні часто роблять передбачувані помилки, що виникають через інтерференцію з рідною мовою.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `два книга` | `дві книги` | Учні ігнорують рід іменника та не використовують жіночу форму `дві`. Також забувають про форму множини іменника. (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0164`) |
+| `п'ять студент` | `п'ять студентів` | Найпоширеніша помилка. Після числівників 5 і більше іменник повинен стояти в родовому відмінку множини, а не в однині чи називному множини. (Джерело: `ext-article-1`, `6-klas-ukrmova-litvinova-2023_s0248`) |
+| `п'ят**ь**надцять` | `п'ятнадцять` | Перенесення м'якого знака з `п'ять` у середину складного числівника. Правило: `ь` не пишеться в середині числівників `-надцять` та `-десят`. (Джерело: `6-klas-ukrmova-golub-2023_s0160`, `6-klas-ukrmova-zabolotnyi-2020_s0170`) |
+| `одинадц**я**ть` (наголос на я) | `один**а́**дцять` | Неправильний наголос. У числівниках на `-а́дцять` наголос падає на склад `-на́-`. (Джерело: `6-klas-ukrmova-betsa-2023_s0005`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0138`) |
+| `Я маю двадцять років.` | `Мені двадцять років.` | Прямий переклад англійської конструкції "I have X years". В українській мові для позначення віку використовується давальний відмінок (`Мені`, `Тобі`, `Йому`). (Джерело: `ext-other_blogs-10`) |
+| `чотир**ь**ма` | `чотирма` | Хибне додавання `ь` в орудний відмінок числівника `чотири` за аналогією до `трьох`, `п'ятьох`. Форма `чотирма` є винятком і пишеться без `ь`. (Джерело: `6-klas-ukrmova-avramenko-2023_s0176`) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**Це обов'язковий розділ.** Навчання української мови має відбуватися на її власних умовах, без опори на російську як "посередника" чи "базову" мову.
+
+1.  **Жодних порівнянь з російською.** Заборонено пояснювати українські числівники через їхню схожість або відмінність від російських. Наприклад, ніколи не казати: "Українське *дев'яносто* — це як російське *девяносто*, але пишеться інакше". Учень має будувати нову лінгвістичну систему з нуля.
+
+2.  **Фонетика з чистого аркуша.** Вимова українських числівників має базуватися на фонетичних правилах української мови. Не можна використовувати російські звуки як аналоги (напр., пояснювати український звук [и] через російський [ы]).
+
+3.  **Історична самодостатність.** Підкреслюйте, що українські числівники, як і вся лексика, є частиною самостійної східнослов'янської мовної традиції. Такі слова, як `сорок` чи `дев'яносто`, мають власну історію в давньоруській мові і не є запозиченнями (Джерело: `ext-other_blogs-67`). Це не "спільні" з російською слова, а слова спільного спадку, який кожна мова розвинула по-своєму.
+
+4.  **Уникати "суржикізмів" у прикладах.** Приклади речень та діалогів повинні бути природними для сучасної української мови. Не можна використовувати кальки з російської, навіть якщо вони поширені в побутовому мовленні. Наприклад, конструкції типу `Я рахую, що...` (калька з "Я считаю, что...") слід замінювати на `Я вважаю, що...` або `На мою думку...`.
+
+Навчання числівників — це чудова нагода показати системну відмінність та самобутність української мови на базовому рівні.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+На рівні А1 лексика для рахунку має бути простою, високочастотною та конкретною.
+
+| Частина мови | Слово | Рівень | Приклад |
+| :--- | :--- | :--- | :--- |
+| **Іменники** | | | |
+| | рік, роки, років | ★★★ | один рік, п'ять років |
+| | гривня, гривні, гривень | ★★★ | дві гривні, десять гривень |
+| | стіл, столи, столів | ★★★ | один стіл, три столи |
+| | книга, книги, книг | ★★★ | одна книга, сім книг |
+| | вікно, вікна, вікон | ★★★ | одне вікно, чотири вікна |
+| | студент(ка) | ★★ | два студенти |
+| | день, дні, днів | ★★ | три дні |
+| | брат, сестра | ★★ | два брати, одна сестра |
+| | кілометр | ★ | сорок кілометрів |
+| | будинок | ★ | десять будинків |
+| **Дієслова** | | | |
+| | бути (є) | ★★★ | У мене є одна сестра. |
+| | мати | ★★★ | Я маю двадцять гривень. |
+| | коштувати | ★★ | Скільки це коштує? |
+| | дорівнювати | ★ | два плюс два дорівнює чотири |
+| **Прислівники/Питальні слова** | | | |
+| | скільки | ★★★ | Скільки тобі років? |
+| | плюс, мінус | ★ | п'ять плюс п'ять |
+
+## Приклади з підручників (Textbook Examples)
+
+Ці приклади демонструють формати вправ, які є ефективними та відповідають українській педагогічній традиції.
+
+**1. Вправа: Математичні приклади (для відпрацювання вимови та форм)**
+Прочитайте приклади. Запишіть (на вибір) два речення. Підкресліть числівники.
+*   `Чотири плюс вісім дорівнює дванадцять.`
+*   `Сто мінус сімдесят дорівнює тридцять.`
+*   `П’ятдесят три плюс сімнадцять дорівнює сімдесят.`
+(Джерело: `2-klas-ukrmova-kravcova-2019-1_s0092`)
+
+**2. Вправа: Відповіді на питання (контекстуалізація)**
+Запиши повні відповіді на запитання.
+*   `Скільки дівчаток у вашому класі?`
+*   `Скільки хлопчиків?`
+*   `Скільки загалом дітей у вашому класі?`
+(Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0138`)
+
+**3. Вправа: Узгодження з іменником (ключове правило 1, 2-4, 5+)**
+Прочитайте вголос словосполучення, правильно узгоджуючи числівник з іменником.
+*   `будинок № 25 (двадцять п'ять)`
+*   `будинок № 1 (один)`
+*   `будинок № 4 (чотири)`
+*   `квартира № 14 (чотирнадцять)`
+*   `квартира № 2 (дві)`
+(Адаптовано з Джерела: `5-klas-ukrmova-uhor-2022-1_s0037`)
+
+**4. Вправа: Заміна цифр словами (письмове закріплення)**
+Спишіть речення, замінюючи цифри словами. Зверніть увагу на правильність уживання іменників.
+*   `Текст був на 294 сторінках.`
+*   `Зустріч із 45 студентами відбулась у вівторок.`
+*   `У школі навчається понад 1000 учнів і учениць.`
+(Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0177`)
+
+## Пов'язані статті (Related Articles)
+
+*   `pedagogy/a1/what-is-this`
+*   `grammar/a1/noun-genders`
+*   `grammar/a1/nominative-case`
+*   `grammar/a2/genitive-case`
+*   `pedagogy/a1/telling-time`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/many-things.md
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 142
-> **Score:** 0.50
->
-> 142
-> Досліди, скількома 
-> способами 
-> можна 
-> прочитати числовий 
-> вираз.
-> Я — дослідник
-> Я — дослідниця
-> Навчаюся читати числові вирази
-> 70 + 25
-> 80 – 25
-> Сума чисел сімдесят і двадцять  
-> п’ять.
-> Сімдесят збільшити на двадцять  
-> п’ять.
-> Перший доданок сімдесят, другий — 
-> двадцять п’ять.
-> До сімдесяти додати двадцять п’ять.
-> Різниця чисел вісімдесят і двадцять п’ять.
-> Вісімдесят зменшити на двадцять п’ять.
-> Зменшуване вісімдесят, від’ємник —  
-> двадцять п’ять.
-> Від вісімдесяти відняти двадцять п’ять.
-> Правильно утворюй форми числівників і вимовляй їх: 
-> сімдесяти, вісімдесяти.
-> 	 	
-> 9   Прочитайте кожен числовий вираз різними способами.
-> 	 	
-> 10   Розв’яжи задачу. Склади і запиши числові вирази на додавання.
-> 	 	
-> 11   Прочитай і розв’яжи задачу. Запиши розв’язок.
+# Педагогіка A1: Many Things
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 28
-> **Score:** 0.33
->
-> 26
-> — З днем народження вітаю! —
-> Друзі кажуть і близькі.
-> Із захопленням відповідаю:
-> — Дякую! Люблю вас всіх!
->                                                            Євгенія Крук
-> Мій день народження
-> 	 Який подарунок на день народження ти очікуєш?
-> 	 Скільки на малюнку дів­чаток?
-> — Дві дівчинки.
-> 	 Ти створив / створила речення.
-> Речення — це закінчена думка. Речення скла-
-> дається зі слів. У ньому позначаємо кожне сло-
-> во так, як показано нижче. 
-> Дівчинка: 
->   (перше слово речення). 
-> Дві дівчинки: 
->  . 
-> Дівчинка з друзями:  
-> .
-> 	 Розглянь малюнки.
 
-## Числа 1-20 (Numbers 1-20)
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 140
-> **Score:** 0.50
->
-> 140
-> Вимова і правопис найуживаніших 
-> числівників
-> Вивчаю числівники 5, 9, 11–20, 30, 50, 60, 70, 80
-> 44
-> Правильно наголошуй числівники!
-> одинадцять
-> дванадцять
-> тринадцять
-> чотирнадцять
-> п’ятнадцять
-> шістнадцять
-> сімнадцять
-> вісімнадцять
-> дев’ятнадцять
-> двадцять
-> тридцять
-> п’ятдесят
-> шістдесят
-> сімдесят
-> вісімдесят
-> 	 	
-> 1   Назвіть числа і запишіть числівники. Поставте наголос у словах.
-> 	 	
-> 3   Утворіть від слів п’ять, шість, сім, 
-> вісім, дев’ять нові числівники за 
-> зразком. Поставте наголос у словах.
-> 2   Запиши повні відповіді на запитання.
-> 1 дес. 1 од. 
-> 1 дес. 2 од.
-> 1 дес. 3 од.
-> Скільки дівчаток у вашому класі?
-> Скільки хлопчиків?
-> Скільки загалом дітей у вашому класі?
-> 1 дес. 4 од. 
-> 1 дес. 5 од. 
-> 1 дес. 6 од.
-> 1 дес. 7 од.
-> 1 дес. 8 од.
-> 1 дес.
+## Методичний підхід (Methodological Approach)
+The concept of "many things" (множина, plural) is foundational and should be introduced early in A1, but methodically. The Ukrainian native pedagogy for early grades focuses on concrete, visual association and pattern recognition rather than abstract rule memorization.
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 105
-> **Score:** 0.50
->
-> 103
-> 	
-> Визнач, що не так на малюнку.
-> 	 Хто один, а кого на малюнку зображено бага-
-> то?
-> 	 Вимов слова — назви намальованих пред-
-> метів, у яких є ь.
-> Апельсин      _____ ,   ______ ,     _______ ,    ______.
-> 12345678      6 7 8       2 3 8 5        6 1 8 7       4 7 2 1
-> 	 Утвори нові слова. Запиши.
-> 	
-> Поміркуй, хто куди спішить.
+The core principle is that the plural is a change in the **ending** of a word to signify more than one item. The approach should be:
 
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 92
-> **Score:** 0.25
->
-> 92
-> 331. 1.	 Поміркуй, як за допомогою числівників Кирилко заши-
-> фрував слова.
-> 2.	 Прочитай та запиши утворені слова. Підкресли слова, близькі 
-> за значенням.
-> 332. 1.	 Прочитай лічилку. Згадай, коли та як її промовляють.
-> Лічилка-безконечка
-> Один і два — росла трава,
-> три, чотири — покосили,
-> п’ять — на сонечку сушили,
-> шість — в копичку поскладали,
-> сім — корівку годували,
-> вісім — молочко давала,
-> дев’ять — діток напувала,
-> десять — привела телятко.
-> Починаймо все спочатку! 
-> Один і два — росла трава…  (Леся Вознюк)
-> 329. 1.	 Відгадай загадки. Знайди слова, які відповідають на питання 
-> скільки?
-> 1. Два скельця, три дужки — на ніс і на вушка. 2. П’ять 
-> комірчин, а одні двері. 3. Деревце — не полінце; шість дірочок 
-> має, весело співає.
+1.  **Concrete to Abstract:** Start with physical objects in the classroom or in pictures. "Це стіл. А це столи." (This is a table. And these are tables). The visual contrast makes the concept intuitive.
+2.  **Agreement over Declension:** Initially, focus on the agreement between nouns and adjectives in the nominative case. The key takeaway for learners is that adjectives must also change to reflect the plural noun they describe (`3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). Ukrainian primary school textbooks emphasize this with tables showing gendered singular adjectives all converging on a single plural form (`4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0064`).
+3.  **Pattern Recognition:** Group nouns by their plural endings. Introduce the most common patterns first (masculine/feminine hard stems ending in **-и**) before moving to soft stems (**-і**) and neuter nouns (**-а, -я**) (`ext-ulp_youtube-261`).
+4.  **Plurality in Context:** Introduce plural forms within simple sentence structures like "У мене є..." (I have...) or "Тут є..." (Here are...). For example, "У кімнаті є два стільці, книги і лампи" (`ext-ulp_youtube-258`). This immediately makes the grammar useful.
+5.  **Verb Agreement:** Once the noun/adjective plural is established, introduce verb agreement. It's crucial to teach that a plural subject requires a plural verb form. A common construction in textbooks is combining two singular nouns to form a plural subject: "Кіт і собака **пустують** у дворі" (A cat and a dog **are playing** in the yard) (`8-klas-ukrmova-avramenko-2025_s0172`). The verb must be in the plural form.
 
-## Десятки і сотні (Tens and Hundreds)
+Avoid overwhelming the learner with all case endings for plurals at once. A1 should master the nominative (who/what?) and basic counting rules, with other cases introduced gradually.
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 140
-> **Score:** 0.33
->
-> 140
-> Вимова і правопис найуживаніших 
-> числівників
-> Вивчаю числівники 5, 9, 11–20, 30, 50, 60, 70, 80
-> 44
-> Правильно наголошуй числівники!
-> одинадцять
-> дванадцять
-> тринадцять
-> чотирнадцять
-> п’ятнадцять
-> шістнадцять
-> сімнадцять
-> вісімнадцять
-> дев’ятнадцять
-> двадцять
-> тридцять
-> п’ятдесят
-> шістдесят
-> сімдесят
-> вісімдесят
-> 	 	
-> 1   Назвіть числа і запишіть числівники. Поставте наголос у словах.
-> 	 	
-> 3   Утворіть від слів п’ять, шість, сім, 
-> вісім, дев’ять нові числівники за 
-> зразком. Поставте наголос у словах.
-> 2   Запиши повні відповіді на запитання.
-> 1 дес. 1 од. 
-> 1 дес. 2 од.
-> 1 дес. 3 од.
-> Скільки дівчаток у вашому класі?
-> Скільки хлопчиків?
-> Скільки загалом дітей у вашому класі?
-> 1 дес. 4 од. 
-> 1 дес. 5 од. 
-> 1 дес. 6 од.
-> 1 дес. 7 од.
-> 1 дес. 8 од.
-> 1 дес.
+## Послідовність введення (Introduction Sequence)
+This sequence builds from the simplest, most frequent patterns to more complex ones, mirroring the logic of Ukrainian primary education materials.
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 142
-> **Score:** 0.50
->
-> 142
-> Досліди, скількома 
-> способами 
-> можна 
-> прочитати числовий 
-> вираз.
-> Я — дослідник
-> Я — дослідниця
-> Навчаюся читати числові вирази
-> 70 + 25
-> 80 – 25
-> Сума чисел сімдесят і двадцять  
-> п’ять.
-> Сімдесят збільшити на двадцять  
-> п’ять.
-> Перший доданок сімдесят, другий — 
-> двадцять п’ять.
-> До сімдесяти додати двадцять п’ять.
-> Різниця чисел вісімдесят і двадцять п’ять.
-> Вісімдесят зменшити на двадцять п’ять.
-> Зменшуване вісімдесят, від’ємник —  
-> двадцять п’ять.
-> Від вісімдесяти відняти двадцять п’ять.
-> Правильно утворюй форми числівників і вимовляй їх: 
-> сімдесяти, вісімдесяти.
-> 	 	
-> 9   Прочитайте кожен числовий вираз різними способами.
-> 	 	
-> 10   Розв’яжи задачу. Склади і запиши числові вирази на додавання.
-> 	 	
-> 11   Прочитай і розв’яжи задачу. Запиши розв’язок.
+-   **Step 1: The Concept of Plural (Nominative Case)**
+    -   Introduce "one" vs. "many" with high-frequency masculine and feminine nouns that follow the simplest rule: adding **-и**.
+    -   **Examples:** `стіл` → `столи`, `кіт` → `коти`, `шафа` → `шафи`, `лампа` → `лампи` (`ext-ulp_youtube-261`).
 
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 94
-> **Score:** 0.50
->
-> 94
-> 1. (Скільки?) … разів відміряй, (скільки?) … раз відріж. 
-> 2. (Скільки?) …  літо краще, як (скільки?)  …  зим. 3. (Скільки?) 
-> … голова добре, а (скільки?) … — краще. 
-> Слова для довідки: одна, один, одне, сім, дві, сто.
-> 2.	 Запишіть одне прислів’я (на вибір). Підкресліть числівник 
-> з іменником. 
-> 337. 1.	 Розглянь малюнки. З яких казок зображені герої?
-> 2.	 Склади речення за двома малюнками (на вибір). Уживай 
-> числівники.
-> 338. 1.	 Дай відповіді на запитання двома словами.
-> Скільки м’ячів? Скільки скакалок? Скільки олівців? 
-> Скільки книг?
-> 2.	 Запиши утворені сполучення слів. 
-> 336. 1.	 Прочитайте прислів’я та вставте пропущені числів-
-> ники. За потреби користуйтеся словами для довідки.
+-   **Step 2: The Soft Stem Plural (Nominative Case)**
+    -   Introduce nouns ending in a soft consonant (e.g., -ць, -нь) or -я, which typically take an **-і** ending.
+    -   **Why this order?** This is the next most common pattern.
+    -   **Examples:** `стілець` → `стільці`, `учитель` → `учителі`, `полиця` → `полиці` (`ext-ulp_youtube-261`).
 
-## Підсумок — Summary
+-   **Step 3: The Neuter Plural (Nominative Case)**
+    -   Introduce neuter nouns, which are distinct in taking **-а** (for hard stems) or **-я** (for soft stems) in the plural.
+    -   **Why this order?** Neuter nouns are a large and consistent group, but their plural ending is very different from masculine/feminine, so it needs its own focus.
+    -   **Examples:** `вікно` → `вікна`, `ліжко` → `ліжка`, `море` → `моря` (`ext-ulp_youtube-261`, `5-klas-ukrmova-uhor-2022-1_s0030`).
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 142
-> **Score:** 0.50
->
-> 142
-> Досліди, скількома 
-> способами 
-> можна 
-> прочитати числовий 
-> вираз.
-> Я — дослідник
-> Я — дослідниця
-> Навчаюся читати числові вирази
-> 70 + 25
-> 80 – 25
-> Сума чисел сімдесят і двадцять  
-> п’ять.
-> Сімдесят збільшити на двадцять  
-> п’ять.
-> Перший доданок сімдесят, другий — 
-> двадцять п’ять.
-> До сімдесяти додати двадцять п’ять.
-> Різниця чисел вісімдесят і двадцять п’ять.
-> Вісімдесят зменшити на двадцять п’ять.
-> Зменшуване вісімдесят, від’ємник —  
-> двадцять п’ять.
-> Від вісімдесяти відняти двадцять п’ять.
-> Правильно утворюй форми числівників і вимовляй їх: 
-> сімдесяти, вісімдесяти.
-> 	 	
-> 9   Прочитайте кожен числовий вираз різними способами.
-> 	 	
-> 10   Розв’яжи задачу. Склади і запиши числові вирази на додавання.
-> 	 	
-> 11   Прочитай і розв’яжи задачу. Запиши розв’язок.
+-   **Step 4: Adjective Agreement in the Plural**
+    -   Introduce the "magic" of the plural adjective ending **-і**. Show how it replaces all three gendered singular endings (`-ий`, `-а`, `-е`). This simplifies things for the learner.
+    -   Use tables to demonstrate: `новий стіл`, `нова книга`, `нове вікно` → `нові столи, книги, вікна` (`4-klas-ukrmova-zaharijchuk_s0082`).
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 140
-> **Score:** 0.33
->
-> 140
-> Вимова і правопис найуживаніших 
-> числівників
-> Вивчаю числівники 5, 9, 11–20, 30, 50, 60, 70, 80
-> 44
-> Правильно наголошуй числівники!
-> одинадцять
-> дванадцять
-> тринадцять
-> чотирнадцять
-> п’ятнадцять
-> шістнадцять
-> сімнадцять
-> вісімнадцять
-> дев’ятнадцять
-> двадцять
-> тридцять
-> п’ятдесят
-> шістдесят
-> сімдесят
-> вісімдесят
-> 	 	
-> 1   Назвіть числа і запишіть числівники. Поставте наголос у сло
+-   **Step 5: Basic Counting with Plurals**
+    -   This is a critical, non-negotiable step for A1. Introduce the "1, 2-3-4, 5+" rule.
+        -   **1:** Agrees in gender (`один стіл`, `одна книга`, `одне вікно`).
+        -   **2, 3, 4:** Take the noun in **Nominative Plural** (`два столи`, `три книги`, `чотири вікна`).
+        -   **5+:** Take the noun in **Genitive Plural** (`п'ять столів`, `шість книг`, `десять вікон`).
+    -   At the A1 stage, it's sufficient to provide the genitive plural forms for memorization alongside the numbers, as the rules for forming it are complex. This rule is explicitly detailed in Ukrainian school grammar (`6-klas-ukrmova-litvinova-2023_s0248`).
 
-... (truncated for context window)
+-   **Step 6: Essential Irregular Plurals**
+    -   Introduce a small, curated list of high-frequency irregular plurals that don't follow the main patterns.
+    -   **Examples:** `людина` → `люди`, `дитина` → `діти`, `друг` → `друзі`, `око` → `очі` (`ext-ulp_youtube-258`).
+
+## Типові помилки L2 (Common L2 Errors)
+For English-speaking learners, plurals present several predictable challenges. Addressing them proactively is key.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Я бачу два *стіл*.` | `Я бачу два **столи**.` | English uses the singular form after a number ("one table", "two table**s**"), but Ukrainian uses the **nominative plural** for numbers 2, 3, and 4. The noun must change. (Джерело: `6-klas-ukrmova-litvinova-2023_s0248`) |
+| `У мене є п'ять *столи*.` | `У мене є п'ять **столів**.` | This is the second half of the counting rule. Numbers 5 and up require the **genitive plural**, not the nominative plural. This is a fundamental concept with no direct English equivalent and must be drilled. (Джерело: `6-klas-ukrmova-litvinova-2023_s0248`) |
+| `Кіт і собака *сидить* тут.` | `Кіт і собака **сидять** тут.` | In English, two singular subjects joined by "and" take a plural verb. The same is true in Ukrainian. Learners often forget to change the verb, leaving it in the 3rd person singular. A plural subject demands a plural verb. (Джерело: `8-klas-ukrmova-avramenko-2025_s0172`) |
+| `Це *новий* книги.` | `Це **нові** книги.` | Adjectives **must** agree in number with the noun they describe. The singular adjective `новий` cannot describe the plural noun `книги`. The adjective must take the universal plural ending `-і`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0082`) |
+| `Тут *кни́жка* і *ру́чка*.` | `Тут **книжки́** і **ру́чки**.` | Learners often ignore or misapply stress shifts in the plural. The stress in `кни́жка` (singular) moves to the end in the plural `книжки́`. This is a common feature and cannot be ignored for correct pronunciation. (Джерело: `ext-ulp_youtube-29`) |
+| `Це мої *друг*.` | `Це мої **друзі**.` | Learners may try to apply a regular plural ending (`-и`) to an irregular noun. High-frequency irregulars like `друг` → `друзі` must be memorized as vocabulary items. (Джерело: `ext-ulp_youtube-258`) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+**MANDATORY:** Teaching Ukrainian plurals requires a strict decolonization framework to avoid common pedagogical pitfalls that center or rely on Russian.
+
+1.  **Teach Ukrainian on Its Own Terms:** Never introduce Ukrainian plurals by comparing them to Russian (e.g., "Ukrainian `-и` is like Russian `-ы`"). This frames Ukrainian as a derivative and builds an incorrect mental model. The learner must build a new, separate Ukrainian system from zero.
+2.  **Stress is Not Russian:** Emphasize that plural stress patterns in Ukrainian are independent and often differ from Russian cognates. A learner's knowledge of Russian stress can be a hindrance, not a help. For example, `по́казник` in Ukrainian has stress on the second syllable, unlike the Russian equivalent (`ext-ulp_youtube-29`). The writer must provide audio and clear markings for all new vocabulary.
+3.  **Correct Etymology:** Acknowledge shared Slavic roots neutrally. When a word exists in both Ukrainian and Russian, present it as part of a common linguistic heritage, not as a "Russian word used in Ukrainian" (`ext-ulp_youtube-139`). The default assumption must be that the word is native to Ukrainian unless proven otherwise.
+4.  **Avoid Surzhyk and Russianisms:** The writer must be vigilant in using vocabulary. For example, use `фарту́х` (correct Ukrainian) not `фа́ртук` (Russian stress/form) (`ext-ulp_youtube-29`). The vocabulary provided in the A1 modules must be vetted to be purely Ukrainian.
+5.  **Pluralia Tantum as a Feature:** When introducing nouns that only exist in the plural (pluralia tantum), like `двері` (doors), `окуляри` (glasses), or city names like `Суми` (`ext-komik_istoryk-67`), present this as a normal and interesting feature of Ukrainian, not as an oddity.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+This vocabulary is appropriate for introducing and practicing plurals at the A1 level.
+
+**Іменники (Nouns):**
+-   ★★★ `стіл` (table), `стілець` (chair), `книга` (book), `кімната` (room), `вікно` (window), `двері` (door), `ліжко` (bed), `будинок` (house), `друг` (friend), `день` (day), `рік` (year), `людина` (person).
+-   ★★☆ `шафа` (wardrobe), `полиця` (shelf), `лампа` (lamp), `картина` (picture), `фотографія` (photo), `син` (son), `брат` (brother), `сусід` (neighbor), `олівець` (pencil), `зошит` (notebook), `урок` (lesson).
+-   ★☆☆ `вазон` (flowerpot), `квітка` (flower), `дерево` (tree), `кіт` (cat), `собака` (dog), `риба` (fish).
+
+**Прикметники (Adjectives):**
+-   ★★★ `новий` (new), `старий` (old), `великий` (big), `маленький` (small), `гарний` (good, beautiful), `добрий` (good, kind).
+-   ★★☆ `цікавий` (interesting), `український` (Ukrainian), `високий` (tall/high), `зелений` (green), `синій` (blue), `білий` (white), `чорний` (black).
+-   ★☆☆ `зручний` (comfortable), `світлий` (light/bright), `теплий` (warm).
+
+**Дієслова (Verbs):**
+-   ★★★ `бути` (to be, especially `є`), `мати` (to have), `жити` (to live).
+-   ★★☆ `стояти` (to stand), `лежати` (to lie), `бачити` (to see), `робити` (to do).
+
+## Приклади з підручників (Textbook Examples)
+These exercise formats are adapted from Ukrainian primary school textbooks and are ideal for A1 learners.
+
+1.  **Вправа: Утвори множину (Exercise: Form the Plural)**
+    -   **Мета:** Practice basic singular-to-plural conversion for nouns and adjectives.
+    -   **Формат:** Fill-in-the-blanks.
+    -   **Завдання:** "Допишіть закінчення, щоб утворити множину." (Add the endings to form the plural.)
+        -   `Акваріумн.. рибка` → `Акваріумн.. рибки`
+        -   `Маленьк.. окунь` → `Маленьк.. окуні`
+        -   `Хиж.. щука` → `Хиж.. щуки`
+        -   `Вусат.. сом` → `Вусат.. соми`
+    -   *(Джерело: Адаптовано з `3-klas-ukrainska-mova-kravtsova-2020-1_s0069`)*
+
+2.  **Вправа: Один → Багато (Exercise: One → Many)**
+    -   **Мета:** Reinforce adjective-noun agreement across genders.
+    -   **Формат:** Table completion.
+    -   **Завдання:** "Заповніть таблицю за зразком." (Fill the table according to the model.)
+| Однина (Singular) | Множина (Plural) |
+| :--- | :--- |
+| `солодкий торт` (ч.р.) | `солодк.. торти` |
+| `солодка слива` (ж.р.) | `солодк.. сливи` |
+| `солодке яблуко` (с.р.) | `солодк.. яблука` |
+    -   *(Джерело: Адаптовано з `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0064`)*
+
+3.  **Вправа: Порахуй предмети (Exercise: Count the Items)**
+    -   **Мета:** Practice the crucial 2-3-4 vs. 5+ counting rule.
+    -   **Формат:** Combine numbers with nouns.
+    -   **Завдання:** "Напишіть правильну форму іменника." (Write the correct form of the noun.)
+        -   `два (зошит)` → __________ (`два зошити`)
+        -   `три (клієнт)` → __________ (`три клієнти`)
+        -   `чотири (смартфон)` → __________ (`чотири смартфони`)
+        -   `п'ять (урок)` → __________ (`п'ять уроків`)
+        -   `десять (учень)` → __________ (`десять учнів`)
+    -   *(Джерело: Адаптовано з `6-klas-ukrmova-litvinova-2023_s0248`)*
+
+4.  **Вправа: Що є в кімнаті? (Exercise: What is in the room?)**
+    -   **Мета:** Use plurals in a descriptive context.
+    -   **Формат:** Picture description or text completion.
+    -   **Завдання:** "Подивіться на малюнок і опишіть кімнату, використовуючи слова в множині." (Look at the picture and describe the room, using words in the plural.)
+    -   **Приклад тексту:** "У кімнаті є два (ліжко), один (стіл) і чотири (стілець). На стіні висять (картина) і (фотографія). На полицях стоять (книга)." (In the room there are two beds, one table, and four chairs. On the wall hang pictures and photographs. On the shelves stand books.)
+    -   *(Джерело: Адаптовано з `ext-ulp_youtube-258` та `7-klas-istoria-ukr-pometun-2024_s0072`)*
+
+## Пов'язані статті (Related Articles)
+-   [[pedagogy/a1/noun-genders|Педагогіка A1: Noun Genders]]
+-   [[pedagogy/a1/adjective-agreement|Педагогіка A1: Adjective Agreement]]
+-   [[pedagogy/a1/numbers-and-counting|Педагогіка A1: Numbers and Counting (1-100)]]
+-   [[pedagogy/a1/nominative-case|Педагогіка A1: The Nominative Case]]
+-   [[pedagogy/a2/genitive-case|Педагогіка A2: The Genitive Case]]
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -726,7 +564,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Числа 1-20 (Numbers 1-20)` (~300 words)
 - `## Десятки і сотні (Tens and Hundreds)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок — Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -779,7 +616,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -879,48 +716,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги — Dialogues (~330 words total)
+- P1 (~110 words): Introduction to the utility of numbers in Ukrainian daily life. We count things everywhere: at a bakery (один хліб, одна булочка, одне тістечко), in a backpack (один олівець, дві ручки), or at a market. Numbers allow us to navigate prices and personal details like age.
+- P2 (~110 words): Dialogue 1 — At a market stall. A customer asks about prices for bags of different sizes using "Скільки коштує?". Key vocabulary: сумка (bag), маленька (small), ціна (price). Numbers used: сто п'ятдесят (150), двісті (200).
+- P3 (~110 words): Dialogue 2 — Meeting someone and sharing age. This extends the greetings from M05. Introducing the age question "Скільки тобі років?" and the response chunk "Мені...". Numbers used: вісімнадцять (18), двадцять п'ять (25), тридцять два (32).
 
-- D1 (~110 words): Bakery dialogue — Покупець asks Пекар about prices. 6 turns: Скільки коштує торт? — Двісті гривень. А хліб? — П'ятнадцять гривень. А три булочки? — Сорок п'ять гривень. А одне тістечко? — Двадцять гривень. Introduces один хліб (m), одна булочка (f), одне тістечко (n) — one-line inline gloss per noun gender. Final line: Дякую, до побачення!
-- P1 (~40 words): Bridging commentary — point out скільки коштує? as the key question pattern. Highlight the three nouns from the dialogue (торт/хліб/тістечко) as recycled vocabulary from M08-M09. Note: noun endings after numbers will be explained in A2 — for now, memorize as chunks.
-- D2 (~110 words): Age exchange — student Оленка meets new classmate Тарас at school. 6 turns: Скільки тобі років? — Мені чотирнадцять. А тобі? — Мені тринадцять. А твоя сестра старша? — Так, їй вісімнадцять. А твій брат? — Йому одинадцять. Introduces Мені/тобі/йому/їй + number + років as memorized chunks with English gloss "I am / you are / he is / she is [age]."
-- P2 (~40 words): Brief note — Мені X років uses three different number-noun combos (рік, роки, років). At A1 we memorize: 1 рік, 2–4 роки, 5+ років. No case grammar — pure pattern recognition. Frame as a Ukrainian "age formula."
-- Exercise (~30 words overhead): **Quiz** — "How old are they?" Match 6 cartoon faces with caption ages (11, 13, 18, 22, 35, 47) to spoken Ukrainian sentences. 6 items.
+## Числа 1-20 — Numbers 1-20 (~330 words total)
+- P1 (~80 words): The foundation: numbers 1-10. Focus on the phonetics of the apostrophe in п'ять and дев'ять, and the distinct [i] sound in сім and вісім (avoiding the Russian 'e' sound).
+- P2 (~100 words): Gender agreement for "one" and "two" (Wiki Step 2). Explain that 'one' must match the noun's gender: один стіл (m), одна книга (f), одне вікно (n). Similarly, 'two' has a feminine form: два столи but дві книги.
+- P3 (~90 words): Numbers 11-20 and the "-надцять" pattern. Explain the historical "one on ten" logic. Emphasize the stress shift: the stress always falls on the "на" syllable (одина́дцять, дванадця́ть).
+- P4 (~60 words): Counting classroom objects to practice noun endings as chunks. We don't learn the Genitive case yet, just the patterns: один зошит, два зошити, п'ять зошитів.
+- <!-- INJECT_ACTIVITY: fill-in-numbers-words --> [fill-in, Write the number in words: 15 → п'ятнадцять, 12 → дванадцять, 10 items]
 
----
-
-## Числа 1–20 (Numbers 1–20) (~330 words total)
-
-- P1 (~100 words): Numbers 1–10 — full list: один, два, три, чотири, п'ять, шість, сім, вісім, дев'ять, десять. Pronunciation warnings for three tricky ones: (a) п'ять — apostrophe softens п before я, sounds like "p-yat'"; (b) сім — NOT "сем" (Russian ghost); (c) дев'ять — apostrophe again, two syllables "dev-yat'." Practice frame: count items from M08 classroom — один стіл, два стільці, три книги, чотири ручки, п'ять зошитів. Numbers come first, nouns are recycled vocabulary.
-- P2 (~120 words): Numbers 11–20 — full list from Vashulenko Grade 3 p.140: одинадцять, дванадцять, тринадцять, чотирнадцять, п'ятнадцять, шістнадцять, сімнадцять, вісімнадцять, дев'ятнадцять, двадцять. Pattern explanation: base number + -надцять (parallel to English "-teen"). Stress rule from textbook: the stress ALWAYS falls on the -на- syllable in -надцять (одинáдцять, дванáдцять, тринáдцять — mark stresses explicitly). One spelling trap: шістнадцять not "шістьнадцять." Counting rhyme from Kravcova Grade 2 p.92: "Один і два — росла трава, три, чотири — покосили…" — gives 1–7 in context.
-- P3 (~80 words): Productive practice frame — two ways to use 1–20 right now. (1) Count real objects around you: скільки стільців у кімнаті? скільки книжок на столі? (2) Answer age questions: Мені + number + років. Prompt learner to say their own age, their sibling's age, a friend's age — all with numbers from this section. Anticipation note: combined numbers (двадцять один, тридцять п'ять) come in the next section.
-- Exercise (~30 words overhead): **Fill-in** — "Write the number in words": 11 → \_\_\_, 15 → \_\_\_, 18 → \_\_\_, 19 → \_\_\_, 20 → \_\_\_. Also 6 → \_\_\_, 9 → \_\_\_, 7 → \_\_\_. 8 items.
-
----
-
-## Десятки і сотні (Tens and Hundreds) (~330 words total)
-
-- P1 (~120 words): Tens 20–100 — list from Vashulenko p.140 plus the two irregulars: двадцять (20), тридцять (30), **сорок** (40 — NOT "чотиридесят"; это irregularne, memorize it!), п'ятдесят (50), шістдесят (60), сімдесят (70), вісімдесят (80), **дев'яносто** (90 — NOT "дев'ятдесят"; another irregular). сто (100). Stress tip from Vashulenko p.142: вимовляй правильно — сімдесяти, вісімдесяти (genitive forms used in math); at A1 we only need nominative. Combined numbers = tens + unit, no connector word: двадцять один (21), тридцять п'ять (35), сорок сім (47), вісімдесят дев'ять (89). Three practice examples with items: двадцять три студенти, сорок вісім гривень, дев'яносто дві копійки.
-- P2 (~120 words): Hundreds for prices — сто (100), двісті (200), триста (300), чотириста (400), п'ятсот (500), шістсот (600), сімсот (700), вісімсот (800), дев'ятсот (900), тисяча (1000). Note the pattern shift at 200: двісті (not "двасто"). At 300–400: триста/чотириста (not "три сто"). At 500–900: -сот suffix. Practice with гривня: одна гривня (1), дві гривні (2–4), п'ять гривень (5+). Memorize three price chunks from Dialogue 1: п'ятнадцять гривень (15₴), двісті гривень (200₴), сорок п'ять гривень (45₴). The noun changes гривня/гривні/гривень are learned here as price chunks — case grammar arrives in A2.
-- P3 (~60 words): Phone number pattern — Ukrainian mobiles: 0XX XXX XX XX. Break into groups for easier recall: нуль дев'яносто сім (097) — пауза — три два один (321) — пауза — сорок п'ять (45) — пауза — шістдесят сім (67). Read each group as a sub-number. Sample: Мій номер — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.
-- Exercise 1 (~30 words overhead): **Quiz** — "Скільки коштує?" Match 8 price tags (15₴, 47₴, 200₴, 350₴, 99₴, 500₴, 1000₴, 75₴) to spoken Ukrainian. 8 items.
-- Exercise 2 (~30 words overhead): **Fill-in** — Complete the phone number dictation. Hear 4 Ukrainian phone numbers in XXX-XXX-XX-XX format; write the missing groups in words. 4 items.
-
----
+## Десятки і сотні — Tens and Hundreds (~330 words total)
+- P1 (~110 words): The tens (20-90). Introduce the regular patterns (п'ятдесят, шістдесят) and the critical irregulars: сорок (40) and дев'яносто (90). Explain how to combine them: сорок сім (47), дев'яносто дев'ять (99).
+- P2 (~100 words): The hundreds (100-1000) for high-value items and prices. List the forms: сто, двісті, триста, чотириста, п'ятсот, тисяча. Note the spelling of двісті (not "двасто").
+- P3 (~120 words): Money and currency. Introduce "гривня" (hryvnia). Provide the memorized patterns for the 1, 2-4, 5+ rule: одна гривня, дві/три/чотири гривні, п'ять/десять/сто гривень. Teach the question "Скільки це коштує?".
+- <!-- INJECT_ACTIVITY: quiz-prices --> [quiz, Match price tags (e.g., 250₴, 400₴) to their Ukrainian written forms, 8 items]
 
 ## Підсумок — Summary (~330 words total)
-
-- P1 (~80 words): Recap of the three number systems built in this module — (1) cardinal 1–20 with two apostrophe rules and the -надцять pattern; (2) tens with the two irregulars сорок and дев'яносто; (3) hundreds with the двісті shift and тисяча. Emphasize: combined numbers never need a connector — двадцять три, сто сорок п'ять. All three systems feed directly into the three practical applications below.
-- P2 (~60 words): Practical use #1 — **Prices.** Question: Скільки коштує [noun]? Answer: [number] гривень/гривні/гривня. Three memorized frames: 15 гривень (хліб), 45 гривень (три булочки), 200 гривень (торт). Students can now ask and answer any price up to 1000₴ using vocabulary they already know.
-- P3 (~60 words): Practical use #2 — **Age.** Question: Скільки тобі/йому/їй років? Answer: Мені/Йому/Їй [number] рік / роки / років. Three memorized frames: Мені чотирнадцять років (14), Йому двадцять два роки (22), Їй тридцять п'ять років (35). The rік/роки/років switch is a chunk — feel it, not analyze it.
-- P4 (~60 words): Practical use #3 — **Phone numbers.** Pattern: read in groups of 3–2–2–2. Practice with three sample numbers: (a) 097-321-45-67; (b) 050-112-33-99; (c) 073-456-78-10. Learner should be able to dictate their own number in Ukrainian. Link to Dialogue 1 context: bakery could call you when your cake is ready — Мій номер телефону...
-- Self-check (~70 words): Bulleted Q&A:
-  - Як сказати 17 по-українськи? → сімнадцять
-  - Як сказати 40 по-українськи? → сорок (не "чотиридесять"!)
-  - Як сказати 90 по-українськи? → дев'яносто (не "дев'ятдесять"!)
-  - Скільки коштує торт, якщо торт коштує 250 гривень? → Двісті п'ятдесят гривень.
-  - Скажіть своє ім'я і вік: Мене звати \_\_\_, мені \_\_\_ років.
-  - Продиктуйте свій номер телефону по-українськи.
+- P1 (~90 words): Recapping Age. Explain that "Мені... років" is a fixed chunk. Provide the three variants for endings based on the last digit: 1 (рік), 2-4 (роки), 5-0 (років). Examples: двадцять один рік, тридцять три роки, сорок років.
+- P2 (~80 words): Phone numbers. Explain the use of "нуль" (zero) and how numbers are typically read in blocks of two or three digits. Example: 067 (нуль шістдесят сім) or 0-9-7 (нуль, дев'ять, сім).
+- P3 (~80 words): Summary of "Скільки" functions. It covers both "how many" (quantity) and "how much" (price). Comparison of "Скільки книг?" vs "Скільки коштує книга?".
+- P4 (~80 words): Self-check list:
+  - Can you say your age? (Мені ... років)
+  - Can you ask for a price? (Скільки коштує ...?)
+  - Can you count to ten without looking?
+  - Can you say your phone number in Ukrainian?
+- <!-- INJECT_ACTIVITY: quiz-age-matching --> [quiz, Match ages in digits to the correct sentence (рік/роки/років), 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-phone-numbers --> [fill-in, Complete the phone number sequences based on audio/text prompts, 4 items]
 
 Grand total: ~1320 words
 </skeleton>

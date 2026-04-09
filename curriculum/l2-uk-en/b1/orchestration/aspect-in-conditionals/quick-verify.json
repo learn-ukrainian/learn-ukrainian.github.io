@@ -1,0 +1,13 @@
+{
+  "attempt": 4,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 3/20 required vocab: {'word': 'вигравати', 'pos': 'verb:impf', 'translation': 'to win (impf — habitual or process)'}, {'word': 'народитися', 'pos': 'verb:pf', 'translation': 'to be born (pf — Якби я народився...)'}, {'word': 'уявити', 'pos': 'verb:pf', 'translation': 'to imagine (pf — a specific act of imagining)'}"
+    }
+  ],
+  "timestamp": "2026-04-09T21:26:37.938750+00:00"
+}

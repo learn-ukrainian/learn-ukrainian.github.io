@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "sounds-letters-and-hello",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-29T18:51:36.923265+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-29T18:52:35.432718+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-29T18:54:06.264754+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-29T18:56:22.996570+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-29T18:58:13.660924+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-29T18:58:13.661201+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-29T19:22:44.526552+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-29T19:22:44.568099+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-29T19:22:44.591976+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-29T19:22:58.740652+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-29T19:22:59.524666+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-29T19:22:59.646092+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-03T12:10:07.442081+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T15:04:47.765177+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T15:04:49.102501+00:00"
+    }
+  }
+}

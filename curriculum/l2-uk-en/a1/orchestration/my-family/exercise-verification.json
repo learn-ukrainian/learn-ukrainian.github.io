@@ -1,43 +1,87 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 42,
+  "grounded_items": 31,
+  "ungrounded": [
+    {
+      "word": "ось",
+      "exercise_type": "fill-in",
+      "context": "— Так, це мій брат. Ось мій ____.",
+      "role": "context"
+    },
+    {
+      "word": "де",
+      "exercise_type": "fill-in",
+      "context": "Де ____ тато?",
+      "role": "context"
+    },
+    {
+      "word": "тут",
+      "exercise_type": "fill-in",
+      "context": "Тут ____ брат.",
+      "role": "context"
+    },
+    {
+      "word": "мама'",
+      "exercise_type": "true-false",
+      "context": "You can say 'мій мама'.",
+      "role": "context"
+    },
+    {
+      "word": "мій'",
+      "exercise_type": "true-false",
+      "context": "The plural of 'мій' is 'мої'.",
+      "role": "context"
+    },
+    {
+      "word": "мої'",
+      "exercise_type": "true-false",
+      "context": "The plural of 'мій' is 'мої'.",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "true-false",
+      "context": "To say 'I have a brother', say 'Я маю брат'.",
+      "role": "context"
+    },
+    {
+      "word": "брат'",
+      "exercise_type": "true-false",
+      "context": "To say 'I have a brother', say 'Я маю брат'.",
+      "role": "context"
+    },
+    {
+      "word": "її'",
+      "exercise_type": "true-false",
+      "context": "'Її' means 'her' and never changes shape.",
+      "role": "context"
+    },
+    {
+      "word": "є'",
+      "exercise_type": "true-false",
+      "context": "If asking a friend, you use 'У тебе є'.",
+      "role": "context"
+    },
+    {
+      "word": "батьки'",
+      "exercise_type": "true-false",
+      "context": "'Батьки' means only 'fathers'.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 31,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 23,
     "not_tested": [
-      "бабуся",
-      "батьки",
-      "брат",
-      "два",
       "дві",
-      "дочка",
-      "дружина",
-      "дядько",
-      "дідусь",
-      "його",
-      "мама",
       "мене",
-      "моя",
       "моє",
-      "мої",
-      "мій",
       "один",
       "одна",
-      "сестра",
-      "син",
-      "сім'я",
-      "тато",
-      "твоя",
       "твоє",
-      "твій",
-      "тебе",
       "тільки",
-      "тітка",
-      "чи",
-      "чоловік",
-      "її"
+      "чи"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,216 +1,192 @@
 vocabulary:
 - word: оди́н
-  translation: one (1)
+  translation: one
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: три
-  translation: three (3)
+  translation: three
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: чоти́ри
-  translation: four (4)
+  translation: four
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: шість
-  translation: six (6)
+  translation: six
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: сім
-  translation: seven (7)
+  translation: seven
   expression: false
   pos: ім.
   gender: с.
   verified: true
 - word: ві́сім
-  translation: eight (8)
+  translation: eight
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: де́в'ять
-  translation: nine (9)
+  translation: nine
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: де́сять
-  translation: ten (10)
+  translation: ten
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: одина́дцять
-  translation: eleven (11)
+  translation: eleven
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: двана́дцять
-  translation: twelve (12)
+  translation: twelve
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: трина́дцять
-  translation: thirteen (13)
+  translation: thirteen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: чотирна́дцять
-  translation: fourteen (14)
+  translation: fourteen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: п'ятна́дцять
-  translation: fifteen (15)
+  translation: fifteen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: шістна́дцять
-  translation: sixteen (16)
+  translation: sixteen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: сімна́дцять
-  translation: seventeen (17)
+  translation: seventeen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: вісімна́дцять
-  translation: eighteen (18)
+  translation: eighteen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: дев'ятна́дцять
-  translation: nineteen (19)
+  translation: nineteen
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: два́дцять
-  translation: twenty (20)
+  translation: twenty
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: три́дцять
-  translation: thirty (30)
+  translation: thirty
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: со́рок
-  translation: forty (40) — irregular, not *чотиридесят
+  translation: forty
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: п'ятдеся́т
-  translation: fifty (50)
+  translation: fifty
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: шістдеся́т
-  translation: sixty (60)
+  translation: sixty
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: сімдеся́т
-  translation: seventy (70)
+  translation: seventy
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: вісімдеся́т
-  translation: eighty (80)
+  translation: eighty
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: дев'яно́сто
-  translation: ninety (90) — irregular, not *дев'ятдесят
+  translation: ninety
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: сто
-  translation: one hundred (100)
+  translation: one hundred
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: дві́сті
-  translation: two hundred (200)
+  translation: two hundred
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: три́ста
-  translation: three hundred (300)
+  translation: three hundred
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: чоти́риста
-  translation: four hundred (400)
+  translation: four hundred
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: п'ятсо́т
-  translation: five hundred (500)
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: шістсо́т
-  translation: six hundred (600)
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: сімсо́т
-  translation: seven hundred (700)
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: вісімсо́т
-  translation: eight hundred (800)
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: дев'ятсо́т
-  translation: nine hundred (900)
+  translation: five hundred
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: ти́сяча
-  translation: one thousand (1,000)
+  translation: one thousand
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: нуль
-  translation: zero (0)
+  translation: zero
   expression: false
   pos: ім.
   gender: ч.
@@ -222,100 +198,64 @@ vocabulary:
   gender: ''
   verified: true
 - word: ко́шту́є
-  translation: costs (3rd person singular of коштувати)
+  translation: costs
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: гри́вня
-  translation: hryvnia (Ukrainian currency unit, after 1)
+  translation: hryvnia (currency)
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: гри́вні
-  translation: hryvnias (currency form after 2–4)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гри́вень
-  translation: hryvnias (currency form after 5+)
-  expression: false
-  pos: ім.
-  gender: ''
   verified: true
 - word: копі́йка
-  translation: kopek (1/100 of a hryvnia)
+  translation: kopek
   expression: false
   pos: ім.
   gender: ж.
   verified: true
+- word: ціна́
+  translation: price
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: но́мер
+  translation: number (phone/room)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: рік
-  translation: year (after 1)
+  translation: year
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: ро́ки́
-  translation: years (after 2–4)
+  translation: years
   expression: false
   pos: ім.
   gender: ''
   verified: true
 - word: ро́кі́в
-  translation: years (after 5+)
+  translation: years
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: но́мер
-  translation: number (phone number / room number)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: мені́
-  translation: 'I am / to me (age formula: Мені … років)'
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: тобі́
-  translation: 'you are / to you (age formula: Тобі … років)'
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: йому
-  translation: 'he is / to him (age formula: Йому … років)'
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: їй
-  translation: 'she is / to her (age formula: Їй … років)'
+- word: бу́лочка
+  translation: bun
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: старша
-  translation: older (feminine)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: покупе́ць
-  translation: buyer / customer (masculine)
+- word: ті́стечко
+  translation: pastry
   expression: false
   pos: ім.
-  gender: ч.
-  verified: true
-- word: пе́кар
-  translation: baker
-  expression: false
-  pos: ім.
-  gender: ч.
+  gender: с.
   verified: true
 - word: торт
   translation: cake
@@ -323,26 +263,56 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: бу́лочка
-  translation: bun / small roll
+- word: су́мка
+  translation: bag
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ті́стечко
-  translation: pastry / small cake
+- word: мале́нька
+  translation: small
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сестра́
+  translation: sister
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: до́бре
-  translation: okay / good / alright
+- word: оліве́ць
+  translation: pencil
   expression: false
-  pos: присл.
-  gender: ''
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ру́чка
+  translation: pen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: підру́чник
+  translation: textbook
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: Скільки коштує?
   translation: How much does it cost?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки це коштує?
+  translation: How much does this cost?
   expression: true
   pos: ''
   gender: ''
@@ -353,32 +323,8 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Мені … років
-  translation: I am … years old
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Йому … років
-  translation: He is … years old
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Їй … років
-  translation: She is … years old
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мій номер телефону
-  translation: My phone number
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: До побачення!
-  translation: Goodbye!
+- word: Мені ... років
+  translation: I am ... years old
   expression: true
   pos: ''
   gender: ''

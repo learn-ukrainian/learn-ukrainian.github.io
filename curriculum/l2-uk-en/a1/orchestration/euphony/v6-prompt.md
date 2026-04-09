@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -230,328 +231,337 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-- **Confirmed (12/12):** у (prep), в (prep), і (conj/part), й (conj/part), з (prep), із (prep), зі (prep), Київ (noun), Львів (noun), офіс (noun), парк (noun), театр (noun)
-- **Not found:** none — all plan vocabulary confirmed in VESUM ✅
-
----
-
-## Textbook Excerpts
-
-### Section: У чи В? (У or В?)
-
-> "Якщо попереднє слово закінчується, а наступне починається на приголосний звук, між ними вживаємо: прийменник у: зустрінемось у школі (не зустрінемося в школі); сполучник і: Сергій і Надія (не Сергій й Надія). Якщо попереднє слово закінчується на голосний, а наступне починається на голосний або приголосний, уживаємо прийменник в або сполучник й."
-> **Source: Glazova, Grade 10, §15**
-
-> Table: consonant→у/і→consonant: *син у спортзалі*; vowel→в/й→consonant: *Ольга в салоні*; consonant→в→vowel: *брат в Одесі*; any→у→в/ф/св/сф/кв/хв: *він у вагоні, сестра у Львові*
-> **Source: Avramenko, Grade 10, p.73**
-
-> "між буквами, що позначають приголосні: день у день, наш учитель; між буквами, що позначають голосні: навчатися в університеті, наша вчителька"
-> **Source: Litvinova, Grade 5, p.174**
-
-### Section: І чи Й? З, із, чи зі?
-
-> Table: у, і — між приголосними: *він у домі, брат умивається; син і мати, дощ іде*; у перед в, ф, кв, тв, льв, хв: *він у вагоні, сестра у Львові*; і перед й, я, ю, є, ї: *її і його, Одеса і Ялта*; в, й — між голосними: *риба в акваріумі, річки й озера*; між голосним і приголосним: *тепло в травні, річки й моря*
-> **Source: Avramenko, Grade 5, p.117 (§51-52)** ← exact match for module's section, Tier 1
-
-> Table З/ІЗ/ЗІ: З — перед голосним: *з однокласницями, з Одеси*; ІЗ — між приголосними: *Максим із Семеном*; після голосного перед свистячими/шиплячими: *із цими новинами*; ЗІ — перед сполученням приголосних з початковими з, с, ш, щ: *зі мною, зі святом, зі школи*
-> **Source: Litvinova, Grade 5, p.177** ← exact match cited in plan
-
-> "Зі вживаємо: перед сполученням приголосних з початковими з, с, ш, шч: вийшли зі школи; бери зі столу; прибув зі Львова"
-> **Source: Zabolotnyi, Grade 5, p.124 (§30)**, Tier 1
-
-### Section: Підсумок — Summary (Dialogue examples)
-
-> "Скупчення збігу голосних або приголосних: нарада відбулась в Кривому Розі → нарада відбулась у Кривому Розі; поїхала у Одесу → поїхала в Одесу"
-> **Source: Glazova Grade 10, §15** (excellent exercise material for self-check)
-
----
+- Confirmed: у, в, і, й, з, із, зі, Київ, Львів, офіс, парк, театр
+- Not found: None
 
 ## Grammar Rules
-
-- **У/В чергування:** Правопис §23 — "Щоб уникнути збігу букв на позначення приголосних звуків та щоб досягти милозвучності, вживають у між приголосними, на початку речення перед приголосним, незалежно від кінця попереднього слова перед наступними в, ф, льв, зв, св, дв, тв, хв і под."
-- **І/Й чергування:** Правопис §24 — "між буквами на позначення приголосних → і; між буквами на позначення голосних → й; між голосним і приголосним → й. **Тільки і** перед й, є, ї, ю, я (напр. Ольга і Йосип, сосни і ялинки). **Тільки і** при зіставленні понять (батьки і діти, правда і кривда)."
-- **З/ІЗ/ЗІ чергування:** Правопис §25 — "З перед голосним усередині речення та на початку речення перед приголосним (не свистячим/шиплячим). Із — перед свистячими та шиплячими (з, с, ц, ч, ш, шч), між приголосними. Зі — якщо початкові з, с, ш, шч плюс консонантний кластер (зі Львова, зі школи, зі святом). Зо — тільки з числівниками два, три та із займенником мною."
-
----
+- Euphony of У/В: Правопис §23 — У is used between consonants, at the start of a sentence before a consonant, and before words starting with в, ф, льв, зв, св, дв, тв, гв, хв (e.g., у Львові). В is used between vowels or after a consonant before a vowel.
+- Euphony of І/Й: Правопис §24 — І is used between consonants, at the start of a sentence, or before words starting with й, є, ї, ю, я. Й is used between vowels or between a vowel and a consonant.
+- Euphony of З/ІЗ/ЗІ: Правопис §25 — З is used before vowels and most consonants. ІЗ is used before sibilants (з, с, ц, ч, ш, щ). ЗІ is used before consonant clusters starting with sibilants (e.g., зі мною, зі школи).
 
 ## Calque Warnings
-
-- **"знаходитися" для місця перебування:** CALQUE (Антоненко-Давидович, ad-148) — НЕ вживати! Правильно: *бути, перебувати, жити*. Наприклад: "Я живу в Києві" (не "знаходжуся в Києві"). **The plan correctly uses "живу/живеш" throughout — no calque issue.**
-- **"розташований" для міст/будівель:** CALQUE (ad-176) — OK for troops/people temporarily positioned; wrong for cities/buildings. Not relevant to this module.
-- **"іти в кіно / в парк / у театр":** OK — natural Ukrainian expressions ✅
-
-### ⚠️ CRITICAL PLAN ERROR FOUND — DIALOGUE 2
-
-The plan's Dialogue 2 contains a **euphony error** that directly contradicts the lesson's own teaching:
-
-> "Ні, **я і Максим** йдемо в парк."
-> Plan note: "і between consonants (я і Максим)"
-
-**This is wrong.** "я" ends in the vowel **"а"**, not a consonant. Context: **я** (ends in vowel "а") → conjunction → **Максим** (starts with consonant "М") = **vowel + consonant → use "й"**.
-
-✅ **Correct form:** "Ні, **я й Максим** йдемо в парк."
-
-The plan note must also be corrected: it should read "й between vowel and consonant (я й Максим)", not "і between consonants". Teaching the wrong rule in an euphony module is a critical pedagogical error.
-
-All other dialogue examples check out:
-- "Ти й Олена йдете в кіно?" — "ти" ends in "и" (vowel) + "Олена" starts with "О" (vowel) → **й** ✅
-- "А Олена й Тарас?" — "Олена" ends in "а" (vowel) + "Тарас" starts with "Т" (consonant) → **й** ✅
-- "Вони йдуть у театр" — "йдуть" ends in "ь" (consonant marker) + "театр" starts with "т" (consonant) → **у** ✅
-- "йдемо в парк" — "йдемо" ends in "о" (vowel) + "парк" starts with "п" (consonant) → **в** ✅
-- "живу в Києві" — "живу" ends in "у" (vowel) + "Києві" starts with "К" (consonant) → **в** ✅
-- "живу у Львові" — before "льв" cluster → always **у** (Правопис §23.1.4) ✅
-- "Тарас у Львові" — "Тарас" ends in "с" (consonant) + before "льв" → **у** ✅
-- "Максим у банку" — "Максим" ends in "м" (consonant) + "банку" starts with "б" (consonant) → **у** ✅
-
----
+- приймати участь: Calque — брати участь (Standard Ukrainian replacement for the Russianism "принимать участие").
+- вірний: OK in context of loyalty, but Calque for "correct" — правильний (e.g., правильна відповідь).
+- самий кращий: Calque — найкращий (Avoid using "самий" for superlatives; use the prefix най-).
 
 ## CEFR Check
-
-- **офіс:** A1 ✅ — at level
-- **парк:** A1 ✅ — at level
-- **театр:** A1 ✅ — at level
-- **жити (живу):** A1 ✅ — at level
-- **Київ / Львів:** proper nouns, not in PULS CEFR — appropriate at any level, essential Ukrainian geography for A1 ✅
-- **у, в, і, й, з, із, зі:** function words / prepositions — A1 ✅
-
-No vocabulary above A1 level found. All plan vocabulary is level-appropriate.
+- Київ: A1 — OK (Found in Grade 2 textbooks)
+- Львів: A1 — OK (Found in Grade 3 textbooks)
+- офіс: A1 — OK (Modern basic vocabulary, found in school textbooks)
+- парк: A1 — OK (Found in Grade 3 textbooks)
+- театр: A1 — OK (Found in Grade 2 textbooks)
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Euphony
-**Module:** euphony | **Phase:** A1.5 [Places]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: Euphony
+**Module:** euphony | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/euphony.md
+
+# Педагогіка A1: Euphony
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The core principle to introduce at A1 is **милозвучність** (euphony, literally "sweet-soundingness"). This is not an optional stylistic flourish but a fundamental, grammaticalized feature of the Ukrainian language. The writer must present it as a key to making one's speech sound naturally Ukrainian.
+
+Ukrainian pedagogy introduces this concept early and intuitively. The primary goal is to avoid the "clash" of multiple consonants or vowels. As one source explains, "ми часто кажемо що українська мова милозвучна... ми використовуємо те слово яке буде краще звучати" (Source `ext-ulp_youtube-246`). This is the guiding philosophy.
+
+The methodological approach should be:
+1.  **Introduce via Listening:** Start with clear examples like `в Україні` but `у Львові` (Source `ext-ulp_youtube-246`). Let learners hear the difference and the natural flow before explaining the rule.
+2.  **Simple Rules First:** Begin with the most common alternations, `у/в` and `і/й`, as they appear frequently in basic sentence patterns. School textbooks for young native speakers focus on practical application through fill-in-the-blank exercises (`Вправа 292`, `Вправа 411` from Sources `5-klas-ukrmova-litvinova-2022_s0183` and `5-klas-ukrmova-litvinova-2022_s0266`).
+3.  **Connect to Meaning:** Emphasize that `у` and `в` are the same preposition, just variants. The same applies to the conjunction `і` and `й`. This prevents learners from seeking a semantic difference that doesn't exist.
+4.  **Systematic Practice:** Use structured exercises that force the learner to choose the correct form based on the preceding and following sounds. The choice is almost always determined by the sounds of the *surrounding* words, not the word itself.
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction of euphonic rules should be gradual and tied to the grammatical structures being taught.
+
+1.  **Step 1: The Prepositions У / В.** This is the most frequent and visible alternation. Introduce it alongside basic location phrases with the locative case.
+    *   **Rule:** Use `в` before a vowel; use `у` before a consonant.
+    *   **Why:** This immediately makes sentences like "I live in Ukraine" sound more natural.
+    *   **Examples:** `Я живу в Україні.` `Він живе у Львові.` (Source `ext-ulp_youtube-246`). `Андрій мешкає в Києві.` (Source `8-klas-ukrmova-avramenko-2025_s0057`). `Вона працює у магазині.` (Source `6-klas-ukrmova-betsa-2023_s0109`).
+
+2.  **Step 2: The Conjunctions І / Й / ТА.** Introduce this when learners begin connecting two nouns or simple clauses.
+    *   **Rule:** Use `й` between two vowels. Use `і` between two consonants. `та` is often a neutral alternative, used for stylistic variation or to avoid difficult clusters.
+    *   **Why:** Prevents vowel clashes (`вона і я`) and consonant pile-ups.
+    *   **Examples:** `Батько і син`, `вона й він`, `думай і скажи` (Source `5-klas-ukrmova-litvinova-2022_s0266`), `Ясени і клени, берези і дуби, горішина й калина` (Source `5-klas-ukrmova-litvinova-2022_s0241`).
+
+3.  **Step 3: The Preposition З / ІЗ / ЗІ.** Introduce this with the genitive or instrumental cases. This is more complex and should come after `у/в` and `і/й` are mastered.
+    *   **Rule:** `з` is the default. `із` is used when `з` is followed by a difficult consonant cluster (e.g., `ш`, `щ`). `зі` is used with a few specific clusters (e.g., `льв-`, `св-`) and certain pronouns like `мною`.
+    *   **Why:** Solves difficult pronunciation challenges for learners.
+    *   **Examples:** `порівняти з шістьма` (hard) → `порівняти із шістьма`; `познайомився з своєю` (hard) → `познайомився зі своєю`; `зі мною` is fixed. `з/із/зі дрібнесеньких гілочок` (Source `5-klas-ukrmova-litvinova-2022_s0241`).
+
+4.  **Step 4: Initial У- / В- on Words.** This is an A2-level concept but can be foreshadowed in A1. Words like `учитель/вчитель` or `увечері/ввечері` can alternate their initial letter depending on the previous word.
+    *   **Rule:** The word's initial letter follows the same pattern as the preposition `у/в`.
+    *   **Why:** Explains variation learners will encounter in authentic texts.
+    *   **Examples:** `Мій учитель` (after a consonant) vs. `Моя вчителька` (after a vowel). (Source `5-klas-ukrmova-litvinova-2022_s0266` provides `чудовий учитель / чудова вчителька`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often struggle with the concept of euphonic alternation as it's absent in English.
+
+| ❌ Помилково (Incorrectly) | ✅ Правильно (Correctly) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Я вчуся в школі.` | `Я вчуся у школі.` | A consonant cluster `в шк-` is created. Ukrainian avoids this by using `у` before a word starting with a consonant like `ш`. (Source `5-klas-ukrmova-litvinova-2022_s0241`) |
+| `Він іде у аудиторію.` | `Він іде в аудиторію.` | A vowel clash `у а-` is created. `в` is used before a vowel to create a smooth transition (`-е в а-`). |
+| `Мама і тато` | `Мама й тато` | While not strictly wrong, `мама й тато` is more fluid and common. `і` after a vowel can create a slight pause or glottal stop for an English speaker, which is unnatural. `й` creates a glide. |
+| `Зустріч з студентами.` | `Зустріч зі студентами.` | The consonant cluster `з ст-` is difficult to pronounce. The variant `зі` is used to break up such clusters, making the phrase flow smoothly. (Based on `з/із/зі` rules in Source `5-klas-ukrmova-litvinova-2022_s0241`) |
+| `Вона була в Львові.` | `Вона була у Львові.` | This is a very common error. The cluster `в Льв-` is phonetically difficult for Ukrainian speakers. `у` is strongly preferred before words starting with `в`, `ф`, `св`, `льв`, etc. (Source `ext-ulp_youtube-246`) |
+| `Я з України.` | `Я з України.` (Pronounced as `[йа з украйіни]`) | The error is phonetic. An English speaker might pronounce this as three separate words. A Ukrainian speaker will link them, with `з` almost becoming a prefix to `України`. The writer should encourage exercises that practice linking words. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This section is **mandatory** for the content writer. Ukrainian euphony is a cornerstone of the language's identity and must be taught on its own terms, free from Russian colonial influence.
+
+1.  **No Russian Comparisons:** **NEVER** explain Ukrainian euphonic rules by comparing them to Russian. Do not say "it's like X in Russian, but...". Ukrainian euphony is far more systematic, pervasive, and grammatically integrated than similar phenomena in Russian. Teaching through a Russian lens will lead to incorrect assumptions and pronunciation.
+2.  **Ukrainian from Scratch:** Learners must build their Ukrainian phonetic and phonological system from zero. The goal is to think in Ukrainian sound patterns, not to "adjust" a Russian base. The `у/в` alternation is a core part of Ukrainian grammar and rhythm, not a minor phonetic tweak.
+3.  **Surzhyk is a Result of Russification, Not Euphony:** Avoid any implication that these alternations are "optional" or "spoken variations". They are standard literary Ukrainian. The breakdown of these rules is a feature of Surzhyk, which is a result of linguistic Russification. Reinforcing the rules is an act of decolonization.
+4.  **`І`/`И` is a Separate Battleground:** While not strictly euphony, the writer must be reminded that the letters `і` and `и` are a primary source of negative transfer from Russian. **Never** describe Ukrainian `и` as "like Russian ы" or `і` as "like Russian и". They are distinct phonemes with their own rules, and this false analogy is one of the most damaging in L2 Ukrainian pedagogy.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+The following A1 vocabulary is ideal for introducing and practicing euphonic rules.
+
+**Іменники (Nouns):**
+*   ★★★: Україна, Київ, Львів, місто, школа, парк, театр, кіно, університет, понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя
+*   ★★☆: урок, день, вечір, друг, подруга, музей, ресторан, магазин, офіс
+*   ★☆☆: аудиторія, вправа, екзамен
+
+**Дієслова (Verbs):**
+*   ★★★: бути, жити, іти, ходити, вчити(ся), працювати, бачити, мати
+*   ★★☆: могти, хотіти, писати, читати, говорити, відпочивати
+*   ★☆☆: починати, думати, знати
+
+**Прикметники / Прислівники (Adjectives / Adverbs):**
+*   ★★★: тут, там, добре, вдома, вранці, ввечері
+*   ★★☆: український, новий, старий, великий, малий
+*   ★☆☆: цікавий, гарний
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model exercises on these proven formats from Ukrainian textbooks.
+
+**1. Fill in the Blanks (Виправте помилки)**
+This exercise forces the learner to apply the rules in context.
+*   **Instruction:** "Виправте помилки, запишіть правильні варіанти."
+*   **Task:**
+    *   `Вітаємо з святами` → `Вітаємо зі святами`
+    *   `участь в концерті` → `участь у концерті`
+    *   `вихід з ситуації` → `вихід із ситуації`
+    *   `у одному екземплярі` → `в одному екземплярі`
+    *   `знайти у інтернеті` → `знайти в інтернеті`
+(Source: `5-klas-ukrmova-litvinova-2022_s0183`, Вправа 292)
+
+**2. Multiple Choice Selection (Вибір форми)**
+This exercise isolates the choice between euphonic variants.
+*   **Instruction:** "Запишіть фрази, керуючись правилами милозвучності."
+*   **Task:**
+    *   `Запитай у/в/уві друзів`
+    *   `побачив у/в/уві соцмережах`
+    *   `подумала і/й/та сказала`
+    *   `вибрати з/із/зі кількох варіантів`
+    *   `чудовий (у/в)читель` / `чудова (у/в)чителька`
+(Source: `5-klas-ukrmova-litvinova-2022_s0266`, Вправа 411)
+
+**3. Paired Alternation Listening/Repetition**
+A listening exercise where the learner hears and repeats pairs of phrases that demonstrate alternation.
+*   **Instruction:** "Слухайте і повторюйте. Зверніть увагу на вимову."
+*   **Task (Audio):**
+    *   "у понеділок / але в середу" (Source `ext-ulp_youtube-243`)
+    *   "в Україні / але у Львові" (Source `ext-ulp_youtube-246`)
+    *   "ходити в музей / їсти у ресторані" (Source `ext-ulp_youtube-237`)
+    *   "брат і сестра / батько й мати"
+
+**4. Sentence Construction**
+Combine words into a full sentence, forcing the use of the correct euphonic form.
+*   **Instruction:** "Складіть речення, використавши подані слова."
+*   **Task:**
+    *   `Ірина Юріївна` / `водійка` / `тролейбус` → `Ірина Юріївна — водійка в тролейбусі.`
+    *   `Дмитро Сергійович` / `офіціант` / `ресторан` → `Дмитро Сергійович — офіціант у ресторані.`
+(Adapted from Source `6-klas-ukrmova-betsa-2023_s0109`, Вправа 255)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/alphabet`
+- `pedagogy/a1/pronunciation-basics`
+- `phonetics/vowel-reduction`
+- `phonetics/consonant-clusters`
+- `grammar/a1/prepositions-of-place`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-## У чи В? (У or В?)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 226
-> **Score:** 0.50
->
-> Чергування у–в та і–й забезпечує милозвучність мови. Завдяки йому 
-> уникаємо незручних для вимови збігів голосних і приголосних звуків. Правила чергування у–в та і–й такі: 
-> у, і
-> між приголосними
-> він у домі, брат умивається; син і мати, 
-> дощ іде
-> у перед в, ф, кв, тв, льв, 
-> хв і под. і перед й, я, ю, є, ї
-> він у вагоні, вона у вагоні, сестра у Львові 
-> її і його, Одеса і Ялта, лисиця і їжак
-> і після й, ї, а також 
-> після я, ю, є, що позна-
-> чають два звуки
-> синій і зелений,
-> Марія і Денис
-> на початку речення пе-
-> ред приголосним
-> У лісі волого. Іде дощ. після паузи (після роз-
-> ділового знака) перед 
-> приголосним 
-> У полі, у лісі волого: іде дощ. Правила чергування стосуються не лише прий­менників у–в і сполуч-
-> ників і–й, а й початкових букв: телефон у кишені, він узяв; брат і се-
-> стра, він іде.
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 123
-> **Score:** 0.50
->
-> 120
-> Чергування [у] – [в]
-> Уживаємо У:
-> Уживаємо В:
-> між приголосними: 
-> вечір у місті; наш учитель
-> між голосними: 
-> живе в Івано-Франківську
-> на початку речення перед 
-> двома чи трьома приголос­
-> ними: У складних обстави-
-> нах.
-> на початку речення перед 
-> голосним: 
-> В Одесі тепло.
-> перед в, ф, зв, св, дв, тв, 
-> хв, гв, льв і под.: зайшла у 
-> фоє; живе у Львові
-> після голосного перед при-
-> голосним (крім в, ф, зв, св, 
-> дв, тв, хв, гв, льв і под.): 
-> пішла в садок; наші вчи­
-> телі 
-> *** 
-> також після голосного перед 
-> в уживаємо префікс в-: 
-> гості ввійшли; Оля вважає
-> після паузи (на письмі по-
-> значаємо розділовим зна-
-> ком) перед приголосним:
-> Знаю, у чому секрет.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 174
-> **Score:** 0.33
->
-> 174
-> Фонетика. Графіка. Орфоепія. Орфографія. Милозвучність української мови
-> Милозвучність української мови. 
-> Правила милозвучності 
-> (чергування у — в, і — й, з — із — зі)
-> Вправа 287
-> 1. Прочитайте вітальну листівку .
-> 2. Поміркуйте й  висловте свої думки: що варто виправити в  тексті? 
-> Чому?
-> Шановні українки і українці!
-> ВІТАЄМО ВАС З СВЯТОМ!
-> Бажаємо щастя, здоров’я й єдності!
-> Нехай в ваших родинах панує злагода!
-> В українській мові існують спеціальні засоби, за допомогою яких 
-> мовлення можна зробити милозвучним, тобто уникнути нагрома-
-> дження складних для вимови звуків .
-> До таких засобів належать звукові варіанти прийменників у — в, 
-> і — й, з — із — зі, сполучників і — й, а також варіанти коренів слів .
-
-## І чи Й? З, із, чи зі?
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 197
-> **Score:** 0.50
->
-> – І Кузьма-листоноша, 
-> винувато похиливши голову, простягнув газету. Павло Максимович подивився на газету, потім на поштаря, потім на 
-> дружину, потім на сина, потім на Семена Семеновича, який, стоячи на ґан-
-> ку, уважно слухав, – і раптом... зареготав. Та так оглушливо, що Бровко 
-> аж присів і прищулив вуха. – Га-га-га-га! Га-га-га-га-га!.. А ми тут мало не той... не... Га-га-га-га-га! На хвилину завмерши, зареготала й Ганна Трохимівна, а за нею і Семен 
-> Семенович, і Марія Омелянівна, не кажучи вже про наших хлопців, які аж 
-> вищали від реготу. Години через дві надвечірні Бамбури знову сповнилися дзвінким співом. Хлопці дивилися на своїх батьків з ніжністю. Ох, ці дорослі! Які вони все-
-> таки складні люди...
-
-## Підсумок — Summary
-
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 243
-> **Score:** 0.33
->
-> 243
-> 592   Згрупуйте приклади, розташувавши їх у такому порядку: 1)  між-
-> особистісне спілкування; 2)  групове спілкування; 3)  масове 
-> спілкування. Вибір обґрунтуйте.
-> Я вдома з братом; кандидат у депутати на зібранні з вибор-
-> цями; тренер і спортсмени на тренуванні; оратор на урочис-
-> тому зібранні; моя сестра в кав’ярні з подругою; пасажири 
-> в транспорті і водій; бабуся і лікар у реєстратурі поліклініки; 
-> мама в чаті з мешканцями нашого будинку; конферансьє 
-> на концерті; екскурсовод і група туристів; дідусь з онуками.
-> Особливості спілкування залежать також від кількості 
-> учасників. З огляду на те, з ким людина спілкується, 
-> вона обирає тему, добирає слова, інтонацію, тембр, 
-> жести й міміку.
-
-## Grammar Reference
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 127
-> **Score:** 0.33
->
-> 124
-> 30. УЖИВАННЯ ПРИЙМЕННИКА З  
-> ТА ЙОГО ВАРІАНТІВ ІЗ, ЗІ (ЗО)
-> Про те, як під час уживання прийменника з  
-> уникнути важкого для вимови збігу приголосних 
-> ПРИГАДАЙМО. Які є шиплячі приголосні? 
-> 303.	А.  Прочитайте виразно вголос словосполучення під ілюстрація-
-> ми, звертаючи увагу на виділені прийменники. 
-> гуляти З таксою
-> гуляти ІЗ чау-чау
-> гуляти ЗІ спанієлем
-> Б.  Вимовте друге та третє словосполучення, уживаючи замість при-
-> йменників із та зі прийменник з. Чи ускладнило це вимову? Чи зашко-
-> дило милозвучності? 
-> В.  Зробіть висновок про те, з якою метою замість прийменника з ужи-
-> ваємо його варіанти із, зі.
-> Збіг прийменника з із деякими іншими приголос­ними 
-> може ускладнювати вимову. Наприклад, важко вимовляти 
-> прийшов з школи.
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 119
-> **Score:** 0.25
->
-> 119
-> 5. Перепишіть слова, вибираючи з дужок потрібний прийменник або 
-> префікс. 
-> Довідався (з, зі) словника, проспівала (з, із) радістю, батько (і, із) си-
-> ном, мати (з, із) донькою, повернувся (з, зі) Львова, узяла (з, із) сумки, 
-> воскрес (з, із) попелу, прибіг (зі, із) складу; (з, зі)щулитися, (з, зі)псувати, 
-> (з, зі)клеїти, (з, зі)грітися, (з, зі)стрибнути, (з, зі)тліти, (з, зі)в’янути, 
-> (з, зі)рвати.
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Голосні й приголосні звуки
-> **Source:** МійКлас — [Голосні й приголосні звуки](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
-Що означають терміни «фонетика», «графіка», «орфоепія», «орфографія»
-Фонетика \(від. грец. phonetikos — звуковий\) — це розділ мовознавства, що вивчає звуки  мови.
- 
-Графіка \(від грец. grapho — пишу\) — це розділ мовознавства, що вивчає cукупність умовних знаків \(букв та символів\) для передачі звуків на письмі.
- 
-Орфоепія \(від грец. orthos — правильний,  epos — мова, мовлення\) — це розділ мовознавства, що вивчає правила літературної вимови.
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-Орфографія \(від грец. orthos — правильний, grapho — пишу\) — це розділ мовознавства, що вивчає правила написання слів.
-Голосні та приголосні звуки
-Звук — найменша одиниця мови та мовлення.
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-### Співвідношення звуків і букв
-> **Source:** МійКлас — [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-### Теорія:
+## Послідовність введення (Introduction Sequence)
 
-*www.ua.pistacja.tv*  
- 
-Як ти вже знаєш, в українській мові є  38  **звуків** і 33  **літери** для передачі цих звуків на письмі.
-Чому така різниця між кількістю звуків і букв?
-Деякі букви \(я, ю, є\) позначають **два** звуки у певних позиціях.
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
 
-Букви ї, щ завжди позначають **два** звуки.
- 
-Буквосполучення дж, дз інколи позначають **два** звуки, а інколи — **один**.
- 
-В українській мові розрізняють тверді приголосні звуки \(22\) й м'які приголосні \(10\), голосні звуки \(6\).
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
 
-### Основні випадки чергування у–в, і–й, з–із–зі. Правила милозвучності
-> **Source:** МійКлас — [Основні випадки чергування у–в, і–й, з–із–зі. Правила милозвучності](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612)
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
 
-### Теорія:
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
 
-*www.ua.pistacja.tv*  
-Правила милозвучності української мови
-Українську мову недарма називають солов'їною й співучою.  Звуки в ній  завжди  поєднуються
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
 
-... (truncated for context window)
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -564,7 +574,6 @@ Write these sections as H2 headings, in this exact order:
 - `## У чи В? (У or В?)` (~300 words)
 - `## І чи Й? З, із, чи зі?` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -619,7 +628,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -720,47 +729,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги — Милозвучність у дії (~400 words total)
+- P1 (~80 words): [Intro: The concept of "Милозвучність" (euphony). Explain that Ukrainian isn't just a language of rules, but a language of music. The core goal is avoiding "clashes" of sounds (consonants or vowels) to keep the air flowing smoothly.]
+- P2 (~100 words): [Dialogue 1: Setting — Proofreading a text about a garden (город). Студент: "Я працюю в городі." Друг: "Краще сказати 'у городі', бо 'в г-' важко вимовити." Examples: у городі, в офісі, у Львові, в Києві.]
+- P3 (~60 words): [Analysis 1: Break down the prepositional choice from Dialogue 1. Why `в Києві` (vowel ends 'и', starts 'К') sounds better than `у Києві` (vowel ends 'и', starts vowel 'у'), and why `у Львові` avoids the triple consonant cluster `в-л-ь-в`.]
+- P4 (~100 words): [Dialogue 2: Planning an evening. Студент: "Ти і Олена йдете?" Друг: "Ти й Олена. Так швидше." Speakers discuss going to the theater (у театр) or park (в парк). Examples: ти й Олена, я і Максим, Олена й Тарас.]
+- P5 (~60 words): [Analysis 2: Break down the conjunction choice from Dialogue 2. Explain that `й` is a glide between vowels (`и-й-о`), while `і` provides a necessary break between heavy consonants (`я-і-м`).]
 
-- P1 (~40 words): Scene-setting intro — two friends, Дарина and Олексій, are proofreading Олексій's Ukrainian essay about his город (garden). Establish that Дарина is pointing out euphony errors as they read sentences aloud together.
-- Dialogue 1 (~110 words): 6-turn exchange — Олексій reads aloud "Я живу в Льові" and "Тарас живе у Києві." Дарина catches the first (should be у Львові — consonant before Л+В cluster), confirms the second is correct. They swap roles: Дарина reads "Вона працює у офісі" (wrong — vowel environment → в офісі). Олексій corrects. Close with: "Слухай, коли вимовляєш — відчуваєш різницю!" Speakers: Олексій / Дарина.
-- Dialogue 2 (~110 words): 6-turn exchange — continuing the essay, Дарина finds "Ти й Олена будете в саду" (correct) and "мама й тато" (correct), then Олексій wrote "вона й він йдуть у парк" — Дарина confirms. Then finds error: "Максим й Семен" (wrong after consonant М → "Максим і Семен"). Final line: "Тепер твій есей звучить по-справжньому гарно!" Speakers: Дарина / Олексій.
-- P2 (~70 words): Brief meta-commentary paragraph — explain that both dialogues show the same logic: Ukrainian chooses between sound variants to avoid awkward consonant or vowel clusters. Name the three pairs introduced: у/в, і/й, з/із/зі. Tell learners: "In the next sections you'll see exactly when each form is used."
+## У чи В? Майстерність чергування (~350 words total)
+- P1 (~90 words): [The Core Rule: Vowel vs. Consonant environment. Explain the "V-C-V" (vowel-consonant-vowel) sandwich. Use `в` when the preceding word ends in a vowel and the next starts with a consonant (`живу в Україні`). Use `у` between consonants (`Максим у банку`).]
+- P2 (~80 words): [The "Difficult Neighbors" Exception: Explain that even if a word ends in a vowel, we use `у` if the next word starts with `в`, `ф`, `св`, or `льв`. Examples: `була у Франції` (not `в Франції`), `працюю у Львові`, `граю у футбол`.]
+- P3 (~90 words): [Sentence Position and Pauses: Explain that `У` is the absolute king at the start of a sentence or after a comma/pause. It provides a strong, clear start. Examples: `У мене є...`, `Так, у нас є...`, `У понеділок...`. Contrast this with the weaker `в` sound.]
+- P4 (~90 words): [Beyond Prepositions: Initial У/В on words. Introduce the idea that the same rules apply to words like `учитель/вчитель`, `уже/вже`, `увечері/ввечері`. Example: `мій учитель` (ends in consonant) vs. `моя вчителька` (ends in vowel).]
+- <!-- INJECT_ACTIVITY: quiz-u-v-choice --> [Quiz: Choose the correct preposition (У or В) based on the surrounding sentence context. 10 items.]
+- <!-- INJECT_ACTIVITY: quiz-naturalness-comparison --> [Quiz: Comparison of two sentences. Identify which one sounds "more Ukrainian" (euphonic) and which sounds "choppy" (clusters). 6 items.]
 
----
+## І чи Й? З, із, чи зі? (~300 words total)
+- P1 (~80 words): [The І/Й Rule: Explain that `Й` is a semivowel that glides between two vowels, whereas `І` is a full vowel used to separate consonants. Examples: `мама й тато` (glide), `брат і сестра` (break), `вона й він`.]
+- P2 (~60 words): [Initial `І`: Similar to `У`, at the start of a sentence or after a pause, we always use `І`. Example: `І він прийшов.` Explain that `Й` can never start a sentence as a conjunction.]
+- P3 (~70 words): [The `З` Preposition: Introduce `з` (with/from) as the default. Explain that it is highly "sticky" and usually merges with the next word. Examples: `з Одеси`, `з другом`, `з братом`.]
+- P4 (~90 words): [The `Із` and `Зі` variants: Explain that `із` is used between consonants, especially before `ш` or `щ` (`із шафи`). `Зі` is the special variant for difficult clusters like `св`, `ст`, or `льв`, and the fixed phrase `зі мною`. Examples: `зі святом`, `зі школи`, `зі мною`.]
+- <!-- INJECT_ACTIVITY: quiz-i-y-choice --> [Quiz: Choose the correct conjunction (І or Й) to connect nouns. 8 items.]
+- <!-- INJECT_ACTIVITY: fill-in-z-iz-zi --> [Fill-in-the-blank: Choose the correct form of the preposition 'with/from' (з, із, or зі). 6 items.]
 
-## У чи В? (У or В?) (~330 words total)
-
-- P1 (~80 words): Introduce the core principle — у/в alternation exists to avoid hard-to-pronounce consonant clusters. State the two main rules with named examples: (1) Use **в** after a vowel before a consonant → "живу **в** Києві", "вона **в** парку"; (2) Use **у** after a consonant before a consonant → "Тарас **у** Львові", "Максим **у** банку". Present as a simple listen-and-feel test, not a memorization table.
-- P2 (~80 words): Sentence-start and post-pause rule — at the beginning of a sentence always use **У**: "**У** мене є квітка." "**У** саду тихо." Same after a comma or pause: "Знаю, **у** чому секрет." Give counterexample for starting before a vowel: "**В** Одесі тепло." Explain: before a vowel, **в** wins regardless of sentence position (В Одесі, в Ірпені). Two concrete mini-pairs for each sub-rule.
-- P3 (~70 words): Special cluster list — before в, ф, кв, тв, льв, хв and similar double-consonant openings, always use **у**: "**у** Львові" (not в Львові — triple consonant л+в+в is brutal), "**у** фоє", "**у** вагоні". Explain in one sentence why: the two в-sounds would crash together. Give learners a shorthand: "If the next word already starts with в or ф — use у."
-- Exercise: **quiz** — "У or В? Choose the correct form." 10 sentence items drawn from the dialogues and plan vocabulary: ___ Києві, живу ___ Одесі, Тарас ___ Львові, вона ___ вагоні, ___ мене є..., знаю ___ чому, ___ Харкові, він ___ фоє, ми ___ банку, ___ парку тихо. (~70 words framing + answer rationale lines)
-
----
-
-## І чи Й? З, із, чи зі? (~330 words total)
-
-- P1 (~80 words): Introduce і/й rule — two forms of the conjunction "and." Rule: use **й** between vowels (avoids a vowel+vowel hiatus): "мама **й** тато", "вона **й** він", "ти **й** Олена." Use **і** between consonants: "брат **і** сестра", "Тарас **і** Максим", "Максим **і** Семен." At the start of a sentence always **і**: "**І** він прийшов." Give three minimal pairs side by side so learners can hear the contrast.
-- P2 (~80 words): Introduce з/із/зі — three forms of the preposition "with / from." State the three contexts with named examples: **з** before most words (vowels or easy consonants) → "**з** Одеси", "**з** другом", "**з** парку"; **із** between two consonant sounds to break the cluster → "Максим **із** Семеном", "повернувся **із** Львова"; **зі** before з, с, ш, щ or especially heavy clusters → "**зі** мною", "**зі** святом", "**зі** школи", "**зі** Стефанією." Mnemonic: зі sounds like a cushion — softens the hardest clusters.
-- P3 (~50 words): Brief note on scope — з/із/зі is a smaller rule than у/в in everyday speech, but comes up constantly in greetings ("зі святом!"), introductions ("я з Одеси"), and conversation about people ("вона з братом"). Reassure learner: з is the default; you only shift to із or зі when you feel the consonant crash.
-- Exercise A: **quiz** — "І or Й? Choose the correct conjunction." 8 items: мама ___ тато, брат ___ сестра, ти ___ Олена, Максим ___ Семен, вона ___ він, Тарас ___ Марія, і ___ він прийшов (sentence start), Київ ___ Одеса. (~50 words framing)
-- Exercise B: **fill-in** — "___, із, or зі? Complete the sentence." 6 items: ___ другом, ___ святом, ___ Одеси, Максим ___ Семеном, ___ школи, ___ мною. (~40 words framing)
-
----
-
-## Підсумок — Summary (~330 words total)
-
-- P1 (~80 words): Recap paragraph — Ukrainian euphony is not an arbitrary rule but a feature of the language's beauty: avoid consonant pileups, avoid vowel hiccups, let speech flow. Name all three pairs again with their core trigger: **у/в** → look at surrounding sounds (consonant vs. vowel); **і/й** → look at sounds before and after the conjunction; **з/із/зі** → look at what follows (vowel, consonant, heavy cluster).
-- Self-check block (~120 words): Bulleted Q&A pairs as specified in the plan:
-  - Я живу (в / у) Києві. → **в** Києві (after vowel у, before consonant К)
-  - Я живу (в / у) Львові. → **у** Львові (before Л+В cluster)
-  - (В / У) мене є квіти. → **У** мене (sentence start before consonant М)
-  - Мама (і / й) тато. → мама **й** тато (between vowels А...А)
-  - Брат (і / й) сестра. → брат **і** сестра (after consonant Т before С)
-  - Повернувся (з / із) Семеном. → **із** Семеном (consonant Н before С)
-  - (Зі / З) святом! → **Зі** святом (before сш-cluster)
-- P2 (~80 words): Practice tip — read your Ukrainian sentences aloud. Native speakers use euphony instinctively, not by consulting tables. The goal is smooth, flowing Ukrainian, not rigid rule application. If a sentence feels like a tongue-twister, swap the variant. Close with encouragement: these alternations are one of the things that make Ukrainian sound like what it is — the солов'їна мова, the nightingale language. Next module: У чому? Де? (Where Is It?) applies these same prepositions in locative context.
-- Exercise: **quiz** — "Which sentence sounds more natural?" 6 minimal pairs where one form is euphonically wrong: (1) "Тарас в Львові" vs "Тарас у Львові"; (2) "мама й тато" vs "мама і тато"; (3) "з мною" vs "зі мною"; (4) "В Одесі тепло" vs "У Одесі тепло"; (5) "брат й сестра" vs "брат і сестра"; (6) "із другом" vs "зі другом." (~50 words framing + answer rationale)
+## Підсумок — Резюме (~270 words total)
+- P1 (~120 words): [Recap of the three euphonic "gears". 1) У/В helps avoid consonant clusters or vowel clashes in locations. 2) І/Й keeps connections between words musical. 3) З/Із/Зі handles the most difficult "sticky" clusters. Remind the student that these rules are about making speech easier for the SPEAKER, not just the listener.]
+- P2 (~150 words): [Self-check Q&A list:
+  * Q: What is the main goal of euphony? A: To avoid clusters of consonants or clashing vowels (милозвучність).
+  * Q: Which form do I use at the start of a sentence? A: Always the full vowels (У, І).
+  * Q: How do I say "I live in Lviv"? A: "Я живу у Львові" (to avoid the в-льв cluster).
+  * Q: "Mama and Tato" — І or Й? A: "Мама й тато" (the й glides between the vowels 'а' and 'т').]
 
 Grand total: ~1320 words
 </skeleton>

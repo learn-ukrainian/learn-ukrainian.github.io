@@ -1,0 +1,93 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 plan sections present in correct order (Dialogues, Майбутній час,
+    Практика, Summary). Fortune teller dialogue present. Dialogue 2 (plans for tomorrow)
+    covers the plan's script almost verbatim. D
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All 80 VESUM-verified words confirmed. Conjugation table correct (verified
+    against `verify_lemma` for бути: буду/будеш/буде/будемо/будете/будуть all confirmed
+    as `verb:imperf:futr`). No Russianisms, s'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Excellent PPP flow: situation (fortune teller + dialogues) → pattern
+    (conjugation table + tense comparison) → practice (conjugation drills + sentence
+    building). Multiple examples per grammar point. Cl'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 8 required vocab items present naturally in prose: завтра ✓, буду/будеш/буде/будемо/будете/будуть
+    ✓, робити ✓. Recommended: відпочивати ✓ (dialogue 3 + practice), наступний ✓ ("наступного
+    тижня"),'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 3 markers match 3 plan hints exactly (matching, fill-in analytic, fill-in
+    tense distinction). Good placement after relevant teaching. Cannot verify exercise
+    YAML content (generated separately). No iss
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Fortune teller opening is creative and immediately demonstrates the pattern.
+    No LLM filler ("Numbers unlock the real Ukraine!"), no meta-commentary ("Let us
+    now explore..."). Natural dialogues with di
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 headings match plan sections. Clean markdown with proper dialogue
+    div formatting. Word count 1221 ≥ 1200 target ✓. No duplicate summaries, no stray
+    tags, no meta-commentary sections. :::note '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." framing.
+    Synthetic future introduced with Ukrainian terminology (складений майбутній).
+    Ukrainian cultural context (гуляти в парку, готува
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Three distinct dialogues with named speakers (Ворожка/Клієнт, Андрій/Марина,
+    Оксана/Тарас). Natural situations: fortune telling, planning tomorrow, weekend
+    plans between colleagues. Multi-turn with te'
+findings:
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: Fortune teller dialogue — "Будеш щаслива! *(You will be happy!)*"
+  issue: Gender agreement mismatch. The speaker label is "Клієнт" (masculine noun),
+    but the predicate adjective is "щаслива" (feminine). Either the label or the adjective
+    must change. The plan specifies "Будеш щасливий/щаслива!" showing both forms.
+  fix: Change to "щасливий" to match "Клієнт" (m), and add a parenthetical note showing
+    the feminine alternative, matching the plan's intent to demonstrate gender agreement
+    with буду + adjective.
+- dimension: PEDAGOGICAL QUALITY
+  severity: CRITICAL
+  location: After dialogue 2 — "*Every person of **буду** appears in this dialogue
+    — **буду**, **будеш**, **буде**, **будемо**, **будете**. Did you catch them all?*"
+  issue: Claims "every person" but lists only 5 of 6 forms. The 3rd person plural
+    "будуть" is missing from the dialogue and from the list. An A1 learner trusting
+    this statement will believe there are only 5 future forms of бути. This directly
+    contradicts the conjugation table presented later, which correctly shows 6 forms.
+  fix: Add a dialogue exchange using "будуть" to dialogue 2 and include it in the
+    list.
+- dimension: PEDAGOGICAL QUALITY
+  severity: MINOR
+  location: :::note block — "The Litvinova Grade 7 textbook confirms both forms are
+    equivalent."
+  issue: RAG search of Litvinova Grade 7 (chunk 7-klas-ukrmova-litvinova-2024_s0054/s0055)
+    shows the textbook presents both future forms but does not use the word "equivalent."
+    The attribution is an extrapolation. This reference is also not listed in the
+    plan's references.
+  fix: Replace with a general attribution to Ukrainian textbooks.
+- dimension: VOCABULARY COVERAGE
+  severity: MINOR
+  location: Dialogue 3 (Оксана/Тарас)
+  issue: Plan's dialogue 2 script included "Звучить добре!" which would introduce
+    the recommended vocab word "звучати." The module replaced this with "Чудово!"
+    — a fine word but misses the vocab opportunity.
+  fix: Not fixing — "Чудово!" is natural and "звучати" is only recommended, not required.
+    Informational only.

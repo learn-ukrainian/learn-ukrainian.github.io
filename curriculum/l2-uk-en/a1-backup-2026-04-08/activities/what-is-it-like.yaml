@@ -1,0 +1,351 @@
+version: '1.0'
+module: what-is-it-like
+level: a1
+inline:
+- id: quiz-yakyi-yaka-yake
+  type: quiz
+  instruction: 'Choose the correct question word for each noun: **Який?** (m), **Яка?**
+    (f), **Яке?** (n)'
+  items:
+  - question: _____ твоя кімната?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 1
+  - question: _____ твій стіл?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 0
+  - question: _____ твоє вікно?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 2
+  - question: _____ цей атлас?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 0
+  - question: _____ це фото?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 2
+  - question: _____ ця книга?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 1
+  - question: _____ цей плакат?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 0
+  - question: _____ ця листівка?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 1
+- id: fill-in-adjective-endings
+  type: fill-in
+  instruction: Choose the correct adjective form to match the noun's gender (-ий for
+    m, -а for f, -е for n)
+  items:
+  - sentence: Це _____ книга.
+    answer: нова
+    options:
+    - новий
+    - нова
+    - нове
+  - sentence: Це _____ стіл.
+    answer: великий
+    options:
+    - великий
+    - велика
+    - велике
+  - sentence: Це _____ вікно.
+    answer: чисте
+    options:
+    - чистий
+    - чиста
+    - чисте
+  - sentence: Це _____ атлас.
+    answer: старий
+    options:
+    - старий
+    - стара
+    - старе
+  - sentence: Це _____ листівка.
+    answer: гарна
+    options:
+    - гарний
+    - гарна
+    - гарне
+  - sentence: Це _____ ліжко.
+    answer: маленьке
+    options:
+    - маленький
+    - маленька
+    - маленьке
+  - sentence: Це _____ плакат.
+    answer: дорогий
+    options:
+    - дорогий
+    - дорога
+    - дороге
+  - sentence: Це _____ підлога.
+    answer: брудна
+    options:
+    - брудний
+    - брудна
+    - брудне
+  - sentence: Це _____ кімната.
+    answer: темна
+    options:
+    - темний
+    - темна
+    - темне
+  - sentence: Це _____ стілець.
+    answer: зручний
+    options:
+    - зручний
+    - зручна
+    - зручне
+- id: match-adjective-opposites
+  type: match-up
+  instruction: Match each adjective to its opposite
+  pairs:
+  - left: великий
+    right: маленький
+  - left: новий
+    right: старий
+  - left: гарний
+    right: поганий
+  - left: чистий
+    right: брудний
+  - left: дорогий
+    right: дешевий
+  - left: світлий
+    right: темний
+- id: fill-in-describe-room
+  type: fill-in
+  instruction: 'Choose the correct adjective form to describe the room. Remember:
+    the ending must match the noun''s gender.'
+  items:
+  - sentence: Моя кімната _____.
+    answer: велика
+    options:
+    - великий
+    - велика
+    - велике
+  - sentence: Стіл _____.
+    answer: новий
+    options:
+    - новий
+    - нова
+    - нове
+  - sentence: Ліжко _____.
+    answer: старе
+    options:
+    - старий
+    - стара
+    - старе
+  - sentence: Вікно _____.
+    answer: чисте
+    options:
+    - чистий
+    - чиста
+    - чисте
+  - sentence: Стілець _____.
+    answer: маленький
+    options:
+    - маленький
+    - маленька
+    - маленьке
+  - sentence: Підлога _____.
+    answer: брудна
+    options:
+    - брудний
+    - брудна
+    - брудне
+workbook:
+- type: group-sort
+  instruction: 'Sort these nouns into three groups by gender. Hint: masculine = він,
+    feminine = вона, neuter = воно.'
+  groups:
+  - label: Masculine (він)
+    items:
+    - стіл
+    - атлас
+    - плакат
+    - стілець
+  - label: Feminine (вона)
+    items:
+    - кімната
+    - книга
+    - листівка
+    - підлога
+  - label: Neuter (воно)
+    items:
+    - вікно
+    - ліжко
+    - фото
+- type: true-false
+  instruction: Read the dialogues again. Are these statements true or false?
+  items:
+  - statement: Кімната Олі велика і світла.
+    correct: true
+    explanation: 'Оля каже: ''Моя кімната велика і світла.'''
+  - statement: Стіл у Олі старий.
+    correct: false
+    explanation: 'Оля каже: ''Стіл новий.'' — The table is new, not old.'
+  - statement: Ліжко у Олі нове.
+    correct: false
+    explanation: 'Оля каже: ''Воно старе.'' — The bed is old.'
+  - statement: Вікно у Олі чисте і велике.
+    correct: true
+    explanation: 'Оля каже: ''Вікно чисте і велике.'''
+  - statement: Атлас на ярмарку дешевий.
+    correct: false
+    explanation: 'Софія каже: ''він дорогий.'' — The atlas is expensive.'
+  - statement: Книга на ярмарку нова і дешева.
+    correct: true
+    explanation: 'Софія каже: ''Нова і дешева.'''
+  - statement: Листівка стара, але гарна.
+    correct: true
+    explanation: 'Софія каже: ''Стара, але гарна.'''
+  - statement: Плакат маленький.
+    correct: false
+    explanation: 'Тарас каже: ''Великий і яскравий.'' — The poster is big.'
+- type: error-correction
+  instruction: Each sentence has a gender agreement error. Find the wrong adjective
+    form and choose the correct one.
+  items:
+  - sentence: Книга новий.
+    error: новий
+    correction: нова
+    error_type: word
+    options:
+    - новий
+    - нова
+    - нове
+    explanation: 'книга is feminine — the adjective needs the feminine ending -а:
+      нова'
+  - sentence: Вікно великий.
+    error: великий
+    correction: велике
+    error_type: word
+    options:
+    - великий
+    - велика
+    - велике
+    explanation: 'вікно is neuter — the adjective needs the neuter ending -е: велике'
+  - sentence: Стіл нова.
+    error: нова
+    correction: новий
+    error_type: word
+    options:
+    - новий
+    - нова
+    - нове
+    explanation: 'стіл is masculine — the adjective needs the masculine ending -ий:
+      новий'
+  - sentence: Кімната великий.
+    error: великий
+    correction: велика
+    error_type: word
+    options:
+    - великий
+    - велика
+    - велике
+    explanation: 'кімната is feminine — the adjective needs the feminine ending -а:
+      велика'
+  - sentence: Ліжко старий.
+    error: старий
+    correction: старе
+    error_type: word
+    options:
+    - старий
+    - стара
+    - старе
+    explanation: 'ліжко is neuter — the adjective needs the neuter ending -е: старе'
+  - sentence: Атлас дорога.
+    error: дорога
+    correction: дорогий
+    error_type: word
+    options:
+    - дорогий
+    - дорога
+    - дороге
+    explanation: 'атлас is masculine — the adjective needs the masculine ending -ий:
+      дорогий'
+- type: observe
+  examples:
+  - Вікно велике **і** чисте. — both qualities are true (parallel)
+  - Кімната світла **і** велика. — both qualities are true (parallel)
+  - Стіл великий, **а** стілець маленький. — one is big, the other is small (contrast)
+  - Книга нова, **а** атлас старий. — one is new, the other is old (contrast)
+  - Стілець маленький, **але** зручний. — small, yet unexpectedly comfortable (concession)
+  - Атлас дорогий, **а** книга дешева. — one is expensive, the other is cheap (contrast)
+  prompt: Look at the bold connectors. When do you use **і** (and)? When do you use
+    **а** or **але** (but)? What is the difference?
+- type: translate
+  instruction: Choose the correct Ukrainian translation. Watch the adjective endings!
+  items:
+  - source: The table is new.
+    options:
+    - text: Стіл новий.
+      correct: true
+    - text: Стіл нова.
+      correct: false
+    - text: Стіл нове.
+      correct: false
+  - source: The window is clean.
+    options:
+    - text: Вікно чистий.
+      correct: false
+    - text: Вікно чиста.
+      correct: false
+    - text: Вікно чисте.
+      correct: true
+  - source: The room is big and bright.
+    options:
+    - text: Кімната велика і світла.
+      correct: true
+    - text: Кімната великий і світлий.
+      correct: false
+    - text: Кімната велике і світле.
+      correct: false
+  - source: The book is new and cheap.
+    options:
+    - text: Книга новий і дешевий.
+      correct: false
+    - text: Книга нова і дешева.
+      correct: true
+    - text: Книга нове і дешеве.
+      correct: false
+  - source: The atlas is expensive.
+    options:
+    - text: Атлас дорогий.
+      correct: true
+    - text: Атлас дорога.
+      correct: false
+    - text: Атлас дороге.
+      correct: false
+  - source: The chair is small but comfortable.
+    options:
+    - text: Стілець маленька, але зручна.
+      correct: false
+    - text: Стілець маленьке, але зручне.
+      correct: false
+    - text: Стілець маленький, але зручний.
+      correct: true

@@ -1,0 +1,493 @@
+{
+  "total_items": 201,
+  "grounded_items": 122,
+  "ungrounded": [
+    {
+      "word": "аналітичний",
+      "exercise_type": "group-sort",
+      "context": "Майбутній час (аналітичний)",
+      "role": "context"
+    },
+    {
+      "word": "синтетичний",
+      "exercise_type": "group-sort",
+      "context": "Майбутній час (синтетичний)",
+      "role": "context"
+    },
+    {
+      "word": "гарантую",
+      "exercise_type": "fill-in",
+      "context": "Я гарантую, що ____ цю роботу до вечора.",
+      "role": "context"
+    },
+    {
+      "word": "заходить",
+      "exercise_type": "match-up",
+      "context": "Вона заходить",
+      "role": "answer"
+    },
+    {
+      "word": "їдуть",
+      "exercise_type": "match-up",
+      "context": "Вони їдуть",
+      "role": "answer"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть форму для 'Ти' (читати цей текст):",
+      "role": "context"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "quiz",
+      "context": "Оберіть форму для 'Ти' (читати цей текст):",
+      "role": "context"
+    },
+    {
+      "word": "ти'",
+      "exercise_type": "quiz",
+      "context": "Оберіть форму для 'Ти' (читати цей текст):",
+      "role": "context"
+    },
+    {
+      "word": "ви'",
+      "exercise_type": "quiz",
+      "context": "Оберіть форму для 'Ви' (писати):",
+      "role": "context"
+    },
+    {
+      "word": "ми'",
+      "exercise_type": "quiz",
+      "context": "Оберіть форму для 'Ми' (Let's do it):",
+      "role": "context"
+    },
+    {
+      "word": "він'",
+      "exercise_type": "quiz",
+      "context": "Оберіть форму для 'Він' (Let him read):",
+      "role": "context"
+    },
+    {
+      "word": "правильне",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильне побажання (Maria, be happy!):",
+      "role": "context"
+    },
+    {
+      "word": "побажання",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильне побажання (Maria, be happy!):",
+      "role": "context"
+    },
+    {
+      "word": "виправте",
+      "exercise_type": "quiz",
+      "context": "Виправте помилку: 'Я іду на роботу на автобусі.'",
+      "role": "context"
+    },
+    {
+      "word": "помилку",
+      "exercise_type": "unjumble",
+      "context": "помилку.",
+      "role": "answer"
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "quiz",
+      "context": "Виправте помилку: 'Давай підемо в кіно!'",
+      "role": "context"
+    },
+    {
+      "word": "машині",
+      "exercise_type": "quiz",
+      "context": "Виправте помилку: 'Він ішов у магазин на машині.'",
+      "role": "context"
+    },
+    {
+      "word": "готовий",
+      "exercise_type": "quiz",
+      "context": "Виправте помилку: 'Друзі, будьте готовий!'",
+      "role": "context"
+    },
+    {
+      "word": "попрацювати",
+      "exercise_type": "error-correction",
+      "context": "Завтра о п'ятій я буду попрацювати.",
+      "role": "context"
+    },
+    {
+      "word": "зробимо",
+      "exercise_type": "error-correction",
+      "context": "Давай зробимо це завдання разом!",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "error-correction",
+      "context": "Давай зробимо це завдання разом!",
+      "role": "context"
+    },
+    {
+      "word": "пішки",
+      "exercise_type": "error-correction",
+      "context": "Він їде до школи пішки.",
+      "role": "context"
+    },
+    {
+      "word": "зробив",
+      "exercise_type": "error-correction",
+      "context": "зробив",
+      "role": "answer"
+    },
+    {
+      "word": "улітку",
+      "exercise_type": "fill-in",
+      "context": "Улітку мій друг ____ до Києва.",
+      "role": "context"
+    },
+    {
+      "word": "день'",
+      "exercise_type": "fill-in",
+      "context": "Він сказав: 'Завтра я ____ місто цілий день'.",
+      "role": "context"
+    },
+    {
+      "word": "місця'",
+      "exercise_type": "fill-in",
+      "context": "Я відповів: 'Звичайно, я ____ тобі найкращі місця'.",
+      "role": "context"
+    },
+    {
+      "word": "нашої",
+      "exercise_type": "fill-in",
+      "context": "Друзі, ____ готові до нашої подорожі!",
+      "role": "context"
+    },
+    {
+      "word": "подорожі",
+      "exercise_type": "fill-in",
+      "context": "Друзі, ____ готові до нашої подорожі!",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "match-up",
+      "context": "робити",
+      "role": "answer"
+    },
+    {
+      "word": "приготувати",
+      "exercise_type": "match-up",
+      "context": "приготувати",
+      "role": "context"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "match-up",
+      "context": "купувати",
+      "role": "answer"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "match-up",
+      "context": "купити",
+      "role": "context"
+    },
+    {
+      "word": "брати",
+      "exercise_type": "match-up",
+      "context": "брати",
+      "role": "answer"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "працюватиму'",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "утворюється",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "тільки",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "дієслів",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "недоконаного",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "виду",
+      "exercise_type": "true-false",
+      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "role": "context"
+    },
+    {
+      "word": "конструкція",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "підемо'",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "правильним",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "українським",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "варіантом",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "наказового",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "способу",
+      "exercise_type": "true-false",
+      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
+      "role": "context"
+    },
+    {
+      "word": "складається",
+      "exercise_type": "true-false",
+      "context": "Аналітичний майбутній час складається з дієслова 'бути' та і",
+      "role": "context"
+    },
+    {
+      "word": "бути'",
+      "exercise_type": "true-false",
+      "context": "Аналітичний майбутній час складається з дієслова 'бути' та і",
+      "role": "context"
+    },
+    {
+      "word": "інфінітива",
+      "exercise_type": "true-false",
+      "context": "Аналітичний майбутній час складається з дієслова 'бути' та і",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "ходити'",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "описує",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "рух",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "одному",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "напрямку",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "конкретний",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "момент",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "role": "context"
+    },
+    {
+      "word": "щоб",
+      "exercise_type": "true-false",
+      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "role": "context"
+    },
+    {
+      "word": "показати",
+      "exercise_type": "true-false",
+      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "role": "context"
+    },
+    {
+      "word": "завершений",
+      "exercise_type": "true-false",
+      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "role": "context"
+    },
+    {
+      "word": "результат",
+      "exercise_type": "true-false",
+      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "role": "context"
+    },
+    {
+      "word": "майбутньому",
+      "exercise_type": "true-false",
+      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "прийменником",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "до'",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "іменник",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "стоїть",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "знахідному",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "role": "context"
+    },
+    {
+      "word": "допомагає",
+      "exercise_type": "unjumble",
+      "context": "допомагає",
+      "role": "answer"
+    },
+    {
+      "word": "знайти",
+      "exercise_type": "unjumble",
+      "context": "знайти",
+      "role": "answer"
+    },
+    {
+      "word": "ця",
+      "exercise_type": "unjumble",
+      "context": "Ця",
+      "role": "answer"
+    },
+    {
+      "word": "кожну",
+      "exercise_type": "unjumble",
+      "context": "кожну",
+      "role": "answer"
+    },
+    {
+      "word": "утворюю",
+      "exercise_type": "unjumble",
+      "context": "утворюю",
+      "role": "answer"
+    },
+    {
+      "word": "тепер",
+      "exercise_type": "unjumble",
+      "context": "Тепер",
+      "role": "answer"
+    },
+    {
+      "word": "кінця",
+      "exercise_type": "unjumble",
+      "context": "кінця.",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "виправити",
+      "контрольна",
+      "обрати",
+      "перевірка",
+      "помилка",
+      "точка"
+    ]
+  },
+  "all_grounded": false
+}

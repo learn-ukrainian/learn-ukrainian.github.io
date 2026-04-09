@@ -2,49 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All outline points (Dialogues, Days, Months, Summary) are covered. Both
-    dialogues (Planning, Birthday) are present. Word count is healthy.
+  score: 9
+  evidence: 'Covered almost all points, including specific textbook references and
+    vocabulary. However, it missed the explicit instruction from the plan to state
+    that "All months are masculine" (`12 months... All '
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: Excellent. Etymologies (четвер/четвертий, березень/береза) are factually
-    correct. Cases in time chunks (у понеділок, в серпні) are correctly formed.
+  evidence: Excellent. Correct grammatical explanations for fleeting vowels (`-е-`
+    dropping out) and case endings for days (`субота → в суботу`, `січень → у січні`).
+    No Russianisms or Surzhyk.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: Introduces temporal prepositions as chunks ("у/в + day combination as
-    a fixed phrase") as instructed by the plan, avoiding overwhelming A1 learners
-    with locative/accusative grammar rules.
+  evidence: Clear PPP structure. The rules are taught not as abstract grammatical
+    tables, but as actionable vocabulary chunks (e.g., simplifying the accusative
+    shift to "final vowel shifts to an -у or -ю sound" f
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items (days, months, seasons,
-    week, birthday) are smoothly integrated into prose and examples.
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally within the text.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Appropriate marker distribution targeting exactly what was just taught
-    in the preceding section.
+  evidence: Markers are placed optimally immediately after their respective instructional
+    sections.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Generally warm and engaging with great cultural notes ("nature calendar"),
-    but the summary opens with slightly cliché meta-commentary ("You now have the
-    full Ukrainian calendar at your fingertips.").
+  score: 10
+  evidence: The tone is encouraging and informative without being overly conversational.
+    Phrases like "Let us focus specifically on the word..." establish a great teacher
+    persona.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, precise adherence to the plan's H2 structure, no stray
-    artifacts.
+  evidence: All sections from the outline are present with exact H2 headings. The
+    word count is 1286, successfully exceeding the 1200-word target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Effectively emphasizes the decolonized/authentic aspect of Ukrainian months
-    originating from nature rather than Roman gods.
+  evidence: Highlights the Slavic etymology of the months (`березень ← birch`, `листопад
+    ← leaf fall`) and correctly points out that the Ukrainian calendar strict starts
+    on Monday.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogues are practical, natural, and accurately model everyday contexts
-    for time (scheduling and birthdays).
+  evidence: Dialogues are practical, contextualized, and feature natural multi-turn
+    exchanges with appropriately named speakers (Олена, Марко, Андрій, Софія).
 findings: []

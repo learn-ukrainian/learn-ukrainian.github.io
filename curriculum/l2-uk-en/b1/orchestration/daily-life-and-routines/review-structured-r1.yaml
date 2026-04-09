@@ -1,0 +1,94 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missing required/recommended vocabulary from the plan: "вирощувати квіти",
+    "грати на гітарі", and "розпорядок дня" (only used in H2), "обов''язки" (used
+    without translation).'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The preposition "о" is incorrectly used with "чверть на восьму". "За чверть
+    до дев'ятої" is a mixed/calqued construction. All other vocabulary and grammar
+    are flawless.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of reflexive verbs, aspectual contrast, and prefixes.
+    Great examples and PPP flow.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required/recommended words "вирощувати квіти", "грати на гітарі", "розпорядок
+    дня" missing or not taught.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 5 markers are correctly placed, accurately testing the taught grammar
+    points.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, engaging, appropriately encouraging tone. No corporate/gamified
+    language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 4686 words, H2 headings match, cleanly structured.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonization point about прати/стирати and пилосос/пилесос is excellent.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural, multi-turn dialogues with named speakers, integrating the target
+    grammar perfectly.
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missing required/recommended vocabulary from the plan: "вирощувати квіти"
+    and "грати на гітарі" are missing from the hobby list in Section 4. "розпорядок
+    дня" only appears in an H2 heading and is not '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The preposition "о" is incorrectly used with "чверть на восьму". "За чверть
+    до дев'ятої" is a mixed/calqued construction. All other vocabulary and grammar
+    are flawless.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of reflexive verbs, aspectual contrast, and prefixes.
+    Great examples and PPP flow.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required/recommended words "вирощувати квіти", "грати на гітарі", "розпорядок
+    дня", and "обов'язки" are missing or not explicitly taught as intended.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 5 markers are correctly placed, accurately testing the taught grammar
+    points and vocabulary.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, engaging, appropriately encouraging tone. No corporate/gamified
+    language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 4686 words, H2 headings match perfectly, cleanly structured, no artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonization point about прати/стирати and пилосос/пилесос is excellent
+    and factually correct.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural, multi-turn dialogues with named speakers, integrating the target
+    grammar perfectly.
+findings: []

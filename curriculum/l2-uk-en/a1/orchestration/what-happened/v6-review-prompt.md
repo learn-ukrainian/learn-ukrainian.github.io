@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 48: What Happened? (A1, A1.8 [Past, Future, Graduation])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -149,176 +149,108 @@ references:
 <generated_module_content>
 ## Dialogues
 
-Monday morning. Окса́на and Дмитро́ meet by the coffee machine at work. They haven't seen each other since Friday — time to catch up on the weekend.
+Monday morning at the office is the perfect time to catch up with coworkers about their weekend activities. Listen closely to how Taras and Olena ask each other about what they did. Pay special attention to the endings of the verbs. Notice how the exact same action has a different ending depending on who performed it.
 
-> — **Оксана:** Приві́т, Дмитре! Що ти роби́в учо́ра? *(Hi, Dmytro! What did you do yesterday?)*
-> — **Дмитро:** Привіт! Я чита́в кни́жку. *(Hi! I read a book.)*
-> — **Оксана:** А яку? *(Which one?)*
-> — **Дмитро:** Детекти́в. А ти? *(A detective novel. And you?)*
-> — **Оксана:** Я готува́ла вече́рю. *(I cooked dinner.)*
-> — **Дмитро:** А що робив Тара́с? *(And what did Taras do?)*
-> — **Оксана:** Він гуля́в у парку. *(He walked in the park.)*
-> — **Дмитро:** А Оле́на? *(And Olena?)*
-> — **Оксана:** Вона́ працюва́ла весь день. *(She worked all day.)*
+> **Олена:** Привіт, Тарасе! **Що ти робив учора?** *(Hi, Taras! What did you do yesterday?)*
+> **Тарас:** Привіт! **Я читав книжку. А ти?** *(Hi! I read a book. And you?)*
+> **Олена:** **Я готувала вечерю. А що робив Іван?** *(I cooked dinner. And what did Ivan do?)*
+> **Тарас:** **Він гуляв у парку. А Марія?** *(He walked in the park. And Mariia?)*
+> **Олена:** **Вона працювала.** *(She worked.)*
 
-Notice the verb **роби́ти** (to do). Дмитро says **робив** — because he is male. Оксана would say **роби́ла** — because she is female. Same verb, different ending. This is the key to Ukrainian past tense: the ending tells you the subject's gender, not the grammatical person (1st, 2nd, 3rd).
+Look at the linguistic patterns in that conversation. The core activity remains the same, but the verb ending changes based on whether **Тарас** (Taras) or **Олена** (Olena) is speaking. When Taras talks about himself, he uses the masculine ending. When Olena talks about herself, she uses the feminine ending. In Ukrainian, the past tense must agree with the gender of the person performing the action.
 
-The next day, Богдан and Марі́я compare how they spent the full weekend. Богдан asks **«Як ти провела́ вихідні́?»** (How did you spend the weekend?) — using **провела** because he's asking a woman.
+Consider another conversation. This time, two colleagues are discussing their entire weekend. Notice what happens when they talk about doing things together as a group.
 
-> — **Богдан:** Як ти провела вихідні? *(How did you spend the weekend?)*
-> — **Марія:** Чудо́во! У субо́ту я ходи́ла в кафе́. *(Great! On Saturday I went to a café.)*
-> — **Богдан:** А в неді́лю? *(And on Sunday?)*
-> — **Марія:** У неділю я диви́лася фільм вдо́ма. А ти? *(On Sunday I watched a film at home. And you?)*
-> — **Богдан:** Я прові́в суботу вдома. Готува́в і читав. *(I spent Saturday at home. I cooked and read.)*
-> — **Марія:** А в неділю? *(And on Sunday?)*
-> — **Богдан:** У неділю ми гуля́ли в парку. *(On Sunday we walked in the park.)*
-> — **Марія:** Як приє́мно! *(How nice!)*
+> **Олена:** Привіт, Тарасе! **Як ти провів вихідні?** *(Hi, Taras! How did you spend the weekend?)*
+> **Тарас:** Добре! **У суботу я гуляв у місті.** *(Good! On Saturday I walked in the city.)*
+> **Олена:** А в неділю? *(And on Sunday?)*
+> **Тарас:** **У неділю я дивився фільм. А ти?** *(On Sunday I watched a film. And you?)*
+> **Олена:** **Я ходила в кафе з подругою.** *(I went to a cafe with a friend.)* **Ми їли торт і пили каву.** *(We ate cake and drank coffee.)*
 
-Марія uses feminine forms: **ходила**, **провела**, **дивилася**. Богдан uses masculine forms: **провів**, **готував**. When Богдан says **ми гуляли** (we walked), the ending is **-ли** — the plural form, which is the same regardless of gender.
+In natural conversation, you will frequently transition from the present to the past. Compare the present tense **я зараз працюю** (I am working right now) with the past tense **учора я працював** (yesterday I worked). The rules for building these two tenses are completely different, requiring a new approach.
 
-Notice how every verb in these dialogues changes its ending depending on who is speaking.
+## Минулий час (Past Tense)
 
-## Мину́лий час (Past Tense)
+The formal rule for forming the **минулий час** (past tense) is wonderfully simple and mechanical. First, take the infinitive form of the verb and remove the final **-ти** ending to find the core stem. Then, you simply add one of four suffixes to that stem: **-в** for masculine subjects, **-ла** for feminine subjects, **-ло** for neuter subjects, and **-ли** for plural subjects. For example, take the model verb **читати** (to read). Drop the **-ти** to get the stem **чита-**. Then add the suffix to create **читав**, **читала**, **читало**, or **читали**.
 
-Here is the core insight: Ukrainian past tense does not mark **person** — it marks **gender**. This is completely different from present tense. Compare:
+This brings us to a crucial pedagogical shift. Unlike the present tense, which changes its ending based on the grammatical person (first, second, or third person like **я читаю**, **ти читаєш**), the past tense does not care about person at all. The past tense only cares about gender. If a man is speaking, he says **я читав** (I read). If a woman is speaking, she says **я читала** (I read). Both use the pronoun **я**, but the verb ending changes to match their gender. 
 
-| | Present tense (person changes) | Past tense (gender changes) |
-|---|---|---|
-| я | чита́ю | читав (♂) / чита́ла (♀) |
-| ти | чита́єш | читав (♂) / читала (♀) |
-| він / вона | чита́є / читає | читав (♂) / читала (♀) |
+*   **Я читав цікаву книжку.** *(I read an interesting book.)* [male speaker]
+*   **Я читала цікаву книжку.** *(I read an interesting book.)* [female speaker]
+*   **Ти добре працював.** *(You worked well.)* [to a male]
+*   **Ти добре працювала.** *(You worked well.)* [to a female]
 
-In present tense, **я читаю** and **ти читаєш** have different endings — the ending shows the person. In past tense, **я читав** and **він читав** are identical — both masculine. The ending shows gender, not person.
+The most common verb you will use in the past tense is the verb **бути** (to be). It follows the exact same pattern. The paradigms are **був** (masculine), **була** (feminine), **було** (neuter), and **були** (plural). If you want to translate the English phrase "I was," a male speaker says **я був**, and a female speaker says **я була**. 
 
-### How to form the past tense
+*   **Учора він був удома.** *(Yesterday he was at home.)*
+*   **Учора вона була на роботі.** *(Yesterday she was at work.)*
+*   **У неділю ми були в кафе.** *(On Sunday we were in a cafe.)*
 
-The rule is straightforward. Take any infinitive, remove **-ти**, and add the gender ending:
+Remember that the present tense word **є** (is/are) is never used when talking about the past.
 
-- **-в** → він (masculine singular)
-- **-ла** → вона (feminine singular)
-- **-ло** → воно́ (neuter singular)
-- **-ли** → вони́ (plural, all genders)
+The neuter and plural forms are equally straightforward. You will often use the neuter pronoun **воно** (it) and the **-ло** ending for impersonal expressions about the weather or environment, such as **було тепло** (it was warm) or **було холодно** (it was cold). The plural ending **-ли** is used for groups of people. A wonderful feature of the plural past tense is that gender distinctions completely disappear. Whether you say **ми гуляли** (we walked), **ви гуляли** (you walked), or **вони гуляли** (they walked), the ending is always exactly the same.
 
-Walk through it with **чита́ти** (to read): **читати** → **чита́-** → **він читав** / **вона читала** / **воно чита́ло** / **вони чита́ли**.
+## Практика (Practice)
 
-The same pattern works for **гуля́ти** (to walk): **гуляти** → **гуля-** → **він гуляв** / **вона гуля́ла** / **воно гуля́ло** / **вони гуляли**.
+You must drill these core patterns using the verbs you already know. The transformation is consistent across almost all basic verbs. 
 
-And for **працюва́ти** (to work): **працювати** → **працюва-** → **він працюва́в** / **вона працювала** / **воно працюва́ло** / **вони працюва́ли**.
+*   **працювати** (to work) → **він працював**, **вона працювала**, **вони працювали**
+*   **гуляти** (to walk) → **він гуляв**, **вона гуляла**, **вони гуляли**
+*   **готувати** (to cook) → **він готував**, **вона готувала**, **вони готували**
+*   **читати** (to read) → **він читав**, **вона читала**, **вони читали**
+*   **говорити** (to speak) → **він говорив**, **вона говорила**, **вони говорили**
 
-:::tip
-Four endings — that's all: **-в**, **-ла**, **-ло**, **-ли**.
-:::
+For reflexive verbs like **дивитися** (to watch), the reflexive suffix **-ся** remains at the very end of the word, after the gender suffix. While the suffix changes to **-сь** in the feminine and plural forms in some dialects, you should focus on the standard forms: **він дивився**, **вона дивилася**, and **вони дивилися**.
 
-### Reflexive verbs
+To ground your sentences in the past, you need time markers. The two most essential phrases at this level are **учора** (yesterday) and **минулого тижня** (last week). Notice that the adjective **минулого** (last/past) is in the genitive case, agreeing with the masculine noun **тиждень** (week). 
 
-Reflexive verbs like **диви́тися** (to watch) keep the **-ся** particle after the gender ending: **він диви́вся** / **вона дивилася** / **воно диви́лося** / **вони диви́лися**. Two example sentences show the pattern:
+*   **Учора я працював.** *(Yesterday I worked.)*
+*   **Минулого тижня вона готувала борщ.** *(Last week she cooked borscht.)*
+*   **Учора ввечері ми дивилися фільм.** *(Yesterday evening we watched a film.)*
+*   **У неділю вранці він читав новини.** *(On Sunday morning he read the news.)*
+*   **У суботу вони гуляли разом.** *(On Saturday they walked together.)*
 
-- **Тарас дивився фільм.** — Taras watched a film.
-- **Іри́на дивилася серіа́л.** — Iryna watched a series.
+<!-- INJECT_ACTIVITY: matching-pronoun-ending -->
 
-Compare with non-reflexive **читати**: він читав / вона читала — no **-ся** at the end. With reflexive verbs, the **-ся** simply tags along after the gender suffix.
+<!-- INJECT_ACTIVITY: fill-in-past-tense-forms -->
 
-### First person reveals YOUR gender
+Question formation in the past tense is very direct. To ask someone "What did you do?", you must use the verb **робити** (to do). However, because the past tense requires gender agreement, the question itself reveals the gender of the person you are talking to. To ask a man, you say **Що ти робив?**. To ask a woman, you say **Що ти робила?**. The response pattern simply reverses this: start with **я**, add the verb with your own gender ending, and finish with the object. 
 
-When the subject is **я** (I) or **ти** (you), the past tense ending reveals the person's own gender. A male speaker says **«Я читав книжку»** (I read a book). A female speaker says **«Я читала книжку»** — same meaning, same person **я**, different ending.
+*   **Що ви робили учора?** *(What did you do yesterday?)* [plural]
+*   **Ми працювали в офісі.** *(We worked in the office.)*
+*   **Як вона провела вихідні?** *(How did she spend the weekend?)*
+*   **Вона гуляла в парку.** *(She walked in the park.)*
 
-This means the question **«Що ти робив?»** is directed at a male, while **«Що ти робила?»** is directed at a female. Both mean "What did you do?" — the ending matches the listener's gender.
+<!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement -->
 
-One more thing: **вони** (they) always takes **-ли**, regardless of whether the group is male, female, or mixed:
-
-- **Він читав.** — He read.
-- **Вона читала.** — She read.
-- **Я читав.** — I (male) read.
-- **Я читала.** — I (female) read.
-- **Вони читали.** — They read. (always **-ли**)
-
-<!-- INJECT_ACTIVITY: matching-past-tense -->
-
-## Пра́ктика (Practice)
-
-Here are the six core verbs you already know from earlier modules — now in their full past tense forms:
-
-| Infinitive | він (♂) | вона (♀) | воно (n.) | вони (pl.) |
-|---|---|---|---|---|
-| читати | читав | читала | читало | читали |
-| працювати | працював | працювала | працювало | працювали |
-| гуляти | гуляв | гуляла | гуляло | гуляли |
-| готува́ти | готував | готувала | готува́ло | готува́ли |
-| дивитися | дивився | дивилася | дивилося | дивилися |
-| говори́ти | говори́в | говори́ла | говори́ло | говори́ли |
-
-The stems are familiar from the present tense. The only new piece is the ending: **-в**, **-ла**, **-ло**, **-ли** (and **-ся** sticking to reflexive verbs).
-
-<!-- INJECT_ACTIVITY: fill-in-past-tense-core -->
-
-### Talking about the past
-
-To describe past events, place a time word at the beginning of the sentence. Two essential time expressions: **учора** (yesterday) and **мину́лого ти́жня** (last week). The time word doesn't change the verb form — it just sets the scene:
-
-- **Учора я читав ціка́ву книжку.** — Yesterday I read an interesting book.
-- **Минулого тижня вона працювала в о́фісі.** — Last week she worked in the office.
-- **У суботу ми гуляли в парку.** — On Saturday we walked in the park.
-- **У неділю вони готували вечерю ра́зом.** — On Sunday they cooked dinner together.
-
-Notice how the time word (**учора**, **у суботу**, **в неділю**) sits at the front of the sentence. This is natural Ukrainian word order — time comes first for emphasis, but the verb ending stays the same no matter where the time word is placed.
-
-<!-- INJECT_ACTIVITY: fill-in-gender-based -->
-
-### Putting it all together
-
-Now try building short exchanges using **«Що ти робив/робила учора?»** (What did you do yesterday?):
-
-> — **Оксана:** Що ти робив учора, Андрію? *(What did you do yesterday, Andrii?)*
-> — **Андрі́й:** Я читав і гуляв у парку. *(I read and walked in the park.)*
-> — **Оксана:** А вве́чері? *(And in the evening?)*
-> — **Андрій:** Ввечері я дивився фільм. *(In the evening I watched a film.)*
-
-And the female version:
-
-> — **Тарас:** Що ти робила учора, Окса́но? *(What did you do yesterday, Oksana?)*
-> — **Оксана:** Я готувала вечерю. По́тім говорила з ма́мою. *(I cooked dinner. Then I talked with mom.)*
-
-The question changes — **робив** for a male listener, **робила** for a female listener. The answers change too, matching the speaker's own gender.
+English speakers often fall into a few common pitfalls when learning this system. First, avoid the direct translation of the English "I was doing." You should never say **я є був** or combine **був** with another verb. Just use the past tense of the main verb directly. Second, because English verbs do not change based on the speaker's gender, learners sometimes accidentally use the masculine **-в** form as a default for everything. If the word **я** refers to a woman, she must actively remember to say **я працювала**, not **я працював**.
 
 ## Summary
 
-### The formation rule
+The Ukrainian past tense requires you to think differently than the present tense. Instead of matching the grammatical person, the verb ending must always agree with the gender of the subject. The mechanical transformation is highly consistent: you take the infinitive stem of the verb and add the appropriate gender suffix. 
 
-Past tense in Ukrainian follows one simple pattern: take the infinitive stem (remove **-ти**) and add the gender ending — **-в** (він), **-ла** (вона), **-ло** (воно), **-ли** (вони).
+| Займенник (Pronoun) | Закінчення (Ending) | Приклад (Example: читати) |
+| :--- | :--- | :--- |
+| **Він** (He) | **-в** | **він читав** |
+| **Вона** (She) | **-ла** | **вона читала** |
+| **Воно** (It) | **-ло** | **воно читало** |
+| **Вони** (They) | **-ли** | **вони читали** |
+
+Always remember this fundamental rule: the past tense shows gender. A male speaker and a female speaker will use different verb endings even though they both use the exact same pronoun **я**.
+
+Before moving on to the next module, test your understanding of these concepts. Ask yourself the following self-check questions to ensure you have internalized the core rules.
+
+*   **Як ми утворюємо минулий час?** *(How do we form the past tense?)* You take the infinitive stem of the verb and add the correct gender suffix.
+*   **Яке закінчення має жіночий рід?** *(What ending does the feminine gender have?)* The feminine ending is always **-ла**.
+*   **Як запитати друга про вчорашній день?** *(How to ask a male friend about yesterday?)* You would ask him: **Що ти робив учора?**
 
 :::note
-In Ukrainian, the past tense ending agrees with the **gender** of the subject — not the grammatical person. **Я читав** and **він читав** are identical because both subjects are masculine. **Я читала** and **вона читала** are identical because both are feminine.
+**Your Production Task**
+Find a language partner, or simply practice speaking aloud to yourself. Tell them three things you did yesterday, making sure to use three different verbs. For example, a male learner might say: **Учора я снідав. Потім я гуляв у парку. Увечері я читав цікаву книжку.** Pay close attention to your verb endings!
 :::
-
-English has no equivalent — "I read" and "she read" look the same regardless of gender. Ukrainian always tells you who is speaking.
-
-### All six verbs at a glance
-
-| Verb | він (♂) | вона (♀) | вони (pl.) |
-|---|---|---|---|
-| читати | читав | читала | читали |
-| працювати | працював | працювала | працювали |
-| гуляти | гуляв | гуляла | гуляли |
-| готувати | готував | готувала | готували |
-| дивитися | дивився | дивилася | дивилися |
-| говорити | говорив | говорила | говорили |
-
-The endings are consistent: **-в / -ла / -ло / -ли**. The plural **вони** always ends in **-ли** — no gender distinction in plural.
-
-### Useful phrases for talking about the past
-
-Four ready-made conversation starters you can use right away:
-
-- **Що ти робив/робила учора?** — What did you do yesterday? (use **робив** for a male, **робила** for a female)
-- **Як ти провів/провела вихідні?** — How did you spend the weekend? (same pattern — **провів** ♂ / **провела** ♀)
-- **Учора я читав/читала книжку.** — Yesterday I read a book. (match YOUR gender)
-- **Ми гуляли разом.** — We walked together. (plural = always **-ли**)
-
-Each question comes in a pair — one masculine form, one feminine form. Choose the one that matches the person you are speaking to.
-
-**Deterministic word count: 1492 words** (calculated by pipeline, do NOT estimate manually)
-
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1468 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -406,8 +338,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -494,50 +426,16 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 80 words | Not found: 39 words
+Verified: 105 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іри — NOT IN VESUM
-  ✗ Андрі — NOT IN VESUM
-  ✗ Андрій — NOT IN VESUM
-  ✗ Андрію — NOT IN VESUM
-  ✗ Богдан — NOT IN VESUM
-  ✗ Готува — NOT IN VESUM
-  ✗ Детекти — NOT IN VESUM
-  ✗ Дмитре — NOT IN VESUM
-  ✗ Дмитро — NOT IN VESUM
+  ✗ Іван — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Пра — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ вдо — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ готува — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ жку — NOT IN VESUM
-  ✗ жня — NOT IN VESUM
-  ✗ зом — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ ктика — NOT IN VESUM
-  ✗ лася — NOT IN VESUM
-  ✗ лися — NOT IN VESUM
-  ✗ мно — NOT IN VESUM
-  ✗ неді — NOT IN VESUM
-  ✗ працюва — NOT IN VESUM
-  ✗ приє — NOT IN VESUM
-  ✗ прові — NOT IN VESUM
-  ✗ серіа — NOT IN VESUM
-  ✗ субо — NOT IN VESUM
-  ✗ тися — NOT IN VESUM
-  ✗ учо — NOT IN VESUM
-  ✗ фісі — NOT IN VESUM
-  ✗ ціка — NOT IN VESUM
+  ✗ Тарасе — NOT IN VESUM
 
-All 80 other words are confirmed to exist in VESUM.
+All 105 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

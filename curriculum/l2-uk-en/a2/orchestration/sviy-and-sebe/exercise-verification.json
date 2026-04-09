@@ -1,0 +1,269 @@
+{
+  "total_items": 163,
+  "grounded_items": 121,
+  "ungrounded": [
+    {
+      "word": "щодня",
+      "exercise_type": "quiz",
+      "context": "Він щодня читає _____ нову книгу.",
+      "role": "context"
+    },
+    {
+      "word": "працюю",
+      "exercise_type": "quiz",
+      "context": "Це _____ новий кабінет. Я працюю тут.",
+      "role": "context"
+    },
+    {
+      "word": "сказала",
+      "exercise_type": "quiz",
+      "context": "Мама сказала, що Олег взяв не _____ светр, а светр брата.",
+      "role": "context"
+    },
+    {
+      "word": "взяв",
+      "exercise_type": "quiz",
+      "context": "Мама сказала, що Олег взяв не _____ светр, а светр брата.",
+      "role": "context"
+    },
+    {
+      "word": "подзвонила",
+      "exercise_type": "quiz",
+      "context": "Вона подзвонила _____ подрузі.",
+      "role": "context"
+    },
+    {
+      "word": "подрузі",
+      "exercise_type": "quiz",
+      "context": "Вона подзвонила _____ подрузі.",
+      "role": "context"
+    },
+    {
+      "word": "паркуємо",
+      "exercise_type": "quiz",
+      "context": "Ми завжди паркуємо _____ машину біля дому.",
+      "role": "context"
+    },
+    {
+      "word": "біля",
+      "exercise_type": "quiz",
+      "context": "Ми завжди паркуємо _____ машину біля дому.",
+      "role": "context"
+    },
+    {
+      "word": "дому",
+      "exercise_type": "quiz",
+      "context": "Ми завжди паркуємо _____ машину біля дому.",
+      "role": "context"
+    },
+    {
+      "word": "їхніх",
+      "exercise_type": "true-false",
+      "context": "Вони чекають їхніх гостей.",
+      "role": "context"
+    },
+    {
+      "word": "марія",
+      "exercise_type": "true-false",
+      "context": "Марія взяла свою парасольку.",
+      "role": "context"
+    },
+    {
+      "word": "забуваєш",
+      "exercise_type": "true-false",
+      "context": "Ти завжди забуваєш твій гаманець.",
+      "role": "context"
+    },
+    {
+      "word": "гаманець",
+      "exercise_type": "true-false",
+      "context": "Ти завжди забуваєш твій гаманець.",
+      "role": "context"
+    },
+    {
+      "word": "склала",
+      "exercise_type": "fill-in",
+      "context": "Вона склала іспит і задоволена _____.",
+      "role": "context"
+    },
+    {
+      "word": "задоволена",
+      "exercise_type": "fill-in",
+      "context": "Вона склала іспит і задоволена _____.",
+      "role": "context"
+    },
+    {
+      "word": "взяли",
+      "exercise_type": "fill-in",
+      "context": "Ми взяли парасольку із _____.",
+      "role": "context"
+    },
+    {
+      "word": "правильний",
+      "exercise_type": "match-up",
+      "context": "у правильний момент",
+      "role": "context"
+    },
+    {
+      "word": "момент",
+      "exercise_type": "match-up",
+      "context": "у правильний момент",
+      "role": "context"
+    },
+    {
+      "word": "думати",
+      "exercise_type": "match-up",
+      "context": "думати самостійно",
+      "role": "context"
+    },
+    {
+      "word": "занадто",
+      "exercise_type": "match-up",
+      "context": "не бути занадто гордим",
+      "role": "context"
+    },
+    {
+      "word": "гордим",
+      "exercise_type": "match-up",
+      "context": "не бути занадто гордим",
+      "role": "context"
+    },
+    {
+      "word": "близькі",
+      "exercise_type": "match-up",
+      "context": "однодумці, близькі друзі",
+      "role": "context"
+    },
+    {
+      "word": "друзі",
+      "exercise_type": "match-up",
+      "context": "однодумці, близькі друзі",
+      "role": "context"
+    },
+    {
+      "word": "фізичний",
+      "exercise_type": "match-up",
+      "context": "мати фізичний стан",
+      "role": "context"
+    },
+    {
+      "word": "стан",
+      "exercise_type": "match-up",
+      "context": "мати фізичний стан",
+      "role": "context"
+    },
+    {
+      "word": "поводитися",
+      "exercise_type": "match-up",
+      "context": "поводитися в суспільстві",
+      "role": "context"
+    },
+    {
+      "word": "суспільстві",
+      "exercise_type": "match-up",
+      "context": "поводитися в суспільстві",
+      "role": "context"
+    },
+    {
+      "word": "створити",
+      "exercise_type": "match-up",
+      "context": "створити образ у голові",
+      "role": "context"
+    },
+    {
+      "word": "образ",
+      "exercise_type": "match-up",
+      "context": "створити образ у голові",
+      "role": "context"
+    },
+    {
+      "word": "голові",
+      "exercise_type": "match-up",
+      "context": "створити образ у голові",
+      "role": "context"
+    },
+    {
+      "word": "рюкзаки",
+      "exercise_type": "error-correction",
+      "context": "Студенти взяли рюкзаки з ними.",
+      "role": "context"
+    },
+    {
+      "word": "ними",
+      "exercise_type": "error-correction",
+      "context": "Студенти взяли рюкзаки з ними.",
+      "role": "context"
+    },
+    {
+      "word": "їй",
+      "exercise_type": "error-correction",
+      "context": "Вона купила їй нову парасольку.",
+      "role": "context"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "fill-in",
+      "context": "У нього",
+      "role": "answer"
+    },
+    {
+      "word": "нас",
+      "exercise_type": "fill-in",
+      "context": "У нас",
+      "role": "answer"
+    },
+    {
+      "word": "думка",
+      "exercise_type": "fill-in",
+      "context": "_____ є своя думка.",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "fill-in",
+      "context": "У тебе",
+      "role": "answer"
+    },
+    {
+      "word": "пишаємося",
+      "exercise_type": "unjumble",
+      "context": "пишаємося",
+      "role": "answer"
+    },
+    {
+      "word": "носить",
+      "exercise_type": "unjumble",
+      "context": "носить",
+      "role": "answer"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "unjumble",
+      "context": "жити",
+      "role": "answer"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина",
+      "role": "context"
+    },
+    {
+      "word": "прийшли",
+      "exercise_type": "quiz",
+      "context": "Діти швидко прийшли до **себе**.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "власний",
+      "горджуся",
+      "звичка",
+      "щоденний"
+    ]
+  },
+  "all_grounded": false
+}

@@ -119,120 +119,99 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
-Оля meets her friend Марко́ at Бори́спіль airport. He has just arrived in Kyiv for the first time and needs to get to his hotel in the city centre.
-> — **Марко:** Приві́т, Олю! Як діста́тися до це́нтру? *(Hi, Olya! How do I get to the centre?)*
-> — **Оля:** Привіт! Є три варіа́нти. *(Hi! There are three options.)*
-> — **Оля:** Мо́жна ї́хати авто́бусом — но́мер сімдеся́т оди́н. *(You can go by bus — number seventy-one.)*
-> — **Оля:** Можна по́тягом — «Експре́с». *(Or by train — the "Express".)*
-> — **Оля:** А́бо на таксі́. *(Or by taxi.)*
-> — **Марко:** А метро́ є? *(Is there a metro?)*
-> — **Оля:** Метро нема́ в аеропорту́. *(There's no metro at the airport.)*
-> — **Оля:** Але́ в це́нтрі є. *(But there is one in the centre.)*
-> — **Оля:** Їдь потягом, а по́тім на метро. *(Take the train, then the metro.)*
-> — **Марко:** До́бре. А де купи́ти квито́к? *(OK. And where do I buy a ticket?)*
-> — **Оля:** Ось там, у ка́сі. *(Over there, at the ticket window.)*
+## Діалоги (Dialogues)
 
-Two patterns appear in this dialogue. Оля says **їхати автобусом** and **їхати потягом** — transport with a special word ending. But she says **на таксі** and **на метро** — transport with **на**. Both mean "by (transport)." You will study both patterns below.
-Марко walks to the ticket window.
-> — **Марко:** Один квиток до центру, будь ла́ска. *(One ticket to the centre, please.)*
-> — **Каса:** В один бік чи туди́ й наза́д? *(One way or round trip?)*
-> — **Марко:** Туди й назад. *(Round trip.)*
-> — **Каса:** На авто́бус чи на по́тяг? *(For the bus or the train?)*
-> — **Марко:** На потяг. *(For the train.)*
-> — **Каса:** Гара́зд. Дві́сті со́рок гри́вень. *(OK. Two hundred forty hryvnias.)*
-> — **Марко:** О котрі́й відпра́влення? *(What time is the departure?)*
-> — **Каса:** О дев'я́тій два́дцять. *(At nine twenty.)*
-> — **Марко:** Дякую! *(Thanks!)*
-> — **Каса:** Будь ласка. Приє́мної пої́здки! *(You're welcome. Have a good trip!)*
+Navigating a new city always starts with understanding the local transit system and learning how to ask the right questions. When arriving at the **Бориспіль** (Boryspil) airport outside of the capital city of Kyiv, the immediate practical challenge is reaching the city center. Travelers have a wide variety of choices depending on their budget, luggage, and final destination: they might take a regular public bus, board a fast express train, call a private taxi, or eventually transfer to the vast underground metro network.
 
-Three new phrases worth remembering: **В один бік чи туди й назад?** (One way or round trip?) — you will hear this at every ticket window in Ukraine. **О котрій відправлення?** (What time is the departure?) — this is the standard way to ask about departure time at any Ukrainian station. And **Приємної поїздки!** (Have a good trip!) — a fixed well-wishing phrase you can use as-is.
-The dialogue introduced four transport words: **автобус** (bus, masculine), **потяг** (train, masculine), **метро** (metro, neuter), and **таксі** (taxi, neuter). Their genders matter — they determine which of the two travel patterns each word uses.
-<!-- INJECT_ACTIVITY: quiz-transport-match -->
+> **Приїжджий:** Вибачте, як дістатися до вокзалу? *(Excuse me, how to get to the train station?)*
+> **Друг:** Їдьте автобусом або на метро. *(Take a bus or by metro.)*
+> **Приїжджий:** Який автобус? А можна на метро? *(Which bus? And is it possible by metro?)*
+> **Друг:** Номер сім. Зупинка ось там. Спочатку треба їхати автобусом до метро «Харківська». *(Number seven. The stop is right there. First you must take a bus to the "Kharkivska" metro.)*
+> **Приїжджий:** Дякую! *(Thank you!)*
+> **Друг:** На здоров'я! *(You are welcome!)*
+
+The key phrase in the first exchange is **як дістатися до...** (how to get to...), which is the most natural and common way to ask for directions to a specific place. This grammatical structure is always followed by a noun in the genitive case to indicate the destination, as seen in the word forms **до вокзалу** (to the station) and **до станції** (to the station). If a local resident helps you with directions and you thank them, a polite native response you will often hear is **На здоров'я!** (You are welcome!).
+
+> **Пасажир:** Добрий день! Один квиток до Львова, будь ласка. *(Good day! One ticket to Lviv, please.)*
+> **Касир:** В один бік чи туди й назад? *(One way or round trip?)*
+> **Пасажир:** Туди й назад. Скільки коштує? *(Round trip. How much does it cost?)*
+> **Касир:** П'ятсот гривень. Є потяг о дев'ятій ранку. *(Five hundred hryvnias. There is a train at nine in the morning.)*
+> **Пасажир:** Дякую. О котрій годині він рушає? *(Thank you. At what time does it depart?)*
+> **Касир:** О дев'ятій рівно. *(At nine exactly.)*
+
+When buying tickets at a terminal or speaking with a conductor, the clerk will routinely ask if your journey is **в один бік** (one way) or **туди й назад** (round trip, literally "there and back"). This everyday interaction naturally integrates expressions of time like **о дев'ятій** (at nine) and simple numbers such as **п'ятсот** (five hundred) to quickly confirm the departure schedule and the final price. Knowing these set phrases makes traveling across Ukraine much smoother and reduces confusion at the ticket counter.
+
+<!-- INJECT_ACTIVITY: fill-in-ticket-buying -->
+
 ## Транспорт (Transport Types)
-Ukrainian cities have rich public transport. Here are the main types for getting around:
-- **автобус** (bus, m) — found in virtually every city
-- **тролейбус** (trolleybus, m) — common in larger cities, runs on electric wires
-- **трамвай** (tram, m) — operates in Kyiv, Lviv, and Vinnytsia among others
-- **маршрутка** (minibus, f) — a small minibus, extremely popular across Ukraine
-For longer distances:
-- **потяг** (train, m) — Укрзалізни́ця connects all major Ukrainian cities
-- **літак** (plane, m) — for longer routes
-Two transport words never change their form, no matter the sentence: **метро** (metro, n) and **таксі** (taxi, n). These are borrowed words ending in a vowel — they stay the same always. You cannot add endings to them the way you can to **потяг** or **автобус**. This difference creates two travel patterns.
-**Pattern 1 — їхати + instrumental chunk.** When the transport word *can* change form, it takes a special ending. Learn each word together with its form as a single chunk — do not analyse the ending at this stage:
-| Transport | "By..." form |
-|---|---|
-| автобус (bus) | їхати **автобусом** |
-| тролейбус (trolleybus) | їхати **тролейбусом** |
-| трамвай (tram) | їхати **трамваєм** |
-| маршрутка (minibus) | їхати **маршруткою** |
-| потяг (train) | їхати **потягом** |
-**Pattern 2 — їхати на + noun.** When the transport word *cannot* change (or uses **на** by convention), the structure is simpler:
-- їхати **на метро** (by metro)
-- їхати **на таксі** (by taxi)
-- їхати **на машині** (by car)
-Which pattern does a word use? Learn it *with* the word: **потяг → потягом**; **метро → на метро**. If the word sounds the same in every context (метро, таксі), use **на**. If it takes endings (автобус → автобусом), use the ending form.
-<!-- INJECT_ACTIVITY: quiz-pattern-choice -->
-## Ко́ри́сні фра́зи (Useful Phrases)
-Марко is now in the city and needs to find a bus stop. He approaches a passer-by.
-> — **Марко:** Ви́бачте, де зупи́нка авто́буса? *(Excuse me, where is the bus stop?)*
-> — **Перехожий:** Ось там, навпро́ти. *(Over there, across the street.)*
 
-At the stop and at the station, these phrases cover the essentials:
-- **Де зупинка автобуса?** — Where is the bus stop?
-- **Один квиток, будь ласка.** — One ticket, please.
-- **Скільки ко́шту́є квиток?** — How much is a ticket?
-- **В один бік чи туди й назад?** — One way or round trip?
-- **Коли насту́пний потяг до Льво́ва?** — When is the next train to Lviv?
-Key vocabulary: **зупинка** (stop, f), **квиток** (ticket, m), **каса** (ticket window, f), **відправлення** (departure, n).
-<!-- INJECT_ACTIVITY: fill-in-ticket -->
-Once you are on a vehicle or navigating on foot, five more phrases help you get where you need to go:
-- **Яка це зупинка?** — What stop is this?
-- **Мені виходити тут?** — Do I get off here?
-- **Вибачте, як дістатися до вокза́лу?** — Excuse me, how do I get to the station?
-- **Їдьте пря́мо.** — Go straight.
-- **Поверніть напра́во / налі́во.** — Turn right / left.
-On the Kyiv metro, stop names are announced aloud — listen for **«Насту́пна ста́нція — Хреща́тик»**. Three direction words to remember: **прямо** (straight), **направо** (right), **наліво** (left). And **дістатися** (to get to) is used in questions as a fixed phrase: **Як дістатися до...?**
+Every major Ukrainian city relies on a robust and heavily utilized network of **громадський транспорт** (public transport). The core of this system typically consists of the "big four" modes of transit. You will frequently see an **автобус** (bus, masculine), a **тролейбус** (trolleybus, masculine), and a **трамвай** (tram, masculine) operating above ground, while larger metropolitan areas like Kyiv and Kharkiv feature a fast underground **метро** (metro, neuter). Grammatically, the words **метро** (metro) and **таксі** (taxi, neuter) are special cases in the language. They are nouns of foreign origin and are completely indeclinable, meaning their word endings never change regardless of their role in a sentence.
+
+For longer journeys stretching between cities, travelers rely heavily on intercity options like a passenger **потяг** (train, masculine) or a commercial **літак** (plane, masculine). In daily conversation, the word **потяг** (train) is often used interchangeably with **поїзд** (train). Within city limits and for commuting between nearby towns, you will undoubtedly encounter the ubiquitous **маршрутка** (minibus, feminine), which operates on fixed municipal routes but traditionally stops on passenger demand. Personal transit is usually done by **машина** (car, feminine). To catch any of these transport types, you need to know the right location: you must head to a **вокзал** (station) for trains, navigate to an **аеропорт** (airport) for flights, or simply wait patiently at a local neighborhood **зупинка** (stop).
+
+When stating exactly how you are traveling, the Ukrainian language makes a strict grammatical distinction between moving on foot and moving by a vehicle. While you say **іти пішки** (to go on foot), traveling by any type of machine requires the motion verb **їхати** (to go by transport). For standard declinable nouns, you indicate the means of transportation by putting the noun directly into the instrumental case without any added preposition. This form clearly shows the instrument or tool you use to travel.
+*   «Я їду **автобусом**.» *(I am going by bus.)*
+*   «Він їде **потягом**.» *(He is going by train.)*
+*   «Ми їдемо **трамваєм**.» *(We are going by tram.)*
+*   «Вони їдуть **тролейбусом**.» *(They are going by trolleybus.)*
+
+A fundamentally different grammatical pattern applies to indeclinable nouns and certain specific vehicles. Instead of using the bare instrumental case, you must use the preposition **на** (on/at) followed immediately by the locative case. Since words like **метро** (metro) and **таксі** (taxi) do not decline, their forms remain identical, while words like **машина** (car) take standard locative endings. Both patterns simply mean "by" a certain transport, but they are grammatically distinct.
+*   «Я їду **на метро**.» *(I am going by metro.)*
+*   «Він їде **на таксі**.» *(He is going by taxi.)*
+*   «Ми їдемо **на машині**.» *(We are going by car.)*
+
+:::caution
+Never mix these two grammatical patterns together. A common learner mistake is saying «на автобусом» — this structure is strictly incorrect. While the locative form «на автобусі» (on the bus) is grammatically possible and occasionally heard, using the pure instrumental form **автобусом** (by bus) is far more idiomatic and natural for native speakers. You should learn each transport type with its preferred prepositional or non-prepositional pattern from the beginning.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-transport-patterns -->
+<!-- INJECT_ACTIVITY: quiz-match-situation -->
+
+## Корисні фрази (Useful Phrases)
+
+When navigating unfamiliar city streets or crowded transit hubs, a few precise questions will help you find the correct transit option without getting lost. If you are looking for a place to wait for a ride, simply ask a friendly passerby **Де зупинка автобуса?** (Where is the bus stop?) or **Де найближча станція метро?** (Where is the nearest metro station?). Once you locate the physical stop, you must ensure you board the vehicle going in the right direction. Use these straightforward phrases to identify the correct route:
+*   «**Який автобус їде в центр?**» *(Which bus goes to the center?)*
+*   «**Вам потрібен номер п'ять.**» *(You need number five.)*
+
+If you need to check the schedule or fare while standing at the terminal, you can confidently ask **Коли наступний потяг?** (When is the next train?) or **Скільки коштує квиток?** (How much is a ticket?) to gather the necessary details.
+
+Once you board a vehicle, communicating effectively with other passengers becomes highly important, especially during the morning or evening rush hour. If you are unsure of your current location along the route, you can simply ask **Яка це зупинка?** (What stop is this?). Ukrainian public transport can get quite crowded during peak times. If someone is blocking your path to the exit doors, the standard, polite way to ask them to let you pass is **Вибачте, ви виходите?** (Excuse me, are you getting off?). If they are not stepping out, they will generally move aside. When the vehicle doors finally open, you can ask **Мені виходити тут?** (Do I get off here?) to confirm your destination, or firmly announce that you are leaving.
+
+When asking the bus driver or a local resident to guide you to a location, you will frequently hear basic directional vocabulary. We now revisit the core movement words: **прямо** (straight), **направо** (right), and **наліво** (left). These spatial adverbs combine seamlessly with transport instructions to create clear routes. If you need help finding a specific landmark, you can ask **Вибачте, як дістатися до...?** (Excuse me, how do I get to...?).
+*   «Ідіть **прямо** до вокзалу.» *(Go straight to the station.)*
+*   «Поїдьте **прямо**, а потім поверніть **направо** на зупинці.» *(Drive straight, and then turn right at the stop.)*
+*   «Станція метро **наліво**.» *(The metro station is to the left.)*
+Recognizing these three distinct directions ensures you can properly follow instructions whether you are walking to a transit platform or directing a taxi driver to your hotel.
+
+Discussing schedules and timetables requires using accurate verbs of departure. Many learners mistakenly use the word «відправлятися» (to depart), but this is a direct phonetic calque from Russian and sounds unnatural in standard conversational Ukrainian. Instead, you must use native verbs that describe motion accurately based on the type of vehicle. For heavy transit vehicles like trains starting to move along a track, use the verb **рушати** (to depart / to set in motion). For scheduled vehicles like buses leaving a large station, use **відбувати** (to depart) or **виїжджати** (to drive out / to leave).
+*   «**Потяг рушає о восьмій.**» *(The train departs at eight.)*
+*   «**Автобус виїжджає з автовокзалу.**» *(The bus leaves from the bus station.)*
+
 <!-- INJECT_ACTIVITY: fill-in-directions -->
-Марко arrives at Ки́їв-Пасажи́рський station. He steps off the train and asks a passer-by:
-> — **Марко:** Вибачте, як дістатися до метро? *(Excuse me, how do I get to the metro?)*
-> — **Перехожий:** Прямо, потім направо. П'ять хвили́н. *(Straight, then right. Five minutes.)*
 
-He buys a metro token at the window:
-> — **Марко:** Один жето́н, будь ласка. Скільки коштує? *(One token, please. How much?)*
-> — **Каса:** Вісімна́дцять гривень. *(Eighteen hryvnias.)*
-
-He enters the metro and checks the display.
-> — **Марко:** Яка це станція? *(What station is this?)*
-> — **Пасажир:** Вокза́льна. *(Vokzalna.)*
-
-New vocabulary: **жетон** (metro token, m), **станція** (station, f). Марко did it — he got from the airport to the metro using only Ukrainian.
 ## Підсумок — Summary
-Transport in Ukrainian cities is varied: **автобус**, **тролейбус**, **трамвай**, and **маршрутка** run in most cities. **Метро** operates in Kyiv, Kharkiv, and Dnipro. For intercity travel, **потяг** is the most popular choice — Укрзалізниця connects all major cities. **Літак** covers longer distances. Two of these words never change form: **метро** and **таксі** — they always use **на**.
-Here are the two patterns side by side:
-| їхати + instrumental | їхати на + noun |
-|---|---|
-| **автобусом** | **на метро** |
-| **тролейбусом** | **на таксі** |
-| **трамваєм** | **на машині** |
-| **маршруткою** | |
-| **потягом** | |
-A helpful guide: if the word takes endings (автобус → автобусом), use the ending form. If it always stays the same (метро, таксі), use **на**.
-### Самопере́ві́рка (Self-Check)
-- Як сказа́ти "by bus"? → **автобусом**
-- Як сказати "by metro"? → **на метро**
-- Як запита́ти про зупи́нку? → **Де зупинка автобуса?**
-- Як купити квиток? → **Один квиток до ___, будь ласка.**
-- Як запитати ціну́? → **Скільки коштує квиток?**
-- Як запитати час відправлення? → **О котрій відправлення?**
-- Як запитати, як дістатися? → **Як дістатися до ___?**
-- Як сказати "turn right"? → **Поверніть направо.**
-- Challenge: How does Марко get from Бориспіль airport to his hotel using two types of transport? Write two sentences using **їхати**.
-<!-- INJECT_ACTIVITY: quiz-which-transport -->
 
-**Deterministic word count: 1356 words** (calculated by pipeline, do NOT estimate manually)
+Navigating a bustling Ukrainian city is remarkably straightforward once you master the core transport vocabulary and foundational grammatical patterns. In this module, we have learned to correctly identify the main types of transit vehicles, including the **автобус** (bus), **потяг** (train), **таксі** (taxi), and **метро** (metro). You now know exactly how to describe your specific method of travel using two distinct linguistic structures: the direct instrumental case pattern for declinable nouns like **автобусом** (by bus), and the locative construction with a preposition for indeclinable nouns like **на метро** (by metro). We also covered highly practical daily scenarios, such as buying a train ticket at a station window by asking for **один квиток** (one ticket) and inquiring about transit schedules using precise phrases like **о котрій годині** (at what time) and the authentic Ukrainian motion verb **рушати** (to depart). Mastering these fundamental elements allows you to travel across the country with much greater confidence.
 
+Review the following questions to verify your personal understanding of this module's key phrases. Cover the provided answers and test yourself aloud before moving forward to the next lesson.
+
+**How do you say "I am going to work by bus"?**
+> «Я їду на роботу автобусом.»
+
+**How do you ask "Where is the train station?"**
+> «Де залізничний вокзал?»
+
+**How do you buy a train ticket to Lviv (round trip)?**
+> «Один квиток до Львова туди й назад, будь ласка.»
+
+**How do you ask "What stop is this?"**
+> «Яка це зупинка?»
+
+**How do you say "Go straight and then left"?**
+> «Ідіть прямо, а потім наліво.»
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1690 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -320,8 +299,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -366,8 +345,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -408,61 +387,13 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 106 words | Not found: 53 words
+Verified: 115 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Бориспіль — NOT IN VESUM
-  ✗ Вокза — NOT IN VESUM
-  ✗ Вісімна — NOT IN VESUM
-  ✗ Гара — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Експре — NOT IN VESUM
-  ✗ Льво — NOT IN VESUM
-  ✗ Олю — NOT IN VESUM
-  ✗ Оля — NOT IN VESUM
-  ✗ Пасажи — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Приє — NOT IN VESUM
-  ✗ Самопере — NOT IN VESUM
-  ✗ Укрзалізни — NOT IN VESUM
-  ✗ Укрзалізниця — NOT IN VESUM
-  ✗ Хреща — NOT IN VESUM
-  ✗ варіа — NOT IN VESUM
-  ✗ вень — NOT IN VESUM
-  ✗ влення — NOT IN VESUM
-  ✗ вокза — NOT IN VESUM
-  ✗ відпра — NOT IN VESUM
-  ✗ дев'я — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ діста — NOT IN VESUM
-  ✗ жето — NOT IN VESUM
-  ✗ жна — NOT IN VESUM
-  ✗ здки — NOT IN VESUM
-  ✗ квито — NOT IN VESUM
-  ✗ льна — NOT IN VESUM
-  ✗ мної — NOT IN VESUM
-  ✗ навпро — NOT IN VESUM
-  ✗ наза — NOT IN VESUM
-  ✗ налі — NOT IN VESUM
-  ✗ напра — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нти — NOT IN VESUM
-  ✗ нтру — NOT IN VESUM
-  ✗ нтрі — NOT IN VESUM
-  ✗ нція — NOT IN VESUM
-  ✗ пна — NOT IN VESUM
-  ✗ пний — NOT IN VESUM
-  ✗ пої — NOT IN VESUM
-  ✗ рка — NOT IN VESUM
-  ✗ рський — NOT IN VESUM
-  ✗ сказа — NOT IN VESUM
-  ✗ спіль — NOT IN VESUM
-  ✗ сті — NOT IN VESUM
-  ✗ сімдеся — NOT IN VESUM
-  ✗ тися — NOT IN VESUM
+  ✗ Львова — NOT IN VESUM
 
-All 106 other words are confirmed to exist in VESUM.
+All 115 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

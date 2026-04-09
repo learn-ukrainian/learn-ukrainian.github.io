@@ -2,9 +2,70 @@ version: '1.0'
 module: checkpoint-time-nature
 level: a1
 inline:
-- id: fill-in-day-paragraph
+- id: fill-in-mixed-review
   type: fill-in
-  instruction: Вставте правильне слово (Insert the correct word)
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - sentence: Зустріч ____ годині.
+    answer: о п'ятій
+    options:
+    - о п'ятій
+    - в п'ятій
+    - у п'ята
+  - sentence: Ми йдемо в кіно ____.
+    answer: у суботу
+    options:
+    - у суботу
+    - в суботі
+    - на суботу
+  - sentence: Мій день народження ____.
+    answer: у січні
+    options:
+    - у січні
+    - в січень
+    - січень
+  - sentence: Сьогодні ____ і холодно.
+    answer: іде дощ
+    options:
+    - іде дощ
+    - іде дощова
+    - дощить
+  - sentence: Взимку дуже ____.
+    answer: холодно
+    options:
+    - холодно
+    - спекотно
+    - тепло
+  - sentence: Я прокидаюся о сьомій ____.
+    answer: ранку
+    options:
+    - ранку
+    - рано
+    - вранці
+- id: match-up-logical-logic
+  type: match-up
+  instruction: З'єднайте питання з логічною відповіддю (Match questions to logical
+    answers)
+  pairs:
+  - left: Котра година?
+    right: Десята тридцять.
+  - left: О котрій зустріч?
+    right: О першій.
+  - left: Яка сьогодні погода?
+    right: Тепло і сонячно.
+  - left: Коли твій день народження?
+    right: У жовтні.
+  - left: Що ти робиш у суботу?
+    right: Граю у футбол.
+  - left: Як часто ти читаєш?
+    right: Кожен день ввечері.
+  - left: Ходімо в парк!
+    right: Добре, о котрій?
+  - left: Що ти будеш робити завтра?
+    right: Буду працювати.
+- id: fill-in-routine-sequence
+  type: fill-in
+  instruction: Оберіть правильне слово (Choose the correct word)
   items:
   - sentence: ____ я прокидаюся і снідаю.
     answer: Спочатку
@@ -48,299 +109,237 @@ inline:
     - Нарешті
     - Спочатку
     - Потім
-- id: fill-in-time-weather
-  type: fill-in
-  instruction: Оберіть правильний варіант (Choose the correct option)
-  items:
-  - sentence: Зустріч ____ годині.
-    answer: о п'ятій
-    options:
-    - о п'ятій
-    - в п'ятій
-    - у п'ята
-  - sentence: Ми йдемо в кіно ____.
-    answer: у суботу
-    options:
-    - у суботу
-    - в суботі
-    - на суботу
-  - sentence: Мій день народження ____.
-    answer: у січні
-    options:
-    - у січні
-    - в січень
-    - січень
-  - sentence: Сьогодні ____ і холодно.
-    answer: іде дощ
-    options:
-    - іде дощ
-    - іде дощова
-    - дощить
-  - sentence: Взимку дуже ____.
-    answer: холодно
-    options:
-    - холодно
-    - спекотно
-    - тепло
-  - sentence: Я прокидаюся о сьомій ____.
-    answer: ранку
-    options:
-    - ранку
-    - рано
-    - вранці
-- id: match-questions-answers
-  type: match-up
-  instruction: З'єднайте питання з відповідями (Match the questions with the answers)
-  pairs:
-  - left: Котра година?
-    right: Десята тридцять.
-  - left: О котрій зустріч?
-    right: О першій.
-  - left: Яка сьогодні погода?
-    right: Тепло і сонячно.
-  - left: Коли твій день народження?
-    right: У жовтні.
-  - left: Що ти робиш у суботу?
-    right: Граю у футбол.
-  - left: Як часто ти читаєш?
-    right: Кожен день ввечері.
-  - left: Ходімо в парк!
-    right: Добре, о котрій?
-  - left: Що ти будеш робити завтра?
-    right: Буду працювати.
 workbook:
 - type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: Яка правильна відповідь на питання 'Котра година?'
+  - question: Яке запитання правильне? (It is now one o'clock.)
     options:
-    - Зараз третя година.
-    - Зараз о третій.
-    - О котрій третій.
-    - Зараз третій.
+    - Котра година?
+    - О котрій зустріч?
+    - Яка година?
+    - Скільки годин?
     correct: 0
-  - question: Яка правильна відповідь на питання 'О котрій зустріч?'
+  - question: Яка форма правильна? (The meeting is at five o'clock.)
     options:
-    - Зустріч третя.
-    - Зустріч о першій.
-    - Зустріч першій.
-    - О першій зустріч.
-    correct: 1
-  - question: Як сказати 'in winter' по-українськи?
+    - Зустріч о п'ятій годині.
+    - Зустріч в п'яту годину.
+    - Зустріч п'ята година.
+    - Зустріч на п'яту годину.
+    correct: 0
+  - question: Який прийменник правильний? (in winter)
     options:
-    - У зима
-    - В зиму
-    - Взимку
-    - Зимою
-    correct: 2
-  - question: Яка правильна послідовність подій дня?
+    - взимку
+    - у зиму
+    - на зимі
+    - у зимку
+    correct: 0
+  - question: Як правильно сказати? (on Friday)
     options:
-    - Потім → спочатку → нарешті
-    - Спочатку → потім → нарешті
-    - Нарешті → потім → спочатку
-    - Спочатку → нарешті → потім
-    correct: 1
-  - question: Як сказати 'It is sunny' по-українськи?
+    - у п'ятницю
+    - в п'ятницю
+    - на п'ятницю
+    - в п'ятниці
+    correct: 0
+  - question: Що означає «робочий тиждень»?
     options:
-    - Є сонце.
-    - Сонячно.
-    - Сонячний.
-    - Буде сонячно.
-    correct: 1
-  - question: Яка правильна форма для 'in January'?
+    - work week
+    - weekend
+    - Sunday
+    - working day
+    correct: 0
+  - question: Яке слово зайве? (Which word is the odd one out?)
     options:
-    - У січень
-    - В січень
-    - У січні
-    - Січень
-    correct: 2
-- type: true-false
-  instruction: Правда чи ні? (True or false?) Читайте текст і вирішіть.
-  items:
-  - statement: Автор прокидається о сьомій ранку у понеділок.
-    correct: true
-    explanation: 'У тексті: ''У понеділок я прокидаюся о сьомій ранку.'''
-  - statement: Автор вивчає українську у вівторок ввечері.
-    correct: false
-    explanation: 'У тексті: ''У середу ввечері я вивчаю українську.'' Не вівторок,
-      а середа.'
-  - statement: В суботу автор завжди гуляє в парку.
-    correct: true
-    explanation: 'У тексті: ''В суботу я завжди гуляю в парку.'''
-  - statement: Взимку автор часто гуляє надворі.
-    correct: false
-    explanation: 'У тексті: ''Взимку іде сніг, і я рідко гуляю.'' Рідко — не часто.'
-  - statement: Навесні автор часто ходить у кіно.
-    correct: true
-    explanation: 'У тексті: ''Навесні тепло і сонячно — я часто ходжу в кіно.'''
-  - statement: Автор вечеряє рівно о восьмій годині.
-    correct: false
-    explanation: 'У тексті: ''Нарешті вечеряю о пів на восьму.'' О пів на восьму =
-      19:30, не 20:00.'
-  - statement: Іноді автор грає у футбол у суботу.
-    correct: true
-    explanation: 'У тексті: ''В суботу я завжди гуляю в парку. Іноді граю у футбол.'''
+    - понеділок
+    - вівторок
+    - неділя
+    - тиждень
+    correct: 3
 - type: group-sort
   instruction: Розподіліть слова за категоріями (Sort the words into categories)
   groups:
-  - label: КОЛИ? (When?)
+  - label: Час (Time)
     items:
+    - година
     - вранці
     - ввечері
-    - вдень
-    - вночі
-    - зранку
+    - сьогодні
     - завтра
-  - label: ЯК ЧАСТО? (How often?)
+  - label: Погода (Weather)
     items:
-    - завжди
-    - часто
-    - іноді
-    - рідко
-    - ніколи
-    - кожен день
+    - сонячно
+    - тепло
+    - холодно
+    - дощ
+  - label: Дні (Days)
+    items:
+    - субота
+    - середа
+    - понеділок
+    - неділя
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Слово «неділя» означає «week» англійською.
+    correct: false
+    explanation: «Неділя» means Sunday. Week is «тиждень».
+  - statement: Ми використовуємо «о» або «об», коли говоримо про конкретний час (о
+      котрій).
+    correct: true
+    explanation: Yes, we use «о» before consonants and «об» before vowels to specify
+      time.
+  - statement: Слово «влітку» (in summer) не потребує додаткового прийменника.
+    correct: true
+    explanation: Seasons function as standalone adverbs in Ukrainian (влітку, взимку).
+  - statement: Правильно говорити «на середу» замість «у середу».
+    correct: false
+    explanation: For days of the week, use «у» or «в» + Accusative case (у середу).
+  - statement: Запитання «Котра година?» використовується для подій у майбутньому.
+    correct: false
+    explanation: It is used to ask about the current time.
+  - statement: Слова «спочатку», «потім», «нарешті» показують послідовність дій.
+    correct: true
+    explanation: Yes, they mean first, then, finally.
 - type: unjumble
   instruction: Складіть правильне речення зі слів (Put the words in the correct order)
   items:
   - words:
-    - прокидаюся
-    - я
-    - ранку
-    - о
-    - сьомій
+    - сьогодні
+    - Яка
+    - погода?
     correct_order:
-    - я
-    - прокидаюся
-    - о
-    - сьомій
-    - ранку
+    - Яка
+    - сьогодні
+    - погода?
   - words:
-    - суботу
-    - ми
-    - в
-    - у
-    - парк
-    - ідемо
-    correct_order:
-    - ми
-    - ідемо
-    - в
-    - парк
-    - у
-    - суботу
-  - words:
-    - сонячно
-    - тепло
-    - навесні
-    - і
-    correct_order:
-    - навесні
     - тепло
     - і
-    - сонячно
-  - words:
-    - сніг
-    - взимку
-    - іде
+    - На вулиці
+    - сонячно.
     correct_order:
-    - взимку
-    - іде
-    - сніг
+    - На вулиці
+    - тепло
+    - і
+    - сонячно.
   - words:
-    - годині
-    - зустріч
-    - першій
-    - о
-    correct_order:
-    - зустріч
-    - о
-    - першій
-    - годині
-  - words:
-    - ввечері
-    - часто
+    - роботу.
+    - на
     - я
-    - книги
-    - читаю
-    correct_order:
-    - я
-    - часто
-    - читаю
-    - книги
-    - ввечері
-  - words:
-    - до
-    - п'ятої
-    - з
-    - дев'ятої
-    - я
-    - працюю
-    correct_order:
-    - я
-    - працюю
-    - з
-    - дев'ятої
-    - до
-    - п'ятої
-- type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
-  items:
-  - sentence: Котра зараз годину?
-    error: годину
-    correction: година
-    error_type: word
-    options:
-    - година
-    - години
-    - годині
-    explanation: 'After ''котра'', use nominative: ''Котра година?'' (What time is
-      it?)'
-  - sentence: Взимку дуже холодний.
-    error: холодний
-    correction: холодно
-    error_type: word
-    options:
-    - холодно
-    - холодна
-    - холодне
-    explanation: 'Weather uses impersonal adverbs: ''холодно'', not the adjective
-      ''холодний''.'
-  - sentence: Навесна тепло і сонячно.
-    error: Навесна
-    correction: Навесні
-    error_type: word
-    options:
-    - Навесні
-    - Навесно
-    - На весні
-    explanation: The correct form is 'навесні' — a fixed adverb meaning 'in spring'.
-  - sentence: Зустріч в п'ятій годині.
-    error: в п'ятій
-    correction: о п'ятій
-    error_type: phrase
-    options:
-    - о п'ятій
-    - в п'ятій
-    - на п'ятій
-    explanation: 'Time expressions use ''о/об'' + locative: ''о п''ятій годині'' (at
-      five o''clock).'
-  - sentence: Я ніколи рідко ходжу в кіно.
-    error: ніколи рідко
-    correction: рідко
-    error_type: phrase
-    options:
-    - рідко
-    - ніколи
-    - іноді
-    explanation: Use only one frequency adverb. 'Ніколи рідко' is contradictory —
-      choose one.
-  - sentence: Спочатку нарешті я снідаю.
-    error: Спочатку нарешті
-    correction: Спочатку
-    error_type: phrase
-    options:
-    - Спочатку
-    - Нарешті
     - Потім
-    explanation: '''Спочатку'' means ''first'' and ''нарешті'' means ''finally'' —
-      they cannot both describe the same opening action.'
+    - йду
+    correct_order:
+    - Потім
+    - я
+    - йду
+    - на
+    - роботу.
+  - words:
+    - п'ятій
+    - Зустріч
+    - о
+    - годині.
+    correct_order:
+    - Зустріч
+    - о
+    - п'ятій
+    - годині.
+  - words:
+    - ввечері
+    - гуляю
+    - У середу
+    - я
+    - в парку.
+    correct_order:
+    - У середу
+    - ввечері
+    - я
+    - гуляю
+    - в парку.
+  - words:
+    - кіно.
+    - взимку
+    - дивитися
+    - люблю
+    - Я
+    correct_order:
+    - Я
+    - люблю
+    - дивитися
+    - кіно.
+    - взимку
+- type: order
+  instruction: Розставте речення в правильному порядку (Put the sentences in the correct
+    order)
+  items:
+  - Спочатку я прокидаюся о сьомій.
+  - Потім я снідаю.
+  - Я працюю з дев'ятої до п'ятої.
+  - Ввечері я відпочиваю.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: What time is it?
+    options:
+    - text: Котра година?
+      correct: true
+    - text: О котрій годині?
+      correct: false
+    - text: Скільки годин?
+      correct: false
+    - text: Коли час?
+      correct: false
+  - source: In autumn it often rains.
+    options:
+    - text: Восени часто іде дощ.
+      correct: true
+    - text: В осінь часто іде дощ.
+      correct: false
+    - text: Восени часто є дощ.
+      correct: false
+    - text: У осені часто дощить.
+      correct: false
+  - source: I never work on Saturday.
+    options:
+    - text: У суботу я ніколи не працюю.
+      correct: true
+    - text: В суботі я ніколи працюю.
+      correct: false
+    - text: На суботу я не працюю.
+      correct: false
+    - text: У суботу я не працюю ніколи.
+      correct: false
+  - source: I always read in the evening.
+    options:
+    - text: Я завжди читаю ввечері.
+      correct: true
+    - text: Я часто читаю ввечері.
+      correct: false
+    - text: Я іноді читаю ввечері.
+      correct: false
+    - text: Я ніколи не читаю ввечері.
+      correct: false
+  - source: At what time is the meeting?
+    options:
+    - text: О котрій зустріч?
+      correct: true
+    - text: Котра зустріч?
+      correct: false
+    - text: Скільки зустріч?
+      correct: false
+    - text: Яка зустріч?
+      correct: false
+  - source: First I eat breakfast.
+    options:
+    - text: Спочатку я снідаю.
+      correct: true
+    - text: Потім я снідаю.
+      correct: false
+    - text: Нарешті я снідаю.
+      correct: false
+    - text: Завжди я снідаю.
+      correct: false

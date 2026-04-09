@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: '**Covered:** All 4 content_outline sections present. Transport types
+    ✓, both patterns ✓, useful phrases ✓, summary with self-check ✓. All required
+    and recommended vocabulary present. **Missing:** Plan'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 27 key forms batch-verified against VESUM — 27/27 found. Instrumental
+    chunk forms (автобусом, потягом, трамваєм, маршруткою) all correct. Imperative
+    їдь/їдьте confirmed. Gender assignments verifie
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: situation (Марко arrives at airport) → pattern (two
+    transport patterns taught as chunks, not grammar rules) → practice (activity markers
+    after each teaching section). Content expli'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: '**Required (6/6):** автобус ✓, метро ✓, таксі ✓, потяг ✓, квиток ✓, зупинка
+    ✓. **Recommended (7/7):** трамвай ✓, маршрутка ✓, літак ✓, направо ✓, наліво ✓,
+    прямо ✓, дістатися ✓. All introduced in cont'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints have matching markers. Each placed after relevant
+    teaching. One bonus marker (quiz-which-transport in summary). Cannot verify actual
+    exercise YAML content (generated separate
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Outstanding narrative thread — Марко's journey from Бориспіль airport
+    to city centre creates a coherent story arc. No LLM filler ("Numbers unlock...",
+    "Let us explore..."). No meta-commentary. Specifi
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections from plan present in correct order: Діалоги → Транспорт
+    → Корисні фрази → Підсумок. Clean markdown, proper dialogue div formatting. Word
+    count 1319 > 1200 target ✓. No duplicate summ'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian transport presented on its own terms — тролейбус, маршрутка,
+    Укрзалізниця are distinctly Ukrainian. Real locations: Бориспіль, Київ-Пасажирський,
+    Вокзальна station. No "like Russian but..." '
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Natural multi-turn conversations with named speakers (Марко, Оля, Каса,
+    Перехожий, Пасажир). Realistic situations: friend helping at airport, buying ticket
+    at window, asking directions on the street, '
+findings: []

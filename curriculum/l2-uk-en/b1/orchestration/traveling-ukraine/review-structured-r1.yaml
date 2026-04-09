@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 5
+  evidence: The text completely omitted the "Planning a two-week road trip" dialogue
+    with the traveling couple ("Спочатку поїдемо до Львова..."). It also missed specific
+    landmarks (`Софійський собор`, `Чернігів`,
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Found a grammatical apposition error: "на відому гору Говерла". Found
+    stylistic calques: "знаходяться" (розташовані) and "включіть постіль у вартість"
+    (додайте постіль).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Good PPP flow. Explanations of "орудний відмінок без прийменника" for
+    geography are excellent and naturally integrated.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: Required word `зворотний квиток` missing (used `туди й назад` instead).
+    Recommended words `хостел`, `провулок`, `навпроти` are missing.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The `quiz-motion-prefixes-context` is placed at the end of Section 2,
+    which breaks pedagogical sequencing because it tests prefixes before they are
+    taught in Section 3.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is warm and encouraging. Good use of conversational transitions
+    ("Давайте детально подивимося...").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown. Word count is 5253 words, well above the 4000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent decolonization notes on transport vocabulary (`відходити/виїжджати`
+    instead of `відправлятися`). Authentic geographical routing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The ticket purchase and airport dialogues are natural and communicative,
+    though the absence of the required planning dialogue impacts the score.
+findings: []

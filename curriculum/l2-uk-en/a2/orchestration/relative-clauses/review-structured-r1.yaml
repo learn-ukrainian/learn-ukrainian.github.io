@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed the explicit plan point: "Contrast with questions: Який це фільм?
+    (question) vs. Фільм, який ми дивилися вчора...".'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Used the calque "знаходиться" for physical locations instead of "розташований"
+    or "лежить/стоїть" in three different places.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent use of PPP flow, clear grammar explanations, and contrasting
+    examples (e.g., highlighting redundant pronouns).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Included all required vocabulary naturally, but missed the recommended
+    word "котрий".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan's requirements and are well-distributed
+    after the relevant teaching segments.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Encouraging teacher persona, avoids gamified cliches, and explains "the
+    why" behind grammar clearly.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module exceeds the 2000-word target and all headings are correctly
+    formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Sentences and contexts are natural to Ukrainian settings.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly contextualized and demonstrate the grammar concepts
+    perfectly without sounding robotic.
+findings: []

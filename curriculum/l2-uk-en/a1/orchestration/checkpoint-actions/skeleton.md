@@ -1,59 +1,29 @@
-## Що ми знаємо? (~220 words total)
-- P1 (~60 words): Framing paragraph — this checkpoint covers M15-M20 (A1.3 phase). Direct address to learner: "Before we start the next phase, let's see how much you already know." Sets up the self-check as a confidence builder, not a test. Examples: short statements — Я читаю, Він хоче спати, Вона прокидається.
-- P2 (~160 words): Self-check block — 6 bulleted questions with YES/NO self-assessment. One bullet per module: (M15) Can you say what you like? "Я люблю каву. Мені подобається музика." (M16) Can you conjugate Group I verbs? "Я читаю / ти читаєш / він читає." (M17) Can you conjugate Group II verbs? "Я говорю / ти говориш / він говорить." (M18) Can you use modal verbs? "Я хочу їсти. Вона може допомогти. Він мусить працювати." (M19) Can you ask all 7 questions? "Хто? Що? Де? Куди? Коли? Чому? Як?" (M20) Can you describe your morning? "Я прокидаюся, вмиваюся, снідаю."
+## Що ми знаємо? (What Do We Know?) (~220 words total)
+- P1 (~70 words): Welcome to the A1.3 consolidation checkpoint. Brief overview of the journey from simply liking things (M15) to describing entire morning routines (M20). Motivation for self-reflection before moving to A1.4.
+- P2 (~150 words): A structured self-check list. Can you: 1. Say "I like coffee" (Мені подобається кава)? 2. Conjugate "to read" (читати) for all persons? 3. Conjugate "to speak" (говорити)? 4. Express a need (Я мушу йти)? 5. Ask "Where is the office?" (Де офіс?)? 6. Say "I wake up" (Я прокидаюся)? Each point includes a quick example for the learner to mentally verify.
 
----
+## Читання (Reading Practice) (~280 words total)
+- P1 (~60 words): Setting the stage for our first review text. Meet Pavlo, a designer from Kyiv. This text combines every verb group and modal studied so far into a coherent narrative.
+- P2 (~130 words): The Core Text: "Мій звичайний день" (My Typical Day). 10 sentences: "Я прокидаюся о сьомій. Спочатку я вмиваюся, а потім снідаю. Я дуже люблю каву. О дев'ятій я вже працюю. Я дизайнер, тому я багато думаю і малюю. Удень я можу гуляти в парку. Увечері я мушу вчити англійську, але я хочу дивитися фільм. Одинадцята вечора — я вже сплю."
+- P3 (~90 words): Lexical analysis of Pavlo's story. Focus on sequence markers (спочатку, потім, тоді) and how they anchor the verbs. Reminder: "любити" (to love/like) vs "хотіти" (to want). 
+- <!-- INJECT_ACTIVITY: fill-in-describe-day --> [fill-in, focus: Describe your day using sequence words and reflexive verbs, 6 items]
 
-## Читання (~275 words total)
-- P1 (~25 words): Introduction to the reading — learner reads aloud. Reminder: every word here is from M15-M20. No new vocabulary.
-- Reading text (~180 words): A 10-sentence passage. Taras describes his day: "Мене звати Тарас. Я прокидаюся о сьомій годині. Спочатку вмиваюся і чищу зуби. Потім снідаю — я люблю каву і бутерброди. Я працюю в офісі. Моя робота починається о дев'ятій. Я можу читати документи і відповідати на листи. Увечері я хочу відпочивати. Я слухаю музику або дивлюся фільм. Я мушу лягати спати о десятій — завтра знову рано вставати." Covers: reflexives (вмиваюся, прокидаюся), Group I (читаю, слухаю, дивлюся), Group II (починається, відповідаю), modals (можу, хочу, мушу), sequence words (спочатку, потім, увечері).
-- P2 (~70 words): Post-reading comprehension prompts (not activities — just think-aloud questions). "Що Тарас робить вранці? О котрій він починає працювати? Що він хоче робити увечері?" Learner answers mentally or aloud. Reminds them these question words (що, о котрій, коли) were from M19.
+## Граматика (Grammar Summary) (~250 words total)
+- P1 (~70 words): Recap of the two verb groups. Group I (-ють) endings with examples: знати, працювати, думати. Group II (-ять) endings with examples: говорити, бачити, робити. Highlight the stem change in "бачити" (бачу).
+- P2 (~60 words): Modals and the Infinitive. How "хотіти", "могти", and "мусити" act as helpers. Usage pattern: Modal (conjugated) + Infinitive (unchanged). Example: "Я хочу (1st sg) говорити (inf)".
+- P3 (~60 words): The logic of questions and negation. Reviewing the 7 question words (Хто, Що, Де, Куди, Коли, Чому, Як). Reminder on "Double Negation": "Я нічого не знаю" (I know nothing). Crucial decolonization note: use "ставити питання" (to ask a question), never "задавати".
+- P4 (~60 words): Reflexive verbs and the "-ся" suffix. Examples: прокидатися, вмиватися, одягатися. Note on the reduction of "-ся" to "-сь" after vowels (я вмиваюся vs ти вмиваєшся).
+- <!-- INJECT_ACTIVITY: group-sort-verbs --> [group-sort, focus: Categorize verbs into Group I, Group II, or Reflexive, 12 items]
+- <!-- INJECT_ACTIVITY: quiz-mixed-conjugation --> [quiz, focus: Mixed conjugation choice for Group I and II verbs, 10 items]
 
----
+## Діалог (Connected Dialogue) (~330 words total)
+- P1 (~80 words): Context: A meeting between friends, Olena and Viktor. Olena is busy, Viktor wants to hang out. This scenario forces the use of questions, modals, and negation in a natural "розмовний" register.
+- P2 (~140 words): The Full Dialogue. 12 turns. Viktor: "Привіт! Що ти робиш?" Olena: "Я зараз працюю, але дуже хочу каву." Viktor: "Ти можеш гуляти зараз?" Olena: "Не можу, мушу закінчити проект. Коли ти вільний?" Viktor: "Я вільний о шостій. Де ми зустрічаємося?" Olena: "У центрі. До зустічі!"
+- P3 (~110 words): Pedagogical breakdown. Focus on the difference between "Де" (location: where?) and "Куди" (direction: where to?). Explanation of why Olena says "не можу" (cannot) instead of just "ні". Introduction of the polite "У мене є питання" (I have a question) as per the wiki's naturalness guidelines.
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-completion --> [fill-in, focus: Complete a meeting dialogue using modals and question words, 8 items]
 
-## Граматика (~220 words total)
-- P1 (~50 words): Intro — one paragraph summarizing the logic of the A1.3 grammar system: Ukrainian verbs change form depending on who is doing the action. Two main patterns (дієвідміни). Modal verbs use the infinitive (-ти). Reflexive verbs add -ся. Questions use 7 fixed question words.
-- P2 (~80 words): Conjugation table recap — Group I vs Group II side-by-side. Left column: читати — читаю, читаєш, читає, читаємо, читаєте, читають. Right column: говорити — говорю, говориш, говорить, говоримо, говорите, говорять. One sentence identifying the key signal: Group I ends in -ють (3pl), Group II in -ять. Mnemonic: "If they all '-ять' together, it's Group II."
-- P3 (~55 words): Modal verbs recap — хотіти, могти, мусити always followed by infinitive (-ти). Three model sentences: Я хочу читати. Ти можеш говорити. Він мусить працювати. Negative: Я не хочу спати. Я не можу прийти. Note: мусити/мушу — stress on му́шу.
-- P4 (~35 words): Reflexive verbs recap — verb + -ся signals action done to/by oneself. Four examples: прокидаюся, вмиваюся, одягаюся, називаюся. Pattern: regular conjugation + -ся appended.
+## Підсумок — Summary (~250 words total)
+- P1 (~100 words): Achievement checklist. "You have completed A1.3 [Actions]! You can now: Conjugate most common verbs, express desires and obligations, ask about anything using the 7 'W' questions, and describe your daily life from morning to night."
+- P2 (~150 words): Forward look to A1.4 [Time and Nature]. Introduction to the concept of time (години), days of the week (дні тижня), and talking about the weather (погода). Encouragement: "You've mastered the 'What' (actions); now we learn the 'When' and 'Where' in detail."
 
----
-
-## Діалог (~330 words total)
-- P1 (~30 words): Setup — Оля зустрічає Максима в парку в суботу вранці. The dialogue combines ALL A1.3 skills in one natural conversation.
-- Dialogue block (~240 words): 16-turn exchange.
-  — Привіт, Максиме! Що ти тут робиш?
-  — Привіт, Олю! Я гуляю. А ти?
-  — Я теж хочу гуляти. Можна з тобою?
-  — Звичайно! Ти часто тут гуляєш?
-  — Так, зазвичай вранці. Я прокидаюся рано і люблю свіже повітря.
-  — А я мушу вставати рано через роботу. Де ти працюєш?
-  — Я працюю в лікарні. Я лікар. А ти?
-  — Я вчитель. Я викладаю математику.
-  — Цікаво! Тобі подобається твоя робота?
-  — Так, дуже! Я люблю говорити з дітьми. А ти можеш розповісти про свій день?
-  — Можу! Я прокидаюся о шостій, вмиваюся, снідаю. Потім їду на роботу.
-  — Коли ти починаєш?
-  — О восьмій. Мушу бути там вчасно!
-  — А що ти робиш увечері?
-  — Увечері я хочу відпочивати. Я читаю або слухаю музику. А ти?
-  — Я теж люблю читати. Я зараз читаю цікаву книгу!
-  Uses: Group I (гуляю, люблю, читаю, слухаю), Group II (говорю, викладаю, починаю), modals (хочу, можу, мушу), all key question words (що, де, коли, як), reflexives (прокидаюся, вмиваюся), sequence words (зазвичай, потім, увечері).
-- P2 (~60 words): Post-dialogue analysis — two sentences pointing out patterns. "Notice how both verb groups appear naturally in this dialogue. Notice how modals always connect to an infinitive: мушу бути, хочу відпочивати, можу розповісти." Draws learner's attention to the grammar they just saw in action.
-
----
-
-## Підсумок (~270 words total)
-- P1 (~60 words): Achievement statement — "You have completed A1.3: Actions. This is a major milestone. You can now do six things in Ukrainian that are core to any conversation: describe actions, express wants and obligations, ask questions, use reflexive verbs, build a daily routine, and combine all of these in connected speech."
-- P2 (~120 words): Bulleted recap of six A1.3 skills with one example sentence each:
-  • **Дієслова І групи** — Я читаю книгу. Вони слухають музику.
-  • **Дієслова ІІ групи** — Ти говориш добре. Вона вчить українську.
-  • **Модальні дієслова** — Я хочу спати. Він може прийти. Ми мусимо працювати.
-  • **Питальні слова** — Хто це? Що ти робиш? Де ти живеш? Куди ти йдеш? Коли починається? Чому ти мовчиш? Як ти себе почуваєш?
-  • **Заперечення** — Я не хочу їсти. Ніхто не знає.
-  • **Зворотні дієслова** — Я прокидаюся, вмиваюся, одягаюся.
-- P3 (~90 words): Forward look — "In A1.4 — Time and Nature, you will learn to say what time it is (котра година?), name the days of the week and months, talk about the weather, and describe the seasons. These topics build directly on your verb skills: Зараз третя година. Сьогодні неділя. Надворі холодно. Восени я люблю гуляти в парку. You already have the verbs. Now you will add time, days, and nature to your Ukrainian world."
-
----
-
-**Grand total: ~1315 words**
+Grand total: ~1330 words

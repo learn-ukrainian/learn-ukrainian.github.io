@@ -1,0 +1,116 @@
+{
+  "total_items": 201,
+  "grounded_items": 185,
+  "ungrounded": [
+    {
+      "word": "родиною",
+      "exercise_type": "quiz",
+      "context": "Ми з родиною часто збираємося _____.",
+      "role": "context"
+    },
+    {
+      "word": "збираємося",
+      "exercise_type": "quiz",
+      "context": "Ми з родиною часто збираємося _____.",
+      "role": "context"
+    },
+    {
+      "word": "дев'ятий",
+      "exercise_type": "match-up",
+      "context": "Не працює ліфт на дев'ятий поверх.",
+      "role": "answer"
+    },
+    {
+      "word": "винятків",
+      "exercise_type": "true-false",
+      "context": "Кімнати у квартирі завжди вимагають прийменника «у/в», без в",
+      "role": "context"
+    },
+    {
+      "word": "вказану",
+      "exercise_type": "true-false",
+      "context": "Комунальні послуги завжди входять у вказану ціну оренди.",
+      "role": "context"
+    },
+    {
+      "word": "сучасну",
+      "exercise_type": "true-false",
+      "context": "Термін «хрущовка» означає сучасну новобудову.",
+      "role": "context"
+    },
+    {
+      "word": "новобудову",
+      "exercise_type": "true-false",
+      "context": "Термін «хрущовка» означає сучасну новобудову.",
+      "role": "context"
+    },
+    {
+      "word": "любимо",
+      "exercise_type": "error-correction",
+      "context": "Ми любимо пити чай у кухні.",
+      "role": "context"
+    },
+    {
+      "word": "чай",
+      "exercise_type": "error-correction",
+      "context": "Ми любимо пити чай у кухні.",
+      "role": "context"
+    },
+    {
+      "word": "орендували",
+      "exercise_type": "error-correction",
+      "context": "Ми орендували цю квартиру у рік.",
+      "role": "context"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "error-correction",
+      "context": "Ми купили нову меблю для вітальні.",
+      "role": "context"
+    },
+    {
+      "word": "нову",
+      "exercise_type": "error-correction",
+      "context": "Ми купили нову меблю для вітальні.",
+      "role": "context"
+    },
+    {
+      "word": "меблю",
+      "exercise_type": "error-correction",
+      "context": "Ми купили нову меблю для вітальні.",
+      "role": "context"
+    },
+    {
+      "word": "пан",
+      "exercise_type": "error-correction",
+      "context": "Шановний пан Олег, я пишу щодо оголошення.",
+      "role": "context"
+    },
+    {
+      "word": "олег",
+      "exercise_type": "error-correction",
+      "context": "Шановний пан Олег, я пишу щодо оголошення.",
+      "role": "context"
+    },
+    {
+      "word": "типи",
+      "exercise_type": "group-sort",
+      "context": "Типи житла",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 24,
+    "tested_in_exercises": 17,
+    "not_tested": [
+      "вмебльована",
+      "договір",
+      "оренда",
+      "площа",
+      "полагодити",
+      "протікати",
+      "ремонт"
+    ]
+  },
+  "all_grounded": false
+}

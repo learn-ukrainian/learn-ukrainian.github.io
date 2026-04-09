@@ -1,28 +1,186 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 102,
+  "grounded_items": 73,
+  "ungrounded": [
+    {
+      "word": "він",
+      "exercise_type": "match-up",
+      "context": "Він",
+      "role": "answer"
+    },
+    {
+      "word": "буде",
+      "exercise_type": "fill-in",
+      "context": "буде працювати",
+      "role": "answer"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "group-sort",
+      "context": "вона буде",
+      "role": "answer"
+    },
+    {
+      "word": "будуть",
+      "exercise_type": "fill-in",
+      "context": "будуть відпочивати",
+      "role": "answer"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "match-up",
+      "context": "Вони",
+      "role": "answer"
+    },
+    {
+      "word": "ви",
+      "exercise_type": "match-up",
+      "context": "Ви",
+      "role": "answer"
+    },
+    {
+      "word": "будете",
+      "exercise_type": "group-sort",
+      "context": "ви будете",
+      "role": "answer"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)",
+      "role": "context"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)",
+      "role": "context"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "fill-in",
+      "context": "нього",
+      "role": "answer"
+    },
+    {
+      "word": "неї",
+      "exercise_type": "fill-in",
+      "context": "неї",
+      "role": "answer"
+    },
+    {
+      "word": "нас",
+      "exercise_type": "fill-in",
+      "context": "нас",
+      "role": "answer"
+    },
+    {
+      "word": "час",
+      "exercise_type": "fill-in",
+      "context": "У _____ є час у суботу зранку.",
+      "role": "context"
+    },
+    {
+      "word": "вечір",
+      "exercise_type": "fill-in",
+      "context": "У _____ є плани на вечір?",
+      "role": "context"
+    },
+    {
+      "word": "них",
+      "exercise_type": "fill-in",
+      "context": "них",
+      "role": "answer"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "match-up",
+      "context": "твоя",
+      "role": "answer"
+    },
+    {
+      "word": "наша",
+      "exercise_type": "match-up",
+      "context": "наша",
+      "role": "answer"
+    },
+    {
+      "word": "ваше",
+      "exercise_type": "match-up",
+      "context": "ваше",
+      "role": "answer"
+    },
+    {
+      "word": "її",
+      "exercise_type": "match-up",
+      "context": "її",
+      "role": "answer"
+    },
+    {
+      "word": "його",
+      "exercise_type": "match-up",
+      "context": "його",
+      "role": "answer"
+    },
+    {
+      "word": "немає",
+      "exercise_type": "quiz",
+      "context": "_____ немає часу в понеділок.",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "quiz",
+      "context": "_____ немає часу в понеділок.",
+      "role": "context"
+    },
+    {
+      "word": "велика",
+      "exercise_type": "quiz",
+      "context": "_____ є велика квартира.",
+      "role": "context"
+    },
+    {
+      "word": "мало",
+      "exercise_type": "true-false",
+      "context": "В неділю Тарас буде спати мало.",
+      "role": "context"
+    },
+    {
+      "word": "куди",
+      "exercise_type": "quiz",
+      "context": "Куди Тарас піде у п'ятницю?",
+      "role": "context"
+    },
+    {
+      "word": "піде",
+      "exercise_type": "quiz",
+      "context": "Куди Тарас піде у п'ятницю?",
+      "role": "context"
+    },
+    {
+      "word": "коли",
+      "exercise_type": "quiz",
+      "context": "Коли Тарас буде прибирати?",
+      "role": "context"
+    },
+    {
+      "word": "який",
+      "exercise_type": "quiz",
+      "context": "Який план у Тараса на неділю?",
+      "role": "context"
+    },
+    {
+      "word": "тараса",
+      "exercise_type": "quiz",
+      "context": "Який план у Тараса на неділю?",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
-    "not_tested": [
-      "вечірка",
-      "вчити",
-      "відпочивати",
-      "вільний",
-      "допізна",
-      "жаль",
-      "задоволенням",
-      "звичайно",
-      "зустрінемося",
-      "зустріч",
-      "квартира",
-      "кіно",
-      "на",
-      "план",
-      "прибирати",
-      "тиждень"
-    ]
+    "tested_in_exercises": 16,
+    "not_tested": []
   },
-  "all_grounded": true
+  "all_grounded": false
 }

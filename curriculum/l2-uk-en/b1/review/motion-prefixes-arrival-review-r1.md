@@ -1,100 +1,72 @@
 ## Linguistic Scan
 Errors found:
-1. **Calques / Russianisms**:
-   - `місцезнаходження` (calque from местонахождение, should be `місце перебування`).
-   - `благополучно` (Russianism/calque, should be `щасливо` або `успішно`).
-   - `брати/взяти таксі` (calque from брать такси, should be `сісти в таксі` or `їхати на таксі`).
-   - `доставка` (Russianism, should be `доставляння`).
-   - `парковку` (informal Russianism, should be `стоянку` or `майданчик для паркування`).
-2. **Surzhyk Syntax**:
-   - `Давайте розглянемо` (Surzhyk imperative, should be `Розгляньмо`).
-3. **Stylistic awkwardness**:
-   - `лімітованої точки` (unnatural use of a borrowed word, should be `конкретної точки`).
+1. **Russianism/Calque:** "моя подорож благополучно закінчилася" — `благополучно` in this context is a calque of Russian «благополучно»; Ukrainian idiomatically prefers `щасливо` or `успішно` for travel.
+2. **Surzhyk/Bureaucratic phrasing:** "бо вони здійснили факт прибуття пішки" — this is extremely unnatural "plastic" phrasing ("accomplished the fact of arrival").
 
 ## Exercise Check
-- Marker logic issue: The `group-sort` marker's focus deviated completely from the plan. The plan asked to sort by prefix meaning (arrival vs. reaching), but the marker asks to sort by vehicle vs. on foot. 
-- Marker formatting issue: The `free-write` marker is missing the `items: 6` parameter requested by the plan.
-- All other exercises correctly match the taught material and are distributed well.
+- `<!-- INJECT_ACTIVITY: match-perfective-imperfective -->` (Matches plan: match-up)
+- `<!-- INJECT_ACTIVITY: fill-in-arrival-past -->` (Matches plan: fill-in, split 1)
+- `<!-- INJECT_ACTIVITY: group-sort-prefixes -->` (Matches plan: group-sort)
+- `<!-- INJECT_ACTIVITY: fill-in-reaching-future -->` (Matches plan: fill-in, split 2)
+- `<!-- INJECT_ACTIVITY: quiz-semantic-choice -->` (Matches plan: quiz)
+- `<!-- INJECT_ACTIVITY: error-correction-arrival -->` (Matches plan: error-correction)
+- `<!-- INJECT_ACTIVITY: free-write-travel-story -->` (Matches plan: free-write)
+
+**Inventory Issues:** The plan asked for 6 activities. The writer placed 7 markers by intelligently splitting the conjugation `fill-in` into two separate markers to test arrival and reaching immediately after they are taught. This is a sound pedagogical improvement and all markers are placed logically.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missing the full conjugation of `доїхати` (the writer provided conjugation for `дійти` instead). Missing the imperfective example for `прибігати` (used perfective twice for the kitten example). Missing the specific example for `доплисти` in Section 3. |
-| 2. Linguistic accuracy | 8/10 | Several calques and Russianisms present: "взяв таксі", "брати таксі", "благополучно", "місцезнаходження", "доставка", "парковка". Surzhyk syntax in "Давайте розглянемо". |
-| 3. Pedagogical quality | 9/10 | Very strong contextual explanations of grammar. The distinction between "при-" (being there) and "до-" (making it there) is explained clearly with contrasting examples like "Я прийшов до тебе" vs "Я ледве дійшов до тебе". |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are integrated naturally into the prose. |
-| 5. Exercise quality | 8/10 | The `group-sort` activity asks students to sort verbs by vehicle vs on foot, entirely missing the point of the module (при- vs до-), contrary to the plan's exact instruction. |
-| 6. Engagement & tone | 8/10 | Good use of culturally relevant examples (Zakarpattia, Boryspil, Dovbush Rocks). However, minor meta-commentary slightly disrupts the tone: "Почнемо наш детальний огляд...", "Давайте розглянемо...". |
-| 7. Structural integrity | 10/10 | All sections are present, properly ordered, and well within the target word count bounds (4742 words against a 4000 target). |
-| 8. Cultural accuracy | 10/10 | Accurate references to Ukrainian geography, rural estates, and travel patterns. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogue is a realistic exchange about travel logistics featuring named speakers ("Олена", "Максим") and effectively incorporates the target grammar. |
+| 1. Plan adherence | 8/10 | Missed the "Литвінова Grade 6, p.54" reference regarding the spelling rules of the prefix при-. The writer also incorrectly applied the "прибути (formal)" requirement to a human guest instead of the train as planned. Word count (5407) easily exceeds the target. All vocabulary is present. |
+| 2. Linguistic accuracy | 8/10 | Found a Russianism/Calque ("моя подорож благополучно закінчилася") and an unnatural bureaucratic construction ("бо вони здійснили факт прибуття пішки і тепер присутні тут."). Otherwise, cases and phonetic explanations are correct. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow. The shift from one-way/multi-way bases to perfective/imperfective prefixed verbs is explained clearly. Copious examples given for each prefix before testing. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words from the plan are utilized naturally in context, without resorting to bare lists. |
+| 5. Exercise quality | 10/10 | The writer intelligently split the planned conjugation `fill-in` into two separate markers (`fill-in-arrival-past` and `fill-in-reaching-future`) to test concepts immediately after they are taught. This results in 7 markers for 6 planned activities, which is a pedagogical improvement. |
+| 6. Engagement & tone | 10/10 | Encouraging and supportive tone. Very clear analogies (e.g., comparing prefixes to a camera lens focus). No corporate filler. |
+| 7. Structural integrity | 8/10 | Found a major formatting artifact where an internal word count instruction leaked into a heading: `## При- чи до-? Різниця у значенні (~770 words total)`. Word count is strictly verified as 5407. |
+| 8. Cultural accuracy | 10/10 | Culturally grounded contexts, such as traveling to a "зелена садиба" in Zakarpattia and utilizing standard Ukrainian transport (trains, marshrutkas). |
+| 9. Dialogue & conversation quality | 9/10 | The dialogues are largely natural, but the host's phrasing "відпочивайте після того, як ви прибули" sounds stilted and translated. |
 
 ## Findings
-[Plan adherence] [Critical]
-Location: Section 3 "Префікс до-: досягнення мети"
-Issue: The plan explicitly required the full conjugation of `доїхати`. The writer omitted this entirely, conjugating `дійти` instead.
-Fix: Add the future and past tense conjugations of `доїхати` directly after introducing it.
+[1. Plan adherence] [major]
+Location: "Цей префікс працює як універсальний маркер успішного фінішу для будь-якого способу пересування."
+Issue: The plan explicitly required integrating a reference from "Литвінова Grade 6, p.54" regarding the spelling rules for "при-". The writer missed this completely.
+Fix: Inject a brief spelling reminder citing Litvinova after the explanation of the prefix's function.
 
-[Plan adherence] [Major]
-Location: Section 2 "Префікс при-: прибуття" and Section 3 "Префікс до-: досягнення мети"
-Issue: The plan required an example for the imperfective `прибігати` ("Кіт прибігає, коли чує їжу") and perfective `доплисти` ("Він доплив до берега"). The text uses perfective `прибіг` for the cat and omits `доплисти` entirely outside the summary table.
-Fix: Update the cat example to imperfective `прибігати` and add a sentence with `доплисти` for a swimmer.
+[2. Linguistic accuracy] [major]
+Location: "моя подорож благополучно закінчилася"
+Issue: "Благополучно" in this context is a common Russianism/Calque. Ukrainian prefers "щасливо" or "успішно" for journeys.
+Fix: Change to "успішно закінчилася".
 
-[Linguistic accuracy] [Critical]
-Location: Section 2 ("він вирішив не брати швидке таксі", "я одразу взяв таксі до вас"), Section 4 ("благополучно доїхали"), Section 5 ("машина вже приїхала на парковку"), Section 6 ("місцезнаходження")
-Issue: Text relies on direct Russian calques ("брати таксі", "благополучно", "місцезнаходження", "парковку").
-Fix: Replace with natural Ukrainian equivalents: "сісти в таксі/їхати таксі", "щасливо/успішно", "місце перебування", "стоянку".
+[2. Linguistic accuracy] [critical]
+Location: "бо вони здійснили факт прибуття пішки і тепер присутні тут."
+Issue: Highly unnatural, robotic phrasing ("accomplished the fact of arrival"). This is a semantic calque of bureaucratic speech.
+Fix: Simplify to "прибули пішки і тепер присутні тут".
 
-[Linguistic accuracy] [Major]
-Location: Section 3 ("Коли ж швидка доставка людей або комерційних вантажів")
-Issue: "Доставка" is a known Russianism; the standard Ukrainian verbal noun is "доставляння" (neuter).
-Fix: Change to "швидке доставляння".
+[7. Structural integrity] [critical]
+Location: `## При- чи до-? Різниця у значенні (~770 words total)`
+Issue: The writer leaked an internal word count instruction directly into the H2 markdown heading.
+Fix: Remove the target word count from the heading.
 
-[Linguistic accuracy] [Minor]
-Location: Section 4 ("Давайте розглянемо цю тонку лінгвістичну різницю")
-Issue: "Давайте + verb" is a Surzhyk construction mimicking Russian "давайте рассмотрим".
-Fix: Change to the proper imperative "Розгляньмо".
-
-[Exercise quality] [Major]
-Location: `<!-- INJECT_ACTIVITY: group-sort ... -->` and `<!-- INJECT_ACTIVITY: free-write ... -->`
-Issue: The `group-sort` activity tests the wrong concept (vehicle vs foot) instead of the plan's requirement (arrival vs reaching). The `free-write` tag is missing the item count.
-Fix: Correct the marker instructions to match the plan exactly.
-
-[Engagement & tone] [Minor]
-Location: Section 3 ("Почнемо наш детальний огляд з базового руху пішки.")
-Issue: Meta-commentary detracts from the immersive flow of the module.
-Fix: Simplify to "Найбільш базовим є рух пішки."
+[9. Dialogue & conversation quality] [major]
+Location: "Тоді проходьте швидше до своєї кімнати та добре відпочивайте після того, як ви прибули (arrived / formal)." and "Але наш ранковий поїзд зі столиці приїхав (arrived)..."
+Issue: The phrase "після того, як ви прибули" is stilted and unnatural for a host welcoming guests. Additionally, the plan required demonstrating the formal verb "прибути" for a train, but the writer used "приїхав" for the train and forced "прибути" awkwardly on the human guests.
+Fix: Change the train verb to "прибув (arrived, formal)" and change the host's awkward sentence to "відпочивайте після довгої дороги."
 
 ## Verdict: REVISE
-The writer did an excellent job explaining the semantic differences between the prefixes, but missed several explicit structural requirements from the plan (conjugations, specific examples) and allowed multiple Russian calques to slip through. The exercise marker for `group-sort` must also be corrected to ensure the generated activity matches the learning objective.
+The module exhibits several critical and major issues, including a leaked structural prompt artifact in an H2 heading, a missing plan citation (Litvinova), a Russianism ("благополучно"), and highly unnatural bureaucratic phrasing ("здійснили факт прибуття"). Because these are identifiable and precisely correctable issues, the verdict is REVISE via deterministic fixes rather than a full reject.
 
 <fixes>
-- find: "він вирішив не брати швидке таксі."
-  replace: "він вирішив не їхати на швидкому таксі."
-- find: "А вже звідти я одразу взяв таксі до вас"
-  replace: "А вже звідти я одразу сів у таксі до вас"
-- find: "Ближче до вечора ми благополучно"
-  replace: "Ближче до вечора ми щасливо"
-- find: "хтось покидає своє місцезнаходження і рухається геть"
-  replace: "хтось покидає своє місце перебування і рухається геть"
-- find: "його машина вже приїхала на парковку"
-  replace: "його машина вже приїхала на стоянку"
-- find: "Коли ж швидка доставка людей або комерційних вантажів"
-  replace: "Коли ж швидке доставляння людей або комерційних вантажів"
-- find: "Давайте розглянемо цю тонку лінгвістичну різницю"
-  replace: "Розгляньмо цю тонку лінгвістичну різницю"
-- find: "до певної лімітованої точки у просторі."
-  replace: "до певної конкретної точки у просторі."
-- find: "Почнемо наш детальний огляд з базового руху пішки."
-  replace: "Найбільш базовим є рух пішки."
-- find: "Для далеких подорожей на будь-якому транспорті ми обов'язково маємо використовувати дієслово **доїхати** *(to reach by vehicle, perfective)*. Воно є абсолютно необхідним"
-  replace: "Для далеких подорожей на будь-якому транспорті ми обов'язково маємо використовувати дієслово **доїхати** *(to reach by vehicle, perfective)*. Його майбутній час відмінюється так: я **доїду**, ти **доїдеш**, він/вона **доїде**, ми **доїдемо**, ви **доїдете**, вони **доїдуть**. Минулий час: **доїхав**, **доїхала**, **доїхало**, **доїхали**. Воно є абсолютно необхідним"
-- find: "стрибнути в останній вечірній трамвай»."
-  replace: "стрибнути в останній вечірній трамвай». Якщо ми говоримо про подолання дистанції по воді, ми використовуємо дієслово **доплисти** *(to swim all the way to, perfective)*. Наприклад: «Втомлений плавець успішно доплив до берега»."
-- find: "Або ж у побутовій ситуації: «Мій пухнастий кіт миттєво прибіг на кухню, коли почув звук відкритої консерви»."
-  replace: "Його недоконаною парою є дієслово **прибігати** *(to come running repeatedly)*. Або ж у побутовій ситуації: «Мій пухнастий кіт щоразу швидко прибігає на кухню, коли чує звук відкритої консерви»."
-- find: "<!-- INJECT_ACTIVITY: group-sort, Sort prefixed motion verbs into those involving a vehicle vs. those on foot, 10 items -->"
-  replace: "<!-- INJECT_ACTIVITY: group-sort, Sort prefixed motion verbs into при- (arrival) / до- (reaching) groups, 10 items -->"
-- find: "<!-- INJECT_ACTIVITY: free-write, Write a short travel narrative describing a recent trip using at least 4 при- and 3 до- verbs. -->"
-  replace: "<!-- INJECT_ACTIVITY: free-write, Write a short travel narrative using at least 4 при- and 3 до- verbs, 6 items -->"
+- find: "Цей префікс працює як універсальний маркер успішного фінішу для будь-якого способу пересування."
+  replace: "Цей префікс працює як універсальний маркер успішного фінішу для будь-якого способу пересування. Як нагадує підручник Литвінової для 6 класу, важливо не плутати його із префіксом «пре-». Префікс «при-» завжди означає наближення, тому ми пишемо саме «приїхати», а не з літерою «е»."
+- find: "моя подорож благополучно закінчилася"
+  replace: "моя подорож успішно закінчилася"
+- find: "здійснили факт прибуття пішки і тепер присутні тут."
+  replace: "прибули пішки і тепер присутні тут."
+- find: "## При- чи до-? Різниця у значенні (~770 words total)"
+  replace: "## При- чи до-? Різниця у значенні"
+- find: "Але наш ранковий поїзд зі столиці приїхав (arrived) на станцію із запізненням на цілу годину."
+  replace: "Але наш ранковий поїзд зі столиці прибув (arrived, formal) на станцію із запізненням на цілу годину."
+- find: "та добре відпочивайте після того, як ви прибули (arrived / formal)."
+  replace: "та добре відпочивайте після довгої дороги."
 </fixes>

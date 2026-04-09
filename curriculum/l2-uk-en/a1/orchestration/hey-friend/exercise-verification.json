@@ -1,24 +1,122 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 84,
+  "grounded_items": 66,
+  "ungrounded": [
+    {
+      "word": "дні",
+      "exercise_type": "true-false",
+      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "role": "context"
+    },
+    {
+      "word": "народження",
+      "exercise_type": "true-false",
+      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "role": "context"
+    },
+    {
+      "word": "знайомиться",
+      "exercise_type": "true-false",
+      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "role": "context"
+    },
+    {
+      "word": "тарасом",
+      "exercise_type": "true-false",
+      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "role": "context"
+    },
+    {
+      "word": "сина",
+      "exercise_type": "true-false",
+      "context": "Телефон сина лежить на столі. (The son's phone is on the tab",
+      "role": "context"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "true-false",
+      "context": "Телефон сина лежить на столі. (The son's phone is on the tab",
+      "role": "context"
+    },
+    {
+      "word": "дочки",
+      "exercise_type": "true-false",
+      "context": "Ключі дочки в кишені у тата. (The daughter's keys are in dad",
+      "role": "context"
+    },
+    {
+      "word": "тата",
+      "exercise_type": "true-false",
+      "context": "Ключі дочки в кишені у тата. (The daughter's keys are in dad",
+      "role": "context"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "true-false",
+      "context": "Бабуся йде додому. (Grandma is going home.)",
+      "role": "context"
+    },
+    {
+      "word": "українській",
+      "exercise_type": "true-false",
+      "context": "В українській мові для звертання ми використовуємо називний ",
+      "role": "context"
+    },
+    {
+      "word": "мові",
+      "exercise_type": "true-false",
+      "context": "В українській мові для звертання ми використовуємо називний ",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "В українській мові для звертання ми використовуємо називний ",
+      "role": "context"
+    },
+    {
+      "word": "звертання",
+      "exercise_type": "true-false",
+      "context": "В українській мові для звертання ми використовуємо називний ",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "В українській мові для звертання ми використовуємо називний ",
+      "role": "context"
+    },
+    {
+      "word": "іменинника",
+      "exercise_type": "true-false",
+      "context": "Тарас — це брат іменинника. (Taras is the birthday person's ",
+      "role": "context"
+    },
+    {
+      "word": "тато'",
+      "exercise_type": "true-false",
+      "context": "The word 'тато' changes to 'тате' in the vocative case.",
+      "role": "context"
+    },
+    {
+      "word": "тате'",
+      "exercise_type": "true-false",
+      "context": "The word 'тато' changes to 'тате' in the vocative case.",
+      "role": "context"
+    },
+    {
+      "word": "пані'",
+      "exercise_type": "true-false",
+      "context": "The title 'пані' does not change its form when addressing so",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "бабуся",
-      "брат",
-      "вчитель",
-      "дочко",
-      "друг",
-      "дідусь",
-      "козак",
-      "пан",
-      "пані",
-      "подруга",
-      "сестра",
-      "синку"
+      "подруга"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

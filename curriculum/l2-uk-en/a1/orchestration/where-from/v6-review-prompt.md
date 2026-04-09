@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 34: Where From? (A1, A1.5 [Places])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -159,147 +159,118 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги — Dialogues
 
-It's the first week of the semester, and students from all over the world are meeting at a Kyiv university. Everyone wants to know the same thing: **Звідки ти?** (Where are you from?) Here's how that conversation sounds in Ukrainian — using **з** (from) plus a country or city name.
+An international student mixer at a university in Kyiv is the perfect place to hear a symphony of languages and accents. When people from different backgrounds gather in one room, the most natural icebreaker is finding out where everyone comes from. In Ukrainian, asking about someone's origin is a direct, essential communicative skill. You will hear the question **Звідки ти?** (Where are you from?) echoing across the room as students connect, share their stories, and learn about each other's homes. The ability to state your origin confidently is your passport to deeper conversations. 
 
-### Діало́г 1 — На зу́стрічі студе́нтів (At a student mixer)
+> **Джон:** Звідки ти? *(Where are you from?)*
+> **Максим:** Я з України, з Києва. А ти? *(I am from Ukraine, from Kyiv. And you?)*
+> **Джон:** Я з Канади, із Торонто. *(I am from Canada, from Toronto.)*
+> **Максим:** Давно тут? *(Have you been here long?)*
+> **Джон:** Ні, я приїхав місяць тому. *(No, I arrived a month ago.)*
 
-> — **Тарас:** Приві́т! Ме́не зва́ти Тарас. Звідки ти? *(Hi! My name is Taras. Where are you from?)*
-> — **Лена:** Я з Украї́ни, з Ки́єва. А ти? *(I'm from Ukraine, from Kyiv. And you?)*
-> — **Тарас:** Я з Кана́ди, із Торо́нто. *(I'm from Canada, from Toronto.)*
-> — **Лена:** Давно́ тут? *(Been here long?)*
-> — **Тарас:** Ні, я приї́хав мі́сяць тому́. А ти, Кенджі? *(No, I arrived a month ago. And you, Kenji?)*
-> — **Кенджі:** Я з Япо́нії, з То́кіо. *(I'm from Japan, from Tokyo.)*
-> — **Тарас:** Як ціка́во! *(How interesting!)*
+The core interaction for stating your origin revolves around the question **Звідки ти?** (Where are you from?). Notice how the response is constructed: **Я з...** (I am from...). In Ukrainian, the present tense verb for "to be" is almost always omitted in these standard phrases. You do not need to say "I am," you simply state your pronoun, the preposition, and the place. The structure **Я з України** (I am from Ukraine) is a complete, grammatically correct sentence that you can use immediately. When talking about a specific city, you simply add it to the phrase, such as **Я з України, з Києва** (I am from Ukraine, from Kyiv).
 
-:::tip
-**Я приїхав** (I arrived) — memorize this as a ready-made chunk. The full verb **приїхати** belongs to A2. For now, just use **я приїхав** (masculine) or **я приїхала** (feminine) when you need to say "I arrived."
-:::
+> **Анна:** Звідки ти йдеш? *(Where are you coming from?)*
+> **Марко:** Я йду з роботи. *(I am coming from work.)*
+> **Анна:** А Олена? *(And Olena?)*
+> **Марко:** Вона йде зі школи. *(She is coming from school.)*
+> **Анна:** Куди вона йде? *(Where is she going?)*
+> **Марко:** Додому. *(Home.)*
 
-Notice how Dialogue 1 uses **з** (from) with both countries and cities. The same question — **Звідки ти?** — works for both. When Lena answers **Я з України, з Києва**, she's layering: country first, then city. Think of it as zooming in: "from Ukraine, from Kyiv." Taras does the same: **Я з Канади, із Торонто** — from Canada, from Toronto.
+This second conversation highlights a shorter exchange about physical movement. We are contrasting the origin point — coming from work or from school — with the destination. You use the exact same preposition to describe walking away from a building as you do when stating the country you were born in.
 
-### Діалог 2 — На ву́лиці (On the street)
+## Звідки? — Where From?
 
-> — **Оксана:** Звідки ти йдеш? *(Where are you coming from?)*
-> — **Микола:** Я йду з робо́ти. А ти? *(I'm coming from work. And you?)*
-> — **Оксана:** Я зі шко́ли. Куди́ ти за́раз? *(From school. Where are you headed now?)*
-> — **Микола:** Додо́му. А Оле́на де? *(Home. And where's Olena?)*
-> — **Оксана:** Вона́ ще в магази́ні. Але́ ско́ро йде з магази́ну додому. *(She's still at the store. But she's heading home from the store soon.)*
-> — **Микола:** До́бре. Бува́й! *(Okay. Bye!)*
+Ukrainian categorizes spatial relations and movement into three distinct, logical questions: **Де?** (Where are you?), **Куди?** (Where are you going?), and **Звідки?** (Where are you from?). Think of this as the "Location Trio." If we take a country like **Україна** (Ukraine), it changes its shape depending on which of the three questions you are answering. At this A1 level, you will learn to use these combinations as memorized chunks, while the full grammatical rules of the genitive case will be covered in A2.
+
+*   **Де ти? — В Україні.** (Where are you? — In Ukraine.) This uses the locative case to show exactly where you ARE.
+*   **Куди ти їдеш? — В Україну.** (Where are you traveling to? — To Ukraine.) This uses the accusative case to show where you are GOING.
+*   **Звідки ти? — З України.** (Where are you from? — From Ukraine.) This is a genitive chunk, showing the point where you are FROM.
+
+To express this origin, you need a preposition. Just as you learned in Module 28, Ukrainian applies euphony rules to make speech flow smoothly. The basic preposition for "from" is **з**, and you will use it before most vowels and consonants, like **з Канади** (from Canada). If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv).
 
 :::note
-**з роботи** = from work | **зі школи** = from school | **додому** = homeward (direction)
+You do not need to memorize complex euphony rules for **з**, **із**, and **зі** right now. Focus on learning the correct combinations as single blocks of vocabulary, like **зі США** (from the USA).
 :::
 
-Look at what both dialogues share. **Звідки?** always triggers **з/із/зі** plus a place name: **з Японії** (from Japan), **з роботи** (from work), **зі школи** (from school). But notice two different uses: (1) **Звідки ти?** asks about your origin or nationality — **Я з Японії**; (2) **Звідки ти йдеш?** asks where you're physically coming from right now — **з роботи**, **зі школи**. Both use the same preposition family. Up next: the full direction trio **Де?–Куди?–Звідки?** — the three questions every Ukrainian speaker uses constantly.
+When you use this preposition, the noun that follows it must change its ending. Feminine nouns ending in **-а** change to **-и**: **Україна** becomes **з України**, **Канада** becomes **з Канади**, and **Одеса** becomes **з Одеси**. Feminine nouns ending in **-я** change to **-ї**: **Англія** becomes **з Англії**. Masculine place names ending in a consonant usually add an **-а**: **Київ** becomes **з Києва**, and **Харків** becomes **з Харкова**. These predictable patterns allow you to comfortably form the origin phrase for most common locations without needing to memorize a complex table.
 
-<!-- INJECT_ACTIVITY: fill-in-zvidky -->
+:::caution
+English relies heavily on the verb "to be" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean "I am from Ukraine" — always use **з** for your origin.
+:::
 
-## Звідки? (Where From?)
+<!-- INJECT_ACTIVITY: answer-zvidky -->
 
-You already know two of the three essential location questions. **Де ти?** (Where are you?) appeared in M05. **Куди ти ї́деш?** (Where are you going?) came in M33. Now the trio is complete with **Звідки ти?** (Where are you from?). Here's the whole system — one country, three different forms, three different questions:
+The question **Звідки?** is used for much more than just international geography. You will use it constantly in your daily life to explain your routine movements. The same exact pattern applies to everyday locations in your city. When you finish your shift, you are walking **з роботи** (from work). After buying groceries, you are coming **з магазину** (from the store). When you finish your financial tasks, you step out **з банку** (from the bank). And when classes end, a student walks **зі школи** (from school).
 
-- **Де ти?** — **В Украї́ні.** (locative — where you ARE right now)
-- **Куди ти їдеш?** — **В Украї́ну.** (accusative — direction TO)
-- **Звідки ти?** — **З України.** (genitive chunk — origin FROM)
+<!-- INJECT_ACTIVITY: location-trio-sort -->
 
-See how **Україна** changes shape each time? **В Україні**, **В Україну**, **З України** — three different endings for three different situations. Native speakers switch between them automatically. We learn the pattern now and the full grammar of these endings (**відмінки**) in A2.
+## Країни і міста — Countries and Cities
 
-### З / із / зі — the euphony rule
+Major Ukrainian cities provide excellent practice for forming these origin phrases. The capital city is **Київ** (Kyiv), so you would say **з Києва** (from Kyiv). The cultural hub of the west is **Львів** (Lviv), which becomes **зі Львова** (from Lviv). The southern port is **Одеса** (Odesa), forming **з Одеси** (from Odesa). In the east, we have **Харків** (Kharkiv), which changes to **з Харкова** (from Kharkiv). The central city of **Дніпро** (Dnipro) becomes **з Дніпра** (from Dnipro), and the southeastern industrial center **Запоріжжя** (Zaporizhzhia) becomes **із Запоріжжя** (from Zaporizhzhia).
 
-Remember the euphony patterns from M28? The preposition **з** (from) follows the same logic. It has three forms to keep Ukrainian sounding smooth:
+:::tip
+The name **Україна** historically means "land," "region," or "our country." It is not a "borderland," as Russian imperialist myths have tried to claim. And its capital, **Київ**, has always been the historical heart of this land.
+:::
 
-**With Ukrainian cities:**
-- **з Києва**, **з Одеси**, **з Харкова**, **з Дніпра**
-- **зі Львова** — **зі** before the лв- cluster
+When interacting in international environments, you will also need to recognize common country names. If someone asks where you are from, you might need to say you are from Canada: **Канада** (Canada) becomes **з Канади** (from Canada). The United States is usually abbreviated, giving us **зі США** (from the USA) or occasionally **зі Штатів** (from the States). Other frequent European nations include **Англія** (England), which forms **з Англії** (from England), and **Німеччина** (Germany), which becomes **з Німеччини** (from Germany). You might also meet people from neighboring **Польща** (Poland), saying **з Польщі** (from Poland), or from further away like **Франція** (France), making **із Франції** (from France), **Італія** (Italy), making **з Італії** (from Italy), and **Японія** (Japan), which changes to **з Японії** (from Japan).
 
-**With countries:**
-- **з Канади**, **з Англії**, **з Польщі**, **з Фра́нції**, **з Японії**, **з Німеччини**
-- **зі США** / **зі Шта́тів** — **зі** before the шт- cluster
+Your origin is deeply connected to your identity and the language you speak. We can review concepts from Module 05 and link them to the new origin pattern. Notice how these phrases flow together in a logical sequence.
 
-**With everyday places:**
-- **з роботи**, **з магазину**, **з банку**, **з парку**
-- **зі школи** — **зі** before шк-
+*   **Мене звати Петро.** (My name is Petro.)
+*   **Я з України.** (I am from Ukraine.)
+*   **Я українець.** (I am a Ukrainian man.)
+*   **Я говорю українською.** (I speak Ukrainian.)
 
-The pattern: **з** before most consonants and vowels; **із** between awkward consonant clusters; **зі** before combinations starting with з-, с-, ш-. At A1, don't calculate — just recognize the pattern and memorize the fixed phrases from the lists above.
+We can contrast this with someone from a different background:
 
-### Memorize as chunks
+*   **Мене звати Джон.** (My name is John.)
+*   **Я з Англії.** (I am from England.)
+*   **Я англієць.** (I am an Englishman.)
+*   **Я говорю англійською.** (I speak English.)
 
-Treat **з** + place as sealed units, the same way you learned **в Україні** as a single phrase back in M30. English speakers don't think "in + Ukraine" as separate words — they say "in Ukraine" as one chunk. Do the same here. **Я з України**, **з Києва**, **з роботи** — three set phrases to know by heart. Why does **Київ** become **Києва** and **Україна** become **України**? Those are genitive case endings — full A2 grammar. For now, recognize and reproduce the forms from this module's vocabulary. If you can say **Я з Києва** without hesitating, you're doing it right.
+<!-- INJECT_ACTIVITY: preposition-quiz -->
 
-<!-- INJECT_ACTIVITY: group-sort-location-trio -->
+Often, where you are from is not where you are right now. You can combine your origin and your current location in a single sentence to tell a richer story about yourself. To do this, use the conjunction **але** (but) and the adverb **зараз** (now). This is an excellent way to practice both the "from" pattern and the "in" pattern together. 
 
-## Краї́ни і міста́ (Countries and Cities)
+*   **Я живу в Києві, але я зі Львова.** (I live in Kyiv, but I am from Lviv.)
+*   **Вона з Канади, але зараз вона живе в Україні.** (She is from Canada, but now she lives in Ukraine.)
 
-### Украї́нські міста (Ukrainian cities)
-
-Here are six major Ukrainian cities with their **з**-forms — the shape they take after **Звідки?**:
-
-| Мі́сто (City) | Звідки? (From where?) |
-|---|---|
-| **Київ** (Kyiv) | **з Києва** |
-| **Львів** (Lviv) | **зі Львова** |
-| **Одеса** (Odesa) | **з Одеси** |
-| **Харків** (Kharkiv) | **з Харкова** |
-| **Дніпро** (Dnipro) | **з Дніпра** |
-| **Запоріжжя** (Zaporizhzhia) | **із Запоріжжя** |
-
-Ukrainian city names carry history. **Київ** takes its name from Кий, a legendary Polanian prince. **Львів** is named for Prince Лев Дани́лович — Lev, son of Danylo. When you say **зі Львова**, you're using a form shaped by centuries of Ukrainian language. Notice **зі Львова** specifically — the **зі** form prevents an awkward зл- consonant cluster.
-
-### Країни (Countries)
-
-Countries follow the same pattern. Here are the ones you'll use most often:
-
-**Nearby:** **Польща** → **з Польщі** | **Угорщина** (Hungary) → **з Уго́рщини** | **Румунія** (Romania) → **з Руму́нії**
-
-**Further away:** **Канада** → **з Канади** | **США** → **зі США** (**зі Штатів**) | **Англія** (England) → **з Англії** | **Німеччина** (Germany) → **з Німеччини** | **Франція** (France) → **з Франції** | **Японія** (Japan) → **з Японії** | **Італія** (Italy) → **з Іта́лії**
-
-One important note: these are Ukrainian names, not transliterations of English. Germany is **Німеччина** (not "Герма́нія"). Japan is **Японія**. Canada is **Канада** (not "Кенада"). Always use the Ukrainian forms.
-
-### Націона́льність і мо́ва (Nationality and language)
-
-Back in M05, you learned to introduce yourself. Now extend that chain with origin:
-
-- **Я з України** → **Я украї́нець** (m) / **українка** (f) → **Я говорю́ украї́нською.**
-- **Я з Польщі** → **Я поляк** (m) / **полька** (f) → **Я говорю по́льською.**
-
-And here's a new contrast — where you live now versus where you're originally from:
-
-- **Я живу́ в Ки́єві, але я зі Львова.** (I live in Kyiv, but I'm from Lviv.)
-- **Вона живе́ в Кана́ді, але вона з України.** (She lives in Canada, but she's from Ukraine.)
-
-The pattern: **живу в** [place — locative] + **але я з** [place — genitive chunk]. This is how diaspora Ukrainians talk about themselves every day.
-
-<!-- INJECT_ACTIVITY: quiz-prepositions -->
-
-<!-- INJECT_ACTIVITY: fill-in-location-vs-origin -->
+<!-- INJECT_ACTIVITY: location-contrast -->
 
 ## Підсумок — Summary
 
-You now have all three direction questions that Ukrainian speakers use constantly. Here's the complete trio — three questions, three preposition families, three memorized chunk sets:
+You now have a complete, functional system for describing spatial relations and movement in Ukrainian. A review of the three core questions will solidify this system. 
 
-| Пита́ння (Question) | Прийме́нник (Preposition) | Приклад (Example) | Meaning |
-|---|---|---|---|
-| **Де?** | в/на + locative chunk | **В Україні. У Києві. На робо́ті.** | where you ARE |
-| **Куди?** | в/на + accusative chunk | **В Україну. У Київ. На робо́ту.** | where you're GOING |
-| **Звідки?** | з/із/зі + genitive chunk | **З України. З Києва. З роботи.** | where you're FROM |
+When you want to express a static location, you ask **Де?** (Where?). The answer usually requires the prepositions **в** or **на** and the locative case, such as **в Україні** (in Ukraine). 
 
-Why does **Київ** become **Києва** in one column and **Києві** in another? Those are different case endings — the genitive and locative. Full case grammar arrives in A2. For now: recognize the pattern, memorize the fixed forms from this module. You already have all three direction questions. Use them.
+When you want to talk about a destination, you ask **Куди?** (Where to?). The answer also uses **в** or **на** but with the accusative case, such as **в Україну** (to Ukraine). 
 
-### Переві́р себе́ (Self-check)
+Finally, when you are talking about an origin, you ask **Звідки?** (Where from?). The answer requires the prepositions **з**, **із**, or **зі** plus a genitive chunk, like **з України** (from Ukraine).
 
-Answer these three questions out loud in Ukrainian. Switch the prepositions correctly for each:
+Here is a summary of the most frequent city and country changes you learned in this module:
+*   **Україна** → **з України**
+*   **Канада** → **з Канади**
+*   **Німеччина** → **з Німеччини**
+*   **Київ** → **з Києва**
+*   **Львів** → **зі Львова**
+*   **Харків** → **з Харкова**
 
-- **Звідки ти?** (З яко́ї країни? З яко́го міста?)
-- **Де ти зараз?** (В яко́му мі́сті? В які́й краї́ні?)
-- **Куди ти йдеш пі́сля цього́ уро́ку?** (Додому? На роботу? В магази́н?)
+To ensure you have mastered these concepts, try to answer the following self-check questions out loud. Use your own real-world information where possible.
 
-If you can answer all three — switching smoothly between **з/із/зі**, **в/на**, and **в/на** — the **Де?/Куди?/Звідки?** trio is yours.
+*   **Звідки ти?** (Where are you from?) → **Я з...**
+*   **Звідки твій друг?** (Where is your male friend from?) → **Він з...**
+*   **Звідки твоя подруга?** (Where is your female friend from?) → **Вона з...**
+*   **Ти зараз у Києві чи у Львові?** (Are you in Kyiv or in Lviv right now?) → **Я зараз у...**
+*   **Звідки ти йдеш зараз?** (Where are you coming from right now?) → **Я йду з...**
+*   **Де ти живеш?** (Where do you live now?) → **Я живу в...**
+*   **Куди ти йдеш після уроку?** (Where are you going after this lesson?) → **Я йду в/на...**
 
-**Deterministic word count: 1374 words** (calculated by pipeline, do NOT estimate manually)
-
+By mastering the question **Звідки?**, you have unlocked the final piece of the basic location puzzle. You can now confidently describe where you are, where you are heading, and where you came from. In the next module, Checkpoint — Places, you will review and consolidate all of this spatial vocabulary before moving on to new topics.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1597 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -387,8 +358,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -475,61 +446,40 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 65 words | Not found: 79 words
+Verified: 51 words | Not found: 29 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іта — NOT IN VESUM
   ✗ Італія — NOT IN VESUM
+  ✗ Італії — NOT IN VESUM
   ✗ Англія — NOT IN VESUM
   ✗ Англії — NOT IN VESUM
-  ✗ Дани — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
+  ✗ Джон — NOT IN VESUM
   ✗ Дніпра — NOT IN VESUM
   ✗ Дніпро — NOT IN VESUM
-  ✗ Додо — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
   ✗ Запоріжжя — NOT IN VESUM
-  ✗ Кана — NOT IN VESUM
   ✗ Канада — NOT IN VESUM
   ✗ Канади — NOT IN VESUM
-  ✗ Кенада — NOT IN VESUM
-  ✗ Кенджі — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
-  ✗ Лена — NOT IN VESUM
   ✗ Львова — NOT IN VESUM
+  ✗ Львові — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
-  ✗ Микола — NOT IN VESUM
-  ✗ Націона — NOT IN VESUM
   ✗ Німеччина — NOT IN VESUM
   ✗ Німеччини — NOT IN VESUM
   ✗ Одеса — NOT IN VESUM
   ✗ Одеси — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Переві — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ Петро — NOT IN VESUM
   ✗ Польща — NOT IN VESUM
   ✗ Польщі — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Руму — NOT IN VESUM
-  ✗ Румунія — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
   ✗ Торонто — NOT IN VESUM
-  ✗ Уго — NOT IN VESUM
-  ✗ Угорщина — NOT IN VESUM
-  ✗ Украї — NOT IN VESUM
-  ✗ Фра — NOT IN VESUM
   ✗ Франція — NOT IN VESUM
   ✗ Харкова — NOT IN VESUM
   ✗ Харків — NOT IN VESUM
-  ✗ Шта — NOT IN VESUM
-  ✗ Япо — NOT IN VESUM
   ✗ Японія — NOT IN VESUM
   ✗ Японії — NOT IN VESUM
-  ✗ деш — NOT IN VESUM
-  ✗ зва — NOT IN VESUM
-  ✗ кіо — NOT IN VESUM
-  ✗ лович — NOT IN VESUM
 
-All 65 other words are confirmed to exist in VESUM.
+All 51 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

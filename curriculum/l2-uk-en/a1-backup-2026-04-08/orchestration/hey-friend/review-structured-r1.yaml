@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 content_outline sections present with correct topics. Dialogues
+    match plan scenarios. **Deduction:** Required vocabulary **пані** (Mrs./Ms.) is
+    completely absent from prose — plan lists it as re
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Every vocative form verified against VESUM. All 13 vocative forms batch-verified
+    ✅. Consonant alternation rules (г→ж, к→ч) confirmed by VESUM (друже, козаче).
+    Textbook references verified against Litv
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues first (situation), then explicit rule explanation
+    (pattern), then practice markers. The nominative-vs-vocative contrast ("Олена
+    прийшла" vs "Олено, ходи сюди!") is an eff'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'All required vocab present EXCEPT **пані** — a required word that is
+    never used or explained. This matters pedagogically: пані is невідмінюване (invariable),
+    so its vocative = називний, which is a use'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers for 4 plan hints — correct count. Types roughly match plan (quiz,
+    fill-in, group-sort). Markers placed after relevant teaching content. **Minor
+    deduction:** 2 of 4 markers clustered in the s
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no "Let us explore...", no gamified language.
+    The birthday party setting is concrete and engaging. Good cultural framing: "the
+    vocative is one of the ways Ukrainian encodes hu'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 H2 headings from plan present and correctly ordered. Clean markdown.
+    Word count 1204 meets 1200 target. **Deduction:** The raw English aside in Dialogue
+    2 ("— he's talking to Марко's sister") br
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — Ukrainian presented on its own terms. No "like Russian
+    but..." comparisons. The description of vocative as "alive and vibrant in modern
+    Ukrainian" is accurate and culturally respec
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Dialogue 1 is excellent — natural multi-turn, named speakers, realistic
+    party setting, each vocative form used organically. **Dialogue 2 has a logic problem:**
+    Марко asks "Тату, а де ключі?" but Тато '
+findings: []

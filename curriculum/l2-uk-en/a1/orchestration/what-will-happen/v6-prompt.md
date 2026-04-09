@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -262,405 +262,350 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (15/15):**
-- ✅ завтра (adv)
-- ✅ буду → бути (verb) — note: VESUM also has "буда" (noun); the verb reading is correct
-- ✅ будеш → бути (verb)
-- ✅ буде → бути (verb)
-- ✅ будемо → бути (verb)
-- ✅ будете → бути (verb)
-- ✅ будуть → бути (verb)
-- ✅ робити (verb)
-- ✅ відпочивати (verb)
-- ✅ наступний (adj, 3 matches)
-- ✅ тиждень (noun, 2 matches)
-- ✅ план (noun, 2 matches)
-- ✅ звучати (verb)
-- ✅ футбол (noun, 2 matches)
-- ✅ зараз (adv) — note: VESUM also has "зараза" (noun); the adverb reading is correct
-
-**Not found:** — none. All 15 plan vocabulary items exist in VESUM.
-
----
-
-## Textbook Excerpts
-
-### Section: Майбутній час (Future Tense)
-
-> *"Складена форма: дієслово бути в особовій формі + інфінітив основного дієслова. Особа / Однина / Множина: 1-ша — буду писати, буду робити / будемо писати, будемо робити; 2-га — будеш писати, будеш робити / будете писати, будете робити; 3-тя — буде писати, буде робити / будуть писати, будуть робити."*
-> **Source: Litvinova, Grade 7, tier 1 (2024)** — §9 Часи дієслова, сторінка 52
-
-> *"Складена форма: До неозначеної форми додаємо дієслово-зв'язку бути в особових формах майбутнього часу: буду берегти, будеш берегти, будуть берегти."*
-> **Source: Zabolotnyi, Grade 7, tier 1 (2024)** — Форми дієслів майбутнього часу, сторінка 69
-
-### Section: Stress on буду forms (Practical Note for Module)
-
-> *"Дієслово бути в майбутньому часі має наголос на першому складі: бу́ду, бу́демо, бу́деш, бу́дете."*
-> **Source: Avramenko, Grade 7, tier 1 (2024)** — §39 Наголошування дієслів та їхніх форм, сторінка 89
-
-### Section: Summary — Three Tenses Comparison
-
-> *"Часи дієслова: Теперішній — у момент повідомлення (що робить?) → читає; Минулий — до моменту повідомлення (що робив?) → читав; Майбутній — після моменту повідомлення (що робитиме?) → читатиме / буде читати."*
-> **Source: Zabolotnyi, Grade 7, tier 1 (2024)** — §16 Часи дієслова, сторінка 61
-
-### Section: Dialogues — Plans / Future conversation
-
-> *"Розкажіть, як ви плануєте свій день (один із днів тижня на вибір). Що ви в цей день будете робити? … Плани — це те, що ти щодня, крок за кроком будеш виконувати."*
-> **Source: Kravtsova, Grade 4, tier 2** — сторінка 136
-
-> *"У середу я планую… Розкажіть, як ви плануєте свій день. Що ви в цей день будете робити?"*
-> **Source: Vashulenko, Grade 2, tier 2 (2019)** — сторінка 83
-
-### Section: Weekend plans dialogue
-
-> *"— Ти підеш зі мною на річку? — Так, я залюбки поплаваю. — Отож ми можемо запланувати на суботу? — Щодо суботи я хотів би спочатку порадитися з батьками."*
-> **Source: Zabolotnyi, Grade 8, tier 1 (2025)** — сторінка 123
-
----
+- Confirmed: завтра, буду, будеш, буде, будемо, будете, будуть, робити, відпочивати, наступний, тиждень, план, звучати, футбол, зараз.
+- Not found: None.
 
 ## Grammar Rules
-
-Правопис 2019 does not have a dedicated section returned for "майбутній час" via this query interface; however, the textbooks confirm the grammar rules authoritatively:
-
-- **Analytic (compound) future** = бути (personal form) + imperfective infinitive. Confirmed by Litvinova Gr.7, Zabolotnyi Gr.7 §майбутній час.
-- **Two future forms for imperfective verbs**: (1) складена: буду читати; (2) складна (synthetic): читатиму. The plan correctly restricts A1 to the складена form only — textbooks confirm this is the simpler and first-taught pattern.
-- **Stress rule**: буду/будемо/будеш/будете all take stress on the **first syllable** (бу́-). Source: Avramenko Gr.7 §39. This is critical for the module's stress annotations.
-- **Imperfective verbs only** take the складена form. Perfective verbs use the simple future (прочитаю). The plan correctly notes synthetic future is A2 — confirmed by Zabolotnyi Gr.7 table.
-
----
+- Майбутній час (складена форма): Правопис § 97 (згідно з підручниками) — Analytic future is formed by the conjugated forms of "бути" (буду, будеш, буде, будемо, будете, будуть) + the infinitive of the main verb (e.g., буду читати). This form is used for imperfective aspect verbs.
+- Часові прислівники: Temporal expressions like "next week" should use the Genitive case without a preposition: "наступного тижня" (not "на наступному тижні", which is often corrected as a lexical error).
 
 ## Calque Warnings
-
-- **"звучить добре"** — Антоненко-Давидович did not flag this as a calque. The phrase is natural Ukrainian. The entry found was unrelated (about overloaded verbal nouns). **OK** to use.
-- **"готувати вечерю"** — No calque flag. "Готувати" (to cook/prepare) + "вечеря" (dinner) is standard Ukrainian. **OK.**
-- **"дивитися футбол"** — No direct calque flag. The style guide raised the issue of "болільник vs вболівальник" but nothing against watching football. **OK.** (Note: native phrasing is "дивитися футбол" — no preposition needed, parallel to English "watch football".)
-- **"наступного тижня"** — No calque found. Genitive of time is confirmed as natural Ukrainian by Антоненко-Давидович (орудний/родовий відмінок часу entry). **OK.**
-
----
+- "звучить добре": OK — While "Це гарна ідея" is more traditional, "Це звучить добре" is widely used in modern Ukrainian to express agreement with a plan.
+- "на наступному тижні": Calque — Should be "наступного тижня" (Genitive case, no preposition).
+- "робити плани": Calque — Better to use "мати плани" or the verb "планувати".
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| завтра | A1 | ✅ On target |
-| робити | A1 | ✅ On target |
-| відпочивати | A1 | ✅ On target |
-| тиждень | A1 | ✅ On target |
-| план | A1 | ✅ On target |
-| футбол | A1 | ✅ On target |
-| зараз | A1 | ✅ On target |
-| наступний | A1 | ✅ On target |
-| **звучати** | **B1** | ⚠️ **ABOVE TARGET — see note** |
-
-**⚠️ FLAG — `звучати` is B1, not A1.** The phrase "Звучить добре!" appears in Dialogue 2 of the plan. At A1, learners have not yet acquired this verb. Consider replacing with a simpler A1 reaction such as:
-- "Добре!" (Good!) — A1 ✅
-- "Чудово!" (Wonderful!) — still expressive and more A1-appropriate
-- "Як добре!" (How nice!) — entirely within A1 lexicon
-
-All other vocabulary items are confirmed at A1 level.
+- завтра: A1 — OK
+- відпочивати: A1 — OK
+- наступний: A1 — OK
+- тиждень: A1 — OK
+- план: A1 — OK
+- футбол: A1 — OK
+- зараз: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: What Will Happen?
-**Module:** what-will-happen | **Phase:** A1.8 [Past, Future, Graduation]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: What Will Happen?
+**Module:** what-will-happen | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/what-will-happen.md
+
+# Педагогіка A1: What Will Happen
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The primary goal at the A1 level is to enable learners to talk about their immediate future plans (`плани на майбутнє`). The pedagogical approach in Ukrainian textbooks for young learners is practical and builds upon existing knowledge.
+
+The cornerstone of teaching future tense at the A1 level is the **compound future (складена форма)**. This form is the most straightforward for beginners and is used extensively in introductory dialogues (Source: `ext-ulp_youtube-276`). It consists of the auxiliary verb **`бути`** (to be) conjugated in the future tense, followed by the **infinitive** of the main verb (Source: `7-klas-ukrmova-avramenko-2024_s0078`).
+
+For example:
+- `Я **буду читати**` (I will read)
+- `Вони **будуть грати** у теніс` (They will play tennis)
+
+This approach is effective because:
+1.  **Cognitive Load:** Learners only need to memorize the six conjugations of `бути`. They can then reuse the infinitives of verbs they already know (`читати`, `робити`, `дивитися`).
+2.  **Immediate Application:** It directly translates to the common A1 task of discussing weekend or upcoming plans, often framed by the question, "**Що ти будеш робити на вихідних?**" (What are you going to do on the weekend?) (Source: `ext-ulp_youtube-276`).
+3.  **Foundation for Aspect:** This form is used for **imperfective verbs**, introducing learners to the idea of an ongoing or repeated future action, which lays the groundwork for understanding verb aspect later.
+
+Ukrainian elementary school textbooks (Grades 2-4) introduce all future tense forms but heavily rely on the `буду + інфінітив` structure for initial exercises and examples (Sources: `2-klas-ukrmova-vashulenko-2019-1_s0081`, `4-klas-ukrayinska-mova-kravtsova-2021-1_s0107`). The initial focus is always on expressing personal plans, making the grammar point relevant and engaging (Source: `ext-ulp_youtube-21`).
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Step 1: Introduce the Concept & Key Verb `бути`**. Start with the context of making plans (`плани`). Teach the future tense conjugation of the verb `бути`. It has predictable endings similar to first-conjugation present tense verbs (Source: `ext-ulp_youtube-276`).
+    - я **буду**
+    - ти **будеш**
+    - він/вона/воно **буде**
+    - ми **будемо**
+    - ви **будете**
+    - вони **будуть**
+    It's crucial to drill this conjugation first, as it's the foundation for the compound future.
+
+2.  **Step 2: Form the Compound Future (`бути` + Infinitive)**. Combine the conjugated forms of `бути` with familiar imperfective infinitives like `робити`, `читати`, `слухати`, `гуляти`. Use the pattern: **Person + `бути` (conjugated) + Verb (infinitive).** For example: `У суботу я буду бігати і займатися йогою` (On Saturday I will run and do yoga) (Source: `ext-ulp_youtube-276`).
+
+3.  **Step 3: Practice through Dialogue and Questions**. Use simple, contextual questions like `Що ти будеш робити завтра?` (What will you do tomorrow?) or `Що ви будете робити на вихідних?` (What will you do on the weekend?). Learners should answer using the compound future. This mirrors exercises in beginner materials (Source: `ext-ulp_youtube-246`).
+
+4.  **Step 4: Introduce the Simple Perfective Future**. After the compound form is mastered, introduce the **simple future (проста форма)** for **perfective verbs**. Explain that this is for a single, completed future action or result. It's formed by adding a prefix to a verb that looks like its present-tense counterpart (e.g., `робити` → `**з**роблю`, `писати` → `**на**пишу`) (Source: `7-klas-ukrmova-avramenko-2024_s0078`).
+    - Contrast: `Я **буду писати** лист` (I will be writing a letter - process) vs. `Я **напишу** лист` (I will write a letter - result/completion).
+
+5.  **Step 5: Briefly Mention the Complex Future (for A2 exposure)**. Introduce the **complex future (складна форма)**, formed with `інфінітив + -м- + закінчення` (e.g., `писатиму`, `читатимеш`), as an alternative to the compound future for imperfective verbs. Note that it's often considered more formal or poetic (Source: `ext-ulp_youtube-13`) and is less common in everyday spoken language at the A1 level. Learners should recognize it but are not expected to produce it actively at this stage. Ukrainian textbooks present them as interchangeable options (`буду писати` / `писатиму`) (Source: `3-klas-ukrainska-mova-vashulenko-2020-1_s0150`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| Я **буду зробити** це завтра. | Я **зроблю** це завтра. (або) Я **буду робити** це завтра. | The compound future (`бути` + infinitive) is only used with **imperfective** infinitives. For a one-time, completed action, the simple perfective future is used. This is a fundamental error related to verb aspect. |
+| Він **будеш** читати. | Він **буде** читати. | Incorrect conjugation of the auxiliary verb `бути`. Learners must memorize the future tense forms of `бути` correctly for each person. |
+| Я **писатиму буду**. | Я **писатиму**. (або) Я **буду писати**. | This is a "double future" error, mixing the complex (`-м-`) form with the compound (`буду`) form. Learners must use one or the other, not both (Source: `7-klas-ukrmova-litvinova-2024_s0056`). |
+| Завтра я **роблю** домашнє завдання. | Завтра я **буду робити** домашнє завдання. | English speakers sometimes use the present tense for future plans ("Tomorrow I'm doing..."). While Ukrainian can sometimes do this for scheduled events (`Завтра я їду до моря` - Source: `7-klas-ukrmova-avramenko-2024_s0079`), for general plans, the future tense is required. |
+| Ви **будете йти** в театр? | **Чи** ви **будете йти** в театр? (або) Ви **будете йти** в театр? (з висхідною інтонацією) | English speakers rely on word order ("Will you go...?") for questions. In Ukrainian, questions are formed with the particle `чи` or, more commonly in speech, with rising intonation. |
+| Я **не буду** ходити. | Я **не буду** ходити. | While this is grammatically correct, often the simple perfective is more natural for negation of a single event: `Я **не піду**` (I will not go). Teaching the nuance between "I will not be going" and "I won't go" is key. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a clean slate, free from Russian-language interference. This is non-negotiable.
+
+1.  **Teach Ukrainian on Its Own Terms:** Never introduce Ukrainian grammar or phonetics as "like Russian X, but...". The learner's mental model must be built from Ukrainian examples alone. For the future tense, this means presenting the system of three forms (проста, складна, складена) as a feature of the Ukrainian language (Source: `7-klas-ukrmova-betsa-2023_s0208`).
+
+2.  **Highlight the Complex (`-м-`) Form:** The complex/synthetic future (`читатиму`, `ходитимемо`) is a vibrant and distinct feature of the Ukrainian language. While the compound form (`буду читати`) is easier for A1 learners, the `-м-` form should be introduced as an authentic, often more literary or "more Ukrainian" sounding alternative (Source: `ext-ulp_youtube-13`). It has no direct, common equivalent in modern standard Russian, making it a clear point of linguistic distinction.
+
+3.  **Aspect is Not a Russian Concept:** Verb aspect (доконаний/недоконаний вид) is a feature of Slavic languages. Frame it within the Ukrainian system. The choice between `буду робити` and `зроблю` is a choice of *aspect*, not just tense. This concept should be introduced using only Ukrainian examples.
+
+4.  **Avoid False Friends:** Do not use Russian cognates to teach vocabulary unless they are identical in form and meaning. Focus on vocabulary from authentic Ukrainian sources (e.g., the dialogues provided).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Дієслова (Verbs)
+- ★★★ `бути`, `робити`, `мати` (to have), `хотіти`
+- ★★★ `читати`, `писати`, `слухати`, `дивитися`
+- ★★★ `йти`, `їхати`, `бігати`, `гуляти`
+- ★★☆ `готувати`, `їсти`, `пити`, `купувати`
+- ★★☆ `відпочивати`, `грати` (у футбол, в карти), `співати`
+- ★☆☆ `починати`, `закінчувати`, `зустрічатися`
+
+### Іменники (Nouns)
+- ★★★ `план / плани`, `вихідні`, `день`, `тиждень`
+- ★★★ `робота`, `школа`, `урок`, `книга`, `фільм`
+- ★★☆ `субота`, `неділя`, `ранок`, `вечір`
+- ★★☆ `друг / друзі`, `сім'я`, `мама`, `тато`
+- ★★☆ `музика`, `театр`, `парк`, `магазин`
+- ★☆☆ `подорож`, `свято`, `поїзд`, `пікнік`
+
+### Прислівники та часові вирази (Adverbs & Time Expressions)
+- ★★★ `завтра`, `сьогодні`, `ввечері`, `вранці`
+- ★★★ `на вихідних`, `у суботу`, `у неділю`
+- ★★☆ `скоро`, `потім`, `разом`
+- ★☆☆ `завжди`, `ніколи`, `часто`
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Transformation: Present to Future**
+    This exercise reinforces that the compound future is a simple change.
+    *Prompt (based on Source `6-klas-ukrmova-betsa-2023_s0209`):*
+    Напишіть речення в майбутньому часі. (Write the sentences in the future tense.)
+    - Зразок: `Петро вивчає історію.` → `Петро буде вивчати історію.`
+    1. `Олена працює дизайнеркою.` → `Олена буде працювати дизайнеркою.`
+    2. `Я іду в магазин.` → `Я буду йти в магазин.`
+    3. `Учні на перерві їдять яблука.` → `Учні на перерві будуть їсти яблука.`
+
+2.  **Forming All Three Future Types**
+    This helps learners see the complete system for a single verb.
+    *Prompt (based on Source `4-klas-ukrayinska-mova-ponomarova-2021-1_s0106`):*
+    Від дієслова `малювати` утворіть три форми майбутнього часу. (From the verb `to draw`, form the three future tense forms.)
+    - **Що зроблю?** (проста, доконаний вид): `намалюю`
+    - **Що робитиму?** (складна, недоконаний вид): `малюватиму`
+    - **Що буду робити?** (складена, недоконаний вид): `буду малювати`
+
+3.  **Answering Questions about Plans**
+    This is a core communicative task for A1.
+    *Prompt (based on Source `ext-ulp_youtube-246`):*
+    Прочитайте розклад і дайте відповіді на запитання. (Read the schedule and answer the questions.)
+    *Текст:* `У вівторок ми будемо вчити граматику. У четвер ми будемо слухати українську музику.`
+    - `Що ви будете робити у вівторок?`
+      - *Відповідь:* `У вівторок ми будемо вчити граматику.`
+    - `Що ви будете робити у четвер?`
+      - *Відповідь:* `У четвер ми будемо слухати українську музику.`
+
+4.  **Choosing the Correct Form of `бути`**
+    A classic fill-in-the-blanks exercise to drill conjugation.
+    *Prompt:*
+    Вставте правильну форму дієслова `бути`. (Insert the correct form of the verb `to be`.)
+    1. Я ... читати книгу. (`буду`)
+    2. Ти ... дивитися фільм? (`будеш`)
+    3. Він ... грати у футбол. (`буде`)
+    4. Ми ... гуляти в парку. (`будемо`)
+    5. Ви ... слухати музику. (`будете`)
+    6. Вони ... відпочивати вдома. (`будуть`)
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/verb-aspect`
+- `grammar/future-tense`
+- `grammar/verbs/verb-conjugation`
+- `vocabulary/a1/daily-routines-and-plans`
 
 ---
 
-## Dialogues
+### Вікі: pedagogy/a1/what-happened.md
 
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 251
-> **Score:** 0.50
->
-> 251
-> Кажу** літу:
-> — Ти вже врізало день, щодня доточуєш ночі, підганяєш 
-> усіх достигати, а саме — холоднішати. Навіщо? Я ще нічого 
-> літнього не встигла.
-> А воно мені каже:
-> — Якби я чекало, допоки люди перероблять свою роботу, 
-> то так ніколи б і не настало. Або ніколи не скінчилося.
-> — Другий варіант мені подобається більше.
-> — Ну навряд чи тобі хотілось би жити у світі вічнозелених 
-> вишень і ніколи недостиглих кавунів. Усьому свій час. Мені 
-> час минати потроху.
-> — Але ж…
-> — Що але ж? Просто не відкладай мене на завтра. Бо кожне 
-> завтра я вночі роблю коротшим за сьогодні (А. Акуленко).
-> Запитання
-> Завдання
-> 1. Які слова вжито в перенос-
-> ному значенні?
-> 2. Скільки звуків позначають 
-> букви я, є та ю у виділених 
-> словах? Поясніть.
-> 3. Як правильно вимовити 
-> слово «подобається»?
-> 4.
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 50
-> **Score:** 0.25
->
-> § 9  Часи діє слова  
-> 47
-> Проєкт
-> Виконайте завдання на вибір:
-> • Заплануйте відвідання екскурсії у своєму місті. 
-> • Підготуйте екскурсію по своєму місту/селищу/вулиці: 
-> зберіть інформацію, продумайте план, напишіть орі-
-> єнтовний текст, проведіть захід.
-> Майбутній час
-> Дієслова у формі майбутнього часу позначають дію, що 
-> відбуватиметься або відбудеться після моменту мовлення.
-
-## Майбутній час (Future Tense)
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 41
-> **Score:** 0.33
->
-> Розділ 1  ДІЄСЛОВО
-> 38
-> § 9  Часи діє слова
-> Вправа 48
-> 1   Прочитайте речення 
-> Я 
-> роблю  
-> вчора 
-> уроки.
-> Я 
-> робила  
-> завтра 
-> уроки.
-> Я 
-> робитиму 
-> зараз 
-> уроки.
-> 2   Поміркуйте, чи правильно побудовані речення  
-> Що в  них не так?
-> 3   Скоригуйте й  запишіть правильні варіанти 
-> 4   Поміркуйте, у  якій частині діє слова закладено значення часу 
-> Дієслова у формі дійсного способу виражають дію, що 
-> відбувалася, відбувається або відбувати меться. Вони  мають 
-> форми трьох часів: теперішнього, минулого та майбутнього.
-
-## Практика (Practice)
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 140
-> **Score:** 0.50
->
-> § 23  Прислівник як частина мови  
-> 137
-> Їсти (піцу/смачно), повернутися (надвечір/після уроків), 
-> чекати (біля супермаркету/отам), планувати (цієї зими/взим­
-> ку), працювати (довго/три години), бути (в школі/деінде), по­
-> бачитися (зранку/о дев’ятій), дістатися (пішки/тролейбусом), 
-> говорити (по­китайськи/китайською мовою).
-> Вправа 186
->  
-> Доповніть словосполучення прислівниками, що відповідатимуть на по-
-> ставлені питання 
-> Іти (куди?), іти (коли?), іти (звідки?), іти (як?); співати (як?), 
-> співати (коли?), співати (де?); радіти (наскільки?), радіти (де?), 
-> радіти (як?), радіти (з якої причини?).
-> Вправа 187
->  
-> Складіть кілька словосполучень із кожним запропонованим 
-> діє словом так, щоб залежним словом був прислівник (за 
-> зразком попередньої вправи) 
-> Бігти, писати, розуміти.
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 50
-> **Score:** 0.25
->
-> § 9  Часи діє слова  
-> 47
-> Проєкт
-> Виконайте завдання на вибір:
-> • Заплануйте відвідання екскурсії у своєму місті. 
-> • Підготуйте екскурсію по своєму місту/селищу/вулиці: 
-> зберіть інформацію, продумайте план, напишіть орі-
-> єнтовний текст, проведіть захід.
-> Майбутній час
-> Дієслова у формі майбутнього часу позначають дію, що 
-> відбуватиметься або відбудеться після моменту мовлення.
-
-> **Source:** gisem, Grade 6
-> **Section:** Сторінка 19
-> **Score:** 0.50
->
-> За потреби скористай­
-> теся додатковими джерелами. Підручник  
-> Видавництво «Ранок»
-
-## Summary
-
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 62
-> **Score:** 0.33
->
-> 58
-> 58
-> Виконайте тестові завдання. 
-> 1. У формі теперішнього часу вжито обидва дієслова в рядку
-> А співаю, спізнишся  
-> В шепочу, усміхаєшся
-> Б міркую, подорожували
-> Г прочитаємо, мріємо
-> 2. Дієслово у формі майбутнього часу вжито в словосполученні 
-> А вивчатимемо напам’ять
-> В розцвітає навесні 
-> Б просили прочитати
-> Г віримо в перемогу
-> 3. Дієслово у  формі минулого часу вжито в кожному реченні, ОКРІМ
-> А З брудної води ще ніхто чистим не вийшов (Нар. творчість).
-> Б  Топчуть ноги радісно і струнко сонні трави на вузькій межі
-> (О. Теліга).
-> В  Гнучка гілка клена тулилася зранку до чистої шибки вікна 
-> (І. Ільків).
-> Г  Вузлуваті натруджені дуби важко розкинули нерухомі шат ра
-> (М. Стельмах).
-> Відновіть речення, уживаючи на місцях пропусків особові дієслова у відпо-
-> відній часовій формі, й запишіть.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 143
-> **Score:** 0.50
->
-> І якраз у яму 
-> втрапить. А ми вже вириємо, постараємося.
-
-## Grammar Reference
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 50
-> **Score:** 0.50
->
-> § 9  Часи діє слова  
-> 47
-> Проєкт
-> Виконайте завдання на вибір:
-> • Заплануйте відвідання екскурсії у своєму місті. 
-> • Підготуйте екскурсію по своєму місту/селищу/вулиці: 
-> зберіть інформацію, продумайте план, напишіть орі-
-> єнтовний текст, проведіть захід.
-> Майбутній час
-> Дієслова у формі майбутнього часу позначають дію, що 
-> відбуватиметься або відбудеться після моменту мовлення.
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 52
-> **Score:** 0.33
->
-> § 9  Часи діє слова  
-> 49
-> Діє слова недоконаного виду утворюють просту і скла-
-> дену форми майбутнього часу:
-> Проста форма
-> основа інфінітива
-> + суфікс -м-
-> + особове закінчення
-> Складена форма
-> дієслово бути в особовій формі
-> +
-> інфінітив основного дієслова
-> Майбутній час дієслів недоконаного виду
-> Проста форма
-> Особа
-> Число
-> Однина
-> Множина
-> 1-ша
-> писатиму, робитиму
-> писатимемо, робитимемо
-> 2-га
-> писатимеш, робити­
-> меш
-> писатимете, 
-> робитимете
-> 3-тя
-> писатиме, робитиме
-> писатимуть, 
-> робитимуть
-> Складена форма
-> Особа
-> Число
-> Однина
-> Множина
-> 1-ша
-> буду писати, буду 
-> робити
-> будемо писати, будемо 
-> робити
-> 2-га
-> будеш писати, будеш 
-> робити
-> будете писати, будете 
-> робити
-> 3-тя
-> буде писати, буде 
-> робити
-> будуть писати, будуть 
-> робити
->                    Підручник 
->  
->          видавництво "Ранок"
+# Педагогіка A1: What Happened
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Займенник як частина мови
-> **Source:** МійКлас — [Займенник як частина мови](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/zaimennik-51336/zaimennik-iak-chastina-movi-pravilne-nagoloshuvannia-zaimennikovikh-form-51337)
+The Ukrainian approach to teaching the past tense (`минулий час`) at the A1 level is communicative and context-driven, prioritizing pattern recognition over abstract rule memorization. Unlike English, the Ukrainian past tense is grammatically simple in its formation but requires agreement with the gender and number of the subject.
 
-### Теорія:
+The core native pedagogy, as seen in primary school textbooks and beginner resources, is to introduce past tense forms through simple, relatable narratives. For instance, the topic "How I spent my vacation" is a classic entry point (Source: `2-klas-ukrmova-bolshakova-2019-1`). Learners first encounter forms like `відпочивав`, `плавала`, `їздили` in a natural dialogue. The focus is on understanding the meaning and the context (`he rested`, `she swam`, `they traveled`).
 
-*www.ua.pistacja.tv*  
-Займенник — це самостійна змінна частина мови, яка лише вказує на предмети, їхні ознаки або кількість, не називаючи їх, і відповідає на питання хто? що? який? чий? скільки? котрий?  
-Морфологічні ознаки займенника
-Усі займенники змінюються за** **відмінками: *хто — кого, кому, ким, \(на\) кому.*
-Деякі займенники змінюються ще й за родами та числами: *чий — чия, чиє, чиї.*
-Синтаксична роль займенників
-У реченні займенник найчастіше виступає:
-- підметом: *Вчора **я** ходив у школу. **Хтось** зазирнув у вікно.* 
-- означенням: *Зараз розповім про **свої** плани. **Ці** дівчатка не з нашого класу.* 
-- додатком: *Щось **тебе** не бачу.* 
-Зрідка —  частиною  присудка: *Щось ти сьогодні **ніякий.***
-*** *** 
-Зверни увагу\!
+The past tense of the verb `бути` (to be) — `був`, `була`, `було`, `були` — serves as the foundation. It is introduced early and reinforced constantly, as it's the most frequent past tense verb (Source: `ext-ulp_youtube-277`). Once this pattern is established, other verbs are introduced by demonstrating the consistent suffix system: `-в` for masculine, `-ла` for feminine, `-ло` for neuter, and `-ли` for plural (Source: `6-klas-ukrmova-betsa-2023_s0205`).
 
-### Розряди займенників за значенням
-> **Source:** МійКлас — [Розряди займенників за значенням](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/zaimennik-51336/rozriadi-zaimennikiv-za-znachenniam-zaimenniki-iak-zasib-zv-iazku-rechen_-467947)
+The concept is taught as a modification of the verb's infinitive form. Ukrainian pedagogical materials explicitly state that past tense forms are created from the infinitive stem (`основа інфінітива`) using suffixes (Source: `6-klas-ukrmova-betsa-2023_s0205`). This provides a clear and predictable mechanical rule for learners to follow, which builds confidence. Exercises involve transforming present tense sentences to past tense or filling in the correct past tense form based on the subject's gender, making the agreement rule intuitive through repetition.
 
-### Теорія:
+## Послідовність введення (Introduction Sequence)
 
-*www.ua.pistacja.tv*  
- 
-Особові займенники
-Указують на осіб, інших істот, предмети, явища і поняття: *я, ти, він, вона, воно, ми, ви, вони*.
-Особові займенники бувають трьох осіб, змінюються за числами і відмінками; займенник **він** змінюється також за родами.
-Зверни увагу\!
-Для виявлення ввічливого став
+The introduction must be gradual, building from the simplest, most frequent forms to more complex ones.
 
-... (truncated for context window)
+1.  **Step 1: The Verb `бути` (to be) in the Past.** This is the gateway to the past tense. Start by contrasting present and past situations using high-frequency adverbs.
+    - `Сьогодні він вдома.` (Today he is at home.) → `Вчора він **був** вдома.` (Yesterday he was at home.)
+    - `Сьогодні вона на роботі.` (Today she is at work.) → `Вчора вона **була** на роботі.` (Yesterday she was at work.)
+    - `Сьогодні вони в парку.` (Today they are in the park.) → `Вчора вони **були** в парку.` (Yesterday they were in the park.)
+    - The neuter form `було` is introduced with impersonal expressions: `Було холодно` (It was cold). (Source: `ext-ulp_youtube-277`)
+
+2.  **Step 2: Regular Verbs & Gender/Number Agreement.** Introduce high-frequency imperfective verbs that follow the standard pattern. The writer should present them in a table format showing the transformation from the infinitive.
+    - `читати` → `він чита**в**`, `вона чита**ла**`, `воно чита**ло**`, `вони чита**ли**`
+    - `робити` → `він роби**в**`, `вона роби**ла**`, `воно роби**ло**`, `вони роби**ли**`
+    This sequence is supported by numerous pedagogical sources that present conjugation tables as a primary learning tool (Sources: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0106`, `5-klas-ukrmova-uhor-2022-1_s0093`).
+
+3.  **Step 3: Contextualization with Time Markers.** Immediately pair past tense verbs with simple time expressions to ground them in reality. This is a core feature of communicative language teaching.
+    - `вчора` (yesterday)
+    - `минулого тижня` (last week)
+    - `минулого року` (last year)
+    - `у понеділок` (on Monday)
+    The podcast transcript in `ext-ulp_youtube-277` demonstrates this perfectly by combining `їздив` with `минулого місяця`.
+
+4.  **Step 4: Introduction to `про-` and `по-` Perfectives.** At the A1 level, a deep dive into verbal aspect is premature. However, the contrast between a process and a single, completed action can be introduced via the most common prefixes, `по-` and `про-`. This should be framed as learning vocabulary pairs.
+    - `читати` (to read, process) → `**про**читати` (to read, finish)
+    - `снідати` (to have breakfast) → `**по**снідати` (to finish breakfast)
+    Source `ext-other_blogs-23` explicitly lists `по-` as the most common perfectivizing prefix and provides a long list of examples (`думати/подумати`, `слухати/послухати`). The writer should introduce this as "doing" vs. "done." For example: "Вчора я довго `читав` книжку. Нарешті я її `прочитав`." (Yesterday I was reading a book for a long time. Finally, I finished it.) This distinction is beautifully illustrated in the phrase `як я вивчала і вивчила англійську мову` (how I was studying and [finally] learned English) (Source: `ext-ulp_youtube-181`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers will make predictable errors based on interference from their native language, which lacks grammatical gender and has a more complex tense system.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Вчора Марія **читав** книжку.` | `Вчора Марія **читала** книжку.` | English past tense verbs don't change for gender. Learners often default to the masculine `-в` form as the "base" form. The fix is drilling with female subjects and names until the `-ла` ending becomes automatic. |
+| `Вчора я **є був** у кіно.` | `Вчора я **був** у кіно.` | This is a direct translation of the English "I am/was" structure. Learners must be taught that `був/була` is a standalone verb and `є` is never used in the past tense. |
+| `Я **мав** гарний день.` | `**У мене був** гарний день.` | English "to have" is a verb. Ukrainian expresses possession with the preposition `у` + genitive pronoun + the verb `бути`. The learner must memorize this structural difference for possession. |
+| `Він **катавсь** на сноуборді.` | `Він **катався** на сноуборді.` | The reflexive particle `-ся` is an integral part of the verb and doesn't change or get abbreviated in this way in the standard language. It always follows the verb ending. (Source: `ext-ulp_youtube-277`). |
+| `Він **бігтив** додому.` | `Він **біг** додому.` | A small but important group of verbs with consonant stems (like `бігти`, `нести`, `могти`) do not use the `-в` suffix in the masculine singular form. This rule, mentioned in `6-klas-ukrmova-betsa-2023_s0205`, needs to be taught explicitly for these common verbs. |
+| `Я не **люблю** лижі.` | `Я **не любив** лижі.` | Learners might mix up present tense negation (`не люблю`) with past tense. It's crucial to show that negation works the same way: the particle `не` simply precedes the past tense verb. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to build the language system from the ground up, free from the pervasive influence of Russian-centric pedagogy that has dominated the field for decades.
+
+1.  **No Russian as a Bridge:** NEVER teach Ukrainian past tense by comparing it to Russian. Do not say "it's like the Russian past tense." Ukrainian grammar must be explained on its own terms, using its own logic and native pedagogical sources (e.g., `bolshakova`, `vashulenko`). The learner's reference point should be English vs. Ukrainian, not English vs. Russian vs. Ukrainian.
+
+2.  **Phonetic Independence:** The pronunciation of past tense endings must be based on Ukrainian phonetics. For example, the masculine `-в` ending is often a non-syllabic [w] sound at the end of a word (e.g., `читав` [t͡ʃɪˈtɑw]). This is a distinctly Ukrainian feature and should not be equated with the harder, more consonantal Russian final `в`.
+
+3.  **Correcting False Cognates:** Be vigilant about "false friends." A classic example relevant to scheduling and talking about the past involves the days of the week.
+    - In Ukrainian, `неділя` means **Sunday**.
+    - In Russian, `неделя` means **week**.
+    This can lead to significant misunderstanding. This distinction is clearly explained in beginner materials (Source: `ext-ulp_youtube-289`) and historical context (Source: `ext-istoria_movy-0`). The curriculum must proactively teach and test this difference.
+
+4.  **Emphasize Native Vocabulary:** While there is shared Slavic vocabulary, prioritize examples that are distinctly Ukrainian or have a high frequency in modern Ukrainian usage. The vocabulary should be sourced from Ukrainian children's literature, modern media, and school textbooks, not from Russian-to-Ukrainian dictionaries that might suggest calques.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for introducing and practicing the past tense at the A1 level.
+
+**Дієслова (Verbs):**
+- бути (to be) ★★★
+- робити (to do/make) ★★★
+- читати (to read) ★★★
+- писати (to write) ★★★
+- говорити (to speak) ★★★
+- слухати (to listen) ★★★
+- дивитися (to watch) ★★★
+- жити (to live) ★★
+- працювати (to work) ★★
+- гуляти (to walk/stroll) ★★
+- снідати/обідати/вечеряти (to have breakfast/lunch/dinner) ★★
+- їхати (to go by transport) ★★
+- бачити (to see) ★
+- купувати (to buy) ★
+
+**Іменники (Nouns):**
+- книжка (book) ★★★
+- фільм (film) ★★★
+- музика (music) ★★★
+- робота (work) ★★
+- парк (park) ★★
+- місто (city) ★★
+- море (sea) ★
+- село (village) ★
+- друг/подруга (friend m/f) ★★
+
+**Прислівники та вирази часу (Adverbs & Time Expressions):**
+- вчора (yesterday) ★★★
+- сьогодні (today) ★★★
+- вранці (in the morning) ★★
+- вдень (in the afternoon) ★★
+- ввечері (in the evening) ★★
+- минулого тижня (last week) ★★
+- минулого місяця (last month) ★
+- минулого року (last year) ★
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities on these proven formats from Ukrainian pedagogical sources.
+
+1.  **Sentence Transformation (Present → Past):** This exercise format directly reinforces the mechanical change.
+    *   **Source:** `6-klas-ukrmova-betsa-2023_s0205`
+    *   **Prompt:** `Перепишіть речення. Замініть теперішній час на минулий.` (Rewrite the sentences. Change the present tense to the past tense.)
+    *   **Example Task:**
+        1.  `Увечері сусід гуляє із собакою в парку.` → `Увечері сусід **гуляв** із собакою в парку.`
+        2.  `Діти пишуть повідомлення друзям.` → `Діти **писали** повідомлення друзям.`
+
+2.  **Fill-in-the-Blanks with Gender/Number Agreement:** This tests the learner's ability to apply the agreement rule in context.
+    *   **Source:** `6-klas-ukrmova-betsa-2023_s0205`, Exercise 448
+    *   **Prompt:** `Прочитайте речення, вставляючи на місці пропуску дієслово йти в минулому часі.` (Read the sentences, inserting the verb 'to go' in the past tense in the blank space.)
+    *   **Example Task:**
+        1. `Учора я ______ у гості до своєї бабусі.` (If speaker is female → `йшла`)
+        2. `У п’ятницю діти з вчителем ______ на екскурсію.` (Plural → `йшли`)
+        3. `Куди Степан ______ у середу з батьком?` (Masculine → `йшов`)
+
+3.  **Question & Answer based on a Schedule/Story:** This is a communicative activity that uses the past tense to discuss completed events.
+    *   **Source:** `5-klas-ukrmova-uhor-2022-1_s0049`
+    *   **Prompt:** `Розкажіть, де були Оксана й Давид у понеділок, у вівторок тощо. Що вони робили?` (Tell us where Oksana and David were on Monday, on Tuesday, etc. What did they do?)
+    *   **Example Task (based on a visual schedule):**
+        - `Що Давид робив у понеділок?` → `У понеділок Давид **був** у басейні. Він там **плавав**.`
+        - `Що Оксана робила у вівторок?` → `У вівторок Оксана **була** в бібліотеці. Вона **читала** книгу.`
+
+4.  **Table Completion:** This visual tool helps solidify the pattern for different persons and genders.
+    *   **Source:** `5-klas-ukrmova-uhor-2022-1_s0012`
+    *   **Prompt:** `Запишіть відсутні форми дієслів.` (Write the missing verb forms.)
+    *   **Example Task:**
+| | `розповідати` | `чути` |
+| :--- | :--- | :--- |
+| Я, ти, він (ч.р.) | `розповідав` | `чув` |
+| Я, ти, вона (ж.р.)| `розповідала` | ______ |
+| Ми, ви, вони (мн.) | ______ | `чули` |
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/ukrainian-alphabet`
+- `pedagogy/a1/gender-of-nouns`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/verbal-aspect-introduction`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -673,7 +618,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Майбутній час (Future Tense)` (~300 words)
 - `## Практика (Practice)` (~300 words)
 - `## Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -729,7 +673,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -828,116 +772,33 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
-
-- P1 (~80 words): Opening fortune teller scene — Ворожка turns to Клієнт and begins predicting: "Ти будеш багато подорожувати. Будеш знаходити нових друзів. Будеш отримувати подарунки. Будеш щасливий / щаслива!" Клієнт responds: "Справді? А коли це буде?" Ворожка: "Скоро! Твоє майбутнє — яскраве!" Sets the fun register and introduces будеш/будуть in context before any explanation.
-
-- P2 (~110 words): Dialogue 1 — Plans for tomorrow. Covers all six persons of буду + infinitive:\
-  — Що ти будеш робити завтра?\
-  — Завтра я буду працювати.\
-  — А ввечері?\
-  — Ввечері я буду готувати вечерю.\
-  — А що буде робити Олена?\
-  — Вона буде читати.\
-  — А ви будете гуляти?\
-  — Так, ми будемо гуляти в парку!\
-  Short italicised note after: "Every person of буду appears in this dialogue — count them."
-
-- P3 (~110 words): Dialogue 2 — Weekend plans. Natural planning register with multiple persons:\
-  — Що ви будете робити на вихідних?\
-  — У суботу ми будемо відпочивати.\
-  — А в неділю?\
-  — У неділю я буду готувати, а чоловік буде гуляти з дітьми.\
-  — Звучить добре! А я буду дивитися футбол.\
-  — Ти завжди будеш дивитися футбол!\
-  Italicised note: "Notice 'Звучить добре!' — a useful reaction phrase. Literally: 'It sounds good!'"
-
-- Exercise — Matching (~30 words setup): Match each pronoun to the correct form of бути in future tense: я → буду, ти → будеш, він/вона → буде, ми → будемо, ви → будете, вони → будуть. (6 pairs — from activity_hints.)
-
----
+## Dialogues (~330 words total)
+- P1 (~50 words): Introduction to the concept of the future in daily life — moving from what we "did" (yesterday) to what we "will do" (tomorrow).
+- Dialogue 1 (~100 words): Fortune teller (Ворожка) at a fair. Use verbs of destiny and travel: "Ти будеш багато подорожувати," "Будеш знаходити нових друзів," "Будеш отримувати подарунки." Focus on high-frequency nouns like друг, подарунок, робота.
+- Dialogue 2 (~90 words): Plans for tomorrow between two friends. Asking "Що ти будеш робити завтра?" with answers like "Я буду працювати," "Я буду готувати вечерю," and "Вона буде читати."
+- Dialogue 3 (~90 words): Weekend planning dialogue. Using plural forms: "Що ви будете робити на вихідних?" "У суботу ми будемо відпочивати," "В неділю чоловік буде гуляти з дітьми," and the contrastive "А я буду дивитися футбол."
 
 ## Майбутній час (Future Tense) (~330 words total)
-
-- P1 (~70 words): Frame the concept — Ukrainian Grade 3-4 term: майбутній час. Ukrainian has TWO future forms; at A1 we learn ONE: the складений майбутній (analytic future) = буду + infinitive. Compare the pattern to English "will + verb": Я буду читати = I will read. The infinitive читати never changes — only буду is conjugated by person.
-
-- P2 (~90 words): Full conjugation table in running prose + embedded grid of буду читати:\
-  1st sg — я буду читати\
-  2nd sg — ти будеш читати\
-  3rd sg — він / вона буде читати\
-  1st pl — ми будемо читати\
-  2nd pl — ви будете читати\
-  3rd pl — вони будуть читати\
-  Key observation to write out: "Only six forms of бути; the verb after it stays as the infinitive every time."
-
-- P3 (~100 words): Three-tense comparison using the same root verb читати, grounding each in a time word:\
-  Минулий — Я читав / читала книжку вчора. (gender ending on the verb — as taught in M49)\
-  Теперішній — Я читаю книжку зараз. (person ending — present tense)\
-  Майбутній — Я буду читати книжку завтра. (буду + infinitive)\
-  Emphasise the structural contrast: past uses gender, present uses person endings, future uses буду as the carrier of person information.
-
-- P4 (~70 words): Scope note — mention the simple future form робитиму exists (learners may hear it) but it is an A2 topic. At A1 always use буду + infinitive — it is correct and natural in all situations. Source: Litvinova Grade 7 textbook confirms both forms; the analytic form is the safer, fully equivalent option.
-
----
+- P1 (~80 words): Explain the concept of the "Analytic Future" (складена форма). Compare it to the English "will + verb" structure to provide a familiar mental anchor, emphasizing that in Ukrainian we use a conjugated form of "бути" (to be) plus the infinitive of the main verb.
+- P2 (~90 words): Present the conjugation table of the auxiliary verb "бути" in the future: я буду, ти будеш, він/вона буде, ми будемо, ви будете, вони будуть. Highlight that these endings are regular and similar to the present tense of first-conjugation verbs.
+- <!-- INJECT_ACTIVITY: matching-pronoun-to-be --> [matching, focus: Match pronoun to the correct form of 'бути' (future), 6 items]
+- P3 (~80 words): Explain the "Invariant Infinitive" rule — the main verb (читати, працювати, відпочивати) never changes its ending in this construction. Only the "буду" part changes. Give examples: "я буду працювати" vs "вони будуть працювати."
+- P4 (~80 words): Contrast the future with present and past tenses using a single verb like "читати." Briefly mention that while other future forms exist (synthetic), the analytic "буду" form is the primary tool for A1 learners.
 
 ## Практика (Practice) (~330 words total)
+- P1 (~90 words): Grouping and practicing core A1 verbs in the future tense: "читати," "працювати," "готувати," "гуляти," "дивитися," "говорити." Show how these infinitives we already know are easily plugged into the future structure.
+- P2 (~80 words): Introducing future time markers (часові маркери): "завтра" (tomorrow), "наступного тижня" (next week), "у суботу" (on Saturday), "ввечері" (in the evening). Explain how these words signal the need for the future tense.
+- <!-- INJECT_ACTIVITY: fill-in-future-formation --> [fill-in, focus: Complete the analytic future tense (бути + infinitive), 6 items]
+- P3 (~80 words): How to ask questions about plans. Focus on the standard question "Що ти будеш робити?" and "Що ви будете робити?" Explain the word order in questions (usually SVO or putting the question word first).
+- P4 (~80 words): Building natural sentences about intentions. Provide examples of full-day plans: "Вранці я буду снідати, вдень буду працювати, а ввечері ми будемо відпочивати."
 
-- P1 (~100 words): Six core verbs conjugated in analytic future — all six persons for each:\
-  читати → буду читати … будуть читати\
-  працювати → буду працювати … будуть працювати\
-  готувати → буду готувати … будуть готувати\
-  гуляти → буду гуляти … будуть гуляти\
-  дивитися → буду дивитися … будуть дивитися\
-  говорити → буду говорити … будуть говорити\
-  Point out: the infinitive form stays identical regardless of which verb follows буду.
-
-- Exercise — Fill-in 1 (~30 words setup): Complete the analytic future tense (6 items from activity_hints):\
-  Завтра я ___ працювати. [буду/буде/будемо]\
-  Що ти ___ робити ввечері? [будеш/буду/будете]\
-  Вона ___ читати книжку. [буде/будуть/будемо]\
-  Ми ___ дивитися футбол. [будемо/буде/буду]\
-  Ви ___ гуляти в парку? [будете/будеш/будуть]\
-  Вони ___ відпочивати. [будуть/будемо/буде]
-
-- P2 (~110 words): Building full sentences with future tense + time expressions. Present 6 model sentences and highlight the time words in bold:\
-  **Завтра** я буду працювати з дев'ятої до п'ятої.\
-  **Ввечері** ми будемо дивитися фільм.\
-  **У суботу** вони будуть гуляти в парку.\
-  Що ви будете їсти **на вечерю**?\
-  **Наступного тижня** він буде відпочивати.\
-  **Вранці** вона буде готувати сніданок.\
-  Vocabulary callout box: завтра (tomorrow), ввечері (in the evening), вранці (in the morning), у суботу (on Saturday), наступного тижня (next week).
-
-- Exercise — Fill-in 2 (~30 words setup): Distinguish past / present / future — choose the correct form (4 items from activity_hints):\
-  Зараз я ___ . [читаю / читав / буду читати]\
-  Учора він ___ у парку. [гуляв / гуляє / буде гуляти]\
-  Завтра ми ___ фільм. [будемо дивитися / дивилися / дивимося]\
-  Минулого тижня вона ___. [працювала / працює / буде працювати]
-
----
-
-## Підсумок (~330 words total)
-
-- P1 (~80 words): Formation recap — write out the rule in plain language: "To form the analytic future in Ukrainian: take буду (conjugated for person) + the infinitive of any verb (unchanged). Six forms of буду: буду, будеш, буде, будемо, будете, будуть. The infinitive after буду never changes — regardless of gender, number, or person."
-
-- P2 (~80 words): Three-tense summary — display all three tenses with the same verb (читати) for a clean three-row comparison table rendered as bullet list:\
-  • Учора я читав / читала. → Минулий час (gender ending)\
-  • Зараз я читаю. → Теперішній час (person ending)\
-  • Завтра я буду читати. → Майбутній час (буду + infinitive)\
-  Closing sentence: "Now you can speak about yesterday, today, and tomorrow in Ukrainian."
-
-- P3 (~80 words): Key question-answer pattern drill. Write two model Q&A exchanges to anchor the most useful production frame:\
-  — Що ти будеш робити завтра? — Завтра я буду працювати.\
-  — Що вона буде робити ввечері? — Вона буде читати книжку.\
-  — Що ви будете робити у суботу? — У суботу ми будемо відпочивати.\
-  Note: Що ти будеш робити? is the single most useful future question at A1 — memorise it as a chunk.
-
-- P4 (~90 words): Self-check — bulleted Q&A list:\
-  • What is the analytic future? → буду + infinitive\
-  • What changes in "ми будемо читати"? → Only будемо — the infinitive stays fixed\
-  • How do you say "She will rest"? → Вона буде відпочивати\
-  • How do you say "They will cook"? → Вони будуть готувати\
-  • What is the future of "Ти читаєш"? → Ти будеш читати\
-  • How do you ask "What will you do tomorrow?"? → Що ти будеш робити завтра?
+## Summary (~330 words total)
+- P1 (~150 words): Final recap of the analytic future formation: буду / будеш / буде / будемо / будете / будуть + інфінітив. Emphasize that the infinitive is the "dictionary form" of the verb. Reinforce that this form is used for processes and intentions.
+- P2 (~180 words): The "Three-Tense Matrix" comparison. Review the markers for each: Past (gender endings -в/-ла/-ло/-ли), Present (person endings), and Future (буду + infinitive). End with the planned self-check questions:
+    - Що ти будеш робити завтра вранці? (Я буду...)
+    - Що ти будеш робити наступного тижня? (Я буду...)
+    - Що будуть робити твої друзі ввечері? (Вони будуть...)
+- <!-- INJECT_ACTIVITY: fill-in-tense-distinction --> [fill-in, focus: Distinguish between past, present, and future tenses, 4 items]
 
 Grand total: ~1320 words
 </skeleton>

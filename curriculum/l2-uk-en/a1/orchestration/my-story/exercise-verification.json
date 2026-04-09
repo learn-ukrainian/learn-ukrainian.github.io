@@ -1,28 +1,117 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 80,
+  "grounded_items": 64,
+  "ungrounded": [
+    {
+      "word": "любила",
+      "exercise_type": "fill-in",
+      "context": "любила",
+      "role": "answer"
+    },
+    {
+      "word": "читати",
+      "exercise_type": "fill-in",
+      "context": "У дитинстві вона ____ читати.",
+      "role": "context"
+    },
+    {
+      "word": "україні",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні ми ____ в Україні.",
+      "role": "context"
+    },
+    {
+      "word": "японія",
+      "exercise_type": "fill-in",
+      "context": "Моя ____ — це Японія.",
+      "role": "context"
+    },
+    {
+      "word": "вчилися",
+      "exercise_type": "group-sort",
+      "context": "вчилися",
+      "role": "answer"
+    },
+    {
+      "word": "вчимося",
+      "exercise_type": "group-sort",
+      "context": "вчимося",
+      "role": "answer"
+    },
+    {
+      "word": "розповідаю",
+      "exercise_type": "group-sort",
+      "context": "розповідаю",
+      "role": "answer"
+    },
+    {
+      "word": "тарас",
+      "exercise_type": "true-false",
+      "context": "Тарас народився в Києві.",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "true-false",
+      "context": "Тарас не любить свою роботу.",
+      "role": "context"
+    },
+    {
+      "word": "любить",
+      "exercise_type": "true-false",
+      "context": "Тарас не любить свою роботу.",
+      "role": "context"
+    },
+    {
+      "word": "грає",
+      "exercise_type": "true-false",
+      "context": "У вільний час він грає у баскетбол.",
+      "role": "context"
+    },
+    {
+      "word": "баскетбол",
+      "exercise_type": "true-false",
+      "context": "У вільний час він грає у баскетбол.",
+      "role": "context"
+    },
+    {
+      "word": "хоче",
+      "exercise_type": "true-false",
+      "context": "Далі Тарас хоче жити в Одесі.",
+      "role": "context"
+    },
+    {
+      "word": "подорожував",
+      "exercise_type": "error-correction",
+      "context": "Далі я подорожував.",
+      "role": "context"
+    },
+    {
+      "word": "жили",
+      "exercise_type": "error-correction",
+      "context": "жили",
+      "role": "answer"
+    },
+    {
+      "word": "закінчив",
+      "exercise_type": "error-correction",
+      "context": "Потім я переїхала в Київ і закінчив університет.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 8,
     "not_tested": [
       "батьки",
-      "вчитися",
-      "далі",
       "дитинство",
-      "жити",
       "закінчити",
-      "зараз",
-      "мрія",
       "народитися",
       "переїхати",
-      "подорожувати",
       "програміст",
-      "раніше",
       "розповідати",
-      "університет",
       "успіх"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-weather-season -->`
-- `<!-- INJECT_ACTIVITY: fill-in-weather-for-season -->`
-- `<!-- INJECT_ACTIVITY: match-weather-context -->`
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue-weather -->`
+- `<!-- INJECT_ACTIVITY: fill-in-weather-dialogue -->`
+- `<!-- INJECT_ACTIVITY: match-up-weather-season -->`
+- `<!-- INJECT_ACTIVITY: fill-in-season-weather -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -106,116 +105,100 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Іванко and Галя stand at a window on a grey morning. They want to go hiking — but the sky looks terrible. Should they go today, or wait until tomorrow?
+Morning routines often begin with a glance outside the window to check the conditions. Deciding what to wear for the day or planning an outdoor trip with a friend requires basic vocabulary to describe the environment. Ivan and Halya are looking out their window, trying to figure out if today is a good day for a hike in the mountains. 
 
-> **Іванко:** Яка сьогодні погода? *(What's the weather like today?)*
-> **Галя:** Сьогодні холодно і йде дощ. *(It's cold today and it's raining.)*
-> **Іванко:** Ой... А завтра? *(Oh... And tomorrow?)*
+Ivan asks the most common question about the daily conditions, and Halya responds by describing both the temperature and the rain. Notice how Halya uses the word **буде** (will be) as a fixed chunk to predict the conditions for the next day.
+
+> **Іванко:** Яка сьогодні погода? *(What is the weather like today?)*
+> **Галя:** Сьогодні холодно і йде дощ. *(Today it is cold and it is raining.)*
+> **Іванко:** А завтра? *(And tomorrow?)*
 > **Галя:** Завтра буде тепло і сонячно. *(Tomorrow it will be warm and sunny.)*
-> **Іванко:** Добре! Тоді завтра гуляємо! *(Great! Then tomorrow we walk!)*
-> **Галя:** Так! Завтра буде гарний день. *(Yes! Tomorrow will be a nice day.)*
+> **Іванко:** Добре! Тоді завтра гуляємо! *(Good! Then we walk tomorrow!)*
 
-Three phrases to notice here. **Яка погода** (what weather) — this is how you ask about the weather. **Холодно** (cold) — no subject, no "it is," just the state. And **буде тепло** (will be warm) — **буде** works as a simple future marker. Treat it as a chunk for now, not a full grammar lesson.
+The word **погода** (weather) is a feminine noun. When asking about it, use the feminine question word **яка** (what kind of). The adverb **сьогодні** (today) sets the context for the current day, and **завтра** (tomorrow) looks ahead. These time adverbs help ground your conversation in the present or the future.
 
-There's something interesting about Ukrainian weather sentences: the weather just IS. There is no dummy subject like English "it." **Сьогодні холодно** means exactly "today cold." The language skips the filler word English needs. This makes weather talk shorter and more direct.
+People also have strong opinions about different times of the year. When discussing your favorite time of year, you can connect the seasons to the typical conditions you experience during those months. The phrase **пора року** translates to "season" (literally "time of the year").
 
-Now Іванко and Галя talk about their favourite seasons:
-
-> **Іванко:** Яка пора року тобі подобається? *(What season do you like?)*
+> **Іванко:** Яка пора року тобі подобається? *(Which season do you like?)*
 > **Галя:** Мені подобається літо. *(I like summer.)*
 > **Іванко:** Чому? *(Why?)*
-> **Галя:** Тому що влітку тепло і сонячно. А тобі? *(Because in summer it's warm and sunny. And you?)*
-> **Іванко:** Мені подобається осінь. *(I like autumn.)*
-> **Галя:** Восени красиво? *(Is it beautiful in autumn?)*
-> **Іванко:** Так! А взимку? *(Yes! And in winter?)*
-> **Галя:** Взимку холодно, але красиво. Йде сніг! *(In winter it's cold, but beautiful. It snows!)*
+> **Галя:** Тому що влітку тепло і сонячно. А тобі? *(Because in summer it is warm and sunny. And you?)*
+> **Іванко:** Мені подобається осінь. Восени красиво. *(I like autumn. In autumn it is beautiful.)*
 
-Notice the season adverbs: **взимку** (in winter), **навесні** (in spring), **влітку** (in summer), **восени** (in autumn). These are frozen adverbs you already know from M23. They don't change form. Now pair each with the weather you just heard: **взимку** — **холодно**, **влітку** — **тепло**, **восени** — **дощ**.
+This conversation uses the verb construction **мені подобається** (I like / it is pleasing to me) alongside the adverbs **тепло** (warm), **сонячно** (sunny), and **красиво** (beautiful). Ukrainian relies heavily on these descriptive adverbs to convey states and environments accurately.
 
 ## Яка погода? (What's the Weather?)
 
-Ukrainian weather sentences have no subject — just a state adverb sitting alone as the whole sentence. **Сьогодні холодно** — "today it's cold." Compare the four temperature adverbs side by side: **холодно** (cold), **прохолодно** (cool), **тепло** (warm), **спекотно** (hot). Each word is an adverb that doubles as a full predicate — nothing else needed. No subject, no verb "to be." As Заболотний teaches in Grade 8: безособові речення (impersonal sentences) express natural phenomena. The weather simply exists.
+English requires a subject and a verb to build a sentence, even when neither makes logical sense. You say "It is cold", using the empty pronoun "it". Ukrainian grammar takes a different, much more direct approach. According to the textbook *Заболотний Grade 8* (page 126), Ukrainian uses **безособові речення** (impersonal sentences) to convey natural phenomena. You simply state the adverb without any subject or the verb "to be" to establish the fact. You say **холодно** (cold) to mean "It is cold", and **тепло** (warm) to mean "It is warm". A common mistake for English speakers is trying to translate word-for-word, resulting in incorrect phrases like **Це є тепло** (This is warm) or **Воно є сонячно** (It is sunny). These literal translations sound highly unnatural to native speakers. Drop the subject and verb entirely.
 
-Beyond temperature, you need sky conditions: **хмарно** (cloudy), **ясно** (clear), **сонячно** (sunny). These work exactly the same way — standalone adverbs as full sentences. Compare: **Сьогодні ясно і сонячно** versus **Сьогодні хмарно**. You can toggle between today and tomorrow using time adverbs: **Сьогодні хмарно. Завтра буде сонячно.** Notice **буде** appears again — it's a simple future marker used as a chunk here, not a full verb lesson yet. **Сьогодні** (today) states the present; **завтра** (tomorrow) plus **буде** signals the future.
+:::caution
+Never use **це є** or **воно є** to describe the weather. Ukrainian drops the subject entirely. Use the bare adverb: **Сьогодні тепло** (Today it is warm).
+:::
 
-<!-- INJECT_ACTIVITY: fill-in-weather-season -->
+The core vocabulary for discussing temperature consists of four essential adverbs. Use **холодно** (cold) for winter days, **прохолодно** (cool) for crisp autumn mornings, **тепло** (warm) for pleasant spring afternoons, and **спекотно** (hot) for the peak of summer. You can modify these states by adding the adverb **дуже** (very) before the weather word.
 
-Now the really fun part — precipitation and movement. Each weather phenomenon in Ukrainian has its own verb:
+*   **Сьогодні дуже спекотно.** — Today it is very hot.
+*   **Вчора було прохолодно.** — Yesterday it was cool.
+*   **Сьогодні дуже тепло.** — Today it is very warm.
+*   **Вчора було холодно.** — Yesterday it was cold.
 
-- **Іде дощ.** — It's raining (literally "rain goes").
-- **Іде сніг.** — It's snowing ("snow goes").
-- **Дме вітер.** — The wind is blowing.
-- **Світить сонце.** — The sun is shining.
+The word **вчора** means "yesterday". When talking about the past, you must add the neuter past-tense verb **було** (it was) before the adverb.
 
-There's a lovely moment in a Grade 5 textbook (Avramenko, p.27) where a little sister hears her brother say **піде дощ** and asks: *«А хіба дощ може ходити?»* — "Can rain really walk?" This confusion shows that **іде дощ** is an idiom, not literal walking. Rain "goes" the same way English rain "falls" — nobody pictures it tripping. Learn all four verbs as fixed chunks: **іде** (goes — for rain and snow), **дме** (blows — for wind), **світить** (shines — for the sun).
+Ukrainian personifies precipitation, treating it as an active participant. Instead of saying "it is raining", you say that the rain or snow "goes" or "walks". The verb **іти** (to go on foot) describes this action. This creates fixed, highly idiomatic paradigms.
 
-Temperature in numbers uses **градуси** (degrees). **Сьогодні двадцять градусів** — "Today it's twenty degrees." For positive and negative temperatures, use **плюс** and **мінус**: **Плюс тридцять** (plus thirty — hot), **Мінус десять** (minus ten — very cold). In everyday speech, Ukrainians often drop **градусів**: simply **Сьогодні мінус десять.** Ukrainian weather forecasts always use Celsius — **плюс двадцять** (20°C) is **тепло**, **плюс тридцять** (30°C) is **спекотно**, **мінус десять** (−10°C) is **дуже холодно**.
+*   **Іде дощ.** — It is raining (literally "rain goes").
+*   **Іде сніг.** — It is snowing (literally "snow goes").
+
+While the single verb **дощить** (it rains) exists in the dictionary, the phrase **іде дощ** is the natural conversational form you will hear on the street. Other weather events use different verbs: **світить сонце** (the sun is shining) and **дме вітер** (the wind is blowing).
+
+<!-- INJECT_ACTIVITY: fill-in-weather-dialogue -->
 
 ## Погода і пори року (Weather and Seasons)
 
-Connect weather to all four seasons using the adverbs from M23. Here are four mini-portraits — each season in two weather facts and one image from nature:
+Linking weather states to the seasons you learned earlier provides excellent conversational practice. Use the seasonal adverbs **взимку** (in winter), **навесні** (in spring), **влітку** (in summer), and **восени** (in autumn) to establish the time context, and then add the typical environmental conditions.
 
-- **Взимку холодно. Іде сніг. Все біле.** — In winter it's cold. It snows. Everything is white.
-- **Навесні тепло. Іде дощ. Все зелене.** — In spring it's warm. It rains. Everything is green.
-- **Влітку спекотно. Світить сонце. Все квітне.** — In summer it's hot. The sun shines. Everything blooms.
-- **Восени прохолодно. Дме вітер. Листя жовте.** — In autumn it's cool. The wind blows. The leaves are yellow.
+*   **Взимку холодно. Іде сніг.** — In winter it is cold. It snows.
+*   **Навесні тепло. Все зелене.** — In spring it is warm. Everything is green.
+*   **Влітку спекотно. Світить сонце.** — In summer it is hot. The sun shines.
+*   **Восени прохолодно. Іде дощ.** — In autumn it is cool. It rains.
 
-Each portrait follows the same pattern: season adverb + temperature + precipitation or sky + nature image. This is the Grade 4 textbook pattern: *«Сади цвітуть навесні, улітку трав поля шовкові, а восени врожай збирають, узимку снігу всі чекають.»*
+These short, descriptive sentences form the foundation of natural storytelling in Ukrainian.
 
-<!-- INJECT_ACTIVITY: fill-in-weather-for-season -->
+Beyond temperature and precipitation, you often need to describe the appearance of the sky. The three main adverbs for the sky are **хмарно** (cloudy), **ясно** (clear), and **сонячно** (sunny). There is a logical link between the state of the sky and the type of weather you can expect.
 
-Weather descriptions naturally combine with opinions. You already know **подобається** (like) from M15. Now pair it with seasons and weather:
+*   **Сьогодні ясно і сонячно.** — Today it is clear and sunny.
+*   **Зараз дуже хмарно.** — Right now it is very cloudy.
+*   **Сонце не світить. Хмарно.** — The sun is not shining. It is cloudy.
 
-- **Мені подобається зима. Іде сніг і все біле.** — I like winter. It snows and everything is white.
-- **Я люблю літо. Спекотно і сонячно.** — I love summer. It's hot and sunny.
-- **Мені подобається весна. Тепло і все зелене.** — I like spring. It's warm and everything is green.
+If the sky is covered in heavy clouds, you might soon say **іде дощ**. 
 
-The pattern is simple: **Мені подобається** + season, then a separate sentence with the weather reason. This recycles **подобається** and **люблю** from M15 while adding your new weather vocabulary.
+:::tip
+The word **ясно** (clear) is also frequently used in conversation to mean "I understand" or "It is clear to me."
+:::
 
-<!-- INJECT_ACTIVITY: match-weather-context -->
+When exact details matter, you can discuss the temperature using numbers. Ukraine uses the Celsius scale, so any numbers you hear will reflect that system. The noun **градус** (degree) is masculine. Combine it with the words **плюс** (plus) or **мінус** (minus) to specify the exact conditions outside. If someone asks **Яка температура?** (What is the temperature?), you reply with the number.
 
-Now put everything together in one more conversation. Іванко asks Галя about her dream weather:
+*   **Сьогодні плюс двадцять градусів.** — Today it is plus twenty degrees.
+*   **Сьогодні двадцять градусів.** — Today is twenty degrees.
+*   **Зараз мінус десять.** — Right now it is minus ten.
 
-> **Іванко:** Яка твоя ідеальна погода? *(What's your ideal weather?)*
-> **Галя:** Плюс двадцять, сонячно і без вітру. *(Plus twenty, sunny, and no wind.)*
-> **Іванко:** А взимку ти любиш сніг? *(And in winter, do you like snow?)*
-> **Галя:** Так, але не дуже холодно! *(Yes, but not too cold!)*
-> **Іванко:** У Києві зараз мінус п'ять. *(In Kyiv right now it's minus five.)*
-> **Галя:** О, це дуже холодно! А у тебе? *(Oh, that's very cold! And where you are?)*
-> **Іванко:** У мене сьогодні тепло. Плюс п'ятнадцять і хмарно. *(Here today it's warm. Plus fifteen and cloudy.)*
-> **Галя:** Добре! Не холодно — і добре! *(Good! Not cold — and that's fine!)*
+You can also use the adverbs **тепло** and **холодно** as nouns in certain contexts to refer to the abstract concept of warmth or cold. For example, **На вулиці тепло** means "It is warm outside" (literally "on the street"). Using the phrase **на вулиці** (outside) is a very common way to describe outdoor conditions in daily conversation.
 
-Notice **ідеальна** (ideal), **без вітру** (without wind — **без** means "without"), and how Галя and Іванко compare weather in different cities using **у Києві** (in Kyiv) and **у мене** (where I am).
+<!-- INJECT_ACTIVITY: match-up-weather-season -->
+<!-- INJECT_ACTIVITY: fill-in-season-weather -->
 
 ## Підсумок — Summary
 
-You now have three weather tools. First, state adverbs for temperature: **холодно** (cold), **прохолодно** (cool), **тепло** (warm), **спекотно** (hot), plus sky conditions **хмарно** (cloudy), **ясно** (clear), **сонячно** (sunny). Second, movement verbs for precipitation: **іде дощ**, **іде сніг**, **дме вітер**, **світить сонце**. Third, season-weather combinations: **взимку холодно**, **влітку спекотно**. Together these cover everything a real weather conversation needs.
+You now have a complete toolkit for describing the environment around you. The fundamental question is **Яка сьогодні погода?** (What is the weather like today?). To answer, you rely on impersonal adverbs without subjects or verbs: **холодно** (cold), **тепло** (warm), **спекотно** (hot), and **прохолодно** (cool). Precipitation is personified as a moving object, giving us the natural conversational phrases **іде дощ** (it is raining) and **іде сніг** (it is snowing). We also use active verbs for other phenomena, such as **дме вітер** (the wind is blowing) and **світить сонце** (the sun is shining). When you look at the sky, you can describe it as **хмарно** (cloudy), **ясно** (clear), or **сонячно** (sunny). Connecting these conditions to the time of year allows you to build rich sentences like **взимку холодно** (in winter it is cold) or **влітку спекотно** (in summer it is hot).
 
-:::tip Інструменти погоди — Weather Toolkit
-- **Питання:** Яка сьогодні погода?
-- **Температура:** холодно · прохолодно · тепло · спекотно
-- **Опади:** іде дощ · іде сніг
-- **Небо:** хмарно · ясно · сонячно
-- **Вітер/сонце:** дме вітер · світить сонце
-- **Градуси:** плюс двадцять · мінус десять
-- **Час:** сьогодні · завтра · вчора
-- **Пори року:** взимку · навесні · влітку · восени
-:::
+Use this self-check to practice your new vocabulary. Read the questions below and try to answer them aloud in complete Ukrainian sentences. Think about the current conditions outside your window, the temperature, and your personal preferences.
 
-<!-- INJECT_ACTIVITY: fill-in-dialogue-weather -->
+*   Яка сьогодні погода у твоєму місті?
+*   Яка температура сьогодні: плюс чи мінус?
+*   Яка твоя улюблена пора року? Чому?
+*   Що йде взимку: дощ чи сніг?
 
-### Перевір себе — Self-check
-
-Try these on your own. Say each answer out loud in Ukrainian before checking:
-
-- Опиши сьогоднішню погоду трьома реченнями. *(Describe today's weather in three sentences.)*
-- Яка погода взимку там, де ти живеш? *(What's the weather like in winter where you live?)*
-- Яка твоя улюблена пора року? Чому? *(What's your favourite season? Why?)*
-- Say in Ukrainian: "Tomorrow it will be warm and sunny."
-- Say in Ukrainian: "I like autumn because it's cool."
-- How do you say "it's raining" in Ukrainian? And "it's snowing"?
-
-Next up: **My Day** (M25) builds a full daily schedule. You'll need today's weather to decide what to wear and where to go — all the vocabulary from this module feeds directly into M25 morning routines and outdoor plans. **Сьогодні тепло? Тоді гуляємо!**
+If you can answer these questions confidently using adverbs like **тепло** or phrases like **іде дощ**, you have successfully mastered the basics of Ukrainian weather descriptions. This vocabulary will allow you to plan your days, discuss your favorite seasons, and easily start conversations with native speakers.
 
 </module_content>
 
@@ -305,30 +288,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -348,27 +371,36 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-adjectives
-- **fill-in** — Який? Яка? Яке?: Choose adjective ending to match noun gender
+### Pattern: grammar-adjectives [§4.2.1.2]
+**Прикметники та узгодження** (Adjectives and agreement)
+- **fill-in** — Який? Яка? Яке?: Обрати правильне закінчення прикметника за родом іменника / Choose adjective ending to match noun gender
   - Instruction: *Вставте правильну форму*
-- **error-correction** — Знайди помилку в узгодженні: Find gender/number agreement errors between adjective and noun
-- **match-up** — Іменник + прикметник: Match nouns to correct adjective forms
+- **error-correction** — Знайди помилку в узгодженні: Знайти помилку в узгодженні прикметника й іменника за родом/числом / Find gender/number agreement errors between adjective and noun
+- **match-up** — Іменник + прикметник: Зіставити іменники з правильними формами прикметників / Match nouns to correct adjective forms
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Узгодження — це граматика, а не лексика. Переклад не тестує закінчення
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -400,68 +432,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

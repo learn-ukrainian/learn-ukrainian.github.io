@@ -1,18 +1,18 @@
 vocabulary:
 - word: перевезти́
-  translation: to transport across
+  translation: to transport across / to relocate
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: провести́
-  translation: to guide through / lead
+  translation: to guide through / to lead
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: провезти́
-  translation: to transport through
+  translation: to transport through / past
   expression: false
   pos: дієсл.
   gender: ''
@@ -30,19 +30,19 @@ vocabulary:
   gender: ''
   verified: true
 - word: пролеті́ти
-  translation: to fly past
+  translation: to fly past / through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: проплисти́
-  translation: to sail past
+  translation: to sail past / through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: на́скрізь
-  translation: through
+  translation: through / right through
   expression: false
   pos: присл.
   gender: ''
@@ -78,7 +78,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: перевести́
-  translation: to lead across / to translate
+  translation: to lead across / to transfer
   expression: false
   pos: дієсл.
   gender: ''
@@ -96,19 +96,19 @@ vocabulary:
   gender: ''
   verified: true
 - word: пробі́гти
-  translation: to run past
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: переходити
-  translation: to cross (imperfective)
+  translation: to run past / through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: проходити
-  translation: to pass (imperfective)
+  translation: to pass / to walk through
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проїжджа́ти
+  translation: to drive past / through (habitually)
   expression: false
   pos: дієсл.
   gender: ''
@@ -119,20 +119,56 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: перетина́ти
-  translation: to cross
-  expression: false
-  pos: дієсл.
+- word: перейти вулицю
+  translation: to cross the street
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: пронести́
-  translation: to carry through
-  expression: false
-  pos: дієсл.
+- word: перейти кордон
+  translation: to cross the border
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: проїхати повз
-  translation: to drive past
+- word: перейти поріг
+  translation: to cross the threshold
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переїхати міст
+  translation: to drive across a bridge
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перебігти дорогу
+  translation: to run across the road
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перенести дитину
+  translation: to carry a child across
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перевести бабусю
+  translation: to lead a grandmother across
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перевезти меблі
+  translation: to transport furniture / to relocate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переїхати до Києва
+  translation: to move to Kyiv
   expression: true
   pos: ''
   gender: ''
@@ -144,74 +180,80 @@ vocabulary:
   gender: ''
   verified: true
 - word: перекла́сти
-  translation: to translate (text)
+  translation: to translate
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
+- word: перевести гроші
+  translation: to transfer money
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перейти на українську мову
+  translation: to switch to the Ukrainian language
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пройти повз кав'ярню
+  translation: to walk past the coffee shop
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: проїхати зупинку
-  translation: to miss one's stop
+  translation: to drive past a stop / to miss one's stop
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: пробігти очима
-  translation: to skim / scan with eyes
+- word: пройти через міський парк
+  translation: to walk through the city park
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: порі́г
-  translation: threshold
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: проїхати через незнайоме місто
+  translation: to drive through the unfamiliar city
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: на́товп
-  translation: crowd
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: пронести валізу
+  translation: to carry a suitcase through
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: тротуа́р
-  translation: sidewalk
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: провести туристів
+  translation: to lead tourists through / to guide
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: світлофо́р
-  translation: traffic light
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: провезти вантаж
+  translation: to transport cargo through
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: межа́
-  translation: boundary / limit
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: пробігти очима текст
+  translation: to skim the text with one's eyes
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: запра́вка
-  translation: gas station
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: пройшов рік
+  translation: a year has passed
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: передмі́стя
-  translation: suburbs
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: поперек
-  translation: across / perpendicularly
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: уздо́вж
-  translation: along
-  expression: false
-  pos: присл.
+- word: переїхати в нову квартиру
+  translation: to move to a new apartment
+  expression: true
+  pos: ''
   gender: ''
   verified: true

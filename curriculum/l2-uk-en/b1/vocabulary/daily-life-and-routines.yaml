@@ -1,0 +1,493 @@
+vocabulary:
+- word: помити посуд
+  translation: to wash dishes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: витирати пил
+  translation: to dust
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поспіша́ти
+  translation: to hurry
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мандрува́ти
+  translation: to travel, wander
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розважа́тися
+  translation: to entertain oneself, have fun
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виро́щувати
+  translation: to grow (plants)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бутербро́д
+  translation: sandwich
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́ша
+  translation: porridge
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: електронна пошта
+  translation: email
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: звіт
+  translation: report
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: серіа́л
+  translation: TV series
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: велосипе́д
+  translation: bicycle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: розпорядок дня
+  translation: daily routine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прокидатися
+  translation: to wake up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обі́дати
+  translation: to have lunch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вече́ряти
+  translation: to have dinner
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прибира́ти
+  translation: to clean up, tidy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пилососити
+  translation: to vacuum
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прати білизну
+  translation: to do laundry
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прасува́ти
+  translation: to iron
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виносити сміття
+  translation: to take out the trash
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: готувати їжу
+  translation: to cook food
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: займа́тися
+  translation: to engage in, do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: запі́знюватися
+  translation: to be late
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: встига́ти
+  translation: to manage in time
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відклада́ти
+  translation: to postpone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вихідні́
+  translation: weekend
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: буди́льник
+  translation: alarm clock
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хатні справи
+  translation: household chores
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пошук роботи
+  translation: job search
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: співбе́сіда
+  translation: interview
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: робоче місце
+  translation: workplace
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обо́в'язки
+  translation: duties
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: щоденне життя
+  translation: daily life
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зворотні дієслова
+  translation: reflexive verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підво́дитися
+  translation: to get up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зачі́суватися
+  translation: to comb one's hair
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: я́годи
+  translation: berries
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: виходити з дому
+  translation: to leave the house
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: трамва́й
+  translation: tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: метро́
+  translation: metro
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: одяга́тися
+  translation: to get dressed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: збира́тися
+  translation: to get ready
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: затри́муватися
+  translation: to delay/linger
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приїжджа́ти
+  translation: to arrive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заходити
+  translation: to enter/drop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перевіря́ти
+  translation: to check
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обгово́рювати
+  translation: to discuss
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: допрацьо́вувати
+  translation: to finish off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: віддієслівні іменники
+  translation: verbal nouns
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: навча́ння
+  translation: studies, learning
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ви́вчення
+  translation: studying, investigation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: виконання
+  translation: execution, fulfillment
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: чита́ння
+  translation: reading
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пилосо́с
+  translation: vacuum cleaner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пра́ска
+  translation: iron
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: впо́ратися
+  translation: to cope, manage
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to paint, draw
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ння
+  translation: painting
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: подорожува́ння
+  translation: traveling
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: фотографува́ння
+  translation: photographing
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кататися на велосипеді
+  translation: to ride a bike
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приро́да
+  translation: nature
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: парк
+  translation: park
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: на́бережна
+  translation: embankment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дихати свіжим повітрям
+  translation: to breathe fresh air
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за місто
+  translation: to the countryside
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ро́зклад
+  translation: schedule
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: план на день
+  translation: day plan
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: планувати заздалегідь
+  translation: to plan in advance
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пора́да
+  translation: advice
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на вашому місці я б
+  translation: in your place I would
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стара́тися
+  translation: to try
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: досягати поставлених цілей
+  translation: to reach goals
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: почина́тися
+  translation: to begin
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

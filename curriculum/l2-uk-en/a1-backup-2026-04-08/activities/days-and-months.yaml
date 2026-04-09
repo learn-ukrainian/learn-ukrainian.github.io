@@ -1,0 +1,292 @@
+version: '1.0'
+module: days-and-months
+level: a1
+inline:
+- id: fill-in-days-order
+  type: fill-in
+  instruction: Оберіть пропущений день (Choose the missing day)
+  items:
+  - sentence: понеділок, ___, середа
+    answer: вівторок
+    options:
+    - вівторок
+    - субота
+    - четвер
+  - sentence: середа, ___, п'ятниця
+    answer: четвер
+    options:
+    - четвер
+    - п'ятниця
+    - неділя
+  - sentence: п'ятниця, ___, неділя
+    answer: субота
+    options:
+    - субота
+    - вівторок
+    - середа
+  - sentence: неділя, ___, вівторок
+    answer: понеділок
+    options:
+    - понеділок
+    - вівторок
+    - четвер
+  - sentence: вівторок, середа, ___
+    answer: четвер
+    options:
+    - четвер
+    - п'ятниця
+    - неділя
+  - sentence: четвер, п'ятниця, ___
+    answer: субота
+    options:
+    - субота
+    - понеділок
+    - вівторок
+  - sentence: субота, ___, понеділок
+    answer: неділя
+    options:
+    - неділя
+    - понеділок
+    - п'ятниця
+- id: match-months-seasons
+  type: match-up
+  instruction: З'єднайте місяць із порою року (Match the month to the season)
+  pairs:
+  - left: січень
+    right: зима
+  - left: квітень
+    right: весна
+  - left: липень
+    right: літо
+  - left: жовтень
+    right: осінь
+  - left: лютий
+    right: зима
+  - left: травень
+    right: весна
+  - left: серпень
+    right: літо
+  - left: листопад
+    right: осінь
+- id: fill-in-chunks
+  type: fill-in
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - sentence: Я працюю ___.
+    answer: у понеділок
+    options:
+    - у понеділок
+    - понеділок
+    - в понеділок
+  - sentence: Мій день народження ___.
+    answer: у березні
+    options:
+    - у березні
+    - березень
+    - в березень
+  - sentence: Ми гуляємо ___.
+    answer: в суботу
+    options:
+    - в суботу
+    - субота
+    - у субота
+  - sentence: ___ холодно.
+    answer: Взимку
+    options:
+    - Взимку
+    - Зима
+    - У зима
+  - sentence: Я вивчаю українську ___.
+    answer: у вівторок
+    options:
+    - у вівторок
+    - вівторок
+    - в вівторок
+  - sentence: Вони відпочивають ___.
+    answer: у серпні
+    options:
+    - у серпні
+    - серпень
+    - в серпень
+workbook:
+- type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  groups:
+  - label: Дні тижня
+    items:
+    - понеділок
+    - вівторок
+    - середа
+    - четвер
+    - п'ятниця
+    - субота
+    - неділя
+  - label: Місяці
+    items:
+    - січень
+    - лютий
+    - березень
+    - квітень
+    - травень
+    - червень
+    - липень
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Тиждень в Україні починається з понеділка.
+    correct: true
+    explanation: Yes — the Ukrainian week starts on понеділок (Monday), not Sunday.
+  - statement: П'ятниця — це п'ятий день тижня.
+    correct: true
+    explanation: Yes — п'ятниця comes from п'ять (five), making it the fifth day.
+  - statement: Листопад — це місяць осені.
+    correct: true
+    explanation: Yes — листопад (November) belongs to осінь (autumn).
+  - statement: Серпень — це місяць зими.
+    correct: false
+    explanation: No — серпень (August) is a summer month. Winter months are грудень,
+      січень, лютий.
+  - statement: Дні тижня і місяці в українській пишуться з великої літери.
+    correct: false
+    explanation: 'No — in Ukrainian, days and months are written in lowercase: понеділок,
+      березень.'
+  - statement: Слово «листопад» буквально означає «листя падає».
+    correct: true
+    explanation: 'Yes — листопад = листя (leaves) + падати (to fall): the month when
+      leaves fall.'
+  - statement: Неділя означає «тиждень» у сучасній українській мові.
+    correct: false
+    explanation: No — in modern Ukrainian тиждень means week. Неділя means Sunday.
+  - statement: Березень названий на честь берези.
+    correct: true
+    explanation: Yes — березень (March) comes from береза (birch tree), whose sap
+      flows in early spring.
+- type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: How do you say 'on Wednesday'?
+    options:
+    - у середу
+    - в середа
+    - у середа
+    correct: 0
+  - question: How do you say 'in March'?
+    options:
+    - у березень
+    - в березні
+    - в березень
+    correct: 1
+  - question: How do you say 'in summer'?
+    options:
+    - у літо
+    - в літку
+    - влітку
+    correct: 2
+  - question: How do you say 'on Friday'?
+    options:
+    - у п'ятницю
+    - у п'ятниця
+    - в п'ятниці
+    correct: 0
+  - question: How do you say 'in November'?
+    options:
+    - у листопад
+    - в листопаді
+    - в листопаду
+    correct: 1
+  - question: How do you say 'in winter'?
+    options:
+    - у зима
+    - в зимі
+    - взимку
+    correct: 2
+- type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: У грудні холодно — це ___.
+    answer: зима
+    options:
+    - зима
+    - осінь
+    - весна
+  - sentence: ___ квітнуть дерева.
+    answer: Навесні
+    options:
+    - Навесні
+    - Влітку
+    - Восени
+  - sentence: В серпні ми відпочиваємо. Серпень — це ___.
+    answer: літо
+    options:
+    - літо
+    - зима
+    - весна
+  - sentence: ___ починається школа.
+    answer: Восени
+    options:
+    - Восени
+    - Влітку
+    - Навесні
+  - sentence: Зима — це сніг і ___.
+    answer: холод
+    options:
+    - холод
+    - тепло
+    - дощ
+  - sentence: Осінь — це листя і ___.
+    answer: дощ
+    options:
+    - дощ
+    - сніг
+    - море
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: On Monday
+    options:
+    - text: понеділок
+      correct: false
+    - text: у понеділок
+      correct: true
+    - text: у понеділка
+      correct: false
+  - source: In April
+    options:
+    - text: квітень
+      correct: false
+    - text: у квітня
+      correct: false
+    - text: у квітні
+      correct: true
+  - source: In autumn
+    options:
+    - text: восени
+      correct: true
+    - text: осінь
+      correct: false
+    - text: у осінь
+      correct: false
+  - source: On Saturday
+    options:
+    - text: субота
+      correct: false
+    - text: в суботу
+      correct: true
+    - text: у субота
+      correct: false
+  - source: In spring
+    options:
+    - text: весна
+      correct: false
+    - text: у весну
+      correct: false
+    - text: навесні
+      correct: true
+  - source: In December
+    options:
+    - text: грудень
+      correct: false
+    - text: в грудні
+      correct: true
+    - text: в грудня
+      correct: false

@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The module is comprehensive and strictly follows the outline, but missed
+    one specific point in the "Переговори про оренду" section: "Як повідомити про
+    виїзд?". Additionally, the recommended word "водо'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'The text contains a few critical errors: the Russianism "поломка/поломки",
+    the calque "уточнюючі" (instead of "уточнювальні"), a typo "струкрованим", and
+    an orthographic inconsistency "ріелтору" (desp'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. Complex concepts like the "у/в" vs "на" exception
+    (на кухні/на балконі) and grammar cases are explained clearly with excellent contextual
+    examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required words are present and used naturally. Almost all recommended
+    words are included, except for "водопостачання", which was replaced with the more
+    colloquial "воду".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are correctly formatted, match the plan's hints, and
+    are perfectly placed after the concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly engaging, natural, and encouraging without being artificially
+    gamified. The dialogue and examples are very relatable.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Perfect markdown structure. Word count is 4639, significantly exceeding
+    the 4000-word target. No meta-commentary or stray artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Superb cultural context. It accurately describes "хрущовка", floor numbering
+    starting from 1, the concepts of "євроремонт", "перша здача", and "під ключ",
+    which are essential for navigating the Ukrain
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are realistic, practical, and highly relevant. They model
+    authentic negotiation tactics and formal requests perfectly.
+findings: []

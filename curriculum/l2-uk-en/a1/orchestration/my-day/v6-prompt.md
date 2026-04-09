@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -246,333 +247,353 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Plan vocabulary (16 items) — all confirmed:**
-- вранці (adv) ✅
-- вдень (adv) ✅
-- ввечері (adv) ✅
-- обідати (verb) ✅
-- вечеряти (verb) ✅
-- відпочивати (verb) ✅
-- після (prep + adv) ✅
-- прокидатися (verb) ✅
-- вмиватися (verb) ✅
-- одягатися (verb) ✅
-- вночі (adv) ✅
-- також (adv) ✅
-- типовий (adj — 3 forms) ✅
-- вільний (adj — 3 forms) ✅
-
-**Additional words appearing in section text — also verified:**
-- лягати (verb) ✅
-- снідати (verb) ✅
-- спочатку (adv) ✅
-- потім (adv) ✅
-- нарешті (adv) ✅
-
-**Not found: none.** All 19 unique words confirmed in VESUM.
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги (Daily schedule dialogue)
-> "Мій день — Сьогодні в мене багато справ, — мовило жабеня Кнак. — Запишу. «Поснідати. Одягнутися. Піти до Квака. Прогулятися з Кваком. Пообідати. Подрімати. Погратися з Кваком. Повечеряти. Лягти спати»."
-> Source: Захаріjчук, Grade 1 (2025), Буквар, p. 24 — titled "Мій день" (trust tier 1)
-
-**Pedagogical note:** Grade 1 presents the daily schedule as a list of infinitives — exactly the lexical chunk approach the plan uses. The text also naturally contains `лягти спати` as the final item, confirming the chunk is textbook-authentic.
-
-### Section: Мій типовий день (Model text — present tense)
-> "Я прокидаюсь о сьомій годині. Виконую кілька фізичних вправ. Потім загартовуюся контрастним душем."
-> Source: Авраменко, Grade 6 (2023), p. 10 (trust tier 1)
-
-> "Розкажіть про свій звичний розпорядок дня, уживаючи дієслова у формі теперішнього часу. Зразок: 7:00 — прокидаюсь, роблю зарядку, чищу зуби... 7:30 — снідаю. 8:00 — вигулюю свого домашнього дракона..."
-> Source: Литвинова, Grade 7 (2024), Вправа 61, p. 46 (trust tier 1)
-
-**Pedagogical note:** Both sources confirm the model text format (present tense, time + action) and the exact vocabulary cluster. Авраменко Grade 6 is the closest parallel to the plan's model text. Litvinova Grade 7 confirms the exercise type: describe your daily routine using present tense verbs.
-
-### Section: Від ранку до вечора (Adverbs as time markers)
-> "Прислівники й співзвучні (омонімічні) слова інших частин мови розпізнаємо в контексті (за лексичним значенням, морфологічними ознаками, синтаксичною роллю). ПОРІВНЯЙМО: Ранком (прислівник) — Ранком дуже холодно. / ранком (іменник) — Привітати з добрим ранком."
-> Source: Заболотний, Grade 7 (2024), p. 153 (trust tier 1)
-
-**Pedagogical note:** Confirms the plan's approach — time-of-day words are adverbs and are taught by contrast with corresponding nouns. The plan's instruction "These are adverbs — just add them to the beginning of a sentence" is exactly how Ukrainian textbooks frame it.
-
-### Section: Підсумок (Summary — telling your day)
-> "Ця вправа дає змогу спочатку обмінятися ідеями з партнерами й лише потім озвучити свої думки..." / "Зустрітися вдень — привітати в день народження" (adverb vs. prepositional phrase distinction)
-> Source: Заболотний, Grade 7 (2024), p. 255 (trust tier 1)
-
-**Pedagogical note:** The Grade 7 exercise distinguishing `вдень` (adverb) from `в день народження` (noun phrase) confirms the plan's adverb framing is sound. The summary self-check task ("Describe your typical Monday from morning to evening") mirrors Grade 7-style production exercises.
-
----
+- Confirmed: вранці, вдень, ввечері, вночі, обідати, вечеряти, відпочивати, після, прокидатися, вмиватися, одягатися, також, типовий, вільний.
+- Not found: None (All words exist and are morphologically correct).
 
 ## Grammar Rules
-
-- **Parts-of-day adverbs are immutable:** Правопис §30 (прислівники) — вранці, вдень, ввечері, вночі are adverbs; they do not decline. Confirmed by Grade 7 Заболотний: "Прислівник — незмінна частина мови." The plan correctly describes these as "just add to the beginning of a sentence."
-
-- **Time expressions with ordinals — Антоненко-Давидович §198:** "Котра година?" is correct; "Скільки годин?" is a Russianism. "О першій" / "о сьомій" (ordinal + locative) is the correct Ukrainian pattern. The plan uses `о першій` and `о дев'ятій` correctly.
-
-- **Future analytical "буду + infinitive":** Standard Ukrainian grammatical pattern (not a calque). The plan correctly labels `буду працювати` as a chunk at A1 — teaching as a fixed pattern before the grammar explanation (M48-49) is sound pedagogy.
-
----
+- Adverbs of time (вранці, вдень, ввечері, вночі): Правопис § 30.1.а — "Разом пишуться прислівники, утворені сполученням прийменника з іменником: ввечері, вдень, взимку, вранці...".
+- Sequence words: "Спочатку", "потім", "нарешті" — confirmed as standard adverbs (Правопис § 30.1.а).
+- Verbs of daily routine: "Снідати", "обідати", "вечеряти" — Group I verbs (-ати), regular conjugation.
 
 ## Calque Warnings
-
-- **лягати спати:** OK — Антоненко-Давидович uses `лягти` in natural Ukrainian contexts ("Варто мені лягти..."). The phrase is native Ukrainian, no Russian influence. ✅
-- **після обіду (in the afternoon):** OK — natural Ukrainian prepositional phrase. No calque found. ✅ Note: Антоненко-Давидович confirms "після обіду" is proper usage vs. clock-time expressions.
-- **дивитися фільм:** OK — Антоненко-Давидович himself uses `подивитись` naturally ("згодився піти зі мною подивитись, як замерзає Дніпро"). No calque. ✅
-- **BONUS — "Скільки годин?":** ⚠️ CALQUE — Антоненко-Давидович §198 explicitly warns against this. The plan uses `о першій`, `о сьомій` (correct ordinals), but any clock-time dialogue must use **"Котра година?"** not **"Скільки годин?"**
-
----
+- "після обіду": OK (natural) — literally "after lunch", used to denote the period after the midday meal. Often used interchangeably with "вдень" (in the day/afternoon).
+- "лягати спати": OK (natural) — standard verbal chunk.
+- "як пройшов твій день": OK (natural) — common greeting/question. "Як минув день?" is a slightly more formal/literary alternative.
 
 ## CEFR Check
-
-- **вранці:** A1 — ✅ on target
-- **вдень:** A1 — ✅ on target
-- **ввечері:** A1 — ✅ on target
-- **вночі:** A1 — ✅ on target
-- **відпочивати:** A1 — ✅ on target
-- **обідати:** A1 — ✅ on target
-- **типовий:** A2 — ⚠️ one level above target. Used in module title "Мій типовий день." Acceptable as **passive recognition** at A1.4 (upper A1); do NOT put in active production exercises or quiz distractors.
-- **вільний:** A2 — ⚠️ one level above target. E.g., "вільний час." Same recommendation: passive only; do not test actively.
-
-**Summary:** Core vocabulary (time adverbs, meal verbs) is solidly A1. Two adjectives (`типовий`, `вільний`) are A2 by PULS — fine for passive exposure at A1.4 but must not appear in quiz answer keys or fill-in-the-blank activities.
+- вранці: A1 — (Confirmed: Grade 1-3 textbook frequency)
+- обідати: A1 — (Confirmed: Grade 5 vocab list)
+- відпочивати: A1 — (Confirmed: Grade 5 exercise)
+- типовий: A2+ — (Found in Grade 8+ literary analysis) — **Recommendation**: Keep for "типовий день" as it's a cognate (typical) and easy for English speakers, but prioritize "звичайний" for high-frequency daily use.
+- вільний: A2 — (Confirmed: Grade 7 phraseology) — **Recommendation**: Acceptable for A1 in the context of "вільний час" (free time).
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: My Day
-**Module:** my-day | **Phase:** A1.4 [Time and Nature]
-**Textbook grades searched:** 3, 4, 5
+# Knowledge Packet: My Day
+**Module:** my-day | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/my-day.md
+
+# Педагогіка A1: My Day
+
+
+
+## Методичний підхід (Methodological Approach)
+The "My Day" (`Мій день`) topic is fundamental for A1 learners, as it introduces high-frequency vocabulary and grammatical structures essential for basic personal communication. The pedagogical approach, as gleaned from Ukrainian educational resources, should be grounded in communicative, context-driven learning. Instead of memorizing isolated words, learners should acquire language in functional chunks.
+
+The core principle is to build from the general to the specific, and from simple states to complex actions.
+
+1.  **Time Frames First:** Begin with the broad parts of the day: **`вранці`** (in the morning), **`вдень`** (in the afternoon), **`ввечері`** (in the evening), and **`вночі`** (at night). These adverbs provide the temporal skeleton for the day's narrative (Source: `ext-ulp_youtube-243`, `ext-ulp_youtube-253`). They are introduced as single, unchangeable units.
+2.  **Anchor with Meals:** Meals are universal and serve as the next anchor. Introduce the nouns **`сніданок`, `обід`, `вечеря`** and immediately pair them with their corresponding verbs: **`снідати`, `обідати`, `вечеряти`** (Source: `ext-ulp_youtube-253`). This immediately teaches a pattern and avoids the common L2 error of using `мати` (to have).
+3.  **Introduce Core Verbs:** Populate the time frames with essential, non-reflexive verbs like **`працювати`** (to work), **`читати`** (to read), and **`відпочивати`** (to rest). Simple sentences like "Вранці я працюю" are constructed.
+4.  **Introduce Reflexive Verbs (`-ся`):** The daily routine is impossible to describe without reflexive verbs. Introduce verbs like **`прокидатися`** (to wake up), **`вмиватися`** (to wash one's face), and **`одягатися`** (to get dressed) as a distinct group (Source: `ext-article-0`). Explain their function: the action is directed back at the subject. The example of the frog creating a to-do list in a children's story (`Прокинутися`, `Поснідати`) provides a simple, clear model of listing these daily actions (Source: `4-klas-ukrmova-zaharijchuk_s0150`).
+5.  **Expand with Time and Frequency:** Once the basic structure (`[Time Frame] + [Subject] + [Action]`) is solid, introduce basic time-telling (`о дев'ятій годині` - at 9 o'clock) (Source: `ext-ulp_youtube-235`) and adverbs of frequency (`завжди`, `зазвичай`, `іноді`, `ніколи`) to add detail and nuance (Source: `ext-ulp_youtube-253`).
+
+This sequential, chunk-based approach helps learners build a narrative of their day, making the language immediately personal and useful. Every new piece of vocabulary or grammar should be slotted into the existing narrative framework.
+
+## Послідовність введення (Introduction Sequence)
+
+The content writer should introduce concepts in this specific order to build a logical and pedagogically sound foundation.
+
+- **Step 1: The Four Parts of the Day.**
+  - Introduce `ранок`, `день`, `вечір`, `ніч` as nouns.
+  - Immediately introduce their adverbial forms: **`вранці`, `вдень`, `ввечері`, `вночі`**. Emphasize that these are single words meaning "in the morning," etc., and don't require a separate preposition. This is a high-frequency pattern seen across multiple sources (e.g., `ext-ulp_youtube-243`, `5-klas-ukrmova-uhor-2022-1_s0079`).
+  - **Why this order:** These words create the basic canvas on which the rest of the daily routine is painted.
+
+- **Step 2: Meal Vocabulary (Noun-Verb Pairs).**
+  - Present meals as fundamental daily events.
+  - Teach **`сніданок` / `снідати`**, **`обід` / `обідати`**, **`вечеря` / `вечеряти`**.
+  - **Why this order:** This establishes a core pattern of Ukrainian verb formation and usage for common activities. It immediately gives the learner a functional way to talk about their day and preempts the error of using "to have" (Source: `ext-ulp_youtube-253`).
+
+- **Step 3: Foundational Action Verbs (Present Tense).**
+  - Introduce a small set of high-frequency, non-reflexive verbs.
+  - Examples: `працювати`, `вчитись`, `читати`, `слухати музику`, `відпочивати`.
+  - The writer should immediately show them in context: `Вдень я працюю. Ввечері я читаю.` (Source: `ext-ulp_youtube-243`).
+
+- **Step 4: Key Reflexive Verbs (`-ся`).**
+  - Explain that many "self-directed" actions use the `-ся` particle.
+  - Introduce: **`прокидатися`** (to wake up), **`вмиватися`** (to wash face), **`одягатися`** (to get dressed), **`готуватися`** (to prepare oneself), **`лягати спати`** (to lie down to sleep). (Source: `ext-article-0`, `7-klas-ukrlit-mishhenko-2015_s0229`).
+  - **Why this order:** These are essential for describing the beginning and end of the day. Introducing them as a group helps learners recognize the pattern.
+
+- **Step 5: Days of the Week & "On [Day]".**
+  - Introduce the seven days of the week (`понеділок`, `вівторок`, etc.).
+  - Teach the construction for "on [day]": `у/в` + Accusative case. For example, **`у понеділок`**, **`у суботу`** (Source: `ext-ulp_youtube-243`). This expands the temporal context from a single day to a full week.
+
+- **Step 6: Simple Time-Telling.**
+  - Focus on the most common structure: **`о/об` + [ordinal number in Locative case] + `годині`**.
+  - Example: `о дев'ятій годині` (at nine o'clock), `об одинадцятій годині` (at eleven o'clock) (Source: `ext-ulp_youtube-235`).
+  - **Why this order:** This adds a layer of specificity. It should come after the broader time frames are mastered. For A1, stick to telling the hour.
+
+## Типові помилки L2 (Common L2 Errors)
+The writer must explicitly address these common pitfalls for English speakers.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Я маю сніданок.` | `Я снідаю.` | Direct translation of "I have breakfast." Ukrainian uses a specific verb for eating each meal (Source: `ext-ulp_youtube-253`). `Мати` implies possession, not consumption. |
+| `Я прокидаю о сьомій.` | `Я прокида**юся** о сьомій.` | Forgetting the reflexive particle `-ся`. English uses "wake up," where "up" is a particle. In Ukrainian, the action is reflexive (`-ся` means "oneself"), so the particle is mandatory for this meaning (Source: `ext-article-0`). |
+| `Я працюю **в** ранку.` | `Я працюю **вранці**.` | English uses "in the morning," leading learners to combine a preposition and noun. Ukrainian uses a single adverb (`вранці`) for this concept (Source: `ext-ulp_youtube-243`). |
+| `Зустріч **в** дев'ятій годині.` | `Зустріч **о** дев'ятій годині.` | Incorrect preposition for time. English "at 9 o'clock" can be confusing. Ukrainian consistently uses `о` (or `об` before a vowel) for telling time on the hour (Source: `ext-ulp_youtube-235`). |
+| `Я завжди роблю домашнє завдання ввечері.` | `Я завжди **виконую** домашнє завдання ввечері.` | Overuse of `робити` (to do/make). While not strictly wrong, `виконувати` (to complete/fulfill) is the more natural verb for tasks like homework. `Робити` is more for physical creation. |
+| `Я сплю о 11 годині.` | `Я **лягаю спати** об 11 годині.` | `Спати` means "to be asleep." `Лягати спати` means "to go to bed" or "to lie down to sleep," which is the action of starting sleep. The lazy character Павлусь is described as going to sleep all day (`ляже`, `засне`) (Source: `7-klas-ukrlit-mishhenko-2015_s0229`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This is a critical section. The A1 level is where a learner's foundational phonetic and lexical categories are formed. It is imperative to build a purely Ukrainian framework, free from Russian interference.
+
+1.  **NO Russian Phonetic Analogies:** The writer must **never** explain a Ukrainian sound by comparing it to Russian. For example, do not say "Ukrainian `и` is like Russian `ы`" or "Ukrainian `і` is like Russian `и`." Ukrainian phonetics must be taught on their own terms, using native audio and articulatory descriptions. Ukrainian has its own distinct phonetic system, and drawing parallels to the colonizer's language reinforces a colonial mindset and creates phonetic confusion.
+2.  **Vocabulary Purity:** Use authentically Ukrainian vocabulary. Avoid common Surzhyk (mixed Ukrainian-Russian language) or Russianisms. For example, for "next," use `наступний`, not `слідуючий` (a calque from Russian `следующий`). The podcast sources consistently use authentic Ukrainian (e.g., `ext-ulp_youtube-243`).
+3.  **Grammar on Its Own Terms:** Present Ukrainian grammar as a complete, independent system. Do not frame it in terms of its differences from Russian. For example, when teaching the days of the week, simply teach the Ukrainian names (`понеділок`, `вівторок`...). Do not mention that some names differ from Russian.
+4.  **Cultural Context:** The examples of a "typical day" should feel Ukrainian. Mentioning specific Ukrainian foods (even simple ones like `сирники` or `борщ`), activities, or holidays (`Великдень`, `Різдво`) grounds the language in its proper cultural context (Source: `ext-ulp_youtube-54`). This builds a direct connection to Ukraine, bypassing the historical imposition of Russian as the default Slavic culture.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for an A1 learner discussing their day.
+
+**Іменники (Nouns):**
+- ★★★ `ранок`, `день`, `вечір`, `ніч` (parts of the day)
+- ★★★ `сніданок`, `обід`, `вечеря` (meals)
+- ★★★ `робота`, `школа`, `університет`, `дім` (locations)
+- ★★★ `година`, `хвилина` (time)
+- ★★ `тиждень`, `понеділок`, `вівторок`, `середа`, `четвер`, `п'ятниця`, `субота`, `неділя` (week)
+- ★★ `чай`, `кава`, `вода` (drinks)
+- ★ `душ`, `зуби`, `ліжко` (personal items)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be - past and future forms are key) (Source: `5-klas-ukrmova-uhor-2022-1_s0079`)
+- ★★★ `прокидатися`, `вставати` (to wake up, to get up)
+- ★★★ `снідати`, `обідати`, `вечеряти` (to eat meals)
+- ★★★ `працювати`, `вчитися` (to work, to study)
+- ★★★ `іти`, `їхати` (to go - basic forms)
+- ★★★ `лягати спати` (to go to bed)
+- ★★ `вмиватися`, `чистити зуби` (to wash face, to brush teeth)
+- ★★ `одягатися` (to get dressed)
+- ★★ `відпочивати` (to rest)
+- ★★ `читати`, `писати`, `слухати` (to read, write, listen)
+- ★ `приймати душ` (to take a shower)
+- ★ `готувати (їжу)` (to prepare food)
+
+**Прислівники (Adverbs):**
+- ★★★ `вранці`, `вдень`, `ввечері`, `вночі` (in the morning/afternoon...)
+- ★★★ `сьогодні`, `завтра`, `вчора` (today, tomorrow, yesterday)
+- ★★★ `завжди`, `зазвичай`, `часто`, `іноді`, `рідко`, `ніколи` (always, usually, often, sometimes, rarely, never)
+- ★★ `швидко`, `повільно` (quickly, slowly)
+- ★★ `потім`, `спочатку` (then/later, at first)
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities on these proven formats from Ukrainian educational materials.
+
+1.  **Simple Narrative with Comprehension Questions (Source: `ext-ulp_youtube-243`, `5-klas-ukrmova-uhor-2022-1_s0079`)**
+    - Provide a short text about someone's day or week.
+    - **Текст:** "З понеділка по четвер я вчусь і працюю. Вранці у мене уроки. Ввечері я викладаю українську мову. У п'ятницю я зазвичай працюю вдома. У суботу я записую подкаст, а ввечері розважаюся. У неділю я відпочиваю." (Adapted from `ext-ulp_youtube-243`).
+    - **Запитання:**
+        - Що ти робиш з понеділка по четвер?
+        - Коли ти працюєш вдома?
+        - Як ти розважаєшся в суботу?
+
+2.  **Creating a To-Do List (Source: `4-klas-ukrmova-zaharijchuk_s0150`)**
+    - This is an excellent exercise for practicing infinitives.
+    - **Завдання (Task):** Напиши свій список справ на завтра. (Write your to-do list for tomorrow.)
+    - **Приклад (Example):**
+        - Прокинутися
+        - Поснідати
+        - Піти на роботу
+        - Пообідати
+        - Повечеряти
+        - Лягти спати
+
+3.  **Fill-in-the-Blanks with Time Adverbs (Source: `5-klas-ukrmova-zabolotnyi-2023_s0176`)**
+    - This reinforces the connection between activities and times of day.
+    - **Завдання (Task):** Доповніть речення словами `вранці`, `вдень`, `ввечері`, `вночі`. (Complete the sentences with...)
+    - **Речення (Sentences):**
+        - Я снідаю ________. (вранці)
+        - Багато людей працюють ________. (вдень)
+        - Моя сім'я вечеряє ________. (ввечері)
+        - Більшість людей сплять ________. (вночі)
+        - Чого ______ не зробиш, того ______ не здоженеш. (вранці, ввечері)
+
+4.  **Correct the Sentence (Error Analysis)**
+    - Present sentences with common L2 errors and have the learner correct them.
+    - **Завдання (Task):** Знайдіть і виправте помилки. (Find and correct the mistakes.)
+    - **Помилкові речення (Incorrect sentences):**
+        - `Я маю каву в ранку.` -> `Я п'ю каву вранці.`
+        - `Він прокидає о восьмій.` -> `Він прокидається о восьмій.`
+        - `Ми будемо в кіно в суботу.` -> `Ми будемо в кіно в суботу.` (Accusative is correct here, `у суботу`)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/telling-time`
+- `pedagogy/a1/verbs-of-motion-basics`
+- `pedagogy/a1/days-of-the-week`
+- `grammar/cases/accusative-case`
+- `grammar/verbs/reflexive-verbs`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/checkpoint-my-world.md
 
-> **Source:** kravtsova, Grade 4
-> **Section:** Сторінка 136
-> **Score:** 0.50
->
-> 1
-> — Добре, — зам(’)явся хлопчик. — Але, розумієте...
-> — Ти хочеш якийсь план на майбутнє?
-> — Ага (Юлія Смаль).
-> 3. Прочитала оповідання (Ю/ю)лії (С/с)маль «Магазин 
-> планів на майбутнє». Я в захваті! Як гарно письме(н/нн)иця 
-> розповідає про плани на майбутнє! Саме плани, а не мрії! 
-> Бо мрії бувають різні, часто нездійсненні. І не мету! Бо мета має 
-> бути чітка і виважена... А плани! Плани — це те, що ти щодня, 
-> крок за кроком будеш виконувати. І у визначений тобою час, 
-> якщо будеш упертим / упертою, план буде виконано. Успіхів 
-> у викона(н/нн)і своїх планів!
-> 4. Ти знаєш, як виконати свій план?
-> По(-)перше, спочатку його склади. По(-)друге, продумай 
-> пункти, які допоможуть тобі виконати план. Обов(’)язково напи­
-> ши термін викона(н/нн)я кожного пункту.
+# Педагогіка A1: Checkpoint My World
 
-## Мій типовий день (My Typical Day)
 
-> **Source:** kravtsova, Grade 3
-> **Section:** Сторінка 86
-> **Score:** 0.50
->
-> 86
-> 243. 1.	 Прочитай вірш. Про які гарні манери згадує авторка?
-> Зранку різних справ багато: 
-> вмитись, їсти, одягатись.  
-> Треба час розрахувати, 
-> за годинником звірятись. 
-> П’ять хвилин — 
-> на умивання,  
-> п’ять також — на одягання, 
-> три — щоб постіль 
-> поскладати,   
-> потім снідати, малята! 
-> Є й хвилини на дорогу.   
-> З друзями іди у ногу, 
-> не спиняйся ні на крок —  
-> вчасно встигнеш на урок!
-> 242.	 1.	 Прочитай текст. Які гарні манери ти ще знаєш ? Розкажи.
-> З людиною, яка має гарні манери, приємно спілкуватися. 
-> І прищеплювати їх потрібно ще в дитинстві. Прочитай основні 
-> правила ввічливих людей. Спробуй їх запам’ятати та виконувати. 
-> Правило 1. Називай дітей на ім’я, а дорослих — на ім’я та 
-> по батькові. 
-> Правило 2.
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 117
-> **Score:** 0.50
->
-> •  Складіть текст-розповідь за малюнком і словосполученнями. 
-> Запишіть. Підкресліть словосполучення, яким позначено час.
-> Правильно вимовляємо, пишемо, відповідаємо на 
-> питання о котр ій год ині? котра година?
-> Прокинувся о сьомій годині ранку. Чекатиму об оди­
-> надцятій годині. На сімнадцяту годину прийду. Чверть 
-> на третю розпочнемо. О пів на д ев’яту продзвенів 
-> дзвінок (пів до дев ’ятої). За чверть хвилин дванадця­
-> та година буде (чверть хвилин до дванадцятої). 
-> Десять хвилин на п ’ятнадцяту годину розпочнеться 
-> нарада. О чотирнадцятій годині п ’ятнадцять хвилин 
-> пролунав сигнал.
-> •  Спишіть словесні формули на означення часу. Підкресліть 
-> числівники.
-> СШ ш А
-> уЬ
-> 268.
+## Методичний підхід (Methodological Approach)
+The "My World" checkpoint is a crucial consolidation module for A1 learners. The primary pedagogical goal is to shift the learner from passive recognition and simple responses to active, structured production. This module assesses the learner's ability to synthesize vocabulary and grammar from previous lessons to talk about the most important topic: themselves.
 
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 150
-> **Score:** 0.50
->
-> 147
-> ослаблення імунітету. Крім того, якщо вранці ви не поїли, 
-> будьте певні, що за обідом з’їсте мінімум у два рази більше, 
-> ніж зазвичай.
-> Привчіть себе їсти не раніше, ніж через пів години після 
-> пробудження. Уставши з ліжка, випийте пів склянки теплень-
-> кої води. Це активізує процеси життєдіяльності в організмі. 
-> Можна додати у воду кілька крапель лимонного соку. По-
-> тім займіться звичними справами: прийміть душ, одягніться, 
-> зберіть сумку. За цей час шлунок почне працювати – і ви від-
-> чуєте легкий голод. Ось тепер – снідайте (Із журналу).
-> ІІ. Виконайте завдання до тексту.
-> 1. Знайдіть по одному слову з двома: а) м’якими приголосними; 
-> б) дзвінкими; в) глухими.
-> 2. Запишіть виділені слова фонетичною транскрипцією. 
-> 3. Знайдіть три слова, під час вимови яких приголосні уподібнюємо.
-> 4.
+The core methodology is **scaffolding from dialogue to monologue**. Ukrainian pedagogy for young learners heavily emphasizes this transition. We start with simple, structured question-and-answer pairs and gradually build towards a short, coherent narrative. As seen in `Source 15` (`6-klas-ukrmova-betsa-2023_s0018`), a key exercise is to "Трансформуйте діалог у монолог" (Transform the dialogue into a monologue). This provides a clear pathway for learners, reducing the cognitive load of spontaneous production.
 
-## Від ранку до вечора (From Morning to Evening)
+The structure of the produced text is explicitly taught, following the model used in Ukrainian primary schools: **Зачин (Introduction), Основна частина (Main Part), and Кінцівка (Conclusion)** (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0119`). This simple three-part structure gives learners a reliable template for organizing their thoughts, whether they are writing about their family, their day, or their hobbies. The goal is not literary prowess, but clear, logical communication.
 
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 150
-> **Score:** 0.50
->
-> 147
-> ослаблення імунітету. Крім того, якщо вранці ви не поїли, 
-> будьте певні, що за обідом з’їсте мінімум у два рази більше, 
-> ніж зазвичай.
-> Привчіть себе їсти не раніше, ніж через пів години після 
-> пробудження. Уставши з ліжка, випийте пів склянки теплень-
-> кої води. Це активізує процеси життєдіяльності в організмі. 
-> Можна додати у воду кілька крапель лимонного соку. По-
-> тім займіться звичними справами: прийміть душ, одягніться, 
-> зберіть сумку. За цей час шлунок почне працювати – і ви від-
-> чуєте легкий голод. Ось тепер – снідайте (Із журналу).
-> ІІ. Виконайте завдання до тексту.
-> 1. Знайдіть по одному слову з двома: а) м’якими приголосними; 
-> б) дзвінкими; в) глухими.
-> 2. Запишіть виділені слова фонетичною транскрипцією. 
-> 3. Знайдіть три слова, під час вимови яких приголосні уподібнюємо.
-> 4.
+Finally, this module is an opportunity for **active recall and application**. It is not about introducing a large volume of new material. Instead, it's about activating what has already been learned in a meaningful, personalized context. The focus is on communicative competence and building the learner's confidence in using Ukrainian to express personal information (Source 31: `ext-ulp_youtube-60`).
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 29
-> **Score:** 0.33
->
-> Прилітає ластівка. Вона віддає поживу 
-> одному, потім другому. Раптом старшень­
-> ке з них кинулося назустріч матері. Воно 
-> з ’їло не свою порцію.
-> Удруге й утретє ластівка віддає поживу 
-> меншому, щоб провчити нетерплячого (За 
-> Іваном Складаним).
-> •  Установіть за допомогою питань зв’язок слів у першому реченні. 
-> Випишіть із першого абзацу основу речень (підмет і присудок).
-> •  Спишіть другий абзац тексту. Підкресліть головні та друго­
-> рядні члени речення. Пригадайте, на які питання відповіда­
-> ють підмет і присудок.
-> 55. Прочитайте текст. Визначте його тему. Назвіть зачин, основ-
-> " ну частину й кінцівку тексту. Доберіть заголовок.
-> Уперше я побачив цю дику кізоньку 
-> ввечері пізньої осені. Уже давно люди 
-> помітили її на Лісовому масиві в Києві.
-> Я подумки називав кізку Зірочкою.
-> Настали холоди.
+## Послідовність введення (Introduction Sequence)
+The "My World" checkpoint should follow a logical progression from simple questions to a structured personal narrative. The sequence of tasks should be designed to build confidence at each stage.
 
-> **Source:** kravtsova, Grade 3
-> **Section:** Сторінка 86
-> **Score:** 0.50
->
-> 86
-> 243. 1.	 Прочитай вірш. Про які гарні манери згадує авторка?
-> Зранку різних справ багато: 
-> вмитись, їсти, одягатись.  
-> Треба час розрахувати, 
-> за годинником звірятись. 
-> П’ять хвилин — 
-> на умивання,  
-> п’ять також — на одягання, 
-> три — щоб постіль 
-> поскладати,   
-> потім снідати, малята! 
-> Є й хвилини на дорогу.   
-> З друзями іди у ногу, 
-> не спиняйся ні на крок —  
-> вчасно встигнеш на урок!
-> 242.	 1.	 Прочитай текст. Які гарні манери ти ще знаєш ? Розкажи.
-> З людиною, яка має гарні манери, приємно спілкуватися. 
-> І прищеплювати їх потрібно ще в дитинстві. Прочитай основні 
-> правила ввічливих людей. Спробуй їх запам’ятати та виконувати. 
-> Правило 1. Називай дітей на ім’я, а дорослих — на ім’я та 
-> по батькові. 
-> Правило 2.
+1.  **Step 1: Foundational Q&A (Recycled Vocabulary).**
+    Begin by activating core introductory phrases. The task is a simple dialogue where the learner answers basic questions about themselves. This reinforces patterns they should already know.
+    *   *Prompt:* — Як тебе звуть? / — Мене звуть... (Джерело: `6-klas-ukrmova-betsa-2023_s0014`)
+    *   *Prompt:* — Як твоє прізвище? / — Моє прізвище... (Джерело: `6-klas-ukrmova-betsa-2023_s0014`)
+    *   *Prompt:* — Звідки ти? / — Я з [country/city].
+    *   *Prompt:* — Де ти живеш? / — Я живу в [city].
 
-## Підсумок — Summary
+2.  **Step 2: Expanding the Circle (Family & Professions).**
+    Introduce questions about the people in the learner's "world." This stage focuses on using third-person pronouns (*він, вона*) and possessives (*його, її*), along with the instrumental case for professions.
+    *   *Prompt:* — Розкажи... хто це на фото? (Джерело: `6-klas-ukrmova-betsa-2023_s0018`)
+    *   *Model:* — Ось це моя мама. Її звуть... Вона працює лікаркою. (Джерело: `6-klas-ukrmova-betsa-2023_s0018`)
+    *   This step requires learners to correctly apply noun gender for family members (мама, тато) and agree possessive pronouns accordingly (моя мама, мій тато).
 
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 150
-> **Score:** 0.50
->
-> 147
-> ослаблення імунітету. Крім того, якщо вранці ви не поїли, 
-> будьте певні, що за обідом з’їсте мінімум у два рази більше, 
-> ніж зазвичай.
-> Привчіть себе їсти не раніше, ніж через пів години після 
-> пробудження. Уставши з ліжка, випийте пів склянки теплень-
-> кої води. Це активізує процеси життєдіяльності в організмі. 
-> Можна додати у воду кілька крапель лимонного соку. По-
-> тім займіться звичними справами: прийміть душ, одягніться, 
-> зберіть сумку. За цей час шлунок почне працювати – і ви від-
-> чуєте легкий голод. Ось тепер – снідайте (Із журналу).
-> ІІ. Виконайте завдання до тексту.
-> 1. Знайдіть по одному слову з двома: а) м’якими приголосними; 
-> б) дзвінкими; в) глухими.
-> 2. Запишіть виділені слова фонетичною транскрипцією. 
-> 3. Знайдіть три слова, під час вимови яких приголосні уподібнюємо.
-> 4.
+3.  **Step 3: Transitioning from Dialogue to Monologue.**
+    This is the most critical step. Guide the learner to connect their previous answers into a simple, continuous text. The prompt is direct: "Transform the dialogue into a monologue" (Джерело: `6-klas-ukrmova-betsa-2023_s0018`).
+    *   *Model:* "Мене звати [Ім'я]. Я з [країна]. Я живу в [місто]. Це моя мама. Її звати... Вона працює вчителькою."
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 82
-> **Score:** 0.33
->
-> 180. Прочитайте текст. Перекажіть.
-> Ніч збирається на роботу. Робота в неї проста: перебу­
-> ти до ранку, поки люди виспляться. Коли наставала раніш­
-> ня година, Ніч була вільна аж до темного вечора. Утомлена 
-> Ніч вирушала на далекі острови. Там вона грілася на гаря­
-> чому пісочку, слухала ніжний плюскіт морських хвиль. Ніч 
-> обожнювала відпочивати (За Сашком Дерманським).
-> •  Визначте, який це текст. Випишіть із тексту сполучення при­
-> кметників з іменниками за зразком.
-> Зразок: (що?) година (яка?) ранішня.
-> 181. Прочитайте слова.
-> Ніч, пора, доба, ранок, тривалість, рік, довга, узимку, і, 
-> осінь, улітку, коротка, темна, зоряна, проміжок, ч
+4.  **Step 4: Explicitly Structuring the Narrative.**
+    Introduce the formal structure for any simple text, as taught in Ukrainian schools. This provides a mental checklist for the learner.
+    *   **Зачин (Introduction):** State the topic. ("Я хочу розповісти про свою сім'ю.")
+    *   **Основна частина (Main Part):** Provide the details. (Names, professions, etc.)
+    *   **Кінцівка (Conclusion):** A simple closing sentence. ("Я люблю свою родину.")
+    *   This framework helps organize the information from Step 3 into a more formal composition (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0119`).
 
-... (truncated for context window)
+5.  **Step 5: Final Production (Written or Spoken).**
+    The culminating task is a free, but guided, production. The prompt should be specific but allow for personalization.
+    *   *Prompt Example:* "Напишіть розповідь «Моя сім’я»" (Джерело: `6-klas-ukrmova-betsa-2023_s0018`).
+    *   *Alternative Prompts:* "Опиши свого друга / свою подругу", "Розкажи про свій дім".
+
+## Типові помилки L2 (Common L2 Errors)
+For English-speaking learners, the "My World" topic surfaces several predictable errors related to gender, case, and sentence structure.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Моя тато` і `мій мама`. | `Мій тато` і `моя мама`. | Learners incorrectly associate `моя` with "my" for a female (mom) and `мій` for a male (dad). The possessive pronoun must agree with the **grammatical gender of the noun** it modifies (`тато` is masculine, `мама` is feminine), not the gender of the person. (Джерело: `ext-other_blogs-46`) |
+| Я працюю `вчитель`. | Я працюю `вчителем`. | When stating a profession with `працювати` (or being something), the noun for the profession must be in the **Instrumental case (Орудний відмінок)**. English uses the nominative ("I work as a teacher"). A Ukrainian school textbook explicitly models this: `Ким працює? (О. в.) ... учителем` (Джерело: `6-klas-ukrmova-betsa-2023_s0016`). |
+| Моє ім'я є Анна. | Мене звати Анна. | This is a direct translation of the English structure "My name is...". While `Моє ім'я Анна` is grammatically possible, the most common and natural way to introduce oneself is the structure `Мене звати...` ("They call me..."). This is the first form taught in Ukrainian textbooks (Джерело: `6-klas-ukrmova-betsa-2023_s0014`). |
+| `Привіт, Давид!` | `Привіт, Давиде!` | English does not have a vocative case for direct address. In Ukrainian, it is mandatory. Learners often forget to change the ending of a name when addressing someone directly. `Оксанко, ти знаєш...` is a clear example from a textbook (Джерело: `5-klas-ukrmova-uhor-2022-1_s0015`). |
+| Це його сестра. Її звати Ірина. Це **його** брат. | Це його сестра. Її звати Ірина. Це **її** брат. | Learners confuse the meaning of possessive pronouns. When talking about Irina's brother, English would use "her brother". The learner mistakenly uses *його* ("his") again, thinking about the brother's gender, not the owner's (Irina's). This requires drilling the concepts of "his" (`його`) vs. "her" (`її`). |
+| Моя сестра має 25 років. | Моїй сестрі 25 років. | Age is expressed using the dative case (`кому?`) + number + `років/рік/роки`, not the verb `мати` (to have) as in English and other European languages. This is a fundamental structural difference. <!-- VERIFY --> |
+
+## Деколонізаційні застереження (Decolonization Notes)
+Teaching Ukrainian must be done on its own terms, completely independent of Russian. The "My World" topic is an early opportunity to establish correct, decolonized linguistic habits.
+
+1.  **Ukrainian is Not "Russian with different letters":** The writer must NEVER use Russian as a point of comparison (e.g., "This is like the Russian word..."). This creates a false equivalency and hinders the development of authentic Ukrainian phonetics and intuition. The Ukrainian language has its own distinct history, with some words being borrowed by other languages, including Russian and Polish (Джерело: `ext-istoria_movy-10`). The goal is to build a "Ukrainian mental map" from zero.
+
+2.  **Pronunciation without Russian Interference:** Pronunciation of names and words must be based on Ukrainian phonology. For example, the name `Давид` is pronounced with a hard `д` at the end, not devoiced to `[Давіт]` as would happen in Russian. Emphasize listening to native Ukrainian audio, not relying on transliteration or comparison.
+
+3.  **Vocabulary Purity:** Use exclusively Ukrainian vocabulary. Avoid common Russianisms that have crept into Surzhyk (a mixed Russo-Ukrainian vernacular). For instance, use `Гаразд` or `Добре` for "okay," not the Russian `ладно`. Use `дякую` for "thank you," not `спасибі` (which, while Ukrainian, is often overused due to Russian influence and `дякую` is more common in many regions). Source `ext-imtgsh-151` discusses how Russian was used as a tool of occupation, making linguistic purity a crucial act of decolonization.
+
+4.  **Ukrainian Names:** Always use the standard Ukrainian forms of names (e.g., `Ганна`, `Олексій`, `Дмитро`, `Христина`) and not their Russified equivalents (`Анна`, `Алексей`, `Дмитрий`, `Кристина`). This reinforces Ukrainian identity and cultural norms from the very first lesson.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+This checkpoint should only test high-frequency, personally relevant vocabulary that has been introduced in A1.
+
+**Іменники (Nouns):**
+*   ***Сім'я / Родина*** (family) ★★★
+*   ***Мама (or мати), тато (or батько)*** (mom, dad) ★★★
+*   ***Брат, сестра*** (brother, sister) ★★★
+*   ***Дідусь, бабуся*** (grandfather, grandmother) ★★
+*   ***Чоловік, дружина*** (husband, wife) ★★
+*   ***Син, дочка (донька)*** (son, daughter) ★★
+*   ***Друг, подруга*** (friend m/f) ★★★
+*   ***Робота, школа, університет*** (work, school, university) ★★★
+*   ***Дім (будинок), квартира*** (house, apartment) ★★
+*   ***Місто, країна*** (city, country) ★★★
+*   ***Ім'я, прізвище*** (first name, last name) ★★★
+
+**Дієслова (Verbs):**
+*   ***бути*** (to be) ★★★
+*   ***звати*** (to be called) ★★★
+*   ***жити*** (to live) ★★★
+*   ***працювати*** (to work) ★★★
+*   ***вчитись / навчатись*** (to study) ★★★
+*   ***любити*** (to love, to like) ★★★
+*   ***мати*** (to have) ★★★
+
+**Займенники (Pronouns):**
+*   ***Я, ти, він, вона, воно, ми, ви, вони*** (I, you, he, she, it, we, you, they) ★★★
+*   ***Мій/моя/моє, твій/твоя/твоє, його, її, наш/наша/наше, ваш/ваша/ваше, їхній*** (my, your, his, her, our, your, their) ★★★
+
+**Прислівники (Adverbs):**
+*   ***тут, там*** (here, there) ★★
+*   ***добре*** (well) ★★
+
+## Приклади з підручників (Textbook Examples)
+The module should use activity formats that are common in Ukrainian primary and middle school textbooks. These provide authentic, pedagogically sound models.
+
+1.  **Structured Dialogue Completion (Source `6-klas-ukrmova-betsa-2023_s0014`)**
+    *   **Task:** Complete and practice a basic introductory dialogue.
+    *   **Format:**
+        > — Як тебе звуть?
+        > — Мене звуть … .
+        > — Як твоє прізвище?
+        > — Моє прізвище … .
+
+2.  **Photo Description Role-Play (Source `6-klas-ukrmova-betsa-2023_s0018`)**
+    *   **Task:** Use a family photo (real or provided) to ask and answer questions about family members.
+    *   **Format:**
+        > — Розкажи детальніше, хто це на фото.
+        > — Ось це моя мама. Її звуть Еріка Іштванівна. Вона працює лікаркою в лікарні. Праворуч від мами моя сестра Іветта. Вона студентка...
+
+3.  **Written Narrative Prompt (Source `6-klas-ukrmova-betsa-2023_s0018`)**
+    *   **Task:** Write a short, structured story based on previously practiced dialogues.
+    *   **Format:**
+        > Напишіть розповідь «Моя сім’я». Використайте матеріали діалогів §4–5.
+        > *(This directly links the written task to the preceding spoken practice).*
+
+4.  **Text Scramble / Structure Identification (Source `2-klas-ukrmova-kravcova-2019-1_s0119`)**
+    *   **Task:** Give learners the jumbled sentences of a short personal narrative. Their task is to reorder them into a logical Зачин (Introduction), Основна частина (Main Part), and Кінцівка (Conclusion).
+    *   **Format:**
+        > *[Кінцівка]* Він дуже веселий.
+        > *[Основна частина]* Його звати Сергій. Він працює інженером.
+        > *[Зачин]* Це мій друг.
+        > **Your task:** Put the sentences in the correct order to make a story.
+
+## Пов'язані статті (Related Articles)
+*   `pedagogy/a1/personal-pronouns`
+*   `pedagogy/a1/possessive-pronouns`
+*   `pedagogy/a1/verb-conjugation-present`
+*   `pedagogy/a1/instrumental-case`
+*   `pedagogy/a1/noun-gender`
+*   `pedagogy/a1/vocative-case`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -585,7 +606,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Мій типовий день (My Typical Day)` (~300 words)
 - `## Від ранку до вечора (From Morning to Evening)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -640,7 +660,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -740,36 +760,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
-- P1 (~40 words): Brief framing paragraph — introduces the two scenarios: a friend asking about your day (past-tense chunks) and planning tomorrow (future chunks). States that past and future forms are taught as frozen phrases here, not grammar.
-- Dialogue 1 (~120 words): Як пройшов твій день? — Multi-turn exchange: «Добре! Вранці я працював у офісі.» — «А потім?» — «Потім обідав о першій. Після обіду гуляв у парку.» — «А ввечері що робив?» — «Ввечері дивився фільм і читав книгу. Нарешті ліг спати о дванадцятій.» Full turn-by-turn formatting. Sequence words (спочатку / потім / після обіду / нарешті) bolded inline. Past forms (працював, обідав, гуляв, дивився, читав, ліг) glossed as *[past-tense chunk — full grammar in M48]*.
-- P2 (~30 words): One-sentence callout box: "Notice the pattern — sequence word + verb + time: *Потім обідав о першій.*" Focuses the learner's eye on word order.
-- Dialogue 2 (~120 words): Що ти будеш робити завтра? — «Вранці буду працювати. — А після обіду? — Після обіду буду вивчати українську. А ввечері — буду гуляти з друзями. — А вночі? — Нарешті буду спати!» Future chunks буду + infinitive bolded. Infinitives: працювати, вивчати, гуляти, спати. Glossed: *[буду + infinitive = "I will…" — full grammar in M46]*.
-- P3 (~20 words): One-line bridge: "Same structure, two timelines — yesterday I *worked*, tomorrow I *will work*. The sequence words stay the same."
+## Діалоги (~330 words total)
+- P1 (~40 words): [Introduction to the narrative setting: a blogger recording a daily vlog or writing a diary entry, setting up the context for using time markers and sequence words in a natural, conversational flow.]
+- P2 (~100 words): [Dialogue 1: "Як пройшов твій день?" (How was your day?). The narrator describes their day to a friend using past tense chunks like "працював" (worked), "обідав" (had lunch), and "читав" (read). The friend asks "А потім?" (And then?) to prompt sequence.]
+- P3 (~60 words): [Linguistic analysis of Dialogue 1: Focusing on "вранці" (in the morning) vs "після обіду" (in the afternoon) as fixed adverbs and explaining that the past tense forms (-в) are introduced here as ready-made vocabulary chunks for storytelling.]
+- P4 (~90 words): [Dialogue 2: "Що ти будеш робити завтра?" (What will you do tomorrow?). Planning a future schedule using the chunk "буду + infinitive" (буду працювати, буду вивчати). The dialogue emphasizes the contrast between "вдень" and "ввечері".]
+- P5 (~40 words): [Linguistic analysis of Dialogue 2: Explaining the future intention chunk "буду + infinitive" as a simple way to talk about upcoming plans without full conjugation rules yet.]
 
-## Мій типовий день (My Typical Day) (~330 words total)
-- P1 (~40 words): Section intro — explains this section presents a full model-day narrative using the present tense (A1.3) + time expressions (M22) + parts-of-day adverbs. Learner should treat it as a reading + vocabulary model.
-- P2 (~110 words): Model day narrative — full paragraph of connected sentences: «Я прокидаюся о сьомій. Спочатку вмиваюся і одягаюся. Потім снідаю о восьмій. О дев'ятій починаю працювати. Вдень я працюю до першої. О першій обідаю. Після обіду ще працюю до п'ятої. Ввечері готую вечерю і відпочиваю. О дев'ятій дивлюся фільм або читаю книгу. Нарешті о дванадцятій лягаю спати.» All verbs are present-tense Group I/II forms already known from M16-M21. Sequence words bolded.
-- P3 (~100 words): Parts-of-day adverbs explanation — table-style prose: вранці (in the morning, before ~noon), вдень (during the day, ~9–17), після обіду (in the afternoon, literally "after lunch"), ввечері (in the evening, ~18–22), вночі (at night, ~22–6). Pattern note: these are adverbs — place them at the start of a sentence: *Ввечері я читаю.* No case change, no conjugation. Contrast: «о сьомій» (at 7 o'clock — accusative with о) vs. «вранці» (in the morning — adverb, no preposition).
-- Exercise — Fill-in 2 (~50 words): Choose the correct part of the day (від activity_hints fill-in 2): «Я п'ю каву ___ (вранці / вночі / ввечері)», «Ми вечеряємо ___ (ввечері / вранці / вдень)», «Вона працює з дев'ятої до п'ятої ___ (вдень / вночі / вранці)», «Вони гуляють у парку ___ (після обіду / вночі / вранці)». 4 items, single-choice.
-- P4 (~30 words): Short note — «після обіду» is two words functioning as a time adverb. Can be used alone («Після обіду я відпочиваю.») or with a clock time: «Після обіду, о третій, я вчу українську.»
+## Мій типовий день (~340 words total)
+- P1 (~80 words): [The Temporal Skeleton: Explaining the four parts of the day as adverbs: вранці, вдень, ввечері, вночі. Contrast with English: emphasize that NO preposition "в" is needed because the adverb already contains the "in the" meaning.]
+- P2 (~90 words): [The Reflexive Routine: Introducing the concept of reflexive verbs (-ся) for self-directed actions. Teach "прокидатися" (to wake up), "вмиватися" (to wash), and "одягатися" (to get dressed) as a logical morning sequence.]
+- P3 (~100 words): [Model Narrative: "Мій типовий понеділок." A 10-sentence paragraph combining time (о сьомій), reflexive verbs, and parts of the day. Examples: "Я прокидаюся о сьомій. Вранці я працюю. Вдень я обідаю."]
+- P4 (~70 words): [Vocabulary deep-dive: "лягати спати" (to go to bed) vs "спати" (to sleep). Explain that "лягати спати" is the action of ending the day, while "вночі я сплю" describes the state.]
+- <!-- INJECT_ACTIVITY: match-activity-time --> [match-up, focus: matching the activity to the logical time of day (прокидаюся-вранці, сплю-вночі), 8 items]
 
-## Від ранку до вечора (From Morning to Evening) (~330 words total)
-- P1 (~120 words): Extended sequence words — introduces the full connector set with example sentences for each: **спочатку** (first, to start — *Спочатку я снідаю.*), **потім** (then, next — *Потім я йду на роботу.*), **після того / після цього** (after that — *Після того я відпочиваю.*), **нарешті** (finally — *Нарешті я лягаю спати.*), **також** (also — *Я також читаю вранці.*), **а потім** (and then, with light contrast — *Я снідаю, а потім іду до офісу.*). Notes: спочатку ≠ на початку (спочатку = sequence marker in narration; на початку = at the beginning of something). після того / після цього are interchangeable at A1.
-- P2 (~100 words): Daily activity verbs — presents the meal verbs as a triad: снідати (to have breakfast — review from M20), обідати (to have lunch), вечеряти (to have dinner). All Group I (-ати): conjugation pattern identical to читати (я снідаю, ти снідаєш, він снідає). Two new verbs: відпочивати (to rest — Group I: я відпочиваю, ти відпочиваєш) and the chunk лягати спати (to go to bed — treat as one unit at A1, full reflexive verbs in M38). Four example sentences combining verb + time: «О першій я обідаю.» «Після роботи я відпочиваю.» «Ввечері я вечеряю о сьомій.» «О дванадцятій я лягаю спати.»
-- Exercise — Match-up (~60 words): Match activity to logical time of day (from activity_hints): прокидаюся ↔ вранці, снідаю ↔ вранці, працюю ↔ вдень, обідаю ↔ вдень, вечеряю ↔ ввечері, дивлюся фільм ↔ ввечері, лягаю спати ↔ вночі, сплю ↔ вночі. 8 pairs.
-- P3 (~50 words): Synthesis note — shows how sequence words + time adverbs + activity verbs stack: «Вранці я прокидаюся о сьомій. Спочатку снідаю. Потім іду на роботу. Після того обідаю о першій. Ввечері відпочиваю. Нарешті лягаю спати.» Callout: any two sentences about your day can be connected with потім or після того.
+## Від ранку до вечора (~340 words total)
+- P1 (~80 words): [The Connective Tissue: Introducing sequence words "спочатку" (first), "потім" (then/later), and "нарешті" (finally). Show how they turn a list of facts into a story: "Спочатку я снідаю. Потім я працюю."]
+- P2 (~80 words): [Expanding the flow: Teaching "після того" (after that) and "також" (also) to avoid repetitive use of "потім". Example: "Я обідаю. Після того я також гуляю в парку."]
+- P3 (~90 words): [The Meal Verbs: Emphasizing the noun-verb pairs сніданок/снідати, обід/обідати, вечеря/вечеряти. Explicitly warn against the English calque "мати сніданок" (I have breakfast); in Ukrainian, you just "breakfast".]
+- P4 (~90 words): [Daily Activity Verbs: Reviewing Group I verbs (-ати) in the context of a day: "відпочивати" (to rest), "читати" (to read), "гуляти" (to walk). Show conjugation for "Я" and "Ти" to facilitate the dialogue situations.]
+- <!-- INJECT_ACTIVITY: fill-in-sequence --> [fill-in, focus: choosing the correct sequence word (Спочатку... Потім... Нарешті) to complete a logical day, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-parts-of-day --> [fill-in, focus: choosing between вранці, вдень, ввечері, вночі based on activities like "п'ю каву" or "сплю", 5 items]
 
-## Підсумок — Summary (~330 words total)
-- P1 (~80 words): Full-formula recap — explains the three-part building block for narrating a day: **[Time expression] + [Sequence word] + [Verb + object/complement]**. Example breakdowns: «О сьомій [time] / — / прокидаюся [verb]» → «Спочатку [seq] / снідаю [verb]» → «Потім [seq] / о дев'ятій [time] / іду на роботу [verb + complement]». Shows that time and sequence words are interchangeable at the start — both are correct.
-- P2 (~100 words): Extended model day narrative — longer coherent story (8–10 sentences) weaving all four sections together: «Мій типовий понеділок починається о шостій тридцять. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю каву і їм бутерброд. О дев'ятій починаю працювати. Вдень я дуже зайнятий. О першій обідаю в кафе. Після обіду ще працюю до шостої. Ввечері відпочиваю — готую вечерю і дивлюся серіал. Також читаю перед сном. Нарешті о дванадцятій лягаю спати. Завтра — те саме!» Functions as a second model for learner imitation.
-- Exercise — Fill-in 1 (~60 words): Complete the logical sequence (from activity_hints fill-in 1, 6 items): «___ (Спочатку/Потім/Нарешті) я прокидаюся і вмиваюся.» «Після того я ___ (снідаю/вечеряю/лягаю спати).» «Вдень я ___ (працюю/прокидаюся/снідаю) в офісі.» «О першій годині я ___ (обідаю/вечеряю/прокидаюся).» «___ (Потім/Спочатку/Вранці) я читаю книгу або дивлюся фільм.» «___ (Нарешті/Спочатку/Вдень) я лягаю спати о дванадцятій.»
-- P3 — Self-check (~90 words): Bulleted prompt list for learner's own production:
-  - Describe your typical Monday from morning to evening (5–8 sentences).
-  - Use at least 3 time expressions (e.g., о восьмій, після обіду, ввечері).
-  - Use at least 3 sequence words (спочатку, потім, нарешті).
-  - Include at least 4 daily activity verbs (прокидатися, снідати, обідати, відпочивати, лягати спати).
-  - Starter: «Мій типовий понеділок починається о ___. Спочатку я ___…»
+## Підсумок (~310 words total)
+- P1 (~120 words): [The Story Formula: Recap of how to build a coherent narrative by combining Time (о якій годині?) + Sequence (спочатку/потім) + Activity (verb). Model a "Super-Sentence": "Вранці о восьмій я спочатку снідаю, а потім працюю."]
+- P2 (~190 words): [Self-check and Final Task. Provide a bulleted checklist for the learner:
+    - Can I name 4 parts of the day as adverbs? (вранці, вдень, ввечері, вночі)
+    - Can I use 3 words to order my actions? (спочатку, потім, нарешті)
+    - Do I remember to use -ся for "прокидатися" and "вмиватися"?
+    - Final Narrative Task: Write 6 sentences about your typical Monday using at least 3 sequence words and 3 specific times.]
 
 Grand total: ~1320 words
 </skeleton>

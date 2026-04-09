@@ -12,7 +12,7 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -21,195 +21,112 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги (Dialogues)
+## Діало́ги — Розкажи́ про пла́ни
 
-Вітя and Оле́нка are standing by a bulletin board at the community center, scanning sign-up sheets for weekend activities. Their conversation covers everything this module teaches — invitations, hobbies, and how often they do things.
+When you want to know what someone is doing in their **ві́льний час** (free time), the most natural approach is to ask about their upcoming weekend. By starting a conversation with **Що ти ро́биш у вихідні́?** (What are you doing this weekend?), you can gauge their availability before suggesting an activity. This is the perfect way to begin a discussion about plans, hobbies, and how people prefer to spend their time outside of work or study.
 
-### Діало́г 1 — Weekend Plans
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Приві́т, Вітю! Що ти ро́биш у вихідні́? *(Hi, Vitya! What are you doing on the weekend?)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Приві́т, Оле́нко! Що ти робиш у вихідні? *(Hi, Olenka! What are you doing this weekend?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Оле́нка:</span> Привіт! Зазвича́й я гуля́ю і чита́ю. *(Hi! Usually I walk and read.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Привіт! Зазвича́й я гуля́ю і чита́ю. *(Hi! Usually I walk and read.)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Ході́мо в кіно́ в субо́ту! *(Let's go to the cinema on Saturday!)*</div>
 
+<div class="dialogue-line"><span class="speaker">Оленка:</span> До́бре! О котрі́й годи́ні? *(Okay! At what time?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А в субо́ту? Ході́мо в кіно́! *(And on Saturday? Let's go to the cinema!)*</div>
+<div class="dialogue-line"><span class="speaker">Вітя:</span> О п'я́тій. *(At five.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Вітя:</span> О, до́бре! О котрі́й? *(Oh, great! At what time?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> О п'я́тій. *(At five.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Чудо́во! А по́тім — гуля́ємо? *(Wonderful! And then — we walk?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Так, звича́йно! *(Yes, of course!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Чудо́во! До зу́стрічі! *(Great! See you!)*</div>
 
 </div>
 
-Notice how Оленка uses **Ходімо!** (Let's go!) to invite Вітя. This is the natural Ukrainian invitation — **Ходімо** + activity + day + time. She names the activity (**в кіно**), the day is already clear (**в суботу**), and when Вітя asks **О котрій?** (At what time?), she gives a time from M25: **О п'ятій** (At five). There's a second invitation word: **Дава́й!** (Let's! — informal). While **Ходімо** suggests going somewhere together, **Давай** is broader — it works for any shared activity: **Давай погра́ємо у те́ніс!** (Let's play tennis!), **Давай послухаємо му́зику!** (Let's listen to music!).
+:::tip Invitation Patterns
+When you want to invite someone to join you, use the imperative phrase **Ходімо!** (Let's go!). You might also hear native speakers use **Дава́й!** (Let's!), which is a very common informal and conversational alternative. However, **Ходімо!** is the standard, grammatically correct form to prioritize when suggesting a shared activity. 
+:::
 
-### Діалог 2 — Hobbies and Frequency
 <div class="dialogue">
 
 <div class="dialogue-line"><span class="speaker">Вітя:</span> Ти лю́биш спорт? *(Do you like sports?)*</div>
 
-
 <div class="dialogue-line"><span class="speaker">Оленка:</span> Так, я гра́ю у футбо́л. *(Yes, I play football.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Спра́вді? Як ча́сто? *(Really? How often?)*</div>
-
+<div class="dialogue-line"><span class="speaker">Вітя:</span> Як ча́сто? *(How often?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Оленка:</span> Дві́чі на ти́ждень, у вівто́рок і четве́р. *(Twice a week, on Tuesday and Thursday.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Вітя:</span> А ще? Що ти робиш? *(And what else? What do you do?)*</div>
-
+<div class="dialogue-line"><span class="speaker">Вітя:</span> А ще що ти робиш? *(And what else do you do?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Оленка:</span> І́ноді слу́хаю му́зику і малю́ю. *(Sometimes I listen to music and draw.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Вітя:</span> Я теж малюю! А в музе́й хо́диш? *(I draw too! Do you go to the museum?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Рі́дко. Раз на мі́сяць. *(Rarely. Once a month.)*</div>
-
-
 </div>
 
-The key question here is **Як часто?** (How often?) — it opens the door to frequency adverbs like **іноді** (sometimes) and **рідко** (rarely), plus numeric expressions like **двічі на тиждень** (twice a week). Оленка answers naturally, combining hobby verbs with how often she does each one.
+## Хо́бі і спорт — Що ти любиш?
 
-:::tip
-Three communicative tools from these dialogues: **Ходімо!** (Let's go!) for going somewhere together, **Давай!** (Let's!) for any shared activity, and **Як часто?** (How often?) for asking about frequency. Both appear naturally in conversation before any formal explanation — you already understand them from context.
+The simplest and most direct way to talk about your interests is to use the verb **люби́ти** (to love/like) followed by an infinitive verb. This structure allows you to express your preferences without needing complex grammar rules. For example, if your hobby is reading, you simply combine the two verbs. Here are some common examples of activities you might enjoy:
+* **чита́ти кни́ги** (to read books)
+* **малюва́ти вдо́ма** (to draw at home)
+* **фотографува́ти** (to take photos)
+* **диви́тися фі́льми / серіа́ли** (to watch movies/series)
+
+When talking about sports and games, Ukrainian uses the verb **гра́ти** (to play) with the preposition **у** (or **в**). This specific combination is required for any competitive sport or structured game. Remember that the preposition you choose depends on the first letter of the next word to maintain a smooth flow of sound. 
+* **грати у футбол** (to play football)
+* **грати у баскетбо́л** (to play basketball)
+* **грати у те́ніс** (to play tennis)
+* **грати у комп'ю́терні і́гри** (to play computer games)
+
+In contrast to sports, playing a musical instrument uses a completely different pattern. You still use the verb **грати**, but you must combine it with the preposition **на** (on) followed by the instrument. This is a fixed chunk of language that you should memorize as a single unit. It literally translates to "playing on" the instrument.
+* **грати на гіта́рі** (to play guitar)
+* **грати на піані́но** (to play piano)
+* **грати на скри́пці** (to play violin)
+
+For places of entertainment, we use the verb **ходи́ти** (to go habitually) to describe visiting them regularly. Just like with sports and instruments, different venues require different prepositions. We use the chunk **ходити в** for most buildings and physical structures, such as **ходити в кіно** (to go to the cinema), **ходити в теа́тр** (to go to the theater), or **ходити в музе́й** (to go to a museum). However, for events and performances, we use the chunk **ходити на**. You would say **ходити на конце́рт** (to go to a concert) or **ходити на футбол** (to go to a football match).
+
+<MatchUp client:only="react" pairs={[{"left": "грати", "right": "у футбол"}, {"left": "грати", "right": "на гітарі"}, {"left": "слухати", "right": "музику"}, {"left": "дивитися", "right": "фільми"}, {"left": "ходити", "right": "в театр"}, {"left": "читати", "right": "книгу"}, {"left": "малювати", "right": "вдома"}]} instruction={"З'єднайте дієслово з іменником (Match the verb to the logical noun)"} />
+<FillIn client:only="react" items={[{"sentence": "Він грає _____ піаніно.", "answer": "на", "options": ["на", "у", "в"]}, {"sentence": "Ми граємо _____ футбол.", "answer": "у", "options": ["у", "на", "в"]}, {"sentence": "Я хочу ходити _____ концерт.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Вони ходять _____ театр раз на місяць.", "answer": "в", "options": ["в", "на", "у"]}, {"sentence": "Вона грає _____ гітарі.", "answer": "на", "options": ["на", "у", "в"]}, {"sentence": "Діти грають _____ теніс.", "answer": "у", "options": ["у", "на", "в"]}]} instruction={"Оберіть правильний прийменник (Choose the correct preposition)"} />
+
+## Як часто? — Прислі́вники частоти́
+
+To describe how regularly you participate in your hobbies, you need adverbs of frequency. The most common positive frequency adverbs are **за́вжди́** (always), **зазвичай** (usually), **часто** (often), and **іноді** or **і́нколи** (sometimes). In a Ukrainian sentence, these adverbs typically sit right before the main verb. This placement highlights the frequency of the action you are describing.
+* **Я часто гуляю в парку.** (I often walk in the park.)
+* **Ми зазвичай чита́ємо вве́чері.** (We usually read in the evening.)
+* **Вона́ іноді фотографу́є мі́сто.** (She sometimes photographs the city.)
+
+When expressing negative frequency, we use words like **рі́дко** (rarely) and **ніколи** (never). There is a critical grammatical rule regarding the word **ніколи**: it requires a double negation. This means it must always be followed by the particle **не** (not) and the main verb. The word **рідко**, on the other hand, stands alone and does not take a negative particle.
+* **Я ніколи не граю у футбол.** (I never play football.)
+* **Він ніколи не чита́є журна́ли.** (He never reads magazines.)
+* **Ми рідко хо́димо в кіно.** (We rarely go to the cinema.)
+
+:::note Double Negation
+In English, double negatives are considered incorrect grammar. In Ukrainian, they are absolutely mandatory when using negative adverbs like **ніколи**. You must say "I never not do something" for the sentence to make sense.
 :::
 
-## Хо́бі і спорт (Hobbies and Sports)
+If you want to be more specific about your schedule, you can use numbers with the phrase **на тиждень** (per week) or **на мі́сяць** (per month). These fixed expressions indicate exactly how many times an action occurs within a given timeframe. Another highly useful and common alternative is **ко́жен день** (every day), which serves as a more literal substitute for **завжди**.
+* **раз на тиждень** (once a week)
+* **двічі на тиждень** (twice a week)
+* **три́чі на тиждень** (three times a week)
 
-In M15, you learned the pattern **Я люблю́** + infinitive (I like to...). Now we expand that with specific hobby verbs. Each verb naturally pairs with a noun — learn them as chunks, not separate words:
+You can synthesize all of these elements by combining the days of the week with your frequency adverbs and activity verbs. This allows you to describe a complete, detailed routine in a single sentence.
+* **У понеді́лок о п'ятій я завжди займа́юся спо́ртом.** (On Monday at five I always practice sports.)
+* **Ко́ли у п'я́тницю йде дощ, ми часто ходимо в театр.** (When it rains on Friday, we often go to the theater.)
 
-- **малюва́ти** (to draw) — Я люблю малювати.
-- **фотографува́ти** (to take photos) — Вона́ лю́бить фотографувати.
-- **слу́хати музику** (to listen to music) — Він слу́хає музику.
-- **диви́тися фі́льми** (to watch films) — Ми ди́вимося фільми.
-- **дивитися серіа́ли** (to watch series) — Вони́ ди́вляться серіали.
-
-These verbs and their objects belong together. When you say **слухати**, the next word is almost always **музику**. When you say **дивитися**, you expect **фільми** or **серіали**. Think of them as a single unit.
-
-Ukrainian has two different prepositions for **гра́ти** (to play), depending on what you play. For sports, use **у**. For instruments, use **на**:
-
-- **грати у футбол** (to play football)
-- **грати у баскетбо́л** (to play basketball)
-- **грати у теніс** (to play tennis)
-- **грати у волейбо́л** (to play volleyball)
-- **грати на гіта́рі** (to play guitar)
-- **грати на піані́но** (to play piano)
-- **грати на скри́пці** (to play violin)
-
-:::caution
-Don't choose the preposition — learn the whole phrase. Sport → **у**, instrument → **на**. If you memorize **грати у футбол** and **грати на гітарі** as complete chunks, you'll never mix them up.
-:::
-
-<MatchUp client:only="react" pairs={[{"left": "to play football", "right": "грати у футбол"}, {"left": "to play guitar", "right": "грати на гітарі"}, {"left": "to listen to music", "right": "слухати музику"}, {"left": "to watch films", "right": "дивитися фільми"}, {"left": "to go to the cinema", "right": "ходити в кіно"}, {"left": "to go to the theater", "right": "ходити в театр"}, {"left": "to read a book", "right": "читати книгу"}, {"left": "to go to a concert", "right": "ходити на концерт"}]} instruction={"З'єднайте пари (Match the pairs)"} />
-
-Going out for entertainment also follows a chunk pattern: **ходи́ти** + **в** or **на** + destination. Memorize these as fixed phrases:
-
-- **ходити в кіно** (to go to the cinema) — Я ходжу́ в кіно.
-- **ходити в теа́тр** (to go to the theater) — Він хо́дить в театр.
-- **ходити на конце́рт** (to go to a concert) — Вона ходить на концерт.
-- **ходити в музей** (to go to a museum) — Ми хо́димо в музей.
-
-The case grammar behind **в** and **на** comes later in A1.5 — for now, memorize these as full phrases. You already know the destinations; just attach **ходити** to the front.
-
-Now combine several chunks to describe a range of hobbies. Try reading these aloud:
-
-- Я граю у баскетбол і слухаю музику.
-- Вона гра́є на гітарі і малю́є.
-- Вони хо́дять в театр і дивляться фільми.
-
-Your turn: pick two or three of your own hobbies and describe them using the same structures. Use **Я люблю** + infinitive, or just the verb + object.
-
-<FillIn client:only="react" items={[{"sentence": "Він грає ___ піаніно.", "answer": "на", "options": ["на", "у", "в"]}, {"sentence": "Ми граємо ___ футбол.", "answer": "у", "options": ["у", "на", "в"]}, {"sentence": "Я хочу ходити ___ концерт.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Вони ходять ___ театр раз на місяць.", "answer": "в", "options": ["в", "на", "у"]}, {"sentence": "Вона грає ___ скрипці.", "answer": "на", "options": ["на", "у", "в"]}, {"sentence": "Він ходить ___ музей іноді.", "answer": "в", "options": ["в", "на", "у"]}, {"sentence": "Я ходжу ___ кіно у суботу.", "answer": "в", "options": ["в", "на", "у"]}]} instruction={"Оберіть правильний прийменник (Choose the correct preposition)"} />
-
-## Як часто? (How Often?)
-
-Ukrainian has six core frequency adverbs. Think of them on a scale from "always" to "never":
-
-**за́вжди́** (always) → **зазвичай** (usually) → **часто** (often) → **іноді** (sometimes) → **рідко** (rarely) → **ніколи** (never)
-
-Each one in a sentence:
-
-- Я **завжди** сні́даю. *(I always eat breakfast.)*
-- Вона **зазвичай** чита́є вве́чері. *(She usually reads in the evening.)*
-- Він **часто** грає у теніс. *(He often plays tennis.)*
-- Ми **іноді** ходимо в кіно. *(We sometimes go to the cinema.)*
-- Вона **рідко** ди́виться серіали. *(She rarely watches series.)*
-- Він **ніколи не** грає у футбол. *(He never plays football.)*
-
-A note on **іноді**: you may also hear **і́нколи**, which means the same thing. Use **іноді** as your main word — it's more common at this level.
-
-Word order is straightforward: the frequency adverb goes **before the verb** in a neutral statement. **Я часто гуляю.** **Він іноді малює.** One special rule: **ніколи** always requires **не** before the verb. This is Ukrainian double negation — you saw it in M19. They usually go together in this order:
-
-- Я **ніколи не** працю́ю у неді́лю. *(I never work on Sunday.)*
-- Він **ніколи не** ходить у театр. *(He never goes to the theater.)*
-
-:::note
-**Ніколи** + **не** = always together. Dropping **не** sounds incomplete in Ukrainian, even though English uses only "never."
-:::
-
-<FillIn client:only="react" items={[{"sentence": "Неділя — вихідний день. Я ___ працюю у неділю.", "answer": "ніколи не", "options": ["ніколи не", "завжди", "часто"]}, {"sentence": "Вона грає у теніс двічі ___ тиждень.", "answer": "на", "options": ["на", "у", "в"]}, {"sentence": "— ___ в кіно у суботу! — Добре!", "answer": "Ходімо", "options": ["Ходімо", "Давай", "Ідемо"]}, {"sentence": "Я люблю спорт, тому ___ граю у баскетбол.", "answer": "часто", "options": ["часто", "ніколи", "рідко"]}, {"sentence": "Я не маю часу, тому ___ читаю книги.", "answer": "рідко", "options": ["рідко", "часто", "завжди"]}, {"sentence": "— Що ти робиш ___ ? — Зазвичай відпочиваю.", "answer": "у вихідні", "options": ["у вихідні", "вихідні", "на вихідні"]}]} instruction={"Оберіть правильне слово або фразу (Choose the correct word or phrase)"} />
-
-Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These often go **after the verb** or at the end of the sentence:
-
-- **раз на тиждень** (once a week)
-- **двічі на тиждень** (twice a week)
-- **три́чі на тиждень** (three times a week)
-- **ко́жен день** (every day)
-- **раз на місяць** (once a month)
-
-In full sentences:
-
-- Я граю у футбол **двічі на тиждень**. *(I play football twice a week.)*
-- Вона ходить у кіно **раз на місяць**. *(She goes to the cinema once a month.)*
-- Він малює **кожен день**. *(He draws every day.)*
-- Ми гра́ємо у волейбол **тричі на тиждень**. *(We play volleyball three times a week.)*
-
-You can even combine both types — an adverb before the verb and a numeric expression after it:
-
-- Я **часто** граю у теніс — **двічі або́ тричі на тиждень**. *(I often play tennis — two or three times a week.)*
-- Вона **рідко** ходить у театр — **раз на місяць**. *(She rarely goes to the theater — once a month.)*
-
-Try it yourself: pick two of your hobbies and add a frequency to each — one single-word adverb and one numeric expression. This combination is exactly what you'll need for the A1.4 checkpoint.
+<FillIn client:only="react" items={[{"sentence": "Я _____ працюю у неділю, бо це мій вихідний.", "answer": "ніколи не", "options": ["ніколи не", "завжди", "часто"]}, {"sentence": "Вона грає у теніс двічі _____.", "answer": "на тиждень", "options": ["на тиждень", "у тиждень", "в тиждень"]}, {"sentence": "Я люблю спорт, тому _____ граю у баскетбол.", "answer": "часто", "options": ["часто", "ніколи", "рідко"]}, {"sentence": "Я не маю часу, тому _____ читаю книги.", "answer": "рідко", "options": ["рідко", "часто", "завжди"]}, {"sentence": "Він _____ слухає таку музику.", "answer": "ніколи не", "options": ["ніколи не", "ніколи", "не ніколи"]}, {"sentence": "Ми _____ гуляємо ввечері, якщо гарна погода.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "рідко"]}]} instruction={"Оберіть правильне слово (Choose the correct word)"} />
 
 ## Підсумок — Summary
 
-This module gave you three building blocks for talking about free time:
+You are now ready to discuss your free time, hobbies, and weekend plans in Ukrainian. You have learned how to use **любити** with an infinitive verb to express your general interests, and you have mastered the crucial difference between the phrases **грати у** for competitive sports and **грати на** for musical instruments. You also know how to invite a friend to an event using the standard imperative **Ходімо!**, and how to specify whether you are going into a building with **ходити в** or attending an event with **ходити на**. Finally, you can accurately describe the frequency of your activities using adverbs like **часто** and **ніколи**, remembering the vital rule of double negation for the latter.
 
-1. **Hobby verbs** — **Я люблю** + infinitive, **грати у** + sport, **грати на** + instrument, **ходити в/на** + destination. All learned as chunks — verb and object together.
-2. **Invitation patterns** — **Ходімо!** (Let's go!) + destination + time + day for going somewhere together. **Давай!** + verb for any shared activity: **Давай пограємо!** (Let's play!), **Давай поди́вимося фільм!** (Let's watch a film!). Both are natural Ukrainian invitations — combine with days from M24 and times from M25 for a complete invitation.
-3. **Frequency scale** — **завжди, зазвичай, часто, іноді, рідко, ніколи** before the verb. Numeric expressions (**двічі на тиждень, раз на місяць**) after the verb. Double negation with **ніколи не**.
+Use the following self-check questions to verify that you can confidently apply these new communication skills. Read the question, formulate your own answer, and then compare it to the provided model response.
+* **Що ви лю́бите роби́ти у вільний час?** (What do you like to do in your free time?)
+  * Model answer: **Я люблю́ читати і ходити в кіно.** (I like to read and go to the cinema.)
+* **Як часто ви гра́єте у футбол?** (How often do you play football?)
+  * Model answer: **Я граю у футбол двічі на тиждень.** (I play football twice a week.)
+* **Ви граєте на піаніно?** (Do you play the piano?)
+  * Model answer: **Ні, я ніколи не граю на піаніно, але́ я слухаю музику.** (No, I never play the piano, but I listen to music.)
+* **Як запроси́ти дру́га в театр?** (How to invite a friend to the theater?)
+  * Model answer: **Ходімо в театр у суботу!** (Let's go to the theater on Saturday!)
 
-### Self-Check
-
-Test yourself — answer each question aloud in Ukrainian:
-
-- How do you say "let's go to the cinema"? → **Ходімо в кіно!**
-- How do you say "let's play tennis"? → **Давай пограємо у теніс!**
-- What is your hobby? → **Я граю у футбол.** / **Я люблю малювати.** / **Я слухаю музику.**
-- How often do you play tennis? → **Двічі на тиждень.** / **Іноді.** / **Рідко.**
-- Do you always watch series? → **Так, я завжди дивлю́ся.** / **Ні, я ніколи не дивлюся.**
-- What do you do on the weekend? → **Я зазвичай гуляю і читаю.**
-- Does he play piano or football? → **Він грає на піаніно.**
-
-If you answered four or more, you're ready for M27.
-
-All four A1.4 skills now come together: time expressions from M25, days of the week from M24, weather from M23, and now free-time activities with frequency. At the checkpoint (M27), you'll describe a full day from **ра́нок** (morning) to **ве́чір** (evening) — including the weather, your plans, and how often you do your activities. The invitation and frequency patterns from this module are essential building blocks for that final A1.4 task.
-
-**Ти вже вмі́єш говори́ти про хобі, запро́шувати дру́зів і поя́снювати, як часто ти щось робиш. Це — спра́вжня розмо́ва!** *(You can already talk about hobbies, invite friends, and explain how often you do things. That's real conversation!)*
+By combining your knowledge of time, weather, days of the week, and now free time activities, you can easily describe your perfect weekend routine. This comprehensive foundation prepares you to review all of these interconnected concepts in the upcoming Checkpoint module, where your ability to communicate about daily life will be put to the test.
 
 </TabItem>
 <TabItem label="Словник">
@@ -218,96 +135,74 @@ All four A1.4 skills now come together: time expressions from M25, days of the w
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
+| **за́вжди́** | always | присл. |  |
+| **зазвича́й** | usually | присл. |  |
+| **ча́сто** | often | присл. |  |
+| **і́ноді** | sometimes | присл. |  |
+| **і́нколи** | sometimes | присл. |  |
+| **рі́дко** | rarely | присл. |  |
 | **вихідні́** | weekend | прикм. |  |
 | **спорт** | sport | ім. | ч. |
 | **футбо́л** | football | ім. | ч. |
-| **кіно́** | cinema (indeclinable) | ім. | с. |
+| **кіно́** | cinema | ім. | с. |
 | **теа́тр** | theater | ім. | ч. |
-| **конце́рт** | concert | ім. | ч. |
 | **музе́й** | museum | ім. | ч. |
-| **ча́сто** | often | присл. |  |
-| **і́ноді** | sometimes | присл. |  |
-| **і́нколи** | sometimes (variant of іноді) | присл. |  |
-| **рі́дко** | rarely | присл. |  |
-| **за́вжди́** | always | присл. |  |
-| **зазвича́й** | usually | присл. |  |
+| **конце́рт** | concert | ім. | ч. |
+| **ході́мо** | let's go! | дієсл. |  |
+| **дава́й** | let's (informal) | дієсл. |  |
 | **раз** | once / one time | присл. |  |
 | **дві́чі** | twice | присл. |  |
 | **три́чі** | three times | присл. |  |
-| **дава́й** | let's (informal suggestion) | дієсл. |  |
 | **малюва́ти** | to draw | дієсл. |  |
 | **фотографува́ти** | to take photos | дієсл. |  |
-| **гра́ти** | to play | дієсл. |  |
-| **слу́хати** | to listen | дієсл. |  |
-| **диви́тися** | to watch | дієсл. |  |
-| **ходи́ти** | to go (regularly) | дієсл. |  |
-| **сні́дати** | to eat breakfast | дієсл. |  |
-| **баскетбо́л** | basketball | ім. | ч. |
-| **те́ніс** | tennis | ім. | ч. |
-| **волейбо́л** | volleyball | ім. | ч. |
-| **гіта́ра** | guitar | ім. | ж. |
-| **піані́но** | piano (indeclinable) | ім. | с. |
-| **скри́пка** | violin | ім. | ж. |
-| **серіа́л** | TV series | ім. | ч. |
-| **му́зика** | music | ім. | ч. |
-| **по́тім** | then / afterwards | присл. |  |
-| **спра́вді** | really | присл. |  |
-| **чудо́во** | wonderful / great | присл. |  |
-| **звича́йно** | of course | присл. |  |
-| **або́** | or | спол. |  |
-| **вве́чері** | in the evening | присл. |  |
+| **готува́ти** | to cook | дієсл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Ходімо!** | Let's go! |
-| **ніколи не** | never (double negation — ніколи always requires не before the verb) |
-| **дивитися серіали** | to watch series |
-| **грати у баскетбол** | to play basketball |
-| **грати у теніс** | to play tennis |
-| **грати у волейбол** | to play volleyball |
-| **грати на гітарі** | to play guitar (грати на + instrument) |
-| **грати на піаніно** | to play piano |
-| **грати на скрипці** | to play violin |
-| **ходити в кіно** | to go to the cinema |
-| **ходити в театр** | to go to the theater |
-| **ходити на концерт** | to go to a concert |
-| **ходити в музей** | to go to the museum |
-| **Як часто?** | How often? |
-| **раз на тиждень** | once a week |
-| **двічі на тиждень** | twice a week |
-| **тричі на тиждень** | three times a week |
-| **раз на місяць** | once a month |
+| **вільний час** | free time |
+| **на тиждень** | per week |
+| **на місяць** | per month |
 | **кожен день** | every day |
+| **грати у** | to play (sports/games) |
+| **грати на** | to play (instrument) |
+| **ходити в** | to go to (building) |
+| **ходити на** | to go to (event) |
+| **слухати музику** | to listen to music |
+| **займатися спортом** | to practice sports |
+| **Що ти робиш у вихідні?** | What are you doing this weekend? |
+| **До зустрічі!** | See you! |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "вихідні́", back: "weekend", subtitle: "прикм." }, { front: "спорт", back: "sport", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "футбо́л", back: "football", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кіно́", back: "cinema (indeclinable)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "конце́рт", back: "concert", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ча́сто", back: "often", subtitle: "присл." }, { front: "і́ноді", back: "sometimes", subtitle: "присл." }, { front: "і́нколи", back: "sometimes (variant of іноді)", subtitle: "присл." }, { front: "рі́дко", back: "rarely", subtitle: "присл." }, { front: "за́вжди́", back: "always", subtitle: "присл." }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "раз", back: "once / one time", subtitle: "присл." }, { front: "дві́чі", back: "twice", subtitle: "присл." }, { front: "три́чі", back: "three times", subtitle: "присл." }, { front: "дава́й", back: "let&#39;s (informal suggestion)", subtitle: "дієсл." }, { front: "малюва́ти", back: "to draw", subtitle: "дієсл." }, { front: "фотографува́ти", back: "to take photos", subtitle: "дієсл." }, { front: "гра́ти", back: "to play", subtitle: "дієсл." }, { front: "слу́хати", back: "to listen", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "ходи́ти", back: "to go (regularly)", subtitle: "дієсл." }, { front: "сні́дати", back: "to eat breakfast", subtitle: "дієсл." }, { front: "баскетбо́л", back: "basketball", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "те́ніс", back: "tennis", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "волейбо́л", back: "volleyball", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гіта́ра", back: "guitar", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "піані́но", back: "piano (indeclinable)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "скри́пка", back: "violin", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "серіа́л", back: "TV series", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "му́зика", back: "music", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́тім", back: "then / afterwards", subtitle: "присл." }, { front: "спра́вді", back: "really", subtitle: "присл." }, { front: "чудо́во", back: "wonderful / great", subtitle: "присл." }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "або́", back: "or", subtitle: "спол." }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "за́вжди́", back: "always", subtitle: "присл." }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "ча́сто", back: "often", subtitle: "присл." }, { front: "і́ноді", back: "sometimes", subtitle: "присл." }, { front: "і́нколи", back: "sometimes", subtitle: "присл." }, { front: "рі́дко", back: "rarely", subtitle: "присл." }, { front: "вихідні́", back: "weekend", subtitle: "прикм." }, { front: "спорт", back: "sport", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "футбо́л", back: "football", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кіно́", back: "cinema", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "конце́рт", back: "concert", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ході́мо", back: "let&#39;s go!", subtitle: "дієсл." }, { front: "дава́й", back: "let&#39;s (informal)", subtitle: "дієсл." }, { front: "раз", back: "once / one time", subtitle: "присл." }, { front: "дві́чі", back: "twice", subtitle: "присл." }, { front: "три́чі", back: "three times", subtitle: "присл." }, { front: "малюва́ти", back: "to draw", subtitle: "дієсл." }, { front: "фотографува́ти", back: "to take photos", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"грати у ___": ["футбол", "баскетбол", "теніс", "волейбол"], "грати на ___": ["гітарі", "піаніно", "скрипці"], "ходити в / на ___": ["кіно", "театр", "концерт", "музей"]}} instruction={"Розподіліть слова за групами (Sort the words into groups)"} />
+<FillIn client:only="react" items={[{"sentence": "— _____ в кіно у суботу! — Добре!", "answer": "Ходімо", "options": ["Ходімо", "Давай", "Ідемо"]}, {"sentence": "Що ти робиш _____?", "answer": "у вихідні", "options": ["у вихідні", "вихідні", "на вихідні"]}, {"sentence": "— _____ на концерт завтра! — Чудова ідея!", "answer": "Ходімо", "options": ["Ходімо", "Йдемо", "Давай"]}, {"sentence": "— Що ви робите _____? — Ми граємо у теніс.", "answer": "у вихідні", "options": ["у вихідні", "вихідні", "на вихідні"]}, {"sentence": "— _____ в музей! — Я не люблю музеї.", "answer": "Ходімо", "options": ["Ходімо", "Пішли", "Давай"]}, {"sentence": "Я маю вільний _____, ходімо гуляти!", "answer": "час", "options": ["час", "день", "тиждень"]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Вона ніколи ходить у театр.", "isTrue": false, "explanation": "'Ніколи' always requires 'не' before the verb: ніколи не ходить."}, {"statement": "Я часто граю у футбол — двічі на тиждень.", "isTrue": true, "explanation": "'Часто' (often) is consistent with 'двічі на тиждень' (twice a week)."}, {"statement": "Він завжди малює — кожен день.", "isTrue": true, "explanation": "'Завжди' (always) and 'кожен день' (every day) express the same frequency."}, {"statement": "Я рідко читаю книги — кожен день.", "isTrue": false, "explanation": "'Рідко' (rarely) contradicts 'кожен день' (every day) — these are opposites."}, {"statement": "Я ніколи не граю у волейбол — у мене немає часу.", "isTrue": true, "explanation": "Correct: 'ніколи не' + verb. The context (no time) supports 'never'."}, {"statement": "Він ніколи не ходить у кіно — двічі на тиждень.", "isTrue": false, "explanation": "'Ніколи не ходить' (never goes) contradicts 'двічі на тиждень' (twice a week)."}, {"statement": "Ми зазвичай дивимося фільми у вихідні.", "isTrue": true, "explanation": "Correct structure: 'зазвичай' (usually) + verb + object + time phrase."}]} instruction={"Правда чи ні? (True or false?)"} />
+<GroupSort client:only="react" groups={{"Спорт і ігри (грати у)": ["футбол", "баскетбол", "теніс", "комп'ютерні ігри"], "Музичні інструменти (грати на)": ["гітарі", "піаніно", "скрипці"]}} instruction={"Розподіліть слова за категоріями (Sort words by categories)"} />
 
-<Quiz client:only="react" questions={[{"question": "Що Вітя зазвичай робить у вихідні?", "options": [{"text": "Ходить у театр", "correct": false}, {"text": "Гуляє і читає", "correct": true}, {"text": "Грає у футбол", "correct": false}, {"text": "Слухає музику", "correct": false}]}, {"question": "Куди Лєна запрошує Вітю в суботу?", "options": [{"text": "У музей", "correct": false}, {"text": "На концерт", "correct": false}, {"text": "В кіно", "correct": true}, {"text": "В театр", "correct": false}]}, {"question": "Як часто Лєна грає у футбол?", "options": [{"text": "Раз на тиждень", "correct": false}, {"text": "Двічі на тиждень", "correct": true}, {"text": "Кожен день", "correct": false}, {"text": "Рідко", "correct": false}]}, {"question": "Коли саме Лєна грає у футбол?", "options": [{"text": "У понеділок і середу", "correct": false}, {"text": "У п'ятницю і суботу", "correct": false}, {"text": "У вівторок і четвер", "correct": true}, {"text": "У неділю", "correct": false}]}, {"question": "Як часто Лєна ходить у музей?", "options": [{"text": "Кожен день", "correct": false}, {"text": "Двічі на тиждень", "correct": false}, {"text": "Раз на місяць", "correct": true}, {"text": "Ніколи", "correct": false}]}, {"question": "Що Вітя і Лєна люблять робити?", "options": [{"text": "Грати у футбол", "correct": false}, {"text": "Слухати музику", "correct": false}, {"text": "Ходити в театр", "correct": false}, {"text": "Малювати", "correct": true}]}]} instruction={"Дайте відповідь на запитання (Answer the question)"} />
+<TrueFalse client:only="react" items={[{"statement": "Ми кажемо «грати на футбол».", "isTrue": false, "explanation": "Для спорту ми використовуємо прийменник «у/в»: грати у футбол."}, {"statement": "Після слова «ніколи» завжди має бути частка «не».", "isTrue": true, "explanation": "В українській мові використовується подвійне заперечення: «ніколи не»."}, {"statement": "Ми кажемо «ходити в концерт».", "isTrue": false, "explanation": "Для подій (подія) ми використовуємо прийменник «на»: ходити на концерт."}, {"statement": "«Ходімо!» — це запрошення щось зробити разом.", "isTrue": true, "explanation": "Це стандартна форма для запрошення (Let's go!)."}, {"statement": "Ми кажемо «грати на гітарі».", "isTrue": true, "explanation": "Для музичних інструментів використовується прийменник «на»."}, {"statement": "Ми кажемо «ходити на кіно».", "isTrue": false, "explanation": "Для будівель (building) використовується прийменник «в/у»: ходити в кіно."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Я ___ слухаю музику — кожен день.", "answer": "завжди", "options": ["завжди", "рідко", "іноді", "ніколи не"]}, {"sentence": "Він ___ ходить у театр — раз на рік.", "answer": "рідко", "options": ["рідко", "часто", "завжди", "іноді"]}, {"sentence": "Вона ___ грає на гітарі — тричі на тиждень.", "answer": "часто", "options": ["часто", "іноді", "рідко", "завжди"]}, {"sentence": "Зазвичай я граю у волейбол, але ___ ходжу в театр.", "answer": "іноді", "options": ["іноді", "завжди", "ніколи не", "рідко"]}, {"sentence": "Він ___ не дивиться фільми — він не любить кіно.", "answer": "ніколи", "options": ["ніколи", "рідко", "іноді", "часто"]}, {"sentence": "Ми ___ граємо у баскетбол — двічі або тричі на тиждень.", "answer": "часто", "options": ["часто", "ніколи", "рідко", "зазвичай"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+<Translate client:only="react" questions={[{"source": "I play football.", "options": [{"text": "Я граю у футбол.", "correct": true}, {"text": "Я граю на футбол.", "correct": false}, {"text": "Я граю в футболі.", "correct": false}, {"text": "Я граю футбол.", "correct": false}]}, {"source": "She plays the piano.", "options": [{"text": "Вона грає на піаніно.", "correct": true}, {"text": "Вона грає у піаніно.", "correct": false}, {"text": "Вона грає в піаніно.", "correct": false}, {"text": "Вона грає піаніно.", "correct": false}]}, {"source": "We often go to the cinema.", "options": [{"text": "Ми часто ходимо в кіно.", "correct": true}, {"text": "Ми часто ходимо на кіно.", "correct": false}, {"text": "Ми рідко ходимо в кіно.", "correct": false}, {"text": "Ми зазвичай ходимо в кіно.", "correct": false}]}, {"source": "Let's go to the theater!", "options": [{"text": "Ходімо в театр!", "correct": true}, {"text": "Ходімо на театр!", "correct": false}, {"text": "Йдемо у театрі!", "correct": false}, {"text": "Давай в театрі!", "correct": false}]}, {"source": "I never listen to music.", "options": [{"text": "Я ніколи не слухаю музику.", "correct": true}, {"text": "Я ніколи слухаю музику.", "correct": false}, {"text": "Я не ніколи слухаю музику.", "correct": false}, {"text": "Я завжди не слухаю музику.", "correct": false}]}, {"source": "What do you do on the weekend?", "options": [{"text": "Що ти робиш у вихідні?", "correct": true}, {"text": "Що ти робиш на вихідні?", "correct": false}, {"text": "Що ти робиш вихідні?", "correct": false}, {"text": "Що ти робиш у вихідний?", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Він грає у піаніно.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "до"], "explanation": "Instruments use 'на': грати на піаніно."}, {"sentence": "Вона ходить на театр.", "errorWord": "на", "correctForm": "в", "options": ["в", "у", "до"], "explanation": "Places of entertainment use 'в': ходити в театр."}, {"sentence": "Я граю на футбол.", "errorWord": "на", "correctForm": "у", "options": ["у", "в", "до"], "explanation": "Sports use 'у': грати у футбол."}, {"sentence": "Ми ходимо в концерт.", "errorWord": "в", "correctForm": "на", "options": ["на", "у", "до"], "explanation": "Events and performances use 'на': ходити на концерт."}, {"sentence": "Він грає у скрипці.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "до"], "explanation": "Instruments use 'на': грати на скрипці."}, {"sentence": "Вона ходить на музей.", "errorWord": "на", "correctForm": "в", "options": ["в", "у", "до"], "explanation": "Places use 'в': ходити в музей."}]} instruction={"Знайдіть помилку і виправте (Find the error and correct it)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Ми ходимо на музей у суботу.", "errorWord": "на", "correctForm": "в", "options": ["в", "у", "до"], "explanation": "Для будівель (музей) використовується прийменник в/у."}, {"sentence": "Я граю в гітарі щодня.", "errorWord": "в", "correctForm": "на", "options": ["на", "у", "до"], "explanation": "Для інструментів використовується прийменник на."}, {"sentence": "Вона ніколи грає у теніс.", "errorWord": "грає", "correctForm": "не грає", "options": ["не грає", "грати", "грають"], "explanation": "В українській мові використовується подвійне заперечення з ніколи."}, {"sentence": "Вони грають на комп'ютерні ігри.", "errorWord": "на", "correctForm": "у", "options": ["у", "в", "до"], "explanation": "Для ігор та спорту використовується прийменник у/в."}, {"sentence": "Він грає у скрипці дуже гарно.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "до"], "explanation": "Для інструментів використовується прийменник на."}, {"sentence": "Ходімо на кіно сьогодні!", "errorWord": "на", "correctForm": "в", "options": ["в", "у", "до"], "explanation": "Для будівель використовується прийменник в/у."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<Unjumble client:only="react" items={[{"words": "у / суботу / кіно / в / Ходімо", "answer": "Ходімо в кіно у суботу"}, {"words": "на / грає / двічі / теніс / Лєна / тиждень / у", "answer": "Лєна грає у теніс двічі на тиждень"}, {"words": "рідко / Я / серіали / дивлюся", "answer": "Я рідко дивлюся серіали"}, {"words": "не / ніколи / в / музей / ходить / Він", "answer": "Він ніколи не ходить в музей"}, {"words": "завжди / у / Вона / неділю / читає", "answer": "Вона завжди читає у неділю"}, {"words": "тиждень / грає / на / баскетбол / тричі / у / Він", "answer": "Він грає у баскетбол тричі на тиждень"}]} instruction={"Складіть речення зі слів (Put the words in order to make a sentence)"} />
-
+<Unjumble client:only="react" items={[{"words": "у / граю / Я / футбол.", "answer": "Я граю у футбол."}, {"words": "ніколи / гітарі. / не / Вона / грає / на", "answer": "Вона ніколи не грає на гітарі."}, {"words": "в / Ходімо / кіно!", "answer": "Ходімо в кіно!"}, {"words": "робиш / у / ти / Що / вихідні?", "answer": "Що ти робиш у вихідні?"}, {"words": "часто / в / Ми / театр. / ходимо", "answer": "Ми часто ходимо в театр."}, {"words": "граю / у / теніс / двічі / на / тиждень. / Я", "answer": "Я граю у теніс двічі на тиждень."}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- ULP — various episodes on hobbies and sports
-  _Conversational patterns for discussing free time._
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=153), стор. 153
+- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=104), стор. 104
+- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=56), стор. 56
+- [Вашуленко М. С. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-vashulenko-2019-1.pdf#page=80), стор. 80
+- [Голуб Н. Б. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_golub_2022.pdf#page=180), стор. 180
 
 **Статті — Articles**
 
@@ -318,12 +213,6 @@ All four A1.4 skills now come together: time expressions from M25, days of the w
 - [р.Дністер р.Мукша. с.Велика Слобода рибалка з криги!❄️🎣👍](https://www.youtube.com/watch?v=xdtaSfAsTB8) (Ukrainian Lessons)
 - [Попав на клювання, 🎣 залікового окуня! 🐟👍 Розігрую кепку! 🧢](https://www.youtube.com/watch?v=gxjm5irXur4) (Ukrainian with Olha)
 - [Ловлю 🐟 судака на 🚩 жерлиці. Судак клює в ночі!👍](https://www.youtube.com/watch?v=nHtYSO1QWiI) (Ukrainian Online School)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/)
-- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
 
 </TabItem>
 </Tabs>

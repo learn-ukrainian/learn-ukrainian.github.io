@@ -1,0 +1,217 @@
+vocabulary:
+- word: бу́ти
+  translation: to be (helper verb for future tense)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́ду
+  translation: I will (1st sg. future of бути)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бу́деш
+  translation: you will (2nd sg. future of бути)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́де
+  translation: he/she/it will (3rd sg. future of бути)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́демо
+  translation: we will (1st pl. future of бути)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́дете
+  translation: you will (2nd pl. future of бути)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́дуть
+  translation: they will (3rd pl. future of бути)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подорожува́ти
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знахо́дити
+  translation: to find
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: отри́мувати
+  translation: to receive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́сти
+  translation: to eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за́втра
+  translation: tomorrow
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: now
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ско́ро
+  translation: soon
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: спра́вді
+  translation: really, indeed
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вра́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: насту́пний
+  translation: next
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: яскра́вий
+  translation: bright
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: щасли́вий
+  translation: happy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: воро́жка
+  translation: fortune teller (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: подару́нок
+  translation: gift, present
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: майбу́тнє
+  translation: future (n)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ти́ждень
+  translation: week (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: футбо́л
+  translation: football, soccer (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вече́ря
+  translation: dinner (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сніда́нок
+  translation: breakfast (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кни́жка
+  translation: book (f)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чолові́к
+  translation: husband; man (m)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ді́ти
+  translation: children (pl)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: у суботу
+  translation: on Saturday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на вихідних
+  translation: on the weekend
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: наступного тижня
+  translation: next week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти будеш робити?
+  translation: What will you do?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти будеш робити завтра?
+  translation: What will you do tomorrow?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

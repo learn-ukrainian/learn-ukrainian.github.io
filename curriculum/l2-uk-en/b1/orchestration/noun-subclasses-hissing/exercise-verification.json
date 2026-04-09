@@ -1,0 +1,356 @@
+{
+  "total_items": 231,
+  "grounded_items": 176,
+  "ungrounded": [
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть іменник мішаної групи:",
+      "role": "context"
+    },
+    {
+      "word": "ліс",
+      "exercise_type": "group-sort",
+      "context": "ліс",
+      "role": "answer"
+    },
+    {
+      "word": "осінній",
+      "exercise_type": "quiz",
+      "context": "Де ховався сильний осінній вітер?",
+      "role": "context"
+    },
+    {
+      "word": "чого",
+      "exercise_type": "quiz",
+      "context": "Для чого чоловікам були потрібні ці важкі ножі?",
+      "role": "context"
+    },
+    {
+      "word": "чоловікам",
+      "exercise_type": "quiz",
+      "context": "Для чого чоловікам були потрібні ці важкі ножі?",
+      "role": "context"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "quiz",
+      "context": "Кого чоловіки знайшли між мокрими деревами?",
+      "role": "context"
+    },
+    {
+      "word": "знайшли",
+      "exercise_type": "quiz",
+      "context": "Кого чоловіки знайшли між мокрими деревами?",
+      "role": "context"
+    },
+    {
+      "word": "ніж'",
+      "exercise_type": "quiz",
+      "context": "Родовий відмінок (немає...) для слова 'ніж':",
+      "role": "context"
+    },
+    {
+      "word": "стіл'",
+      "exercise_type": "quiz",
+      "context": "Родовий відмінок (немає...) для слова 'стіл':",
+      "role": "context"
+    },
+    {
+      "word": "кіт'",
+      "exercise_type": "quiz",
+      "context": "Родовий відмінок (немає...) для слова 'кіт':",
+      "role": "context"
+    },
+    {
+      "word": "рік'",
+      "exercise_type": "quiz",
+      "context": "Родовий відмінок (немає...) для слова 'рік':",
+      "role": "context"
+    },
+    {
+      "word": "ківш'",
+      "exercise_type": "quiz",
+      "context": "Родовий відмінок (немає...) для слова 'ківш':",
+      "role": "context"
+    },
+    {
+      "word": "їжею",
+      "exercise_type": "fill-in",
+      "context": "Вони поділилися їжею з цими ____ (слухачі).",
+      "role": "context"
+    },
+    {
+      "word": "важким",
+      "exercise_type": "fill-in",
+      "context": "Він майстерно володіє своїм важким ____ (меч).",
+      "role": "context"
+    },
+    {
+      "word": "води",
+      "exercise_type": "fill-in",
+      "context": "Свіжа крапля води лежить на ____ (меч).",
+      "role": "context"
+    },
+    {
+      "word": "лекції",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні на лекції немає моїх ____ (товариші).",
+      "role": "context"
+    },
+    {
+      "word": "постійно",
+      "exercise_type": "fill-in",
+      "context": "Ми постійно спілкуємося зі ____ (сторожі).",
+      "role": "context"
+    },
+    {
+      "word": "спілкуємося",
+      "exercise_type": "fill-in",
+      "context": "Ми постійно спілкуємося зі ____ (сторожі).",
+      "role": "context"
+    },
+    {
+      "word": "розмовляємо",
+      "exercise_type": "error-correction",
+      "context": "Ми розмовляємо з нічним сторожом.",
+      "role": "context"
+    },
+    {
+      "word": "товаришом",
+      "exercise_type": "error-correction",
+      "context": "Ми пишаємося нашим новим товаришом.",
+      "role": "context"
+    },
+    {
+      "word": "випадково",
+      "exercise_type": "error-correction",
+      "context": "Він випадково торкнувся мене своїм плечом.",
+      "role": "context"
+    },
+    {
+      "word": "задоволена",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже задоволена своїм новим прізвищом.",
+      "role": "context"
+    },
+    {
+      "word": "ховаються",
+      "exercise_type": "error-correction",
+      "context": "Люди ховаються під цим великим плащом від дощу.",
+      "role": "context"
+    },
+    {
+      "word": "плащом",
+      "exercise_type": "error-correction",
+      "context": "Люди ховаються під цим великим плащом від дощу.",
+      "role": "context"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "error-correction",
+      "context": "Мій новий знайомий працює нічним сторожом.",
+      "role": "context"
+    },
+    {
+      "word": "знайомий",
+      "exercise_type": "error-correction",
+      "context": "Мій новий знайомий працює нічним сторожом.",
+      "role": "context"
+    },
+    {
+      "word": "щодня",
+      "exercise_type": "error-correction",
+      "context": "Він щодня нарізає свій обід цим старим ножом.",
+      "role": "context"
+    },
+    {
+      "word": "нарізає",
+      "exercise_type": "error-correction",
+      "context": "Він щодня нарізає свій обід цим старим ножом.",
+      "role": "context"
+    },
+    {
+      "word": "обід",
+      "exercise_type": "error-correction",
+      "context": "Він щодня нарізає свій обід цим старим ножом.",
+      "role": "context"
+    },
+    {
+      "word": "старим",
+      "exercise_type": "error-correction",
+      "context": "Він щодня нарізає свій обід цим старим ножом.",
+      "role": "context"
+    },
+    {
+      "word": "холодну",
+      "exercise_type": "error-correction",
+      "context": "У холодну погоду він ховається під теплим плащом.",
+      "role": "context"
+    },
+    {
+      "word": "вчора",
+      "exercise_type": "error-correction",
+      "context": "Вчора він зустрівся з молодим читачом у парку.",
+      "role": "context"
+    },
+    {
+      "word": "зустрівся",
+      "exercise_type": "error-correction",
+      "context": "Вчора він зустрівся з молодим читачом у парку.",
+      "role": "context"
+    },
+    {
+      "word": "молодим",
+      "exercise_type": "error-correction",
+      "context": "Вчора він зустрівся з молодим читачом у парку.",
+      "role": "context"
+    },
+    {
+      "word": "читачом",
+      "exercise_type": "error-correction",
+      "context": "Вчора він зустрівся з молодим читачом у парку.",
+      "role": "context"
+    },
+    {
+      "word": "вогнищом",
+      "exercise_type": "error-correction",
+      "context": "Вони довго сиділи перед гарячим вогнищом і розмовляли.",
+      "role": "context"
+    },
+    {
+      "word": "розмовляли",
+      "exercise_type": "error-correction",
+      "context": "Вони довго сиділи перед гарячим вогнищом і розмовляли.",
+      "role": "context"
+    },
+    {
+      "word": "потім",
+      "exercise_type": "error-correction",
+      "context": "Потім він сказав: 'Бувай, мій вірний товарише!'",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "error-correction",
+      "context": "Потім він сказав: 'Бувай, мій вірний товарише!'",
+      "role": "context"
+    },
+    {
+      "word": "бувай",
+      "exercise_type": "error-correction",
+      "context": "Потім він сказав: 'Бувай, мій вірний товарише!'",
+      "role": "context"
+    },
+    {
+      "word": "називним",
+      "exercise_type": "group-sort",
+      "context": "Збігається з називним (неістоти)",
+      "role": "context"
+    },
+    {
+      "word": "істоти",
+      "exercise_type": "group-sort",
+      "context": "Збігається з родовим (істоти)",
+      "role": "context"
+    },
+    {
+      "word": "лісі",
+      "exercise_type": "fill-in",
+      "context": "У лісі росте багато зелених ____ (кущ).",
+      "role": "context"
+    },
+    {
+      "word": "росте",
+      "exercise_type": "fill-in",
+      "context": "У лісі росте багато зелених ____ (кущ).",
+      "role": "context"
+    },
+    {
+      "word": "зелених",
+      "exercise_type": "fill-in",
+      "context": "У лісі росте багато зелених ____ (кущ).",
+      "role": "context"
+    },
+    {
+      "word": "дякуємо",
+      "exercise_type": "fill-in",
+      "context": "Ми щиро дякуємо нашим уважним ____ (слухач).",
+      "role": "context"
+    },
+    {
+      "word": "уважним",
+      "exercise_type": "fill-in",
+      "context": "Ми щиро дякуємо нашим уважним ____ (слухач).",
+      "role": "context"
+    },
+    {
+      "word": "здивовано",
+      "exercise_type": "fill-in",
+      "context": "Він здивовано потиснув своїми широкими ____ (плече).",
+      "role": "context"
+    },
+    {
+      "word": "потиснув",
+      "exercise_type": "fill-in",
+      "context": "Він здивовано потиснув своїми широкими ____ (плече).",
+      "role": "context"
+    },
+    {
+      "word": "чоловічих",
+      "exercise_type": "fill-in",
+      "context": "На їхніх чоловічих ____ (плече) лежить велика відповідальніс",
+      "role": "context"
+    },
+    {
+      "word": "відповідальність",
+      "exercise_type": "fill-in",
+      "context": "На їхніх чоловічих ____ (плече) лежить велика відповідальніс",
+      "role": "context"
+    },
+    {
+      "word": "стали",
+      "exercise_type": "fill-in",
+      "context": "Ми швидко стали хорошими ____ (товариш).",
+      "role": "context"
+    },
+    {
+      "word": "хорошими",
+      "exercise_type": "fill-in",
+      "context": "Ми швидко стали хорошими ____ (товариш).",
+      "role": "context"
+    },
+    {
+      "word": "столі",
+      "exercise_type": "fill-in",
+      "context": "На столі лежать нові гострі ____ (ніж).",
+      "role": "context"
+    },
+    {
+      "word": "лежать",
+      "exercise_type": "fill-in",
+      "context": "На столі лежать нові гострі ____ (ніж).",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 27,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "безсуфіксний",
+      "грач",
+      "закінчення",
+      "кличний",
+      "множина",
+      "монтаж",
+      "неістота",
+      "однина",
+      "орудний",
+      "паралельні",
+      "пейзаж",
+      "шиплячий",
+      "істота"
+    ]
+  },
+  "all_grounded": false
+}

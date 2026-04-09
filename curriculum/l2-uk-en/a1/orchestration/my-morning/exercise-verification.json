@@ -1,28 +1,148 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 56,
+  "grounded_items": 35,
+  "ungrounded": [
+    {
+      "word": "одягає",
+      "exercise_type": "fill-in",
+      "context": "Ти одягає____.",
+      "role": "context"
+    },
+    {
+      "word": "прокидає",
+      "exercise_type": "fill-in",
+      "context": "Він прокидає____.",
+      "role": "context"
+    },
+    {
+      "word": "одягаю",
+      "exercise_type": "fill-in",
+      "context": "Я одягаю____.",
+      "role": "context"
+    },
+    {
+      "word": "вмиває",
+      "exercise_type": "fill-in",
+      "context": "Вона вмиває____.",
+      "role": "context"
+    },
+    {
+      "word": "збираю",
+      "exercise_type": "fill-in",
+      "context": "Я збираю____ на роботу.",
+      "role": "context"
+    },
+    {
+      "word": "повертає",
+      "exercise_type": "fill-in",
+      "context": "Ти повертає____ пізно.",
+      "role": "context"
+    },
+    {
+      "word": "навчає",
+      "exercise_type": "fill-in",
+      "context": "Він навчає____ вранці.",
+      "role": "context"
+    },
+    {
+      "word": "навчаю",
+      "exercise_type": "fill-in",
+      "context": "Я навчаю____.",
+      "role": "context"
+    },
+    {
+      "word": "руки",
+      "exercise_type": "quiz",
+      "context": "Я _____ руки.",
+      "role": "context"
+    },
+    {
+      "word": "п'ю",
+      "exercise_type": "group-sort",
+      "context": "п'ю каву",
+      "role": "answer"
+    },
+    {
+      "word": "прокидається",
+      "exercise_type": "match-up",
+      "context": "прокидається",
+      "role": "context"
+    },
+    {
+      "word": "збирається",
+      "exercise_type": "group-sort",
+      "context": "збирається",
+      "role": "answer"
+    },
+    {
+      "word": "повертаєшся",
+      "exercise_type": "match-up",
+      "context": "повертаєшся",
+      "role": "context"
+    },
+    {
+      "word": "чищу",
+      "exercise_type": "group-sort",
+      "context": "чищу зуби",
+      "role": "answer"
+    },
+    {
+      "word": "снідає",
+      "exercise_type": "true-false",
+      "context": "Настя снідає вранці.",
+      "role": "context"
+    },
+    {
+      "word": "поспішає",
+      "exercise_type": "true-false",
+      "context": "У суботу Ліна поспішає.",
+      "role": "context"
+    },
+    {
+      "word": "навчається",
+      "exercise_type": "error-correction",
+      "context": "навчається",
+      "role": "answer"
+    },
+    {
+      "word": "одягається",
+      "exercise_type": "error-correction",
+      "context": "Я одягається швидко.",
+      "role": "context"
+    },
+    {
+      "word": "збираєшся",
+      "exercise_type": "error-correction",
+      "context": "збираєшся",
+      "role": "answer"
+    },
+    {
+      "word": "повертаюся",
+      "exercise_type": "error-correction",
+      "context": "повертаюся",
+      "role": "answer"
+    },
+    {
+      "word": "додому",
+      "exercise_type": "error-correction",
+      "context": "Я повертаєшся додому.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 7,
     "not_tested": [
       "вмиватися",
-      "вранці",
       "збиратися",
       "йти",
       "навчатися",
-      "нарешті",
       "одягатися",
       "повертатися",
       "поспішати",
-      "потім",
       "прокидатися",
-      "пізно",
-      "після",
-      "снідати",
-      "спочатку",
-      "цього"
+      "снідати"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

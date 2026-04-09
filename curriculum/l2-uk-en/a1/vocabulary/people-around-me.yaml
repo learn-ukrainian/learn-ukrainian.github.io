@@ -1,21 +1,45 @@
 vocabulary:
-- word: ба́чити
-  translation: to see
+- word: сусі́д
+  translation: neighbor
   expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: зна́ти
-  translation: to know
+- word: коле́га
+  translation: colleague
   expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: люби́ти
-  translation: to love
+- word: виклада́ч
+  translation: lecturer
   expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: продаве́ць
+  translation: seller
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: покупе́ць
+  translation: buyer
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: чека́ти
   translation: to wait for
@@ -30,40 +54,22 @@ vocabulary:
   gender: ''
   verified: true
 - word: по́друга
-  translation: friend (f)
+  translation: friend (female)
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: лі́кар
-  translation: doctor (m)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вчи́тель
-  translation: teacher (m)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сусі́д
-  translation: neighbor (m)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: та́то
-  translation: dad
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: ма́ма
-  translation: mom
+  translation: mother
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: та́то
+  translation: father
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: сестра́
   translation: sister
@@ -71,14 +77,14 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ті́тка
-  translation: aunt
+- word: дя́дько
+  translation: uncle
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: бабу́ся
-  translation: grandmother
+- word: ті́тка
+  translation: aunt
   expression: false
   pos: ім.
   gender: ж.
@@ -89,93 +95,45 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: коле́га
-  translation: colleague (m/f)
+- word: нарече́ний
+  translation: groom
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вчи́телька
+  translation: teacher (female)
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: виклада́ч
-  translation: lecturer (m)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: продаве́ць
-  translation: seller (m)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: покупе́ць
-  translation: buyer (m)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: весі́лля
-  translation: wedding
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: родовий відмінок
-  translation: genitive case
+- word: Кого ти бачиш?
+  translation: Whom do you see?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: живі́
-  translation: animate (living beings)
-  expression: false
-  pos: прикм.
+- word: Ходімо!
+  translation: Let's go!
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: неживі́
-  translation: inanimate (things)
-  expression: false
-  pos: прикм.
+- word: Я тебе познайомлю!
+  translation: I will introduce you!
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: кого?
-  translation: whom? (animate accusative question)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: по́руч
-  translation: next to, beside
+  translation: whom?
   expression: false
-  pos: присл.
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: ще не
-  translation: not yet
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: за́раз
-  translation: now
+- word: що?
+  translation: what?
   expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: нови́й
-  translation: new
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: до́брий
-  translation: kind, good
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: познайо́мити
-  translation: to introduce
-  expression: false
-  pos: дієсл.
+  pos: спол.
   gender: ''
   verified: true

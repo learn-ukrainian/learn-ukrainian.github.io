@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,8 +27,8 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-holiday-dates -->`
-- `<!-- INJECT_ACTIVITY: quiz-holiday-traditions -->`
+- `<!-- INJECT_ACTIVITY: quiz-holiday-match -->`
+- `<!-- INJECT_ACTIVITY: quiz-holiday-clues -->`
 - `<!-- INJECT_ACTIVITY: group-sort-traditions -->`
 - `<!-- INJECT_ACTIVITY: fill-in-greetings -->`
 
@@ -89,133 +89,117 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Вступ: Що таке свято?
 
-Ukrainians love their holidays — and they have special greetings for each one. Here are two conversations: one about **Різдво** (Christmas), one about **День Незалежності** (Independence Day).
+To truly understand a culture, you must understand how its people celebrate. The rhythm of the year is marked by special days that bring people together. In Ukrainian, a holiday is a **свято** (holiday). The plural form is **свята** (holidays). Ukrainians love to gather with family and friends around large tables, share traditional food, and sing songs that have been passed down for generations. 
 
-> **Олена:** Коли в тебе Різдво? *(When is your Christmas?)*
-> **Том:** Двадцять п'ятого грудня. А в тебе? *(December 25th. And yours?)*
-> **Олена:** У нас — теж! *(Ours too!)*
-> **Том:** Теж? Раніше було сьомого січня, так? *(Also? It used to be January 7th, right?)*
-> **Олена:** Так, але тепер — двадцять п'ятого. *(Yes, but now it's the 25th.)*
-> **Том:** Що ви робите на Різдво? *(What do you do on Christmas?)*
-> **Олена:** Ми співаємо колядки і їмо кутю. *(We sing carols and eat kutia.)*
-> **Том:** Що таке кутя? *(What is kutia?)*
-> **Олена:** Це пшениця з медом і маком. Дуже смачно! *(It's wheat with honey and poppy seeds. Very tasty!)*
-> **Том:** Як гарно! З Різдвом! *(How lovely! Merry Christmas!)*
-> **Олена:** З Різдвом Христовим! *(Merry Christmas! [lit. "with Christ's Christmas"])*
+We group our celebrations into three main categories. First, we have **релігійні свята** (religious holidays) like Christmas and Easter, which are deeply spiritual and rich in ancient traditions. Second, we have **традиційні свята** (traditional holidays) which often connect to the changing seasons and nature. Finally, we have **державні свята** (state holidays) which mark important historical days for the nation.
 
-Both **З Різдвом!** and **З Різдвом Христовим!** are correct greetings. The longer form with **Христовим** is the fuller, more traditional way to say it.
+When a special day arrives, people want to express their joy. The verb for this action is **святкувати** (to celebrate), and to express good wishes we use **вітати** (to congratulate/greet). You will hear these words often. If you are not sure of the exact name of the occasion, you can always use the universal greeting. You simply say **Зі святом!** (Happy Holiday!). This short, polite phrase works for almost any festive occasion and instantly connects you to the Ukrainian soul.
 
-> **Марко:** Двадцять четверте серпня — День Незалежності! *(August 24th — Independence Day!)*
-> **Оксана:** Так, це головне державне свято України. *(Yes, it's the main national holiday of Ukraine.)*
+## Діалоги: Говоримо про свята
+
+Let us look at how people talk about these special days in real life. Our first conversation takes place during the winter season. Two friends are discussing their plans for Christmas. In 2023, Ukraine made a major historical shift in its calendar. The country officially moved the date of Christmas to December 25th. This change aligns Ukraine with the majority of Europe and the rest of the Christian world. It was a conscious decision to break away from the Russian Orthodox calendar, which celebrates on January 7th. Now, Ukrainians celebrate in the month of **грудень** (December).
+
+> **Українська родина:** Коли в тебе Різдво? *(When is your Christmas?)*
+> **Іноземний гість:** Двадцять п'ятого грудня. А в тебе? *(On the twenty-fifth of December. And yours?)*
+> **Українська родина:** У нас теж! *(We also have it then!)*
+> **Українська родина:** Раніше святкували сьомого січня. *(Earlier we celebrated on the seventh of January.)*
+> **Українська родина:** Але тепер двадцять п'ятого. *(But now on the twenty-fifth.)*
+> **Іноземний гість:** Що ви робите на Різдво? *(What do you do for Christmas?)*
+> **Українська родина:** Ми співаємо колядки і їмо кутю. *(We sing carols and eat kutia.)*
+> **Іноземний гість:** Як гарно! З Різдвом! *(How beautiful! Merry Christmas!)*
+> **Українська родина:** З Різдвом Христовим! *(Merry Christmas!)*
+
+Our second conversation happens in the city center during the summer. The date is August 24th, and the streets are full of people. They are celebrating the most important political day of the year. Notice the atmosphere of national pride in their exchange.
+
+> **Оксана:** Двадцять четверте серпня! *(The twenty-fourth of August!)*
+> **Марко:** День Незалежності! *(Independence Day!)*
+> **Оксана:** Так, це головне державне свято України. *(Yes, it is the main state holiday of Ukraine.)*
 > **Марко:** Що ви робите? *(What do you do?)*
-> **Оксана:** Вдень ми дивимося парад і ходимо на концерт. *(During the day we watch the parade and go to a concert.)*
+> **Оксана:** Ми дивимося парад і ходимо на концерт. *(We watch the parade and go to the concert.)*
 > **Марко:** А ввечері? *(And in the evening?)*
-> **Оксана:** Ввечері — салют і святковий вечір з друзями. *(In the evening — fireworks and a festive evening with friends.)*
-> **Марко:** Усі у вишиванках? *(Everyone in vyshyvankas?)*
-> **Оксана:** Так! З Днем Незалежності! *(Yes! Happy Independence Day!)*
-> **Марко:** Слава Україні! *(Glory to Ukraine!)*
+> **Оксана:** Ввечері салют. *(In the evening there are fireworks.)*
+> **Оксана:** І святковий вечір з друзями. *(And a festive evening with friends.)*
+> **Марко:** З Днем Незалежності! *(Happy Independence Day!)*
+> **Оксана:** Слава Україні! *(Glory to Ukraine!)*
 
-Now check yourself — can you answer these from the dialogues?
+<!-- INJECT_ACTIVITY: quiz-holiday-match -->
 
-- Що їдять на Різдво? *(What do people eat on Christmas?)*
-- Де люди бувають на День Незалежності? *(Where do people go on Independence Day?)*
+## Українські свята: Традиції та символи
 
-<!-- INJECT_ACTIVITY: quiz-holiday-dates -->
+The winter cycle revolves around **Різдво** (Christmas). As we saw in the dialogue, this takes place on December 25th. The celebration actually begins the evening before. December 24th is known as **Свята вечеря** (Holy Supper). When the first star appears in the night sky, families sit down at the dining table. Tradition requires exactly **дванадцять страв** (twelve dishes). This number represents the twelve apostles. All the food on the table must be vegan, meaning no meat or dairy. 
 
-## Українські свята (Ukrainian Holidays)
+The absolute most important and sacred dish is **кутя** (kutia). This is a sweet, ritual porridge made from whole wheat berries, poppy seeds, honey, and walnuts. It is always the very first food eaten at the meal, and everyone must have at least one spoonful. People also eat traditional **борщ** (borscht), **вареники** (dumplings), **риба** (fish), and drink **узвар** (dried fruit compote). 
 
-### Різдво (Christmas) — December 25
+:::note Calendar Alignment
+In 2023, Ukraine moved its official celebration of Christmas from January 7th to December 25th. This historical change aligns the country with Europe and the broader Christian world, moving away from the Russian Orthodox calendar.
+:::
 
-Ukraine celebrates **Різдво** on **двадцять п'яте грудня** (December 25). Until 2023, the official date was January 7 — the Russian Orthodox calendar date. Ukraine moved Christmas to December 25, aligning with most of Europe and Ukraine's own pre-Soviet tradition. This was part of a broader break from Russian cultural influence. The word **Різдво** is neuter — so in the instrumental case it becomes **різдвом**: **З Різдвом!**
+After dinner, the singing begins. People sing **колядки** (carols). Groups of singers called **колядники** (carolers) walk from house to house in their neighborhoods. They carry a large, illuminated star and sing songs to wish the hosts wealth, health, and a good harvest. Inside the home, instead of a plastic tree, you might see a **дідух** (sheaf of wheat). This ancient symbol represents the ancestors and the agricultural harvest, and it predates the modern Christmas tree tradition.
 
-The heart of Ukrainian Christmas is **Свята вечеря** (Holy Supper) on December 24 — **Святвечір** (Christmas Eve). The table has **дванадцять страв** (twelve dishes), one for each apostle. All dishes are **пісні** (fasting) — no meat. The first dish is always **кутя** — wheat porridge with **мед** (honey), **мак** (poppy seeds), and **горіхи** (nuts). After кутя come **борщ**, **вареники**, **риба** (fish), and **узвар** (dried fruit compote). As Ukrainian textbooks describe it: on Святвечір, кутя is a sacred dish that connects the family to their ancestors.
+The spring cycle centers entirely on **Великдень** (Easter). This is the absolute biggest religious celebration of the year in Ukraine. The exact date changes every spring according to the lunar calendar. During this time, Ukrainians create **писанки** (decorated eggs). A **писанка** (decorated egg) is a raw egg covered in intricate, symbolic geometric patterns using hot beeswax and vibrant dyes. It is a highly respected, unique Ukrainian art form. 
 
-After dinner, **колядники** (carolers) go door to door singing **колядки** (Christmas carols). These songs wish the family health and happiness — **здоров'я і щастя**. A traditional folk carol from the textbook begins: «Ой перший же празник — то Різдво Христове». The verb **колядувати** means "to go caroling" — a living tradition across Ukraine to this day.
+:::caution Name vs. Food
+Do not confuse the holiday with the holiday food! The holiday itself is **Великдень** or **Пасха** (Easter). However, a **паска** (Easter bread) is the sweet bread you eat on that day. You celebrate **Великдень**, but you eat a **паска**.
+:::
 
-### Великдень (Easter)
+On Sunday morning, families wake up very early and go to church. They bring a woven basket filled with bread, eggs, salt, and meat to perform the ritual of **святити кошик** (blessing the basket).
 
-**Великдень** is the biggest religious holiday in Ukraine. The date changes each year — it falls in **весна** (spring). When you meet someone on Easter, the greeting is a call-and-response:
+When people meet on Easter Sunday, they do not say standard greetings like "hello" or "good morning". Instead, they use a special, joyful ritual greeting:
+*   **Христос воскрес!** (Christ is risen!)
+*   **Воістину воскрес!** (Indeed risen!)
 
-- **Христос воскрес!** *(Christ is risen!)*
-- **Воістину воскрес!** *(Indeed risen!)*
+<!-- INJECT_ACTIVITY: quiz-holiday-clues -->
 
-If someone says the first line, you answer with the second. The word **воістину** means "truly" or "indeed."
+## Державні свята: Громадянська ідентичність
 
-Three traditions define Великдень: **Писанка** — a decorated egg, not just dyed but covered in intricate wax-resist patterns. This is uniquely Ukrainian folk art. **Паска** — tall, sweet Easter bread, blessed at church. And **святити кошик** — blessing the Easter basket at church on Saturday night. The basket holds паска, писанки, meat, and other food for the Sunday meal.
+State holidays reflect the modern history, struggles, and identity of the nation. The most significant of these is **День Незалежності** (Independence Day). On August 24, 1991, Ukraine officially declared its independence from the Soviet Union. Today, this is the ultimate **державне свято** (state holiday) for every Ukrainian citizen. 
 
-<!-- INJECT_ACTIVITY: quiz-holiday-traditions -->
+Cities completely transform on this day. People gather in the streets and central squares to celebrate freedom and sovereignty. You will often see a large military **парад** (parade) in the capital city of Kyiv. There are massive public **концерти** (concerts) featuring popular musicians. The streets, balconies, and cars are decorated with thousands of blue and yellow **прапори** (flags). In the evening, the sky lights up with a **салют** (fireworks). To greet someone on this day, you simply say **З Днем Незалежності!** (Happy Independence Day!). You will also hear the patriotic exchange echoing everywhere: **Слава Україні!** (Glory to Ukraine!) and the proud response **Героям слава!** (Glory to the heroes!).
 
-## Державні свята (National Holidays)
+Beyond Independence Day, there are several other important dates to know. The absolute biggest secular celebration of the entire year is **Новий рік** (New Year) on January 1st. On New Year's Eve, families decorate a festive **ялинка** (tree) and exchange **подарунки** (gifts) at midnight. 
 
-### День Незалежності — August 24
+In the spring, Ukrainians celebrate a unique cultural event called **Вишиванковий день** (Vyshyvanka Day). This occurs annually on the third Thursday of May. It is a modern, living tradition rather than an official day off work. Everyone goes to school, the university, or the office wearing a **вишиванка** (embroidered shirt). This beautiful traditional garment serves as a powerful visual symbol of Ukrainian identity, unity, and cultural resistance.
 
-On **двадцять четверте серпня 1991 року**, Ukraine declared independence from the Soviet Union. This is the most important **державне свято** (national holiday). The word **незалежність** (independence) breaks down clearly: **не** (not) + **залежати** (to depend) — not depending on another state. **Незалежний** means "independent," and **держава** means "state" — so **державне свято** is literally a "state holiday."
-
-How do Ukrainians celebrate? During the day — **парад** (parade) in the city center, **концерти** (concerts) on the main squares, and people carry **синьо-жовті прапори** (blue-and-yellow flags) through the streets. In the evening — **салют** (fireworks) over the city. Many people wear **вишиванка** (embroidered shirt) as a symbol of Ukrainian identity.
-
-The standard greeting is **З Днем Незалежності!** (Happy Independence Day!). And the national call-and-response:
-
-- **Слава Україні!** *(Glory to Ukraine!)*
-- **Героям слава!** *(Glory to the heroes!)*
-
-This is not just a holiday phrase — it is used year-round. Since the Maidan revolution in 2014, it has become the official military greeting and a symbol of Ukrainian resilience.
-
-### Other Holidays to Know
-
-Four more holidays every learner should recognize:
-
-- **Новий рік** (New Year) — January 1. The biggest secular celebration. Greeting: **З Новим роком!**
-- **Вишиванковий день** (Vyshyvanka Day) — the third Thursday of May. Everyone wears a **вишиванка** — a symbol of Ukrainian identity and cultural resistance.
-- **День Конституції** (Constitution Day) — June 28.
-- **День захисників і захисниць України** (Defenders' Day) — October 1. The official name includes both masculine (**захисник**) and feminine (**захисниця**) forms.
+Two other key dates mark the foundations of the modern state. On June 28th, the country observes **День Конституції** (Constitution Day), honoring the adoption of the nation's fundamental law. Later in the year, on October 1st, the people honor their military defenders on **День захисників і захисниць** (Defenders' Day). This solemn and important day pays respect to all the men and women who protect the nation's borders.
 
 <!-- INJECT_ACTIVITY: group-sort-traditions -->
 
 ## Підсумок — Summary
 
-### The З + Instrumental Greeting Pattern
+Now that you know the major Ukrainian holidays, you need to know how to form the most common greetings. Ukrainian uses a very specific, consistent grammatical pattern for this. The formula relies on the preposition **з** (with) followed by the name of the holiday in the instrumental case. You literally wish someone well "with" the holiday.
 
-Every Ukrainian holiday greeting follows one pattern: **З** + the holiday noun in the **instrumental case** + exclamation mark.
+You already know how the instrumental case works from phrases you learned earlier, like **кава з молоком** (coffee with milk). The spelling changes at the end of the words follow the exact same rules you learned for nouns. Here is how the names of the holidays transform in everyday speech:
 
-- **З Різдвом!** (Merry Christmas!) — різдво → різдвом
-- **З Великоднем!** (Happy Easter!) — великдень → великоднем
-- **З Новим роком!** (Happy New Year!) — новий рік → новим роком
-- **З Днем Незалежності!** (Happy Independence Day!)
-- **З днем народження!** (Happy birthday!)
-- **Зі святом!** (Happy holiday!) — свято → святом
+*   **Новий рік** → **З Новим роком!** (Happy New Year!)
+*   **Різдво** → **З Різдвом!** (Merry Christmas!)
+*   **Великдень** → **З Великоднем!** (Happy Easter!)
+*   **День народження** → **З днем народження!** (Happy birthday!)
+*   **День Незалежності** → **З Днем Незалежності!** (Happy Independence Day!)
 
-The instrumental endings: **-ом** for masculine and neuter nouns (різдвом, роком, святом), **-ою/-ею** for feminine (перемогою, весною).
+After the initial short greeting, people often add longer, specific wishes. The pattern for making a wish uses the verb **бажати** (to wish) followed by the genitive case. You can memorize this very common, polite sequence: **Бажаю щастя, здоров'я, миру** (I wish you happiness, health, peace). 
 
-### Connection to What You Already Know
+Let us review the quick calendar of major events to help you remember the timeline. In **грудень** (December) on the 25th, we celebrate **Різдво**. In **січень** (January) on the 1st, we celebrate the secular **Новий рік**. In the **весна** (spring), the date changes, but we always celebrate **Великдень**. Finally, in **серпень** (August) on the 24th, we celebrate **День Незалежності**.
 
-You already know the instrumental case from **з** + noun: **кава з молоком** (coffee with milk), **борщ з хлібом** (borshch with bread), **вареники з сиром** (varenyky with cheese). Holiday greetings use the same preposition and the same case — just with a different meaning. **З молоком** = "with milk." **З Різдвом** = "with Christmas" → wishing you a happy Christmas. Same grammar, new context.
+:::tip Self-Check
+How do you say "Merry Christmas"?
+**З Різдвом!**
 
-### Holiday Calendar
+What is the ritual response to "Христос воскрес!"?
+**Воістину воскрес!**
 
-| Date | Holiday | Greeting |
-|------|---------|----------|
-| грудень 25 | Різдво | З Різдвом Христовим! |
-| січень 1 | Новий рік | З Новим роком! |
-| весна | Великдень | Христос воскрес! |
-| травень (третій четвер) | Вишиванковий день | — |
-| серпень 24 | День Незалежності | З Днем Незалежності! / Слава Україні! |
-| жовтень 1 | День захисників і захисниць | — |
+When is Christmas in Ukraine?
+**Двадцять п'ятого грудня.**
 
-### Self-Check
+How do you say "Happy New Year"?
+**З Новим роком!**
 
-- Як привітати з Різдвом? → **З Різдвом Христовим!**
-- Що відповідають на «Христос воскрес!»? → **Воістину воскрес!**
-- Коли День Незалежності? → **Двадцять четверте серпня.**
-- Що таке кутя? → **Пшениця з медом, маком і горіхами.**
-- Як привітати з Новим роком? → **З Новим роком!**
+How do you greet someone on August 24th?
+**З Днем Незалежності!**
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-greetings -->
-
-## Підсумок
-
-You now know the major Ukrainian holidays and how to greet people for each one. **Різдво** on December 25 brings **Свята вечеря** with twelve fasting dishes, starting with **кутя**. **Великдень** in spring means **писанки**, **паска**, and the greeting **Христос воскрес! — Воістину воскрес!** **День Незалежності** on August 24 celebrates Ukraine's freedom with parades, flags, and **Слава Україні! — Героям слава!** The universal greeting formula is **З + instrumental**: З Різдвом, З Великоднем, З Новим роком, З Днем Незалежності. You already knew this case from кава з молоком — now you can use it to celebrate with Ukrainians. **З перемогою!**
 
 </module_content>
 
@@ -305,30 +289,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -348,21 +372,39 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -394,68 +436,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

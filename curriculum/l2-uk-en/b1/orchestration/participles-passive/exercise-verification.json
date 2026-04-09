@@ -1,0 +1,361 @@
+{
+  "total_items": 219,
+  "grounded_items": 162,
+  "ungrounded": [
+    {
+      "word": "цікава",
+      "exercise_type": "fill-in",
+      "context": "Це дуже цікава, нещодавно _____ книга.",
+      "role": "context"
+    },
+    {
+      "word": "їхали",
+      "exercise_type": "fill-in",
+      "context": "Ми їхали через новий, сучасно _____ міст.",
+      "role": "context"
+    },
+    {
+      "word": "через",
+      "exercise_type": "fill-in",
+      "context": "Ми їхали через новий, сучасно _____ міст.",
+      "role": "context"
+    },
+    {
+      "word": "сучасно",
+      "exercise_type": "fill-in",
+      "context": "Ми їхали через новий, сучасно _____ міст.",
+      "role": "context"
+    },
+    {
+      "word": "якісно",
+      "exercise_type": "fill-in",
+      "context": "Усі ці речі — це якісно _____ проєкти.",
+      "role": "context"
+    },
+    {
+      "word": "проєкти",
+      "exercise_type": "fill-in",
+      "context": "Усі ці речі — це якісно _____ проєкти.",
+      "role": "context"
+    },
+    {
+      "word": "зварену",
+      "exercise_type": "fill-in",
+      "context": "зварену",
+      "role": "answer"
+    },
+    {
+      "word": "принесла",
+      "exercise_type": "fill-in",
+      "context": "Вона принесла мені смачно _____ каву.",
+      "role": "context"
+    },
+    {
+      "word": "каву",
+      "exercise_type": "fill-in",
+      "context": "Вона принесла мені смачно _____ каву.",
+      "role": "context"
+    },
+    {
+      "word": "відкрита",
+      "exercise_type": "fill-in",
+      "context": "відкрита",
+      "role": "answer"
+    },
+    {
+      "word": "крамниця",
+      "exercise_type": "fill-in",
+      "context": "Крамниця була вже _____ для покупців.",
+      "role": "context"
+    },
+    {
+      "word": "покупців",
+      "exercise_type": "fill-in",
+      "context": "Крамниця була вже _____ для покупців.",
+      "role": "context"
+    },
+    {
+      "word": "пофарбувати",
+      "exercise_type": "match-up",
+      "context": "пофарбувати",
+      "role": "answer"
+    },
+    {
+      "word": "вимити",
+      "exercise_type": "match-up",
+      "context": "вимити",
+      "role": "answer"
+    },
+    {
+      "word": "вимитий",
+      "exercise_type": "match-up",
+      "context": "вимитий",
+      "role": "context"
+    },
+    {
+      "word": "посадений",
+      "exercise_type": "error-correction",
+      "context": "Цей сад був посадений моїм дідусем.",
+      "role": "context"
+    },
+    {
+      "word": "моїм",
+      "exercise_type": "error-correction",
+      "context": "Цей сад був посадений моїм дідусем.",
+      "role": "context"
+    },
+    {
+      "word": "дідусем",
+      "exercise_type": "error-correction",
+      "context": "Цей сад був посадений моїм дідусем.",
+      "role": "context"
+    },
+    {
+      "word": "закрутений",
+      "exercise_type": "error-correction",
+      "context": "Кран був міцно закрутений, тому я не зміг пустити воду.",
+      "role": "context"
+    },
+    {
+      "word": "зміг",
+      "exercise_type": "error-correction",
+      "context": "Кран був міцно закрутений, тому я не зміг пустити воду.",
+      "role": "context"
+    },
+    {
+      "word": "пустити",
+      "exercise_type": "error-correction",
+      "context": "Кран був міцно закрутений, тому я не зміг пустити воду.",
+      "role": "context"
+    },
+    {
+      "word": "воду",
+      "exercise_type": "error-correction",
+      "context": "Кран був міцно закрутений, тому я не зміг пустити воду.",
+      "role": "context"
+    },
+    {
+      "word": "вразений",
+      "exercise_type": "error-correction",
+      "context": "Він був дуже вразений цією несподіваною новиною.",
+      "role": "context"
+    },
+    {
+      "word": "цією",
+      "exercise_type": "error-correction",
+      "context": "Він був дуже вразений цією несподіваною новиною.",
+      "role": "context"
+    },
+    {
+      "word": "несподіваною",
+      "exercise_type": "error-correction",
+      "context": "Він був дуже вразений цією несподіваною новиною.",
+      "role": "context"
+    },
+    {
+      "word": "новиною",
+      "exercise_type": "error-correction",
+      "context": "Він був дуже вразений цією несподіваною новиною.",
+      "role": "context"
+    },
+    {
+      "word": "увесь",
+      "exercise_type": "error-correction",
+      "context": "Увесь газон був рівно скосений ще вранці.",
+      "role": "context"
+    },
+    {
+      "word": "газон",
+      "exercise_type": "error-correction",
+      "context": "Увесь газон був рівно скосений ще вранці.",
+      "role": "context"
+    },
+    {
+      "word": "скосений",
+      "exercise_type": "error-correction",
+      "context": "Увесь газон був рівно скосений ще вранці.",
+      "role": "context"
+    },
+    {
+      "word": "вранці",
+      "exercise_type": "error-correction",
+      "context": "Увесь газон був рівно скосений ще вранці.",
+      "role": "context"
+    },
+    {
+      "word": "зробений",
+      "exercise_type": "error-correction",
+      "context": "Проєкт був зробений дуже швидко та якісно.",
+      "role": "context"
+    },
+    {
+      "word": "купений",
+      "exercise_type": "error-correction",
+      "context": "Цей квиток був купений заздалегідь через інтернет.",
+      "role": "context"
+    },
+    {
+      "word": "заздалегідь",
+      "exercise_type": "error-correction",
+      "context": "Цей квиток був купений заздалегідь через інтернет.",
+      "role": "context"
+    },
+    {
+      "word": "інтернет",
+      "exercise_type": "error-correction",
+      "context": "Цей квиток був купений заздалегідь через інтернет.",
+      "role": "context"
+    },
+    {
+      "word": "милувалася",
+      "exercise_type": "fill-in",
+      "context": "Вона милувалася _____ рушником.",
+      "role": "context"
+    },
+    {
+      "word": "гуляли",
+      "exercise_type": "fill-in",
+      "context": "Ми довго гуляли по _____ палацу.",
+      "role": "context"
+    },
+    {
+      "word": "палацу",
+      "exercise_type": "fill-in",
+      "context": "Ми довго гуляли по _____ палацу.",
+      "role": "context"
+    },
+    {
+      "word": "пишаємося",
+      "exercise_type": "quiz",
+      "context": "Ми пишаємося **зробленими** проєктами. Яка роль слова «зробл",
+      "role": "context"
+    },
+    {
+      "word": "залишалися",
+      "exercise_type": "quiz",
+      "context": "Двері залишалися **зачиненими**. Яка роль слова «зачиненими»",
+      "role": "context"
+    },
+    {
+      "word": "зачиненими",
+      "exercise_type": "quiz",
+      "context": "Двері залишалися **зачиненими**. Яка роль слова «зачиненими»",
+      "role": "context"
+    },
+    {
+      "word": "дивився",
+      "exercise_type": "quiz",
+      "context": "Він довго дивився на **написаний** текст. Яка роль слова «на",
+      "role": "context"
+    },
+    {
+      "word": "текст",
+      "exercise_type": "quiz",
+      "context": "Він довго дивився на **написаний** текст. Яка роль слова «на",
+      "role": "context"
+    },
+    {
+      "word": "лежала",
+      "exercise_type": "quiz",
+      "context": "На столі лежала смачна **варена** картопля.",
+      "role": "context"
+    },
+    {
+      "word": "смачна",
+      "exercise_type": "quiz",
+      "context": "На столі лежала смачна **варена** картопля.",
+      "role": "context"
+    },
+    {
+      "word": "продається",
+      "exercise_type": "quiz",
+      "context": "У магазині продається **мелена** кава.",
+      "role": "context"
+    },
+    {
+      "word": "баристою",
+      "exercise_type": "quiz",
+      "context": "Це щойно **змелена** баристою кава.",
+      "role": "context"
+    },
+    {
+      "word": "вірш",
+      "exercise_type": "quiz",
+      "context": "Цей вірш був швидко **вивчений** учнем.",
+      "role": "context"
+    },
+    {
+      "word": "учнем",
+      "exercise_type": "quiz",
+      "context": "Цей вірш був швидко **вивчений** учнем.",
+      "role": "context"
+    },
+    {
+      "word": "творенні",
+      "exercise_type": "true-false",
+      "context": "При творенні дієприкметників із суфіксом -ен- часто відбуває",
+      "role": "context"
+    },
+    {
+      "word": "інакше",
+      "exercise_type": "true-false",
+      "context": "Пасивні дієприкметники відмінюються інакше, ніж звичайні при",
+      "role": "context"
+    },
+    {
+      "word": "дієприкметниках",
+      "exercise_type": "true-false",
+      "context": "У пасивних дієприкметниках української мови ніколи не пишеть",
+      "role": "context"
+    },
+    {
+      "word": "подвоєне",
+      "exercise_type": "true-false",
+      "context": "У пасивних дієприкметниках української мови ніколи не пишеть",
+      "role": "context"
+    },
+    {
+      "word": "словосполученні",
+      "exercise_type": "true-false",
+      "context": "Слово «варена» у словосполученні «варена картопля» є дієприк",
+      "role": "context"
+    },
+    {
+      "word": "дієприкметником",
+      "exercise_type": "true-false",
+      "context": "Слово «варена» у словосполученні «варена картопля» є дієприк",
+      "role": "context"
+    },
+    {
+      "word": "мною",
+      "exercise_type": "unjumble",
+      "context": "мною.",
+      "role": "answer"
+    },
+    {
+      "word": "надійно",
+      "exercise_type": "unjumble",
+      "context": "надійно",
+      "role": "answer"
+    },
+    {
+      "word": "дивилися",
+      "exercise_type": "unjumble",
+      "context": "дивилися",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 22,
+    "tested_in_exercises": 16,
+    "not_tested": [
+      "варений",
+      "воджений",
+      "дієприкметник",
+      "зварений",
+      "колотий",
+      "пасивний"
+    ]
+  },
+  "all_grounded": false
+}

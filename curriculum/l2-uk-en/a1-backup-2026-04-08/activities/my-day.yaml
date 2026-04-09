@@ -1,0 +1,331 @@
+version: '1.0'
+module: my-day
+level: a1
+inline:
+- id: fill-in-part-of-day
+  type: fill-in
+  instruction: Оберіть правильний час доби (Choose the correct part of the day)
+  items:
+  - sentence: Я п'ю каву _____.
+    answer: вранці
+    options:
+    - вранці
+    - вночі
+    - ввечері
+  - sentence: Ми вечеряємо _____.
+    answer: ввечері
+    options:
+    - ввечері
+    - вранці
+    - вдень
+  - sentence: Вона працює з дев'ятої до п'ятої _____.
+    answer: вдень
+    options:
+    - вдень
+    - вночі
+    - вранці
+  - sentence: Вони гуляють у парку _____.
+    answer: після обіду
+    options:
+    - після обіду
+    - вночі
+    - вранці
+  - sentence: Я лягаю спати _____.
+    answer: вночі
+    options:
+    - вночі
+    - вранці
+    - вдень
+  - sentence: Він снідає _____.
+    answer: вранці
+    options:
+    - вранці
+    - ввечері
+    - вночі
+- id: match-time-of-day
+  type: match-up
+  instruction: З'єднайте дію з часом доби (Match each action with the correct part
+    of the day)
+  pairs:
+  - left: прокидаюся
+    right: вранці
+  - left: снідаю
+    right: вранці
+  - left: працюю
+    right: вдень
+  - left: обідаю
+    right: вдень
+  - left: вечеряю
+    right: ввечері
+  - left: дивлюся фільм
+    right: ввечері
+  - left: лягаю спати
+    right: вночі
+  - left: сплю
+    right: вночі
+- id: fill-in-sequence
+  type: fill-in
+  instruction: Оберіть правильне слово (Choose the correct word to complete the sequence)
+  items:
+  - sentence: _____ я прокидаюся і вмиваюся.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: Після того я _____.
+    answer: снідаю
+    options:
+    - снідаю
+    - вечеряю
+    - лягаю спати
+  - sentence: Вдень я _____ в офісі.
+    answer: працюю
+    options:
+    - працюю
+    - прокидаюся
+    - снідаю
+  - sentence: О першій годині я _____.
+    answer: обідаю
+    options:
+    - обідаю
+    - вечеряю
+    - прокидаюся
+  - sentence: _____ я читаю книгу або дивлюся фільм.
+    answer: Потім
+    options:
+    - Потім
+    - Спочатку
+    - Вранці
+  - sentence: _____ я лягаю спати о дванадцятій.
+    answer: Нарешті
+    options:
+    - Нарешті
+    - Спочатку
+    - Вдень
+workbook:
+- type: true-false
+  instruction: Правда чи ні? (True or false?) Читайте діалоги і відповідайте.
+  items:
+  - statement: Оленка обідала о першій годині.
+    correct: true
+    explanation: Так — «Потім обідала о першій.»
+  - statement: Оленка лягла спати о десятій.
+    correct: false
+    explanation: Ні — «Нарешті лягла спати о дванадцятій.»
+  - statement: Марко буде гуляти ввечері.
+    correct: true
+    explanation: Так — «Ввечері буду гуляти.»
+  - statement: Марко буде вивчати українську вранці.
+    correct: false
+    explanation: Ні — «Після обіду буду вивчати українську.»
+  - statement: Оленка гуляла у парку після обіду.
+    correct: true
+    explanation: Так — «Після обіду гуляла у парку.»
+  - statement: У типовому дні оповідач обідає о другій годині.
+    correct: false
+    explanation: Ні — «О першій обідаю.»
+- type: quiz
+  instruction: Оберіть правильну форму дієслова (Choose the correct verb form)
+  items:
+  - question: Я _____ о сьомій ранку.
+    options:
+    - прокидаєшся
+    - прокидаюся
+    - прокидається
+    - прокидаємося
+    correct: 1
+  - question: Ми _____ о першій годині.
+    options:
+    - обідаю
+    - обідаєш
+    - обідаємо
+    - обідає
+    correct: 2
+  - question: Вона _____ о сьомій ввечері.
+    options:
+    - вечеряю
+    - вечеряє
+    - вечеряємо
+    - вечеряєш
+    correct: 1
+  - question: Вони _____ після роботи.
+    options:
+    - відпочиваю
+    - відпочиваєш
+    - відпочиває
+    - відпочивають
+    correct: 3
+  - question: Я _____ фільм ввечері.
+    options:
+    - дивишся
+    - дивлюся
+    - дивиться
+    - дивимося
+    correct: 1
+  - question: Він _____ спати о дванадцятій.
+    options:
+    - лягаю
+    - лягаєш
+    - лягає
+    - лягаємо
+    correct: 2
+- type: group-sort
+  instruction: Розподіліть дії за часом доби (Sort the actions by time of day)
+  groups:
+  - label: Вранці і вдень (Morning and daytime)
+    items:
+    - прокидаюся
+    - вмиваюся
+    - снідаю
+    - починаю працювати
+    - обідаю
+    - іду на роботу
+  - label: Ввечері і вночі (Evening and night)
+    items:
+    - вечеряю
+    - відпочиваю
+    - дивлюся фільм
+    - читаю книгу
+    - готую вечерю
+    - лягаю спати
+- type: unjumble
+  instruction: Складіть речення (Put the words in the correct order)
+  items:
+  - words:
+    - і
+    - вранці
+    - снідаю
+    - вмиваюся
+    - я
+    correct_order:
+    - вранці
+    - я
+    - вмиваюся
+    - і
+    - снідаю
+  - words:
+    - вдень
+    - я
+    - в
+    - офісі
+    - працюю
+    correct_order:
+    - вдень
+    - я
+    - працюю
+    - в
+    - офісі
+  - words:
+    - ввечері
+    - відпочиваю
+    - я
+    - і
+    - вечеряю
+    correct_order:
+    - ввечері
+    - я
+    - вечеряю
+    - і
+    - відпочиваю
+  - words:
+    - спочатку
+    - я
+    - снідаю
+    - потім
+    - іду
+    - на
+    - роботу
+    correct_order:
+    - спочатку
+    - я
+    - снідаю
+    - потім
+    - іду
+    - на
+    - роботу
+  - words:
+    - нарешті
+    - о
+    - дванадцятій
+    - лягаю
+    - спати
+    - я
+    correct_order:
+    - нарешті
+    - я
+    - лягаю
+    - спати
+    - о
+    - дванадцятій
+  - words:
+    - після
+    - обіду
+    - або
+    - читаю
+    - відпочиваю
+    - я
+    correct_order:
+    - після
+    - обіду
+    - я
+    - читаю
+    - або
+    - відпочиваю
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Я вечеряю вранці.
+    error: вранці
+    correction: ввечері
+    error_type: word
+    options:
+    - ввечері
+    - вдень
+    - вночі
+    explanation: 'Вечеряти — вечірній прийом їжі. Правильно: ввечері.'
+  - sentence: Я снідаю вночі.
+    error: вночі
+    correction: вранці
+    error_type: word
+    options:
+    - вранці
+    - вдень
+    - ввечері
+    explanation: 'Сніданок — вранці. Правильно: вранці.'
+  - sentence: Нарешті я прокидаюся і вмиваюся.
+    error: Нарешті
+    correction: Спочатку
+    error_type: word
+    options:
+    - Спочатку
+    - Потім
+    - Після того
+    explanation: 'Прокидатися — перша дія дня. Правильно: Спочатку.'
+  - sentence: Після обіду я снідаю.
+    error: снідаю
+    correction: відпочиваю
+    error_type: word
+    options:
+    - відпочиваю
+    - обідаю
+    - вечеряю
+    explanation: 'Сніданок — вранці, не після обіду. Після обіду краще: відпочиваю.'
+  - sentence: Вдень я лягаю спати о дванадцятій.
+    error: Вдень
+    correction: Вночі
+    error_type: word
+    options:
+    - Вночі
+    - Вранці
+    - Ввечері
+    explanation: 'Лягати спати о дванадцятій — нічний час. Правильно: Вночі.'
+  - sentence: Я снідаю, а нарешті п'ю каву.
+    error: нарешті
+    correction: потім
+    error_type: word
+    options:
+    - потім
+    - після того
+    - спочатку
+    explanation: 'Нарешті — для кінцевої дії дня. Між двома послідовними діями: потім.'

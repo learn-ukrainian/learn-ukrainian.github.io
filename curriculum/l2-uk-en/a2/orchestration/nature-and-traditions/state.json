@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "nature-and-traditions",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-08T19:01:40.688133+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-08T19:01:40.700460+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-08T19:04:39.878307+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-08T19:22:32.005535+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-08T19:32:06.966829+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T19:32:06.966972+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-08T19:34:33.100022+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T19:34:33.119109+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-08T19:34:33.125436+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-08T19:35:58.252886+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-08T19:35:58.253095+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-08T19:35:58.551012+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-08T19:49:39.757964+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-08T22:45:43.202303+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-08T22:45:52.577135+00:00"
+    }
+  }
+}

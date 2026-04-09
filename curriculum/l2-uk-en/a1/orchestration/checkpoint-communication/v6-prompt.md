@@ -1,32 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Підсумок — Summary'
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -59,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -243,369 +225,332 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-- **Confirmed:** кутя, колядка/колядки, свічка/свічки, святкувати, запросити, вільний/вільна, разом, привіт, друг/друзів, читай, дай, читайте, дайте, прийди, принеси, скажи, ходімо, принесу, купити, Олено (←Олена), Тарасе (←Тарас), Андрію (←Андрій), гарний, скоро, двадцять, четвертого, сказати, знати, можемо (←могти), хотіти, знаєш, думати, привітати
-- **Not found (VESUM case-sensitivity):** `Різдво` (capital) — **safe to use**: lowercase `різдво` found as noun (3 matches). VESUM is case-sensitive; capitalized holiday names are a known gap. Word is confirmed real.
-- **Not found (phrase token):** `з Різдвом` — not a single token; component words verified separately (з + різдвом). Safe.
-
----
-
-## Textbook Excerpts
-
-### Section: Що ми знаємо? / Граматика — Vocative case (кличний відмінок)
-> «Утворюючи від імен людей форму кличного відмінка, керуйтеся правилами: чоловічі тверда група -е (Іване, Денисе, Олександре), м'яка група -ю (Ігорю, Сергію); жіночі тверда група -о (Алло, Галино, Наталко), м'яка група -є (Надіє, Аделе).»
-> Source: Авраменко, Grade 8, §62–63 (tier 1, 2025)
->
-> **Validates plan rules directly:** Олена→Олено (-а→-о ✅), Тарас→Тарасе (hard→-е ✅), Андрій→Андрію (soft→-ю ✅)
-
-### Section: Граматика — Imperative (наказовий спосіб)
-> Table: «(ти) співай, роби | (ви) співайте, робіть | (ми) співаймо, робімо»
-> «Форми наказового способу не утворюють за допомогою слова давати. Правильними є форми співаймо, робімо, а не давай співати, давайте робити.»
-> Source: Літвінова, Grade 7, §11 (tier 1, 2024)
->
-> **Validates:** читай, читайте (✅), дай, дайте (✅), ходімо (✅). Note: ходімо ← ходити 1-person plural imperative form confirmed.
-
-### Section: Граматика — Coordinating conjunctions (сурядні сполучники)
-> «Сурядні — Єднальні: і (й), та (у значенні і). Протиставні: а, але, та (у значенні але), проте, зате. Підрядні — Причинові: бо, тому що, оскільки. З'ясувальні: що, як, щоб. Часові: коли, доки, щойно.»
-> Source: Літвінова, Grade 7, §32 «Сполучники сурядності й підрядності» (tier 1, 2024)
->
-> **Validates:** і/та (єднальні ✅), а (протиставний ✅), але (протиставний ✅), бо (причиновий ✅)
-
-### Section: Граматика — Subordinating conjunctions що/де/коли
-> «Підрядна частина місця відповідає на питання: де? куди? звідки? — з'єднується сполучними словами де, куди, звідки. [...] Де воля родиться, там загиба зневіра.»
-> Source: Заболотний, Grade 9, §складнопідрядне речення (tier 2, 2017)
->
-> **Validates:** що (з'ясувальний), де (місця), коли (часовий) — all with comma before subordinate clause ✅
-
-### Section: Читання / Діалог — Ukrainian holidays vocabulary
-> «Дніпро обняв дзвінкі Карпати, / А в хаті вже кутя і сіно. / Дозвольте заколядувати: / — З Різдвом Христовим, Україно!» (Йосип Струцюк)
-> Also: «1 січня — Новий рік | 25 грудня — Різдво Христове»
-> Source: Захарійчук, Grade 1 Буквар (tier 1, 2025)
->
-> **Validates:** Різдво ✅, кутя ✅, колядки ✅, З Різдвом! greeting formula ✅
-
----
+- Confirmed: різдво, кутя, колядка, вільний, святкувати, разом, двадцять, четвертий, принести, сказати, хотіти, свічка, привіт, гарний, купити, запросити, друг.
+- Not found: None (all plan words verified).
 
 ## Grammar Rules
-
-- **Кличний відмінок:** Правопис 2019 §§ on іменник declension (query returned §18 — consonant changes — by keyword mismatch). Authoritative confirmation comes from Авраменко Grade 6 §54 and Grade 8 §62–63 (tier 1 NUS textbooks): endings -о (тверда/жіноча), -е (тверда/чоловіча), -ю (м'яка). Plan's rules Олено/Тарасе/Андрію are **textbook-confirmed**.
-- **Наказовий спосіб:** Правопис 2019 has no dedicated section (morphology is covered under verb tables). Авраменко Grade 11 and Літвінова Grade 7 §11 confirm: 2sg -й/-и, 2pl -йте/-іть. Pattern **textbook-confirmed**.
-- **З + орудний відмінок (грeetings):** З Різдвом! — instrumental after прийменник з for holiday greetings. Confirmed in Grade 1 Буквар directly: «З Різдвом Христовим!» ✅
-
----
+- Vocative Case: Grade 6 (betsa) §39 — І відміна тверда: -о (Олено); ІІ відміна тверда: -е (Тарасе); ІІ відміна м'яка: -ю (Андрію).
+- Imperative Mood: Grade 11 (avramenko) §17 — 2nd person sing: -∅/-и (скажи, принеси); 2nd person plur: -те/-іть (скажіть, принесіть). Note: Using "давай" is a calque; use synthetic forms or "хай".
+- Conjunctions: Grade 4 (varzatska) §73 — Coordinating (і, а, але, бо) and subordinating (що, де, коли) require proper comma usage before the conjunction in complex sentences.
+- Holiday Greetings: Phraseological usage — "З" + Instrumental case (З Різдвом!, З Новим роком!).
 
 ## Calque Warnings
-
-- **"святкувати разом"** — Style guide returns no calque warning. Natural Ukrainian ✅. (Style guide returned unrelated "повезти/пощастити" entry.)
-- **"запросити друзів"** — No calque. Style guide notes: beware of **"заказати"** (means "to order" or "to forbid"), NOT "to invite" — but plan correctly uses **запросити** (A1 VESUM ✅). No issue.
-- **"вільний (час/день)"** — No calque. Style guide returned time-keeping entry. "Вільний" in sense of "free/available" is standard Ukrainian. ✅
-
----
+- "Давай святкувати": Calque from Russian "давай" — OK: "святкуймо" or "хотілося б святкувати".
+- "Я думаю, що": Acceptable for A1, but "На мою думку" is a more authentic Ukrainian alternative.
+- "Прийди до мене": OK — standard imperative (Grade 7 avramenko §35).
 
 ## CEFR Check
-
-- **Різдво** — A1 ✅ (PULS confirmed)
-- **святкувати** — A1 ✅ (PULS confirmed)
-- **запросити** — A1 ✅ (PULS confirmed)
-- **разом** — A1 ✅ (PULS confirmed)
-- **свічка** — A2 ⚠️ slightly above strict A1, but contextually justified for holiday cultural vocabulary in a checkpoint module
-- **вільний** — A2 ⚠️ slightly above strict A1, but the meaning "free/available" (вільна двадцять четвертого) is entirely natural and comprehensible from context in a checkpoint review
-
-**Note:** відсвяткувати (perfective) is B1 — the plan correctly uses imperfective **святкувати** (A1) ✅. Module avoids the higher-level perfective form.
+- різдво: A1 — OK (Core holiday vocabulary)
+- свято: A1 — OK
+- кутя: A1 — OK (Essential cultural term for A1.7 context)
+- запросити: A2 — Above target (Consider using "покликати" for A1, but "запросити" is acceptable for a checkpoint)
+- вільний: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Checkpoint: Communication
-**Module:** checkpoint-communication | **Phase:** A1.7 [Communication]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: Checkpoint: Communication
+**Module:** checkpoint-communication | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/checkpoint-communication.md
+
+# Педагогіка A1: Checkpoint Communication
+
+
+
+## Методичний підхід (Methodological Approach)
+
+Checkpoint communication modules serve as cumulative reviews where learners integrate previously learned grammar and vocabulary into practical, goal-oriented dialogues. The pedagogical approach, as seen in Ukrainian educational materials, is heavily context-driven and functional. Dialogues are not abstract grammar drills; they model real-life situations like making plans, inviting friends, and arranging meetings (Source 1, 2, 10).
+
+The core method is built around listening to or reading a model dialogue, then breaking it down into functional chunks. For instance, the Ukrainian Lessons Podcast (ULP) consistently presents a full dialogue first, asks comprehension questions, and only then dissects the grammar and vocabulary (Source 1, 10, 18). This "whole-to-part" approach mirrors natural language acquisition.
+
+Ukrainian textbooks for native speakers also emphasize dialogue as a central activity. They use dialogues to introduce new concepts and then immediately ask students to analyze, transform, or role-play them (Source 7, 12, 31). The goal is active use, not passive knowledge. Exercises often involve transforming a dialogue into a monologue, which forces the learner to process and re-synthesize the information, confirming comprehension (Source 6, 12).
+
+Greetings and politeness are foundational. Materials for both native speakers and L2 learners introduce the distinction between formal and informal address early on, using vocative case for names (`Привіт, Олю`) and polite forms for strangers or elders (`Шановний Сергію Васильовичу`) (Source 3, 7, 27). This isn't just a grammar point; it's a core element of communicative competence in Ukrainian culture.
+
+## Послідовність введення (Introduction Sequence)
+
+A logical sequence for an A1 learner to acquire checkpoint communication skills should build from simple exchanges to more complex negotiations.
+
+1.  **Step 1: Basic Greetings, Farewells, and Politeness Formulas.** This is the absolute foundation.
+    *   **Informal:** `Привіт!` (Hello!), `Па-па!` (Bye-bye!) (Source 1).
+    *   **Formal/Neutral:** `Добрий день!` (Good day!), `До побачення!` (Goodbye!) (Source 19, 27).
+    *   **Core Politeness:** `Дякую` (Thank you), `Будь ласка` (Please/You're welcome) (Source 1, 19).
+
+2.  **Step 2: Core Status Check Questions.** The most common conversational openers.
+    *   `Як справи?` (How are things?), `Як ти?` (How are you?) (Source 1, 2).
+    *   Common responses: `Все добре`, `Нормально`, `Чудово` (Source 1, 2, 8).
+
+3.  **Step 3: Making Simple, Direct Invitations.** The focus is on a clear proposal.
+    *   Use of imperative or suggestive forms: `Ходімо в кіно!` (Let's go to the cinema!) (Source 20).
+    *   Direct question form: `Хочеш піти зі мною?` (Do you want to go with me?) (Source 2).
+    *   Initial responses: `Так, давай` (Yes, let's), `Добре` (Okay) (Source 2).
+
+4.  **Step 4: Negotiating Time and Place.** This is the "checkpoint" skill, requiring specific grammar.
+    *   Asking about time: `О котрій годині?` (At what time?) or `На котру годину?` (For what time?) (Source 1, 10).
+    *   Telling time using `о` + ordinal number in the Locative case: `о третій` (at three), `о сьомій` (at seven) (Source 1, 10).
+    *   Asking about place: `Де зустрінемось?` (Where will we meet?).
+    *   Responding with `в/у` or `на` + Locative case: `у парку`, `на фестивалі` (Source 18).
+
+5.  **Step 5: Simple Apologies and Explanations for Refusal.**
+    *   Politely declining: `На жаль, не можу` (Unfortunately, I can't) (Source 20).
+    *   Giving a simple reason: `Погано почуваюся` (I feel unwell), `Я зайнята` (I'm busy) (Source 2, 20).
+    *   Simple apology: `Вибач` (Sorry - informal), `Пробач` (Forgive me) (Source 7).
+
+6.  **Step 6: Formal vs. Informal Register.** Introduce the concept of `ти` (informal 'you') vs. `ви` (formal/plural 'you').
+    *   Contrast informal `Привіт, Тарасе` with formal `Добрий день, Сергію Васильовичу` (Source 1, 3).
+    *   Explain that `ви` is used with strangers, elders, and in professional contexts. Show how verb endings and pronouns change: `Хочеш?` (ти) vs. `Хочете?` (ви).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Привіт, Оксана.` | `Привіт, Оксано!` | The **Vocative case** (`кличний відмінок`) is mandatory for direct address in Ukrainian. Ignoring it sounds abrupt and unnatural. It is a key feature of the language (Source 3, 5, 7). |
+| `Зустрінемось в 7 годин.` | `Зустрінемось о сьомій годині.` | To specify a time on the hour, Ukrainian uses the preposition `о` followed by the **ordinal number** (сьома - seventh) in the **Locative case** (`о сьомій`). Using `в` (in) and a cardinal number is a direct transfer from English ("at 7") and is incorrect (Source 10, 23). |
+| `Я вибачаюся.` | `Вибачте!` / `Пробачте!` / `Перепрошую!` | The reflexive form `вибачаюся` literally means "I forgive myself." It is considered incorrect and even rude in the context of an apology. The correct forms are direct commands or dedicated verbs of apology (Source 27). |
+| `Скільки година?` | `Котра година?` | The standard way to ask for the time is `Котра година?` which literally means "Which hour (in order) is it?". `Скільки` (how much/many) is used for countable quantities, not for telling time (Source 10). |
+| `Дякую вам.` (when `дякую` is sufficient) | `Дякую.` | While `Дякую вам` is grammatically correct for formal situations, beginners often overuse it. In many informal and service contexts, a simple `Дякую` is more natural. Over-formality can sound stiff. The choice depends on context, a nuance to be taught. <!-- VERIFY --> |
+| `*Без п'яти шість.` | `За п'ять шоста.` | When telling time before the hour, Ukrainian uses constructions like `за [хвилин] [година]` (literally "[minutes] to [hour]") or `[хвилин] до [години]` ("[minutes] to [hour]"). The preposition `без` (without) is a calque from Russian and incorrect in this context (Source 23). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian communication requires a deliberate de-linking from Russian linguistic habits, which are often mistakenly presented as a "shortcut" to learners.
+
+1.  **The Vocative Case is Non-Negotiable and a Key Differentiator:** Russian has lost the vocative case in everyday speech, retaining it only in archaic or religious contexts. Ukrainian, however, uses it constantly and actively (`друже`, `Олено`, `пане`). Emphasize that this is a core, living feature of Ukrainian grammar, not an optional flourish. Its absence in modern Russian is a point of divergence, not a model to follow (Source 5).
+2.  **Teach `Пане / Пані` as the Default Formal Address:** The use of `Пане` (Sir/Mr.) and `Пані` (Madam/Mrs./Ms.) followed by a first name or title is the standard, polite, European way of formal address in Ukrainian (Source 3). Avoid introducing the Russian-style `Ім'я + по-батькові` (Name + Patronymic) as the primary model. While patronymics are used (`Сергію Васильовичу`), they often appear in more official or older-generation contexts. The `Пан/Пані` model is more versatile, modern, and aligns Ukrainian with its Central European cultural context.
+3.  **Avoid Russian Phonetic Analogies:** Do not teach Ukrainian sounds by comparing them to Russian ones (e.g., "Ukrainian `и` is like Russian `ы`"). This creates phonetic interference and hinders the development of an authentic Ukrainian accent. Teach each sound on its own terms, using minimal pair drills based on Ukrainian words.
+4.  **Calques and Surzhyk:** Actively teach against common Russian calques in conversational phrases. A prime example is the incorrect use of `*Давай!` for "bye" (a Russianism) instead of the proper `Па-па` or `До побачення`. The brief should explicitly list and forbid such constructions.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is essential for A1 checkpoint dialogues.
+
+**Іменники (Nouns):**
+*   `друг / подруга` (friend m/f) ★★★ (Source 12, 20)
+*   `день` (day) ★★★ (Source 3)
+*   `година` (hour, time) ★★★ (Source 1, 10)
+*   `кіно` (cinema, movie) ★★★ (Source 10, 20)
+*   `фестиваль` (festival) ★★ (Source 18)
+*   `кава` (coffee) ★★ (Source 18)
+*   `вечірка` (party) ★★ (Source 1)
+*   `час` (time) ★★ (Source 10)
+*   `зустріч` (meeting) ★
+
+**Дієслова (Verbs):**
+*   `бути` (to be) ★★★
+*   `мати` (to have) ★★★
+*   `хотіти` (to want) ★★★ (Source 1, 2)
+*   `могти` (can, to be able to) ★★★ (Source 1, 20)
+*   `йти / піти` (to go) ★★★ (Source 2, 7)
+*   `бачити` (to see) ★★★ (Source 1, 12)
+*   `говорити` (to speak) ★★ (Source 2)
+*   `зустрітися / зустрічатися` (to meet) ★★ (Source 8, 10)
+*   `запросити / запрошувати` (to invite) ★★ (Source 1)
+*   `прийти` (to come, arrive) ★★ (Source 1)
+
+**Прислівники (Adverbs) & Фрази (Phrases):**
+*   `добре` (good, well) ★★★ (Source 1)
+*   `нормально` (normally, okay) ★★★ (Source 1)
+*   `сьогодні` (today) ★★★ (Source 10)
+*   `завтра` (tomorrow) ★★★ (Source 1)
+*   `тут` (here) ★★
+*   `там` (there) ★★ (Source 1)
+*   `швидко` (quickly) ★ (Source 13)
+*   `повільно` (slowly) ★ (Source 13)
+*   `зараз` (now) ★★★ (Source 2, 10)
+*   `разом` (together) ★★ (Source 20)
+
+**Ключові фрази (Key Phrases):**
+*   `Як справи?` (How are things?) ★★★
+*   `Що нового?` (What's new?) ★★★ (Source 18)
+*   `О котрій годині?` (At what time?) ★★★ (Source 10)
+*   `До зустрічі.` (See you later.) ★★★ (Source 18)
+*   `На все добре.` (All the best / Goodbye) ★★ (Source 19)
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Dialogue Completion and Role-Play (Source 22, 31):** This exercise format requires active production and understanding of conversational flow.
+    *   **Prompt:** *Побудуйте діалог за зразком. Розіграйте діалог із сусідом / сусідкою за партою.* (Construct a dialogue based on the model. Act out the dialogue with your deskmate.)
+    *   **Example Model:**
+        — Як тебе звуть?
+        — Мене звуть … .
+        — Як твоє прізвище?
+        — Моє прізвище … .
+    *   **Pedagogical Value:** This simple format is easily adaptable for arranging a meeting. E.g., "— Ходімо в кіно. О котрій годині? — ...". It moves from controlled practice to free production.
+
+2.  **Dialogue Punctuation and Analysis (Source 7):** This focuses on the written conventions of dialogue, especially the vocative case comma.
+    *   **Prompt:** *Перепишіть діалог, розставляючи пропущені розділові знаки. Хто з подружок порушив етикет у спілкуванні?* (Rewrite the dialogue, inserting the missing punctuation marks. Which of the friends violated etiquette in the conversation?)
+    *   **Example Text:** `— Алло! Привіт Олю привіталася Оксана.` (Needs comma after `Привіт` and `Олю`).
+    *   **Pedagogical Value:** This connects the grammatical rule (vocative case) to its function in polite communication and its visual representation in text. It also introduces the meta-level of analyzing social appropriateness.
+
+3.  **Dialogue Transformation (Source 12):** This task tests deep comprehension by forcing a change in perspective.
+    *   **Prompt:** *Трансформуйте діалог у монолог і перекажіть його від імені: А. Давида (від першої особи); Б. Оксани (від третьої особи).* (Transform the dialogue into a monologue and retell it from the perspective of: A. David (first person); B. Oksana (third person).)
+    *   **Pedagogical Value:** A learner cannot complete this without fully understanding who said what and what the overall context is. It's an excellent comprehension check for a checkpoint module.
+
+4.  **Functional Questions about a Dialogue (Source 1, 10, 18):** A straightforward and effective way to check listening or reading comprehension.
+    *   **Prompt:** *Слухайте діалог і дайте відповідь на запитання: Коли буде вечірка?* (Listen to the dialogue and answer the question: When will the party be?) (Source 1). *Що вони будуть робити?* (What are they going to do?) (Source 10).
+    *   **Pedagogical Value:** It anchors the learning purpose. The learner is listening not just to words, but for specific, functional information needed to answer the question, mimicking real-life listening.
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/telling-time`
+- `grammar/a1/vocative-case`
+- `grammar/a1/locative-case`
+- `grammar/a1/ordinal-numbers`
+- `culture/etiquette-formal-informal`
 
 ---
 
-## Що ми знаємо? (What Do We Know?)
+### Вікі: pedagogy/a1/checkpoint-first-contact.md
 
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 7
-> **Score:** 0.25
->
-> 7
-> ІІ. Наша мова відображає наш світ. Ми даємо назви речам, 
-> які бачимо і які мають для нас значення. Це не новина. Ще в 
-> 1880-х роках антрополог* Франц Боас, вивчаючи побут інуїтів*, 
-> котрі живуть на півночі Канади, був заінтригований, дізна-
-> вшись, що їхня мова має спеціальне слово aqilokod на позна-
-> чення «снігу, що м’яко падає», та pieqnartoq — для «снігу, що 
-> добре годиться, аби їхати по ньому на ґринджолах*». Наші 
-> слова формують наші мрії та надії на майбутнє… (М. Вікінґ).
-> Запитання
-> Завдання
-> 1. Що в тексті для вас відоме, 
-> а що — нове?
-> 2. Чому північним народам так 
-> важливо мати в мові спеціальні 
-> слова для позначення снігу, 
-> а в українській мові таких слів 
-> немає?
-> 3. Як цей текст пов’язаний із 
-> темою уроку? 
-> 1. Як ви розумієте зміст пер-
-> шого речення?
-> 2.
-
-## Читання (Reading Practice)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 10
-> **Score:** 0.33
->
-> 10
-> ПІСЕННІ СКАРБИ РІДНОГО КРАЮ
-> Освіжає, звеселяє, молодить.
-> Серце завмирає, дух перехоплює. 
-> Краса.
-> 10.	 Домашнє завдання.
-> 1.	 Які українські традиції та обряди ви знаєте? Опишіть одну/один із них 
-> (усно).
-> 2.	 Дослідіть пісню «Ой весна, весна — днем красна» за планом. 
-> Ой весна, весна — днем красна 
-> — Ой весна, весна — днем красна. 
-> Що ж ти нам, весно, принесла?
-> — Принесла я вам літечко,
-> Ще й рожевую квіточку,
-> Хай вродиться житечко,
-> Ще й озимая пшениця,
-> І усякая пашниця. 
-> — Ой весна, весна, ти красна,
-> Що ти, весно красна, нам принесла? 
-> — Принесла я вам літечко,
-> Ще й запашненьке зіллячко,
-> Ще й зеленую травицю,
-> І холодную водицю. 
-> Принесла я вам ягнятко,
-> Ще й маленькеє телятко.
-
-## Граматика (Grammar Summary)
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 226
-> **Score:** 0.50
->
-> 226
-> 515   Прочитайте тексти. Визначте наміри мовців. Розподіліть ролі 
-> і прочитайте тексти виразно.
-> — Дай Боже щастя, 
-> дідусю!
-> — Дякую, внучку! Дай 
-> Боже і тобі!
-> — Зашпиліть куртку, 
-> бо застудитеся. Сьогодні 
-> холодно. І не нудно вам 
-> отут 
-> так 
-> замітати? 
-> Щодня одне й те саме.
-> — 
-> Ні, 
-> хлопчику, 
-> я люблю свою роботу. 
-> Подивися, яка чудова 
-> осінь. Яке гарне барвис-
-> те 
-> листя, 
-> як 
-> твій 
-> портфель. 
-> Уяви 
-> собі, 
-> що в світі нема двох 
-> однакових листочків, як 
-> і людей. Господь кожно-
-> го створив неповторним 
-> (І. Захаревич).
-> — Ви хоч раз були в зимовому 
-> гаю? 
-> — 
-> спитав 
-> Павлусь 
-> однокласників.
-> — Ні! — сказали в один голос.
-> Павлусь посміхнувся:
-> — Тоді ви ще не бачили справж-
-> ньої казки… Там тонкі берези, 
-> наче чорногузи, мерзнуть на одній 
-> нозі.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 45
-> **Score:** 0.33
->
-> В. Прочитайте текст удруге й докладно його перекажіть (усно).
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 252
-> **Score:** 0.33
->
-> 252
-> Відомості із синтаксису й пунктуації. Діалог . Тире при діалозі
-> — Чого ж так поспішаєш? — далі глузувала матуся, але 
-> видно було, що вона щиро тішиться за доньку. — Думаєш, зу-
-> мієш прочитати? Це ж ненависною англійською, яку ти так 
-> не хотіла вчити, ще й упиралася, наче віслючок! Пам’ятаєш?
-> — У-у-у, — протягла Ксеня, — годі вже! Давай листа! — 
-> І, відвоювавши законну здобич, метнулась до своєї кімнати.
-> (Оксана Лущевська)
-> Варіант 2
-> Лесик, Толя й два Володі
-> Сумували на колоді.
-> Лесик скаржився: «Хлоп’ята,
-> Страх як тяжко жить мені —
-> Слухай маму, слухай тата,
-> Умивайся день при дні.
-
-## Діалог (Connected Dialogue)
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 114
-> **Score:** 0.33
->
-> 114
-> Комунікативні можливості речень
-> 291   Прочитайте текст. Про що в ньому йдеться? Які емоції викликає 
-> у вас це свято? Які очікування і передчуття у вас напередодні 
-> Різдва? Які речення за метою висловлювання використовує 
-> письменниця? Чому? Напишіть, що для вас означає це свято.
-> Різдво для мене — це не просто біблійний сюжет, можли-
-> вість замислитися над мудрістю Божого промислу, занурити-
-> ся в його барвистість. Це набагато більше. Бо моєму Різдву 
-> не одна тисяча літ.
-
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 239
-> **Score:** 0.25
->
-> 235
-> 235
-> Зверніть увагу! 
-> Вибір того чи того стійкого етикетного вислову залежить від 
-> ситуації спілкування, а також від віку, соціального статусу, 
-> Люди, які володіють мовленнєвим етикетом, більш успішні й
-> швидше досягають порозуміння з іншими. Під час спіл ку ван-
-> ня можемо використовувати стійкі етикетні вислови. 
-> Етикетні
-> тематичні групи
-> Стійкі етикетні вислови
-> (формули спілкування)
-> Вітання
-> Добрий день! Добридень! Вітаю! Привіт! Добро-
-> го здоров’я! Моє шанування! Радий(-а) тебе ба-
-> чити! Здоровенькі були! Слава Україні! Героям
-> слава!
-> Прощання
-> До побачення! До зустрічі! Прощавайте! Щас-
-> ливо! Щасливої дороги! Бувайте здорові! На все 
-> добре! На зв’язку! На добраніч! Хай Бог помагає!
-> Вибачення
-> Пробачте. Перепрошую. Даруйте. Прошу виба-
-> чення. Мені дуже шкода. Прийміть мої виба-
-> чення.
-
-## Підсумок — Summary
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 3
-> **Score:** 0.25
->
-> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . . . 86
-> ФРАЗЕОЛОГІЯ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
-> Фразеологізми . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 88
-> Різновиди фразеологічних одиниць . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 96
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 4
-> **Score:** 0.50
->
-> 4
-> Зміст
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . 102
-> ФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ . . . . . . . . . 103
-> Фонетика. Звуки мовлення . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 104
-> Транскрипція  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 107
-> Голосні та приголосні звуки . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 110
-> Голосні наголошені й  ненаголошені  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
-> Особливості вимови ненаголошених  голосних . . . . . . . . . . . . . . .
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 188
-> **Score:** 0.33
->
-> Підсумкові тести  
-> 185
-> В  метелик виявився живим
-> Г  чоловік перепросив за скоєне
-> Завдання 3 
->  
-> Фразеологізм усе у твоїх руках означає 
-> А  треба планувати своє життя
-> Б  людина сама керує своєю долею
-> В  мрії завжди здійснюються
-> Г  ти сильніший за інших
-> Завдання 4
->  
-> Чи згодні ви з думкою, що ми самі керуємо нашим життям? Наведіть ар-
-> гументи на підтвердження своєї позиції  Згадайте ситуації, що доводять 
-> чи спростовують твердження 
-> Підсумкові тести
-> 1  Прийменниками є  усі слова в  рядку
-> А з, і, не
-> Б над, але, в
-> В якщо, поряд, же
-> Г понад, незважаючи на, у
-> 2  Прийменник є  в реченні
-> А Наш мозок наділений дивовижними можливостями.
-> Б Він спроможний працювати навіть уві сні.
-> В Є багато способів, як розвинути розумові здібності.
-> Г Щастя усміхається тим, хто пробує.
-
-## Grammar Reference
-
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 165
-> **Score:** 0.33
->
-> 161
-> 161
-> 
-> 
-> 
-> аби-
-> ані- де- чи- що- як-
-> аби
-> ані
-> де
-> чи
-> як
-> 
-> по-
-> -ому -ему (-єму) -и -е 
-> (-є)
-> по
+# Педагогіка A1: Checkpoint First Contact
 
 
-... (truncated for context window)
+
+## Методичний підхід (Methodological Approach)
+
+The Ukrainian pedagogical approach to teaching initial introductions is fundamentally communicative and context-driven. Even from the first lesson, the goal is to enable a learner to participate in a simple, formulaic dialogue (`діалог`). The core concepts of **ім'я** (first name), **прізвище** (surname), and **по батькові** (patronymic) are introduced as functional chunks of language needed to complete a real-world task, such as introducing oneself or filling out a simple form (Джерело: `4-klas-ukrayinska-mova-varzatska-2021-1_s0159`, `6-klas-ukrmova-zabolotnyi-2020_s0032`).
+
+Ukrainian textbooks for early grades (1-2) establish this pattern by immediately presenting model dialogues. They use a "question-and-answer" format that is easy to memorize and adapt (Джерело: `5-klas-ukrmova-uhor-2022-1_s0107`, `6-klas-ukrmova-betsa-2023_s0014`). For example, the structure `— Як тебе звуть? — Мене звуть ... .` is presented as a fixed pair to be practiced with a partner (`Розіграйте діалог із сусідом / сусідкою за партою`) (Джерело: `6-klas-ukrmova-betsa-2023_s0014`).
+
+Key methodological principles are:
+1.  **Dialogue First:** The primary mode of instruction is the dialogue or poly-dialogue (`полілог`), where students learn by playing roles in a given situation (`Ситуація`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `5-klas-ukrmova-avramenko-2022_s0011`). This makes the language immediately useful.
+2.  **Structural Repetition:** Core phrases like `Мене звати...` and `Моє прізвище...` are drilled through repetition, not grammatical analysis at first. The focus is on automaticity. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`).
+3.  **Immediate Introduction of Capitalization:** From the outset, learners are shown that names, patronymics, and surnames are proper nouns written with a capital letter (`пишуть з великої літери`) (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0070`, `2-klas-ukrmova-bolshakova-2019-2_s0023`). This is treated as a fundamental orthographic rule, not an advanced topic.
+4.  **Implicit Grammar:** The accusative case in `Мене звати...` and the vocative case in direct address (`Оксано!`) are introduced implicitly through model phrases. Formal grammatical explanation is delayed until the learner is comfortable with the functional use of the phrases (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `6-klas-ukrmova-litvinova-2023_s0148`).
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction of "first contact" language should follow a logical progression from simple to complex, mirroring the approach in Ukrainian native-speaker textbooks.
+
+1.  **Step 1: Foundational Phrases & Pronouns.** Start with greetings (`Добрий день!`) and the core construction `Мене звати...` (My name is...). This immediately introduces the personal pronoun in the accusative case (`мене`) in a fixed, unanalyzed chunk (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). Contrast `Як тебе звати?` (informal 'you') with `Як вас звати?` (formal/plural 'you').
+
+2.  **Step 2: Adding the Surname.** Introduce the concept of `прізвище` (surname) with the parallel construction `Моє прізвище...` (My surname is...). Practice this in a simple dialogue format (Джерело: `6-klas-ukrmova-betsa-2023_s0014`, `5-klas-ukrmova-uhor-2022-1_s0107`). At this stage, learners practice asking and answering both questions in a sequence.
+
+3.  **Step 3: The Vocative Case (Кличний відмінок) for Direct Address.** This is a critical element of natural Ukrainian speech and must be introduced early. Instead of just saying a name, learners must be taught to use the vocative form to call someone.
+    *   For feminine names ending in `-а`, it changes to `-о`: `Анна → Анно!`, `Оксана → Оксано!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   For masculine names ending in a consonant, it changes to `-е`: `Тарас → Тарасе!`, `Павло → Павле!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   Introduce formal address with `пан/пані`: `пане Іваненку`, `пані Оксано` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`). This immediately elevates the learner's politeness and authenticity.
+
+4.  **Step 4: Introducing the Patronymic (По батькові).** Explain that `по батькові` is a name derived from one's father's name and is used in formal or respectful situations. Show the full formal structure: `Прізвище, Ім’я, По батькові` (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`). Explain the common suffixes: `-ович` (masculine) and `-івна` (feminine) (Джерело: `6-klas-ukrmova-betsa-2023_s0016`). The goal at A1 is recognition, not productive use. Learners should understand what it is when they see it on a form or hear it in a formal introduction.
+
+5.  **Step 5: Contextual Application.** Embed these skills in practical scenarios like booking a table (`Скажіть будь ласка ваше прізвище`) or making a doctor's appointment (`ваше прізвище ім'я і номер телефону будь ласка`) (Джерело: `ext-ulp_youtube-120`, `ext-ulp_youtube-58`). This reinforces the utility of the language.
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers often make predictable errors when learning to introduce themselves. The curriculum should proactively address these.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я звати Анна.` | `Мене звати Анна.` | This is a direct translation of "I am called Anna." English speakers must learn the fixed Ukrainian construction which uses the accusative pronoun `мене` (me). (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`) |
+| `Привіт, Марія.` | `Привіт, Маріє!` | Forgetting the vocative case (`Кличний відмінок`) in direct address. It sounds unnatural and blunt to a native speaker. The ending must change (`-ія` -> `-іє`, `-а` -> `-о`, consonant -> `-е`). (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`) |
+| `Моє ім'я є Тарас.` | `Моє ім'я — Тарас.` or `Мене звати Тарас.` | Overuse of the verb `бути` (`є`) where it's typically omitted in the present tense for identity statements. The dash (`—`) is the correct punctuation, or the `Мене звати` structure should be used. <!-- VERIFY --> |
+| `Прізвище моє Ковальчук.` | `Моє прізвище — Ковальчук.` | Unnatural word order based on English. While grammatically possible, the standard, neutral response is `Моє прізвище...` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). |
+| "What is your middle name?" (asking about `по батькові`) | "Як вас по батькові?" | Equating the patronymic with an Anglo-American "middle name." A middle name is a second personal name; a patronymic is a grammatical and cultural construct derived from the father's name. This distinction is crucial. (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`) |
+| `Пан Шевченко...` (when ordering should be name first) | `Пан Тарас...` | In many formal contexts, the correct address is `пан/пані` + First Name. However, in official documents, it is always Last Name first (`прізвище, ім'я`) (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0278`, `9-klas-ukrajinska-mova-avramenko-2017_s0211`). The brief should clarify the context. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian from a decolonized perspective is non-negotiable. This is especially important in foundational topics where Russian-centric habits can form.
+
+1.  **Teach Ukrainian on Its Own Terms:** Never introduce Ukrainian letters or sounds as "like the Russian X." Learners must build a clean Ukrainian phonetic and orthographic foundation from zero. Russian has different letters (e.g., `ы`, `э`) and different pronunciations for shared letters (e.g., `и`, `г`). Using Russian as a reference point pollutes the learning process from day one.
+2.  **Patronymics are East Slavic, Not Russian:** Explicitly state that patronymics (`по батькові`) are a feature of Ukrainian, Belarusian, and Russian cultures. Frame it as a shared heritage, not a Russian import. Highlight the distinct Ukrainian suffixes (`-ович`, `-івна`) as seen in textbooks (Джерело: `6-klas-ukrmova-betsa-2023_s0016`).
+3.  **Correct Transliteration:** Emphasize the official Ukrainian transliteration system (and the common informal one) which differs from Russian. Key examples: `Г` is `H`, not `G`; `И` is `Y`, not `I`; `І` is `I`. This prevents learners from writing Ukrainian names with Russian spelling conventions.
+4.  **Surname Origins:** When discussing surnames, highlight authentic Ukrainian origins related to professions (`Коваль`, `Бондар`, `Гончар`), features, or Cossack history, not just those shared with Russian (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0025`, `3-klas-ukrainska-mova-vashulenko-2020-2_s0158`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is the absolute essential minimum for the "First Contact" module.
+
+*   **Іменники (Nouns):**
+    *   ім'я ★★★ (first name)
+    *   прізвище ★★★ (surname)
+    *   по батькові ★★ (patronymic)
+    *   учень / учениця ★★★ (student m/f)
+    *   вчитель / вчителька ★★★ (teacher m/f)
+    *   друг / подруга ★★ (friend m/f)
+    *   пан / пані / панно ★★★ (Mr. / Mrs. / Miss)
+    *   номер (телефону) ★★ (phone number)
+*   **Дієслова (Verbs):**
+    *   звати ★★★ (to be called)
+    *   бути ★★★ (to be - often omitted in present)
+    *   знати ★★ (to know)
+    *   жити ★ (to live)
+*   **Займенники (Pronouns):**
+    *   я, ти, він, вона, ми, ви, вони ★★★ (Nominative: I, you, he, she, etc.)
+    *   мене, тебе, його, її, нас, вас, їх ★★★ (Accusative: me, you, him, her, etc.)
+    *   мій/моя/моє, твій/твоя/твоє ★★★ (my, your)
+*   **Ключові фрази (Key Phrases):**
+    *   Добрий день. / Привіт. ★★★
+    *   Як тебе/вас звати? ★★★
+    *   Мене звати... ★★★
+    *   Як твоє/ваше прізвище? ★★★
+    *   Моє прізвище... ★★★
+    *   Дуже приємно. / Радий (рада) знайомству. ★★
+    *   Так / Ні ★★★
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises are models for the content writer, demonstrating the native Ukrainian pedagogical methodology.
+
+1.  **Basic Dialogue Completion (from Source `6-klas-ukrmova-betsa-2023_s0014`)**
+    *   **Task:** Побудуйте діалог за зразком. Запишіть. Розіграйте діалог із сусідом / сусідкою за партою.
+    *   **Model:**
+        > — Як тебе звуть?
+        > — Мене звуть … .
+        > — Як твоє прізвище?
+        > — Моє прізвище … .
+    *   **Pedagogical Value:** This simple, repetitive task builds automaticity for the most fundamental introductory exchange. It encourages active, paired practice.
+
+2.  **Identifying Name Components (from Source `5-klas-ukrmova-uhor-2022-1_s0107`)**
+    *   **Task:** Уточніть, де ім’я, де по батькові, де прізвище.
+    *   **Model:**
+        > — Франко — це ім’я?
+        > — Ні, це прізвище. Його звати Іван Якович.
+    *   **Pedagogical Value:** This exercise moves from simple production to comprehension and analysis. It teaches learners to differentiate between the three components of a full formal name and introduces the structure `Його звати...`.
+
+3.  **Table Fill-in (from Source `2-klas-ukrmova-bolshakova-2019-2_s0023`)**
+    *   **Task:** Заповни таблицю за зразком.
+    *   **Input:** `Григоренко Святослав Андрійович, Телюк Наталія Григорівна, Шевченко Тарас Григорович.`
+    *   **Table Structure:**
+| Прізвище | Ім’я | По батькові |
+| :--- | :--- | :--- |
+| Бондар | Лариса | Вікторівна |
+    *   **Pedagogical Value:** This is a classic exercise for reinforcing the structure and order of formal Ukrainian names and practicing reading/writing them correctly.
+
+4.  **Contextual Role-Play (from Source `6-klas-ukrmova-zabolotnyi-2020_s0032`)**
+    *   **Task:** Складіть діалог (6–8 реплік) в офіційно-діловому стилі... Ви прийшли записатися до бібліотеки. Повідомте мету свого візиту, а також на прохання бібліотекарки – своє прізвище та ім’я, дату народження, місце проживання (для оформлення картки читача).
+    *   **Pedagogical Value:** This places the language skill in a highly realistic, official context (`офіційно-діловий стиль`). It moves beyond simple introductions to a multi-turn conversation where personal information is requested and provided for a clear purpose. This demonstrates the practical value of what has been learned.
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/alphabet`
+- `pedagogy/a1/greetings-and-farewells`
+- `grammar/nouns/vocative-case`
+- `grammar/pronouns/personal-pronouns`
+- `culture/names-and-address`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -619,7 +564,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Граматика (Grammar Summary)` (~200 words)
 - `## Діалог (Connected Dialogue)` (~200 words)
 - `## Підсумок — Summary` (~150 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1000 words minimum.
 
@@ -677,7 +621,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -778,40 +722,44 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Що ми знаємо? (~220 words total)
-- P1 (~60 words): Intro framing this as a checkpoint, not a test — a chance to see how far you've come. Pose five self-check questions as a numbered checklist, one per M42–M46 skill. Examples: "Можу звернутися до друга — Тарасе! Можу дати прохання — Принеси! Можу з'єднати думки — бо, але."
-- P2 (~80 words): Brief answer key for each question, showing the pattern learned. Vocative: Олена→Олено, Тарас→Тарасе, Андрій→Андрію. Imperative: читати→читай/читайте, дати→дай/дайте. Conjunctions: і/та (addition), а (contrast), але (but), бо (reason). Subordinators: що, де, коли + comma. Holiday greeting: З Різдвом!, З Великоднем!
-- P3 (~80 words): Encouragement paragraph — if you can tick each box, you have the full A1.7 communication toolkit. Emphasises the achievement: you can now address real people by name, tell them what to do, explain why, and build longer thoughts. These five tools together make you sound like someone who actually speaks Ukrainian, not someone reading from a phrasebook.
+- P1 (~100 words): Welcome the student to the A1.7 Checkpoint. Explain that this module is a "Communication Hub" where we integrate the social skills learned in M42–M46. Introduce the "Mission": You are helping friends organize a school event, which requires addressing people, giving clear orders, and explaining plans.
+- P2 (~120 words): A series of rhetorical self-check questions to activate prior knowledge. Ask the learner if they remember how to call a friend (Тарасе! Олено!), how to ask for help (Дай! Принеси!), and how to explain reasons (бо я не знаю..., тому що...). Mention the cultural context of holiday greetings (З Різдвом!).
 
-## Читання (~280 words total)
-- P1 (~30 words): Short reading setup — read the text below; notice how all five A1.7 tools appear naturally together in one situation.
-- Reading text (~200 words): Олена телефонує Тарасу напередодні Різдва. Uses: vocative (Тарасе!), imperative (Прийди до мене! Принеси кутю, будь ласка!), coordinating conjunctions (бо ми святкуємо разом, і я вже маю свічки, але не знаю, скільки людей прийде), subordinating conjunctions (Я думаю, що це буде гарне свято. Скажи, де ти будеш двадцять четвертого. Я не знаю, коли ти вільний.), holiday vocabulary (Різдво, кутя, колядки, З Різдвом!). Two paragraphs of running prose (not bullet points), ~100 words each — Олена's invitation in paragraph one, Тарас's response accepting and asking questions in paragraph two.
-- P2 (~50 words): Two comprehension prompts in Ukrainian to check understanding: Що просить Олена? Коли Тарас вільний? Learners answer in a single sentence — this previews the activity that follows.
-- Exercise 1 — fill-in (vocative + imperative): 8 items. Pattern: ___(Олена), ___(принести) плакати! / ___(Тарас), ___(написати) список! Learner writes the correct vocative and ти-imperative in each blank.
+## Читання (~270 words total)
+- P1 (~100 words): Introduction to the reading text. Set the scene: Olena is calling her friend Taras to plan a community Christmas gathering at the school. This text will demonstrate how all communication tools (vocative, imperative, conjunctions) work together in a single flow.
+- P2 (~170 words): The Reading Text: "Лист або дзвінок Олени". Olena writes/speaks to Taras. Key sentences: "Тарасе, привіт! Прийди раніше, будь ласка. Принеси плакати і квитки. Я знаю, що ти маєш напої, але нам потрібні стільці, бо людей буде багато. Я хочу, щоб ми святкували Різдво разом. Скажи, коли ти будеш у школі." Includes vocabulary: плакат (poster), квиток (ticket), напій (drink), стілець (chair).
 
-## Граматика (~220 words total)
-- P1 (~50 words): Mini-table: Vocative endings. Three rows — -а stem → -о (Олена→Олено, мама→мамо), hard consonant stem → -е (Тарас→Тарасе, друг→друже), soft/й stem → -ю (Андрій→Андрію, учитель→учителю). One sentence of usage note: use vocative whenever you call someone directly.
-- P2 (~50 words): Mini-table: Imperative. Two columns — ти form and ви form. Rows: читати→читай/читайте, писати→пиши/пишіть, дати→дай/дайте, принести→принеси/принесіть. Usage note: ти = friend/child, ви = adult/polite. будь ласка softens any request.
-- P3 (~60 words): Two-row summary of conjunctions. Coordinating: і/та (and — adds), а (and/but — contrasts: Олена йде, а Тарас залишається), але (but — contradicts: Я хочу прийти, але я хворий), бо (because: Принеси кутю, бо я не вмію варити). Subordinating: що (Я знаю, що ти тут.), де (Скажи, де ти.), коли (Я не знаю, коли ти вільний.) — comma before all three.
-- Exercise 2 — quiz (choose the conjunction): 8 items. Pattern: Я не йду, ___ хворий. (і / а / але / бо) / Він сказав, ___ прийде. (що / де / коли / але). One correct answer per item.
-- P4 (~60 words): Holiday greeting formula: З + noun in instrumental case. З Різдвом! З Великоднем! З Новим роком! З днем народження! One sentence explaining the pattern: take the holiday name, put it in instrumental (Різдво→Різдвом, Великдень→Великоднем), add З before it. This formula works for every Ukrainian celebration.
-- Exercise 3 — fill-in (subordinating conjunctions): 6 items. Pattern: Я знаю, ___ він тут. / Скажи, ___ ти прийдеш. / Я не розумію, ___ вона плаче. Learner writes що, де, or коли.
+## Граматика (~240 words total)
+- P1 (~60 words): Vocative Case Recap. Review the three main patterns for A1 names: -а becomes -о (Оксано, Олено), hard consonants add -е (Петре, Тарасе, друже), and soft/й endings change to -ю (Андрію, матусю). Emphasize that in Ukraine, calling someone by their name in the Nominative (Оксана!) sounds like a command or a list, whereas the Vocative is for real communication.
+- P2 (~60 words): Imperative Mood Recap. Review forms for "ти" (читай, пиши, роби) and "ви" (читайте, пишіть, робіть). Remind learners to add "будь ласка" (please) for politeness. Contrast the informal "Дай" with the formal "Дайте".
+- <!-- INJECT_ACTIVITY: vocative-imperative-practice --> [fill-in, focus: Vocative + Imperative forms in a school fair context, 8 items]
+- P3 (~60 words): Conjunctions & Linking. Review the coordinating conjunctions: і/та (addition), а (mild contrast/and), але (strong contrast/but), and бо/тому що (reason/because). Explain when to use "а" (e.g., Мій чай гарячий, а твій холодний).
+- <!-- INJECT_ACTIVITY: conjunctions-quiz --> [quiz, focus: Choosing the correct conjunction (і / а / але / бо), 8 items]
+- P4 (~60 words): Complex Sentences with що, де, коли. Review how these words link a main clause to a sub-clause. CRITICAL: Reiterate the rule about the mandatory comma before these conjunctions in Ukrainian. Examples: "Я думаю, що..." (I think that...), "Вона знає, де..." (She knows where...), "Скажи, коли..." (Tell [me] when...).
+- <!-- INJECT_ACTIVITY: complex-sentences-fill-in --> [fill-in, focus: Completing sentences with що, де, or коли, 6 items]
 
-## Діалог (~220 words total)
-- Setup (~20 words): Context sentence: Організатор готує шкільний ярмарок. Він/вона розподіляє завдання між волонтерами.
-- Dialogue (~160 words): Six exchanges. Turn 1: Організатор addresses Олена by vocative + imperative: — Олено, принеси, будь ласка, плакати, бо стіл уже готовий. Turn 2: Олена confirms + asks where: — Добре, принесу! Скажи, де покласти їх. Turn 3: Організатор answers with де + addresses Тарас: — Ось біля входу. Тарасе, постав столи, але спочатку перевір, чи є стільці. Turn 4: Тарас: — Я вже знаю, де вони. І я маю квитки та напої — все готово. Turn 5: Організатор: — Чудово! Я думаю, що ярмарок буде гарний, бо ми добре підготувалися. Turn 6: Both volunteers: — З ярмарком! / З успіхом!
-- P1 (~40 words): Post-dialogue note — circle every vocative, imperative, conjunction, and subordinating clause you see. Count: you should find at least 2 vocatives, 3 imperatives, 3 coordinating conjunctions, and 3 subordinating clauses. This is what natural A1.7 Ukrainian looks like in action.
-- Exercise 4 — quiz (holiday match): 8 items. Match greeting to occasion: З Різдвом! → image/label of Різдво; З Великоднем! → Великдень; З Новим роком! → Новий рік; З днем народження! → birthday; etc. Tests holiday vocabulary from M46 in context.
+## Діалог (~240 words total)
+- P1 (~60 words): Context for the dialogue. Taras and Olena are finalizing their plans for the holiday gathering. They need to confirm the time, place, and what to bring.
+- P2 (~120 words): The Dialogue: "Різдвяні плани". 
+    — Олено, привіт! Ти знаєш, що скоро Різдво?
+    — Так, Тарасе! Я думаю, що ми можемо святкувати разом.
+    — Добре! Скажи, коли ти вільна, бо я хочу запросити друзів.
+    — Я вільна двадцять четвертого. Але я не знаю, де ми будемо.
+    — Ходімо до мене! Принеси кутю, будь ласка.
+    — Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом!
+- P3 (~60 words): A brief cultural note on holiday greetings. Explain the formula "З + Instrumental case" (З Різдвом, З Великоднем, З Новим роком). Mention that responding with "Навзаєм!" (Likewise!) or "Вас також!" (You too!) is standard.
+- <!-- INJECT_ACTIVITY: holiday-greeting-match --> [quiz, focus: Matching the specific greeting to the holiday (e.g., З Різдвом! -> 7 січня), 8 items]
 
-## Підсумок (~150 words total)
-- P1 (~150 words): Achievement list — bulleted, not prose, as the plan specifies:
-  - ✅ Ти можеш звертатися до людей по імені: Олено! Тарасе! Андрію!
-  - ✅ Ти можеш попросити когось щось зробити: Принеси! Напиши! Дайте, будь ласка!
-  - ✅ Ти можеш з'єднувати думки: і, а, але, бо — чотири різні зв'язки.
-  - ✅ Ти можеш будувати складні речення: Я знаю, що… Скажи, де… Я не знаю, коли…
-  - ✅ Ти можеш говорити про українські свята та вітати людей: З Різдвом! З Великоднем!
-  - 👉 Далі: A1.8 — минулий і майбутній час, і фінальний випускний модуль A1.
+## Підсумок (~150 words)
+- P1 (~150 words): Achievement checklist for phase A1.7 Communication.
+    - You can address people correctly using the vocative case (Олено! Тарасе!).
+    - You can give instructions and make requests using the imperative mood (Читай! Дайте!).
+    - You can connect your ideas into longer sentences using conjunctions (і, а, але, бо).
+    - You can build complex sentences with the words що, де, коли (and you remember the comma!).
+    - You know how to greet people for major Ukrainian holidays using the Instrumental case.
+    Next: A1.8 — The final stage of A1, where we tackle the Past and Future tenses!
 
-Grand total: ~1090 words
+Grand total: ~1120 words
 </skeleton>
 
 ## Output Format

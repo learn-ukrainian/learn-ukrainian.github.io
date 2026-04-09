@@ -2,56 +2,48 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: All 4 content_outline sections present with correct headings. All required
-    vocabulary (у/в, і/й, з/із/зі) and all recommended vocabulary (Київ, Львів, офіс,
-    парк, театр) appear in prose. Word count 14
+  score: 10
+  evidence: Covered all alternation rules (у/в, і/й, з/із/зі), included required dialogues,
+    and cited both textbook references. Word count exceeded the target (1642 vs 1200)
+    without fluff.
 - dimension: 2
   name: Linguistic accuracy
-  score: 6
-  evidence: 'Three factual errors in rule formulation: (1) "Use й between vowels"
-    contradicts its own example "вона й він — consonant В after" — Glazova Grade 10
-    confirms the rule is "after a vowel, use й"; (2) "R'
+  score: 5
+  evidence: 'CRITICAL ERRORS: Falsely corrected "Я працюю в городі" to "у" (it should
+    be "в" after a vowel); claimed "Києві" starts with an "и" sound; falsely claimed
+    "У" is always used at the start of sentences ('
 - dimension: 3
   name: Pedagogical quality
-  score: 7
-  evidence: 'Strong PPP flow: dialogues present the situation, rules extract the pattern,
-    self-check provides practice. The proofreading scenario is excellent pedagogy
-    — learner corrects errors, which mirrors how '
+  score: 8
+  evidence: The V-C-V sandwich metaphor is excellent. However, the factual errors
+    in the examples contradict the rules, which would confuse a learner.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'All required vocab used naturally in prose: у/в alternation demonstrated
-    extensively, і/й throughout dialogues and rules, з/із/зі in dedicated section.
-    All recommended: Київ (dialogues), Львів (dialog'
+  score: 10
+  evidence: Successfully integrated required words (у/в, і/й, з/із/зі) and recommended
+    words (Київ, Львів, офіс, парк, театр) naturally into the prose.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 markers match 4 plan activity_hints exactly in type and focus. Well-distributed:
-    one per teaching section. Self-check in Summary provides 7 inline items testing
-    all three alternation pairs with expl'
+  score: 10
+  evidence: All 4 exercise markers from the plan are present and placed exactly where
+    they should be after the relevant theory sections.
 - dimension: 6
   name: Engagement & tone
   score: 9
-  evidence: No motivational openers, no meta-commentary, no "Let us explore." The
-    proofreading scenario is engaging and natural. Cultural reference to "солов'їна
-    мова" is specific and earned — placed at the end a
+  evidence: The tone is warm and encouraging. "Three distinct, well-oiled gears" is
+    a great metaphor.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown with all 4 H2 headings matching plan sections. No duplicate
-    summaries, no meta-commentary sections, no stray tags. Word count 1420 within
-    target range (1200 minimum). Dialogue formattin
+  evidence: Clean markdown, logical flow, word count well above the minimum threshold.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented entirely on its own terms. No "like Russian" comparisons.
-    Милозвучність explained as an inherent feature of Ukrainian, not in contrast to
-    another language. "Солов'їна мова" referen
+  evidence: Focused entirely on Ukrainian phonetics without framing it as an exception
+    to other languages.
 - dimension: 9
-  name: Dialogue quality
-  score: 9
-  evidence: Named speakers (Дарина, Олексій) with distinct roles — Дарина as the corrector
-    with sharper ears, Олексій as the writer learning. Multi-turn exchanges with natural
-    reactions ("Стоп!", "Чому?", "Зрозум
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogue fits the "proofreading" prompt well, though it suffers from the
+    linguistic error identified in Dimension 2.
 findings: []

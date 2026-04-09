@@ -1,44 +1,49 @@
 ## Linguistic Scan
-No major linguistic errors found. Minor stylistic polish items identified.
+
+No linguistic errors found. The Ukrainian text uses correct grammar, vocabulary, and authentic phrasing suitable for the A1.2 level. 
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: group-sort-vocab-categories -->` is present after the first section ( Що ми знаємо?). Matches plan.
-- `<!-- INJECT_ACTIVITY: quiz-gender-agreement -->` is present after the grammar summary. Matches plan.
-- `<!-- INJECT_ACTIVITY: quiz-singular-plural -->` is present after the grammar summary. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->` is present after the dialogue. Matches plan.
-Markers are well distributed and match the hints.
+
+- `<!-- INJECT_ACTIVITY: group-sort-categories -->` matches plan hint #3 (group-sort) and is placed correctly after the introductory self-check questions.
+- `<!-- INJECT_ACTIVITY: transform-plural-sentences -->` matches plan hint #4 (plural quiz) and is placed correctly after the reading section that highlights plurals.
+- `<!-- INJECT_ACTIVITY: quiz-agreement-pairs -->` matches plan hint #1 (agreement quiz) and is placed correctly after the grammar summary.
+- `<!-- INJECT_ACTIVITY: fill-in-market-dialogue -->` matches plan hint #2 (dialogue fill-in) and is placed correctly after the market dialogue.
+
+All markers are present, correctly conceptualized, and logically placed.
 
 ## Scores
+
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers all 6 points and themes from the plan. Deducting 1 point because the deterministic word count (1483) is >20% over the target (1200). |
-| 2. Linguistic accuracy | 9/10 | Good use of target grammar. Deducting 1 point for a minor stylistic calque ("На столі є лампа") and a missing typological dash in parallel syntax ("Та біла. А ця — синя"). |
-| 3. Pedagogical quality | 10/10 | Excellent summary format for a Checkpoint. Clear patterns, strong rule definitions, and highly contextual examples that stick strictly to M08-M13 limits. |
-| 4. Vocabulary coverage | 10/10 | Required cultural vocab (вишиванка, глечик, писанки, намисто) effectively contextualized in the market dialogue. Good reuse of colors and numbers. |
-| 5. Exercise quality | 10/10 | All 4 activity markers injected at the correct logical points (after instruction/review blocks). |
-| 6. Engagement & tone | 9/10 | Conversational and supportive tone. A little bit of "telling instead of showing" at the end ("Your vocabulary milestone is real..."), but acceptable for a checkpoint milestone. |
-| 7. Structural integrity | 9/10 | Clean Markdown and good flow, but deducting 1 point due to exceeding the word count budget significantly (+283 words). |
-| 8. Cultural accuracy | 10/10 | Excellent authentic cultural details regarding ярмарки, вишиванки, and глечики. |
-| 9. Dialogue & conversation quality | 10/10 | Natural shopping interaction. Good illustration of "цей" vs "той" distance mechanics in practice. |
+| 1. Plan adherence | 10/10 | Covers all 6 grammar/review points from the plan. Adapts the dialogue perfectly to the `dialogue_situations` setting (market, crafts) rather than the generic placeholder text. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, calques, or grammatical errors. Correct use of plurals with numbers (два стільці, три сині книги) and adjectives (мале, білі). |
+| 3. Pedagogical quality | 10/10 | Excellent PPP flow. The grammar section clearly breaks down noun endings by gender with immediate examples (стіл, ручка, дзеркало) before explaining adjective agreement. |
+| 4. Vocabulary coverage | 10/10 | All core cultural items mentioned in the plan's dialogue setting (вишиванка, глечик, намисто, писанки) are used naturally in the dialogue. |
+| 5. Exercise quality | 10/10 | Four activity markers are present, mapped precisely to the correct concepts, and placed immediately after the relevant teaching sections. |
+| 6. Engagement & tone | 8/10 | Generally encouraging, but the opener uses gamified/cliché phrasing: "You have reached a significant milestone in your Ukrainian learning journey." |
+| 7. Structural integrity | 8/10 | The module is structurally sound and well over the word count target (1514 words), but contains a dangling, incomplete sentence fragment: "If you answered yes to these questions,  To truly consolidate..." |
+| 8. Cultural accuracy | 10/10 | The dialogue authentically references a Ukrainian "ярмарок" and specific cultural crafts, teaching numbers and colors within a culturally accurate context. |
+| 9. Dialogue & conversation quality | 9/10 | The conversation at the market is natural, using appropriate demonstratives and prices in a realistic shopping scenario ("Одне намисто — двісті гривень. У мене є триста гривень. Купуємо!"). |
 
 ## Findings
 
-[2. Linguistic accuracy] [minor]
-Location: Читання (Reading Practice) - `На столі є лампа. Ця лампа біла.`
-Issue: "На столі є лампа" is a slight calque of English "there is a lamp on the table". In Ukrainian, for objects located somewhere, the verb of presence 'є' is typically omitted ("На столі лампа") unless emphasizing existence vs absence.
-Fix: Remove "є" for a more natural nominal sentence.
+[7. Structural integrity] [major]
+Location: "If you answered yes to these questions,  To truly consolidate this knowledge, we need to sort the words you already know into logical categories."
+Issue: Incomplete, dangling sentence fragment resulting in a double space and abrupt transition.
+Fix: Complete the sentence logically by adding "you are doing great!".
 
-[2. Linguistic accuracy] [minor]
-Location: Діалог - `> **Катя:** Та біла. А ця — синя й червона.`
-Issue: Missing typological dash for the omitted verb in the parallel structure ("Та біла" vs "А ця — синя").
-Fix: Add the dash to "Та — біла."
+[6. Engagement & tone] [minor]
+Location: "You have reached a significant milestone in your Ukrainian learning journey. By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment."
+Issue: Gamified and cliché "learning journey" phrasing, which violates the tone guidelines.
+Fix: Remove the first sentence entirely to start with a stronger, more direct opening.
 
 ## Verdict: REVISE
-The module is high-quality, but there are minor linguistic and stylistic fixes required before it passes the quality gate.
+
+The module is linguistically flawless, perfectly adheres to the A1.2 checkpoint parameters, and incorporates the cultural vocabulary naturally. However, the structural artifact (dangling sentence) and the minor tone issue must be fixed before publishing.
 
 <fixes>
-- find: "На столі є лампа. Ця лампа біла."
-  replace: "На столі лампа. Ця лампа біла."
-- find: "**Катя:** Та біла. А ця — синя й червона. *(That one is white. And this one is blue and red.)*"
-  replace: "**Катя:** Та — біла. А ця — синя й червона. *(That one is white. And this one is blue and red.)*"
+- find: "If you answered yes to these questions,  To truly consolidate this knowledge,"
+  replace: "If you answered yes to these questions, you are doing great! To truly consolidate this knowledge,"
+- find: "You have reached a significant milestone in your Ukrainian learning journey. By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment."
+  replace: "By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment."
 </fixes>

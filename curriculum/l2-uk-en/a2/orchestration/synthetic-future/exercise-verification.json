@@ -1,0 +1,138 @@
+{
+  "total_items": 130,
+  "grounded_items": 110,
+  "ungrounded": [
+    {
+      "word": "план",
+      "exercise_type": "fill-in",
+      "context": "За хвилину я ____ тобі свій план.",
+      "role": "context"
+    },
+    {
+      "word": "додому",
+      "exercise_type": "fill-in",
+      "context": "О сьомій годині я ____ додому.",
+      "role": "context"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "group-sort",
+      "context": "будеш купувати",
+      "role": "answer"
+    },
+    {
+      "word": "мені",
+      "exercise_type": "fill-in",
+      "context": "Вона ____ допомагати мені щодня.",
+      "role": "context"
+    },
+    {
+      "word": "купимо",
+      "exercise_type": "quiz",
+      "context": "Ми (будемо купувати / купимо) фрукти щодня.",
+      "role": "context"
+    },
+    {
+      "word": "допоможеш",
+      "exercise_type": "quiz",
+      "context": "Якщо ти (будеш допомагати / допоможеш) мені, ми підемо в кін",
+      "role": "context"
+    },
+    {
+      "word": "швидко",
+      "exercise_type": "quiz",
+      "context": "Я швидко (напишу / буду писати) цей текст.",
+      "role": "context"
+    },
+    {
+      "word": "попрацює",
+      "exercise_type": "quiz",
+      "context": "Вона (буде працювати / попрацює) в офісі цілий день.",
+      "role": "context"
+    },
+    {
+      "word": "офісі",
+      "exercise_type": "quiz",
+      "context": "Вона (буде працювати / попрацює) в офісі цілий день.",
+      "role": "context"
+    },
+    {
+      "word": "зустрінуться",
+      "exercise_type": "quiz",
+      "context": "Вони (будуть зустрічатися / зустрінуться) часто.",
+      "role": "context"
+    },
+    {
+      "word": "казати",
+      "exercise_type": "quiz",
+      "context": "Я (скажу / буду казати) тобі свій план зараз.",
+      "role": "context"
+    },
+    {
+      "word": "воно",
+      "exercise_type": "match-up",
+      "context": "він/вона/воно",
+      "role": "answer"
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "error-correction",
+      "context": "Завтра я буду прочитати цікаву статтю.",
+      "role": "context"
+    },
+    {
+      "word": "дивитися",
+      "exercise_type": "error-correction",
+      "context": "будемо дивитися",
+      "role": "answer"
+    },
+    {
+      "word": "фільми",
+      "exercise_type": "error-correction",
+      "context": "Кожного вечора ми подивимося фільми.",
+      "role": "context"
+    },
+    {
+      "word": "обіцяю",
+      "exercise_type": "error-correction",
+      "context": "Я обіцяю, що буду зробити салат.",
+      "role": "context"
+    },
+    {
+      "word": "утворюється",
+      "exercise_type": "true-false",
+      "context": "Простий майбутній час утворюється від дієслів доконаного вид",
+      "role": "context"
+    },
+    {
+      "word": "дієслів",
+      "exercise_type": "true-false",
+      "context": "Простий майбутній час утворюється від дієслів доконаного вид",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Форма «я буду написати» є абсолютно правильною в українській",
+      "role": "context"
+    },
+    {
+      "word": "дієсловом",
+      "exercise_type": "true-false",
+      "context": "Складений майбутній час (з дієсловом «бути») показує довгий ",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "обіцяти",
+      "планувати",
+      "прибрати",
+      "приїхати",
+      "сказати"
+    ]
+  },
+  "all_grounded": false
+}

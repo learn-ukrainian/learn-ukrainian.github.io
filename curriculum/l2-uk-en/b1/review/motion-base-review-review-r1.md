@@ -1,66 +1,95 @@
 ## Linguistic Scan
-No linguistic errors found.
+Linguistic scan completed. Identified several critical linguistic errors and Russicisms:
+- The verb "знаходитися" is repeatedly used to indicate state or location (a common calque of the Russian "находиться"). Ukrainian requires "перебувати" or "бути".
+- The construction "давайте" + verb (e.g., "давайте подивимося") is a calque of Russian imperative ("давайте посмотрим"). The correct Ukrainian form is the synthetic imperative (подивімося). 
+- Two critical typographical errors found: "поїздам" (instead of "поїздом") and "Щщо" (instead of "Що").
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz, Unidirectional choice with "зараз" or "в цей момент" -->`: Correctly placed after the unidirectional section. Focus matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in, Conjugate іти/їхати/бігти in present and past -->`: Correctly placed. Focus matches plan.
-- `<!-- INJECT_ACTIVITY: match-up, Match unidirectional with multidirectional pairs -->`: Placed after multidirectional section. Good logic.
-- `<!-- INJECT_ACTIVITY: group-sort, Sort verb forms into Unidirectional and Multidirectional -->`: Correctly placed. Tests the core classification logic.
-- `<!-- INJECT_ACTIVITY: quiz, Choose correct carrying/leading verb pair based on context -->`: Tests the carrying/leading group. 
-- `<!-- INJECT_ACTIVITY: fill-in, Fill in prepositions and correct case endings (Gen/Acc) for motion -->`: Correctly placed after prepositions section.
-- `<!-- INJECT_ACTIVITY: error-correction, Fix sentences where uni/multi verbs were swapped -->`: Placed in the final practice section.
-- `<!-- INJECT_ACTIVITY: free-write, Мій звичайний день - describe movement using 4+ pairs -->`: Good final synthesis task.
-
-All 8 requested activity hints from the plan are represented with accurately placed markers that test the immediately preceding concepts.
+The exercise logic is generally good, but there are structure mismatches with the plan. 
+- The plan specified 6 activity markers. However, 7 were generated, including an unprompted `fill-in-prepositions-motion` marker. 
+- The `fill-in-conjugation-one-way` marker is placed too early (right after section 2), meaning the student is tested on conjugations before learning the multidirectional verbs in section 3. The plan required a conjugation test of the motion verbs in present tense (implicitly both groups).
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | Three plan elements were completely missed: 1) The required `dialogue_situations` between a couple planning their morning commute. 2) The Вашуленко Grade 2 polysemy examples (`іде зима, іде час`). 3) The `під`/`за` spatial preposition shift from Instrumental (location) to Accusative (direction). |
-| 2. Linguistic accuracy | 10/10 | Exceptional. Perfectly explains complex phonetic alternations (д→дж, зд→ждж, с→ш) and correct euphony rules. Flawless use of pure Ukrainian phrasing (`їздити по покупки`, `відбуває/виїжджає`). |
-| 3. Pedagogical quality | 8/10 | Very strong PPP flow and brilliant explanation of `їхав` (interrupted process) vs `їздив` (completed round-trip). Missed the `під столом` vs `під стіл` case contrast which is a critical pedagogical link to previous modules. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (іти/ходити, їхати/їздити, бігти/бігати, нести/носити, вести/водити, везти/возити, літати/летіти, пливти/плавати, щодня, зараз, валіза) are naturally woven into the prose. |
-| 5. Exercise quality | 10/10 | Markers perfectly align with the plan's `activity_hints` and are placed logically after the corresponding theory sections. |
-| 6. Engagement & tone | 8/10 | Generally engaging, but the opening contains some generic "telling instead of showing" fluff: *"Глибоке розуміння цієї системи — це найважливіший ключ до того... Без цих базових пар абсолютно неможливо опанувати складніші..."* |
-| 7. Structural integrity | 9/10 | Clean markdown and proper heading hierarchy. Word count (5133) is running slightly high for a 4000-word target, but acceptable given the depth of conjugation tables required. |
-| 8. Cultural accuracy | 10/10 | Culturally grounded examples (Kyiv metro, Podil, Zhytniy market) and strict adherence to decolonized vocabulary guidelines regarding transportation verbs. |
-| 9. Dialogue & conversation quality | 4/10 | The module contains a good short exchange with a tourist, but entirely failed to write the core conversational dialogue specified in the plan. The "Київський ранок" blockquote is a stylized monologue, not a dialogue. |
+| 1. Plan adherence | 8/10 | Covers the entire structure well, but misses the explicitly required reference to the Заболотний Grade 5 textbook and its prefix diagram for "бігти" in the first section. |
+| 2. Linguistic accuracy | 6/10 | Contains calques: "знаходитися" instead of "перебувати" and "давайте" + verb. Also has typos ("поїздам", "Щщо"). All conjugation forms and cases with prepositions are perfectly correct. |
+| 3. Pedagogical quality | 9/10 | Strong PPP flow. Introduces concepts with examples ("Микола... іде", "їде на метро") before detailing conjugation rules. Excellent explanations of phonetic alternations. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are naturally integrated into the prose (e.g., валіза, пішки, зараз). |
+| 5. Exercise quality | 7/10 | The text hallucinates an extra exercise marker not in the plan (`fill-in-prepositions-motion`) and places the conjugation test before the student learns half of the conjugations, violating the plan's structure. |
+| 6. Engagement & tone | 10/10 | Tone is encouraging and natural. Good use of a real-life scenario in Kyiv ("Ранок у Києві") to demonstrate practical usage. |
+| 7. Structural integrity | 10/10 | All headers from the plan are present, word count is 4900 (exceeds the 4000 target), and the narrative flows logically. |
+| 8. Cultural accuracy | 10/10 | Includes local context ("історичний центр міста", "Поділ", "Софія Київська"). Explicitly points out and corrects the common Russicism "відправлятися" in favor of "відбуває" or "виїжджає". |
+| 9. Dialogue & conversation quality | 9/10 | While the dialogue is presented more as a narrative passage than a direct conversation, it effectively uses the target grammar in a highly natural, contextualized way. |
 
 ## Findings
 
-[Plan Adherence] [Major]
-Location: Section "Практика: односпрямований чи різноспрямований?"
-Issue: The plan explicitly required a dialogue between a husband and wife discussing morning commuting plans (`dialogue_situations`). This was completely omitted.
-Fix: Inject the required dialogue at the start of the "Практика" section.
+[1. Plan adherence] [MAJOR]
+Location: Section "Світ руху: чому дієслова руху — особлива група?", paragraph 1: "де ми навчимося висловлювати найдрібніші просторові деталі."
+Issue: Missing the explicitly requested textbook reference to the prefix diagram for "бігти" from Заболотний Grade 5.
+Fix: Append the reference to the paragraph.
 
-[Plan Adherence] [Major]
-Location: Section "Прийменники з дієсловами руху" (Paragraph 4: "Так само працює і прийменник «на»...")
-Issue: The plan required connecting motion verbs to M27 spatial prepositions by explicitly demonstrating the shift from Instrumental to Accusative case with the prepositions "під" and "за" (e.g., `під столом` vs `під стіл`). This was omitted.
-Fix: Add the `під/за` + Instrumental/Accusative examples to the paragraph explaining the `на` preposition shift.
+[2. Linguistic accuracy] [CRITICAL]
+Location: Multiple places (e.g., "де ви зараз знаходитеся.", "машина знаходиться в ремонті")
+Issue: The verb "знаходитися" is a common Russicism (calque of "находиться") when used to indicate location or state. In Ukrainian, "перебувати" or "бути" (often omitted or just "є") should be used.
+Fix: Replace with appropriate forms of "перебувати" or "бути" (у/в).
 
-[Plan Adherence] [Major]
-Location: Section "Односпрямовані дієслова: іти, їхати, бігти" (Paragraph 2)
-Issue: The plan explicitly requested referencing Вашуленко Grade 2 to show early motion verb polysemy ("іде катер, іде поїзд, іде зима, іде час"). This was omitted.
-Fix: Insert the polysemy examples into the explanation of the verb "іти".
+[2. Linguistic accuracy] [CRITICAL]
+Location: Section "Односпрямовані дієслова", paragraph 4: "«Ми **їдемо** *(are riding/driving)* поїздам до мальовничого Львова»"
+Issue: Typo "поїздам" (dative plural) instead of the correct instrumental singular "поїздом" for means of transport.
+Fix: Change "поїздам" to "поїздом".
 
-[Engagement & tone] [Minor]
-Location: Section "Світ руху: чому дієслова руху — особлива група?" (Paragraph 1)
-Issue: Contains generic enthusiasm and meta-commentary ("найважливіший ключ до того... Без цих базових пар абсолютно неможливо опанувати..."), which violates the style guide to avoid "telling instead of showing".
-Fix: Remove the meta-commentary sentences.
+[2. Linguistic accuracy] [CRITICAL]
+Location: Section "Односпрямовані дієслова", paragraph 5: "Щщо ж стосується нашого минулого часу"
+Issue: Typo with double letter "Щщо".
+Fix: Change to "Що".
+
+[2. Linguistic accuracy] [MAJOR]
+Location: Multiple places ("Отже, давайте детальніше подивимося", "давайте прочитаємо", "Давайте підсумуємо" etc.)
+Issue: Using "давайте" + verb is a calque from Russian ("давайте почитаем"). Ukrainian uses the synthetic imperative form for the first person plural (прочитаймо, подивімося, підсумуймо).
+Fix: Replace with proper synthetic imperative forms.
+
+[5. Exercise quality] [MAJOR]
+Location: Activity markers
+Issue: The marker `fill-in-conjugation-one-way` was placed before multidirectional verbs were taught, so it cannot fulfill the plan's requirement to test present tense conjugation of all motion verbs. Also, an extra hallucinated marker `fill-in-prepositions-motion` was added that was not in the plan.
+Fix: Remove `fill-in-prepositions-motion` and move the conjugation marker to the end of Section 3, renaming it to `fill-in-conjugation`.
 
 ## Verdict: REVISE
-The module's linguistic explanations are exceptionally high quality, accurately breaking down complex phonetics and nuanced usage rules. However, it missed three distinct architectural points from the plan (a required dialogue, a specific polysemy textbook reference, and an Instrumental/Accusative contrast rule). These are easily fixed with the provided surgical injections.
+The module has an excellent pedagogical foundation and greatly exceeds the word count, but it contains several critical linguistic errors (typos, calques like "знаходитися" and "давайте"), missed a required textbook citation, and misplaced an exercise marker. These issues must be fixed before the module can pass.
 
 <fixes>
-- find: "Часто в усному мовленні ви можете почути коротші форми, такі як «йду» або «йдеш». Вони є абсолютно правильними і підпорядковуються правилам милозвучності української мови.\n\nМинулий час дієслова «іти» є унікальним і вимагає особливої уваги."
-  replace: "Часто в усному мовленні ви можете почути коротші форми, такі як «йду» або «йдеш». Вони є абсолютно правильними і підпорядковуються правилам милозвучності української мови. Також варто пам'ятати про багатозначність цього слова. Як зазначається у підручнику М. Вашуленка для 2 класу, дієслово «іде» може вживатися не лише з людьми. Ми часто кажемо про неживі предмети або абстрактні поняття: іде катер, іде поїзд, іде зима, іде час.\n\nМинулий час дієслова «іти» є унікальним і вимагає особливої уваги."
-
-- find: "Так само працює і прийменник «на». Порівняйте: «Ми стоїмо **на концерті**» *(We are standing at the concert)* та «Ми весело їдемо **на концерт**» *(We are driving happily to the concert)*. Динамічний рух завжди перемагає статику і повністю змінює граматичне правило закінчення слова."
-  replace: "Так само працює і прийменник «на». Порівняйте: «Ми стоїмо **на концерті**» *(We are standing at the concert)* та «Ми весело їдемо **на концерт**» *(We are driving happily to the concert)*. Динамічний рух завжди перемагає статику і повністю змінює граматичне правило закінчення слова. Цей самий принцип дії розповсюджується на прийменники простору «під» *(under)* та «за» *(behind)*. Коли ми описуємо статичне місце, ми використовуємо орудний відмінок: кіт спить під столом *(location, Ор.в.)*, сад знаходиться за будинком *(location, Ор.в.)*. Але з дієсловами руху ми знову переходимо на знахідний відмінок: кіт біжить під стіл *(direction, Зн.в.)*, ми йдемо за будинок *(direction, Зн.в.)*."
-
-- find: "## Практика: односпрямований чи різноспрямований?\n\nЩоб швидко та без помилок вибрати правильне дієслово руху"
-  replace: "## Практика: односпрямований чи різноспрямований?\n\nДавайте розглянемо типову життєву ситуацію. Вихідний ранок у Києві — чоловік та дружина вирішують, як дістатися до різних місць:\n\n> — **Дружина:** Я зараз **йду** *(on foot)* до Житнього ринку за свіжими овочами. А ти **їдеш** *(by transport)* на Поділ?\n> — **Чоловік:** Так, я якраз виходжу. А де наші діти?\n> — **Дружина:** Вони вже **біжать** *(are running)* у парк гратися з друзями. До речі, а як бабуся дістанеться до нас?\n> — **Чоловік:** Вона **їде** *(is driving/riding)* трамваєм, буде тут за двадцять хвилин.\n\nЩоб швидко та без помилок вибрати правильне дієслово руху"
-
-- find: "Кожна така пара чітко відповідає за певний тип фізичного пересування: рух власними ногами, рух на колесах, швидкий біг, політ у небі або плавання по воді. Глибоке розуміння цієї системи — це найважливіший ключ до того, щоб говорити українською мовою максимально природно, саме так, як говорять справжні носії мови. Без цих базових пар абсолютно неможливо опанувати складніші граматичні теми в майбутньому.\n\nГоловна, фундаментальна особливість"
-  replace: "Кожна така пара чітко відповідає за певний тип фізичного пересування: рух власними ногами, рух на колесах, швидкий біг, політ у небі або плавання по воді.\n\nГоловна, фундаментальна особливість"
+- find: "де ви зараз знаходитеся."
+  replace: "де ви зараз перебуваєте."
+- find: "але сьогодні його улюблена машина знаходиться в ремонті."
+  replace: "але сьогодні його улюблена машина в ремонті."
+- find: "Коли Микола знаходиться в процесі дороги прямо зараз"
+  replace: "Коли Микола перебуває в дорозі прямо зараз"
+- find: "коли ви знаходитеся всередині певного транспорту прямо зараз"
+  replace: "коли ви перебуваєте всередині певного транспорту прямо зараз"
+- find: "і ми просто знаходимося десь, ми використовуємо"
+  replace: "і ми просто перебуваємо десь, ми використовуємо"
+- find: "«Ми **їдемо** *(are riding/driving)* поїздам до мальовничого Львова»"
+  replace: "«Ми **їдемо** *(are riding/driving)* поїздом до мальовничого Львова»"
+- find: "Щщо ж стосується нашого минулого часу"
+  replace: "Що ж стосується нашого минулого часу"
+- find: "де ми навчимося висловлювати найдрібніші просторові деталі."
+  replace: "де ми навчимося висловлювати найдрібніші просторові деталі. Як чудово ілюструє підручник Заболотного (5 клас, с. 55) на прикладі дієслова «бігти», одне базове слово плюс різні префікси створюють абсолютно різні значення."
+- find: "<!-- INJECT_ACTIVITY: fill-in-prepositions-motion -->\n\n"
+  replace: ""
+- find: "ви можете сміливо обирати слова саме з цієї групи.\n\n<!-- INJECT_ACTIVITY: fill-in-conjugation-one-way -->\n\n## Різноспрямовані дієслова"
+  replace: "ви можете сміливо обирати слова саме з цієї групи.\n\n## Різноспрямовані дієслова"
+- find: "<!-- INJECT_ACTIVITY: group-sort-direction --> [group-sort, Sort verb forms (іду, їжджу, бігаєш, йшов) into unidirectional vs. multidirectional categories, 10 items]\n\n## Повний набір: нести/носити, вести/водити, везти/возити"
+  replace: "<!-- INJECT_ACTIVITY: group-sort-direction --> [group-sort, Sort verb forms (іду, їжджу, бігаєш, йшов) into unidirectional vs. multidirectional categories, 10 items]\n<!-- INJECT_ACTIVITY: fill-in-conjugation -->\n\n## Повний набір: нести/носити, вести/водити, везти/возити"
+- find: "Отже, давайте детальніше подивимося на два головні правила"
+  replace: "Отже, подивімося детальніше на два головні правила"
+- find: "давайте прочитаємо коротку історію про один звичайний ранок"
+  replace: "прочитаймо коротку історію про один звичайний ранок"
+- find: "Давайте уважно подивимося на повну таблицю відмінювання"
+  replace: "Уважно подивімося на повну таблицю відмінювання"
+- find: "Тепер давайте трохи прискоримо наш рух і скористаємося"
+  replace: "Тепер трохи прискормо наш рух і скористаймося"
+- find: "Давайте детально розглянемо чотири типові життєві ситуації."
+  replace: "Детально розгляньмо чотири типові життєві ситуації."
+- find: "Давайте підсумуємо всі вісім базових пар української мови"
+  replace: "Підсумуймо всі вісім базових пар української мови"
 </fixes>

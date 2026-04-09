@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "pluralia-tantum",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T19:58:57.887492+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T19:58:57.902604+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T20:03:12.669259+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T20:06:10.923969+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T20:13:45.304013+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T20:13:45.305544+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-09T20:15:56.375568+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T20:15:56.454752+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-09T20:15:56.474127+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-09T20:16:37.018154+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-09T20:16:37.018396+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-09T20:16:37.480226+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-09T20:22:30.871623+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-09T20:22:31.228107+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-09T20:22:35.337808+00:00"
+    }
+  }
+}

@@ -1,65 +1,37 @@
 ## Що ми знаємо? (~220 words total)
-- P1 (~60 words): Opening self-check framing — "A1.6 covered five topics. Let's see what you can do!" Present 5 checkboxes as self-assessment prompts: ✓ Name 10 foods and 5 drinks (М36) ✓ Say what you eat/drink using accusative (М37) ✓ Order at a café (М38) ✓ Ask prices and buy things (М39) ✓ Use accusative for people (М40)
-- P2 (~80 words): Quick vocabulary warm-up — two mini-lists for self-check. Їжа: борщ, вареники, салат, хліб, сир, піца, каша, яєчня, суп, котлета. Напої: кава, чай, вода, сік, молоко. Encourage learner: "Cover the list. Can you recall 10 foods and 5 drinks without looking? Then you're ready."
-- P3 (~80 words): Grammar warm-up prompt — four quick pattern checks with answers to verify: (1) Я їм ___ (борщ → борщ, салат → салат). (2) Я п'ю ___ (кава → каву, вода → воду). (3) Мені ___, будь ласка (сік → сік, піца → піцу). (4) Я бачу ___ (Олена → Олену, брат → брата). "If all four feel natural, proceed. If not, revisit M37 and M40."
+- P1 (~50 words): Introduction to the A1.6 Checkpoint. We reflect on the journey from identifying basic foods in M36 to navigating social introductions in M40. We establish the goal: integrating food, shopping, and people into a single communicative flow.
+- P2 (~60 words): Vocabulary review of M36-M37. We list ten essential food items (хліб, сир, молоко, яблуко, помідор, картопля, яйце, м'ясо, риба, цукор) and five drinks (вода, сік, чай, кава, пиво) to ensure the building blocks are ready for case manipulation.
+- P3 (~60 words): Functional review of M38-M39. We revisit the core "Cafe" and "Market" patterns: "Мені каву, будь ласка" for ordering and "Скільки коштує...?" for price inquiries, emphasizing the importance of the currency "гривня" over any colonial alternatives.
+- P4 (~50 words): Self-check questionnaire based on the plan. A bulleted list of "Can you?" questions: Can you name foods? Can you use the accusative? Can you order at a cafe? Can you ask prices? Can you introduce a person?
+- <!-- INJECT_ACTIVITY: group-sort-accusative-type --> [group-sort, focus: inanimate (що?) vs animate (кого?) forms, 10 items]
 
----
+## Читання (~280 words total)
+- P1 (~40 words): Setting the stage for our reading practice. Meet Anna, a student in Kyiv, whose Saturday involves a traditional "market-cafe-social" loop that tests every skill learned in the A1.6 phase.
+- P2 (~90 words): Anna at the "Лук'янівський ринок". She navigates the stalls, checking prices for "помідори" and "огірки". Paragraph uses phrases: "Скільки коштують ці яблука?", "Дайте кілограм, будь ласка", and "Це дорого/дешево".
+- P3 (~80 words): Anna transitions to a small cafe called "Смачно". She interacts with the "продавець", ordering a light lunch: "Мені борщ і воду з лимоном, будь ласка". She asks for the "рахунок" and pays "карткою".
+- P4 (~70 words): Anna meets her friend "Олена" and introduces her "брат Тарас". This integrates the animate accusative from M40: "Ти знаєш мого брата?", "Я бачу Олену". We conclude the story with a successful social interaction.
+- <!-- INJECT_ACTIVITY: quiz-shopping-situations --> [quiz, focus: matching shopping/cafe situations to correct phrases, 8 items]
 
-## Читання (~270 words total)
-- P1 (~30 words): Short lead-in — "Read about Anna's day. Notice how she uses accusative for food, drinks, and people. Find at least six accusative forms."
-- Reading text (~200 words): Titled "День Анни" — a connected narrative paragraph using M36-M40 vocabulary. Anna wakes up, eats кашу and drinks каву з молоком for breakfast. She goes to the ринок and asks: «Скільки коштують помідори?» — «Тридцять гривень кілограм.» — «Дайте кілограм, будь ласка.» She buys хліб, сир, і яблука. Then she goes to a café, sits down: «Тут вільно?» She orders: «Мені борщ і воду, будь ласка.» She sees a friend Олена across the room: «О, я бачу Олену! Олено, привіт!» Олена comes over. Anna says: «Ти знаєш мого брата Михайла? Це мій брат.» They eat together. At the end: «Рахунок, будь ласка. Можна карткою?» — «Звичайно.»
-- P2 (~40 words): Comprehension check — 3 quick questions after the text: (1) Що Анна купує на ринку? (2) Що вона замовляє в кафе? (3) Кого вона бачить у кафе? Learner answers in Ukrainian using full sentences.
+## Граматика (~240 words total)
+- P1 (~70 words): Accusative Inanimate Summary. We contrast Masculine/Neuter (no change: борщ, сік, молоко, яблуко) with Feminine (-а/-я changes to -у/-ю: каву, воду, піцу, картоплю). 
+- P2 (~70 words): Accusative Animate Summary. We recap the M40 rule: Feminine follows the -у/-ю pattern (маму, Олену), while Masculine takes the genitive ending -а/-я (брата, друга, лікаря, вчителя).
+- P3 (~60 words): Quantity and Price patterns. We review the agreement of "гривня" with numbers (1 гривня, 2-4 гривні, 5-20 гривень) and the use of "кілограм" and "пляшка" as measure words.
+- P4 (~40 words): "З" + Instrumental snippets. Brief review of common menu "chunks" like "кава з молоком" or "чай з цукром", treating them as fixed phrases for the A1 level.
+- <!-- INJECT_ACTIVITY: quiz-accusative-forms --> [quiz, focus: choose correct accusative form for inanimate and animate nouns, 10 items]
 
----
+## Діалог (~200 words total)
+- P1 (~40 words): Introduction to the "Dinner Party" (Вечеря) scenario. We imagine hosting guests and the full cycle of preparation, from the сніданок (breakfast) to the market visit.
+- P2 (~110 words): A multi-turn connected dialogue involving a "Господиня" and her friend/seller. Flow: 1. Breakfast talk ("Я п'ю каву з молоком"). 2. Market transaction ("Скільки коштують помідори?"). 3. Cafe encounter ("Рахунок, будь ласка"). 4. Friend intro ("Ти знаєш мого брата?").
+- P3 (~50 words): Analysis of the dialogue. We point out how "хотіти" (to want) and "давати" (to give) are used naturally instead of literal translations like "I will have", emphasizing decolonized linguistic habits.
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-completion --> [fill-in, focus: completing the cafe + market dialogue with correct grammar forms, 8 items]
 
-## Граматика (~220 words total)
-- P1 (~50 words): Mini-header "Шість ключових шаблонів A1.6" — frame as a quick-reference summary, not new material. "You learned all of this in M36–M40. Here it is in one place."
-- P2 (~40 words): Pattern 1 — Food/drink vocabulary chunks. Їжа + напої + meals: сніданок, обід, вечеря. Key chunk: кава з молоком, борщ зі сметаною, хліб із сиром. «Я їм кашу на сніданок. Я п'ю каву з молоком.»
-- P3 (~40 words): Pattern 2 — Accusative inanimate. Rule: masculine nouns don't change (борщ → борщ, хліб → хліб). Feminine -а/-я nouns: кава → каву, вода → воду, піца → піцу. Three column mini-table: Nominative | Accusative | Example sentence.
-- P4 (~40 words): Pattern 3 — Ordering and prices. Fixed phrases: «Мені ___, будь ласка» / «Скільки коштує/коштують?» / «Дайте ___, будь ласка» / «Рахунок, будь ласка» / «Можна карткою?» / гривня → гривні → гривень (1/2-4/5+).
-- P5 (~50 words): Pattern 4 — Accusative animate. Feminine same as inanimate: Олена → Олену, мама → маму. Masculine animate = genitive ending: брат → брата, лікар → лікаря, друг → друга, вчитель → вчителя. Quick contrast: «Я бачу борщ» (inanimate, no change) vs «Я бачу брата» (animate, -а).
+## Підсумок (~150 words)
+- P1 (~50 words): Reflection on the A1.6 Food and Shopping phase. We celebrate the shift from simple naming to functional market and social competence.
+- P2 (~100 words): Achievement checklist (as per plan):
+    - You can name foods and drinks.
+    - You can use the accusative case for objects and people.
+    - You can order food, ask for the bill, and pay.
+    - You can navigate a market and ask prices.
+    - Next: A1.7 — "Communication and Plans" (phone calls, emails, and making dates).
 
----
-
-## Діалог (~220 words total)
-- P1 (~20 words): Scene-setter — "Наталя та Дмитро починають день. Читайте і стежте за відмінками." (Natalia and Dmytro start their day.)
-- Dialogue (~140 words): Three-scene connected dialogue covering all A1.6 skills:
-
-**Сніданок:**
-— Що ти їш на сніданок?
-— Я їм кашу і п'ю каву з молоком. А ти?
-— Я їм яєчню і хліб із сиром.
-
-**На ринку:**
-— Скільки коштують помідори?
-— П'ятнадцять гривень кілограм.
-— Дорого! А яблука?
-— Двадцять гривень. Дуже смачні!
-— Добре, дайте кілограм яблук, будь ласка.
-
-**У кафе:**
-— Тут вільно?
-— Так, сідайте!
-— Мені борщ і воду, будь ласка.
-— О, я бачу Олену! Олено, привіт! Ти знаєш мого брата Дмитра?
-— Ні, не знаю. Дуже приємно, Дмитре!
-— Рахунок, будь ласка. Можна карткою?
-— Звичайно. Все було дуже смачно!
-
-- P2 (~60 words): Post-dialogue note — annotate the three grammar patterns used. Bold two examples for each: (1) Accusative inanimate: **кашу**, **яєчню**, **воду**, **борщ**. (2) Accusative animate: **Олену**, **брата Дмитра**. (3) Café/market phrases: **Мені борщ**, **Дайте кілограм**, **Рахунок, будь ласка**. "Did you spot all of them in the dialogue?"
-
----
-
-## Підсумок (~150 words total)
-- P1 (~150 words): A1.6 achievement summary in celebratory but informative tone. "You have completed A1.6 — Food and Shopping. Here is what you can now do:
-  - ✓ Talk about їжа та напої — foods, drinks, and meals (М36)
-  - ✓ Use the accusative case for inanimate nouns — борщ, каву, воду, піцу (М37)
-  - ✓ Order at a кафе — «Мені борщ, будь ласка» / «Рахунок» / «Можна карткою?» (М38)
-  - ✓ Shop at the ринок — «Скільки коштує?» / «Дайте кілограм» / гривня/гривні/гривень (М39)
-  - ✓ Use the accusative case for animate nouns — «Я бачу Олену» / «Я знаю брата» (М40)
-
-  **Наступний крок — A1.7: Спілкування.** You will learn to make plans, write messages, and talk on the phone. Ukrainian is becoming your language."
-
----
-
-Grand total: ~1080 words
+Grand total: ~1090 words

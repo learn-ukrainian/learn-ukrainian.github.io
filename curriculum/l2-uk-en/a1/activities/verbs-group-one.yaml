@@ -2,360 +2,361 @@ version: '1.0'
 module: verbs-group-one
 level: a1
 inline:
-- id: fill-in-conjugation
+- id: match-up-person-verb
+  type: match-up
+  instruction: З'єднайте займенник із дієсловом (Match pronoun to verb form)
+  pairs:
+  - left: я
+    right: працюю
+  - left: ти
+    right: знаєш
+  - left: він
+    right: читає
+  - left: ми
+    right: готуємо
+  - left: ви
+    right: слухаєте
+  - left: вони
+    right: гуляють
+- id: fill-in-conjugation-drill
   type: fill-in
-  instruction: Fill in the correct form of the verb in brackets. Remove **-ти**, then
-    add the right ending.
+  instruction: Вставте правильну форму дієслова (Type the correct verb form)
   items:
-  - sentence: Я ____ книгу. (читати)
+  - sentence: Я (читати) ____ книгу.
     answer: читаю
+  - sentence: Ти (знати) ____ правду.
+    answer: знаєш
+  - sentence: Він (працювати) ____ в офісі.
+    answer: працює
+  - sentence: Вона (слухати) ____ музику.
+    answer: слухає
+  - sentence: Ми (гуляти) ____ в парку.
+    answer: гуляємо
+  - sentence: Ви (готувати) ____ вечерю.
+    answer: готуєте
+  - sentence: Вони (читати) ____.
+    answer: читають
+  - sentence: Я (готувати) ____.
+    answer: готую
+  - sentence: Ти (гуляти) ____.
+    answer: гуляєш
+  - sentence: Він (знати) ____.
+    answer: знає
+- id: quiz-subject-verb-agreement
+  type: quiz
+  instruction: Оберіть правильну форму дієслова (Choose the correct verb form)
+  items:
+  - question: Вона _____ книгу.
     options:
     - читаю
     - читаєш
     - читає
-  - sentence: Ти ____ музику. (слухати)
-    answer: слухаєш
-    options:
-    - слухаю
-    - слухаєш
-    - слухає
-  - sentence: Він ____ в офісі. (працювати)
-    answer: працює
-    options:
-    - працюю
-    - працюєш
-    - працює
-  - sentence: Вона ____ вечерю. (готувати)
-    answer: готує
+    - читаємо
+    correct: 2
+  - question: Ти _____ вечерю.
     options:
     - готую
-    - готуєш
     - готує
-  - sentence: Я ____ в парку. (гуляти)
-    answer: гуляю
-    options:
-    - гуляю
-    - гуляєш
-    - гуляє
-  - sentence: Ти ____ українську? (вивчати)
-    answer: вивчаєш
+    - готують
+    - готуєш
+    correct: 3
+  - question: Я _____ українську.
     options:
     - вивчаю
     - вивчаєш
+    - вивчають
     - вивчає
-  - sentence: Він ____ цю пісню. (знати)
-    answer: знає
+    correct: 0
+  - question: Ми _____ разом.
     options:
-    - знаю
+    - працюю
+    - працюють
+    - працюєте
+    - працюємо
+    correct: 3
+  - question: Ви _____ музику.
+    options:
+    - слухаєте
+    - слухаєш
+    - слухаю
+    - слухає
+    correct: 0
+  - question: Вони _____ в парку.
+    options:
+    - гуляєте
+    - гуляємо
+    - гуляю
+    - гуляють
+    correct: 3
+  - question: Він _____ правду.
+    options:
     - знаєш
+    - знають
     - знає
-  - sentence: Вона ____ малюнок. (малювати)
-    answer: малює
+    - знаю
+    correct: 2
+  - question: Сашко _____.
     options:
     - малюю
-    - малюєш
     - малює
-  - sentence: Ми ____ вечерю. (готувати)
-    answer: готуємо
-    options:
-    - готуємо
-    - готуєте
-    - готують
-  - sentence: Вони ____ в парку. (гуляти)
-    answer: гуляють
-    options:
-    - гуляємо
-    - гуляєте
-    - гуляють
-- id: quiz-verb-forms
-  type: quiz
-  instruction: Choose the correct verb form for the pronoun shown.
-  items:
-  - question: Вона ____ книгу. (читати)
-    options:
-    - читаю
-    - читаєш
-    - читає
-    correct: 2
-  - question: Я ____ музику. (слухати)
-    options:
-    - слухаю
-    - слухаєш
-    - слухає
-    correct: 0
-  - question: Ти ____ в парку? (гуляти)
-    options:
-    - гуляю
-    - гуляєш
-    - гуляє
+    - малюємо
+    - малюють
     correct: 1
-  - question: Він ____ в офісі. (працювати)
-    options:
-    - працюю
-    - працюєш
-    - працює
-    correct: 2
-  - question: Я ____ українську. (вивчати)
-    options:
-    - вивчаю
-    - вивчаєш
-    - вивчає
-    correct: 0
-  - question: Вона ____ вечерю. (готувати)
-    options:
-    - готую
-    - готуєш
-    - готує
-    correct: 2
-  - question: Ти ____ цю пісню? (знати)
-    options:
-    - знаю
-    - знаєш
-    - знає
-    correct: 1
-  - question: Він ____ нову книгу. (читати)
-    options:
-    - читаю
-    - читаєш
-    - читає
-    correct: 2
-- id: match-person-to-form
-  type: match-up
-  instruction: Match each pronoun + infinitive on the left to the correct conjugated
-    form on the right.
-  pairs:
-  - left: я (читати)
-    right: читаю
-  - left: ти (читати)
-    right: читаєш
-  - left: він (читати)
-    right: читає
-  - left: я (гуляти)
-    right: гуляю
-  - left: ти (гуляти)
-    right: гуляєш
-  - left: вона (гуляти)
-    right: гуляє
-- id: fill-in-context
+- id: fill-in-complete-sentence
   type: fill-in
-  instruction: Complete each sentence with the correct verb form. (The infinitive
-    is in brackets.)
+  instruction: Вставте правильне дієслово (Complete the sentence)
   items:
-  - sentence: Що ти ____? (слухати)
-    answer: слухаєш
+  - sentence: Що ти робиш? — Я ____ музику.
+    answer: слухаю
     options:
     - слухаю
     - слухаєш
     - слухає
-  - sentence: Я ____ вечерю. (готувати)
-    answer: готую
+    - слухають
+  - sentence: Що вона робить? — Вона ____ вечерю.
+    answer: готує
     options:
-    - готую
     - готуєш
     - готує
-  - sentence: Він ____ в парку. (гуляти)
+    - готують
+    - готуємо
+  - sentence: Що ви робите? — Ми ____ книгу.
+    answer: читаємо
+    options:
+    - читаємо
+    - читаєте
+    - читаю
+    - читає
+  - sentence: Що вони роблять? — Вони ____ в офісі.
+    answer: працюють
+    options:
+    - працює
+    - працюємо
+    - працюєте
+    - працюють
+  - sentence: Що він робить? — Він ____ в парку.
     answer: гуляє
     options:
     - гуляю
     - гуляєш
     - гуляє
-  - sentence: Ти ____ українську? (вивчати)
-    answer: вивчаєш
+    - гуляють
+  - sentence: Що ти робиш? — Я ____ українську.
+    answer: вивчаю
     options:
-    - вивчаю
-    - вивчаєш
     - вивчає
-  - sentence: Вона ____ музику. (слухати)
-    answer: слухає
-    options:
-    - слухаю
-    - слухаєш
-    - слухає
-  - sentence: Я ____ в офісі. (працювати)
-    answer: працюю
-    options:
-    - працюю
-    - працюєш
-    - працює
+    - вивчаємо
+    - вивчають
+    - вивчаю
 workbook:
-- type: group-sort
-  instruction: Sort each verb form into the correct column based on which pronoun
-    it belongs to.
+- id: workbook-group-sort-pronouns
+  type: group-sort
+  instruction: Розподіліть займенники на однину та множину (Sort pronouns into singular
+    and plural)
   groups:
-  - label: я  (ending -ю)
+  - label: Однина (Singular)
     items:
-    - читаю
-    - слухаю
-    - гуляю
-    - знаю
-    - готую
-    - працюю
-  - label: ти  (ending -єш)
+    - я
+    - ти
+    - він
+    - вона
+    - воно
+  - label: Множина (Plural)
     items:
-    - читаєш
-    - слухаєш
-    - гуляєш
-    - знаєш
-    - готуєш
-    - працюєш
-  - label: він/вона  (ending -є)
-    items:
-    - читає
-    - слухає
-    - гуляє
-    - знає
-    - готує
-    - працює
-- type: error-correction
-  instruction: Each sentence has one wrong verb form. Find it and choose the correct
-    one.
+    - ми
+    - ви
+    - вони
+- id: workbook-quiz-address
+  type: quiz
+  instruction: 'Оберіть правильне звертання (Choose the correct form: Ти чи Ви?)'
   items:
-  - sentence: Я читаєш книгу.
-    error: читаєш
-    correction: читаю
+  - question: Анно, ____ працюєш в офісі?
+    options:
+    - ти
+    - ви
+    - ми
+    - вони
+    correct: 0
+  - question: Сашко і Юля, ____ слухаєте музику?
+    options:
+    - ви
+    - ти
+    - ми
+    - вони
+    correct: 0
+  - question: Максиме, що ____ робиш?
+    options:
+    - ти
+    - ви
+    - він
+    - вона
+    correct: 0
+  - question: Олено, ____ готуєш вечерю?
+    options:
+    - ти
+    - ви
+    - вона
+    - я
+    correct: 0
+  - question: Анно і Максиме, ____ гуляєте?
+    options:
+    - ви
+    - ти
+    - ми
+    - вони
+    correct: 0
+  - question: Юлю, ____ читаєш книгу?
+    options:
+    - ти
+    - ви
+    - ми
+    - вони
+    correct: 0
+- id: workbook-error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and fix the mistake)
+  items:
+  - sentence: Я працюю, а ти працює.
+    error: працює
+    correction: працюєш
     error_type: word
     options:
-    - читаю
+    - працюю
+    - працюєш
+    - працюють
+    explanation: For 'ти' (you singular), the ending is -єш.
+  - sentence: Вона читаю нову книгу.
+    error: читаю
+    correction: читає
+    error_type: word
+    options:
+    - читаєш
     - читає
     - читають
-    explanation: '**Я** = first person singular → ending **-ю**: читаю. The ending
-      **-єш** belongs to ти.'
-  - sentence: Ти слухає музику.
-    error: слухає
-    correction: слухаєш
+    explanation: For 'вона' (she), the ending is -є.
+  - sentence: Ми гуляють в парку.
+    error: гуляють
+    correction: гуляємо
     error_type: word
     options:
-    - слухаю
-    - слухаєш
-    - слухають
-    explanation: '**Ти** = second person singular → ending **-єш**: слухаєш. The ending
-      **-є** belongs to він/вона.'
-  - sentence: Вона гуляю в парку.
-    error: гуляю
-    correction: гуляє
-    error_type: word
-    options:
-    - гуляю
-    - гуляєш
+    - гуляємо
+    - гуляєте
     - гуляє
-    explanation: '**Вона** = third person singular → ending **-є**: гуляє. The ending
-      **-ю** belongs to я.'
-  - sentence: Я готуєш вечерю.
+    explanation: For 'ми' (we), the ending is -ємо.
+  - sentence: Ви слухаєш музику.
+    error: слухаєш
+    correction: слухаєте
+    error_type: word
+    options:
+    - слухаєте
+    - слухає
+    - слухають
+    explanation: For 'ви' (you plural/formal), the ending is -єте.
+  - sentence: Вони знає правду.
+    error: знає
+    correction: знають
+    error_type: word
+    options:
+    - знають
+    - знаємо
+    - знаєте
+    explanation: For 'вони' (they), the ending is -ють.
+  - sentence: Він готуєш вечерю.
     error: готуєш
-    correction: готую
+    correction: готує
     error_type: word
     options:
     - готую
-    - готуєш
     - готує
-    explanation: '**Я** = first person singular → ending **-ю**: готую. Note the stem
-      shortening: готувати → готу-.'
-  - sentence: Він вивчаю українську.
-    error: вивчаю
-    correction: вивчає
-    error_type: word
-    options:
-    - вивчаю
-    - вивчаєш
-    - вивчає
-    explanation: '**Він** = third person singular → ending **-є**: вивчає. The ending
-      **-ю** belongs to я.'
-  - sentence: Ти знаю цю пісню.
-    error: знаю
-    correction: знаєш
-    error_type: word
-    options:
-    - знаю
-    - знаєш
-    - знає
-    explanation: '**Ти** = second person singular → ending **-єш**: знаєш. The rule:
-      **ти завжди -єш** for every Group I verb.'
-- type: true-false
-  instruction: True or false? Decide if each statement about Group I verbs is correct.
+    - готують
+    explanation: For 'він' (he), the ending is -є.
+- id: workbook-true-false
+  type: true-false
+  instruction: Правда чи ні? (True or False based on the dialogues)
   items:
-  - statement: The **ти** form of **читати** is **читаєш**.
+  - statement: Юля готує вечерю.
     correct: true
-    explanation: 'Correct! Every Group I verb takes **-єш** in the ти form: читаєш,
-      слухаєш, гуляєш, знаєш...'
-  - statement: The **я** form of **слухати** is **слухає**.
+    explanation: Юля says 'Я готую вечерю'.
+  - statement: Сашко готує вечерю.
     correct: false
-    explanation: 'No — **я** takes **-ю**: слухаю. The ending **-є** belongs to він/вона
-      (third person singular).'
-  - statement: The **він** form of **гуляти** ends in **-єш**.
-    correct: false
-    explanation: 'No — **він** takes **-є**: гуляє. The ending **-єш** belongs to
-      ти (second person singular).'
-  - statement: '**Готувати** is a Group I verb.'
+    explanation: Сашко says 'Я не готую. Я читаю'.
+  - statement: Олена слухає музику.
     correct: true
-    explanation: Yes! **Готувати** ends in **-увати**, one of the three Group I infinitive
-      endings (-ати, -увати, -яти).
-  - statement: The **ти** form of every Group I verb ends in **-єш**.
+    explanation: Сашко says 'Вона слухає музику'.
+  - statement: Анна працює в офісі.
     correct: true
-    explanation: 'Correct! This is the key rule: **ти завжди -єш**. Reading, listening,
-      walking, cooking — the ти ending never changes in Group I.'
-  - statement: '**Робити** is a Group I verb.'
+    explanation: Анна says 'Я працюю в офісі'.
+  - statement: Максим працює в офісі.
     correct: false
-    explanation: No — **робити** is Group II. Its ти form is **робиш** (with **-и-**,
-      not **-є-**). You will learn Group II in M17.
-- type: observe
-  examples:
-  - Я читаю → я слухаю → я гуляю → я знаю → я готую → я працюю
-  - Ти читаєш → ти слухаєш → ти гуляєш → ти знаєш → ти готуєш → ти працюєш
-  - Він читає → він слухає → він гуляє → він знає → він готує → він працює
-  - Вона читає → вона слухає → вона гуляє → вона знає → вона готує → вона працює
-  - 'Я готую / ти готуєш / він готує  — stem: готу- (not готува-)'
-  - 'Я працюю / ти працюєш / він працює  — stem: працю- (not працюва-)'
-  prompt: Look at all six rows. (1) What ending do ALL ти forms share? (2) What ending
-    do ALL він/вона forms share? (3) For готувати and працювати, what happened to
-    the -ва- before the endings? State the pattern in your own words.
-- type: translate
-  instruction: Choose the correct Ukrainian translation.
+    explanation: Максим says 'Я не працюю, я навчаюся'.
+  - statement: Максим вивчає українську.
+    correct: true
+    explanation: Максим says 'Так, я вивчаю!'
+- id: workbook-translate
+  type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
   items:
-  - source: I read.
+  - source: I am reading.
     options:
     - text: Я читаю.
       correct: true
-    - text: Ти читаєш.
+    - text: Я є читаю.
       correct: false
-    - text: Він читає.
+    - text: Я читаєш.
       correct: false
-  - source: You listen to music.
+  - source: She is cooking dinner.
     options:
-    - text: Вона слухає музику.
-      correct: false
-    - text: Ти слухаєш музику.
-      correct: true
-    - text: Я слухаю музику.
-      correct: false
-  - source: She cooks dinner.
-    options:
-    - text: Вона готую вечерю.
-      correct: false
-    - text: Вона готуєш вечерю.
-      correct: false
     - text: Вона готує вечерю.
       correct: true
-  - source: He works.
+    - text: Вона є готує вечерю.
+      correct: false
+    - text: Вона готують вечерю.
+      correct: false
+  - source: We work together.
     options:
-    - text: Він працюю.
-      correct: false
-    - text: Він працюєш.
-      correct: false
-    - text: Він працює.
+    - text: Ми працюємо разом.
       correct: true
-  - source: You walk in the park.
+    - text: Ми працюють разом.
+      correct: false
+    - text: Ми є працюємо разом.
+      correct: false
+  - source: They know the truth.
     options:
-    - text: Я гуляю в парку.
-      correct: false
-    - text: Ти гуляєш у парку.
+    - text: Вони знають правду.
       correct: true
-    - text: Він гуляє в парку.
+    - text: Вони знає правду.
       correct: false
-  - source: I study Ukrainian.
+    - text: Вони є знають правду.
+      correct: false
+  - source: Do you know this song?
     options:
-    - text: Я вивчаю українську.
+    - text: Ти знаєш цю пісню?
       correct: true
-    - text: Ти вивчаєш українську.
+    - text: Ти знає цю пісню?
       correct: false
-    - text: Вона вивчає українську.
+    - text: Ти є знаєш цю пісню?
       correct: false
+  - source: What are you doing?
+    options:
+    - text: Що ти робиш?
+      correct: true
+    - text: Що ти робить?
+      correct: false
+    - text: Що ти роблять?
+      correct: false
+- id: workbook-order-dialogue
+  type: order
+  instruction: Розставте речення в правильному порядку (Put the sentences in order
+    to make a dialogue)
+  items:
+  - Привіт! Що ти робиш?
+  - Я готую вечерю. А ти?
+  - Я не готую. Я читаю.
+  - А що робить Олена?
+  - Вона слухає музику.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4

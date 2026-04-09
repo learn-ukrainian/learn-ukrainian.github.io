@@ -7,189 +7,136 @@ pipeline: v6
 build_status: draft
 ---
 
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
-import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import OddOneOut from '@site/src/components/OddOneOut';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
-import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги (Dialogues)
+## Діало́ги — Making Plans
 
-Before any grammar tables, hear all three modal verbs in action. Watch for **хо́чу** (I want), **мо́жу** (I can), and **му́шу** (I must) in every exchange below.
+To express your weekend plans, daily intentions, or obligations, you need to navigate between what you desire, what is actually possible, and what is required. When two friends negotiate their free time, they are constantly weighing these three factors to find an activity that works for both of them. Consider a typical conversation about making plans between **Оля** (Olya) and **Дени́с** (Denys). They are trying to figure out their weekend schedule.
 
-### Dialogue 1 — Planning the weekend
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оля:</span> Дени́се, що ти хо́чеш роби́ти у вихідні́? *(Denys, what do you want to do on the weekend?)*</div>
+<div class="dialogue-line"><span class="speaker">Оля:</span> Що ти хо́чеш роби́ти? *(What do you want to do?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Денис:</span> Я хо́чу гуля́ти. А ти? *(I want to walk. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Дени́с:</span> Я хочу гуля́ти в парку. А ти? *(I want to walk in the park. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Оля:</span> Я не мо́жу, я му́шу працюва́ти. *(I can't, I must work.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Я теж хочу гуляти, але́ не можу — мушу працюва́ти. *(I also want to walk, but I can't — I have to work.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Шкода! А в неді́лю ти мо́жеш? *(Pity! And on Sunday, can you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Так, у неділю я можу! *(Yes, on Sunday I can!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Що ти хочеш робити? *(What do you want to do?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Хочу піти в кіно́. Ти хочеш? *(I want to go to the cinema. Do you want to?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Зві́сно хочу! Домо́вилися! *(Of course I want to! Deal!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Денис:</span> Шкода! *(Pity!)*</div>
 
 </div>
+
+In another common situation, such as ordering at a café or asking a waiter for advice, expressing a clear desire for an object is essential.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Відві́дувач:</span> Я хочу ка́ву. *(I want coffee.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> Велику чи мале́ньку? *(Large or small?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Відвідувач:</span> Велику. І ще я хочу ї́сти. Що ви мо́жете порекомендува́ти? *(Large. And also I want to eat. What can you recommend?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Можу порекомендувати борщ! *(I can recommend borscht!)*</div>
+
+</div>
+
+Breaking down the key phrases from these dialogues reveals how Ukrainian structures them. The exclamation **шкода** means "pity" or "unfortunately," and it is a very natural and highly common reaction when someone cannot join your plans. More importantly, notice how the verb "to want" behaves differently depending on what exactly follows it. You can pair it directly with a physical object, as in **я хочу каву** (I want coffee). Here, the original dictionary noun **ка́ва** (coffee) changes its ending to **каву** because it is the grammatical object of the desire. Alternatively, you can pair the verb "to want" with another action entirely, as in **я хочу їсти** (I want to eat) or **я хочу гуляти** (I want to walk), demonstrating your intention to perform a specific activity.
+
+## Хоті́ти (To Want)
+
+The verb **хотіти** (to want) is one of the most frequently used words in the Ukrainian language, and it operates as a true irregular verb. Despite ending in **-іти́**, which typically signals a Group II conjugation pattern, **хотіти** actually conjugates according to the specific rules of Group I. When pronouncing this word, you must ensure that you make the first vowel a clear, open Ukrainian **о**, carefully distinguishing it from the reduced sounds you might encounter in other Slavic languages. 
+
+A key morphological feature of **хотіти** is the consistent consonant shift that occurs right in its root. As you conjugate it through the present tense, the letter **т** from the dictionary form (**хот-**) changes entirely to the letter **ч** (**хоч-**) across every single grammatical person. This shift is a very common and essential phonetic pattern in Ukrainian.
+
+*   **я хочу** (I want)
+*   **ти хочеш** (you want)
+*   **він/вона́ хо́че** (he/she wants)
+*   **ми хо́чемо** (we want)
+*   **ви хо́чете** (you want - formal/plural)
+*   **вони́ хо́чуть** (they want)
+
+When you express a direct desire for a physical object, you use **хотіти** followed immediately by a noun. This noun must take the Accusative case because it directly receives the action of wanting. For feminine nouns ending in **-а**, the ending changes to **-у**. Thus, **вода́** (water) becomes **воду́**, and **кава** (coffee) becomes **каву**. For masculine inanimate nouns, the form remains exactly the same as the dictionary form, requiring no visible change at all.
+
+*   **Я хочу воду.** (I want water.)
+*   **Він хоче каву.** (He wants coffee.)
+*   **Я хочу сік.** (I want juice.)
+*   **Вона хоче борщ.** (She wants borscht.)
+
+When you want to express a clear desire to perform an action, you use what is called a Compound Verbal Predicate structure. This simply means you take the conjugated modal verb (**хочу**, **хочеш**, etc.) and immediately follow it with the infinitive form of the main verb. Unlike English, which explicitly requires the particle "to" placed between the two verbs, Ukrainian simply links them directly together. To form the negative, place the particle **не** directly before the verb: **я не хочу** (I do not want), **ти не хочеш?** (do you not want?), **вона не хоче** (she does not want). While polite requests use conditional forms like **хоті́в би** or **хоті́ла би** (I would like) — which you will learn later — for now, **я хочу** is the standard, direct way to express a want.
+
+*   **Я хочу чита́ти.** (I want to read.)
+*   **Я не хочу спа́ти.** (I do not want to sleep.)
+*   **Ти не хочеш гуляти?** (Do you not want to walk?)
+
+<FillIn client:only="react" items={[{"sentence": "Я ___ каву.", "answer": "хочу", "options": ["хочу", "хочеш", "хоче", "хочемо"]}, {"sentence": "Ти ___ спати?", "answer": "хочеш", "options": ["хочу", "хочеш", "хочете", "хочуть"]}, {"sentence": "Вона ___ читати.", "answer": "хоче", "options": ["хоче", "хочемо", "хочете", "хочуть"]}, {"sentence": "Ми ___ їсти.", "answer": "хочемо", "options": ["хочу", "хоче", "хочемо", "хочете"]}, {"sentence": "Ви ___ чай?", "answer": "хочете", "options": ["хочу", "хочеш", "хочемо", "хочете"]}, {"sentence": "Вони ___ воду.", "answer": "хочуть", "options": ["хоче", "хочемо", "хочете", "хочуть"]}, {"sentence": "Він ___ сік.", "answer": "хоче", "options": ["хочу", "хочеш", "хоче", "хочемо"]}, {"sentence": "Я не ___ спати.", "answer": "хочу", "options": ["хочу", "хочеш", "хоче", "хочуть"]}, {"sentence": "Ти не ___ гуляти?", "answer": "хочеш", "options": ["хочу", "хочеш", "хочемо", "хочете"]}]} instruction={"Fill in the correct form of **хотіти**."} />
+
+## Могти́ і му́сити (Can and Must)
+
+The verb **могти** (can, to be able) expresses personal ability or granted permission, and it is also classified as an irregular Group I verb. Much like "to want", it features a significant consonant shift within its root structure. The original letter **г** (**мог-**) transforms into **ж** (**мож-**) consistently across all present tense forms. This predictable shift is a hallmark of Ukrainian pronunciation.
+
+*   **я можу** (I can)
+*   **ти мо́жеш** (you can)
+*   **він/вона мо́же** (he/she can)
+*   **ми мо́жемо** (we can)
+*   **ви можете** (you can - formal/plural)
+*   **вони мо́жуть** (they can)
+
+You will use **могти** primarily to talk about your internal physical abilities, to discuss newly acquired skills, or to formally ask for permission from someone else. It functions identically to **хотіти** by forming a compound structure with a following infinitive verb to create a complete thought.
+
+*   **Я можу говори́ти украї́нською.** (I can speak Ukrainian.)
+*   **Ти можеш допомогти́?** (Can you help?)
+*   **Він не може працювати.** (He cannot work.)
+
+In sharp contrast, the verb **мусити** (must, to have to) expresses a strong, unavoidable obligation. This verb operates as a regular Group II verb with only one minor, yet critical exception: the consonant **с** shifts to **ш** strictly in the first-person singular ("I" form). The rest of the conjugation paradigm follows the standard Group II pattern flawlessly. While **хотіти** focuses entirely on personal choice, **мусити** equals pure obligation. It is much stronger than **тре́ба** (need to), which functions as a simpler, impersonal alternative that you will use later.
+
+*   **я мушу** (I must)
+*   **ти му́сиш** (you must)
+*   **він/вона му́сить** (he/she must)
+*   **ми му́симо** (we must)
+*   **ви му́сите** (you must - formal/plural)
+*   **вони му́сять** (they must)
+
+*   **Я мушу працювати.** (I must work.)
+*   **Ти мусиш вчи́ти слова́.** (You must learn the words.)
+
+These three distinct modal verbs form the logical linguistic foundation for negotiating any daily situation. You can combine them to easily explain complex circumstances, weighing your internal desires against your actual abilities and your pressing duties. Observe how beautifully they work together in a single context: **я хочу гуляти** (I possess the internal desire to walk), **але́ не можу** (but I lack the physical possibility or ability to do so) — **я мушу працювати** (because I hold the strict necessity to work).
 
 :::tip
-Three modals, three meanings: **хочу** = want · **можу** = can · **мушу** = must
+For a slightly softer or more impersonal way to say "it is necessary" or "I need to," Ukrainians frequently use the single word **треба** (need to). It does not conjugate at all for different grammatical persons, making it very beginner-friendly for rapidly expressing everyday needs.
 :::
 
-Every modal verb here follows the same pattern: **modal + infinitive**. Оля says **хочу гуляти** (want to walk), **не можу** (can't), **мушу працювати** (must work). Денис asks **ти можеш?** (can you?), **ти хочеш?** (do you want to?).
+*   **Я хочу читати кни́гу.** (I want to read a book.)
+*   **Але я не можу читати.** (But I cannot read.)
+*   **Я мушу спати.** (I must sleep.)
 
-### Dialogue 2 — At a café
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> До́брого дня! Що ви хо́чете? *(Good day! What would you like?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Я хочу ка́ву, будь ла́ска. *(I want coffee, please.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Велику чи мале́ньку? *(Large or small?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Велику. І ще я хочу ї́сти. Що ви мо́жете порекомендува́ти? *(Large. And I also want to eat. What can you recommend?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Можу порекомендува́ти борщ! *(I can recommend borscht!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Денис:</span> Чудо́во! Я хочу борщ. *(Wonderful! I want borscht.)*</div>
-
-
-</div>
-
-Something different happened here. **Я хочу каву** — Denys wants a *thing*, not an *action*. When you want a thing, **хоті́ти** takes a noun directly (accusative case): **хочу каву** (coffee), **хочу борщ** (borscht). No infinitive needed. But when he says **я хочу їсти** — that's wanting an action, so the infinitive returns.
-
-You used **хочу**, **можу**, and **мушу** intuitively through both dialogues. Now let's see exactly how each one works — starting with the most irregular: **хотіти**.
-
-## Хотіти (To Want)
-
-**Хотіти** (to want) is a Group I verb — but its infinitive ends in **-іти́**, which normally signals Group II (like **робити**, **му́сити**). Ukrainian grammarians list **хотіти** as an explicit exception. The key giveaway: its third person plural form ends in **-уть** (**хо́чуть**), not **-ять**. That **-уть** ending is the signature of Group I.
-
-Every present-tense form of **хотіти** uses a changed stem. The infinitive stem is **хот-**, but in all present-tense forms it becomes **хоч-** — a **т→ч** consonant alternation. This change is absolute: there is no present-tense form that keeps the original **т**.
-
-| | Singular | Plural |
-|---|---|---|
-| **я** | хочу | **ми** хо́чемо |
-| **ти** | хочеш | **ви** хочете |
-| **він/вона́** | хо́че | **вони́** хочуть |
-
-Compare the two stems side by side: **хот-іти** (infinitive, dictionary form) versus **хоч-у** (present, conjugated). The mutation **хот- → хоч-** is fixed across all six forms. Once you know **хоч-**, just add the regular Group I endings: **-у, -еш, -е, -емо, -ете, -уть**.
-
-**Хотіти** has two syntactic patterns. The first: **хотіти + infinitive** — when you want to *do* something.
-
-- **Я хочу чита́ти.** — I want to read.
-- **Ти хочеш гуляти?** — Do you want to walk?
-- **Вона хоче вчи́тися.** — She wants to study.
-
-The second: **хотіти + noun** (accusative) — when you want a *thing*.
-
-- **Я хочу каву.** — I want coffee.
-- **Він хоче борщ.** — He wants borscht.
-- **Ми хочемо пі́цу.** — We want pizza.
-
-<FillIn client:only="react" items={[{"sentence": "Я ____ читати.", "answer": "хочу", "options": ["хочу", "хочеш", "хоче"]}, {"sentence": "Ти ____ гуляти?", "answer": "хочеш", "options": ["хочу", "хочеш", "хоче"]}, {"sentence": "Він ____ їсти.", "answer": "хоче", "options": ["хочу", "хочеш", "хоче"]}, {"sentence": "Вона ____ спати.", "answer": "хоче", "options": ["хочемо", "хочеш", "хоче"]}, {"sentence": "Ми ____ піти в кіно.", "answer": "хочемо", "options": ["хочемо", "хочете", "хочуть"]}, {"sentence": "Ви ____ каву?", "answer": "хочете", "options": ["хочемо", "хочете", "хочуть"]}, {"sentence": "Вони ____ гуляти в парку.", "answer": "хочуть", "options": ["хочемо", "хочете", "хочуть"]}, {"sentence": "Я ____ борщ.", "answer": "хочу", "options": ["хочу", "хочеш", "хочемо"]}, {"sentence": "Ти ____ допомогти?", "answer": "хочеш", "options": ["хочу", "хочеш", "хоче"]}]} instruction={"Fill in the correct form of **хотіти**"} />
-
-Negation is straightforward. Place **не** directly before the verb: **Я не хочу.** **Ти не хочеш спа́ти?** (Don't you want to sleep?) **Він не хоче їсти.** (He doesn't want to eat.) A polite alternative — **хоті́в би** / **хоті́ла б** (I would like) — uses the conditional mood, which comes in B1. For now, **Я хочу...** is your direct, natural option.
-
-A Ukrainian Grade 3 poem (Vashulenko textbook) shows how **хотіти** expresses deep, persistent desire — not just mild preference: *«Я страше́нно хочу ма́ти годівни́цю на вікні́»* (I desperately want to have a bird feeder on my window). The child wanted so intensely that he *«хотів, хотів, хотів»* — wanted and wanted and wanted. Eventually he realized wanting alone wasn't enough: *«Кра́ще я змайстру́ю сам»* (Better I'll build it myself). **Хотіти** carries real emotional weight — genuine desire, not just "I'd prefer."
-
-## Могти́ і мусити (Can and Must)
-
-**Могти** (to be able to, can) is the second irregular verb in this module. Like **хотіти**, it belongs to Group I — its third person plural ends in **-уть** (**мо́жуть**). The stem mutation here: **мог- → мож-**, a **г→ж** alternation. This г→ж pattern is common in Ukrainian: **допомогти́ → допоможу́**, **берегти́ → бережу́**. Whenever you see **г** in an infinitive stem, expect **ж** in conjugated forms.
-
-| | Singular | Plural |
-|---|---|---|
-| **я** | можу | **ми** мо́жемо |
-| **ти** | можеш | **ви** можете |
-| **він/вона** | мо́же | **вони** можуть |
-
-**Могти** expresses ability or possibility — "I am able to" or "I can."
-
-- **Я можу говори́ти украї́нською.** — I can speak Ukrainian.
-- **Ти можеш допомогти?** — Can you help?
-- **Він може читати.** — He can read.
-- **Ми можемо зустрі́тися.** — We can meet.
-
-Note: **могти** is about *ability*. For *permission* ("May I?"), Ukrainian uses **мо́жна** — an impersonal word coming in a later module.
-
-Now the contrast: **мусити** (to must, to have to). Unlike the other two, **мусити** is a regular Group II verb — with one small twist. The **я**-form has a **с→ш** alternation: **мушу**. All other forms keep the regular **с**:
-
-| | Singular | Plural |
-|---|---|---|
-| **я** | мушу | **ми** му́симо |
-| **ти** | му́сиш | **ви** му́сите |
-| **він/вона** | му́сить | **вони** му́сять |
-
-**Мусити** means obligation — strong, unavoidable obligation. Антоне́нко-Давидо́вич, the great Ukrainian stylist, warns that **мусити** should be reserved for genuine compulsion — situations where you truly have no choice. For ordinary, everyday obligation, Ukrainian speakers often prefer **маю** (from **мати** — to have): **Я маю працювати** (I need to work — ordinary duty) versus **Я мушу працювати** (I'm forced to work — no escape). At A1, focus on **мушу** for strong obligation. You'll meet **маю** and **тре́ба** (one needs to) in later modules.
-
-Now picture the three modals as a triangle — desire, ability, obligation — joined in one sentence: **«Я хочу гуляти, але не можу — мушу працювати.»** (I want to walk, but I can't — I must work.) **Хочу** = internal desire. **Можу** = ability or possibility. **Мушу** = external compulsion, no choice.
-
-Quick mental test: *"I have free time and money for the cinema"* → **можу** піти в кіно. *"Tomorrow is an exam — I have to study"* → **мушу** вчи́ти. *"I really love this book"* → **хочу** читати.
-
-<Quiz client:only="react" questions={[{"question": "You love coffee and really want some right now.", "options": [{"text": "хочу", "correct": true}, {"text": "можу", "correct": false}, {"text": "мушу", "correct": false}]}, {"question": "You have the skill to cook borscht and offer to help.", "options": [{"text": "хочу", "correct": false}, {"text": "можу", "correct": true}, {"text": "мушу", "correct": false}]}, {"question": "You have a work deadline — you absolutely have to work today.", "options": [{"text": "хочу", "correct": false}, {"text": "можу", "correct": false}, {"text": "мушу", "correct": true}]}, {"question": "You are able to speak Ukrainian.", "options": [{"text": "хочу", "correct": false}, {"text": "можу", "correct": true}, {"text": "мушу", "correct": false}]}, {"question": "You have a strong desire to go to the cinema.", "options": [{"text": "хочу", "correct": true}, {"text": "можу", "correct": false}, {"text": "мушу", "correct": false}]}, {"question": "You have an important obligation and no way to avoid it.", "options": [{"text": "хочу", "correct": false}, {"text": "можу", "correct": false}, {"text": "мушу", "correct": true}]}, {"question": "You are free on Sunday and able to meet a friend.", "options": [{"text": "хочу", "correct": false}, {"text": "можу", "correct": true}, {"text": "мушу", "correct": false}]}, {"question": "You are very hungry and desperately want to eat.", "options": [{"text": "хочу", "correct": true}, {"text": "можу", "correct": false}, {"text": "мушу", "correct": false}]}]} instruction={"**Хочу, можу,** or **мушу**? Choose the right modal verb for each situation"} />
-
-<FillIn client:only="react" items={[{"sentence": "Я ____ гуляти, але мушу працювати.", "answer": "хочу", "options": ["хочу", "можу", "мушу"]}, {"sentence": "Ти ____ допомогти мені?", "answer": "можеш", "options": ["хочеш", "можеш", "мусиш"]}, {"sentence": "Він хоче гуляти, але ____ працювати.", "answer": "мусить", "options": ["хоче", "може", "мусить"]}, {"sentence": "Ми ____ борщ і каву, будь ласка.", "answer": "хочемо", "options": ["хочемо", "можемо", "мусимо"]}, {"sentence": "Я ____ говорити українською.", "answer": "можу", "options": ["хочу", "можу", "мушу"]}, {"sentence": "Вони ____ піти в кіно в неділю.", "answer": "хочуть", "options": ["хочуть", "можуть", "мусять"]}]} instruction={"Choose the correct modal form to complete each sentence"} />
+<Quiz client:only="react" questions={[{"question": "In a café: 'Я ___ каву.'", "options": [{"text": "хочу", "correct": true}, {"text": "можу", "correct": false}, {"text": "мушу", "correct": false}, {"text": "можеш", "correct": false}]}, {"question": "Asking for help: 'Ти ___ допомогти?'", "options": [{"text": "можеш", "correct": true}, {"text": "мусиш", "correct": false}, {"text": "хочу", "correct": false}, {"text": "може", "correct": false}]}, {"question": "No choice: 'Я ___ працювати.'", "options": [{"text": "мушу", "correct": true}, {"text": "хочу", "correct": false}, {"text": "можу", "correct": false}, {"text": "хочеш", "correct": false}]}, {"question": "A physical ability: 'Я ___ читати українською.'", "options": [{"text": "можу", "correct": true}, {"text": "мушу", "correct": false}, {"text": "хоче", "correct": false}, {"text": "можемо", "correct": false}]}, {"question": "Asking a friend: 'Що ти ___ робити?'", "options": [{"text": "хочеш", "correct": true}, {"text": "можеш", "correct": false}, {"text": "мусиш", "correct": false}, {"text": "хочете", "correct": false}]}, {"question": "Strong desire: 'Вона ___ їсти борщ.'", "options": [{"text": "хоче", "correct": true}, {"text": "може", "correct": false}, {"text": "мусить", "correct": false}, {"text": "хочу", "correct": false}]}, {"question": "Obligation: 'Ми ___ вчити слова.'", "options": [{"text": "мусимо", "correct": true}, {"text": "можемо", "correct": false}, {"text": "хочемо", "correct": false}, {"text": "мусять", "correct": false}]}, {"question": "Physical inability: 'Я не ___ спати.'", "options": [{"text": "можу", "correct": true}, {"text": "хочу", "correct": false}, {"text": "мушу", "correct": false}, {"text": "можеш", "correct": false}]}]} instruction={"Choose the correct modal verb: **хочу**, **можу**, or **мушу**."} />
+<FillIn client:only="react" items={[{"sentence": "Я хочу гуляти, але не ___.", "answer": "можу", "options": ["можу", "мушу", "хочу", "можеш"]}, {"sentence": "Я не можу гуляти — я ___ працювати.", "answer": "мушу", "options": ["мушу", "можу", "хочу", "мусить"]}, {"sentence": "Вона хоче спати, але не ___.", "answer": "може", "options": ["може", "мусить", "хоче", "можуть"]}, {"sentence": "Він не може читати — він ___ працювати.", "answer": "мусить", "options": ["мусить", "може", "хоче", "мусять"]}, {"sentence": "Ми хочемо каву, але не ___.", "answer": "можемо", "options": ["можемо", "мусимо", "хочемо", "можуть"]}, {"sentence": "Ти не можеш гуляти — ти ___ вчити слова.", "answer": "мусиш", "options": ["мусиш", "можеш", "хочеш", "мусите"]}]} instruction={"Complete the logical sentences with the correct verb."} />
+<Quiz client:only="react" questions={[{"question": "How does the root of **хотіти** change?", "options": [{"text": "'т' changes to 'ч' in all forms", "correct": true}, {"text": "It is completely regular", "correct": false}, {"text": "'г' changes to 'ж'", "correct": false}, {"text": "'с' changes to 'ш'", "correct": false}]}, {"question": "Which statement is true about **могти**?", "options": [{"text": "It is a regular verb", "correct": false}, {"text": "'г' changes to 'ж' in most forms", "correct": true}, {"text": "'с' changes to 'ш'", "correct": false}, {"text": "It ends in -іти", "correct": false}]}, {"question": "When does **мусити** have a consonant shift?", "options": [{"text": "Only in 'я мушу'", "correct": true}, {"text": "In all forms", "correct": false}, {"text": "Only in 'вони мусять'", "correct": false}, {"text": "Never", "correct": false}]}, {"question": "What is the 'they' form of **могти**?", "options": [{"text": "вони можуть", "correct": true}, {"text": "вони можать", "correct": false}, {"text": "вони мусять", "correct": false}, {"text": "вони хочуть", "correct": false}]}, {"question": "Which verb belongs to Group II?", "options": [{"text": "мусити", "correct": true}, {"text": "хотіти", "correct": false}, {"text": "могти", "correct": false}, {"text": "гуляти", "correct": false}]}, {"question": "What is the 'I' form of **хотіти**?", "options": [{"text": "я хочу", "correct": true}, {"text": "я хотю", "correct": false}, {"text": "я хочю", "correct": false}, {"text": "я хоту", "correct": false}]}]} instruction={"Identify the verb pattern. Choose the correct statement."} />
 
 ## Підсумок — Summary
 
-Three modal verbs, three meanings — here they are side by side:
+You have now successfully built the grammatical foundation necessary for expressing complex thoughts using the Compound Verbal Predicate structure. By seamlessly combining a conjugated modal verb with any infinitive action, you instantly multiply the variety of sentences you can independently create. Always remember the critical consonant shifts that define the two major irregular verbs: the root of **хотіти** completely trades its **т** for a **ч** across the entire paradigm, while the root of **могти** consistently shifts its **г** to a **ж** across every single present tense form (**вони можуть**). You also learned that the verb of strict obligation, **мусити**, remains entirely regular for Group II, except for the **с** shifting to **ш** exclusively in the specific **я мушу** form.
 
-| Дієсло́во | Meaning | Group | Я-form | Stem change |
-|---|---|---|---|---|
-| хотіти | desire (want) | I (irregular) | хочу | хот → хоч (т→ч) |
-| могти | ability (can) | I (irregular) | можу | мог → мож (г→ж) |
-| мусити | obligation (must) | II (regular*) | мушу | *с→ш in я-form only |
+From a strictly practical standpoint, it is incredibly important to remember the core equations of these modals: **Хочу** + infinitive expresses desire (I want to). **Можу** + infinitive expresses ability (I can). **Мушу** + infinitive expresses obligation (I must). Furthermore, **хотіти** is by far the most versatile of the three verbs discussed. It stands as the only modal verb that frequently pairs directly with a noun object to express a direct physical desire, such as **я хочу каву** (I want coffee). On the other hand, both **могти** and **мусити** almost always demand an accompanying infinitive action to make logical sense, such as **я можу працювати** (I can work). To effectively negate any of these statements, you simply place the negative particle **не** immediately before the conjugated modal verb: **я не хочу** (I do not want), **ми не можемо** (we cannot).
 
-All three follow the same construction: **modal verb + infinitive** (the unchanged dictionary form ending in **-ти**). **Я хочу читати.** **Ти можеш допомогти.** **Він мусить іти.** The infinitive never changes — the modal verb alone carries person and number. One exception: **хотіти** also works with a noun directly — **Я хочу каву** — when you want a thing rather than an action.
-
-Five patterns to memorize as ready-made chunks. These cover most everyday modal situations at A1:
-
-- **Я хочу мати...** — I want to have...
-- **Я не можу.** — I can't.
-- **Що ти хочеш робити?** — What do you want to do?
-- **Мушу йти.** — I have to go.
-- **Ти можеш допомогти?** — Can you help?
-
-### Self-Check
-
-Test yourself — answer each prompt out loud before checking:
-
-- Скажи́, що ти хочеш робити сього́дні. → **Я хочу ___.**
-- Скажи, що ти можеш робити українською. → **Я можу ___.**
-- Скажи, що ти мусиш робити за́втра. → **Я мушу ___.**
-- Як відмі́нюється **хотіти**? Яка особли́вість? → хот → хоч (т→ч), Group I
-- Яка різни́ця між **можу** і **мушу**? → ability vs obligation
-- Яке́ закі́нчення в 3-й осо́бі множини́ у **могти**? → **можуть** (Group I: -уть)
-
-<Quiz client:only="react" questions={[{"question": "хочемо", "options": [{"text": "хотіти", "correct": true}, {"text": "могти", "correct": false}, {"text": "мусити", "correct": false}]}, {"question": "можуть", "options": [{"text": "хотіти", "correct": false}, {"text": "могти", "correct": true}, {"text": "мусити", "correct": false}]}, {"question": "мусять", "options": [{"text": "хотіти", "correct": false}, {"text": "могти", "correct": false}, {"text": "мусити", "correct": true}]}, {"question": "хочеш", "options": [{"text": "хотіти", "correct": true}, {"text": "могти", "correct": false}, {"text": "мусити", "correct": false}]}, {"question": "можеш", "options": [{"text": "хотіти", "correct": false}, {"text": "могти", "correct": true}, {"text": "мусити", "correct": false}]}, {"question": "мусить", "options": [{"text": "хотіти", "correct": false}, {"text": "могти", "correct": false}, {"text": "мусити", "correct": true}]}]} instruction={"Which verb does this conjugated form come from — **хотіти**, **могти**, or **мусити**?"} />
-
-In the next modules, you'll meet **можна** (one may / it's allowed) — an impersonal construction for permission. Later, at A2, **мав би** / **ма́ла б** (should) will build on the modal foundation you've just learned. For now, **хочу**, **можу**, **мушу** — these three verbs unlock a huge range of everyday Ukrainian expression: from ordering **каву** at a café to explaining why you can't come to a party.
+As a final self-check to conclude this topic, actively try to answer the following questions out loud to verify your absolute understanding of these core modal concepts:
+*   Can you say exactly what you want to do right now using a full, grammatically correct sentence? (For example, **Я хочу пи́ти чай**).
+*   Can you list three distinct things you can confidently do in Ukrainian, focusing heavily on your current abilities? (For example, **Я можу читати**, **я можу говорити українською**).
+*   Can you express a mandatory duty you have scheduled for tomorrow? (For example, **Я мушу працювати**).
+*   Can you quickly conjugate the irregular verb **хотіти** for all grammatical persons out loud from memory, entirely without checking the reference table provided earlier in the module?
 
 </TabItem>
 <TabItem label="Словник">
@@ -198,81 +145,68 @@ In the next modules, you'll meet **можна** (one may / it's allowed) — an 
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **хоті́ти** | to want (irregular) | дієсл. |  |
-| **могти́** | to be able to, can (irregular) | дієсл. |  |
-| **му́сити** | to must, to have to | дієсл. |  |
-| **ка́ва** | coffee (f) | ім. | ж. |
-| **ї́сти** | to eat | дієсл. |  |
+| **хоті́ти** | to want | дієсл. |  |
+| **могти́** | to be able, can | дієсл. |  |
+| **му́сити** | must, to have to | дієсл. |  |
+| **тре́ба** | need to, it is necessary |  |  |
 | **шко́да́** | pity, unfortunately |  |  |
-| **допомогти́** | to help (perfective) | дієсл. |  |
-| **пора́дити** | to recommend, to advise (perfective) | дієсл. |  |
-| **тре́ба** | one needs to, it is necessary (impersonal) |  |  |
-| **вихідні́** | weekend (pl) | прикм. |  |
+| **допомогти́** | to help | дієсл. |  |
+| **порекомендува́ти** | to recommend | дієсл. |  |
+| **ка́ва** | coffee | ім. | ж. |
+| **ї́сти** | to eat | дієсл. |  |
 | **гуля́ти** | to walk, to stroll | дієсл. |  |
 | **працюва́ти** | to work | дієсл. |  |
-| **неді́ля** | Sunday (f) | ім. | ж. |
-| **кіно́** | cinema, movies (n, indeclinable) | ім. | с. |
-| **зві́сно** | of course | присл. |  |
-| **офіціа́нт** | waiter (m) | ім. | ч. |
+| **пи́ти** | to drink | дієсл. |  |
+| **чита́ти** | to read | дієсл. |  |
+| **спа́ти** | to sleep | дієсл. |  |
+| **вчи́ти** | to learn, to study | дієсл. |  |
+| **слова́** | words | ім. | с. |
+| **сік** | juice | ім. | ч. |
+| **вода́** | water | ім. | ж. |
+| **кни́га** | book | ім. | ж. |
+| **офіціа́нт** | waiter | ім. | ч. |
+| **відві́дувач** | visitor, customer | ім. | ч. |
 | **вели́кий** | large, big | прикм. |  |
 | **мале́нький** | small, little | прикм. |  |
-| **чудо́во** | wonderful, great | присл. |  |
-| **пі́ца** | pizza (f) | ім. | ж. |
-| **спа́ти** | to sleep | дієсл. |  |
-| **чита́ти** | to read | дієсл. |  |
-| **вчи́тися** | to study, to learn (reflexive) | дієсл. |  |
-| **зустрі́тися** | to meet (perfective, reflexive) | дієсл. |  |
-| **говори́ти** | to speak, to talk | дієсл. |  |
-| **піти** | to go (perfective) | ім. | ж. |
-| **йти** | to go (imperfective, on foot) | дієсл. |  |
-| **вчи́ти** | to study, to learn (transitive) | дієсл. |  |
-| **ма́ти** | to have (also used as modal: маю = I need to) | ім. |  |
-| **мо́жна** | one may, it is allowed (impersonal) |  |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Домовилися!** | Deal! It's agreed! |
 | **Що ти хочеш робити?** | What do you want to do? |
-| **Я не можу.** | I can't. |
-| **Я хочу мати...** | I want to have... |
-| **Мушу йти.** | I have to go. |
-| **Ти можеш допомогти?** | Can you help? |
+| **Я хочу каву.** | I want coffee. |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "хоті́ти", back: "to want (irregular)", subtitle: "дієсл." }, { front: "могти́", back: "to be able to, can (irregular)", subtitle: "дієсл." }, { front: "му́сити", back: "to must, to have to", subtitle: "дієсл." }, { front: "ка́ва", back: "coffee (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ї́сти", back: "to eat", subtitle: "дієсл." }, { front: "шко́да́", back: "pity, unfortunately" }, { front: "допомогти́", back: "to help (perfective)", subtitle: "дієсл." }, { front: "пора́дити", back: "to recommend, to advise (perfective)", subtitle: "дієсл." }, { front: "тре́ба", back: "one needs to, it is necessary (impersonal)" }, { front: "вихідні́", back: "weekend (pl)", subtitle: "прикм." }, { front: "гуля́ти", back: "to walk, to stroll", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "неді́ля", back: "Sunday (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кіно́", back: "cinema, movies (n, indeclinable)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зві́сно", back: "of course", subtitle: "присл." }, { front: "офіціа́нт", back: "waiter (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вели́кий", back: "large, big", subtitle: "прикм." }, { front: "мале́нький", back: "small, little", subtitle: "прикм." }, { front: "чудо́во", back: "wonderful, great", subtitle: "присл." }, { front: "пі́ца", back: "pizza (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "вчи́тися", back: "to study, to learn (reflexive)", subtitle: "дієсл." }, { front: "зустрі́тися", back: "to meet (perfective, reflexive)", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak, to talk", subtitle: "дієсл." }, { front: "піти", back: "to go (perfective)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "йти", back: "to go (imperfective, on foot)", subtitle: "дієсл." }, { front: "вчи́ти", back: "to study, to learn (transitive)", subtitle: "дієсл." }, { front: "ма́ти", back: "to have (also used as modal: маю = I need to)", subtitle: "ім." }, { front: "мо́жна", back: "one may, it is allowed (impersonal)" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "хоті́ти", back: "to want", subtitle: "дієсл." }, { front: "могти́", back: "to be able, can", subtitle: "дієсл." }, { front: "му́сити", back: "must, to have to", subtitle: "дієсл." }, { front: "тре́ба", back: "need to, it is necessary" }, { front: "шко́да́", back: "pity, unfortunately" }, { front: "допомогти́", back: "to help", subtitle: "дієсл." }, { front: "порекомендува́ти", back: "to recommend", subtitle: "дієсл." }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ї́сти", back: "to eat", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk, to stroll", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "пи́ти", back: "to drink", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "вчи́ти", back: "to learn, to study", subtitle: "дієсл." }, { front: "слова́", back: "words", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сік", back: "juice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "відві́дувач", back: "visitor, customer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вели́кий", back: "large, big", subtitle: "прикм." }, { front: "мале́нький", back: "small, little", subtitle: "прикм." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "я", "right": "можу"}, {"left": "ти", "right": "можеш"}, {"left": "він / вона", "right": "може"}, {"left": "ми", "right": "можемо"}, {"left": "ви", "right": "можете"}, {"left": "вони", "right": "можуть"}]} instruction={"Match each pronoun to the correct form of **могти** (to be able to)"} />
+<MatchUp client:only="react" pairs={[{"left": "я", "right": "хочу"}, {"left": "ти", "right": "можеш"}, {"left": "він", "right": "мусить"}, {"left": "ми", "right": "можемо"}, {"left": "ви", "right": "хочете"}, {"left": "вони", "right": "мусять"}]} instruction={"Match the pronoun to the correct verb form."} />
 
-<GroupSort client:only="react" groups={{"Group I (вони → -уть)": ["хотіти", "могти", "гуляти", "читати", "писати", "слухати"], "Group II (вони → -ять)": ["мусити", "робити", "говорити", "вчитися", "ходити", "любити"]}} instruction={"Sort these verbs by conjugation group. Group I verbs end in **-уть** (вони). Group II verbs end in **-ять** (вони)."} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я хочеш каву.", "errorWord": "хочеш", "correctForm": "хочу", "options": ["хочу", "хоче", "хочемо"], "explanation": "For 'я', the correct form is 'хочу'."}, {"sentence": "Ти може допомогти?", "errorWord": "може", "correctForm": "можеш", "options": ["можеш", "можу", "можете"], "explanation": "For 'ти', the correct form is 'можеш'."}, {"sentence": "Ми мусять працювати.", "errorWord": "мусять", "correctForm": "мусимо", "options": ["мусимо", "мушу", "мусите"], "explanation": "For 'ми', the correct form is 'мусимо'."}, {"sentence": "Він хочу їсти.", "errorWord": "хочу", "correctForm": "хоче", "options": ["хоче", "хочеш", "хочуть"], "explanation": "For 'він', the correct form is 'хоче'."}, {"sentence": "Вони можеш читати.", "errorWord": "можеш", "correctForm": "можуть", "options": ["можуть", "може", "можемо"], "explanation": "For 'вони', the correct form is 'можуть'."}, {"sentence": "Ви мусить спати.", "errorWord": "мусить", "correctForm": "мусите", "options": ["мусите", "мусиш", "мусимо"], "explanation": "For 'ви', the correct form is 'мусите'."}]} instruction={"Find and correct the wrong verb form."} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я хотіти каву.", "errorWord": "хотіти", "correctForm": "хочу", "options": ["хочу", "хочеш", "хоче"], "explanation": "Use the conjugated form **хочу** (я-form), not the infinitive хотіти."}, {"sentence": "Ти можуть допомогти?", "errorWord": "можуть", "correctForm": "можеш", "options": ["можу", "можеш", "може"], "explanation": "**Ти** takes **можеш**. **Можуть** is the вони-form (3rd person plural)."}, {"sentence": "Він мушу вчитися.", "errorWord": "мушу", "correctForm": "мусить", "options": ["мусить", "мусиш", "мусимо"], "explanation": "**Він** takes **мусить**. **Мушу** is the я-form only."}, {"sentence": "Ми хочеш гуляти.", "errorWord": "хочеш", "correctForm": "хочемо", "options": ["хочемо", "хочете", "хочуть"], "explanation": "**Ми** takes **хочемо**. **Хочеш** is the ти-form."}, {"sentence": "Вони можемо читати.", "errorWord": "можемо", "correctForm": "можуть", "options": ["можуть", "можемо", "можете"], "explanation": "**Вони** takes **можуть**. **Можемо** is the ми-form."}, {"sentence": "Ти мусять іти?", "errorWord": "мусять", "correctForm": "мусиш", "options": ["мусиш", "мусить", "мусимо"], "explanation": "**Ти** takes **мусиш**. **Мусять** is the вони-form."}]} instruction={"Find the incorrectly conjugated verb and correct it"} />
+<Unjumble client:only="react" items={[{"words": "каву. / хочу / Я", "answer": "Я хочу каву."}, {"words": "допомогти? / можеш / Ти", "answer": "Ти можеш допомогти?"}, {"words": "порекомендувати? / ви / Що / можете", "answer": "Що ви можете порекомендувати?"}, {"words": "працювати. / мушу / Я", "answer": "Я мушу працювати."}, {"words": "спати. / не / Вона / хоче", "answer": "Вона не хоче спати."}, {"words": "можуть / Вони / українською. / говорити", "answer": "Вони можуть говорити українською."}]} instruction={"Put the words in the correct order to make a sentence."} />
 
-<TrueFalse client:only="react" items={[{"statement": "**Хотіти** belongs to conjugation Group I.", "isTrue": true, "explanation": "Correct — its вони-form ends in **-уть** (хочуть), which is the Group I signature."}, {"statement": "The stem of **хотіти** stays **хот-** in all conjugated present-tense forms.", "isTrue": false, "explanation": "Wrong — the stem changes to **хоч-** in every present form (т→ч alternation). There is no present form with хот-."}, {"statement": "**Мусити** is a completely irregular verb, just like хотіти and могти.", "isTrue": false, "explanation": "Wrong — мусити is a regular Group II verb. Only the я-form has a small change: **мушу** (с→ш in я only)."}, {"statement": "Both **можу** and **хочу** end in **-у** because хотіти and могти are both Group I verbs.", "isTrue": true, "explanation": "Correct — Group I я-forms take **-у**. Both verbs belong to Group I despite having unusual stems."}, {"statement": "**Мушу** means 'I want'.", "isTrue": false, "explanation": "Wrong — **мушу** means 'I must / I have to' (obligation). 'I want' is **хочу**."}, {"statement": "In the sentence **Я хочу каву**, the verb хотіти is followed by an infinitive.", "isTrue": false, "explanation": "Wrong — **каву** is a noun in the accusative case. Хотіти + noun means wanting a *thing*. Хотіти + infinitive means wanting to *do* something."}, {"statement": "The stem change in **могти** is г → ж (мог- → мож-).", "isTrue": true, "explanation": "Correct — this г→ж alternation is a regular Ukrainian pattern: допомогти → допоможу, берегти → бережу."}]} instruction={"True or false? Read each statement about the three modal verbs"} />
+<DivideWords client:only="react" items={[{"word": "кава", "answer": "ка-ва"}, {"word": "вода", "answer": "во-да"}, {"word": "шкода", "answer": "шко-да"}, {"word": "гуляти", "answer": "гу-ля-ти"}, {"word": "мусити", "answer": "му-си-ти"}, {"word": "робити", "answer": "ро-би-ти"}, {"word": "читати", "answer": "чи-та-ти"}]} instruction={"Divide the words into syllables."} />
 
-<Translate client:only="react" questions={[{"source": "I want coffee.", "options": [{"text": "Я хочу каву.", "correct": true}, {"text": "Я можу каву.", "correct": false}, {"text": "Я мушу каву.", "correct": false}]}, {"source": "Can you help?", "options": [{"text": "Ти хочеш допомогти?", "correct": false}, {"text": "Ти можеш допомогти?", "correct": true}, {"text": "Ти мусиш допомогти?", "correct": false}]}, {"source": "She must work.", "options": [{"text": "Вона хоче працювати.", "correct": false}, {"text": "Вона може працювати.", "correct": false}, {"text": "Вона мусить працювати.", "correct": true}]}, {"source": "We want to eat.", "options": [{"text": "Ми хочемо їсти.", "correct": true}, {"text": "Ми можемо їсти.", "correct": false}, {"text": "Ми мусимо їсти.", "correct": false}]}, {"source": "I can speak Ukrainian.", "options": [{"text": "Я хочу говорити українською.", "correct": false}, {"text": "Я можу говорити українською.", "correct": true}, {"text": "Я мушу говорити українською.", "correct": false}]}, {"source": "They want borscht.", "options": [{"text": "Вони хочуть борщ.", "correct": true}, {"text": "Вони можуть борщ.", "correct": false}, {"text": "Вони мусять борщ.", "correct": false}]}]} instruction={"Choose the correct Ukrainian translation"} />
+<CountSyllables client:only="react" items={[{"word": "кава", "correct": 2}, {"word": "чай", "correct": 1}, {"word": "борщ", "correct": 1}, {"word": "вода", "correct": 2}, {"word": "сік", "correct": 1}, {"word": "допомогти", "correct": 4}, {"word": "треба", "correct": 2}]} instruction={"How many syllables are in each word?"} />
 
+<OddOneOut client:only="react" items={[{"words": ["чай", "борщ", "кава"], "correct": 2, "explanation": "**кава** has 2 syllables, the others have 1."}, {"words": ["могти", "спати", "працювати"], "correct": 2, "explanation": "**працювати** has 4 syllables, the others have 2."}, {"words": ["сік", "чай", "вода"], "correct": 2, "explanation": "**вода** has 2 syllables, the others have 1."}, {"words": ["хочу", "їсти", "читати"], "correct": 2, "explanation": "**читати** has 3 syllables, the others have 2."}, {"words": ["я", "він", "вона"], "correct": 2, "explanation": "**вона** has 2 syllables, the others have 1."}, {"words": ["гуляти", "мусити", "могти"], "correct": 2, "explanation": "**могти** has 2 syllables, the others have 3."}]} instruction={"Find the word with a different number of syllables."} />
+
+<Order client:only="react" items={["— Що ти хочеш робити?", "— Я хочу гуляти. А ти?", "— Я не можу, я мушу працювати.", "— Шкода!"]} correct_order={[0, 1, 2, 3]} instruction={"Put the dialogue lines in the correct order."} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- [Караман Grade 10, p.179](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=179)
-  _Хотіти listed as Group I exception (despite -іти infinitive)._
-- [Літвінова Grade 7, p.55](https://shkola.in.ua/7-klas-ukrainska-mova-litvinova-2024.html)
-  _Exceptions: хотіти, гудіти, ревіти, іржати — Group I despite -іти._
-
-**Граматика — Grammar (МійКлас)**
-
-- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=112), стор. 112
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=91), стор. 91
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=179), стор. 179
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=102), стор. 102
+- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 228
 
 **Статті — Articles**
 
@@ -281,12 +215,6 @@ In the next modules, you'll meet **можна** (one may / it's allowed) — an 
 **Відео — Videos**
 
 - [Modal Verbs in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) (Speak Ukrainian)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Present Tense](https://www.ukrainianlessons.com/present-tense/)
-- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
 
 </TabItem>
 </Tabs>

@@ -5,38 +5,32 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: опис зовнішності
-  translation: description of appearance
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: стату́ра
-  translation: build/stature
+- word: хара́ктер
+  translation: character
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: поста́ва
-  translation: posture/bearing
+- word: стосу́нки
+  translation: interpersonal relationships
   expression: false
   pos: ім.
-  gender: ж.
-  verified: true
-- word: молоди́й
-  translation: young
-  expression: false
-  pos: прикм.
   gender: ''
   verified: true
-- word: зрі́лий
-  translation: mature
+- word: ро́дичі
+  translation: relatives
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: лі́тній
-  translation: elderly
+- word: знайо́мство
+  translation: acquaintance / meeting
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вродли́вий
+  translation: beautiful/handsome
   expression: false
   pos: прикм.
   gender: ''
@@ -53,90 +47,6 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: струнка́
-  translation: graceful/slim
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вродли́вий
-  translation: beautiful/handsome
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: вира́зне
-  translation: expressive
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: смагля́вий
-  translation: swarthy/dark-skinned
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: бліде́
-  translation: pale
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: кров із молоком
-  translation: blood and milk (healthy/rosy complexion)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ка́рі
-  translation: brown (eyes)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: розко́сі
-  translation: slanting (eyes)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кучеря́вий
-  translation: curly-haired
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: руся́ве
-  translation: light brown (hair)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: кашта́нове
-  translation: chestnut (hair)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ли́сий
-  translation: bald
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: портре́тна дета́ль
-  translation: portrait detail
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: хара́ктер
-  translation: character
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: щи́рий
   translation: sincere
   expression: false
@@ -149,38 +59,56 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: чу́йний
-  translation: sensitive/responsive
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
 - word: кмітли́вий
   translation: quick-witted
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: товари́ський
-  translation: sociable/companionable
+- word: чу́йний
+  translation: sensitive/responsive
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: вередли́вий
-  translation: capricious/picky
+- word: подру́жжя
+  translation: married couple
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відрекомендува́тися
+  translation: to introduce oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: портре́тна дета́ль
+  translation: portrait detail
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: поста́ва
+  translation: posture/bearing
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стату́ра
+  translation: build/stature
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: смагля́вий
+  translation: swarthy/dark-skinned
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: впе́ртий
-  translation: stubborn
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: за́мкнутий
-  translation: withdrawn
+- word: кучеря́вий
+  translation: curly-haired
   expression: false
   pos: прикм.
   gender: ''
@@ -191,22 +119,154 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: самовпе́внений
-  translation: arrogant/overconfident
+- word: приві́тний
+  translation: welcoming/friendly
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: впевнений у собі
-  translation: self-confident
+- word: вередли́вий
+  translation: capricious/picky
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: товари́ський
+  translation: sociable/companionable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дру́жба
+  translation: friendship
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коха́ння
+  translation: romantic love
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дові́ра
+  translation: trust
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прими́рення
+  translation: reconciliation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кли́чний відмі́нок
+  translation: vocative case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вік
+  translation: age
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зріст
+  translation: height
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́тній
+  translation: elderly
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: середнього зросту
+  translation: of average height
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: йому властиво
-  translation: it is characteristic of him
+- word: широкопле́чий
+  translation: broad-shouldered
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: призе́мкуватий
+  translation: squat/stocky
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: струнки́й
+  translation: slender/graceful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: руся́ве
+  translation: light brown/blondish (of hair)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кашта́нове
+  translation: chestnut (of hair)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бліде́
+  translation: pale
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: рум'я́не
+  translation: rosy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: привітний погляд
+  translation: welcoming gaze
   expression: true
   pos: ''
+  gender: ''
+  verified: true
+- word: наполе́гливий
+  translation: persistent
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́мкнутий
+  translation: withdrawn/introverted
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: впе́ртий
+  translation: stubborn
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за характером
+  translation: by character/nature
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: власти́во
+  translation: it is characteristic/typical
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
 - word: че́сний
@@ -221,29 +281,17 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: працьови́тий
-  translation: hardworking
+- word: м'яки́й
+  translation: soft (of character)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: ліни́вий
-  translation: lazy
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: роди́на
-  translation: family
+- word: до́нька
+  translation: daughter
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: ро́дичі
-  translation: relatives
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: близькі родичі
   translation: close relatives
@@ -281,41 +329,41 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: подру́жжя
-  translation: married couple
-  expression: false
-  pos: ім.
-  gender: с.
+- word: двоюрідний брат
+  translation: first cousin (male)
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: све́кор
-  translation: father-in-law (husband's side)
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: двоюрідна сестра
+  translation: first cousin (female)
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: свекру́ха
-  translation: mother-in-law (husband's side)
+  translation: husband's mother
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: тесть
-  translation: father-in-law (wife's side)
+- word: све́кор
+  translation: husband's father
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: те́ща
-  translation: mother-in-law (wife's side)
+  translation: wife's mother
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: неві́стка
-  translation: daughter-in-law
+- word: тесть
+  translation: wife's father
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
 - word: зять
   translation: son-in-law
@@ -323,76 +371,34 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: корі́ння
-  translation: roots
+- word: неві́стка
+  translation: daughter-in-law
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: гі́лля́
-  translation: branches
+- word: Батьківщина
+  translation: Motherland/Homeland
   expression: false
   pos: ім.
-  gender: с.
-  verified: true
-- word: стосу́нки
-  translation: interpersonal relationships
-  expression: false
-  pos: ім.
-  gender: ''
+  gender: ж.
   verified: true
 - word: відно́сини
-  translation: formal relations
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: взає́мини
-  translation: mutual relations
+  translation: formal/official relations
   expression: false
   pos: ім.
   gender: ''
   verified: true
 - word: ста́влення
-  translation: attitude
+  translation: attitude/disposition
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: дру́жба
-  translation: friendship
+- word: взає́мини
+  translation: reciprocal relations / mutual connections
   expression: false
   pos: ім.
-  gender: ч.
-  verified: true
-- word: коха́ння
-  translation: romantic love
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: дові́ра
-  translation: trust
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: дружи́ти
-  translation: to be friends
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: товаришува́ти
-  translation: to be comrades/associate
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: коха́ти
-  translation: to love romantically
-  expression: false
-  pos: дієсл.
   gender: ''
   verified: true
 - word: довіря́ти
@@ -401,119 +407,77 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: супере́чка
-  translation: argument/dispute
+- word: пова́га
+  translation: respect
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: сва́рка
-  translation: quarrel/conflict
+- word: поважа́ти
+  translation: to respect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підтри́мка
+  translation: support
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: свари́тися
-  translation: to quarrel/fight
+- word: підтри́мувати
+  translation: to support
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: прими́рення
-  translation: reconciliation
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мири́тися
-  translation: to make peace/reconcile
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: знайо́мство
-  translation: acquaintance/meeting
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: відрекомендува́тися
-  translation: to introduce oneself
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: дозвольте відрекомендуватися
-  translation: allow me to introduce myself
+- word: Дозвольте відрекомендуватися
+  translation: Allow me to introduce myself
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: дозвольте представити вам
-  translation: allow me to present to you
+- word: Дозвольте представити вам
+  translation: Allow me to introduce to you
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: познайомтеся, будь ласка
-  translation: please meet
+- word: Дуже приємно
+  translation: Very pleased
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: дуже приємно
-  translation: pleased to meet you
+- word: Познайомтеся, будь ласка
+  translation: Please, meet each other
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: радий познайомитися
-  translation: glad to meet you (m)
+- word: Дякую, що приділили час
+  translation: Thank you for your time
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: рада познайомитися
-  translation: glad to meet you (f)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: кли́чний відмі́нок
-  translation: vocative case
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
 - word: твір-опис зовнішності людини
-  translation: composition describing a person's appearance
+  translation: portrait essay
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: за́чи́н
-  translation: introduction/opening
+  translation: introduction (of an essay)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: основна части́на
-  translation: main body
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
 - word: кінці́вка
-  translation: conclusion/ending
+  translation: conclusion (of an essay)
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: загальне враження
-  translation: general impression
-  expression: true
-  pos: ''
-  gender: ''
   verified: true
 - word: художні засоби
   translation: artistic devices
@@ -527,21 +491,33 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: порівняння
-  translation: comparisons/similes
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: зменшувально-пестливі слова
-  translation: diminutive-affectionate words
+- word: сивий, як голуб
+  translation: gray as a dove
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: внутрішній світ
-  translation: inner world
+- word: порівняння
+  translation: similes
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: очі, як волошки
+  translation: eyes like cornflowers
   expression: true
   pos: ''
+  gender: ''
+  verified: true
+- word: зменшувально-пестливі слова
+  translation: diminutives
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: натру́джені
+  translation: hard-working (of hands)
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true

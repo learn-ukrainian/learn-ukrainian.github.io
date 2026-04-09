@@ -1,0 +1,139 @@
+## Dialogues
+
+Two people meet at a language school in Kyiv. One has lived here for years; the other just arrived. They want to know each other's full story — where they come from, what they do now, and what comes next.
+
+> — **Окса́на:** Розкажи́ про себе́! *(Tell me about yourself!)*
+> — **Макси́м:** Я народи́вся в Кана́ді, у Торо́нто. *(I was born in Canada, in Toronto.)*
+> — **Оксана:** А за́раз ти живе́ш тут? *(And now you live here?)*
+> — **Максим:** Так, зараз я живу́ в Ки́єві. *(Yes, now I live in Kyiv.)*
+> — **Оксана:** Чо́му ти переї́хав? *(Why did you move?)*
+> — **Максим:** Я хоті́в вивча́ти украї́нську. *(I wanted to study Ukrainian.)* Мої́ бабу́ся і діду́сь з Украї́ни. *(My grandma and grandpa are from Ukraine.)*
+> — **Оксана:** А що ти бу́деш роби́ти да́лі? *(And what will you do next?)*
+> — **Максим:** Я бу́ду працюва́ти тут і вчи́ти мо́ву. *(I will work here and learn the language.)*
+> — **Оксана:** Чудо́во! У́спіхів тобі́! *(Wonderful! Best of luck!)*
+
+
+All three tenses appear in this single conversation. **Народився** (was born) — past. **Живу** (live) — present. **Буду працювати** (will work) — future. Maksym moves naturally from his childhood in Canada, through his present life in Kyiv, to his future plans. That is the shape of every life story.
+
+Now hear Anna tell her story — from birth to future dreams.
+
+> — **А́нна:** Я народи́лася у Льво́ві. *(I was born in Lviv.)* Там я вчи́лася в шко́лі. *(I studied at school there.)*
+> — **Коле́га:** А по́тім? *(And then?)*
+> — **Анна:** Потім я переї́хала в Ки́їв. *(Then I moved to Kyiv.)* Я закі́нчила університе́т. *(I finished university.)*
+> — **Колега:** А зараз? *(And now?)*
+> — **Анна:** Зараз я працю́ю вчи́телькою. *(Now I work as a teacher.)* Я живу в це́нтрі мі́ста. *(I live in the city centre.)*
+> — **Колега:** А що далі? *(And what's next?)*
+> — **Анна:** Я буду подорожува́ти! *(I will travel!)* Я хо́чу поба́чити Япо́нію. *(I want to see Japan.)*
+> — **Колега:** І ти будеш вчити япо́нську? *(And you'll learn Japanese?)*
+> — **Анна:** Мо́же! Але́ споча́тку — украї́нська для тебе́! *(Maybe! But first — Ukrainian for you!)*
+
+
+Notice how Anna's story flows: past (**народилася**, **вчилася**, **переїхала**, **закінчила**) → present (**працюю**, **живу**) → future (**буду подорожувати**). The story moves forward in time, just like Maksym's. Past events first, then what is true now, then dreams (**мрі́ї**). That is the shape of every life story in Ukrainian.
+
+## Три часи́ ра́зом (Three Tenses Together)
+
+Every life story has three parts. Here is the scaffold you need:
+
+**МИНУ́ЛИЙ ЧАС** (past tense) — things that already happened:
+- **Я народився** / **народилася** в... *(I was born in...)*
+- **Я жив** / **жила́** в... *(I lived in...)*
+- **Я вчи́вся** / **вчилася**... *(I studied...)*
+- **Я працюва́в** / **працюва́ла**... *(I worked...)*
+
+**ТЕПЕ́РІШНІЙ ЧАС** (present tense) — what is true right now:
+- **Зараз я живу** в... *(Now I live in...)*
+- **Я працюю**... *(I work...)*
+- **Я вивча́ю**... *(I study/am learning...)*
+- **Я люблю́**... *(I love...)*
+
+**МАЙБУ́ТНІЙ ЧАС** (future tense) — what will come:
+- **Я буду працювати**... *(I will work...)*
+- **Я буду вивчати**... *(I will study...)*
+- **Я буду жи́ти**... *(I will live...)*
+
+Look at the past tense forms closely. Gender matters: **-в** for masculine (**я народивСЯ**) and **-ла** for feminine (**я народиЛАся**). Three more pairs: **жив** / **жила**, **вчився** / **вчилася**, **працював** / **працювала**. A man says **я народився**, a woman says **я народилася** — the ending always tells you.
+
+Signal words are the listener's roadmap. They tell the listener which tense is coming before the verb arrives:
+
+**Past signals:** **рані́ше** (before/earlier), **у дити́нстві** (in childhood), **коли́ я був / була́ мале́ньким / мале́нькою** (when I was little).
+**Present signals:** **зараз** (now), **сього́дні** (today), **цього́ ро́ку** (this year).
+**Future signals:** **потім** (then/later), **далі** (further/next), **насту́пного року** (next year), **ско́ро** (soon).
+
+Compare this pair: **Раніше я жив у Канаді** *(Before, I lived in Canada)* vs. **Зараз я живу в Украї́ні** *(Now I live in Ukraine)*. Same verb root **жи-**, opposite tense, different signal word. The signal word does the work.
+
+Ukrainian speakers use **А потім...** *(And then...)* to move from past to present and **А далі...** *(And next...)* to move from present to future. These two phrases are the hinges of every life story. Try it: **Я народився в Оде́сі. А потім я переїхав у Київ. А далі — я буду подорожувати!** *(I was born in Odesa. And then I moved to Kyiv. And next — I will travel!)*
+
+<!-- INJECT_ACTIVITY: fill-in-signal-words -->
+
+## Моя́ істо́рія (My Story)
+
+Now read a full model story. Taras is a programmer from Odesa who moved to Kyiv. Read his story and notice how all three tenses flow together naturally.
+
+:::note
+**Тара́с розповіда́є** *(Taras tells his story)*
+
+**Я народився в Одесі у тисяча дев'ятсот дев'яносто п'ятому році.** *(I was born in Odesa in nineteen ninety-five.)* **Я жив там з батька́ми і сестро́ю.** *(I lived there with my parents and sister.)* **У дитинстві я ходи́в у шко́лу.** *(In childhood I went to school.)* **Я люби́в матема́тику.** *(I loved maths.)* **Потім я переїхав у Київ.** *(Then I moved to Kyiv.)* **Я вчився в університе́ті.** *(I studied at university.)*
+
+**Зараз я живу в Києві.** *(Now I live in Kyiv.)* **Я працюю програмі́стом.** *(I work as a programmer.)* **Я люблю свою́ робо́ту.** *(I love my job.)* **На дозві́ллі я гра́ю у футбо́л.** *(In my free time I play football.)* **Я чита́ю книжки́.** *(I read books.)*
+
+**Далі я буду подорожувати.** *(Next I will travel.)* **Я буду вивчати англі́йську.** *(I will study English.)* **І я буду жити в Києві.** *(And I will live in Kyiv.)* **Це моє́ мі́сто!** *(This is my city!)*
+:::
+
+The tense shifts are clear. Past verbs: **народився**, **жив**, **ходив**, **любив**, **переїхав**, **вчився**. Present verbs: **живу**, **працюю**, **люблю**, **граю**, **читаю**. Future constructions: **буду подорожувати**, **буду вивчати**, **буду жити**. Each block has its own signal word: **у дитинстві** and **потім** for the past, **зараз** for the present, **далі** for the future.
+
+<!-- INJECT_ACTIVITY: ordering-life-events -->
+
+Now your turn. Tell YOUR story using the same scaffold:
+
+**Past** — start with: **Я народився** / **народилася** в [місто/краї́на]. Then add: **Я жив/жила...** **Я вчився/вчилася...** **Я працюва́в/працюва́ла...** Use at least three past verbs with the correct gender ending (**-в** or **-ла**).
+
+**Present** — shift with **зараз**: **Зараз я живу...** **Я працюю...** **Я вивчаю українську.** Why are you learning? **Я вивчаю українську, тому́ що...** *(I'm studying Ukrainian because...)*
+
+**Future** — shift with **далі**: **Я буду...** **Я хочу...** Use at least three **буду** + infinitive constructions.
+
+Target: 8–10 sentences. Use **раніше** / **зараз** / **далі** to signal each tense shift. Remember: past verbs change by gender (**-в** for he, **-ла** for she), present verbs change by person (**я живу**, **ти живеш**), and future always uses **буду** + infinitive.
+
+<!-- INJECT_ACTIVITY: fill-in-biography -->
+
+## Summary
+
+Three tenses — three patterns. Here they are side by side.
+
+**Минулий час** (past tense) — add **-в** (masculine), **-ла** (feminine), **-ло** (neuter), or **-ли** (plural) to the verb stem:
+- **народи́в-ся** / **народи́ла-ся** *(was born)*
+- **жи-в** / **жи-ла** *(lived)*
+- **вчи-в-ся** / **вчи-ла-ся** *(studied)*
+
+**Теперішній час** (present tense) — person endings:
+- **я живу**, **ти живеш**, **він/вона́ живе́**
+- **ми живемо́**, **ви живете́**, **вони́ живу́ть**
+
+**Майбутній час** (future tense) — **буду** + infinitive:
+- **я буду подорожувати** *(I will travel)*
+- **ти будеш працювати** *(you will work)*
+- **він/вона бу́де вивчати** *(he/she will study)*
+
+At A1, future tense always uses **буду** + infinitive — never a single conjugated form.
+
+**Signal words — quick reference:**
+
+**МИНУЛИЙ:** **раніше** *(earlier)*, **у дитинстві** *(in childhood)*, **тоді** *(back then)*, **потім** *(then, narrating past sequence)*.
+**ТЕПЕРІШНІЙ:** **зараз** *(now)*, **сьогодні** *(today)*, **цього року** *(this year)*.
+**МАЙБУТНІЙ:** **далі** *(next)*, **потім** *(then, pointing forward)*, **наступного року** *(next year)*, **скоро** *(soon)*.
+
+:::tip
+The word **потім** can signal a past sequence OR a future plan — context tells you which!
+:::
+
+**Life story vocabulary** — words every story needs:
+
+- **народи́тися** *(to be born)* — я народився / народилася
+- **жити** *(to live)* — я жив / жила / живу / буду жити
+- **вчи́тися** *(to study)* — я вчився / вчилася / буду вчитися
+- **переї́хати** *(to move/relocate)* — я переїхав / переїхала
+- **подорожувати** *(to travel)* — я буду подорожувати
+- **закі́нчити** *(to finish/graduate)* — я закі́нчив / закінчила
+- **розповіда́ти** *(to tell/narrate)* — я розповіда́ю / буду розповідати
+- **мрі́я** *(dream)* — моя мрі́я
+
+<!-- INJECT_ACTIVITY: matching-verb-tense -->

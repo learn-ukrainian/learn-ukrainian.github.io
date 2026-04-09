@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -310,335 +310,364 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- **Confirmed (14/14):** бачити (verb), знати (verb), любити (verb), чекати (verb), шукати (verb), друг (noun), подруга (noun), сусід (noun), колега (noun), викладач (noun), вчитель (noun), лікар (noun), продавець (noun), покупець (noun)
-- **Not found:** — (none)
-
-**Note on сусід:** VESUM returned 3 matches: `сусід(noun)`, `сусіда(noun)` × 2. The form `сусіда` exists as its own lemma (historical/regional variant). Module should use `сусід` as the canonical nominative form; accusative `сусіда` is the expected inflected form and is correct.
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги (Dialogues) — знайомство, люди навколо
-> "Якщо є можливість, попросіть, щоб вас представила третя особа. Під час знайомства підтримуйте зоровий контакт зі співрозмовником, дружньо посміхайтеся. Якщо представляєтеся самі, чітко назвіть своє повне ім'я та прізвище. Процес знайомства варто завершувати етикетними фразами на кшталт «Радий/а знайомству», «Дуже приємно» тощо."
-> Source: Litvinova, Grade 7 — confirms natural dialogue etiquette patterns for introduction/acquaintance situations
-
-### Section: Кого? (Whom?) — знахідний відмінок animate vs inanimate
-> **Table (Grade 4, Kravtsova):**
-> | Відмінок | Питання | Жіночий | Чоловічий | Середній |
-> | Н. в. | хто? що? | мама, земля | тато, клен | курча, листя |
-> | Зн. в. | кого? що? | маму, землю | **тата**, клен | курча, листя |
->
-> "Усі іменники — назви неістот ч. р, а також іменники с. р. в Зн. в. мають ту саму форму, що і в Н. в.: будинок, сон, стіл. [Animate masculine changes: тато → тата in Знахідний.]"
-> Source: Kravtsova, Grade 4 — direct textbook grounding for the animate/inanimate split; uses тато→тата as the canonical example, exactly matching the plan's dialogue
-
-### Section: Знахідний відмінок — живе (Accusative Animate) — masculine animate = genitive
-> "Форма знахідного відмінка однини чоловічого роду назв істот збігається з родовим однини: **запросити друга, зустріти сусіда** (Зн. в.) — немає друга, сусіда (Р. в.); форма знахідного відмінка однини чоловічого роду назв неістот збігається з називним відмінком однини: гарний твір (Н. в.) — написати твір (Зн. в.)."
-> Source: Karaman, Grade 10 — authoritative rule statement with exact vocabulary from the plan (друга, сусіда)
-
-### Section: Підсумок — Summary (full accusative table)
-> "Відмінок / Питання / Однина: [Зн. в.] — кого? що? — [м. р.] тата, клен / [ж. р.] маму, землю / [с. р.] курча, листя"
-> Source: Kravtsova, Grade 4 — the exact table format the plan's summary section mirrors; textbook grounding confirmed
-
----
+- Confirmed: бачити, знати, любити, чекати, шукати, друг, подруга, сусід, колега, викладач, вчитель, лікар, продавець, покупець.
+- Not found: []
 
 ## Grammar Rules
-
-**Правопис 2019 note:** The official Правопис covers orthography (spelling) and does not include case paradigms. Case inflection rules belong to the grammatical norm, not spelling norm. Queries for "знахідний відмінок" and "відмінювання іменників" returned no sections — this is expected and correct behaviour. The authoritative source for the animate accusative rule is **textbook morphology** (Grades 4, 6, 10 — all confirmed above).
-
-- **Accusative animate (masculine): Знахідний = Родовий** — confirmed by Karaman Grade 10: "форма Зн. в. однини чоловічого роду назв істот збігається з Р. в. однини"
-- **Accusative animate (feminine): -а/-я → -у/-ю** — confirmed by Kravtsova Grade 4 declension table (мама → маму, земля → землю)
-- **Accusative inanimate (masculine): Знахідний = Називний** — confirmed by Karaman Grade 10 and Glazova Grade 10
-
----
+- Accusative Animate Masculine: Правопис (reflected in school textbooks Grade 4) — For animate masculine nouns of the 2nd declension, the Accusative case is identical to the Genitive (кого?): "бачу брата", "знаю друга", "чекаю лікаря".
+- Accusative Feminine: First declension nouns (ending in -а, -я) change to -у, -ю for both animate and inanimate: "бачу маму", "бачу каву", "знаю подругу".
+- Common Gender Rule: Nouns like "колега" (ending in -а) follow the feminine pattern (-а -> -у) regardless of the person's sex: "Я знаю твого колегу".
 
 ## Calque Warnings
-
-- **"чекати когось" (accusative):** ✅ OK — Антоненко-Давидович confirms чекати governs accusative in Ukrainian: "Олександра давно вже зварила вечерю і **чекала чоловіка**" (Коцюбинський). The plan's examples "Я чекаю його зараз", "Я чекаю Олену" are grammatically natural. No calque.
-- **"Він дуже добрий":** ✅ OK — "добрий" is native Ukrainian. Антоненко-Давидович confirms "хороший" can be a Russianism; the plan correctly avoids it and uses "добрий" throughout.
-- **"Ходімо, я тебе познайомлю":** ✅ OK — "познайомити" is standard Ukrainian. No calque or Russianism found. No style-guide warning triggered.
-
----
+- чекати на кого: OK — Verified in СУМ-11. Both "чекати на кого" and "чекати кого" are correct and natural in Ukrainian.
+- я тебе познайомлю: OK — Natural phrase for "I will introduce you".
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|---|---|---|
-| бачити | A1 | ✅ On target |
-| знати | A1 | ✅ On target |
-| любити | A1 | ✅ On target |
-| чекати | A1 | ✅ On target |
-| шукати | A1 | ✅ On target |
-| друг | A1 | ✅ On target |
-| лікар | A1 | ✅ On target |
-| викладач | A1 | ✅ On target |
-| вчитель | A1 | ✅ On target (also confirmed A1 in PULS) |
-| продавець | A1 | ✅ On target |
-| сусід | A1 | ✅ On target |
-| колега | A1 | ✅ On target |
-| подруга | — | ✅ VESUM confirmed; not separately listed in PULS but derived from друг (A1) |
-| **покупець** | **A2** | ⚠️ **One level above target** — PULS lists as A2 |
-
-**Flag on покупець (A2):** PULS classifies this as A2. Given the module sits in the A1.6 *Food and Shopping* unit, the word is thematically essential and its introduction is pedagogically justified (productive context). Writer should introduce it as **receptive** vocabulary with clear scaffolding (e.g., "людина, яка купує"), not as a word learners must produce actively. Consider adding a `<!-- VERIFY: покупець A2 in PULS — use as receptive vocab only -->` comment in the plan.
+- лікар: A1 — OK
+- вчитель: A1 — OK
+- сусід: A1 — OK
+- друг: A1 — OK
+- викладач: A1/A2 — OK (Commonly used in academic contexts, appropriate for A1.6)
+- покупець/продавець: A1 — OK (Essential for "Food and Shopping" phase A1.6)
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: People Around Me
-**Module:** people-around-me | **Phase:** A1.6 [Food and Shopping]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: People Around Me
+**Module:** people-around-me | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/people-around-me.md
+
+# Педагогіка A1: People Around Me
+
+
+
+## Методичний підхід (Methodological Approach)
+The core of teaching "People Around Me" at the A1 level is to build from the self outwards: me (`я`), you (`ти`), my family (`моя сім'я`), my friends (`мої друзі`), and then their roles (professions). The approach should be communicative and pattern-based, mirroring how Ukrainian children learn about their social circle.
+
+1.  **Start with Identification, Not Deep Grammar:** The initial focus is on simple identification using `Це...` (This is...). Example: `Це моя мама. Це мій тато.` (Source 37). This immediately and intuitively introduces noun gender through the possessive pronouns `мій/моя` without needing to explain the concept of gender itself.
+
+2.  **Introduce Verbs through Natural Context:** Key verbs like `працювати` (to work) and `звати` (to be called) are introduced in simple sentences. The present tense of `бути` (to be) is typically omitted, which is a key feature of Ukrainian. Instead of `Моя мама є лікар`, the natural phrasing is `Моя мама — лікар` (My mom is a doctor) (Source 18).
+
+3.  **Use Dialogues for Social Context:** Learning about people is inherently social. Short, simple dialogues are the primary vehicle for teaching greetings, introductions, and asking about others. For example, `— Хто це? — Це моя сестра Катя.` (— Who is this? — This is my sister Katia.) (Source 18). This format also naturally introduces question words (`хто?`, `де?`, `ким?`).
+
+4.  **Teach Cases Communicatively, Not Theoretically:** At A1, learners don't need to memorize declension tables. Instead, cases are taught through functional "chunks."
+    *   **Nominative (Називний):** For the subject. `Мама працює.` (Mom works.) (Source 37).
+    *   **Accusative (Знахідний):** For the direct object. `Я бачу маму.` (I see Mom.) This is one of the first and most critical case distinctions for an L2 learner (Source 12, 20).
+    *   **Vocative (Кличний):** For direct address. `Мамо, привіт!` (Mom, hello!). This case is vital for politeness and natural speech and should be introduced early (Source 13, 27). It's a major point of difference from Russian and a feature of authentic Ukrainian speech.
+
+5.  **Focus on Real-World Application:** Learners should immediately be able to apply what they've learned. Exercises should involve describing a family photo, writing a simple shopping list (`список покупок`) for family members, or creating a simple dialogue inviting a friend to a party (`запросити тебе в гості`) (Source 7, 5).
+
+The goal is to build a functional scaffolding of language that allows learners to talk about their immediate social world. Abstract grammar rules come later; at A1, it's all about concrete, repeatable patterns (Source 2, 5).
+
+## Послідовність введення (Introduction Sequence)
+
+**Step 1 → Core Vocabulary: Immediate Family & Friends**
+*   Introduce the core nouns: `мама, тато, брат, сестра, друг, подруга, сім'я` (family). These are high-frequency and immediately useful (Source 37).
+*   Pair them with possessive pronouns to implicitly teach gender: `мій тато, мій брат, мій друг` vs. `моя мама, моя сестра, моя подруга`.
+
+**Step 2 → Simple Identification & Naming**
+*   Use the structure `Це + [person]`. Example: `Це моя сім'я на фотографії.` (This is my family in the photo) (Source 18).
+*   Introduce naming with `Його/її звати...` (His/her name is...). Example: `Це мій брат. Його звати Денис.` (Source 18).
+
+**Step 3 → Professions**
+*   Introduce common professions using the structure `[Person] + [profession]`. Example: `Моя мама – лікар, а тато – викладач.` (My mom is a doctor, and dad is a university teacher) (Source 18).
+*   Introduce gendered pairs where they are common: `вчитель / вчителька`, `студент / студентка` (Source 11).
+*   Also, point out common professions that use the masculine form for both genders, like `дизайнер`, `програміст`, `менеджер` (Source 11, 18).
+
+**Step 4 → Grammatical Roles: Subject vs. Object (Nominative vs. Accusative)**
+*   Introduce the Nominative case (хто? що?) as the "doer" of the action. The initial vocabulary is already in this form. `Мама читає.` (Mom is reading.) (Source 37, 40).
+*   Introduce the Accusative case (кого? що?) as the "receiver" of the action. Start with feminine nouns, as the change is obvious: `Я люблю мам**у**.` vs. `Я люблю сестр**у**.` (Source 12, 20).
+*   Then, introduce the Accusative for masculine animate nouns, which is a major learning point: `Я бачу брат**а**.` (I see my brother.) Contrast this with inanimate nouns: `Я бачу стіл.` (I see the table.) (Source 13, 21). This distinction is fundamental.
+
+**Step 5 → Direct Address (Vocative Case)**
+*   Introduce the Vocative case for addressing people directly, as it is essential for natural communication.
+*   Start with simple, common forms: `Мамо!`, `Тату!`, `Друже!`, `Оксано!` (Source 10, 13, 30).
+*   Explain that this form is used instead of the Nominative when calling out to someone or getting their attention. `Оксанко, скажи лагідне, добре слово.` (Oksanka, say a kind, good word) (Source 34).
+
+## Типові помилки L2 (Common L2 Errors)
+Guidance for the writer on what pitfalls English-speaking learners will face and how to pre-emptively address them.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Андрій, де ти?` | `Андрі**ю**, де ти?` | English speakers lack the concept of a vocative case for direct address. They must learn that calling someone by name in Ukrainian requires changing the ending. This is a marker of fluency. (Source 14, 27). |
+| `Я бачу **мій друг**.` | `Я бачу **мого друга**.` | Learners often fail to apply the Accusative case to masculine animate nouns, treating them like inanimate objects. The rule is: if it's a "who" (кого?), the ending changes. (Source 20, 21, 30). |
+| `Вона **є** вчителька.` | `Вона — вчителька.` | English speakers overuse the verb "to be" (`є`) in present tense identity statements. In Ukrainian, it's typically omitted, and a dash (`—`) can be used in writing. (Source 18). |
+| `Моя тато` | `**Мій** тато` | Noun gender is not intuitive for English speakers. They may incorrectly match feminine possessive pronouns (`моя`) with masculine nouns (`тато`). Constant reinforcement through patterns is necessary. (Source 41). |
+| `Я хочу запросити **ви**.` | `Я хочу запросити **вас**.` | Learners often forget to decline personal pronouns. They must learn that pronouns change form when they are the object of a verb (Accusative case). (Source 7, 43). |
+| `Я працюю як вчитель.` | `Я працюю вчителем.` | This is a direct translation of the English "I work *as* a teacher". In Ukrainian, this construction uses the Instrumental case (`ким?` - by whom?), not the word `як` (as/like). While Instrumental case is a B1 topic, this specific phrase chunk should be taught. <!-- VERIFY --> |
+
+## Деколонізаційні застереження (Decolonization Notes)
+**This is a mandatory section for all pedagogical briefs.** The goal is to teach Ukrainian on its own terms, free from the historical dominance of Russian-centric linguistics.
+
+1.  **The Vocative Case is a Ukrainian Feature:** Emphasize that the robust Vocative case (`друже`, `пане`, `Олено`) is a vibrant, living part of modern Ukrainian, distinguishing it clearly from modern Russian, where the vocative is archaic or stylistically limited. It is not an optional or poetic form; it is standard grammar for direct address. (Source 10, 14, 27).
+
+2.  **Gendered Nouns (Feminitives) are Standard:** Forms like `вчителька`, `письменниця`, `дизайнерка`, `засновниця` are not recent inventions or slang; they are a standard and evolving part of the Ukrainian language. The writer should use them consistently and naturally. (Source 4, 11). The use of these forms reflects a conscious break from the Soviet-era practice of using masculine forms as a universal default. (Source 6).
+
+3.  **Teach Ukrainian Phonetics Directly:** Never use Russian as a phonetic reference point (e.g., "Ukrainian `и` is like Russian `ы`"). This builds an incorrect phonetic base. Ukrainian `и` and `і` are distinct sounds that must be learned from native audio examples. The historical pressure to Russify Ukrainian, including language, was a deliberate imperial policy (`Емський указ`), and consciously choosing to be a "свідома українка" (conscious Ukrainian) was an act of identity. (Source 6, 16).
+
+4.  **Avoid "False Friends" with Russian:** The writer must be aware of words that exist in both languages but have different meanings or connotations. For example, `дружина` in Ukrainian primarily means "wife," whereas in Russian, it means "squad" or "retinue." While not directly related to this topic, the principle applies. Vocabulary should be sourced from Ukrainian explanatory dictionaries and usage guides (`СУМ-11`, Source 29).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+#### Іменники (Nouns)
+*   **Family & People (Сім'я та люди):**
+    *   ★★★: `сім'я` (family), `мама` (mom), `тато` (dad), `батьки` (parents), `брат` (brother), `сестра` (sister), `друг` (male friend), `подруга` (female friend), `люди` (people). (Source 37, 17, 26).
+    *   ★★: `дідусь` (grandfather), `бабуся` (grandmother), `чоловік` (husband), `дружина` (wife), `син` (son), `донька` (daughter), `хлопець` (boy/boyfriend), `дівчина` (girl/girlfriend). (Source 37, 41).
+    *   ★: `тітка` (aunt), `дядько` (uncle), `колега` (colleague), `сусід` (neighbor). (Source 41, 8).
+*   **Professions (Професії):**
+    *   ★★★: `вчитель / вчителька` (teacher), `лікар` (doctor), `студент / студентка` (student). (Source 11, 18).
+    *   ★★: `програміст` (programmer), `дизайнер` (designer), `менеджер` (manager), `продавець / продавчиня` (salesperson). (Source 11, 19).
+    *   ★: `письменник / письменниця` (writer), `музикант` (musician), `водій` (driver), `пенсіонер / пенсіонерка` (pensioner). (Source 11, 18).
+
+#### Займенники (Pronouns)
+*   **Personal (Особові):**
+    *   ★★★: `я, ти, він, вона, воно, ми, ви, вони`.
+    *   ★★★ (Accusative forms): `мене, тебе, його, її, нас, вас, їх`. (Source 7, 43).
+*   **Possessive (Присвійні):**
+    *   ★★★: `мій, моя, моє, мої` (my); `твій, твоя, твоє, твої` (your). (Source 41).
+
+#### Дієслова (Verbs)
+*   ★★★: `бути` (to be, including its omission in the present), `звати` (to be called), `працювати` (to work), `жити` (to live), `мати` (to have), `бачити` (to see), `знати` (to know), `любити` (to love).
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Activity: Matching Professions to Workplaces (Source 19)**
+*   **Format:** A matching exercise. Two columns are presented, and the learner must draw a line connecting the person to their place of work.
+*   **Prompt:** `Знайдіть пари за зразком.` (Find the pairs according to the example).
+*   **Example:**
+    | Хто? (Who?) | Де? (Where?) |
+    | :--- | :--- |
+    | лікар | школа |
+    | вчитель | лікарня |
+    | продавець | банк |
+    | економіст | магазин |
+*   **Goal:** Reinforces vocabulary for professions and places in a simple, visual way.
+
+**2. Activity: Distinguishing Subject and Object (Nominative vs. Accusative) (Source 20)**
+*   **Format:** Sentence comparison. The learner reads two very similar sentences where the subject and object are swapped.
+*   **Prompt:** `Спишіть речення. Визначте, якими членами речення є виділені слова.` (Copy the sentences. Determine which part of the sentence the highlighted words are).
+*   **Example:**
+    *   `**Катерина** запросила **подругу**.` (Kateryna invited her friend.) -> Підмет: Катерина (Н.в.), Додаток: подругу (Зн.в.)
+    *   `**Подруга** запросила **Катерину**.` (The friend invited Kateryna.) -> Підмет: Подруга (Н.в.), Додаток: Катерину (Зн.в.)
+*   **Goal:** Forces the learner to focus on word endings to understand "who did what to whom," which is the core function of these cases.
+
+**3. Activity: Forming the Vocative Case for Address (Source 14, 27)**
+*   **Format:** A transformation drill. The learner is given a name or a title in the Nominative and must write it in the Vocative.
+*   **Prompt:** `Утворіть звертання за допомогою сполук слів за зразком.` (Form an address using the word combinations, following the example).
+*   **Example:**
+    *   *Input:* `брат Сергій`, `пан професор`, `подруга Галя`
+    *   *Output:* `брате Сергію`, `пане професоре`, `подруго Галю`
+*   **Goal:** To practice forming the vocative case, which is essential for polite and correct direct address.
+
+**4. Activity: Fill-in-the-blanks with Personal Pronouns (Source 36)**
+*   **Format:** A short paragraph with blanks where the learner must insert the correct form of a personal pronoun.
+*   **Prompt:** `Спиши, вставляючи замість крапок займенник **ти** у відповідних відмінкових формах.` (Copy, inserting the pronoun "you" in the correct case forms instead of the dots).
+*   **Example:** "Чи є (у кого?) **в тебе** справжній друг? Так радісно жити, коли поруч (з ким?) **з тобою** добрі люди. Вони завжди готові прийти (кому?) **тобі** на допомогу."
+*   **Goal:** To drill the declension of personal pronouns in different cases within a meaningful context.
+
+## Пов'язані статті (Related Articles)
+*   `pedagogy/a1/introduction-to-cases`
+*   `pedagogy/a1/nominative-case`
+*   `pedagogy/a1/accusative-case`
+*   `pedagogy/a1/vocative-case`
+*   `vocabulary/a1/professions-and-work`
+*   `vocabulary/a1/family-and-friends`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/around-the-city.md
 
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 243
-> **Score:** 0.50
->
-> 243
-> 592   Згрупуйте приклади, розташувавши їх у такому порядку: 1)  між-
-> особистісне спілкування; 2)  групове спілкування; 3)  масове 
-> спілкування. Вибір обґрунтуйте.
-> Я вдома з братом; кандидат у депутати на зібранні з вибор-
-> цями; тренер і спортсмени на тренуванні; оратор на урочис-
-> тому зібранні; моя сестра в кав’ярні з подругою; пасажири 
-> в транспорті і водій; бабуся і лікар у реєстратурі поліклініки; 
-> мама в чаті з мешканцями нашого будинку; конферансьє 
-> на концерті; екскурсовод і група туристів; дідусь з онуками.
-> Особливості спілкування залежать також від кількості 
-> учасників. З огляду на те, з ким людина спілкується, 
-> вона обирає тему, добирає слова, інтонацію, тембр, 
-> жести й міміку.
-
-## Кого? (Whom?)
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 218
-> **Score:** 0.25
->
-> 218
-> Відомості із синтаксису й пунктуації. Означення
-> Вправа 354
-> 1. Доповніть речення означеннями . Запишіть їх .
-> Я побачила брата (якого?). 
-> Я побачила брата (чийого?). 
-> Люблю дивитися фільми (які?). 
-> Батькам треба говорити правду (яку?). 
-> Не варто сваритися з друзями (якими?). 
-> Учні  пишуть у зошитах (яких?). 
-> 2. Дослідіть, як змінюється зміст речення після доповнення його означен-
-> нями.
-> 3. Поставте стрілочки від означуваного слова до означення, надпишіть пи-
-> тання .
-> 4. Над означеннями надпишіть, якою частиною мови вони виражені .
-> Вправа 355
-> 1. Прочитайте речення, додаючи різні означення .
-> У мене є старша / двоюрідна сестра.
-> Мій / його тато працює лікарем.
-> У них велика / дружна родина.
-> Оксанин / Олегів брат знає англійську / жестову мову.
-> Мама — відомий / висококваліфікований психолог.
-> 2.
-
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 107
-> **Score:** 0.50
->
-> 107
-> — Ні. Я допомагав годувати телят, а вони на птахофермі 
-> доглядали каченят.
-> 2. Спишіть текст. Підкресліть займенники та вкажіть їх особу 
-> і число. За потреби користуйтесь таблицею на с. 106.
-> Міркуйте так: хто? — я, займенник, вказує на особу, яка 
-> говорить про себе: 1-ша особа однини.
-> 3. Складіть усну розповідь про те, як ви допомагаєте стар -
-> шим. Використовуйте у своєму творі особові займен -
-> ники.
-> 228. 1. Розглянь світлину і прочитай текст. 
-> Ми з братом Михайлом виїхали в поле. Брат — трак-
-> торист. Він причіплює до трактора сніговий плуг — такий 
-> величезний трикутник, збитий із грубих колод. Плуг згор-
-> тає сніг у високі кучугури. Навіть лютий вітер їх не розвіє. 
-> Житиме тепер сніжок у землі. Сніг — це ж зерно золоте!
-> 2.
-
-## Знахідний відмінок — живе (Accusative Animate)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 91
-> **Score:** 0.50
->
-> 91
-> 91
-> § 46.  Відмінки  іменників
-> 1. (Сестра) допомагає (мама) готувати (вечеря), а я з (тато) прибираємо 
-> у (квартира). 2. (Сестра) захоплюється (танці), а я — (футбол). 3. На (кані­
-> кули) ми їздимо до (море) або (річка). 
-> 4.	 Виконайте завдання в тестовій формі. 
-> 	
-> Увідповідніть іменник з його відмінковою формою.
-> Іменник (виділене слово)
-> Відмінок
-> (1)Олю, з великим (2)задоволенням за­
-> прошую святкувати (3)день (4)народження 
-> о шостій. Мій (5)брат зустріне тебе (6)на зу-
-> пинці.
-> А	 називний
-> Б	 родовий 
-> В	 давальний 
-> Г	 знахідний 
-> Д	 місцевий 
-> Е	 кличний
-> Є	 орудний
-> 5.	 Прочитайте текст і виконайте завдання.
-> Які широкі дунайські степи. Стелеться степом битий шлях. А хто ж то 
-> скаче шляхом? То запорожець. Раз по раз стає в стременах, оглядає степ. 
-> А вже ген-ген курять димки на обрії...
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 111
-> **Score:** 0.33
->
-> 111
-> Iменник
-> 1. Іван Франко жив і працював в ім’я народу й для народу. 
-> 2. Мале орля, та високо літає. 3. Бабуся дає качатам теп лу 
-> воду. 4. У гнізді пищали жовтороті орлята.
-> У знахідному відмінку множини іменники ІV від-
-> міни, що озна чають назви тварин, мають пара-
-> лельні форми. ПОРІВНЯЙМО: 
-> Назви людей
-> Назви тварин
-> бачив хлоп’ят
-> бачив дівчат
-> бачив левенят (і левенята)
-> бачив ягнят (і ягнята)
-> В орудному відмінку однини іменники із суфіксом
-> -ен- мають паралельні форми. НАПРИКЛАД: іменем
-> й ім’ям, племенем і плем’ям.
-> І. Запишіть іменники в родовому відмінку однини. Виділіть суфікси, які 
-> з’являються при цьому.
-> ЗРАЗОК. Козеня – козеняти.
-> Ягня, кача, плем’я, курча, оленя, орля, вовча, собача, дів-
-> ча, дитя.
-> ІІ.
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 43
-> **Score:** 0.25
->
-> 43
->  
-> 106.		Розглянь малюнок. Прочитай текст, 
-> уставляючи пропущені іменники за 
-> змістом у потрібному відмінку.
-> У Лесі є (хто?) ... . Дівчинка дуже 
-> любить (кого?) ... . Вона дає їсти 
-> й пити (кому?) ... . Потім Леся гуляє 
-> (з ким?) ... . (на кому?) ... виблиску-
-> ють медалі. Він — переможець зма-
-> гань.
-> 	 Запиши доповнений текст. Назви відмін-
-> ки іменників. У яких відмінках немає слів 
-> у тексті?
-> 107.		Розгляньте таблицю та обговоріть її зміст. 
-> Відмінок
-> Питання
-> Приклади  (однина)
-> Н. в.
-> Р. в.
-> Д. в.
-> Зн. в.
-> Ор. в
-> М. в. 
-> Кл.
-
-## Підсумок — Summary
-
-> **Source:** savchenko, Grade 4
-> **Section:** Сторінка 31
-> **Score:** 0.50
->
-> 31
-> Назвè дійових осіб казки. Хто тобі сподобався більше?
-> Чому казка має таку назву? Як би ти її назвав/назвала?
-> Поміркуйте разом. Для чого народ склав цю казку? 
-> Що в ній засуджується? А що схвалюється? Обговоріть.
-> ДЕВ’ЯТЬ БРАТІВ-СІРОМАНЦІВ
-> Хорватська народна казка
-> * * *
-> Мала одна вдова дев’ятеро синів і десяту дочку.
-> У вдовиній хаті часто навіть хліба бракувало. Усе, що 
-> заробить на селі, віддасть дітям, і вони з’їдять. Трапля-
-> лося часом, що доки вона нагодує мале в колисці, то їй 
-> самій уже нічого не залишалося.
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 150
-> **Score:** 0.50
->
-> 150
-> ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ
-> Я гадав, що дружитиму з Антончиком 
-> і їстиму малину аж до старості. Але... Був сонячний теплий вересневий день. Ми сиділи на баштані1 й із присьорбом 
-> хрумкали кавуни. Ви не були на нашому баштані? О-о! Тоді 
-> ви нічого не знаєте. Такого баштана нема 
-> ніде. Точно! Кінця-краю не видно. Од обрію 
-> до обрію. І кавунів – тисячі, мільйони... І всі смугасті. Як тигри. Тисячі, мільйони тигрів. Я живих 
-> бачив у цирку. У Києві. Але то хіба тигри? От дід Салимон – 
-> баштанник наш – ото тигр! Він чогось не любив, як ми крали 
-> кавуни з баштана. Він любив, щоб ми просили. А ми не 
-> любили просити... Воно не так смачно. Коротше, ми сиділи на баштані й хрумкали кавуни. Кра-
-> дені. Діда не було. Не було й близько. Він пішов у сільмаг 
-> по цигарки. Ми бачили. І ми були спокійні.
-
-## Grammar Reference
-
-> **Source:** savchenko, Grade 4
-> **Section:** Сторінка 31
-> **Score:** 0.25
->
-> 31
-> Назвè дійових осіб казки. Хто тобі сподобався більше?
-> Чому казка має таку назву? Як би ти її назвав/назвала?
-> Поміркуйте разом. Для чого народ склав цю казку? 
-> Що в ній засуджується? А що схвалюється? Обговоріть.
-> ДЕВ’ЯТЬ БРАТІВ-СІРОМАНЦІВ
-> Хорватська народна казка
-> * * *
-> Мала одна вдова дев’ятеро синів і десяту дочку.
-> У вдовиній хаті часто навіть хліба бракувало. Усе, що 
-> заробить на селі, віддасть дітям, і вони з’їдять. Трапля-
-> лося часом, що доки вона нагодує мале в колисці, то їй 
-> самій уже нічого не залишалося.
+# Педагогіка A1: Around The City
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Рід іменників
-> **Source:** МійКлас — [Рід іменників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978)
+The core methodological approach for teaching "Around The City" at the A1 level is communicative and situational. The goal is not to exhaustively list vocabulary but to equip the learner with functional chunks to solve a real-world problem: getting lost and asking for directions. The approach should mirror how a native speaker would help a foreigner, simplifying language into clear, actionable steps.
 
-### Теорія:
+Instruction should be built around a core dialogue pattern, as demonstrated in Ukrainian Lessons Podcast episodes (Source 22, Source 23). This involves:
+1.  **Gaining attention politely:** Starting with `Вибачте, будь ласка...` (Source 23).
+2.  **Asking the core question:** Using the simple construction `Де [назва місця]?` (e.g., `Де вокзал?`, `Де центр?`) (Source 23).
+3.  **Understanding a simple response:** Processing basic directional adverbs (`прямо`, `праворуч`, `ліворуч`) and verbs (`ідіть`, `поверніть`) (Source 22).
+4.  **Clarifying transport:** Differentiating between types of transport like `автобус` (bus) and `поїзд` (train), which dictates whether one needs an `автовокзал` or `залізничний вокзал` (Source 22).
 
-*www.ua.pistacja.tv*  
-**Рід притаманний кожному іменнику в однині**. Іменники мають постійне значення **роду**:
-чоловічого: *день, зошит, комп'ютер*,  жіночого: *книга, земля, машина*, середнього: *сонце, місто, озеро*, спільного
+Ukrainian elementary textbooks introduce related concepts through simple, repetitive structures. For example, exercises focus on using prepositions with locations (`Підійшли до річки`, `Сховався за деревом`) (Source 10) or listing related items to build semantic fields (`Яблука, груші, сливи... — це фрукти`) (Source 28). This method of grouping and association should be used for city vocabulary (e.g., `музей`, `церква`, `магазин` are all places in a city).
 
-... (truncated for context window)
+The learning process should be scaffolded, starting with recognizing place names, then forming a question, and finally understanding a multi-step answer. Role-playing dialogues is a highly effective activity at this stage (Source 12, Source 20).
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Core Question & Basic Locations:** Start with the most fundamental survival question: `Де...?` (Where is?). Pair it with the most essential, high-frequency A1-level locations.
+    *   `Де центр?` (Where is the center?) (Source 23)
+    *   `Де вокзал?` (Where is the station?) (Source 22)
+    *   `Де метро?` (Where is the metro?) (Source 23)
+    *   `Де туалет?` <!-- VERIFY -->
+    This immediately gives the learner a functional tool.
+
+2.  **Simple Positional Answers:** Introduce the simplest possible answers a person might point and give.
+    *   `Тут` (Here)
+    *   `Там` (There)
+    *   `Он там` (Over there) (Source 23)
+
+3.  **Essential Directional Commands:** Introduce the imperative verbs and adverbs for giving basic directions. Always teach the formal "ви" forms first (`-іть` ending) as they are safest for speaking to strangers.
+    *   `Ідіть прямо` (Go straight) (Source 22)
+    *   `Поверніть праворуч` (Turn right) (Source 22)
+    *   `Поверніть ліворуч` (Turn left) (Source 22)
+
+4.  **Key Nouns for Navigation:** Introduce nouns that act as landmarks in directions.
+    *   `вулиця` (street) (Source 28)
+    *   `перехрестя` (intersection) (Source 22)
+    *   `церква` (church) (Source 2, Source 9)
+    *   `магазин` (shop) (Source 28)
+
+5.  **Combining into Short Instructions:** Practice combining the elements from steps 3 and 4.
+    *   `Ідіть прямо по вулиці...` (Go straight on ... street) (Source 22).
+    *   `На перехресті поверніть праворуч` (At the intersection, turn right) (Source 22).
+
+6.  **Transportation Vocabulary:** Introduce basic modes of transport and the places associated with them. It is crucial to distinguish between `автовокзал` and `залізничний вокзал`.
+    *   `автобус` (bus) → `автовокзал` (bus station) (Source 22)
+    *   `поїзд` (train) → `залізничний вокзал` (railway station) (Source 22)
+    *   `метро` (metro/subway) (Source 23)
+
+7.  **The Concept of "Needing to Take":** Introduce the impersonal construction `треба їхати` (one needs to go/travel).
+    *   `Треба їхати на метро.` (You need to go by metro.) (Source 23) This is a critical A1 structure that avoids complex verb conjugations.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Вибачаюся` | `Вибачте` | `Вибачаюся` is a reflexive verb meaning "I apologize myself," which is a calque from Russian and considered unnatural and slightly self-centered in modern Ukrainian. The correct form for apologizing or getting someone's attention is the imperative `Вибачте` (Excuse me / Forgive me) (Source 26). |
+| `Де є центр?` | `Де центр?` | English speakers often try to insert the verb "to be" (`є`) in simple "Where is X?" questions, directly translating from English. In Ukrainian, the verb "to be" is omitted in present tense location questions. The structure is simply `Де + [ іменник ]?` (Source 23). |
+| `Іти до праворуч` | `Ідіть праворуч` or `Поверніть праворуч` | Learners may confuse adverbs of direction (`праворуч` - to the right) with nouns of place, incorrectly adding a preposition like `до` (to). The adverbs `праворуч`, `ліворуч`, and `прямо` do not require prepositions when used with verbs of motion (Source 22). |
+| Asking for the "train station" and getting the "bus station" | `Залізничний вокзал` (for trains) vs. `Автовокзал` (for buses) | In English, "station" can be ambiguous. In Ukrainian, the distinction is critical. `Вокзал` by itself often implies the main railway station, but it's best to be specific. A speaker asking for a `поїзд` (train) needs the `залізничний вокзал`; someone asking for an `автобус` (bus) needs the `автовокзал` (Source 22). |
+| Using informal `Іди` with a stranger | `Ідіть` | Learners might encounter the informal `ти` forms (`іди`, `поверни`) first. It is crucial to emphasize that when asking for directions from a stranger, the formal `ви` form (`ідіть`, `поверніть`) is mandatory for politeness and respect (Source 22). |
+| `Це далеко?` (with rising intonation) | `Це далеко?` | This is a positive interference. Unlike English, which often uses auxiliary verbs for questions ("**Is it** far?"), Ukrainian can often form a yes/no question simply by applying a rising intonation to a declarative sentence (Source 23). This is an easy win for learners. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is highly susceptible to colonial narratives, and it is imperative to address this from the beginning.
+
+1.  **The "Empty Land" Myth:** The Russian imperial narrative often claims that southern and eastern Ukrainian cities were "founded" by Russian monarchs (like Catherine II) on empty, wild land. This is false. Content must explicitly state that these cities were often built upon or agglomerated from pre-existing Cossack settlements. The city of Dnipro, for instance, was established on the site of the Cossack sloboda `Половиця` (Source 9). The textbook should present this as the norm: a Ukrainian settlement was renamed and absorbed, its history erased.
+
+2.  **Authentic Toponymy:** Ukrainian place names have deep historical and geographical roots. Village names often derive from geography (`Грядина` - from garden beds, Source 2), local crafts (`гончарі` - potters, Source 1), or ancient landmarks (`Добрий Дуб` - a sacred oak, Source 2). Presenting vocabulary like `куток` (a neighborhood or corner of a village) (Source 2) and `урочище` (a distinct natural landmark) (Source 2) grounds the learner in an authentic Ukrainian perception of space, rather than a generic, universal one.
+
+3.  **No Russian Analogies:** Do not teach Ukrainian directions or locations by comparing them to Russian. For example, never say "вулиця is like Russian улица." Teach Ukrainian on its own terms. Phonetics, grammar, and vocabulary should be presented as a self-contained system. The presence of Cossack, Polish, and other historical layers (Source 3) should be highlighted to show Ukraine's history is European and distinct.
+
+4.  **Transportation Hubs as Ukrainian Spaces:** While `вокзал` is an internationalism (from Vauxhall Gardens), its culture in Ukraine is distinctly Ukrainian. Train travel is a major part of Ukrainian life (Source 22). Frame `вокзали` not as generic transport hubs, but as vibrant centers of Ukrainian life, often with their own markets (`ринок`) and social dynamics (Source 22).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+*   **Places (Місця):**
+    *   `місто` (city) ★★★ (Source 9)
+    *   `село` (village) ★★★ (Source 10)
+    *   `центр` (center) ★★★ (Source 23)
+    *   `вулиця` (street) ★★★ (Source 28)
+    *   `площа` (square) ★★ (Source 28)
+    *   `музей` (museum) ★★ (Source 15)
+    *   `церква` (church) ★★ (Source 9)
+    *   `магазин` (shop) ★★ (Source 28)
+    *   `школа` (school) ★★ (Source 28)
+    *   `бібліотека` (library) ★★ (Source 28)
+    *   `пошта` (post office) ★★ (Source 28)
+    *   `парк` (park) ★ (Source 9)
+    *   `річка` (river) ★ (Source 10)
+*   **Transport (Транспорт):**
+    *   `вокзал` (station) ★★★ (Source 22)
+    *   `залізничний вокзал` (railway station) ★★★ (Source 22)
+    *   `автовокзал` (bus station) ★★★ (Source 22)
+    *   `метро` (metro/subway) ★★★ (Source 23)
+    *   `станція` (station, e.g., metro station) ★★★ (Source 23)
+    *   `поїзд` (train) ★★ (Source 22)
+    *   `автобус` (bus) ★★ (Source 22)
+*   **Navigation Points (Орієнтири):**
+    *   `перехрестя` (intersection) ★★★ (Source 22)
+    *   `будинок` (building, house) ★★ (Source 10)
+    *   `дорога` (road) ★ (Source 4)
+
+### Дієслова (Verbs - Imperative Formal)
+*   `ідіть` (go) ★★★ (Source 22)
+*   `поверніть` (turn) ★★★ (Source 22)
+*   `скажіть` (tell me/say) ★★★ (Source 23)
+*   `вибачте` (excuse me) ★★★ (Source 23)
+*   `дивіться / бачите` (look / you see) ★★ (Source 23)
+
+### Прислівники (Adverbs)
+*   `прямо` (straight) ★★★ (Source 22)
+*   `праворуч` / `направо` (to the right) ★★★ (Source 22)
+*   `ліворуч` / `наліво` (to the left) ★★★ (Source 22)
+*   `тут` (here) ★★★ <!-- VERIFY -->
+*   `там` / `он там` (there / over there) ★★★ (Source 23)
+*   `далеко` (far) ★★ (Source 23)
+*   `близько` (near) ★★ (Source 23)
+*   `пішки` (on foot) ★ (Source 25)
+
+### Ключові фрази (Key Phrases)
+*   `Будь ласка` (Please / You're welcome) ★★★ (Source 23)
+*   `Дякую` / `Дуже дякую` (Thank you / Thank you very much) ★★★ (Source 23)
+*   `Де...?` (Where is...?) ★★★ (Source 23)
+*   `Треба їхати на...` (You need to go by...) ★★ (Source 23)
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Role-Play Dialogue (Situational Practice)**
+*   **Task:** Based on the model from Ukrainian Lessons Podcast (Source 20, Source 22), create a dialogue. One learner is lost and asks for directions to the museum. The other gives simple, two-step directions.
+*   **Student A (Lost Tourist):** `Вибачте, будь ласка. Скажіть, будь ласка, де музей?`
+*   **Student B (Local):** `Ідіть прямо по цій вулиці, а потім поверніть праворуч. Музей буде там.`
+*   **Student A:** `Дуже дякую!`
+*   **Student B:** `Будь ласка.`
+
+**2. Fill-in-the-Preposition (Grammar Focus)**
+*   **Task:** Complete the sentences with the correct preposition from the box: `до`, `в/у`, `на`, `за`. (Inspired by Source 10).
+    *   1. Ми підійшли ____ будинку. (We approached the house.)
+    *   2. Голуби потрапили ____ пастку. (The doves got into the trap.) (Source 10)
+    *   3. Ми сіли ____ метро. (We got on the metro.)
+    *   4. Школа знаходиться ____ тим поворотом. (The school is behind that turn.)
+*   **Answers:** 1. до, 2. в, 3. на, 4. за
+
+**3. Location Identification on a Simple Map (Visual Comprehension)**
+*   **Task:** Provide a simple, schematic map of a town center with 4-5 labeled buildings (e.g., `Школа`, `Вокзал`, `Церква`, `Магазин`). Ask the learner "Where is the X?" and have them respond using simple prepositions. (Adapted from the map task in Source 5).
+*   **Question:** `Де школа?`
+*   **Possible Answer:** `Школа біля церкви.` (The school is near the church.)
+*   **Question:** `Де магазин?`
+*   **Possible Answer:** `Магазин на вулиці Шевченка.` (The shop is on Shevchenko street.)
+
+**4. Building Sentences (Syntax Practice)**
+*   **Task:** Give the learner scrambled words and have them form a correct sentence giving a direction.
+    *   1. `прямо / Ідіть / вулиці / по` -> `Ідіть прямо по вулиці.` (Source 22)
+    *   2. `наліво / На / поверніть / перехресті` -> `На перехресті поверніть наліво.` (Source 22)
+    *   3. `треба / на / Їхати / метро` -> `Треба їхати на метро.` (Source 23)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/polite-expressions`
+- `grammar/cases/prepositional`
+- `grammar/verbs/imperative-mood`
+- `vocabulary/a1/transport`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -651,7 +680,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Кого? (Whom?)` (~300 words)
 - `## Знахідний відмінок — живе (Accusative Animate)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -707,7 +735,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -809,47 +837,37 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Діалоги (Dialogues) (~330 words total)
-
-- Intro (~20 words): One-sentence scene-setter — Наречена показує весільні фотографії другові і називає гостей на знімках.
-- Dialogue 1 (~110 words): Multi-turn exchange (6–8 turns). Наречена points to photo: *— Бачиш маму? А тата?* Friend responds: *— Так, бачу. А хто це?* Bride: *— Це мій брат. Ти знаєш мого брата?* Friend: *— Ні, я не знаю твого брата.* Bride: *— Ходімо, я тебе познайомлю!* Animate accusative naturally modelled: маму (f→-у), тата (m→-а), брата (m→-а). No metalanguage yet — purely situational.
-- Dialogue 2 (~110 words): Multi-turn exchange (6–8 turns). Colleague conversation: *— Ти знаєш нашу вчительку?* *— Так, знаю Олену Петрівну.* *— А нового лікаря?* *— Ні, я ще не знаю лікаря.* *— Він дуже добрий. Я чекаю його зараз.* Models: вчительку (f→-у), Олену (f→-у), лікаря (m→-я) — animate accusative with professional people vocabulary.
-- P1 post-dialogues (~90 words): Reader-focus question: *Що ти помітив/помітила?* Draw attention to the bolded forms — маму, тата, брата, лікаря. Ask: why маму and not мама? Why брата and not брат? Introduce the two question words that unlock the pattern: **що?** (for things) and **кого?** (for people). Bridge sentence: *Знахідний відмінок із живими істотами — це кого?*
-
----
+- P1 (~50 words): Introduction to the social world of the module. We transition from talking about things (shopping, food) to the people in our lives: family, friends, and professionals.
+- P2 (Dialogue 1) (~120 words): A conversation between a bride (Наречена) and a friend looking at wedding photos. Key phrases: "Бачиш маму і тата?", "Це мій брат. Ти знаєш мого брата?", "Ні, я не знаю твого брата." This introduces the animate changes for мама (f), тато (m), and брат (m).
+- P3 (~40 words): A linguistic observation on the dialogue above. Note that when we ask "Who do you see?" (Кого ти бачиш?), the names of people change their endings, unlike the objects we studied in previous modules.
+- P4 (Dialogue 2) (~120 words): A workplace scenario between colleagues. Discussing the teacher and a new doctor. Key phrases: "Ти знаєш нашу вчительку?", "Я знаю Олену Петрівну," "А нового лікаря?", "Я чекаю його зараз." Introduces profession nouns (вчителька, лікар) and female names in the accusative.
 
 ## Кого? (Whom?) (~330 words total)
-
-- P1 (~70 words): Introduce the two-question test. When the verb takes a direct object, Ukrainian asks two different questions: *що?* for inanimate things, *кого?* for animate beings. Examples of *що?*: Я їм хліб (що? → хліб stays хліб), Я п'ю каву (що? → кава→каву), Я бачу стіл (що? → стіл stays стіл). The question *що?* signals: masculine nouns don't change ending.
-- P2 (~80 words): Now switch to *кого?*: Я бачу брата (кого? → not брат!), Я знаю друга (кого? → not друг!), Я чекаю лікаря (кого? → not лікар!). Side-by-side comparison table in prose: *Я бачу хліб — Я бачу брата. Я бачу стіл — Я бачу тата.* The contrast is stark: inanimate masculine = no change; animate masculine = changes. One question word, two completely different rules.
-- P3 (~90 words): Ukrainian Grade 4 approach (Заболотний) — *Бачу кого? що?* This is how Ukrainian schoolchildren learn it: the verb *бачити* takes *кого?* for people and *що?* for things. Кого? triggers the animate rule. Що? does not. The mnemonic: *кого?* → the noun changes; *що?* → masculine stays. Feminine doesn't change either way (-а→-у), but masculine animate is the new pattern to master.
-- P4 (~90 words): Why does Ukrainian mark this difference? Ukrainian makes a grammatical distinction between living beings (animate — живі) and things (inanimate — неживі). Animate nouns get кого?; inanimate get що?. This is a deeper logic: Ukrainian treats *seeing a person* differently from *seeing a thing* — not just semantically, but grammatically. This isn't random: it connects to the genitive case (родовий відмінок) learned earlier. The accusative of masculine animate *looks like* the genitive. We'll see why in the next section.
-
----
+- P1 (~80 words): Explaining the fundamental split in the Ukrainian Accusative case: Animate (people/animals) vs. Inanimate (objects). Recall Module 37 where masculine objects like "хліб" or "чай" did not change. Contrast this with "бачу брата."
+- P2 (~80 words): The logic of the question words. Inanimate nouns answer "що?" (what?), while animate nouns answer "кого?" (whom?). This section explains that "кого?" is the trigger for the masculine change.
+- P3 (~80 words): The "Ukrainian School" mnemonic: "Бачу кого? що?". By asking both questions, students learn to identify if a noun is masculine-inanimate (no change) or masculine-animate (changes to match the genitive case).
+- P4 (~90 words): Introduction to the "Masculine Animate = Genitive" rule. Briefly explain that for a masculine person, we use the same ending we will later use to say "of the brother" (брата). This is the key distinction for L2 learners.
+- <!-- INJECT_ACTIVITY: sort-animate-inanimate --> [group-sort, focus: animate (кого?) vs inanimate (що?) — changes vs stays same for masculine, 10 items]
 
 ## Знахідний відмінок — живе (Accusative Animate) (~330 words total)
-
-- P1 (~80 words): Feminine animate — no surprise. Feminine animate nouns follow the exact same ending as inanimate (-а→-у, -я→-ю). Full paradigm with six people nouns: мама→маму (Я бачу маму), сестра→сестру (Я знаю сестру), Олена→Олену (Я чекаю Олену), подруга→подругу (Я люблю подругу), тітка→тітку (Я бачу тітку), наречена→наречену (Я знаю наречену). Compare to M37: кава→каву — same -у ending. Feminine animate = no new rule needed.
-- Exercise (fill-in): 5 items practising feminine animate accusative — мама, сестра, Олена, подруга, тітка → accusative. Immediate reinforcement before moving to the harder masculine rule.
-- P2 (~100 words): Masculine animate — THE new rule: accusative = genitive. Explicit statement: *Знахідний відмінок чоловічого роду живих істот дорівнює родовому відмінку.* Full table of six masculine animate nouns with both forms: брат→брата (Я бачу брата), друг→друга (Я знаю друга), тато→тата (Я люблю тата), лікар→лікаря (Я чекаю лікаря), вчитель→вчителя (Я знаю вчителя), сусід→сусіда (Я бачу сусіда). Connection to prior learning: *бачу брата* = *нема брата* — same ending the learner already knows from genitive.
-- P3 (~80 words): Critical contrast — animate vs inanimate masculine side-by-side. Two-column structure in prose: *Що? (inanimate) → no change:* Я бачу хліб, Я бачу стіл, Я бачу борщ. *Кого? (animate) → = genitive:* Я бачу брата, Я бачу тата, Я бачу друга. The test to apply in real life: before writing the form, ask the question — *кого?* or *що?* If кого? — take the genitive form. If що? — leave masculine as is.
-- Exercise (group-sort): Sort 10 accusative forms into animate (кого?) and inanimate (що?): брата, хліб, маму, каву, друга, воду, лікаря, чай, Олену, борщ. Reinforces the animate/inanimate distinction visually.
-
----
+- P1 (~110 words): Feminine Animate Nouns. Explain that feminine people follow the same simple rule as feminine objects (-а → -у, -я → -ю). Provide examples: мама → маму, сестра → сестру, подруга → подругу, Олена → Олену. Emphasize that this is consistent with "кава → каву."
+- P2 (~110 words): Masculine Animate Nouns (Hard Stems). Detailed explanation of the -а ending. Use high-frequency family and social nouns: брат → брата, друг → друга, тато → тата (note: тато is masculine), сусід → сусіда. Contrast "Я бачу телефон" (inanimate) with "Я бачу сусіда" (animate).
+- P3 (~110 words): Masculine Animate Nouns (Soft Stems). Explain the -я ending for professions ending in a soft consonant or -ар. Examples: лікар → лікаря, вчитель → вчителя, продавець → продавця. Mention that "колега" (m/f) follows the feminine-style ending (колегу).
+- <!-- INJECT_ACTIVITY: fill-in-animate-transform --> [fill-in, focus: Nominative to Accusative (мама → маму, брат → брата), 10 items]
 
 ## Підсумок — Summary (~330 words total)
-
-- P1 (~100 words): Full accusative picture in prose. The знахідний відмінок has two sub-patterns based on кого?/що?: **Inanimate (що?)** — masculine stays same (хліб→хліб, стіл→стіл), feminine -а→-у (кава→каву, вода→воду), neuter stays same (молоко→молоко). **Animate (кого?)** — feminine still -а→-у (мама→маму, Олена→Олену), masculine = genitive (брат→брата, лікар→лікаря). The single most important rule of this module: *Знахідний відмінок чоловічого роду живих істот = родовий відмінок.*
-- P2 (~80 words): Five key verbs that take animate accusative at A1, each with a full example sentence: **бачити** — Я бачу маму і тата. **знати** — Ти знаєш мого друга Тараса? **любити** — Я дуже люблю бабусю. **чекати** — Вона чекає лікаря. **шукати** — Ми шукаємо нашого сусіда. Learner note: memorise these five verbs — they are the most common contexts where animate accusative appears in daily speech.
-- Self-check (Q&A list, ~100 words):
-  - *Я бачу ___* (мама) → **маму** ✓ (not мамо, not мами)
-  - *Я знаю ___* (брат) → **брата** ✓ (not брат, not братом)
-  - *Я чекаю ___* (лікар) → **лікаря** ✓ (not лікар, not лікарем)
-  - *Я люблю ___* (подруга) → **подругу** ✓ (not подруга, not подруги)
-  - *Я шукаю ___* (вчитель) → **вчителя** ✓ (not вчитель, not вчителю)
-  - *Я бачу ___* (стіл) → **стіл** ✓ (inanimate — що? → no change!)
-  - *Я знаю ___* (Олена) → **Олену** ✓ (not Олена, not Олени)
-- P3 (~50 words): Bridge sentence — Module 40 closes the Food and Shopping phase (A1.6). Module 41 is the checkpoint: it tests accusative (both animate and inanimate), shopping vocabulary, and food items together. Come prepared: Я бачу маму, знаю Олену, чекаю лікаря.
-- Exercise (quiz): 8-item multiple-choice quiz from activity_hints — Я знаю ___ (Олена / Олену / Олени), Я бачу ___ (брат / брата / братом), etc. Placed at end as self-assessment before checkpoint.
+- P1 (~120 words): The Complete Accusative Table recap. Provide a clear visual breakdown: 
+    - Masculine: Inanimate = Nom (хліб), Animate = Gen (брата).
+    - Feminine: Both -а → -у (каву/маму).
+    - Neuter: Always = Nom (молоко).
+- P2 (~80 words): Verbs of Social Interaction. List the 5 key verbs that require the accusative animate: бачити (to see), знати (to know), любити (to love), чекати (to wait for), шукати (to look for). Note that "чекати" (to wait) often uses the preposition "на" but at A1 we focus on the direct object "чекаю маму."
+- P3 (~130 words): Self-check and Social Practice. 
+    - Question: Кого ти любиш? Answer: Я люблю маму і тата. 
+    - Question: Кого ти чекаєш? Answer: Я чекаю друга. 
+    - Question: Кого ти знаєш у школі? Answer: Я знаю вчителя. 
+    - Recap: Remember, if it's a person and it's masculine, add the ending!
+- <!-- INJECT_ACTIVITY: quiz-ending-choice --> [quiz, focus: Choose correct animate ending (Олену, брата, подругу), 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-logic --> [fill-in, focus: Dialogue completion with verbs and people nouns, 6 items]
 
 Grand total: ~1320 words
 </skeleton>

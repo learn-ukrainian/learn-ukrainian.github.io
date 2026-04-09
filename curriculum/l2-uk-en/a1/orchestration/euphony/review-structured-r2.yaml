@@ -3,55 +3,49 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: All four content_outline sections present with correct headings. Dialogue
-    captures the plan's proofreading scenario (Студент writing, Друг correcting).
-    However, the plan's dialogue_situations specifie
+  evidence: 'The plan explicitly requested: `Text mentions: у городі/в городі, і яблука/й
+    яблука, у школі/в школі.` The generated Dialogue 1 completely omitted the `і/й
+    яблука` and `у/в школі` examples.'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'All Ukrainian forms verified correct via VESUM. У/в rules match Правопис
-    §23. З/із/зі rules match Літвінова p.177. However: (1) "At the start of a sentence,
-    always **і**" is incorrect per Літвінова p.'
+  score: 10
+  evidence: The phonetic rules are stated with precision. Exceptions like "у Франції"
+    (before ф), "у Львові" (before льв), and "зі школи" (before шк) are handled flawlessly.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: 'Good PPP flow: situation (proofreading essay) → pattern (rules with examples)
-    → practice (activities). Each grammar point has 3+ Ukrainian examples ✓. The "listen-and-feel
-    test" framing is excellent f'
+  score: 10
+  evidence: Excellent pedagogical flow (PPP). The analogy of building a "V-C-V sandwich"
+    helps visualize the abstract concept of euphony, breaking down the mechanical
+    reasoning behind the rules.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'Required vocab all present: у/в used extensively, і/й taught with examples,
-    з/із/зі covered. Recommended vocab: Київ ✓ (multiple instances), Львів ✓ (multiple),
-    офіс ✓ ("працює в офісі"), парк ✓ ("йде'
+  score: 10
+  evidence: All required alternating prepositions/conjunctions and recommended nouns
+    (Київ, Львів, офіс, парк, театр) are used effectively in context.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 'All four markers placed correctly after relevant teaching. Types match
-    plan exactly (2 quiz, 1 fill-in, 1 natural-sound quiz). Markers spread evenly:
-    one per section. Cannot evaluate item-level logic '
+  score: 10
+  evidence: The 4 injected markers perfectly match the focus and type counts specified
+    in the plan.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: No motivational openers or meta-commentary. The proofreading scenario
-    is genuinely engaging — two friends fixing an essay is natural and relatable.
-    The "солов'їна мова" (nightingale language) cultural
+  score: 10
+  evidence: The tone is warm and encouraging. Phrases like "well-oiled gears" and
+    "keep the melody flowing" add excellent linguistic flavor without relying on generic/gamified
+    filler.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All four H2 sections present and ordered per plan. Clean markdown. No
-    duplicate summaries, no meta-commentary sections, no stray tags. Word count 1423
-    exceeds 1200 target ✓. Activity markers properly '
+  evidence: The markdown is clean, headers perfectly match the outline, and the module
+    exceeds the word target (1655 words).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Fully decolonized — Ukrainian euphony presented on its own terms, never
-    compared to Russian. "Солов'їна мова" is an authentic Ukrainian cultural concept.
-    City examples (Київ, Львів, Одеса) are all Ukr
+  evidence: Geography and contexts are standard and culturally appropriate.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: 'Named speakers (Дарина, Олексій) with distinct roles ✓. Natural proofreading
-    scenario ✓. Multi-turn with genuine interaction ✓. However: (1) Дарина''s "Так,
-    правильно!" → "Ні, «в Києві!»" is confusing '
+  score: 7
+  evidence: There is a critical logic error in Dialogue 2. The student asks "Ти і
+    Олена йдете в кіно?", the friend corrects the grammar, but then the *student*
+    says "Ні, я і Максим йдемо в парк" and answers for t
 findings: []

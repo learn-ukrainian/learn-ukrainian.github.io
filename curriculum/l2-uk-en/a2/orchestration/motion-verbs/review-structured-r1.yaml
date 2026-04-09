@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covers all points and required vocabulary. However, the plan explicitly
+    recommended "різноспрямований", but the text used "багатоспрямований" in "**Багатоспрямований
+    рух** *(multidirectional motion)* '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent conjugation forms and pronunciation rules. Contains a minor
+    redundancy ("Ми часто використовуємо його щодня.") and a critical calque in the
+    summary questions ("Я їду на автобусі" instead of '
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow and clear examples for each rule. However, question
+    3 in the summary asks "Яке закінчення має дієслово **їздити** *(to ride)* у формі
+    **я** *(I)*?", which is factually incorrect bec
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required verbs of motion and conjugation models are integrated naturally
+    with clear examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 5 `<!-- EXERCISE -->` markers are present and perfectly distributed after
+    each teaching block.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Clear, encouraging teacher tone without being overly corporate. Natural
+    wrap-up: "Ось і все на сьогодні. Ви зробили велику роботу."'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: H2 headers match plan perfectly. Word count is 3013 (well over the 2000
+    target). No missing sections.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Correctly highlights the critical political/grammatical rule: "Ніколи
+    не кажіть «на Україну» чи «на Україні»".'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Excellent multi-turn airport dialogue integrating the target verbs and
+    prepositions perfectly (летить до Києва, прилетів з Польщі, їде в готель).
+findings: []

@@ -2,6 +2,12 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [],
-  "timestamp": "2026-03-30T14:27:22.420500+00:00"
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/9 required vocab: купувати (to buy)"
+    }
+  ],
+  "timestamp": "2026-04-09T00:50:26.538303+00:00"
 }

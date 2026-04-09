@@ -1,0 +1,427 @@
+version: '1.0'
+module: food-and-drink
+level: a1
+inline:
+- id: fill-in-z-chunks
+  type: fill-in
+  instruction: Вставте правильний варіант (Fill in the correct з+noun chunk)
+  items:
+  - sentence: Я хочу каву ___.
+    answer: з молоком
+    options:
+    - з молоком
+    - з цукром
+    - з газом
+  - sentence: Вона п'є чай ___.
+    answer: з цукром
+    options:
+    - з лимоном
+    - з молоком
+    - з цукром
+  - sentence: Він їсть хліб ___.
+    answer: з маслом
+    options:
+    - з маслом
+    - з цукром
+    - з лимоном
+  - sentence: Я люблю чай ___.
+    answer: з лимоном
+    options:
+    - з молоком
+    - з лимоном
+    - з газом
+  - sentence: Дайте, будь ласка, воду ___.
+    answer: з газом
+    options:
+    - з газом
+    - з молоком
+    - з цукром
+  - sentence: Ми їмо м'ясо ___.
+    answer: з картоплею
+    options:
+    - з маслом
+    - з картоплею
+    - з лимоном
+- id: quiz-meals-dishes
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Що ми їмо вранці?
+    options:
+    - сніданок
+    - обід
+    - вечерю
+    correct: 0
+  - question: Що ми їмо ввечері?
+    options:
+    - вечерю
+    - сніданок
+    - обід
+    correct: 0
+  - question: Традиційний український суп — це...
+    options:
+    - борщ
+    - каша
+    - вода
+    correct: 0
+  - question: 'Українська страва з тіста і картоплі або сиру:'
+    options:
+    - вареники
+    - сало
+    - хліб
+    correct: 0
+  - question: 'Популярний холодний напій з фруктів:'
+    options:
+    - компот
+    - борщ
+    - кава
+    correct: 0
+  - question: Що ми їмо вдень?
+    options:
+    - обід
+    - сніданок
+    - вечерю
+    correct: 0
+- id: match-food-drink
+  type: match-up
+  instruction: З'єднайте українські слова з англійськими перекладами (Match Ukrainian
+    food and drink words to their English translations)
+  pairs:
+  - left: хліб
+    right: bread
+  - left: м'ясо
+    right: meat
+  - left: риба
+    right: fish
+  - left: молоко
+    right: milk
+  - left: вода
+    right: water
+  - left: сік
+    right: juice
+  - left: сніданок
+    right: breakfast
+  - left: обід
+    right: lunch
+  - left: вечеря
+    right: dinner
+  - left: суп
+    right: soup
+- id: group-sort-food-drinks
+  type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into the correct category)
+  groups:
+  - label: Їжа (Food)
+    items:
+    - хліб
+    - м'ясо
+    - риба
+    - суп
+    - каша
+  - label: Напої (Drinks)
+    items:
+    - кава
+    - чай
+    - вода
+    - сік
+    - молоко
+workbook:
+- id: true-false-food-facts
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Борщ — це традиційний український суп.
+    correct: true
+    explanation: Борщ — це національна страва України з буряком, картоплею і сметаною.
+      UNESCO визнало борщ українською культурною спадщиною у 2022 році.
+  - statement: Вареники — це тісто з картоплею або сиром.
+    correct: true
+    explanation: Вареники — страва з тіста, наповнена картоплею, сиром або вишнями.
+      Символ заможного, щасливого життя в Україні.
+  - statement: Компот — це гарячий напій, як кава.
+    correct: false
+    explanation: Компот — це холодний (або кімнатної температури) напій із фруктів,
+      зварених у воді. Кава — гаряча, а компот — ні.
+  - statement: На сніданок українці зазвичай їдять суп.
+    correct: false
+    explanation: Суп зазвичай їдять на обід. На сніданок типово їдять кашу, яйце,
+      хліб, п'ють каву або чай.
+  - statement: Сметана — це молочний продукт.
+    correct: true
+    explanation: Сметана — молочний продукт, важливий в українській кухні. Її додають
+      до борщу, вареників і деруниів.
+  - statement: Деруни — це вареники з тертої картоплі.
+    correct: false
+    explanation: Деруни — це картопляні оладки (pancakes) з тертої картоплі. Вареники
+      — це зовсім інша страва з тіста.
+- id: anagram-food-words
+  type: anagram
+  instruction: Склади слово з літер (Rearrange the letters to form a Ukrainian food
+    word)
+  items:
+  - letters:
+    - о
+    - р
+    - б
+    - щ
+    answer: борщ
+    hint: traditional Ukrainian beetroot soup
+  - letters:
+    - а
+    - к
+    - а
+    - ш
+    answer: каша
+    hint: porridge
+  - letters:
+    - у
+    - б
+    - к
+    - о
+    - л
+    - я
+    answer: яблуко
+    hint: apple
+  - letters:
+    - б
+    - а
+    - р
+    - и
+    answer: риба
+    hint: fish
+  - letters:
+    - р
+    - к
+    - а
+    - к
+    - у
+    answer: курка
+    hint: chicken
+  - letters:
+    - н
+    - а
+    - б
+    - н
+    - а
+    answer: банан
+    hint: banana
+  - letters:
+    - р
+    - с
+    - и
+    answer: сир
+    hint: cheese
+  - letters:
+    - а
+    - л
+    - с
+    - т
+    - а
+    answer: салат
+    hint: salad
+- id: odd-one-out-food-groups
+  type: odd-one-out
+  instruction: Знайдіть зайве слово (Find the word that doesn't belong)
+  items:
+  - words:
+    - кава
+    - чай
+    - хліб
+    - компот
+    correct: 2
+    explanation: Хліб — це їжа, а кава, чай і компот — напої.
+  - words:
+    - картопля
+    - помідор
+    - огірок
+    - молоко
+    correct: 3
+    explanation: Молоко — це молочний продукт, а картопля, помідор і огірок — овочі.
+  - words:
+    - яблуко
+    - банан
+    - лимон
+    - суп
+    correct: 3
+    explanation: Суп — це страва, а яблуко, банан і лимон — фрукти.
+  - words:
+    - сніданок
+    - обід
+    - вечеря
+    - вода
+    correct: 3
+    explanation: Вода — це напій, а сніданок, обід і вечеря — прийоми їжі.
+  - words:
+    - масло
+    - сметана
+    - сир
+    - риба
+    correct: 3
+    explanation: Риба — це м'ясний продукт, а масло, сметана і сир — молочні продукти.
+  - words:
+    - борщ
+    - вареники
+    - деруни
+    - кефір
+    correct: 3
+    explanation: Кефір — це напій, а борщ, вареники і деруни — традиційні українські
+      страви.
+- id: translate-food-phrases
+  type: translate
+  instruction: Оберіть правильний переклад (Choose the correct Ukrainian translation)
+  items:
+  - source: coffee with milk
+    options:
+    - text: кава з молоком
+      correct: true
+    - text: кава з цукром
+      correct: false
+    - text: чай з молоком
+      correct: false
+  - source: bread with butter
+    options:
+    - text: хліб з маслом
+      correct: true
+    - text: хліб з цукром
+      correct: false
+    - text: каша з маслом
+      correct: false
+  - source: meat with potatoes
+    options:
+    - text: м'ясо з картоплею
+      correct: true
+    - text: риба з картоплею
+      correct: false
+    - text: м'ясо з рисом
+      correct: false
+  - source: tea with lemon
+    options:
+    - text: чай з лимоном
+      correct: true
+    - text: кава з лимоном
+      correct: false
+    - text: чай з цукром
+      correct: false
+  - source: sparkling water
+    options:
+    - text: вода з газом
+      correct: true
+    - text: вода з цукром
+      correct: false
+    - text: сік з газом
+      correct: false
+  - source: fish with rice
+    options:
+    - text: риба з рисом
+      correct: true
+    - text: курка з рисом
+      correct: false
+    - text: риба з картоплею
+      correct: false
+- id: error-correction-food-facts
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  items:
+  - sentence: Борщ — це традиційний польський суп.
+    error: польський
+    correction: український
+    error_type: word
+    options:
+    - український
+    - французький
+    - іспанський
+    explanation: Борщ — це традиційний UKRAINIAN суп. У 2022 році UNESCO визнало борщ
+      українською культурною спадщиною.
+  - sentence: Вареники готують з тіста з рибою або сиром.
+    error: рибою
+    correction: картоплею
+    error_type: word
+    options:
+    - картоплею
+    - рисом
+    - морквою
+    explanation: Традиційна начинка вареників — картопля або сир, а не риба.
+  - sentence: Компот — це гарячий напій із фруктів.
+    error: гарячий
+    correction: холодний
+    error_type: word
+    options:
+    - холодний
+    - молочний
+    - алкогольний
+    explanation: Компот — це холодний (або кімнатної температури) напій із фруктів,
+      зварених у воді. Не гарячий, як кава.
+  - sentence: Вечеря — це ранковий прийом їжі.
+    error: ранковий
+    correction: вечірній
+    error_type: word
+    options:
+    - вечірній
+    - денний
+    - традиційний
+    explanation: Вечеря — це вечірній прийом їжі (ввечері). Ранковий — це сніданок.
+  - sentence: Сало — це популярна українська страва з курки.
+    error: курки
+    correction: свинини
+    error_type: word
+    options:
+    - свинини
+    - риби
+    - картоплі
+    explanation: Сало — це солона свиняча (pork) жирна тканина. Не курка і не риба.
+  - sentence: Кефір — це овоч.
+    error: овоч
+    correction: напій
+    error_type: word
+    options:
+    - напій
+    - фрукт
+    - страва
+    explanation: Кефір — це молочний напій (milk drink). Овочі — це картопля, помідор,
+      огірок.
+- id: quiz-vocabulary-food
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Яке слово означає 'egg' по-українськи?
+    options:
+    - яйце
+    - яблуко
+    - масло
+    - сіль
+    correct: 0
+  - question: Яке слово означає 'sour cream' по-українськи?
+    options:
+    - молоко
+    - масло
+    - сметана
+    - кефір
+    correct: 2
+  - question: Що таке 'огірок' по-англійськи?
+    options:
+    - cucumber
+    - tomato
+    - onion
+    - potato
+    correct: 0
+  - question: Яке слово означає 'butter' по-українськи?
+    options:
+    - сіль
+    - масло
+    - цукор
+    - сметана
+    correct: 1
+  - question: Що таке 'каша' по-англійськи?
+    options:
+    - porridge
+    - soup
+    - salad
+    - bread
+    correct: 0
+  - question: Яке слово означає 'sugar' по-українськи?
+    options:
+    - сіль
+    - картопля
+    - масло
+    - цукор
+    correct: 3

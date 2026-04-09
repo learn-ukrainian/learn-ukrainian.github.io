@@ -1,0 +1,333 @@
+---
+title: "Іду, їду, лечу"
+sidebar:
+  order: 43
+  label: "43. Іду, їду, лечу"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Три пари дієслів руху
+
+В українській мові ми використовуємо різні дієслова руху. English has one verb, "to go", for many different situations. You can go to the store right now, go to the store every day, go by car, or go on foot. В українській мові це абсолютно різні слова. Ukrainian distinguishes motion verbs based on two things: how you travel (on foot, by vehicle, by air) and the specific nature of the trip. The most important difference is between unidirectional (one-way) and multidirectional (habitual or round-trip) movement. Це не залежить від швидкості або відстані. *(This does not depend on speed or distance.)* **Односпрямований рух** *(unidirectional motion)* means you are going in one direction right now, or you have a specific, one-way plan. **Різноспрямований рух** *(multidirectional motion)* means you go there regularly, you travel back and forth, or you just move around aimlessly. We have three main pairs of verbs to express these ideas.
+
+Перша пара — це рух пішки. The first pair is for movement on foot: **іти / ходити** *(to go on foot — unidirectional/multidirectional)*. Дієслово «іти» означає, що ви йдете кудись саме зараз. The verb "іти" shows that you are walking somewhere right now, in one specific direction.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Куди ти йдеш? *(Where are you going?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Я йду до парку. *(I am walking to the park.)*</div>
+
+</div>
+
+Дієслово «ходити» означає регулярну дію або рух туди й назад. The verb "ходити" is for regular habits, repeated actions, or completed round trips.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Ти часто ходиш у цей парк? *(Do you often go to this park?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Так, я ходжу сюди щодня. *(Yes, I go here every day.)*</div>
+
+</div>
+
+In the past tense, a completed trip (going to a place and coming back) is also a round trip, so we use the multidirectional verb "ходити". Вчора я ходив у кіно. *(Yesterday I went to the cinema.)* I went there, watched the movie, and came back. Це закритий цикл. *(This is a closed loop.)*
+
+Друга пара — це рух транспортом. The second pair is for movement by vehicle: **їхати / їздити** *(to go by vehicle — unidirectional/multidirectional)*. Якщо ви використовуєте автобус, поїзд, машину або велосипед, вам потрібні ці дієслова. If you use a bus, train, car, or bicycle, you must use these verbs. You cannot use "іти" or "ходити" if you are in a vehicle.
+Дієслово «їхати» описує рух зараз. "Їхати" is one-way motion right now or a planned one-way trip.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Мама:</span> Ви вже їдете додому? *(Are you driving home already?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Син:</span> Так, ми їдемо. *(Yes, we are driving.)*</div>
+
+</div>
+
+Дієслово «їздити» — це регулярні поїздки. "Їздити" describes habitual or regular trips by transport, or going back and forth multiple times.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Ви їздите на море щоліта? *(Do you go to the sea every summer?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ігор:</span> Ні, ми їздимо туди рідко. *(No, we go there rarely.)*</div>
+
+</div>
+
+Третя пара — це рух у повітрі. The third pair is for movement through the air: **летіти / літати** *(to fly — unidirectional/multidirectional)*. Дієслово «летіти» описує політ зараз або конкретний запланований рейс. The verb "летіти" describes a flight happening right now, or one specific scheduled flight to a destination.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Де зараз твій брат? *(Where is your brother right now?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Він летить до Києва. *(He is flying to Kyiv.)*</div>
+
+</div>
+
+Дієслово «літати» означає регулярні польоти або загальну здатність істоти літати. The verb "літати" means regular flights, round-trip flights over time, or the general ability to fly.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Твій брат часто літає? *(Does your brother fly often?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Так, він часто літає у справах. *(Yes, he often flies for business.)*</div>
+
+</div>
+
+Птахи літають високо в небі. *(Birds fly high in the sky.)* Це їхня природна здатність. *(This is their natural ability.)* They are not just flying to one destination right now; they fly in general.
+
+## Дієвідміна та доконаний вид
+
+Тепер ми маємо навчитися правильно змінювати ці дієслова. Now we must learn to conjugate these motion verbs correctly in the present tense. Дієслово **іти** *(to go, walk)* належить до першої дієвідміни. The verb "іти" belongs to the first conjugation. Ось його форми: я **іду**, ти **ідеш**, він **іде**, ми **ідемо**, ви **ідете**, вони **ідуть**. Дієслово **ходити** *(to walk regularly)* належить до другої дієвідміни. The verb "ходити" belongs to the second conjugation, taking endings like -иш, -ить, -ять. Тут є важливе граматичне правило. There is an important consonant alternation here. Коли ми кажемо про себе, звук «д» змінюється на «дж». When forming the "я" (I) form, the stem consonant changes from "д" to "дж". Тому ми кажемо: я **ходжу** *(I walk)*. Але ця зміна працює тільки для форми «я». But this change only applies to the "я" form. Для інших осіб ми використовуємо звичайну літеру «д». For all other persons, we use the regular letter "д". Отже, повна парадигма: я **ходжу**, ти **ходиш**, вона **ходить**, ми **ходимо**, ви **ходите**, вони **ходять**.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Куди ти ходиш на вихідних? *(Where do you go on weekends?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Я ходжу в басейн. *(I go to the pool.)*</div>
+
+</div>
+
+Дієслово **їхати** *(to ride, drive)* також належить до першої дієвідміни. The verb "їхати" also belongs to the first conjugation. Воно змінюється так само, як і дієслово «іти». It conjugates just like the verb "іти". Форми такі: я **їду**, ти **їдеш**, воно **їде**, ми **їдемо**, ви **їдете**, вони **їдуть**. Дієслово **їздити** *(to ride regularly)* належить до другої дієвідміни. The verb "їздити" belongs to the second conjugation. Тут ми також маємо складне чергування приголосних у формі «я». Here we also have a complex consonant alternation in the "я" form. Звуки «зд» змінюються на «ждж». The consonant cluster "зд" changes to "ждж". Це дуже специфічний український звук. This is a very specific Ukrainian sound cluster. Ми кажемо: я **їжджу** *(I ride)*. Знову, ця зміна відбувається тільки у першій особі однини. Again, this change only happens in the first person singular form. Повна парадигма виглядає так: я **їжджу**, ти **їздиш**, він **їздить**, ми **їздимо**, ви **їздите**, вони **їздять**.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Ігор:</span> Чим ви їздите на роботу? *(How do you commute to work?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Зазвичай я їжджу трамваєм. *(Usually I take the tram.)*</div>
+
+</div>
+
+Третя пара — це дієслова **летіти** *(to fly)* та **літати** *(to fly regularly)*. The third pair is the verbs "летіти" and "літати". Дієслово «летіти» належить до другої дієвідміни. The verb "летіти" belongs to the second conjugation. У формі «я» також є чергування: звук «т» змінюється на «ч». In the "я" form, there is also an alternation: the sound "т" changes to "ч". Ми кажемо: я **лечу** *(I fly)*. Для інших осіб ми повертаємо звук «т» і додаємо стандартні закінчення. For other persons, we return the "т" sound and add the standard endings. Парадигма така: я **лечу**, ти **летиш**, вона **летить**, ми **летимо**, ви **летите**, вони **летять**. Дієслово «літати» є набагато простішим. The verb "літати" is much simpler. Воно належить до першої дієвідміни і не має жодних чергувань. It belongs to the first conjugation and has no consonant alternations. Ми просто додаємо закінчення -ю, -єш до основи. We simply add the endings -ю, -єш to the stem. Парадигма: я **літаю**, ти **літаєш**, він **літає**, ми **літаємо**, ви **літаєте**, вони **літають**.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Ти боїшся літати? *(Are you afraid to fly?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Павло:</span> Ні, я часто літаю. *(No, I fly often.)*</div>
+
+</div>
+
+Тепер поговоримо про доконаний вид цих дієслів. Now let's talk about the perfective aspect of these verbs. Усі ці дієслова руху є недоконаними. All these motion verbs are imperfective. Вони описують тривалий процес або регулярну звичку. They describe an ongoing process or a regular habit. Щоб показати початок нової подорожі, ми додаємо префікс **по-**. To show the start of a new journey, we add the prefix "по-". Ми додаємо цей префікс до односпрямованих дієслів. We add this prefix to the unidirectional verbs. Так ми отримуємо: **піти** *(to leave on foot)*, **поїхати** *(to leave by vehicle)*, **полетіти** *(to fly off)*. These perfective verbs mean "to set off" or "to leave". Дієслово «піти» має неправильні форми минулого часу. The verb "піти" has irregular past tense forms. Ми кажемо: він **пішов** *(he left)*, вона **пішла** *(she left)*, воно **пішло** *(it left)*, вони **пішли** *(they left)*.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Батько:</span> Де зараз Тарас? *(Where is Taras right now?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Син:</span> Він уже пішов геть. *(He has already left.)*</div>
+
+</div>
+
+Для інших дієслів минулий час є стандартним. For the other verbs, the past tense is standard. Вона поїхала додому. *(She left for home.)* Літак полетів учора. *(The plane took off yesterday.)*
+
+## Моделі дієвідмінювання: казати, пити, боротися
+
+В українській мові є особливі правила для багатьох дієслів. *(In Ukrainian, there are special rules for many verbs.)* Деякі дієслова змінюють приголосні звуки в корені. *(Some verbs change consonant sounds in the root.)* Ми називаємо це явище **чергуванням** *(alternation)*.
+
+These changes are not random grammatical irregularities. They are predictable and highly systematic consonant alternations. We often see historical shifts like «з» to «ж», «с» to «ш», or «т» to «ч». These shifts naturally make pronunciation much smoother. They also help distinguish different verb forms more clearly in speech. Once you learn a specific phonetic pattern, you can easily apply it to dozens of similar verbs without memorizing each one individually. Let's look at three very common conjugation models that you will use every day.
+
+Перша модель — це постійна зміна приголосного звука. *(The first model is a constant consonant sound change.)* Ця зміна відбувається в усьому теперішньому часі. *(This change happens throughout the entire present tense.)* Візьмемо популярне дієслово **казати / кажу** *(to say — stem change model)*. У цьому слові звук «з» завжди змінюється на шиплячий «ж». *(In this word, the sound "з" always changes to the hissing "ж".)*
+
+This alternation belongs to the standard first conjugation pattern. The new consonant stays securely in place for every person.
+
+Я **кажу** *(I say)*. Ти **кажеш** *(you say)*. Він **каже** *(he says)*. Ми **кажемо** *(we say)*. Ви **кажете** *(you say)*. Вони **кажуть** *(they say)*.
+
+Many common verbs follow this exact same pattern. For example, the verb **писати** *(to write)* changes «с» to «ш» across all active forms.
+
+Я **пишу** *(I write)*. Ти **пишеш** *(you write)*. Вони **пишуть** *(they write)*.
+
+This structural rule also applies directly to perfective verbs in the simple future tense. The perfective partner **сказати** *(to say — pf.)* conjugates exactly the same way to show completed future actions.
+
+Завтра я **скажу** всю правду. *(Tomorrow I will tell the whole truth.)*
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> Що ти зараз кажеш? *(What are you saying right now?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Іван:</span> Я кажу, що я пишу нову статтю. *(I am saying that I am writing a new article.)*</div>
+
+</div>
+
+Друга важлива модель — це коротка основа з апострофом. *(The second important model is a short stem with an apostrophe.)* Дієслово **пити / п'ю** *(to drink — irregular model)* має дуже коротку форму в теперішньому часі. *(The verb "пити" has a very short form in the present tense.)* Ми використовуємо його щодня. *(We often use it every day.)*
+
+The verbal stem drastically reduces here. Because of this reduction, we must use an apostrophe before adding the standard endings «-ю», «-єш», or «-є». The apostrophe visually and phonetically shows that the consonant and the vowel are pronounced entirely separately.
+
+Я **п'ю** *(I drink)*. Ти **п'єш** *(you drink)*. Вона **п'є** *(she drinks)*. Ми **п'ємо** *(we drink)*. Ви **п'єте** *(you drink)*. Вони **п'ють** *(they drink)*.
+
+Several other short verbs share this specific contraction pattern perfectly. For instance, the verb **бити** *(to hit/beat)* conjugates simply as я **б'ю** *(I hit)*, ти **б'єш** *(you hit)*.
+
+Інше схоже дієслово — це **лити** *(to pour)*. *(Another similar verb is "лити".)* Але тут ми маємо подвійний м'який звук «л». *(But here we have a double soft "л" sound.)*
+
+Я **ллю** *(I pour)*. Ти **ллєш** *(you pour)*. Вони **ллють** *(they pour)*.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Що ти п'єш зранку? *(What do you drink in the morning?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Зазвичай я п'ю чорну каву. *(Usually I drink black coffee.)*</div>
+
+</div>
+
+Третя цікава модель — це дієслова на **-отися** *(verbs ending in -отися)*. Дієслово **боротися / борюся** *(to fight/struggle)* має дві головні особливості під час відмінювання. *(The verb "боротися" has two main features during conjugation.)*
+
+First, the structural stem changes from «от» to «ор» in all present tense forms. Second, we must keep the reflexive particle securely attached to the very end of the conjugated word. We use **-ся** after consonants and **-сь** after vowels.
+
+Я **борюся** *(I struggle)*. Ти **борешся** *(you struggle)*. Він **бореться** *(he struggles)*. Ми **боремося** *(we struggle)*. Ви **боретеся** *(you struggle)*. Вони **борються** *(they struggle)*.
+
+Pay extremely close attention to the third person forms ending in «-ться». This cluster is always pronounced together as a soft, prolonged "ts:a" sound, not exactly as it is written.
+
+Ми щодня боремося за нашу свободу. *(We fight for our freedom every day.)* Вони мужньо борються зі складними проблемами. *(They bravely struggle with complex problems.)*
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Журналіст:</span> За що зараз бореться ваша організація? *(What is your organization fighting for now?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Активіст:</span> Ми боремося за рівні права людей. *(We are fighting for equal human rights.)*</div>
+
+</div>
+
+## Рух + прийменники + відмінки
+
+Коли ми рухаємося, ми маємо мету. *(When we move, we have a destination.)* Ми часто запитуємо: «Куди ти йдеш?» або «Куди ви їдете?». *(We often ask: "Where are you going?" or "Where are you driving to?".)* Ukrainian uses three main prepositions to answer this question. First, we use **до** *(to)* with the Genitive case. Я йду **до школи** *(to school)*. Ми їдемо **до друга** *(to a friend)*. Second, we use **на** *(to/onto)* with the Accusative case for events, open spaces, or specific activities. Він іде **на роботу** *(to work)*. Вони йдуть **на пошту** *(to the post office)*. Third, we use **в** або **у** *(to/into)* with the Accusative case for enclosed spaces, cities, and countries. Вона летить **в Україну** *(to Ukraine)*. Ми їдемо **у місто** *(to the city)*. There is a strict rule regarding the name of our country. Ми завжди говоримо «в Україну» або «в Україні». *(We always say "в Україну" or "в Україні".)* Ніколи не кажіть «на Україну» чи «на Україні». *(Never say "на Україну" or "на Україні".)* This is a fundamental grammatical and political rule of the modern language.
+
+Тепер поговоримо про зворотний напрямок. *(Now let's talk about the opposite direction.)* Ми запитуємо: «Звідки ти йдеш?» або «Звідки летить літак?». *(We ask: "Where are you walking from?" or "Where is the plane flying from?".)* Ukrainian perfectly pairs the destination prepositions with specific return prepositions. Усі ці прийменники вимагають родового відмінка. *(All these prepositions require the Genitive case.)* If you went «до» a person or place, you return **від** *(from)* them. Я йду **від друга** *(from a friend)*. Вона їде **від лікаря** *(from the doctor)*. If you went «на» an event or open space, you return **з** or **зі** *(from/off)* it. Ми йдемо **з роботи** *(from work)*. Діти йдуть **зі школи** *(from school)*. If you went «в» or «у» into a country or enclosed space, you also return **з** *(from/out of)* it. Брат їде **з міста** *(from the city)*. Літак летить **з України** *(from Ukraine)*.
+
+Іноді ми не маємо кінцевої мети. *(Sometimes we do not have a final destination.)* Ми просто рухаємося через певний простір. *(We simply move through a certain space.)* To say that you are crossing something, use **через** *(through/across)* with the Accusative case. Ми йдемо **через парк** *(through the park)*. Вони переходять **через дорогу** *(across the road)*. To describe movement along a surface or wandering inside an area, use **по** *(along/around)* with the Locative case. Ми гуляємо **по місту** *(around the city)*. Вона йде **по вулиці** *(along the street)*. Notice the important difference between a specific destination and wandering. Sentence «Я йду в парк» means the park is your destination. Sentence «Я ходжу по парку» means you are already inside and wandering around.
+
+Уявіть типову ситуацію в аеропорту. *(Imagine a typical situation at the airport.)* Там дуже багато людей. *(There are very many people there.)* Усі кудись поспішають. *(Everyone is hurrying somewhere.)*
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Алло, Маріє! Де ви зараз? *(Hello, Maria! Where are you now?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> Ми вже в аеропорту. Ми йдемо до термінала. *(We are already at the airport. We are walking to the terminal.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Куди ви летите? *(Where are you flying to?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> Ми летимо до Києва. А де Іван? *(We are flying to Kyiv. And where is Ivan?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Він щойно прилетів з Польщі. *(He just flew in from Poland.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> А він куди їде? *(And where is he driving to?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Він їде на таксі в готель. *(He is taking a taxi to the hotel.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> Зрозуміло. Наш літак летить через годину. *(Understood. Our plane flies in an hour.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Добре, щасливої дороги! Поїхали! *(Good, have a safe trip! Let's go!)*</div>
+
+</div>
+
+## Підсумок
+
+Ось і все на сьогодні. *(That is all for today.)* Ви зробили велику роботу. *(You did a great job.)* Дієслова руху — це складна, але важлива тема. *(Verbs of motion are a complex but important topic.)* Тепер ви знаєте різницю між рухом пішки та транспортом. *(Now you know the difference between movement on foot and by transport.)* Щоб перевірити свої знання, дайте відповіді на ці запитання. *(To check your knowledge, answer these questions.)*
+
+1. Яка різниця між формами **«я йду»** *(I am walking)* та **«я ходжу»** *(I walk)*? Яке дієслово показує рух зараз, а яке — регулярну звичку? *(Which verb shows movement now, and which — a regular habit?)*
+2. Як правильно сказати: «Я їду автобусом» чи «Я іду автобусом»? Чому транспорт вимагає іншого дієслова? *(Why does transport require a different verb?)*
+3. Яку форму має дієслово **їздити** *(to ride)* для особи **я** *(I)*? Згадайте про складне чергування приголосних. *(Remember about the complex consonant alternation.)*
+4. Як утворити минулий час чоловічого роду від дієслова **піти** *(to leave on foot)*?
+5. Які прийменники ми використовуємо для запитань **«Куди?»** *(Where to?)* та **«Звідки?»** *(Where from?)*? Який відмінок потрібен після прийменників **до** *(to)*, **з** *(from)* та **від** *(from)*? *(Which case is needed after the prepositions to, from, and from?)*
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **чергува́ння** | alternation | ім. | с. |
+| **односпрямо́ваний** | unidirectional | прикм. |  |
+| **різноспрямо́ваний** | multidirectional | прикм. |  |
+| **багатоспрямований** | multidirectional | прикм. |  |
+| **зві́дки** | from where | присл. |  |
+| **куди́** | where to | присл. |  |
+| **іти́** | to go on foot (unidirectional) | дієсл. |  |
+| **ходи́ти** | to go on foot (multidirectional) | дієсл. |  |
+| **ї́хати** | to go by vehicle (unidirectional) | дієсл. |  |
+| **ї́здити** | to go by vehicle (multidirectional) | дієсл. |  |
+| **леті́ти** | to fly (unidirectional) | дієсл. |  |
+| **літа́ти** | to fly (multidirectional) | дієсл. |  |
+| **піти** | to leave on foot (perfective) | ім. | ж. |
+| **пої́хати** | to leave by vehicle (perfective) | дієсл. |  |
+| **полеті́ти** | to fly off (perfective) | дієсл. |  |
+| **каза́ти** | to say | дієсл. |  |
+| **пи́ти** | to drink | дієсл. |  |
+| **боро́тися** | to fight / struggle | дієсл. |  |
+| **на́прямок** | direction | ім. | ч. |
+| **рух** | movement / motion | ім. | ч. |
+| **писа́ти** | to write | дієсл. |  |
+| **би́ти** | to hit / beat | дієсл. |  |
+| **ли́ти** | to pour | дієсл. |  |
+| **че́рез** | through / across (preposition) | прийм. |  |
+| **по** | along / around (preposition) | прийм. |  |
+| **щодня́** | every day | присл. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **туди й назад** | back and forth |
+| **у справах** | for business |
+| **на вихідних** | on weekends |
+| **пішов геть** | left away / gone |
+| **щасливої дороги!** | have a safe trip! |
+| **Поїхали!** | Let's go! / We're off! |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "чергува́ння", back: "alternation", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "односпрямо́ваний", back: "unidirectional", subtitle: "прикм." }, { front: "різноспрямо́ваний", back: "multidirectional", subtitle: "прикм." }, { front: "багатоспрямований", back: "multidirectional", subtitle: "прикм." }, { front: "зві́дки", back: "from where", subtitle: "присл." }, { front: "куди́", back: "where to", subtitle: "присл." }, { front: "іти́", back: "to go on foot (unidirectional)", subtitle: "дієсл." }, { front: "ходи́ти", back: "to go on foot (multidirectional)", subtitle: "дієсл." }, { front: "ї́хати", back: "to go by vehicle (unidirectional)", subtitle: "дієсл." }, { front: "ї́здити", back: "to go by vehicle (multidirectional)", subtitle: "дієсл." }, { front: "леті́ти", back: "to fly (unidirectional)", subtitle: "дієсл." }, { front: "літа́ти", back: "to fly (multidirectional)", subtitle: "дієсл." }, { front: "піти", back: "to leave on foot (perfective)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пої́хати", back: "to leave by vehicle (perfective)", subtitle: "дієсл." }, { front: "полеті́ти", back: "to fly off (perfective)", subtitle: "дієсл." }, { front: "каза́ти", back: "to say", subtitle: "дієсл." }, { front: "пи́ти", back: "to drink", subtitle: "дієсл." }, { front: "боро́тися", back: "to fight / struggle", subtitle: "дієсл." }, { front: "на́прямок", back: "direction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рух", back: "movement / motion", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "писа́ти", back: "to write", subtitle: "дієсл." }, { front: "би́ти", back: "to hit / beat", subtitle: "дієсл." }, { front: "ли́ти", back: "to pour", subtitle: "дієсл." }, { front: "че́рез", back: "through / across (preposition)", subtitle: "прийм." }, { front: "по", back: "along / around (preposition)", subtitle: "прийм." }, { front: "щодня́", back: "every day", subtitle: "присл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Односпрямований (зараз)": ["іти", "їхати", "летіти", "йду"], "Багатоспрямований (регулярно)": ["ходити", "їздити", "літати", "ходжу"]}} instruction={"Розподіліть дієслова: односпрямований (зараз) чи багатоспрямований (регулярно) рух?"} />
+
+<FillIn client:only="react" items={[{"sentence": "Куди ти зараз ____?", "answer": "ідеш", "options": ["ідеш", "ходиш", "їдеш", "їздиш"]}, {"sentence": "Ми часто ____ у цей парк.", "answer": "ходимо", "options": ["йдемо", "їдемо", "ходимо", "їздимо"]}, {"sentence": "Де Олена? Вона зараз ____ до Києва.", "answer": "летить", "options": ["їде", "летить", "літає", "їздить"]}, {"sentence": "Він ____ у справах дуже рідко.", "answer": "літає", "options": ["летить", "іде", "літає", "ходить"]}, {"sentence": "Вони ____ на роботу автобусом щодня.", "answer": "їздять", "options": ["їдуть", "ідуть", "їздять", "ходять"]}, {"sentence": "Подивись! Ми вже ____ додому.", "answer": "їдемо", "options": ["їздимо", "їдемо", "йдемо", "ходимо"]}, {"sentence": "Вчора Марко ____ у кіно.", "answer": "ходив", "options": ["ішов", "їхав", "ходив", "їздив"]}, {"sentence": "Вона уже ____ додому.", "answer": "пішла", "options": ["ішла", "ходила", "пішла", "полетіла"]}]} instruction={"Оберіть правильне дієслово руху за контекстом"} />
+
+<Quiz client:only="react" questions={[{"question": "Що ти зараз (казати)?", "options": [{"text": "кажеш", "correct": true}, {"text": "казаєш", "correct": false}, {"text": "кажиш", "correct": false}, {"text": "кажуєш", "correct": false}]}, {"question": "Зазвичай зранку я (пити) чорну каву.", "options": [{"text": "пию", "correct": false}, {"text": "п'ю", "correct": true}, {"text": "п'є", "correct": false}, {"text": "пйю", "correct": false}]}, {"question": "Ми щодня (боротися) за свободу.", "options": [{"text": "боромося", "correct": false}, {"text": "боремось", "correct": false}, {"text": "боремося", "correct": true}, {"text": "борються", "correct": false}]}, {"question": "Завтра я (сказати) всю правду.", "options": [{"text": "сказу", "correct": false}, {"text": "скаже", "correct": false}, {"text": "сказаю", "correct": false}, {"text": "скажу", "correct": true}]}, {"question": "Вони мужньо (боротися) з проблемами.", "options": [{"text": "боряться", "correct": false}, {"text": "боротяться", "correct": false}, {"text": "борються", "correct": true}, {"text": "бороться", "correct": false}]}, {"question": "Вона часто (пити) зелений чай.", "options": [{"text": "пиє", "correct": false}, {"text": "п'є", "correct": true}, {"text": "піє", "correct": false}, {"text": "п'єш", "correct": false}]}, {"question": "Ви (казати) неправду!", "options": [{"text": "кажете", "correct": true}, {"text": "казаєте", "correct": false}, {"text": "кажите", "correct": false}, {"text": "кажуте", "correct": false}]}, {"question": "Ти мужньо (боротися).", "options": [{"text": "боришся", "correct": false}, {"text": "борешся", "correct": true}, {"text": "борошся", "correct": false}, {"text": "борюшся", "correct": false}]}]} instruction={"Оберіть правильну форму дієслова (казати, пити, боротися)"} />
+
+<MatchUp client:only="react" pairs={[{"left": "іду до", "right": "школи"}, {"left": "їду на", "right": "роботу"}, {"left": "лечу в", "right": "Україну"}, {"left": "йду з", "right": "роботи"}, {"left": "їду від", "right": "лікаря"}, {"left": "лечу з", "right": "України"}, {"left": "йду через", "right": "парк"}, {"left": "гуляю по", "right": "місту"}]} instruction={"З'єднайте дієслово з правильним прийменником та місцем"} />
+
+<Unjumble client:only="react" items={[{"words": "до / Я / школи. / йду", "answer": "Я йду до школи."}, {"words": "їдемо / на / Ми / роботу.", "answer": "Ми їдемо на роботу."}, {"words": "в / летить / Україну. / Літак", "answer": "Літак летить в Україну."}, {"words": "йдуть / зі / школи. / Діти", "answer": "Діти йдуть зі школи."}, {"words": "лікаря. / від / їдуть / Вони", "answer": "Вони їдуть від лікаря."}, {"words": "місту. / гуляємо / по / Ми", "answer": "Ми гуляємо по місту."}]} instruction={"Складіть правильні речення про напрямок руху"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Я їзджу на роботу автобусом.", "errorWord": "їзджу", "correctForm": "їжджу", "options": ["їжджу", "їзжу", "їздю", "їзджу"], "explanation": "Чергування зд -> ждж у першій особі (я)."}, {"sentence": "Мій брат їде на Україну.", "errorWord": "на", "correctForm": "в", "options": ["в", "до", "з", "у"], "explanation": "З країнами ми завжди використовуємо прийменник «в» або «у»."}, {"sentence": "Вони боряться за свої права.", "errorWord": "боряться", "correctForm": "борються", "options": ["борються", "боріться", "бореться", "борять"], "explanation": "Правильне закінчення для «вони» — борються."}, {"sentence": "Завтра я кажу тобі всю правду.", "errorWord": "кажу", "correctForm": "скажу", "options": ["скажу", "сказаю", "розкажу", "кажу"], "explanation": "Для майбутнього завершеного часу потрібен доконаний вид (сказати)."}, {"sentence": "Ми гуляємо по містом.", "errorWord": "містом", "correctForm": "місту", "options": ["місту", "міста", "місті", "містом"], "explanation": "Прийменник «по» вимагає місцевого відмінка (по чому? по місту)."}, {"sentence": "Діти йдуть з школа.", "errorWord": "школа", "correctForm": "школи", "options": ["школи", "школу", "школою", "школі"], "explanation": "Прийменник «з» вимагає родового відмінка (з чого? зі школи)."}, {"sentence": "Ти часто літиш літаком?", "errorWord": "літиш", "correctForm": "літаєш", "options": ["літаєш", "летиш", "літаш", "літають"], "explanation": "Для регулярної дії потрібне дієслово багатоспрямованого руху (літати)."}, {"sentence": "Я ходжу до парк.", "errorWord": "парк", "correctForm": "парку", "options": ["парку", "парка", "парком", "парку"], "explanation": "Прийменник «до» вимагає родового відмінка (до чого? до парку)."}]} instruction={"Знайдіть і виправте помилку в реченні"} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+## Підручники (Textbooks)
+
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=97), стор. 97
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=99), стор. 99
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=220), стор. 220
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=52), стор. 52
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=99), стор. 99
+
+**Статті — Articles**
+
+- [Prefixes of Motion Guide](https://www.ukrainianlessons.com/prefixes-of-motion/) (Systematic tables for beginners.)
+- [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/) (Audio examples and drills.)
+- [Dobra Forma 28-3: Verbs of Motion (Prefixed)](https://opentext.ku.edu/dobraforma/chapter/28-3/) (University of Kansas)
+- [Dobra Forma 27-1: Verbal Aspect (Introduction)](https://opentext.ku.edu/dobraforma/chapter/27-1/) (University of Kansas)
+
+**Відео — Videos**
+
+- [My Elevator Stopped at a Floor That Doesn’t Exist | Horror Podcast](https://www.youtube.com/watch?v=dcKCbXuAUjQ) (Bright Kids Ukrainian)
+- [ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in...](https://www.youtube.com/watch?v=zVdb0g7KDC0) (Ukrainian Lessons)
+- [Cooking verbs in Ukrainian. Дієслова для готування.](https://www.youtube.com/watch?v=_lvdp6hRm1U) (Bright Kids Ukrainian)
+
+</TabItem>
+</Tabs>

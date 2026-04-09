@@ -2,47 +2,49 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covered all 4 sections (Діалоги, Скільки коштує, Де купити, Підсумок).
+  score: 9
+  evidence: The module covers all required sections and topics. However, it claims
+    that certain words appeared in the dialogues when they did not ("ковбаса" and
+    "масло").
 - dimension: 2
   name: Linguistic accuracy
-  score: 5
-  evidence: 'The text explicitly teaches the WRONG stress for plural kopecks: `2 копійки́,
-    5 копійо́к` instead of `копі́йки, копі́йок`. Also teaches wrong stress for `у
-    ме́не` (`у мене́`) and `дві па́чки` (`дві па'
+  score: 10
+  evidence: All Ukrainian text is correct. No Russianisms, Surzhyk, or calques were
+    detected.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Good use of PPP pedagogy. Clear introduction of numbers and currency agreement
-    before introducing quantity chunks.
+  score: 8
+  evidence: The explanation of currency pluralization is slightly imprecise ("For
+    the number five and any number above it" instead of specifying the final digit),
+    which could confuse learners about numbers like 2
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items are naturally integrated
-    into the text.
+  evidence: All required and recommended vocabulary items from the plan are integrated
+    naturally into the text.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: Good coverage of grammar points in the markers, matching the activity
-    hints accurately.
+  score: 10
+  evidence: The injected markers align perfectly with the plan's activity hints and
+    are positioned exactly where they should be.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Good situational dialogues (outdoor market and supermarket). Natural flow.
+  score: 10
+  evidence: Excellent, encouraging tone. The cultural notes about the market atmosphere
+    and the use of diminutives (картопелька, яблучка) are fantastic.
 - dimension: 7
   name: Structural integrity
-  score: 6
-  evidence: Contains stray formatting artifacts (double stress marks `ко́штува́ти`,
-    `ко́шту́ють`). Also, the word count is 1593, which is >30% over the 1200 target,
-    padded slightly by repetitive explanations at t
+  score: 10
+  evidence: Clean markdown, appropriate use of callouts, and the word count exceeds
+    the target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Accurate presentation of hryvnia/kopeck patterns and Ukrainian shop types
-    (крамниця, ринок).
+  evidence: The distinction between "ринок" and "супермаркет", as well as the historical
+    note about the "шаг" coin, are highly accurate and culturally enriching.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Natural exchanges with realistic transactional phrases (Є знижка?, Можна
-    карткою?, Дорого!).
+  score: 7
+  evidence: The dialogues are natural and communicative, but the first dialogue contains
+    a mathematical error in the total price calculation (75 instead of 110).
 findings: []

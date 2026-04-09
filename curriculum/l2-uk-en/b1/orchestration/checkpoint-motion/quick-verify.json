@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/9 required vocab: просторовий прийменник (spatial preposition)"
+    }
+  ],
+  "timestamp": "2026-04-09T22:20:56.774241+00:00"
+}

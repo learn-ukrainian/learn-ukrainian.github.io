@@ -1,0 +1,319 @@
+vocabulary:
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: меню́
+  translation: menu
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: раху́нок
+  translation: bill
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: замовля́ти
+  translation: to order
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: офіціа́нт
+  translation: waiter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сма́чно
+  translation: delicious (adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рекомендува́ти
+  translation: to recommend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чайові́
+  translation: tip, gratuity
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: готі́вка
+  translation: cash
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ртка
+  translation: card
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: го́стре
+  translation: spicy (neuter adjective)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вегетаріа́нський
+  translation: vegetarian (adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: смачни́й
+  translation: tasty, delicious (adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ті́стечко
+  translation: pastry, small cake
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: хвили́нка
+  translation: moment (diminutive of хвилина)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гри́вня
+  translation: hryvnia (Ukrainian currency)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: звича́йно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сала́т
+  translation: salad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пі́ца
+  translation: pizza
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кав'я́рня
+  translation: coffee shop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́штува́ти
+  translation: to cost
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ре́шта
+  translation: change (money)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: цу́кор
+  translation: sugar
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лимо́н
+  translation: lemon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ві́льно
+  translation: free, available (of a seat)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: м'я́со
+  translation: meat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: карто́пля
+  translation: potatoes
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: я́блука
+  translation: apples
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Що ви рекомендуєте?
+  translation: What do you recommend?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені [acc], будь ласка.
+  translation: '[food/drink] for me, please.'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна [acc]?
+  translation: May I have [food/drink]?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте, будь ласка, [acc].
+  translation: Give me [food/drink], please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я буду [acc].
+  translation: I'll have [food/drink].
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Рахунок, будь ласка.
+  translation: The bill, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна карткою?
+  translation: Can I pay by card?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Готівкою.
+  translation: In cash.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Залиште решту.
+  translation: Keep the change.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це гостре?
+  translation: Is it spicy?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це з м'ясом?
+  translation: Is it with meat?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А що це?
+  translation: What is this?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Є вегетаріанське меню?
+  translation: Is there a vegetarian menu?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вільно? / Тут вільно?
+  translation: Is this seat free?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна меню?
+  translation: May I have the menu?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ще одну каву, будь ласка.
+  translation: One more coffee, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Без цукру.
+  translation: Without sugar.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З лимоном.
+  translation: With lemon.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Все було дуже смачно!
+  translation: Everything was very delicious!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Приходьте ще!
+  translation: Come again!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

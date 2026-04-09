@@ -2,307 +2,342 @@ version: '1.0'
 module: checkpoint-places
 level: a1
 inline:
-- id: quiz-de-kudy-zvidky
+- id: quiz-question-choice
   type: quiz
-  instruction: Оберіть правильне питальне слово (Choose the correct question word)
+  instruction: Оберіть правильне запитання (Choose the correct question)
   items:
-  - question: ___ ти живеш? — У Києві.
+  - question: _____ ти живеш? — У Києві.
     options:
     - Де
     - Куди
     - Звідки
     correct: 0
-  - question: ___ ти йдеш? — У магазин.
-    options:
-    - Куди
-    - Де
-    - Звідки
-    correct: 0
-  - question: ___ ви? — Ми з Канади.
-    options:
-    - Звідки
-    - Де
-    - Куди
-    correct: 0
-  - question: ___ музей? — У центрі.
+  - question: _____ ти йдеш? — У магазин.
     options:
     - Де
     - Куди
     - Звідки
-    correct: 0
-  - question: ___ їде автобус? — На вокзал.
-    options:
-    - Куди
-    - Де
-    - Звідки
-    correct: 0
-  - question: ___ ти їдеш? — З роботи.
-    options:
-    - Звідки
-    - Куди
-    - Де
-    correct: 0
-  - question: ___ аптека? — Направо.
-    options:
-    - Де
-    - Куди
-    - Звідки
-    correct: 0
-  - question: ___ вони? — Зі США.
-    options:
-    - Звідки
-    - Де
-    - Куди
-    correct: 0
-- id: quiz-euphony
-  type: quiz
-  instruction: Оберіть правильний варіант (Choose the correct option)
-  items:
-  - question: Брат ___ сестра.
-    options:
-    - і
-    - й
-    - та
-    correct: 0
-  - question: Вона живе ___ Львові.
-    options:
-    - у
-    - в
-    - на
     correct: 1
-  - question: Я йду ___ школи.
+  - question: _____ ви? — Ми з Канади.
     options:
-    - зі
-    - з
-    - із
+    - Де
+    - Куди
+    - Звідки
+    correct: 2
+  - question: _____ музей? — У центрі.
+    options:
+    - Де
+    - Куди
+    - Звідки
     correct: 0
-  - question: Він ___ Києві.
+  - question: _____ їде автобус? — На вокзал.
     options:
-    - у
-    - в
-    - на
-    correct: 0
-  - question: Мама ___ тато.
-    options:
-    - і
-    - й
-    - та
+    - Де
+    - Куди
+    - Звідки
     correct: 1
-  - question: Ми ___ України.
+  - question: _____ ти їдеш? — З роботи.
     options:
-    - з
-    - із
-    - зі
-    correct: 0
-  - question: Я ___ кімнаті.
+    - Де
+    - Куди
+    - Звідки
+    correct: 2
+  - question: _____ аптека? — Направо.
     options:
-    - в
-    - у
-    - на
+    - Де
+    - Куди
+    - Звідки
     correct: 0
-  - question: Вона ___ США.
+  - question: _____ вони? — Зі США.
     options:
-    - зі
-    - з
-    - із
-    correct: 0
+    - Де
+    - Куди
+    - Звідки
+    correct: 2
 - id: group-sort-cases
   type: group-sort
-  instruction: Розподіліть фрази за категоріями (Sort phrases by category)
+  instruction: Розподіліть фрази за категоріями (Sort the phrases by category)
   groups:
   - label: Локація (Де?)
     items:
     - у школі
     - на площі
     - в центрі
-    - у готелі
-    - на вокзалі
-    - у музеї
   - label: Напрямок (Куди?)
     items:
     - на роботу
     - у Львів
-    - у Канаду
-    - у школу
-    - на площу
-    - у магазин
+    - в Канаду
   - label: Походження (Звідки?)
     items:
     - з України
     - зі США
     - з роботи
-    - з Києва
-    - з Канади
-    - зі школи
-- id: fill-in-dialogue
-  type: fill-in
-  instruction: Вставте правильну форму (Fill in the correct form)
+- id: quiz-euphony-check
+  type: quiz
+  instruction: Оберіть правильний варіант для милозвучності (Choose the correct option
+    for euphony)
   items:
-  - sentence: Вибачте, я ___. Де тут музей?
+  - question: Брат _____ сестра
+    options:
+    - і
+    - й
+    - та
+    correct: 0
+  - question: Вона живе _____ Львові
+    options:
+    - у
+    - в
+    - на
+    correct: 0
+  - question: Я йду _____ школи
+    options:
+    - зі
+    - з
+    - із
+    correct: 0
+  - question: Він _____ Києві
+    options:
+    - у
+    - в
+    - на
+    correct: 0
+  - question: Мама _____ тато
+    options:
+    - й
+    - і
+    - та
+    correct: 0
+  - question: Ми _____ України
+    options:
+    - з
+    - із
+    - зі
+    correct: 0
+  - question: Я _____ кімнаті
+    options:
+    - в
+    - у
+    - на
+    correct: 0
+  - question: Вона _____ США
+    options:
+    - зі
+    - з
+    - із
+    correct: 0
+- id: fill-in-dialogue-forms
+  type: fill-in
+  instruction: Вставте правильні фрази в діалог (Complete the dialogue with the correct
+    phrases)
+  items:
+  - sentence: Вибачте, я _____. Де тут музей?
     answer: з Канади
     options:
     - з Канади
-    - у Канаді
-    - до Канади
-  - sentence: Музей ___. Ідіть на метро.
+    - в Канаді
+    - в Канаду
+  - sentence: Музей _____. Ідіть на метро.
     answer: у центрі
     options:
     - у центрі
-    - у центр
+    - в центр
     - з центру
-  - sentence: А як дістатися ___?
+  - sentence: А як дістатися _____?
     answer: від метро
     options:
     - від метро
-    - до метро
     - на метро
-  - sentence: Вийдіть і йдіть ___. Музей на площі.
+    - в метро
+  - sentence: Вийдіть і йдіть _____. Музей на площі.
     answer: направо
     options:
     - направо
-    - наліво
-    - прямо
-  - sentence: Я хочу їхати ___. Де вокзал?
+    - направі
+    - справа
+  - sentence: Я хочу їхати _____. Де вокзал?
     answer: у Львів
     options:
     - у Львів
     - у Львові
     - зі Львова
-  - sentence: Вокзал далеко, їдьте ___.
+  - sentence: Вокзал далеко, їдьте _____.
     answer: на метро
     options:
     - на метро
-    - у метро
+    - в метро
     - з метро
 workbook:
-- type: true-false
+- id: true-false-reading
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Томас із Канади.
-    correct: true
-    explanation: Томас says 'Я з Канади.'
-  - statement: Вранці Томас їде на метро.
-    correct: true
-    explanation: '''Вранці я їду на метро до станції Хрещатик.'''
-  - statement: Музей знаходиться за рогом від входу в метро.
+  - statement: Марк зараз у Польщі.
     correct: false
-    explanation: Музей на площі. Треба їхати до станції Арсенальна, потім іти пішки.
-  - statement: Вранці Томас іде пішки до Хрещатика.
-    correct: false
-    explanation: Він їде на метро, не пішки.
-  - statement: Увечері Томас у готелі.
+    explanation: Він з Польщі, але зараз у Києві.
+  - statement: Його готель у центрі.
     correct: true
-    explanation: '''Увечері я у готелі.'''
-  - statement: Томас хоче їхати у Харків.
+    explanation: Так, його готель у центрі міста.
+  - statement: Марк іде на вокзал пішки.
     correct: false
-    explanation: 'Він хоче їхати у Львів: ''Хочу їхати у Львів!'''
-  - statement: Зі станції метро треба іти направо.
+    explanation: Вокзал далеко, він їде на метро.
+  - statement: Золоті ворота близько.
     correct: true
-    explanation: '''Виходжу зі станції. Іду направо.'''
-  - statement: Від зупинки до Лаври треба їхати ще одну зупинку.
+    explanation: Так, Золоті ворота близько, він вже біля музею.
+  - statement: Музей на площі.
+    correct: true
+    explanation: Так, музей знаходиться на площі.
+  - statement: Марк іде наліво до музею.
     correct: false
-    explanation: Від зупинки до Лаври пішки — п'ять хвилин.
-- type: match-up
-  instruction: З'єднайте місце з правильною формою (Match the place with its locative
-    form)
+    explanation: Він іде направо.
+- id: error-correction-cases
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Я живу в Київ.
+    error: в Київ
+    correction: у Києві
+    error_type: word
+    options:
+    - у Києві
+    - з Києва
+    - на Києві
+    explanation: 'For location (Де?), use the Locative case: у Києві.'
+  - sentence: Вона йде на школі.
+    error: на школі
+    correction: у школу
+    error_type: word
+    options:
+    - у школу
+    - у школі
+    - зі школи
+    explanation: 'For direction (Куди?), use the Accusative case: у школу.'
+  - sentence: Ми їдемо з автобусі.
+    error: з автобусі
+    correction: на автобусі
+    error_type: word
+    options:
+    - на автобусі
+    - в автобус
+    - автобусом
+    explanation: 'For transport, use на + Locative: на автобусі.'
+  - sentence: Я з Канаді.
+    error: з Канаді
+    correction: з Канади
+    error_type: word
+    options:
+    - з Канади
+    - в Канаді
+    - в Канаду
+    explanation: 'For origin (Звідки?), use з + Genitive: з Канади.'
+  - sentence: Музей в площі.
+    error: в площі
+    correction: на площі
+    error_type: word
+    options:
+    - на площі
+    - на площу
+    - з площі
+    explanation: 'For open spaces like a square, use на: на площі.'
+  - sentence: Він працює в роботі.
+    error: в роботі
+    correction: на роботі
+    error_type: word
+    options:
+    - на роботі
+    - на роботу
+    - з роботи
+    explanation: 'For abstract locations or events like work, use на: на роботі.'
+- id: match-up-questions
+  type: match-up
+  instruction: З'єднайте запитання та логічну відповідь (Match the question with the
+    logical answer)
   pairs:
-  - left: музей
-    right: у музеї
-  - left: вокзал
-    right: на вокзалі
-  - left: площа
-    right: на площі
-  - left: парк
-    right: в парку
-  - left: готель
-    right: у готелі
-  - left: бібліотека
-    right: у бібліотеці
-  - left: станція
-    right: на станції
-  - left: вулиця
-    right: на вулиці
-- type: error-correction
-  instruction: Знайдіть помилку і виправте (Find the error and correct it)
+  - left: Де ти живеш?
+    right: У Києві.
+  - left: Куди ти йдеш?
+    right: У магазин.
+  - left: Звідки ти?
+    right: З Канади.
+  - left: Де вокзал?
+    right: Прямо і направо.
+  - left: Як дістатися?
+    right: Їдьте на метро.
+  - left: Де аптека?
+    right: Близько, на площі.
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
   items:
-  - sentence: Я живу у Канаду.
-    error: Канаду
-    correction: Канаді
-    explanation: 'Де? (location) → locative: у Канаді. Accusative (Канаду) answers
-      Куди? — direction, not location.'
-  - sentence: Ми їдемо зі України.
-    error: зі
-    correction: з
-    explanation: Зі is used before consonant clusters. Україна starts with a vowel
-      (У) → з України.
-  - sentence: Автобус їде на вокзалі.
-    error: вокзалі
-    correction: вокзал
-    explanation: 'Куди? (direction) → accusative: на вокзал. Locative (вокзалі) answers
-      Де? — static location, not motion.'
-  - sentence: Вона і Андрій у школі.
-    error: і
-    correction: й
-    explanation: After a vowel (Вона ends in а), use й. Й is the short form used between
-      words when the preceding word ends in a vowel.
-  - sentence: Він у Канада.
-    error: Канада
-    correction: Канаді
-    explanation: 'У + locative for location. The noun needs a locative ending: у Канаді
-      (not the base form Канада).'
-  - sentence: Музей на вулицю Грушевського.
-    error: вулицю
-    correction: вулиці
-    explanation: 'Де? (location) → locative: на вулиці. Accusative (вулицю) would
-      mean you are going to the street.'
-- type: fill-in
-  instruction: Вставте правильний варіант (Fill in the correct option)
+  - words:
+    - у
+    - Я
+    - Києві.
+    - зараз
+    correct_order:
+    - Я
+    - зараз
+    - у
+    - Києві.
+  - words:
+    - метро.
+    - Ідіть
+    - на
+    correct_order:
+    - Ідіть
+    - на
+    - метро.
+  - words:
+    - Канади.
+    - з
+    - я
+    - Вибачте,
+    correct_order:
+    - Вибачте,
+    - я
+    - з
+    - Канади.
+  - words:
+    - площі.
+    - Музей
+    - на
+    correct_order:
+    - Музей
+    - на
+    - площі.
+  - words:
+    - у
+    - хочу
+    - їхати
+    - Я
+    - Львів.
+    correct_order:
+    - Я
+    - хочу
+    - їхати
+    - у
+    - Львів.
+  - words:
+    - тут
+    - Де
+    - музей?
+    correct_order:
+    - Де
+    - тут
+    - музей?
+- id: order-dialogue
+  type: order
+  instruction: Розставте репліки діалогу в правильному порядку (Put the dialogue lines
+    in the correct order)
   items:
-  - sentence: Він живе ___ Канаді.
-    answer: у
-    options:
-    - у
-    - в
-    - на
-  - sentence: Йди ___ магазин!
-    answer: у
-    options:
-    - у
-    - в
-    - до
-  - sentence: Звідки ти? — Я ___ Києва.
-    answer: з
-    options:
-    - з
-    - до
-    - у
-  - sentence: Університет ___ центрі міста.
-    answer: у
-    options:
-    - у
-    - в
-    - на
-  - sentence: Ми виходимо ___ школи.
-    answer: зі
-    options:
-    - зі
-    - з
-    - від
-  - sentence: Мама ___ тато вдома.
-    answer: й
-    options:
-    - і
-    - й
-    - та
-  - sentence: Олексій іде ___ бібліотеку.
-    answer: у
-    options:
-    - у
-    - в
-    - до
-  - sentence: Вони їдуть ___ метро до центру.
-    answer: на
-    options:
-    - на
-    - у
-    - в
+  - — Вибачте, я з Канади. Де тут музей?
+  - — Музей у центрі. Ідіть на метро.
+  - — А як дістатися від метро?
+  - — Вийдіть і йдіть направо.
+  - — Дякую!
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4

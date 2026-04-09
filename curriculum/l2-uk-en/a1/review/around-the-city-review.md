@@ -1,49 +1,46 @@
 ## Linguistic Scan
-No linguistic errors found.
+Linguistic scan revealed two issues:
+1. The text incorrectly refers to "далеко" and "близько" as "adjectives for space" instead of adverbs. In Ukrainian, these words function as adverbs (прислівники), so teaching them as adjectives is factually incorrect.
+2. A minor euphony violation with "З замку", which creates a clumsy phonetic double consonant ("zz") and should ideally be "Із замку" according to Ukrainian euphony rules.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-directions -->` is placed after the relevant teaching section, but it tests the word "наліво", which is not introduced in the text before the activity (it appears only in the Summary).
-- `<!-- INJECT_ACTIVITY: quiz-de-kudy -->` matches the plan and tests the taught concepts accurately.
-- `<!-- INJECT_ACTIVITY: fill-in-transport -->` matches the plan and tests the taught concepts accurately.
-- `<!-- INJECT_ACTIVITY: match-navigation -->` matches the plan and tests the taught concepts accurately.
+- `<!-- INJECT_ACTIVITY: match-navigation-responses -->` matches the `match-up` hint from the plan. It is correctly placed after the first dialogue section to test response logic.
+- `<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->` matches the `quiz` hint from the plan. It is correctly placed after the "Де і куди разом" section to test locative vs accusative cases.
+- `<!-- INJECT_ACTIVITY: fill-in-directions -->` matches the first `fill-in` hint. It is placed after the "Де і куди разом" section, testing the directional imperatives and vocabulary just taught.
+- `<!-- INJECT_ACTIVITY: fill-in-transport-route -->` matches the second `fill-in` hint. It is placed appropriately after the "Мій район" section, testing transport routes.
+All markers match the plan's `activity_hints` in intent, and they are distributed logically throughout the text to test concepts immediately after they are taught.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The generated text closely follows all the `content_outline` points, including the specific dialogues requested and the synthesis of grammar rules. |
-| 2. Linguistic accuracy | 10/10 | The Ukrainian text is natural and grammatically correct. Cases are correctly applied (e.g., "на вулиці Франка", "в офісі", "їду автобусом", "в театр"). |
-| 3. Pedagogical quality | 8/10 | Strong PPP flow overall, but deduct 2 points because the word "наліво" is tested in the first exercise (`fill-in-directions`) before it has been formally introduced (it is only introduced at the end in the Summary). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are utilized effectively in the prose. |
-| 5. Exercise quality | 10/10 | The injected markers correspond directly to the plan's `activity_hints`. The inline Self-Check effectively reinforces the navigation and case synthesis. |
-| 6. Engagement & tone | 8/10 | Deduct 2 points for minor meta-commentary ("Every learner needs to describe where they live", "Now put the required vocabulary into full sentences"), which slightly breaks immersion and sounds like a teacher's lesson plan. |
-| 7. Structural integrity | 10/10 | The text adheres strictly to the requested markdown structure and word count limits (1288 words). All headers are properly formatted. |
-| 8. Cultural accuracy | 10/10 | Strong cultural grounding with realistic examples like Kyiv, Lviv (Площа Ринок, Високий замок), and vul. Franka. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, concise, and highly realistic, with appropriate polite forms ("вибачте") and authentic conversational flow. |
+| 1. Plan adherence | 10/10 | Covers all content outline points faithfully, integrates required and recommended vocabulary, and exceeds word targets (1702 words). |
+| 2. Linguistic accuracy | 8/10 | Excellent and highly natural Ukrainian usage overall, but contains a grammatical classification error ("adjectives" instead of "adverbs" for "далеко"/"близько") and a minor euphony issue ("З замку"). |
+| 3. Pedagogical quality | 9/10 | Provides a superb breakdown of locative vs. accusative navigation and effective usage of sequence words. The deduction is strictly for the grammatical misclassification. |
+| 4. Vocabulary coverage | 10/10 | Seamlessly includes all required (`пішки`, `хвилина`, `район`, `центр`, `вибачте`) and recommended (`дістатися`, `ідіть`, `їдьте`, `поруч`) words in context. |
+| 5. Exercise quality | 10/10 | The four injected activity markers align perfectly with the four hints in the plan and are placed logically after the relevant instruction. |
+| 6. Engagement & tone | 10/10 | The tone is helpful, encouraging, and grounded in a highly relevant real-world scenario (Lviv walking tour). |
+| 7. Structural integrity | 10/10 | Clean markdown structure. All H2 headings match the plan, and the word count is robust (1702 vs target of 1200). |
+| 8. Cultural accuracy | 10/10 | Excellent decolonized instruction regarding "автовокзал" vs "залізничний вокзал" and the clear explanation of why "вибачаюся" is an unnatural Russian calque. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues represent authentic, polite, and practical street interactions with named speakers. |
 
 ## Findings
-[Pedagogical quality] [Major]
-Location: `The difference is simple: **ідіть** means walking, **їдьте** means riding. The phrase **на розі** (at the corner) is a locative chunk — learn it as a fixed unit.` (in Діалоги section)
-Issue: The word "наліво" is tested in the `fill-in-directions` activity immediately following this section, but it is not introduced until the Summary at the end of the module.
-Fix: Add the direction words to the explanation before the activity.
 
-[Engagement & tone] [Minor]
-Location: `Every learner needs to describe where they live. Here is a model paragraph you can adapt with your own details:`
-Issue: Minor meta-commentary that sounds slightly too much like a teacher's instruction rather than an engaging narrative flow.
-Fix: Rephrase to be more direct and student-focused.
+2. Linguistic accuracy [CRITICAL]
+Location: Section "Мій район", paragraph 1: `The most common adjectives for space are paired with the preposition **від** (from)...`
+Issue: The text categorizes words like "далеко" and "близько" as "adjectives". In Ukrainian grammar, these are adverbs (прислівники), not adjectives (прикметники). This is a factual grammatical error that teaches the wrong part of speech to learners.
+Fix: Change "adjectives" to "adverbs".
 
-[Engagement & tone] [Minor]
-Location: `Now put the required vocabulary into full sentences:`
-Issue: Instructional meta-commentary.
-Fix: Rephrase to be more natural.
+2. Linguistic accuracy [MINOR]
+Location: Section "Діалоги", paragraph 1: `you say: **З замку.** (From the castle).`
+Issue: Euphony violation. Using the preposition "з" before a word starting with "з" (замку) creates an awkward consonant cluster and violates Ukrainian euphony rules. It should be "із" or "зі".
+Fix: Change "З замку" to "Із замку".
 
 ## Verdict: REVISE
-The module is structurally sound, linguistically accurate, and adheres well to the plan. However, the pedagogical flaw of testing "наліво" before introducing it requires a fix to prevent student confusion. Minor stylistic adjustments are also needed to remove teacher-like meta-commentary.
+The module is structurally and culturally excellent, providing a highly engaging breakdown of city navigation and locative vs. accusative dynamics. However, the misclassification of adverbs as adjectives is a critical pedagogical error that must be fixed to ensure grammatical accuracy. The euphony issue is a minor stylistic polish that can be corrected simultaneously.
 
 <fixes>
-- find: "The difference is simple: **ідіть** means walking, **їдьте** means riding. The phrase **на розі** (at the corner) is a locative chunk — learn it as a fixed unit."
-  replace: "The difference is simple: **ідіть** means walking, **їдьте** means riding. The direction words are **прямо** (straight), **направо** (right), and **наліво** (left). The phrase **на розі** (at the corner) is a locative chunk — learn it as a fixed unit."
-- find: "Every learner needs to describe where they live. Here is a model paragraph you can adapt with your own details:"
-  replace: "When describing your own neighborhood, you can adapt a simple paragraph like this:"
-- find: "Now put the required vocabulary into full sentences:"
-  replace: "Notice how these useful phrases work in full sentences:"
+- find: "The most common adjectives for space are paired with the preposition **від** (from)"
+  replace: "The most common adverbs for space are paired with the preposition **від** (from)"
+- find: "you say: **З замку.** (From the castle)."
+  replace: "you say: **Із замку.** (From the castle)."
 </fixes>

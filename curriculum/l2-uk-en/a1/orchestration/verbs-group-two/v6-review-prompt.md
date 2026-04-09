@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 17: Verbs Group II (A1, A1.3 [Actions])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -124,99 +124,115 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
-Тара́с and Мико́ла run into each other at a мо́вне кафе́ — a language café where people practice Ukrainian over coffee. Тарас hears Микола ordering in Ukrainian and strikes up a conversation.
-> — **Тарас:** Приві́т! Ти гово́риш украї́нською? *(Hi! Do you speak Ukrainian?)*
-> — **Микола:** Так, я говорю́ тро́хи. А ти? *(Yes, I speak a little. And you?)*
-> — **Тарас:** Я ба́чу, що ти до́бре говориш! *(I see that you speak well!)*
-> — **Микола:** Дякую! Я вчу украї́нську онлайн. *(Thanks! I study Ukrainian online.)*
-> — **Тарас:** Це неле́гко, але́ ціка́во. *(It's not easy, but interesting.)*
-> — **Микола:** Так! А що ро́биш ти? *(Yes! And what do you do?)*
-> — **Тарас:** Я теж вчу українську. *(I also study Ukrainian.)*
-> — **Микола:** Ми оби́два гово́римо українською! *(We both speak Ukrainian!)*
+## Діалоги (Dialogues)
 
-Look at the verbs Тарас and Микола used: **говориш** (you speak), **говорю** (I speak), **бачу** (I see), **вчу** (I study), **говоримо** (we speak). Every single one belongs to the same verb family — Group II. These verbs share a pattern in their endings that is different from Group I verbs like **чита́ти** (to read) that you learned in the previous module.
-Now a different scene — an evening at home. Окса́на and Богдан are relaxing after a long day.
-> — **Оксана:** Що ти робиш уве́чері? *(What are you doing this evening?)*
-> — **Богдан:** Я дивлю́ся фільм. А ти? *(I'm watching a movie. And you?)*
-> — **Оксана:** Я вчу нові́ слова́. *(I'm studying new words.)*
-> — **Богдан:** Сама? *(By yourself?)*
-> — **Оксана:** Ні, я прошу дру́га допомогти́. *(No, I ask a friend to help.)*
-> — **Богдан:** Він гово́рить ду́же добре. *(He speaks very well.)*
-> — **Оксана:** А по́тім я дивлюся серіа́л. *(And then I watch a series.)*
-> — **Богдан:** Молоде́ць! *(Well done!)*
+We meet our good friends **Тарас** (Taras) and **Микола** (Mykola) at the local gym. They are using action words to talk about physical activities and skills. Observe their conversation as they exercise together. They use entirely new action verbs to describe their fitness routine.
 
-Notice **дивлюся** (I watch) — the **-ся** ending means "oneself." You will learn more about these reflexive verbs in Module 20. For now, just treat **дивлюся** as a single word meaning "I watch."
-Three things to spot in both dialogues: first, every verb follows a recognizable pattern. Second, the **ти**-form always ends in **-иш** (говориш, робиш, вчиш). Third, the **він/вона́** form ends in **-ить** (говорить). The next section explains exactly why.
-## Друга дієвідмі́на (Group II Verbs)
-Group II verbs have an infinitive ending in **-ити** (or **-іти́**): **говори́ти** (to speak), **ба́чити** (to see), **роби́ти** (to do/make), **вчи́ти** (to study/teach), **проси́ти** (to ask/request), **ходи́ти** (to go/walk regularly). These are different from the Group I verbs you already know — verbs like **читати** (to read) and **слу́хати** (to listen) that end in **-а́ти**. The quickest test: check the **ти**-form. If it ends in **-иш** (like **говориш**, **ба́чиш**), it is Group II.
-Here is the full conjugation of **говорити** — your master pattern for Group II:
-| Осо́ба (Person) | Однина́ (Singular) | Множина́ (Plural) |
-|---|---|---|
-| я / ми | говорю | говоримо |
-| ти / ви | говориш | гово́рите |
-| він, вона / вони́ | говорить | гово́рять |
-Now the other five essential Group II verbs. Pay close attention to the **я**-form — it sometimes looks different:
-- **бачити** (to see): бачу, бачиш, ба́чить, ба́чимо, ба́чите, **ба́чать**
-- **робити** (to do): **роблю́**, робиш, ро́бить, ро́бимо, ро́бите, ро́блять
-- **вчити** (to study): вчу, вчиш, вчить, вчимо́, вчите́, вчать
-- **просити** (to request): **прошу**, про́сиш, про́сить, про́симо, про́сите, про́сять
-- **ходити** (to walk): **ходжу́**, хо́диш, хо́дить, хо́димо, хо́дите, хо́дять
-Why do some **я**-forms look unexpected? Group II has consonant changes — but only in the **я**-form. Here are the four key shifts:
-- **б → бл**: робити → **роблю**
-- **д → дж**: ходити → **ходжу**
-- **с → ш**: просити → **прошу**
-- **ч → ч** (no change): бачити → **бачу**
-This is the most important thing to remember: these consonant changes happen ONLY in the **я**-form. Every other form — **ти**, **він/вона**, **ми**, **ви**, **вони** — follows the regular pattern perfectly. Practical tip: learn the **я**-form as a separate vocabulary item for each new verb. Once you know it, the rest is automatic.
-As a warm-up before the activity: say the **я**, **ти**, and **він** forms of **вчити** and **ходити** out loud. Check your answers: вчу/вчиш/вчить and ходжу/ходиш/ходить.
-<!-- INJECT_ACTIVITY: fill-in-conjugate -->
-## Гру́па I чи II? (Which Group?)
-Now that you know both groups, here they are side by side. Compare **читати** (Group I) with **говорити** (Group II):
-| Особа | читати (Group I) | говорити (Group II) |
-|---|---|---|
-| я | чита́ю | говорю |
-| ти | чита́єш | говориш |
-| він/вона | чита́є | говорить |
-| ми | чита́ємо | говоримо |
-| ви | чита́єте | говорите |
-| вони | чита́ють | говорять |
-See the pattern? Group I endings carry the vowel **-є-** (чита́**є**ш, чита**є**, чита**є**мо). Group II endings carry the vowel **-и-** (говор**и**ш, говор**и**ть, говор**и**мо). That single vowel is the difference between the two groups.
-Two fast identification tests you can use with any verb:
-1. **Check the ти-form:** Does it end in **-єш**? → Group I. Does it end in **-иш**? → Group II.
-2. **Check the вони-form:** Does it end in **-ють**? → Group I. Does it end in **-ять** or **-ать**? → Group II.
-Try it yourself: **бачиш** → ends in -иш → Group II. Confirmed: **бачать** (вони-form ends in -ать). **Читаєш** → ends in -єш → Group I. Confirmed: **читають** (вони-form ends in -ють).
-Now an important detail about the **вони**-form in Group II. After sibilant consonants — **ч**, **ш**, **ж**, **щ** — the ending is **-ать**, not **-ять**:
-- **бачать** (not ~~бачять~~) — because the stem ends in **ч**
-- **крича́ть** (not ~~кричять~~) — same reason, stem ends in **ч**
-After all other consonants, the **вони**-form takes **-ять**:
-- **говорять**, **ходять**, **просять**
-Ukrainian textbooks teach a useful trick (from Varzatska, Grade 4): put the verb in the **вони**-form. If it ends in **-ять** or **-ать** → Group II. If it ends in **-ють** or **-уть** → Group I. This one test works for every verb.
-Many high-frequency Ukrainian verbs are Group I. But the verbs you need most for daily actions — **говорити**, **робити**, **бачити**, **ходити** — are all Group II. Knowing this pattern allows you to describe what you see, do, and say.
-<!-- INJECT_ACTIVITY: group-sort -->
-<!-- INJECT_ACTIVITY: quiz-correct-form -->
-## Підсумок — Summary
-Two verb groups, two ending patterns. Here is everything in one place:
-**Group I** (infinitive in **-ати**): endings carry **-є-**
-- -ю, -єш, -є, -ємо, -єте, -ють
-**Group II** (infinitive in **-ити/-іти**): endings carry **-и-**
-- -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать
-Consonant changes in Group II appear only in the **я**-form: **роблю** (б→бл), **ходжу** (д→дж), **прошу** (с→ш), **бачу** (ч stays ч). The sibilant rule: after **ч/ш/ж/щ**, the **вони**-form takes **-ать** (бачать, кричать). After everything else → **-ять** (говорять, ходять). The single most useful test: look at the **ти**-form — **-єш** means Group I, **-иш** means Group II.
-Now go back and look at both dialogues with fresh eyes. Label every verb: **говориш** (II), **говорю** (II), **бачу** (II), **вчу** (II), **робиш** (II), **дивлюся** (II), **прошу** (II), **говорить** (II). Every single verb in today's dialogues was Group II (just like **люби́ти** — to love, which you might remember!). These verbs are central to everyday spoken Ukrainian. Group II is the pattern for many essential action verbs.
-:::tip
-**Самопере́ві́рка (Self-check)**
+> **Тарас:** Ти говориш українською? *(Do you speak Ukrainian?)*
+> **Микола:** Так, я говорю трохи. А ти? *(Yes, I speak a little. And you?)*
+> **Тарас:** Я бачу, що ти добре говориш! *(I see that you speak well!)*
+> **Микола:** Дякую, я вчуся. *(Thanks, I am learning.)*
+
+This dialogue establishes the natural flow of these specific verbs in casual, everyday conversation. You can clearly see how **Тарас** and **Микола** use verb forms like **бачиш** (you see) and **говоримо** (we speak). These verbs follow a completely different ending pattern than the **читаєш** (you read) verbs you learned previously in Module 16. In Ukrainian grammar, we call this new category the Second Conjugation or **Друга дієвідміна**. This new verb family requires its own unique set of vowel sounds in the endings.
+
+Later that same day, the two friends experience a shift to a much quieter setting. They are now at home and discuss their evening plans. This situation focuses heavily on the verbs **дивитися** (to watch) and **вчити** (to study or teach).
+
+> **Тарас:** Що ти робиш увечері? *(What are you doing in the evening?)*
+> **Микола:** Я дивлюся фільм. А ти? *(I am watching a movie. And you?)*
+> **Тарас:** Я вчу нові слова. *(I am studying new words.)*
+> **Микола:** Молодець! *(Well done!)*
+
+Note: **дивлюся** (I watch) — the **-ся** ending means "oneself" (preview for M20). This evening exchange previews the reflexive suffix in a very natural way. You will learn more about this specific reflexive ending soon, but you can already start using it as a memorized vocabulary word.
+
+## Друга дієвідміна (Group II Verbs)
+
+Most Group II verbs can be easily identified by their infinitive ending. You must contrast this with the **-ати** pattern of Group I verbs. The characteristic vowel for all these new endings is the sound **-и-** (or occasionally **-ї-**). This persistent vowel sound makes the Second Conjugation the "I-type" verb group.
+
+We break down the conjugation paradigm using the highly frequent verb **говорити** (to speak). The root stem is **говор-**. You add the personal endings directly to this stem. Group II verbs usually have an infinitive ending in **-ити** (or **-іти**). Let's conjugate **говорити**: **я говорю**, **ти говориш**, **він/вона говорить**, **ми говоримо**, **ви говорите**, **вони говорять**. The general pattern adds the following endings to the stem: **-ю** or **-у**, **-иш**, **-ить**, **-имо**, **-ите**, and **-ять** or **-ать**. 
+
+<!-- INJECT_ACTIVITY: fill-in-conjugation-paradigm -->
+
+To build your basic vocabulary, you must memorize these six essential Group II verbs. They appear constantly in daily Ukrainian speech. Here are six essential Group II verbs and their core forms:
+*   **говорити** (to speak): **говорю**, **говориш**, **говорить**...
+*   **бачити** (to see): **бачу**, **бачиш**, **бачить**...
+*   **робити** (to do/make): **роблю**, **робиш**, **робить**...
+*   **вчити** (to study/teach): **вчу**, **вчиш**, **вчить**...
+*   **просити** (to ask/request): **прошу**, **просиш**, **просить**...
+*   **ходити** (to go/walk regularly): **ходжу**, **ходиш**, **ходить**...
+
+Here are some short sentences to show them in action:
+
+*   **Я говорю українською.** (I speak Ukrainian.)
+*   **Ти бачиш цей будинок?** (Do you see this building?)
+*   **Він робить каву.** (He is making coffee.)
+*   **Вона вчить мову.** (She teaches the language.)
+*   **Ми ходимо у парк.** (We walk to the park.)
+*   **Ви просите воду.** (You ask for water.)
+
+There is a special phonetic rule for verbs whose stems end in hissing sibilant sounds like **ч**, **ш**, **ж**, and **щ**. After these hissing sounds, the **я** ending becomes **-у** (instead of **-ю**) and the **вони** ending becomes **-ать** (instead of **-ять**). We use **бачити** (to see) and **вчити** (to study) as the primary examples of this rule. You write **я бачу** and **вони бачать**. You write **я вчу** and **вони вчать**.
+
+:::caution
+This rule is a strict requirement for Ukrainian melody. You must never write forms like *бачять or *вчять. The hissing consonants completely block the letter **я**.
 :::
-Test yourself on these five questions:
-- Conjugate **бачити** for я, ти, він/вона → **бачу**, **бачиш**, **бачить** ✓
-- Is **слухати** Group I or II? → Check the ти-form: **слу́хаєш** → -єш → Group I ✓
-- Is **говорити** Group I or II? → Check the ти-form: **говориш** → -иш → Group II ✓
-- What happens to **робити** in the я-form? → б→бл: **роблю** ✓
-- Вони-form of **бачити** — -ять or -ать? → **бачать** (ч is a sibilant → -ать) ✓
-If you got all five correct, you have a solid grasp of both conjugation groups. In the next module, you will learn the modal verbs **хоті́ти** (to want) and **могти́** (to be able to) — verbs that let you express wishes and abilities.
-<!-- INJECT_ACTIVITY: fill-in-sentences -->
 
-**Deterministic word count: 1360 words** (calculated by pipeline, do NOT estimate manually)
+## Група I чи II? (Which Group?)
 
+To master Ukrainian verbs, you must create a clear contrast between Group I (the "E-type") and Group II (the "I-type"). Compare the endings side by side:
+
+| Особa | Group I (-ати) | Group II (-ити) |
+| :--- | :--- | :--- |
+| **я** | **читаю** | **говорю** |
+| **ти** | **читаєш** | **говориш** |
+| **він / вона** | **читає** | **говорить** |
+| **вони** | **читають** | **говорять** |
+
+The key difference is in the vowels. The **ти** form uses **-єш** for Group I and **-иш** for Group II. The **вони** form uses **-ють** for Group I and **-ять** or **-ать** for Group II. Remember that after sibilant consonants (**ч**, **ш**, **ж**, **щ**), you must use **-ать** instead of **-ять**. For example, we say **бачать** and **кричать**. After other consonants, use **-ять**, as in **говорять** and **ходять**.
+
+<!-- INJECT_ACTIVITY: group-sort-verbs -->
+
+<!-- INJECT_ACTIVITY: quiz-verb-choice -->
+
+Ukrainian pronunciation prioritizes **милозвучність** (euphony or melody). Because of this focus on melody, some Group II verbs change their last stem consonant. However, this consonant change happens ONLY in the **я** (I) form.
+
+:::tip
+You can reassure yourself that the rest of the conjugation paradigm (**ти**, **він**, **ми**, **ви**, **вони**) remains perfectly regular. You only need to remember the consonant change for the first person singular.
+:::
+
+Here is the breakdown of the specific consonant changes in Group II (**я**-form only). Do not try to memorize the shift as a complex mechanical rule. Instead, learn each specific **я** form together as part of the verb's unique identity. Let's look at some common consonant changes in the **я**-form for Group II verbs:
+*   **робити** → **роблю** (the **б** changes to **бл**)
+*   **ходити** → **ходжу** (the **д** changes to **дж**)
+*   **просити** → **прошу** (the **с** changes to **ш**)
+*   **бачити** → **бачу** (no change in the consonant)
+
+These changes only affect the **я**-form — all other forms are regular. Don't memorize the rule — just learn each **я**-form with the verb.
+
+<!-- INJECT_ACTIVITY: fill-in-translation-context -->
+
+You will frequently encounter the reflexive suffix **-ся** attached to the end of certain action words. We use this suffix with verbs like **вчитися** (to learn/study) and **дивитися** (to watch). This special suffix always attaches right after the conjugated personal ending. For example, **я вчу** plus **ся** becomes **я вчуся**. In the second person, **ти вчиш** plus **ся** becomes **ти вчишся**. Note that this suffix generally indicates an action that is directed back at the speaker or describes a continuous state of being.
+
+## Підсумок — Summary
+
+You now know the two major verb families in the Ukrainian language. You can reinforce your memory using a simple mnemonic trick. The **вони** form is the absolute best way to double-check the group. There are two major verb groups, each with its own ending patterns. Group I verbs (usually ending in **-ати**) take the endings: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. Group II verbs (usually ending in **-ити**) take the endings: **-ю**/**-у**, **-иш**, **-ить**, **-имо**, **-ите**, and **-ять** or **-ать**.
+
+:::note
+If you are ever unsure which group a verb belongs to, simply test the third person plural form. If it ends in **-ють**, it is Group I. If it ends in **-ять**, it is Group II.
+:::
+
+Remember the important consonant shifts that occur exclusively in the **я** (I) form for certain verbs in Group II (**роблю**, **ходжу**, **прошу**). You must apply these shifts correctly to sound natural. You must also remember the sibilant rule for the third person plural, which forces you to say **вони бачать** (they see) instead of using the standard ending. Mastering these specific Group II verbs unlocks your fundamental ability to describe almost all basic daily activities and personal skills.
+
+Use this self-check question and answer list to verify your understanding of the module's core objectives. Read each question carefully and try to answer before looking at the solution.
+
+*   **Question:** Self-check: Conjugate **бачити** for **я**, **ти**, **він/вона**.
+*   **Answer:** The correct forms are **я бачу**, **ти бачиш**, and **він/вона бачить**.
+*   **Question:** Is **слухати** Group I or II? How about **говорити**?
+*   **Answer:** The verb **слухати** is Group I, because the infinitive ends in **-ати**, and the **ти**-form is **слухаєш**. The verb **говорити** is Group II, because it uses the **-иш** ending.
+*   **Question:** What happens to the letter **д** in the **я** form of the verb **ходити** (to walk)?
+*   **Answer:** The letter changes to **дж**, making the correct form **я ходжу**.
+*   **Question:** What is the correct grammatical ending for the **вони** (they) pronoun in Group II?
+*   **Answer:** The standard ending is **-ять**, but it changes to **-ать** after hissing sibilants.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1361 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -304,8 +320,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -392,61 +408,25 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 92 words | Not found: 56 words
+Verified: 73 words | Not found: 14 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Богдан — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Мико — NOT IN VESUM
   ✗ Микола — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Самопере — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
   ✗ ати — NOT IN VESUM
   ✗ ать — NOT IN VESUM
   ✗ бачять — NOT IN VESUM
-  ✗ бимо — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ вне — NOT IN VESUM
-  ✗ гко — NOT IN VESUM
-  ✗ гово — NOT IN VESUM
+  ✗ вчять — NOT IN VESUM
   ✗ говор — NOT IN VESUM
-  ✗ димо — NOT IN VESUM
-  ✗ дить — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дять — NOT IN VESUM
-  ✗ дієвідмі — NOT IN VESUM
   ✗ имо — NOT IN VESUM
   ✗ ите — NOT IN VESUM
   ✗ ити — NOT IN VESUM
   ✗ ить — NOT IN VESUM
-  ✗ крича — NOT IN VESUM
-  ✗ кричять — NOT IN VESUM
-  ✗ неле — NOT IN VESUM
-  ✗ нською — NOT IN VESUM
-  ✗ нську — NOT IN VESUM
-  ✗ оби — NOT IN VESUM
-  ✗ риш — NOT IN VESUM
-  ✗ рка — NOT IN VESUM
-  ✗ рять — NOT IN VESUM
-  ✗ серіа — NOT IN VESUM
-  ✗ симо — NOT IN VESUM
-  ✗ сиш — NOT IN VESUM
-  ✗ слу — NOT IN VESUM
-  ✗ сять — NOT IN VESUM
-  ✗ тро — NOT IN VESUM
-  ✗ уве — NOT IN VESUM
-  ✗ украї — NOT IN VESUM
-  ✗ уть — NOT IN VESUM
-  ✗ хаєш — NOT IN VESUM
-  ✗ ціка — NOT IN VESUM
-  ✗ чать — NOT IN VESUM
-  ✗ чимо — NOT IN VESUM
-  ✗ чите — NOT IN VESUM
+  ✗ ють — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
+  ✗ єте — NOT IN VESUM
 
-All 92 other words are confirmed to exist in VESUM.
+All 73 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

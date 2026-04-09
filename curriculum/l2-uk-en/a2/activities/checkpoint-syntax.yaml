@@ -1,0 +1,350 @@
+version: '1.0'
+module: checkpoint-syntax
+level: a2
+inline:
+- id: quiz-conjunction-id
+  type: quiz
+  instruction: Визначте тип підрядного речення
+  items:
+  - question: Я не поїхав на концерт, бо дуже втомився.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 0
+  - question: Ми виїхали раніше, щоб не запізнитися.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 1
+  - question: Якщо ти маєш час, допоможи мені з проектом.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 2
+  - question: Хоча вчора було холодно, ми довго гуляли в парку.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 3
+  - question: Я залишуся вдома, тому що маю багато роботи.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 0
+  - question: Він купив цю машину, хоча вона дуже дорога.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 3
+  - question: Якщо я здам проект, ми зустрінемося в кафе.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 2
+  - question: Я п'ю каву, щоб швидко прокинутися.
+    options:
+    - Причина (Cause)
+    - Мета (Purpose)
+    - Умова (Condition)
+    - Допуст (Concession)
+    correct: 1
+- id: fill-in-conjunction-form
+  type: fill-in
+  instruction: Вставте правильний сполучник у речення
+  items:
+  - sentence: Я йду в магазин, _____ купити свіжий хліб.
+    answer: щоб
+    options:
+    - щоб
+    - бо
+    - якщо
+    - хоча
+  - sentence: Вона не прийшла в офіс, _____ була дуже зайнята.
+    answer: тому що
+    options:
+    - тому що
+    - щоб
+    - якщо
+    - який
+  - sentence: _____ завтра буде тепле сонце, ми обов'язково підемо в парк.
+    answer: Якщо
+    options:
+    - Якщо
+    - Хоча
+    - Бо
+    - Щоб
+  - sentence: Він купив цю велику машину, _____ вона дуже дорога.
+    answer: хоча
+    options:
+    - хоча
+    - бо
+    - щоб
+    - якщо
+  - sentence: Це старий цегляний будинок, _____ я живу вже десять років.
+    answer: де
+    options:
+    - де
+    - який
+    - щоб
+    - тому що
+  - sentence: Це новий робочий проект, _____ ми успішно закінчили вчора.
+    answer: який
+    options:
+    - який
+    - що
+    - щоб
+    - бо
+  - sentence: Я точно знаю, _____ ти зараз знаходишся тут.
+    answer: що
+    options:
+    - що
+    - щоб
+    - який
+    - бо
+  - sentence: Я запізнився на зустріч, _____ на дорозі був великий затор.
+    answer: бо
+    options:
+    - бо
+    - щоб
+    - якщо
+    - хоча
+- id: sort-conjunction-types
+  type: group-sort
+  instruction: Розподіліть речення за типом зв'язку
+  groups:
+  - label: Причина (тому що, бо)
+    items:
+    - Я п'ю гарячу каву, бо хочу прокинутися.
+    - Він не працює, тому що дуже втомився.
+  - label: Мета (щоб)
+    items:
+    - Ми вчимо українську мову, щоб вільно спілкуватися.
+    - Я виїхав з дому раніше, щоб не запізнитися.
+  - label: Умова (якщо)
+    items:
+    - Якщо ти маєш час, допоможи мені.
+    - Ми підемо гуляти, якщо буде гарна погода.
+  - label: Допуст (хоча)
+    items:
+    - Хоча було дуже холодно, ми пішли в парк.
+    - Вона купила квиток, хоча він був дорогий.
+  - label: Означення (який, де)
+    items:
+    - Це велике місто, яке мені дуже подобається.
+    - Це стара компанія, де я працюю.
+workbook:
+- type: match-up
+  instruction: З'єднайте частини складних речень
+  pairs:
+  - left: Я купив квиток,
+    right: щоб поїхати на концерт.
+  - left: Ми не пішли в парк,
+    right: бо на вулиці йшов дощ.
+  - left: Якщо завтра буде гарна погода,
+    right: ми зустрінемося в кафе.
+  - left: Це дуже цікава книжка,
+    right: яку я зараз читаю.
+  - left: Він добре говорить українською,
+    right: хоча живе тут недавно.
+  - left: Вона сказала,
+    right: що прийде завтра зранку.
+- type: error-correction
+  instruction: Знайдіть і виправте помилку в реченні
+  items:
+  - sentence: Я йду в магазин, тому що купити свіжий хліб.
+    error: тому що
+    correction: щоб
+    error_type: word
+    options:
+    - щоб
+    - бо
+    - якщо
+    explanation: Для мети (in order to) ми використовуємо 'щоб' + інфінітив.
+  - sentence: Я не знаю, якщо він прийде сьогодні.
+    error: якщо
+    correction: чи
+    error_type: word
+    options:
+    - чи
+    - що
+    - щоб
+    explanation: Для непрямих питань (if/whether) використовується 'чи', а не 'якщо'.
+  - sentence: Це велике місто, який мені дуже подобається.
+    error: який
+    correction: яке
+    error_type: word
+    options:
+    - яке
+    - яка
+    - які
+    explanation: Слово 'місто' середнього роду (neuter), тому потрібно 'яке'.
+  - sentence: Я хочу, щоб ти купити квиток на поїзд.
+    error: купити
+    correction: купив
+    error_type: word
+    options:
+    - купив
+    - купуєш
+    - купи
+    explanation: Після 'щоб' для іншої особи використовується дієслово в минулому
+      часі.
+  - sentence: Вона залишилася вдома, щоб вона дуже втомилася.
+    error: щоб
+    correction: бо
+    error_type: word
+    options:
+    - бо
+    - хоча
+    - якщо
+    explanation: Це причина (because), а не мета (in order to).
+  - sentence: Це мій найкращий колега, з який я роблю проект.
+    error: з який
+    correction: з яким
+    error_type: phrase
+    options:
+    - з яким
+    - з якого
+    - з якому
+    explanation: Після прийменника 'з' використовується орудний відмінок (Instrumental).
+- type: translate
+  instruction: Оберіть правильний переклад речення
+  items:
+  - source: I am reading this book because it is interesting.
+    options:
+    - text: Я читаю цю книжку, бо вона цікава.
+      correct: true
+    - text: Я читаю цю книжку, щоб вона цікава.
+      correct: false
+  - source: If I have free time, I will help you.
+    options:
+    - text: Якщо я матиму вільний час, я допоможу тобі.
+      correct: true
+    - text: Чи я матиму вільний час, я допоможу тобі.
+      correct: false
+  - source: He went to the store in order to buy bread.
+    options:
+    - text: Він пішов у магазин, щоб купити хліб.
+      correct: true
+    - text: Він пішов у магазин, тому що купити хліб.
+      correct: false
+  - source: This is the project that we finished yesterday.
+    options:
+    - text: Це проект, який ми закінчили вчора.
+      correct: true
+    - text: Це проект, що ми закінчили вчора.
+      correct: false
+  - source: Although it is raining, we are going for a walk.
+    options:
+    - text: Хоча йде дощ, ми йдемо гуляти.
+      correct: true
+    - text: Якщо йде дощ, ми йдемо гуляти.
+      correct: false
+  - source: I don't know whether he will come.
+    options:
+    - text: Я не знаю, чи він прийде.
+      correct: true
+    - text: Я не знаю, якщо він прийде.
+      correct: false
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - Він
+    - каже,
+    - що
+    - дуже
+    - втомився.
+    correct_order:
+    - Він
+    - каже,
+    - що
+    - дуже
+    - втомився.
+  - words:
+    - Ми
+    - підемо
+    - гуляти,
+    - хоча
+    - йде
+    - дощ.
+    correct_order:
+    - Ми
+    - підемо
+    - гуляти,
+    - хоча
+    - йде
+    - дощ.
+  - words:
+    - Якщо
+    - буде
+    - час,
+    - я
+    - допоможу
+    - тобі.
+    correct_order:
+    - Якщо
+    - буде
+    - час,
+    - я
+    - допоможу
+    - тобі.
+  - words:
+    - Я
+    - п'ю
+    - каву,
+    - щоб
+    - швидко
+    - прокинутися.
+    correct_order:
+    - Я
+    - п'ю
+    - каву,
+    - щоб
+    - швидко
+    - прокинутися.
+  - words:
+    - Це
+    - цікава
+    - книжка,
+    - яку
+    - я
+    - зараз
+    - читаю.
+    correct_order:
+    - Це
+    - цікава
+    - книжка,
+    - яку
+    - я
+    - зараз
+    - читаю.
+  - words:
+    - Я
+    - запізнився
+    - на
+    - зустріч,
+    - бо
+    - був
+    - затор.
+    correct_order:
+    - Я
+    - запізнився
+    - на
+    - зустріч,
+    - бо
+    - був
+    - затор.

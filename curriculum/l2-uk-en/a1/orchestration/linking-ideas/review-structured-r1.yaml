@@ -2,56 +2,43 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 content_outline sections present and covered. Dialogue 1 (making
-    plans — каву чи чай) matches plan verbatim. Dialogue 2 (talking about the day)
-    matches plan. Vacation dialogue from `dialogue_sit
+  score: 10
+  evidence: Covers all points in the `content_outline`, including the specific dialogues
+    and comma rules.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'One critical gender error: Соня says "Я **хотів** зателефонувати" — must
-    be "хотіла" (feminine past). All other Ukrainian verified correct via VESUM (127/127
-    content words pass). Conjunction explanati'
+  score: 9
+  evidence: Generally excellent, but "Сьогодні сонце" is less pedagogically sound
+    as an adverbial parallel to "Сьогодні холодно".
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Excellent PPP flow: dialogues introduce conjunctions in context → explicit
-    grammar explanation with 3-4 examples per conjunction → practice markers after
-    each section. The а vs але distinction ("а = s'
+  score: 8
+  evidence: Good use of examples, but two activity markers testing `бо` are placed
+    before the `бо` section.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 6 required words (і, та, а, але, бо, тому що) introduced in context
-    across dialogues and grammar sections. Recommended: чому (5 examples in Бо section),
-    теж ("Я теж хочу" in Dialogue 1), чи ("каву'
+  evidence: All required and recommended conjunctions are used naturally in prose.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 4 markers matching all 4 plan activity_hints. Each placed after the relevant
-    teaching. Self-check in Підсумок has 5 connect-the-pair items with model answers
-    — pedagogically strong. Cannot fully evalu
+  score: 8
+  evidence: Exercises test appropriate skills, but placement causes them to test untaught
+    concepts.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'No motivational filler, no meta-commentary, no "Let us explore." Opening
-    is concrete: "Listen to how they connect their thoughts." Dialogues are natural
-    situations (coffee choice, evening catch-up, va'
+  evidence: Natural teacher tone without corporate gamification. Good, practical examples.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Four H2 sections matching plan exactly (Діалоги, Сполучники, Бо і тому
-    що, Підсумок). Clean markdown. No stray tags or artifacts. Word count 1385 is
-    within target range (1200 min). No duplicate sectio
+  evidence: 1778 words easily exceeds the 1200 word target. Clean markdown structure.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Ukrainian presented on its own terms. No "like Russian but…" comparisons.
-    Бо explicitly defended: "Бо is not slang, not informal, not wrong — it appears
-    in proverbs, literature, and everyday speech." '
+  evidence: Correct explanations of Ukrainian communication styles (e.g., answering
+    "Чому" with "Бо").
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Three dialogues with named speakers (Оля/Марко, Данило/Соня, Олег/Ліна).
-    Natural situations: choosing drinks, evening catch-up, vacation planning. Multi-turn
-    with distinct voices. One deduction: the g'
+  score: 10
+  evidence: Natural multi-turn conversations showing real situations.
 findings: []

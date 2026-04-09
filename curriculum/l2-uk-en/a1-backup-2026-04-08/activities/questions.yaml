@@ -1,0 +1,355 @@
+version: '1.0'
+module: questions
+level: a1
+inline:
+- id: quiz-question-words
+  type: quiz
+  instruction: Choose the correct **питальне слово** (question word) to complete each
+    sentence.
+  items:
+  - question: _____ ти живеш?
+    options:
+    - Де
+    - Куди
+    - Коли
+    correct: 0
+  - question: _____ ти йдеш?
+    options:
+    - Де
+    - Куди
+    - Хто
+    correct: 1
+  - question: _____ ти?
+    options:
+    - Що
+    - Хто
+    - Де
+    correct: 1
+  - question: _____ ти вивчаєш?
+    options:
+    - Хто
+    - Що
+    - Як
+    correct: 1
+  - question: _____ ти працюєш?
+    options:
+    - Де
+    - Коли
+    - Чому
+    correct: 1
+  - question: _____ ти не відповідаєш?
+    options:
+    - Як
+    - Де
+    - Чому
+    correct: 2
+  - question: _____ тебе звати?
+    options:
+    - Що
+    - Як
+    - Хто
+    correct: 1
+  - question: _____ знає, де книга?
+    options:
+    - Що
+    - Де
+    - Хто
+    correct: 2
+- id: match-question-answer
+  type: match-up
+  instruction: Match each question to the correct answer from the dialogues.
+  pairs:
+  - left: Хто ти?
+    right: Я студент.
+  - left: Де ти живеш?
+    right: Я живу у Львові.
+  - left: Що ти вивчаєш?
+    right: Я вивчаю українську мову.
+  - left: Коли ти працюєш?
+    right: Вранці.
+  - left: Як тебе звати?
+    right: Мене звати Олег.
+  - left: Чому ти не відповідаєш?
+    right: Тому що я не чув.
+  - left: Що це на столі?
+    right: Нічого цікавого.
+- id: fill-in-negation
+  type: fill-in
+  instruction: Fill in the blank with **не**, **ніхто**, **нічого**, **ніколи**, **ніде**,
+    or **нікуди**.
+  items:
+  - sentence: Він _____ знає.
+    answer: не
+    options:
+    - не
+    - ні
+    - нічого
+  - sentence: Ми _____ розуміємо.
+    answer: не
+    options:
+    - не
+    - ніколи
+    - ніхто
+  - sentence: Вона _____ говорить.
+    answer: не
+    options:
+    - не
+    - ніде
+    - нічого
+  - sentence: _____ не знає.
+    answer: Ніхто
+    options:
+    - Ніхто
+    - Нічого
+    - Ніколи
+  - sentence: Я _____ не бачу.
+    answer: нічого
+    options:
+    - нічого
+    - ніхто
+    - ніде
+  - sentence: Вона _____ не запізнюється.
+    answer: ніколи
+    options:
+    - ніколи
+    - нічого
+    - ніхто
+  - sentence: Він _____ не йде.
+    answer: нікуди
+    options:
+    - нікуди
+    - ніде
+    - ніколи
+  - sentence: _____ не було.
+    answer: Ніде
+    options:
+    - Ніде
+    - Нікуди
+    - Ніхто
+- id: quiz-double-negation
+  type: quiz
+  instruction: Ukrainian requires **подвійне заперечення** (double negation). Choose
+    the correct sentence.
+  items:
+  - question: How do you say 'Nobody knows' in Ukrainian?
+    options:
+    - Ніхто знає.
+    - Ніхто не знає.
+    - Не ніхто знає.
+    correct: 1
+  - question: How do you say 'I don't know anything' in Ukrainian?
+    options:
+    - Я знаю нічого.
+    - Я нічого знаю.
+    - Я нічого не знаю.
+    correct: 2
+  - question: How do you say 'She is never late' in Ukrainian?
+    options:
+    - Вона ніколи не запізнюється.
+    - Вона ніколи запізнюється.
+    - Вона не ніколи запізнюється.
+    correct: 0
+  - question: How do you say 'He isn't going anywhere' in Ukrainian?
+    options:
+    - Він не нікуди йде.
+    - Він нікуди йде.
+    - Він нікуди не йде.
+    correct: 2
+  - question: How do you say 'Nobody speaks' in Ukrainian?
+    options:
+    - Ніхто говорить.
+    - Не говорить ніхто.
+    - Ніхто не говорить.
+    correct: 2
+  - question: Which sentence uses **подвійне заперечення** correctly?
+    options:
+    - Я нічого не бачу.
+    - Я нічого бачу.
+    - Я не нічого бачу.
+    correct: 0
+workbook:
+- type: group-sort
+  instruction: 'Sort each question into the correct group: **Де** (location — where
+    something *is*) or **Куди** (direction — where something is *going*).'
+  groups:
+  - label: Де (location)
+    items:
+    - Де ти живеш?
+    - Де книга?
+    - Де стіл?
+    - Де ти?
+    - Де студент?
+    - Де Олег?
+  - label: Куди (direction)
+    items:
+    - Куди ти йдеш?
+    - Куди вони їдуть?
+    - Куди він іде?
+    - Куди вона йде?
+    - Куди ти їдеш?
+    - Куди ми йдемо?
+- type: match-up
+  instruction: Match each **питальне слово** (question word) to what it asks about.
+  pairs:
+  - left: Хто?
+    right: a person
+  - left: Що?
+    right: a thing or activity
+  - left: Де?
+    right: a location (where something is)
+  - left: Куди?
+    right: a direction (where something is going)
+  - left: Коли?
+    right: a time (when)
+  - left: Чому?
+    right: a reason (why)
+  - left: Як?
+    right: a manner (how)
+- type: true-false
+  instruction: True or false? Read each statement about Ukrainian questions and negation.
+  items:
+  - statement: '**Де** asks about direction — where you are going.'
+    correct: false
+    explanation: Де asks about static location (where something IS). Куди asks about
+      direction (where something is GOING).
+  - statement: '**Куди** asks about movement — where something or someone is heading.'
+    correct: true
+    explanation: Куди is used with verbs of movement like йти, їхати, ходити.
+  - statement: To make a yes/no question in Ukrainian, you MUST add **чи** at the
+      beginning.
+    correct: false
+    explanation: 'Rising intonation alone is enough: Ти знаєш? ↑ Чи is optional and
+      used mainly in formal written Ukrainian.'
+  - statement: '**Не** goes directly before the verb in Ukrainian negation: Я **не**
+      знаю.'
+    correct: true
+    explanation: Не is a particle placed immediately before the verb. It is almost
+      never separated from it.
+  - statement: '**Ніхто не знає** is correct Ukrainian — both ніхто AND не are required.'
+    correct: true
+    explanation: 'Ukrainian requires double negation: the ні- word AND не before the
+      verb. Both parts are mandatory.'
+  - statement: You can say **Ніхто знає** (without не) to mean 'Nobody knows' in Ukrainian.
+    correct: false
+    explanation: 'Ukrainian requires double negation: Ніхто не знає. Dropping не makes
+      the sentence ungrammatical.'
+  - statement: 'The prefix **ні-** attaches to question words to form negative words:
+      хто → ніхто, де → ніде, коли → ніколи.'
+    correct: true
+    explanation: Ні- + хто = ніхто (nobody), ні- + де = ніде (nowhere), ні- + коли
+      = ніколи (never), ні- + куди = нікуди (to nowhere).
+- type: error-correction
+  instruction: Each sentence has one error. Find the wrong word and correct it.
+  items:
+  - sentence: Що ти — студент?
+    error: Що
+    correction: Хто
+    error_type: word
+    options:
+    - Хто
+    - Де
+    - Як
+    explanation: Хто asks about a person's identity. Що asks about things or activities.
+      When asking who someone is (a person), use Хто.
+  - sentence: Хто ти вивчаєш? Українську мову?
+    error: Хто
+    correction: Що
+    error_type: word
+    options:
+    - Що
+    - Де
+    - Коли
+    explanation: Що asks about activities and things. Хто asks about people. Вивчати
+      is an activity, so use Що.
+  - sentence: Де ти йдеш? До Львова?
+    error: Де
+    correction: Куди
+    error_type: word
+    options:
+    - Куди
+    - Коли
+    - Як
+    explanation: Йти is a movement verb, so use Куди (direction), not Де (location).
+      Де would ask where you already are.
+  - sentence: Куди ти живеш? У Львові?
+    error: Куди
+    correction: Де
+    error_type: word
+    options:
+    - Де
+    - Як
+    - Хто
+    explanation: Жити is a verb of being/staying, not movement. Use Де (location),
+      not Куди (direction).
+  - sentence: Я ні знаю, де книга.
+    error: ні
+    correction: не
+    error_type: word
+    options:
+    - не
+    - ніхто
+    - нічого
+    explanation: Не is the particle that negates a verb directly (Я не знаю). Ні is
+      a standalone 'no' used to answer a question.
+  - sentence: Я ніхто не бачу на столі.
+    error: ніхто
+    correction: нічого
+    error_type: word
+    options:
+    - нічого
+    - ніколи
+    - ніде
+    explanation: Ніхто means 'nobody' (a person). Нічого means 'nothing' (a thing).
+      When you see nothing on the table, use нічого.
+- type: fill-in
+  instruction: 'Fill in the blank with the correct **ні-** word: **ніхто**, **нічого**,
+    **ніколи**, **ніде**, or **нікуди**.'
+  items:
+  - sentence: _____ не знає, де книга.
+    answer: Ніхто
+    options:
+    - Ніхто
+    - Нічого
+    - Ніколи
+  - sentence: Я _____ не бачу на столі.
+    answer: нічого
+    options:
+    - нічого
+    - ніхто
+    - ніде
+  - sentence: Вона _____ не запізнюється.
+    answer: ніколи
+    options:
+    - ніколи
+    - нічого
+    - ніхто
+  - sentence: Він _____ не йде.
+    answer: нікуди
+    options:
+    - нікуди
+    - ніде
+    - ніколи
+  - sentence: _____ не було.
+    answer: Ніде
+    options:
+    - Ніде
+    - Нікуди
+    - Ніхто
+  - sentence: Ми _____ не розуміємо.
+    answer: нічого
+    options:
+    - нічого
+    - ніхто
+    - ніколи
+  - sentence: _____ не приходить.
+    answer: Ніхто
+    options:
+    - Ніхто
+    - Нічого
+    - Ніде
+  - sentence: Ти _____ не чуєш?
+    answer: нічого
+    options:
+    - нічого
+    - ніхто
+    - ніколи

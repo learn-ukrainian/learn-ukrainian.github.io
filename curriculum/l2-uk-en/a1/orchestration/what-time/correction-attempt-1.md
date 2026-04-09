@@ -1,6 +1,7 @@
 <correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
+CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
+- FIX: Missing section heading: 'Підсумок — Summary'
 - FIX: Missing 4/7 required vocab: ранок (morning, m), вечір (evening, m), день (day, m), ніч (night, f)
 </correction_directive>
 

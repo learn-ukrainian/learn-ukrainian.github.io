@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All four content_outline sections present with correct headings. Dialogue
+    captures the plan's proofreading scenario (Студент writing, Друг correcting).
+    However, the plan's dialogue_situations specifie
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'All Ukrainian forms verified correct via VESUM. У/в rules match Правопис
+    §23. З/із/зі rules match Літвінова p.177. However: (1) "At the start of a sentence,
+    always **і**" is incorrect per Літвінова p.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: situation (proofreading essay) → pattern (rules with examples)
+    → practice (activities). Each grammar point has 3+ Ukrainian examples ✓. The "listen-and-feel
+    test" framing is excellent f'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocab all present: у/в used extensively, і/й taught with examples,
+    з/із/зі covered. Recommended vocab: Київ ✓ (multiple instances), Львів ✓ (multiple),
+    офіс ✓ ("працює в офісі"), парк ✓ ("йде'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All four markers placed correctly after relevant teaching. Types match
+    plan exactly (2 quiz, 1 fill-in, 1 natural-sound quiz). Markers spread evenly:
+    one per section. Cannot evaluate item-level logic '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers or meta-commentary. The proofreading scenario
+    is genuinely engaging — two friends fixing an essay is natural and relatable.
+    The "солов'їна мова" (nightingale language) cultural
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All four H2 sections present and ordered per plan. Clean markdown. No
+    duplicate summaries, no meta-commentary sections, no stray tags. Word count 1423
+    exceeds 1200 target ✓. Activity markers properly '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — Ukrainian euphony presented on its own terms, never
+    compared to Russian. "Солов'їна мова" is an authentic Ukrainian cultural concept.
+    City examples (Київ, Львів, Одеса) are all Ukr
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Named speakers (Дарина, Олексій) with distinct roles ✓. Natural proofreading
+    scenario ✓. Multi-turn with genuine interaction ✓. However: (1) Дарина''s "Так,
+    правильно!" → "Ні, «в Києві!»" is confusing '
+findings: []

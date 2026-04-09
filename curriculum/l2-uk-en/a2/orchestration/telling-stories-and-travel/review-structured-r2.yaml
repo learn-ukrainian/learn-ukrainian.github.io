@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Deductions for missing required questions from the plan in the dialogues.
+    Scenario 2 is missing "Як доберемося? Поїдемо потягом чи полетимо?" and "Що будемо
+    робити?". Scenario 3 is missing "Що найбіль
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Found several critical errors: a Russianism superlative ("сама активна"),
+    a mistranslation of intent vs reality ("мало трапитися"), and a phraseological
+    calque ("отримав багато вражень").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of "Stage vs. Action" principle for imperfective/perfective.
+    Good examples of future tense formation and gender agreement in past tense.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary are used smoothly and contextually
+    throughout the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exact match with the 4 `activity_hints` provided in the plan. Logical
+    placement.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Positive, encouraging tone. Very clear and natural phrasing without relying
+    on gamified corporate language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All headers and sections are perfectly ordered. The word count is 2794,
+    well above the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Superb emphasis on authentic Ukrainian city names (Київ, Львів) and transportation
+    terminology ("подорож", "двірець", warning against "білет" and "путешествіє").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogues are realistic and contextualize the grammar well, but docked
+    points due to missing the questions defined in the plan outline.
+findings: []

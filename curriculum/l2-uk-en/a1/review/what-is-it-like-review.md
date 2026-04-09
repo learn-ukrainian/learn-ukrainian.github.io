@@ -1,29 +1,44 @@
 ## Linguistic Scan
-No linguistic errors found. The module demonstrates high accuracy in gender agreement (m/f/n) and uses authentic Ukrainian vocabulary throughout. No Russianisms, Surzhyk, or calques were detected.
+No linguistic errors found. (All Ukrainian terms and dialogues are grammatically accurate and idiomatic. No Russianisms, Surzhyk, or calques were detected.)
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-yakyi-yaka-yake -->`: Correctly placed after the dialogues introducing the question words. Matches plan (type: quiz, focus: Який/яка/яке?).
-- `<!-- INJECT_ACTIVITY: fill-in-adjective-endings -->`: Correctly placed after the grammar explanation of the -ий/-а/-е pattern. Matches plan (type: fill-in, focus: adjective endings).
-- `<!-- INJECT_ACTIVITY: match-adjective-opposites -->`: Correctly placed after the vocabulary section introducing antonym pairs. Matches plan (type: match-up, focus: adjective opposites).
-- `<!-- INJECT_ACTIVITY: fill-in-describe-room -->`: Correctly placed after the model paragraph describing a room. Matches plan (type: fill-in, focus: describing room).
-
-Total markers: 4 (Matches the 4 activity hints in the plan).
+- `<!-- INJECT_ACTIVITY: quiz-question-word -->` is placed directly after the grammar explanation of "який/яка/яке". Perfect timing.
+- `<!-- INJECT_ACTIVITY: fill-in-adjective-endings -->` is placed at the end of the question word section, testing the endings rule.
+- `<!-- INJECT_ACTIVITY: match-up-opposites -->` is placed after the introduction of adjective pairs.
+- `<!-- INJECT_ACTIVITY: fill-in-room-description -->` is placed logically after the room description syntax is explained.
+All markers match the plan's `activity_hints` perfectly in focus and type.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all content_outline points exactly. Word count (1529) exceeds target (1200) without padding. Correctly implements negative constraint (no furniture in Dialogue 2). |
-| 2. Linguistic accuracy | 10/10 | All gender agreements are correct (кімната велика, стіл новий, вікно чисте). No Russian contamination. |
-| 3. Pedagogical quality | 10/10 | Follows PPP flow perfectly. Contextualizes grammar through real scenarios (book fair, room description). Uses textbook-aligned strategy (opposites/antonyms). |
-| 4. Vocabulary coverage | 10/10 | Includes all required and recommended vocabulary from the plan. Introduces them in natural contexts. |
-| 5. Exercise quality | 10/10 | Markers are strategically placed to test immediate acquisition. Types and focus match plan hints perfectly. |
-| 6. Engagement & tone | 10/10 | Professional and direct. Avoids "motivational fluff." The setting of a "weekend book fair" is a nice cultural touch. |
-| 7. Structural integrity | 10/10 | All H2 headings from the plan are present. Clean Markdown. No meta-commentary sections. |
-| 8. Cultural accuracy | 10/10 | Cites authentic Ukrainian pedagogical sources (Ponomarova, Vashulenko). Use of "book fair" (книжковий ярмарок) is culturally relevant. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural and multi-turn. Speakers have motivation (browsing, asking about a room). |
+| 1. Plan adherence | 10/10 | The module follows the plan perfectly. The textbook dialogues (Вашуленко, Пономарова) are utilized creatively. All vocabulary and outline points are fully fleshed out. |
+| 2. Linguistic accuracy | 10/10 | Excellent, natural Ukrainian. Exclamations like "Який великий плакат!" and comparative structures ("Стілець старий, а ліжко — нове") are flawlessly written. |
+| 3. Pedagogical quality | 8/10 | Mostly excellent, but the English prose states: "express a desire to drink **чиста вода** (clean water), or mention that you prefer to read a book in a **світла кімната** (bright room)." This implies to learners that they can slot these nominative phrases directly into verb phrases requiring the accusative ("чисту воду") or locative ("світлій кімнаті"), which is misleading at the A1 stage. |
+| 4. Vocabulary coverage | 10/10 | Every single required and recommended word from the plan is introduced naturally in context before being explicitly defined. |
+| 5. Exercise quality | 10/10 | The injected markers correspond perfectly to the planned activities and appear at the right pedagogical moments. |
+| 6. Engagement & tone | 8/10 | The tone is generally encouraging, but ends with gamified/corporate filler: "major milestone in your language journey" and "breathes life into your conversations". |
+| 7. Structural integrity | 10/10 | Word count is 1941 (comfortably above the 1200 target). All H2s match the plan exactly. |
+| 8. Cultural accuracy | 10/10 | References to native Grade 3 textbooks are well-integrated. The book fair setting feels authentic. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are realistic, conversational, and effectively demonstrate the grammar points in action. |
 
 ## Findings
-No findings.
 
-## Verdict: PASS
-The module is of exceptional quality, adhering strictly to the plan while providing rich, contextualized examples. It perfectly implements the grammar of adjective agreement and question words (Який/яка/яке) in a way that is accessible to A1 learners. The use of primary textbook references (Ponomarova, Vashulenko) adds academic authority and ensures pedagogical alignment with the Ukrainian State Standard.
+[Pedagogical quality] [Major]
+Location: `You might say to a friend that you have a **гарний день** (nice day), express a desire to drink **чиста вода** (clean water), or mention that you prefer to read a book in a **світла кімната** (bright room).`
+Issue: The English explanation implies that the nominative phrases "чиста вода" and "світла кімната" can be directly dropped into sentences after verbs like "drink" or "read in", which actually require the accusative ("чисту воду") and locative ("світлій кімнаті"). This will confuse an A1 learner trying to build sentences.
+Fix: Rephrase the English context so the nominative usage is grammatically plausible without requiring case changes.
+
+[Engagement & tone] [Minor]
+Location: `The ability to accurately describe the world around you is a major milestone in your language journey. It moves you beyond simply pointing at objects and allows you to share your unique perspective and opinions. A table is no longer just a table; it is a big, new, clean table. A room is no longer just a room; it is a small but beautiful space. This descriptive power breathes life into your conversations and helps you connect with native speakers on a deeper level.`
+Issue: Contains gamified/corporate filler language ("major milestone in your language journey", "breathes life into your conversations") which violates the tone guidelines.
+Fix: Trim the empty filler to keep the paragraph concise, retaining only the substantive points.
+
+## Verdict: REVISE
+The module is outstanding in its linguistic quality, adherence to the plan, and pedagogical flow. However, it requires a REVISE verdict due to a Major finding in Pedagogical Quality where the English explanation inadvertently implies incorrect grammatical case usage, as well as a Minor finding regarding gamified tone filler.
+
+<fixes>
+- find: "You might say to a friend that you have a **гарний день** (nice day), express a desire to drink **чиста вода** (clean water), or mention that you prefer to read a book in a **світла кімната** (bright room)."
+  replace: "You might describe the weather as a **гарний день** (nice day), remark that the lake has **чиста вода** (clean water), or say your office is a **світла кімната** (bright room)."
+- find: "The ability to accurately describe the world around you is a major milestone in your language journey. It moves you beyond simply pointing at objects and allows you to share your unique perspective and opinions. A table is no longer just a table; it is a big, new, clean table. A room is no longer just a room; it is a small but beautiful space. This descriptive power breathes life into your conversations and helps you connect with native speakers on a deeper level."
+  replace: "The ability to accurately describe objects allows you to share your unique perspective and opinions. A table is no longer just a table; it is a big, new, clean table. A room is no longer just a room; it is a small but beautiful space."
+</fixes>

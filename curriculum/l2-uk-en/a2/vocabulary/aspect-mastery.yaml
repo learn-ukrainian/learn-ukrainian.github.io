@@ -1,0 +1,199 @@
+vocabulary:
+- word: утво́рення
+  translation: formation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: морфоло́гія
+  translation: morphology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тільки що
+  translation: just now
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: класти / покласти
+  translation: to put (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: починати / почати
+  translation: to begin (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: закінчувати / закінчити
+  translation: to finish (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: основа слова
+  translation: word stem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергування звуків
+  translation: sound alternation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їсти / з'їсти
+  translation: to eat (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пекти / спекти
+  translation: to bake (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: записувати / записати
+  translation: to note down (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: запрошувати / запросити
+  translation: to invite (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мити / помити
+  translation: to wash (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прасувати / випрасувати
+  translation: to iron (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вмиватися / вмитися
+  translation: to wash one's face (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: одягатися / одягнутися
+  translation: to get dressed (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дивитися / подивитися
+  translation: to watch / to take a look (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пояснювати / пояснити
+  translation: to explain (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: розуміти / зрозуміти
+  translation: to understand (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перекладати / перекласти
+  translation: to translate (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: розповідати / розповісти
+  translation: to tell / to narrate (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відкривати / відкрити
+  translation: to open (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: закривати / закрити
+  translation: to close (impf./pf.)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вчо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: один раз
+  translation: one time / once
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Я тільки що зробив це
+  translation: I just did this
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я ще не закінчив
+  translation: I haven't finished yet
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Давай почнемо
+  translation: Let's start
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

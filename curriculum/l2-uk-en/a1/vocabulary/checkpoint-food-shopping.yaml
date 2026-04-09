@@ -11,47 +11,53 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: варе́ники
-  translation: dumplings
+- word: молоко́
+  translation: milk
   expression: false
   pos: ім.
-  gender: ''
+  gender: с.
   verified: true
-- word: сала́т
-  translation: salad
+- word: я́блуко
+  translation: apple
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: помідо́р
+  translation: tomato
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: пі́ца
-  translation: pizza
+- word: карто́пля
+  translation: potato
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ка́ша
-  translation: porridge
+- word: яйце́
+  translation: egg
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: м'я́со
+  translation: meat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ри́ба
+  translation: fish
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: яє́чня
-  translation: fried eggs
+- word: цу́кор
+  translation: sugar
   expression: false
   pos: ім.
-  gender: ж.
-  verified: true
-- word: котле́та
-  translation: cutlet
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ка́ва
-  translation: coffee
-  expression: false
-  pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
 - word: вода́
   translation: water
@@ -59,11 +65,41 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: молоко́
-  translation: milk
+- word: пи́во
+  translation: beer
   expression: false
   pos: ім.
   gender: с.
+  verified: true
+- word: продаве́ць
+  translation: seller
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кілогра́м
+  translation: kilogram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: огіро́к
+  translation: cucumber
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лимо́н
+  translation: lemon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́ма
+  translation: mother
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: сніда́нок
   translation: breakfast
@@ -71,8 +107,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: вече́ря
-  translation: dinner
+- word: ка́ша
+  translation: porridge
   expression: false
   pos: ім.
   gender: ж.
@@ -84,82 +120,10 @@ vocabulary:
   gender: ''
   verified: true
 - word: кафе́
-  translation: café
+  translation: cafe
   expression: false
   pos: ім.
   gender: с.
-  verified: true
-- word: раху́нок
-  translation: bill (at a restaurant)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гри́вня
-  translation: hryvnia (Ukrainian currency, 1)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гри́вні
-  translation: hryvnias (2–4)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гри́вень
-  translation: hryvnias (5+, genitive plural)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: помідо́ри
-  translation: tomatoes
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: я́блука
-  translation: apples
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: смета́на
-  translation: sour cream
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: офіціа́нт
-  translation: waiter
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: продаве́ць
-  translation: seller, vendor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сма́чно
-  translation: tasty, delicious
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: до́рого
-  translation: expensive
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ві́льно
-  translation: free, available (of a seat)
-  expression: false
-  pos: присл.
-  gender: ''
   verified: true
 - word: звича́йно
   translation: of course
@@ -167,86 +131,44 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: ра́зом
-  translation: together
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ра́птом
-  translation: suddenly
+- word: де́шево
+  translation: cheap
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: підхо́дити
-  translation: to approach, to come up to
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: замовля́ти
-  translation: to order
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ко́штува́ти
-  translation: to cost
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: купува́ти
-  translation: to buy
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: кілогра́м
-  translation: kilogram
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ка́ртка
-  translation: card (payment card)
+- word: господи́ня
+  translation: hostess
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: борщ зі сметаною
-  translation: borscht with sour cream
+- word: дава́ти
+  translation: to give
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Мені каву, будь ласка
+  translation: Coffee for me, please
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: хліб із сиром
-  translation: bread with cheese
+- word: Рахунок, будь ласка
+  translation: The bill, please
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Мені ___, будь ласка.
-  translation: I'll have ___, please.
+- word: Дуже приємно!
+  translation: Very nice to meet you!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Дайте ___, будь ласка.
-  translation: Give [me] ___, please.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Тут вільно?
-  translation: Is this seat free?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Сідайте!
-  translation: Sit down! (polite)
+- word: Що ви хочете?
+  translation: What do you want?
   expression: true
   pos: ''
   gender: ''

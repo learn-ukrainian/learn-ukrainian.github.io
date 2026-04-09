@@ -1,0 +1,200 @@
+{
+  "total_items": 220,
+  "grounded_items": 190,
+  "ungrounded": [
+    {
+      "word": "важке",
+      "exercise_type": "quiz",
+      "context": "Нарешті він _____ своє важке домашнє завдання!",
+      "role": "context"
+    },
+    {
+      "word": "фінанси",
+      "exercise_type": "quiz",
+      "context": "Ми _____ про фінанси цілий вечір без жодного фіналу.",
+      "role": "context"
+    },
+    {
+      "word": "нашої",
+      "exercise_type": "quiz",
+      "context": "Щоліта ми _____ до нашої бабусі в маленьке село.",
+      "role": "context"
+    },
+    {
+      "word": "маленьке",
+      "exercise_type": "quiz",
+      "context": "Щоліта ми _____ до нашої бабусі в маленьке село.",
+      "role": "context"
+    },
+    {
+      "word": "село",
+      "exercise_type": "quiz",
+      "context": "Щоліта ми _____ до нашої бабусі в маленьке село.",
+      "role": "context"
+    },
+    {
+      "word": "гарячу",
+      "exercise_type": "quiz",
+      "context": "Кожного ранку він _____ гарячу і дуже міцну каву.",
+      "role": "context"
+    },
+    {
+      "word": "побачила",
+      "exercise_type": "quiz",
+      "context": "Вона _____ перше вільне таксі, яке несподівано побачила.",
+      "role": "context"
+    },
+    {
+      "word": "нічого",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ про політику дуже довго, але нічого не вирішили.",
+      "role": "context"
+    },
+    {
+      "word": "вирішили",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ про політику дуже довго, але нічого не вирішили.",
+      "role": "context"
+    },
+    {
+      "word": "готувала",
+      "exercise_type": "fill-in",
+      "context": "готувала",
+      "role": "answer"
+    },
+    {
+      "word": "відповів",
+      "exercise_type": "fill-in",
+      "context": "відповів",
+      "role": "answer"
+    },
+    {
+      "word": "унікальна",
+      "exercise_type": "match-up",
+      "context": "доконаний вид (унікальна подія)",
+      "role": "context"
+    },
+    {
+      "word": "несподівана",
+      "exercise_type": "match-up",
+      "context": "доконаний вид (несподівана дія)",
+      "role": "context"
+    },
+    {
+      "word": "постійна",
+      "exercise_type": "match-up",
+      "context": "недоконаний вид (постійна звичка)",
+      "role": "context"
+    },
+    {
+      "word": "швидке",
+      "exercise_type": "match-up",
+      "context": "доконаний вид (швидке досягнення)",
+      "role": "context"
+    },
+    {
+      "word": "прочитала",
+      "exercise_type": "group-sort",
+      "context": "Вона нарешті прочитала цю книгу.",
+      "role": "answer"
+    },
+    {
+      "word": "йому",
+      "exercise_type": "group-sort",
+      "context": "Він сміливо сказав йому правду.",
+      "role": "answer"
+    },
+    {
+      "word": "роман",
+      "exercise_type": "group-sort",
+      "context": "Я читав новий роман цілий вечір.",
+      "role": "answer"
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "group-sort",
+      "context": "Щоліта ми їздили відпочивати на море.",
+      "role": "answer"
+    },
+    {
+      "word": "корисні",
+      "exercise_type": "error-correction",
+      "context": "Щодня він зробив дуже корисні фізичні вправи.",
+      "role": "context"
+    },
+    {
+      "word": "брала",
+      "exercise_type": "error-correction",
+      "context": "брала",
+      "role": "answer"
+    },
+    {
+      "word": "дитинстві",
+      "exercise_type": "error-correction",
+      "context": "У дитинстві вона часто взяла мій словник без дозволу.",
+      "role": "context"
+    },
+    {
+      "word": "взяла",
+      "exercise_type": "error-correction",
+      "context": "У дитинстві вона часто взяла мій словник без дозволу.",
+      "role": "context"
+    },
+    {
+      "word": "вулицею",
+      "exercise_type": "error-correction",
+      "context": "Одного разу я спокійно йшов вулицею і раптом бачив старого д",
+      "role": "context"
+    },
+    {
+      "word": "бачив",
+      "exercise_type": "error-correction",
+      "context": "Одного разу я спокійно йшов вулицею і раптом бачив старого д",
+      "role": "context"
+    },
+    {
+      "word": "минула",
+      "exercise_type": "true-false",
+      "context": "Якщо минула дія повністю завершена і є конкретний результат,",
+      "role": "context"
+    },
+    {
+      "word": "перекладається",
+      "exercise_type": "true-false",
+      "context": "Англійський час Past Simple завжди ідеально перекладається т",
+      "role": "context"
+    },
+    {
+      "word": "доконаним",
+      "exercise_type": "true-false",
+      "context": "Англійський час Past Simple завжди ідеально перекладається т",
+      "role": "context"
+    },
+    {
+      "word": "регулярних",
+      "exercise_type": "true-false",
+      "context": "Ми обов'язково використовуємо недоконаний вид для регулярних",
+      "role": "context"
+    },
+    {
+      "word": "фонових",
+      "exercise_type": "true-false",
+      "context": "Ми обов'язково використовуємо недоконаний вид для регулярних",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 23,
+    "tested_in_exercises": 16,
+    "not_tested": [
+      "видова",
+      "завершеність",
+      "зателефонувати",
+      "пара",
+      "тривалість",
+      "щоразу",
+      "іноді"
+    ]
+  },
+  "all_grounded": false
+}

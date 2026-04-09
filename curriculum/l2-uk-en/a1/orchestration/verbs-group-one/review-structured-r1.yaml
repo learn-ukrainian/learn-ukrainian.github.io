@@ -2,47 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all dialogue points, includes conjugation tables for Group I verbs,
-    uses the 6 essential verbs, and matches the summary section.
+  score: 9
+  evidence: Covers all content outline points and required vocabulary. However, two
+    recommended vocabulary words ("малювати", "грати") were omitted from the prose.
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Contains a critical vocative error ("Юле" instead of "Юлю") and incorrectly
-    claims the letter "є" is present in the ending "-ють". All other Ukrainian forms
-    are correct.
+  score: 10
+  evidence: All Ukrainian text is grammatically correct. The explanation of the "They
+    test" (3rd person plural -уть/-ють) accurately reflects standard Ukrainian pedagogical
+    rules. No Russianisms or calques detect
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent breakdown of stems ("готу-") and endings. PPP pedagogy is very
-    well applied. The only issue is the slight inaccuracy in generalizing the "є"
-    vowel to the "вони" form.
+  score: 10
+  evidence: The lesson flows beautifully from situation (dialogue) to presentation
+    (conjugation table) to practice. The explanation of dropping the "-ва-" in "готувати"
+    and the clarification on the "No-Be" rule (
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required verbs (читати, знати, працювати, слухати, гуляти, готувати)
-    are introduced naturally in dialogues and drills.
+  score: 8
+  evidence: All required verbs are present and used in context. However, the recommended
+    verbs "малювати" (to draw) and "грати" (to play) are missing entirely from the
+    module.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Markers are placed correctly immediately following the corresponding explanations.
+  evidence: Four exercise markers are present and correspond perfectly to the plan's
+    activity hints in type and focus. They are placed logically after the relevant
+    teaching sections.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: 'Tone is warm and encouraging. "A helpful anchor to remember: ти завжди
-    -єш" is great teacher-like framing without being gamified.'
+  score: 7
+  evidence: The text relies occasionally on gamified and corporate filler language,
+    such as "universal key to unlocking", "unlocks massive communicative potential",
+    and "instantly possess the power to use it in s
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is within limits (1295 words), all H2 headings match the plan
-    perfectly.
+  score: 9
+  evidence: 'The markdown structure is clean and matches the plan''s H2 headers perfectly.
+    Word count is healthy (1420 words). There are minor typographical errors: a double
+    space and capitalization error ("Now  Yo'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses natural names (Юля, Сашко, Марина, Андрій) and plausible situations.
+  evidence: Uses natural, contextually appropriate Ukrainian names and settings. The
+    explanation of the "No-Be" rule addresses a specific English-speaker hurdle accurately.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogues feel natural, conversational, and successfully model the target
-    grammar.
+  evidence: The dialogues are natural and effectively demonstrate the target grammar
+    in realistic scenarios (shared kitchen, discussing work/school). Named speakers
+    and clear contexts make them engaging.
 findings: []

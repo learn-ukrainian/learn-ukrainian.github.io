@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text covers the outline well, mentioning textbook authors Заболотний
+    and Литвінова. However, it omitted the recommended vocabulary words "становлення"
+    and "мислення", and generalized the Вашуленко
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The module contains a critical factual error regarding stress: "Наголос
+    тут залишається на першому складі, точно як і в базовому дієслові «звернутися»"
+    (the stress in зверну́тися is on the third sylla'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent pedagogical flow. The explanation of the difference between
+    Ukrainian and Russian phonetics (подовження vs -ние) is highly useful, as is the
+    warning against gerund preposition calques ("від '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is present. Missed recommended words "становлення"
+    and "мислення" (which also affects plan adherence).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The injected markers perfectly align with the plan's five requested types,
+    plus two excellent reading comprehension markers.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional, encouraging, and appropriate for a B1 academic
+    grammar module. It treats the learner as an adult without gamified language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count is 4803 (exceeding the 4000 target). All sections are present
+    and well-structured.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The corporate IT context and news article about reconstruction reflect
+    modern Ukrainian realities.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The workplace dialogue is natural and effectively models the formal use
+    of verbal nouns.
+findings: []

@@ -1,6 +1,6 @@
 # Build Summary: dative-nouns (A2)
 
-Generated: 2026-04-08 00:51
+Generated: 2026-04-09 01:31
 
 ## Pipeline Phases
 
@@ -20,6 +20,7 @@ Generated: 2026-04-08 00:51
 | review | complete | 2026-04-07 22:51:51 |
 | stress | complete | 2026-04-07 22:51:51 |
 | publish | complete | 2026-04-07 22:51:52 |
+| skeleton | complete | 2026-04-08 23:31:11 |
 
 ## Reviews
 
@@ -33,6 +34,8 @@ Generated: 2026-04-08 00:51
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (auto) | 547s | ✅ |
 | skeleton | gemini (auto) | 300s | ❌ |
+| skeleton | gemini (gemini-3-flash-preview) | 300s | ❌ |
+| skeleton | gemini (auto) | 207s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 110s | ✅ |
 | vocab | gemini (auto) | 181s | ✅ |
@@ -40,11 +43,13 @@ Generated: 2026-04-08 00:51
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
 - `v6-pre-verify-prompt.md`

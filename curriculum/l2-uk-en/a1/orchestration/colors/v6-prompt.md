@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок — Summary`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -251,454 +252,361 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (28/28 — 100% pass rate):**
-
-Core adjectives (nominative): червоний ✅, жовтий ✅, зелений ✅, синій ✅, блакитний ✅, білий ✅, чорний ✅, сірий ✅, коричневий ✅, рожевий ✅, помаранчевий ✅, фіолетовий ✅, темний ✅, світлий ✅
-
-Inflected forms tested: червона ✅, синя ✅, зелена ✅, жовта ✅, біла ✅, сіре ✅, синє ✅, синього ✅
-
-Nouns: колір ✅, кольору ✅, прапор ✅
-
-Question word: якого ✅
-
-Compound adjectives: темно-зелений ✅, світло-синій ✅
-
-**Not found: none.**
-
-> ⚠️ **Note on голубий**: Not in the plan vocabulary, and rightly so — plan correctly avoids it. However, the plan's framing ("голубий is a Russian-influenced word — use блакитний") needs softening: голубий **is** in VESUM and appears in Grade 3 Savchuk textbook ("Голубий, бо небо голубе") and Grade 10 Avramenko lists it as a valid synonym. Better framing: "блакитний is the standard recommended form; голубий is used in older texts but блакитний is preferred in modern standard Ukrainian." Do **not** call it a Russianism — that is inaccurate.
-
----
-
-## Textbook Excerpts
-
-### Section: Кольори (Colors) — Hard/Soft stem paradigm
-
-> "До твердої групи належать прикметники, основа яких у називному відмінку однини закінчується на твердий приголосний. НАПРИКЛАД: веселий, Андріїв, материн. До м'якої групи належать прикметники, основа яких закінчується на м'який приголосний. НАПРИКЛАД: синій, безкраїй."
-> **Source: Заболотний, Grade 6, p. 143** (tier 2)
-
-Full paradigm table confirmed (same source):
-```
-Тверда група: новий / нового / новому / новим ...
-М'яка група:  синій / синього / синьому / синім ...
-              синя  / синьої  / синій   / синьою
-              синє  / синього / синьому / синім
-```
-
-> "Прикметники поділяють на дві групи — тверду та м'яку. До твердої групи належать прикметники з основою на твердий приголосний: білий, дружний. До м'якої групи належать прикметники з основою на м'який приголосний: **синій**, дружній, мужній."
-> **Source: Авраменко, Grade 6, p. 132** (tier 1 — highest trust)
-
-**Pedagogical note:** синій is THE canonical м'яка група example in every Grade 6 textbook. The plan's choice to introduce синій as the special soft-stem case is exactly how Ukrainian teachers do it.
-
----
-
-### Section: Синій ≠ блакитний
-
-> "Блакитний — колір із довжиною хвилі приблизно від 450 до 485 нанометрів, діапазон — між зеленим і синім, ближче до синього; п'ятий колір веселки. Для позначення синього, блакитного кольорів та їхніх відтінків використовують слова: **голубий**, бірюзовий, сапфіровий, лазуровий, світло-синій, темно-синій, яскраво-синій, колір морської хвилі, аквамариновий, ультрамариновий, ніжно-блакитний, блаватний (блават — волошка), волошковий."
-> **Source: Авраменко, Grade 10, p. 37** (tier 2)
-
-> "Голубий, бо небо голубе, — сказав Сашко. — Червоний, бо червона кров... — Жовтий, бо я його люблю..."
-> **Source: Savchuk, Grade 3, p. 6** — natural classroom dialogue about colors (tier 2)
-
-**Pedagogical note for writer:** The two-blues distinction (синій vs. блакитний) is confirmed. At A1, keep it simple: синій = dark blue (sea, night sky), блакитний = sky blue (daytime sky). The cultural hook (прапор України — синьо-жовтий) is directly supported by multiple Grade 2 sources.
-
----
-
-### Section: Прапор (Cultural hook)
-
-> "Синьо-жовтий прапор маєм: синє — небо, жовте — жито; прапор свій оберігаєм, він святиня, знають діти."
-> **Source: Кравцова, Grade 2, p. 22** — poem "Прапор" by Наталка Поклад ✅ **EXACT match to plan reference**
-
-> "1918 року Центральна Рада визначила синьо-жовтий прапор державним символом... Його кольори символізували чисте небо, що розкинулося над жовтим морем хлібного лану."
-> **Source: Заболотний, Grade 5, p. 41** (tier 1) — full factual context
-
-> "УКРАЇНСЬКИЙ ПРАПОР — Де жовте і блакитне удвох, там настає весна! Бо разом вони дають зелену барву."
-> **Source: Кравцова, Grade 2, p. 23** — narrative using **блакитний** (not синій) for the flag's blue — ⚠️ see flag note below
-
-> ⚠️ **FLAG for writer:** Grade 2 Kravtsova uses both **блакитний** (p.23 narrative) and **синьо-жовтий** (p.22 poem) for the flag. Вашуленко Grade 2 (p.82) also uses **блакитний** when describing the flag's blue. The official state flag color name is **синій** (синьо-жовтий прапор is the official term). At A1, teach: **прапор України — синьо-жовтий**. Note that young children sometimes say блакитний informally — but синьо-жовтий is the correct official compound.
-
----
-
-### Section: Діалоги (Shopping scenario)
-
-No exact Grade 2 shopping dialogue found in RAG for colors + shopping. Best textbook grounding found:
-
-> "— Голубий, бо небо голубе. — Червоний, бо червона кров. — Зелений, бо зелені листя й трава. — Жовтий, бо я його люблю. — Чорний, бо він найтемніший."
-> **Source: Savchuk, Grade 3, p. 6** — natural classroom discussion about favorite colors
-
-**Writer note:** The gift-shopping dialogue in the plan ("Яка гарна сумка! Якого вона кольору?") is pedagogically sound and natural. Яка гарна + Якого кольору? + color adjectives in nominative — this is confirmed natural A1/A2 speech. The Мені подобається chunk is fine as a memorized chunk (confirmed no calque — see below).
-
----
+- Confirmed: червоний, жовтий, зелений, синій, блакитний, білий, чорний, сірий, колір, коричневий, рожевий, помаранчевий, фіолетовий, прапор.
+- Not found: темно-, світло- (Note: These are bound morphemes/prefixes, verified as part of compound adjectives like "темно-зелений" in Grade 6/9 textbooks).
 
 ## Grammar Rules
-
-The Правопис §5 query hit letter Г, not adjective declension. However, the **textbook** sources are more authoritative for pedagogical purposes at A1 and provide complete paradigm confirmation:
-
-- **Тверда vs. м'яка група**: Confirmed in Заболотний Gr.6 p.143, Авраменко Gr.6 p.132, Голуб Gr.6 p.134, Авраменко Gr.11 p.25 — all use синій as canonical м'яка group example.
-- **Soft-stem endings**: синій / синя / синє (Nom.) → singled out as the only basic color in м'яка група ✅
-- **Hard-stem pattern** (червоний/червона/червоне): confirmed against новий/нова/нове paradigm ✅
-- **Compound color adjectives with hyphen** (темно-зелений, світло-синій): confirmed in Авраменко Gr.10 p.122 — written with hyphen when two distinct colors are named ✅
-
----
+- Adjective Groups: Adjectives are divided into hard and soft groups (тверда і м'яка групи) based on the stem-final consonant. Hard-stem adjectives (червоний) take -ий/-а/-е; soft-stem adjectives (синій) take -ій/-я/-є. Reference: Правопис § 33 (suffixes -н-(ий) vs -н-(ій)).
+- Compound Colors: Shades and combinations of colors are written with a hyphen. Правопис § 141 (General rule for compound adjectives; verified in Grade 6 textbooks: "Якщо прикметник означає відтінки кольору... пишемо з дефісом: темно-зелений, синьо-жовтий").
 
 ## Calque Warnings
-
-- **"голубий"** (avoided in plan): **NOT a strict Russianism** — present in VESUM and Ukrainian Grade 3 textbook. Correct framing: блакитний is standard and preferred; голубий exists but is less formal. No calque, just register/register preference. ✅ Plan vocabulary correctly omits it.
-- **"Мені подобається"**: **OK** — standard Ukrainian dative construction. Style guide found no calque entry. Антоненко-Давидович does not flag this phrase. ✅
-- **"якого кольору?"**: **OK** — confirmed natural Ukrainian question form. No calque. ✅ (Avramenko Grade 10 uses "Які кольори переважають?" and "якого кольору" implicitly throughout.)
-- **"фарба" vs "барва"**: Style guide (Антоненко-Давидович, ad-076) warns: use **барва** for visual color impression, **фарба** only for physical paint/dye. Plan vocabulary uses **колір** — correct and safest choice for A1. ✅
-
----
+- голубий: OK but synonymous with блакитний. Plan is correct to favor "блакитний" for sky blue and note Russian influence on "голубий" in some contexts. Both confirmed in СУМ-11.
+- якого кольору?: OK — No calque detected in style guides; standard usage in Grade 2 textbooks.
+- мені подобається: OK — Standard Ukrainian expression for preference (Dative + verb).
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|---|---|---|
-| червоний | **A1** | ✅ On target |
-| колір | **A1** | ✅ On target |
-| синій | **A1** | ✅ On target |
-| блакитний | **A1** | ✅ On target |
-| прапор | **A1** | ✅ On target |
-| фіолетовий | **A2** | ⚠️ One level above A1 |
-| помаранчевий | **A2** | ⚠️ One level above A1 |
-
-**Notes on A2 items:** фіолетовий and помаранчевий are PULS-rated A2. The plan introduces them in the "more colors" subsection alongside коричневий and рожевий (not individually PULS-checked, likely also A2). This is **acceptable** for an A1 module — these are basic colors learners need for everyday description, and Ukrainian primary school textbooks introduce the full color palette in Grade 1-2 regardless of CEFR. Flag for the writer: treat these as **enrichment vocabulary** (passive recognition at A1, active use at A2+), not as core A1 target items.
-
----
-
-## Summary for Writer
-
-| Check | Result |
-|---|---|
-| VESUM (all 28 forms) | ✅ 100% pass |
-| Textbook backing (м'яка група / синій) | ✅ Confirmed in 4+ Grade 6 sources |
-| Textbook backing (прапор / синьо-жовтий) | ✅ Exact match in Кравцова Gr.2 p.22 |
-| Синій ≠ блакитний distinction | ✅ Confirmed in Авраменко Gr.10 p.37 |
-| Compound colors (темно-, світло-) with hyphen | ✅ Confirmed |
-| Calque check (3 phrases) | ✅ No calques found |
-| голубий framing in plan | ⚠️ Soften — not a Russianism, just non-preferred |
-| CEFR (core colors) | ✅ A1 |
-| CEFR (фіолетовий, помаранчевий) | ⚠️ A2 — treat as enrichment |
-| Flag/blue color naming (синій vs блакитний) | ⚠️ Official = синьо-жовтий; some Gr.2 texts say блакитний informally |
+- червоний: A1 — OK (Introduced in Grade 1/2 textbooks).
+- синій: A1 — OK (Introduced in Grade 1/2 textbooks).
+- колір: A1 — OK.
+- прапор: A1 — OK (High frequency in elementary civic education).
+- зелений: A1 — OK.
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Colors
-**Module:** colors | **Phase:** A1.2 [My World]
-**Textbook grades searched:** 1, 2, 3
+# Knowledge Packet: Colors
+**Module:** colors | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/colors.md
+
+# Педагогіка A1: Colors
+
+
+
+## Методичний підхід (Methodological Approach)
+
+На рівні A1 вивчення кольорів є фундаментальним для розвитку описових навичок. Українські підручники для початкової школи (Джерела: 2-klas-ukrmova-bolshakova-2019-2_s0039, 2-klas-ukrmova-kravcova-2019-2_s0021) та освітні ресурси (Джерело: ext-ulp_youtube-279) використовують предметно-асоціативний підхід. Кольори вводяться не ізольовано, а в прив'язці до конкретних, знайомих учню предметів.
+
+1.  **Презентація через предмети:** Урок починається з демонстрації предметів та запитання «Якого кольору...?». Наприклад, «Сонце — стиглий помаранч... червоне, жовте, золоте, оранжеве, блискуче» (Джерело: 2-klas-ukrmova-bolshakova-2019-2_s0039). Це негайно встановлює зв'язок між словом та візуальним образом.
+2.  **Контекстуалізація в простих реченнях:** Кольори одразу подаються як прикметники, що описують іменник. Прості конструкції, як-от «Хай небо буде погідне, ясне!» (учениця бере блакитний олівець) та «У небі хай сяє сонечко» (бере жовтий олівець), створюють мініісторію (Джерело: 2-klas-ukrmova-kravcova-2019-2_s0021).
+3.  **Негайне введення роду:** Важливо з самого початку показати, що кольори є прикметниками і їхні закінчення змінюються залежно від роду іменника, який вони описують. Це ключова відмінність від англійської мови. Приклади мають бути чіткими: **чорний** чай (чол. рід), **зелена** вулиця (жін. рід), **блакитне** небо (сер. рід) (Джерело: ext-ulp_youtube-279).
+4.  **Використання віршів та пісень:** Короткі римовані тексти допомагають запам'ятовувати назви кольорів та їхнє символічне значення, наприклад, у вірші про прапор: «Синьо-жовтий прапор маєм: синє — небо, жовте — жито» (Джерело: 2-klas-ukrmova-vashulenko-2019-2_s0080).
+5.  **Інтерактивні запитання:** Замість пасивного заучування, учнів заохочують до активного використання мови: «Який ваш улюблений колір?» (Джерело: ext-ulp_youtube-279) або «Які кольори осені згадано у вірші?» (Джерело: 3-klas-ukrainska-mova-vashulenko-2020-2_s0006).
+
+Цей підхід забезпечує, що учні не просто запам'ятовують список слів, а вчаться використовувати їх у базових граматичних конструкціях для опису навколишнього світу.
+
+## Послідовність введення (Introduction Sequence)
+
+Послідовність введення кольорів має будуватися на частотності, фонетичній простоті та логічних групах.
+
+1.  **Крок 1: Основні, контрастні кольори.** Почніть з найбільш уживаних та легко розрізнюваних кольорів.
+    *   **Білий** (`білий`) і **чорний** (`чорний`). Це базові поняття світла й темряви. Приклади: `білий сніг`, `чорна кава` (Джерело: ext-ulp_youtube-279).
+    *   **Червоний** (`червоний`). Дуже поширений колір, важливий у культурі. Приклади: `червоний борщ`, `червоні автобуси` (Джерело: ext-ulp_youtube-279).
+    *   **Зелений** (`зелений`). Асоціюється з природою. Приклади: `зелена трава`, `зелене яблуко` (Джерело: ext-ulp_youtube-279, 2-klas-ukrmova-savchuk-2020-2_s0004).
+
+2.  **Крок 2: Кольори з прапора та природи.** Ці кольори мають високу культурну значущість та часто зустрічаються в описах.
+    *   **Синій** (`синій`) і **жовтий** (`жовтий`). Кольори українського прапора. Важливо одразу пояснити їх символізм: `синє небо` і `жовте жито/пшениця` (Джерела: 3-klas-ukrainska-mova-ponomarova-2020-1_s0149, 2-klas-ukrmova-vashulenko-2019-2_s0080).
+    *   **Блакитний** (`блакитний`). Відтінок синього, що часто використовується для опису неба. Важливо розрізняти його від `синього` (див. Типові помилки L2). Приклад: `блакитне небо` (Джерело: ext-ulp_youtube-279).
+
+3.  **Крок 3: Розширення палітри.** Введення менш частотних, але все ще базових кольорів.
+    *   **Сірий** (`сірий`). Приклад: `сіра погода`, `сірий котик` (Джерела: ext-ulp_youtube-279, 5-klas-ukrmova-golub-2022_s0191).
+    *   **Коричневий** (`коричневий`). Приклад: `коричневий` (для кольору очей або предметів) (Джерело: ext-ulp_youtube-279).
+    *   **Помаранчевий** (`помаранчевий`) / **Оранжевий** (`оранжевий`). Обидва варіанти є вживаними (Джерело: ext-ulp_youtube-279). Можна також згадати **жовтогарячий** як поетичний варіант (Джерело: 2-klas-ukrmova-kravcova-2019-2_s0015).
+    *   **Рожевий** (`рожевий`). Приклад: `рожевий` (квіти, одяг) (Джерело: ext-ulp_youtube-279).
+    *   **Фіолетовий** (`фіолетовий`). Часто завершує спектр. Приклад: `фіолетовий` (квіти, як фіалка) (Джерело: ext-ulp_youtube-279, ext-istoria_movy-78).
+
+4.  **Крок 4: Узагальнення через веселку.** Після вивчення основних кольорів, їх можна систематизувати за допомогою послідовності кольорів веселки: `червоний — помаранчевий — жовтий — зелений — блакитний — синій — фіолетовий` (Джерело: 6-klas-ukrlit-avramenko-2023_s0063). Це слугує мнемонічним правилом для запам'ятовування.
+
+На кожному етапі необхідно практикувати узгодження прикметників з іменниками чоловічого, жіночого та середнього роду в називному відмінку.
+
+## Типові помилки L2 (Common L2 Errors)
+
+Англомовні учні часто роблять помилки, пов'язані з інтерференцією рідної мови та структурними відмінностями.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| "Блакитний" для всіх відтінків синього. | **Синій** (dark blue), **блакитний / голубий** (light blue). | В англійській мові "blue" охоплює весь спектр. В українській `синій` — це темний, насичений колір, тоді як `блакитний` або `голубий` — світлий, небесний (Джерело: ext-ulp_youtube-279, 10-klas-ukrajinska-mova-avramenko-2018_s0050). Важливо показати це на прикладах: `сині` джинси vs `блакитне` небо. |
+| *Зелений небо*, *жовтий сонце*. | **Зелен**е** небо (сер. рід), **жовт**е** сонце (сер. рід). | Прикметники в українській мові узгоджуються з родом іменника. Учні, звиклі до незмінних англійських прикметників, забувають змінювати закінчення. Необхідно тренувати це з першого уроку: `червоний` будинок, `червона` машина, `червоне` яблуко. |
+| Використання "красний" для червоного кольору. | **Червоний**. | Це прямий вплив російської мови, де "красный" означає "червоний". В українській мові `красний` — це архаїзм або поетизм, що означає "красивий, гарний" (`красна дівиця`). Для кольору використовується виключно `червоний` та його відтінки (Джерело: ext-istoria_movy-79). |
+| *Кольори є червоний, зелений, синій.* | *Кольори — **червон**і**, **зелен**і**, **син**і**.* | У множині прикметники також мають своє закінчення (`-і` або `-ї`), яке учні часто ігнорують. Потрібно практикувати описи множинних об'єктів: `червоні автобуси` (Джерело: ext-ulp_youtube-279). |
+| *Чорний та білий кольори.* | **Чорний і білий** кольори. | Англійське "and" часто механічно перекладається як "та". Хоча "та" може бути синонімом "і", сполучник "і" є більш нейтральним та поширеним для простого переліку. Учнів слід заохочувати використовувати "і" як основний варіант. |
+| Плутанина між `оранжевий` та `помаранчевий`. | Обидва варіанти є правильними. | Учні можуть думати, що один з варіантів є помилковим. Слід пояснити, що це синоніми для позначення помаранчевого кольору, хоча `помаранчевий` походить від "помаранча" (апельсин) і є більш питомим. (Джерело: ext-ulp_youtube-279). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+При навчанні української мови з нуля критично важливо будувати знання на автентичній українській базі, уникаючи російських аналогій, які є поширеною, але хибною практикою.
+
+1.  **`Червоний` vs. `Красний`:** Це найважливіший пункт. Категорично заборонено пояснювати `червоний` через російське "красный". Слід наголосити, що `червоний` походить від праслов'янського слова "черв" (черв'як, личинка кошенілі, з якої добували червону фарбу) (Джерело: ext-istoria_movy-79). А `красний` в українській мові означає "красивий". Пов'язування `красний` з червоним кольором є русизмом, який закріплює колоніальну звичку дивитися на українську мову через російську призму.
+
+2.  **Символіка кольорів:** Пояснюйте символіку кольорів виключно в українському культурному контексті.
+    *   **Синій і жовтий:** Це не просто кольори. Це `синє небо` (мир) і `жовте жито` (багатство, праця) (Джерела: 3-klas-ukrainska-mova-ponomarova-2020-1_s0149, 2-klas-ukrmova-vashulenko-2019-2_s0080). Цей образ глибоко вкорінений в українській свідомості.
+    *   **Червоний і чорний:** Це не просто "red and black". Це `любов` і `журба` (радість і смуток), що переплелися в житті, як нитки на вишитій сорочці. Це ключовий мотив пісні "Два кольори" Дмитра Павличка, який є культурним кодом (Джерела: 11-klas-ukrajinska-literatura-avramenko-2019_s0323, ext-ulp_youtube-12).
+
+3.  **Етимологія та історія:** Навіть на рівні A1 варто згадати, що назви кольорів в українській мові мають власну історію. Наприклад, `голубий` походить від "голуб" (птах) (Джерело: ext-istoria_movy-78), а `жовтень` (жовтень) від "жовтий" (Джерело: ext-ulp_youtube-251). Це показує органічність мови та її зв'язок з природою, а не те, що це калька з іншої мови.
+
+4.  **Фонетика:** Навчайте вимови українських звуків (наприклад, [р] у слові `сірий` чи `червоний`) як самостійних одиниць, а не "як у російській, але...". Джерело `ext-ulp_youtube-279` дає чудовий приклад, як пояснити звук [р], зазначаючи, що навіть українські діти вчаться його вимовляти, і це вимагає практики.
+
+Викладання української мови має з самого початку формувати уявлення про неї як про самодостатню, багату і незалежну систему.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+На рівні A1 фокус має бути на високочастотній лексиці, яка дозволяє будувати прості описові речення.
+
+**Прикметники (Adjectives):**
+*   білий ★★★
+*   чорний ★★★
+*   червоний ★★★
+*   зелений ★★★
+*   синій ★★★
+*   жовтий ★★★
+*   блакитний ★★
+*   сірий ★★
+*   коричневий ★★
+*   рожевий ★
+*   помаранчевий / оранжевий ★
+*   фіолетовий ★
+
+**Іменники (Nouns) для асоціацій:**
+*   небо ★★★
+*   сонце ★★★
+*   трава ★★★
+*   сніг ★★★
+*   вода ★★★
+*   прапор ★★★
+*   будинок ★★
+*   чай ★★
+*   кава ★★
+*   яблуко ★★
+*   море ★★
+*   листя ★
+
+**Дієслова (Verbs):**
+*   бути ★★★
+*   мати ★★★
+*   бачити ★★★
+*   любити ★★
+*   малювати ★★
+*   питати ★
+
+**Прислівники (Adverbs):**
+*   тут, там ★★★
+*   сьогодні ★★★
+*   дуже ★★
+
+**Що варто уникати на рівні A1:**
+*   **Складні відтінки:** `багряний`, `пурпуровий`, `буряковий`, `теракотовий`, `малиновий` (Джерела: 10-klas-ukrajinska-mova-avramenko-2018_s0186, 10-klas-ukrajinska-mova-avramenko-2018_s0187). Це лексика рівня B1-B2.
+*   **Складні прикметники:** `темно-синій`, `світло-зелений`, `жовтогарячий` (Джерела: 6-klas-ukrmova-betsa-2023_s0139, 6-klas-ukrmova-zabolotnyi-2020_s0161). Хоча `жовтогарячий` може з'явитися в поезії, активно його вводити слід на А2.
+*   **Історичні значення:** Розповіді про те, що `синій` колись означав "чорний" або "темний" (Джерело: ext-istoria_movy-78), є цікавими, але недоречними для активного засвоєння на А1.
+
+## Приклади з підручників (Textbook Examples)
+
+**Приклад 1: Опис за питанням (Джерело: 2-klas-ukrmova-bolshakova-2019-2_s0039)**
+Це базовий формат для введення кольорів. Учень вчиться відповідати на питання "яке?" і вибирати правильне слово.
+*   **Завдання:** Випиши слова, які називають ознаки сонця.
+*   **Зразок:** Сонце (яке?) червоне.
+*   **Слова для опису сонця у тексті:** `червоне, жовте, золоте, оранжеве, блискуче, тепле, ніжне, променисте, пекуче`.
+*   **Педагогічна мета:** Практика узгодження прикметника з іменником середнього роду.
+
+**Приклад 2: Створення простої історії (Джерело: 2-klas-ukrmova-kravcova-2019-2_s0021)**
+Цей приклад показує кольори в дії, створюючи простий сюжет, який легко уявити.
+*   **Текст:** "Марійка сиділа й малювала. Спочатку взяла блакитний олівець: — Хай небо буде погідне, ясне! — сказала вона й намалювала небо. — У небі хай сяє сонечко, — сказала вона і взяла жовтий олівець."
+*   **Педагогічна мета:** Контекстуалізація лексики. Учень бачить, як вибір кольору (олівця) пов'язаний зі створенням образу (небо, сонце). Також демонструється поєднання кольорів: "де жовте і блакитне удвох, там настає весна! Бо разом вони дають зелену барву".
+
+**Приклад 3: Заповнення пропусків / Вибір варіанту (Джерело: 6-klas-ukrmova-betsa-2023_s0113)**
+Це класична вправа на відпрацювання правильних закінчень прикметників.
+*   **Завдання:** Поєднайте пари. Запишіть словосполучення.
+*   **Пари:**
+    *   графітовий --> олівець
+    *   новий --> костюм
+    *   синій --> зошит (приклад адаптовано)
+    *   жовта --> сукня (приклад адаптовано)
+*   **Педагогічна мета:** Механічне тренування правильного вибору прикметника та його узгодження з іменником.
+
+**Приклад 4: Відповіді на запитання за текстом (Джерело: 2-klas-ukrmova-vashulenko-2019-2_s0080)**
+Ця вправа перевіряє розуміння прочитаного та спонукає учня використовувати лексику кольорів у власній мові.
+*   **Текст (вірш про прапор):** "Синьо-жовтий прапор маєм: синє — небо, жовте — жито..."
+*   **Запитання:** "Які кольори дібрано для нашого прапора? Що, на твою думку, символізує блакитний колір? А жовтий? Як про це сказано у вірші?"
+*   **Педагогічна мета:** Розвиток навичок читання та говоріння, а також засвоєння культурного контексту кольорів.
+
+## Пов'язані статті (Related Articles)
+*   `pedagogy/a1/adjective-agreement`
+*   `pedagogy/a1/basic-nouns`
+*   `culture/symbols/flag`
+*   `culture/traditions/vyshyvanka`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 56
-> **Score:** 0.25
->
-> 56
-> 198. 1.	 Прочитай вірш. Що нового ти дізнався (дізналася)?
-> В будинку мешкали слова,
-> жили собі щасливо.
-> На кожнім поверсі — по два:
-> недбалий і дбайливий.
-> А ще — веселий і сумний,
-> гарячий і холодний,
-> жили чистенький і брудний
-> та ситий і голодний. (Валентина Бутрім)
-> 2.	 Обміняйтеся зошитами та перевірте, чи правильно виконане 
-> завдання.
-> 200.
-> 199. 1.	 Добери і запиши протилежні за значенням слова.
-> Добрий — ... .	 	
-> Велике — ... .
-> День — ... . 	
-> 	
-> Важкий — ... .
-> Коротка шия, як драбина, 
-> в світлих плямах жовта спина, 
-> листячко з дерев зриває, 
-> в холодку працює.
-
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 43
-> **Score:** 0.50
->
-> 43
-> • Уяви, що малюнків було багато. Добери до слів — назв 
-> предметів слова — назви ознак.
-> Зразок. будинок (який?) червоний — будинки (які?) чер-
-> воні.    
-> Дах (який?) … — дахи (які?) … . 
-> Двері (які?) … . 
-> Вікно (яке?) … — вікна (які?) … . 
-> Стіна (яка?) … — стіни (які?) …  . 
-> Аркуш  (який) … — аркуші (які?) ... .
->  
-> Допиши слова — назви предметів. 
-> 1. Дерев’яний, письмовий, коричневий … .
-> 2. Скляна, висока, прозора … .
-> 3. Паперове, різнобарвне, веселе … .
-> 4. Пластикові, довгі, тонкі … .
-> • Чому не варто користуватися пла стиковими трубочками 
-> для соку? Якої шкоди завдають природі пластикові ви-
-> роби?
->  
-> Запиши за зразком.
-> Зразок. Лапа ведмедя — ведмежа лапа.
-> Сукня з шовку — … . Хвіст зайця — … . 
-> Квітка з паперу — … . Вуха лисиці — … . 
-> Чашка зі скла — … .
-
-> **Source:** savchuk, Grade 3
-> **Section:** Сторінка 6
-> **Score:** 0.50
->
-> 6
-> џ
-> У якому класі навчалися учні? Як вони поводилися на 
-> уроці? Чим учителька зацікавила бешкетників? Чи 
-> змінилася поведінка учнів після слухання оповідки?
-> џ
-> Прочитай заголовок наступної частини. Як ти гадаєш, про 
-> що в ній ітиметься?
-> — Голубий, бо небо голубе, — сказав Сашко.
-> — Червоний, бо червона кров, — промовила Олеся.
-> — Зелений, бо зелені листя й трава, — сказав Максим.
-> — Жовтий, бо я його люблю, — додала Наталя.
-> — Чорний, бо він найтемніший, — сказав наостанку Пет-
-> русь.
-> — Ні, любі мої, найголовніший колір білий, бо білого 
-> кольору світло, завдяки якому ми бачимо всі інші кольори. 
-> Але знайте, що без синього, жовтого, зеленого, червоного нема 
-> й білого.
-
-## Кольори (Colors)
-
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 38
-> **Score:** 0.25
->
-> 38
-> сЛова — назви ознак 
-> Вірш. Головний герой. Опис
-> КРІТ І СОНЦЕ
-> З нірки виліз старий кріт і розплющив очі:
-> — Сонце кольору якого? Подивитись хочу.
-> синє, чорне чи зелене, мов травиця в лісі?
-> Чи блакитне і прозоре, як вода у річці?
-> І сказали ми кроту: «Що за дивина!
-> Сонце — стиглий помаранч 
-> дивин
-> , не якась трава. 
-> червоне, жовте, золоте, оранжеве, блискуче…
-> тепле, ніжне, променисте, інколи пекуче…
-> — Не люблю я апельсинів, — тихо мовив кріт
-> І спустився в підземелля рити новий хід.
-> • Прочитай вірш без виділених слів. Що змінилося? 
-> • Випиши слова, які називають ознаки сонця. 
-> Зразок. Сонце (яке?) червоне.
-> Слова — назви ознак предметів відповідають 
-> на питання який? зелений 
-> , яка? зелена 
-> , 
-> яке? зелене 
-> , які? зелені 
-> . Це прикметники. 
-> Розглянь таблицю.
-
-## Синій ≠ блакитний (Blue ≠ Blue)
-
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 22
-> **Score:** 0.50
->
-> Роз’єднай слова і прочитай прислів’я.
-> Депрапорпіднімають,тамУкраїнувеличають.
-> • 
-> Поясни, як ти розумієш це прислів’я.
-> Послухайте вірш Наталки Поклад «Прапор».
-> • 
-> Коли відзначають День Державного Прапора?
-> Прочитай вірш.
-> ПРАПОР
-> Прапор — це державний символ, 
-> він є в кожної держави; 
-> це для всіх — ознака сили, 
-> це для всіх — ознака слави. 
-> Синьо-жовтий прапор маєм: 
-> синє — небо, жовте — жито; 
-> прапор свій оберігаєм, 
-> він святиня, знають діти.
-> Прапор свій здіймаєм гордо, 
-> ми з ним дужі і єдині, 
-> ми навіки вже — з народом, 
-> українським, в Україні.
-> • Що символізують кольори на Державному Прапорі України?
-> • Прочитай виділені рядки.
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 41
-> **Score:** 0.33
->
-> 39
-> 	
-> Прочитай букви, виділені блакитним кольо-
-> ром. Яке слово утворилося? Який заголовок 
-> до вірша можна дібрати?
-> У нас красивий, гарний край:
-> Квіти, море, річка, гай!
-> Рідне все: поля, діброви,
-> А сади які чудові!
-> Їх краса — це білий цвіт...
-> Ненька наша, Україна,
-> Адже ти для нас єдина!
->                                     Дмитро Гонтар
-> 	
-> Знайди на «полі складів» слова — назви пред-
-> метів, які є народними символами України. 
-> Звертай увагу на кольори складів. 
-> ле
-> пи
-> тів
-> лас
-> лю
-> ви
-> оф
-> ка
-> ли
-> ка
-> ер
-> ле
-> іч
-> на
-> на
-> ши
-> сан
-> ван
-> ка
-> ні
-> вер
-> ус
-> ка
-> ба
-> ка
-> 	 До яких із них можна поставити питання хто?
-> Pidruchnyk.com.ua
-
-## Підсумок — Summary
-
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 81
-> **Score:** 0.50
->
-> 81
-> Прочитай речення з  різною інтонацією. Запиши речення, 
-> ставлячи наприкінці крапку або знак оклику.
-> Прийми дарунок (. !)	
-> Любіть Україну (. !)
-> Відвідай виставку (. !)	
-> Бережіть природу (. !)
-> 
-> Запиши спонукальні речення. Підкресли слова — назви дій 
-> двома лініями.
-> Червоний колір часто попереджає про небезпеку. Черво-
-> не світло світлофора сигналізує: «Не переходь вулицю зараз! 
-> Це небезпечно.» У лісі червоного жучка сонечко видно здаля. 
-> Він наче говорить: «Не їжте мене! Я  отруйний!» У  Червону 
-> книгу записують рідкісних тварин і  рослини. Наче просять: 
-> «Не знищуйте природу! Бережіть довкілля!»
-> 
-> Текст. Заголовок. Спілкування в  Інтернеті
-> Спілкування в Інтернеті може бути небезпечним.  Виконуй 
-> правила безпеки в Інтернеті. Спілкуйся зі знайомими людьми.
-
-## Grammar Reference
-
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 45
-> **Score:** 0.50
->
-> 45
-> Прочитай. Склади речення зі словами в першому стовп-
-> чику. Скористайся малюнками.
-> 	
-> синє	
-> раннє	
-> літнє	
-> переднє	
-> заднє
-> 	
-> давнє	
-> вечірнє	 осіннє	
-> середнє	 дружнє
-> 	
->   
-> море
-> місто   
-> 
-> Текст. Тема тексту. Заголовок. Театралізуємо
-> Чи буває синє каченя?
-> Єва намалювала синє небо. У небі намалюва-
-> ла синє літнє сонце. Буяє синє безкрайнє море. 
-> А  в морі плаває синє каченя. 
-> — Гарно вийшло? — запитала Єва. 
-> — Це все несправжнє, — сказав Євген. — 
-> Такого не буває.
-> — Буває! — вигукнула Євгенка. — Я одягну 
-> окуляри із синіми скель-ця-ми, і світ стане синім! 
-> Синє поле, синє осіннє листя, синє молоко, синє 
-> какао… Синій світ…
-> — Не-справ-жнє, але красиве! — прошепотіла 
-> Єва.
-> А ти як думаєш?
-> 1
-> 2
-> Є є
-> не – нє	
-> те – тє	
-> ле – лє
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
-  
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-### Рід іменників
-> **Source:** МійКлас — [Рід іменників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978)
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-### Теорія:
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-*www.ua.pistacja.tv*  
-**Рід притаманний кожному іменнику в однині**. Іменники мають постійне значення **роду**:
-чоловічого: *день, зошит, комп'ютер*,  жіночого: *книга, земля, машина*, середнього: *сонце, місто, озеро*, спільного: *суддя, сирота, нечема, за
+## Послідовність введення (Introduction Sequence)
 
-... (truncated for context window)
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
+
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -711,7 +619,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Кольори (Colors)` (~300 words)
 - `## Синій ≠ блакитний (Blue ≠ Blue)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок — Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -764,7 +671,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -864,52 +771,37 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги — Dialogues (~330 words)
+- P1 (~60 words): Introduction to the importance of color in daily life, setting the scene at a bustling outdoor flower market in Kyiv where Natalka is choosing a gift.
+- P2 (~120 words): [Dialogue 1: Choosing a gift] Natalka and the Seller (Продавець). Natalka asks "Якого кольору ці квіти?". Seller describes: червоні троянди (red roses), білі лілії (white lilies), and жовті соняшники (yellow sunflowers). Natalka chooses a синя ваза (blue vase) for the bouquet. Focus: Introducing "Якого кольору?" and base color agreement.
+- P3 (~50 words): Transition to the second dialogue, moving from nature and gifts to personal belongings and the "My World" theme (A1.2).
+- P4 (~100 words): [Dialogue 2: Wardrobe check] Dmytro and Liza are choosing outfits for a party. Liza points out her чорна сукня (black dress). Dmytro looks for his білий светр (white sweater) and mentions the сіре пальто (grey coat) and коричневі черевики (brown shoes). Review of M08-M09 noun genders with color agreement.
 
-- P1 (~30 words): Scene-setter: "Colors are everywhere around you — in markets, in wardrobes, in the Ukrainian flag. Listen to how Ukrainians talk about them."
-- Dialogue 1 (~110 words): Flower market scene — Наталка and Продавець. Наталка asks про квіти для подруги. Colors emerge naturally: *Червоні троянди* (М: троянда, яка? — червона), *жовті соняшники* (М: соняшник, який? — жовтий), *білі лілії* (F pl: лілія, яка? — біла). Продавець suggests *синя ваза* as a gift add-on, Наталка spots *зелене листя* in the wrapping. Include *Якого кольору...?* and *Мені подобається синя* as natural chunks.
-- P-note 1 (~30 words): Brief annotation: *Мені подобається* = "I like" — a memorized chunk (dative grammar is A2; learn it as a phrase now, like *У мене є*).
-- Dialogue 2 (~110 words): Wardrobe scene — Дмитро helps Ліза choose an outfit for a party. Objects: *чорна сукня* (F), *білий светр* (M), *сіре пальто* (N), *коричневі черевики* (Pl). Дмитро asks *Яка ця сукня?* → *Чорна.* Ліза says *Але є білий светр і сіре пальто.* Дмитро: *Мені подобається сіре пальто!* — uses all four genders in natural exchange.
-- P-note 2 (~50 words): Annotation box: spot the pattern — the adjective ending changes to match the noun's gender: *сукня* (яка?) → *чорна*; *светр* (який?) → *білий*; *пальто* (яке?) → *сіре*. This is the same rule as M09 — colors follow it exactly.
+## Кольори — Colors (~350 words)
+- P1 (~80 words): Introduction to color adjectives as the primary way to describe physical objects. Explanation of the hard-stem pattern (-ий for masculine, -а for feminine, -е for neuter), consistent with the adjectives learned in M09.
+- P2 (~100 words): Deep dive into the "Hard-Stem Rainbow." Using examples from Bolshakova Grade 2: червоне сонце (red sun), жовте жито (yellow rye), зелена трава (green grass). Listing vocabulary with gender triples: чорний/чорна/чорне (black), білий/біла/біле (white), сірий/сіра/сіре (grey).
+- <!-- INJECT_ACTIVITY: quiz-color-match --> [quiz, Match objects to typical colors (e.g., сніг -> білий), 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-gender-agreement --> [fill-in, Gender agreement with colors (e.g., червон__ машина), 10 items]
+- P3 (~90 words): Introduction to the "Soft-Stem" group (м'яка група). Explanation that among common colors, only "синій" (dark blue) follows this pattern. Key morphological shift: masculine -ій, feminine -я, neuter -є. Comparison using Vashulenko Grade 3 logic: новий стіл (hard) vs синій стіл (soft).
+- P4 (~80 words): Drill on the "синій" paradigm. Explicit examples for the learner to memorize: синій олівець (m), синя ручка (f), синє вікно (n). Contrast with "великий" from M09 to show the spelling difference: велика → синя.
+- <!-- INJECT_ACTIVITY: group-sort-hard-soft --> [group-sort, Sort colors into hard-stem (-ий) vs soft-stem (-ій), 10 items]
 
----
+## Синій ≠ блакитний — Blue ≠ Blue (~330 words)
+- P1 (~100 words): The unique Ukrainian distinction between two types of blue. Explanation that "синій" refers to dark, deep shades like the sea (синє море) or the night sky (синє небо вночі). "Блакитний" (or "голубий") refers to light blue, sky blue (блакитне небо вдень). Decolonization note: prefer "блакитний" over the Russian-influenced "голубий."
+- P2 (~80 words): The Colors of the Flag. Cultural significance of the "синьо-жовтий" (blue-and-yellow) flag. Reference to Kravtsova Grade 2: "Синє — небо, жовте — жито." Discussion of why the flag is described as "синій" even when the shade appears lighter in modern prints — it symbolizes the vastness of the sky.
+- <!-- INJECT_ACTIVITY: quiz-blue-shade --> [quiz, Choose синій vs блакитний for specific contexts (e.g., deep ocean vs clear sky), 6 items]
+- P3 (~80 words): Expanding the palette for richer descriptions. Introducing hard-stem variants: рожевий (pink), помаранчевий/оранжевий (orange), фіолетовий (purple), and коричневий (brown). Association with common objects: рожева квітка (pink flower), фіолетова фіалка (purple violet).
+- P4 (~70 words): Compound colors and modifiers. How to create "dark-" and "light-" variants using the prefixes темно- and світло-. Grammar rule: these are joined by a hyphen. Examples: темно-зелений (dark green), світло-синій (light blue).
 
-## Кольори (Colors) (~335 words total)
-
-- P1 (~45 words): Introduce adjective question: *який? яка? яке? які?* — the same four forms from M09. Colors are adjectives (*прикметники*), so they answer these questions. Reference: Большакова Grade 2 p.38 poem "Кріт і Сонце" — colors listed as *синє, чорне, зелене, блакитне, червоне, жовте* as answer prompts.
-- P2 (~100 words): Hard-stem colors (*тверда група*, ending -ий/-а/-е). Present all six as a formatted mini-table with M / F / N columns: *червоний / червона / червоне* (red); *жовтий / жовта / жовте* (yellow); *зелений / зелена / зелене* (green); *чорний / чорна / чорне* (black); *білий / біла / біле* (white); *сірий / сіра / сіре* (grey). Note the shared pattern: drop -ий, add -а (F) or -е (N). Three example phrases: *червоний олівець, червона книга, червоне вікно.*
-- P3 (~90 words): Introduce soft-stem adjective (*м'яка група*) — синій. Explain: most colors end in -ий (hard), but *синій* ends in -ій (soft). Compare side-by-side: *великий стіл → синій стіл* (М), *велика книга → синя книга* (F), *велике вікно → синє вікно* (N). The soft stem changes -ій → -я → -є. Source: Вашуленко Grade 3 p.130 — adjectives split into *тверда* and *м'яка* groups; *синій* is the classic soft-stem example.
-- P4 (~50 words): Memory hook: among the 12 basic colors, *синій* is the ONLY soft-stem one. Learn it as a special case. Everything else follows the hard pattern. Mnemonic: *синій* is as special in grammar as it is in culture — it's the blue of Ukraine's flag.
-- Exercise (~50 words): **Fill-in** — gender agreement with colors (10 items). Stems given, students supply ending: *червон__ олівець (M), жовт__ хустка (F), зелен__ яблуко (N), чорн__ кіт (M), біл__ сорочка (F), сір__ хмара (F), червон__ поле (N), жовт__ аркуш (M), чорн__ вікно (N), зелен__ трава (F).* Answer key in footnote.
-- Exercise (~0 words, embedded in P4 area): **Group-sort** — Sort 10 adjectives into *тверда група* (-ий) vs *м'яка група* (-ій): *червоний, синій, чорний, зелений, ранній, жовтий, сизий, осінній, білий, вечірній.* (Includes two non-color soft-stem adjectives as contrast items from Большакова Grade 1 p.45 list.)
-
----
-
-## Синій ≠ блакитний (Blue ≠ Blue) (~335 words total)
-
-- P1 (~80 words): Ukrainian has TWO separate words for blue — English has one. *Синій* = dark, deep blue: the color of the sea at night, dark ink, a deep winter sky — *синє море, синій олівець, синя ніч.* *Блакитний* = light, sky blue: a clear afternoon sky, a pale ribbon, baby blue — *блакитне небо, блакитна стрічка.* In English both are "blue." In Ukrainian, choosing the wrong one sounds wrong to a native speaker.
-- P2 (~80 words): Cultural anchor — the Ukrainian flag (*прапор*). Poem from Кравцова Grade 2 p.22 — cite two lines directly: *Синьо-жовтий прапор маєм: / синє — небо, жовте — жито.* Explain: the flag's blue stripe is *синій* (deep, sky-at-dusk blue), not *блакитний*. The compound adjective *синьо-жовтий* is hyphenated (two colors joined). Cultural note: *прапор* is m., *державний символ* — presented as vocabulary expansion.
-- P3 (~30 words): Usage note in callout box: *Голубий* — you may hear this Russian-influenced word for light blue. In Ukrainian, always use *блакитний.* This is one of those small but important decolonization choices native speakers make.
-- P4 (~75 words): Four more colors to expand your palette — all hard-stem (-ий/-а/-е): *коричневий / коричнева / коричневе* (brown — the color of chocolate, wood); *рожевий / рожева / рожеве* (pink — *рожева троянда*); *помаранчевий / помаранчева / помаранчеве* (orange — *помаранчевий апельсин*, ref. Большакова p.38 "Сонце — стиглий помаранч"); *фіолетовий / фіолетова / фіолетове* (purple — *фіолетова квітка*).
-- P5 (~35 words): Compound colors with *темно-* and *світло-* (both hyphenated): *темно-зелений ліс, світло-синє небо, темно-коричневий стіл, світло-рожева сукня.* Rule: the prefix *темно-/світло-* modifies shade, the base adjective agrees in gender as normal.
-- P6 (~35 words): Cultural hook — вишиванка (traditional embroidered shirt). Color schemes vary by region: *червоний і чорний* (Полісся), *червоний і синій* (Полтавщина). Even in folk art, Ukrainians distinguish shades of blue precisely.
-- Exercise: **Quiz — синій or блакитний?** (6 items): *небо вдень (блакитний), нічне небо (синій), дитяча ковдра — light (блакитний), морська вода в глибині (синій), прапор України (синій), стрічка на подарунку — pale (блакитний).*
-- Exercise: **Quiz — Якого кольору?** Match 8 objects to their typical color (8 items): *трава (зелена), сніг (білий), ворона (чорна), соняшник (жовтий), помідор (червоний), шоколад (коричневий), небо вдень (блакитне), море вночі (синє).*
-
----
-
-## Підсумок — Summary (~320 words total)
-
-- P1 (~70 words): Hard-stem recap — rule statement + two example sets. *Червоний стіл (M) → червона книга (F) → червоне вікно (N) → червоні олівці (Pl).* Same pattern for *жовтий, зелений, чорний, білий, сірий, коричневий, рожевий, помаранчевий, фіолетовий.* Drop -ий, add -а (F), -е (N), -і (Pl). These are *тверда група.*
-- P2 (~60 words): Soft-stem recap — *синій* is the single soft-stem color. *Синій стіл (M) → синя книга (F) → синє вікно (N) → сині олівці (Pl).* Drop -ій, add -я (F), -є (N), -і (Pl). The soft stem feels different — practice until it's automatic, because you will use it every time you describe the sky, the sea, or the flag.
-- P3 (~50 words): *Синій vs блакитний* recap — one sentence each, anchored to the flag: *Прапор України синьо-жовтий.* The blue is *синій* — deep and strong. The sky on a clear afternoon is *блакитне.* You now see a distinction Ukrainian has always had and English does not.
-- Self-check (bulleted list, ~140 words):
-  - **What color is the Ukrainian flag?** → *Синьо-жовтий* (синій і жовтий)
-  - **Describe 3 things in your room using colors.** → E.g.: *Мій стіл коричневий. Моя книга синя. Моє вікно велике і біле.*
-  - **What is the difference between синій and блакитний?** → *Синій* = dark blue (sea, night sky, flag). *Блакитний* = light blue (daytime sky, pale ribbon).
-  - **Which color adjective has a soft stem (-ій)?** → *Синій* — the only one among basic colors.
-  - **How do you ask "what color?"** → *Якого кольору?* (e.g.: *Якого кольору ця сукня? — Чорна.*)
-  - **What colors does a traditional вишиванка from Полісся use?** → *Червоний і чорний.*
+## Підсумок — Summary (~310 words)
+- P1 (~120 words): Final recap of the color agreement rules. A side-by-side comparison of the hard-stem paradigm (червоний) and the soft-stem paradigm (синій). Reminder that colors must match the gender of the noun they describe, even in plurals (learned as -і for all genders, e.g., зелені дерева).
+- P2 (~90 words): Cultural signature: "Два кольори." Brief mention of the traditional Ukrainian embroidery colors — червоний (love) and чорний (sorrow). Note that while Polissia favors red and black, Poltava embroidery often features red and blue (червоний і синій).
+- P3 (~100 words): Self-check Q&A:
+    *   Якого кольору прапор України? (Синьо-жовтий: синє — небо, жовте — жито)
+    *   Яка різниця між "синій" і "блакитний"? (Синій — dark/deep; блакитний — light/sky blue)
+    *   Яке закінчення має слово "синій" у жіночому роді? (Закінчення -я: синя)
+    *   Як сказати "dark green" українською? (Темно-зелений)
+    *   Назвіть три предмети у вашій кімнаті та їхні кольори. (e.g., Біла шафа, коричневий стіл, сіре крісло)
 
 Grand total: ~1320 words
 </skeleton>

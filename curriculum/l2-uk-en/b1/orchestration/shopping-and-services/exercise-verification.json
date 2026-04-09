@@ -1,0 +1,103 @@
+{
+  "total_items": 244,
+  "grounded_items": 231,
+  "ungrounded": [
+    {
+      "word": "знижку",
+      "exercise_type": "quiz",
+      "context": "Ви хочете попросити знижку на базарі.",
+      "role": "context"
+    },
+    {
+      "word": "поторгувалися",
+      "exercise_type": "quiz",
+      "context": "Ви успішно поторгувалися і хочете запитати про кінцеву варті",
+      "role": "context"
+    },
+    {
+      "word": "кінцеву",
+      "exercise_type": "quiz",
+      "context": "Ви успішно поторгувалися і хочете запитати про кінцеву варті",
+      "role": "context"
+    },
+    {
+      "word": "вартість",
+      "exercise_type": "quiz",
+      "context": "Ви успішно поторгувалися і хочете запитати про кінцеву варті",
+      "role": "context"
+    },
+    {
+      "word": "касира",
+      "exercise_type": "quiz",
+      "context": "Ви хочете попросити касира дати вам чек.",
+      "role": "context"
+    },
+    {
+      "word": "дорожча",
+      "exercise_type": "unjumble",
+      "context": "дорожча.",
+      "role": "answer"
+    },
+    {
+      "word": "ремонту",
+      "exercise_type": "match-up",
+      "context": "майстер з ремонту",
+      "role": "answer"
+    },
+    {
+      "word": "супермаркет",
+      "exercise_type": "match-up",
+      "context": "супермаркет",
+      "role": "context"
+    },
+    {
+      "word": "пече",
+      "exercise_type": "match-up",
+      "context": "людина, яка пече хліб",
+      "role": "answer"
+    },
+    {
+      "word": "остаточною",
+      "exercise_type": "true-false",
+      "context": "На українському ринку перша названа продавцем ціна є остаточ",
+      "role": "context"
+    },
+    {
+      "word": "говорити",
+      "exercise_type": "true-false",
+      "context": "Українською мовою правильно говорити «платити з карткою».",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Слово «рахунку» використовується, коли ми говоримо про балан",
+      "role": "context"
+    },
+    {
+      "word": "светра",
+      "exercise_type": "error-correction",
+      "context": "Мені потрібна менший розмір цього светра.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 23,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "гарантія",
+      "здача",
+      "знижка",
+      "кав'ярня",
+      "курс",
+      "обслуговування",
+      "переказ",
+      "посилка",
+      "примірочна",
+      "ремонт",
+      "стрижка",
+      "тканина"
+    ]
+  },
+  "all_grounded": false
+}

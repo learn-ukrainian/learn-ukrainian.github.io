@@ -1,0 +1,271 @@
+vocabulary:
+- word: вважа́тися
+  translation: to be considered
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: продава́тися
+  translation: to be sold
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виробля́тися
+  translation: to be produced
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́дано
+  translation: has been published
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: засно́вано
+  translation: has been founded
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спроєкто́вано
+  translation: has been designed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: опубліко́вано
+  translation: has been published
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: наді́слано
+  translation: has been sent
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приро́дний
+  translation: natural
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: активний стан
+  translation: active voice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: будува́тися
+  translation: to be built
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: назива́тися
+  translation: to be called
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знахо́дитися
+  translation: to be located
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: використо́вуватися
+  translation: to be used
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: збудо́вано
+  translation: has been built
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́конано
+  translation: has been completed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прочи́тано
+  translation: has been read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ухва́лено
+  translation: has been adopted/passed (laws)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: канцелярит
+  translation: bureaucratese
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перехідне дієслово
+  translation: transitive verb
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неперехідне дієслово
+  translation: intransitive verb
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стан дієслова
+  translation: verb voice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підмет
+  translation: subject
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: при́судок
+  translation: predicate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зазнавати дії
+  translation: to undergo the action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: безособова форма
+  translation: impersonal form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пасивний дієприкметник
+  translation: passive participle
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: руси́зм
+  translation: russicism
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: новосі́лля
+  translation: housewarming
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Палац культури
+  translation: Palace of Culture
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: громадський простір
+  translation: public space
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: експози́ція
+  translation: exhibition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: аншла́г
+  translation: full house (sell-out)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відкри́то
+  translation: has been opened
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розпро́дано
+  translation: has been sold out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: реалізо́вано
+  translation: has been realized/implemented
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: презенто́вано
+  translation: has been presented
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: адапто́вано
+  translation: has been adapted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: скла́дено
+  translation: has been passed (e.g., an exam)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ку́плено
+  translation: has been bought
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зі́брано
+  translation: has been packed/gathered
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ремо́нт
+  translation: renovation
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: заве́ршено
+  translation: has been completed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: інфініти́в
+  translation: infinitive
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

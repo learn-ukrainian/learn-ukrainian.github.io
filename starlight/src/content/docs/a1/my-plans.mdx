@@ -12,10 +12,8 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Observe from '@site/src/components/Observe';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -23,150 +21,159 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <TabItem label="Урок">
 
 ## Dialogues
-Olya, Taras, and Mariia are planning their weekend in a group chat. The weekend is a time to rest, but it often involves running errands. Pay attention to how they talk about their plans using the word **бу́ду** (I will).
+
+Whether you are organizing your weekend, outlining your work schedule, or preparing for graduation, planning is the ultimate social tool. A typical group chat provides the perfect context for friends to coordinate their leisure time. Stating intentions in Ukrainian is surprisingly straightforward, relying on a simple two-part verb structure. The days of the week, specific times, and future verbs combine effortlessly into a complete schedule.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оля:</span> Що ти бу́деш роби́ти у субо́ту? *(What will you do on Saturday?)*</div>
+<div class="dialogue-line"><span class="speaker">Оля:</span> Що ти бу́деш роби́ти у субо́ту? *(What will you be doing on Saturday?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Макси́м:</span> Зра́нку я бу́ду прибира́ти кварти́ру. *(In the morning I will be cleaning the apartment.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> Зра́нку я буду прибира́ти кварти́ру. *(In the morning I will clean the apartment.)*</div>
+<div class="dialogue-line"><span class="speaker">І́ра:</span> А вдень? *(And in the afternoon?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Максим:</span> Вдень я буду ходи́ти в магази́н. А ти? *(In the afternoon I will go to the store. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оля:</span> А вдень? *(And in the afternoon?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Вдень я буду ходи́ти в магази́н. А ти? *(In the afternoon I will go to the store. And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марі́я:</span> Я буду відпочива́ти! Мо́же, пі́демо в кафе́ вве́чері? *(I will rest! Maybe we will go to a cafe in the evening?)*</div>
-
+<div class="dialogue-line"><span class="speaker">Іра:</span> Я буду відпочива́ти! Мо́же, пі́демо в кафе́ вве́чері? *(I will be resting! Maybe we'll go to a cafe in the evening?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Оля:</span> До́бре! О котрі́й? *(Good! At what time?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Іра:</span> О шо́стій. Добре? *(At six. Good?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марія:</span> О шо́стій. Добре? *(At six. Good?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Чудо́во! До зу́стрічі у суботу! *(Great! See you on Saturday!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Максим:</span> Чудо́во! До зу́стрічі у суботу! *(Wonderful! See you on Saturday!)*</div>
 
 </div>
 
-In this dialogue, the friends are using the future tense combined with specific times. You can see the pattern: **я буду прибирати** (I will clean) and **я буду відпочивати** (I will rest). Notice how they specify the time of day: **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening). The word **кварти́ра** means "apartment", and **кафе** is "cafe". 
-When using the analytic future tense with the auxiliary verb **буду**, you only conjugate the auxiliary verb to match the speaker (I, you, he, we). The main action verb always stays in its dictionary form, the infinitive. For example, in the phrase **я буду прибирати** (I will clean), the main verb **прибирати** (to clean) remains unchanged.
-Now, let's look at another situation. Anna is telling her friend about her very busy week. She uses the days of the week to map out her schedule.
+Notice how **Іра** suggests **Може, підемо в кафе ввечері?**. This is a natural way to propose an idea. The future actions are formed simply: **буду прибирати** (will be cleaning), **буду ходити** (will be going), and **буду відпочивати** (will be resting).
+
+:::note
+Notice how the word **план** (plan) behaves just like its English equivalent, but is usually pluralized when asking about general intentions: **У тебе́ є пла́ни?** (Do you have plans?).
+:::
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Дмитро́:</span> У тебе́ є пла́ни на ти́ждень? *(Do you have plans for the week?)*</div>
+<div class="dialogue-line"><span class="speaker">Марі́я:</span> У тебе є плани на ти́ждень? *(Do you have plans for the week?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Петро́:</span> Так, бага́то! У понеді́лок я буду працюва́ти допі́зна. *(Yes, many! On Monday I will work until late.)*</div>
 
-<div class="dialogue-line"><span class="speaker">А́нна:</span> Так, бага́то! У понеді́лок я буду працюва́ти допі́зна. *(Yes, many! On Monday I will work until late.)*</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> У вівто́рок буду вчи́тися. У се́реду — зу́стріч з дру́зями. *(On Tuesday I will study. On Wednesday — a meeting with friends.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Марія:</span> А у четве́р? *(And on Thursday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> У вівто́рок буду вчи́тися. У се́реду — зу́стріч з дру́зями. *(On Tuesday I will study. On Wednesday — a meeting with friends.)*</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> У четвер я буду готува́ти на вечі́рку. *(On Thursday I will cook for the party.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Марія:</span> А в п'я́тницю? *(And on Friday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> А у четве́р? *(And on Thursday?)*</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> В п'ятницю — вечі́рка! Ти будеш? *(On Friday — the party! Will you be there?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> У четвер я буду готува́ти на вечі́рку. *(On Thursday I will cook for a party.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> А в п'я́тницю? *(And on Friday?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> В п'ятницю — вечі́рка! Ти будеш? *(On Friday — a party! Will you be there?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Звича́йно буду! *(Of course I will be!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Марія:</span> Звича́йно буду! *(Of course I will be!)*</div>
 
 </div>
 
-Here, Anna maps out her complete schedule while Dmytro asks follow-up questions. The key pattern is the auxiliary verb **буду** (I will) followed by an infinitive verb. They also use the days of the week as fixed time anchors, such as **у понеділок** (on Monday) and **у вівторок** (on Tuesday). Think about what Anna is doing on Thursday. She is preparing for a **вечірка** (party). Anna also mentions she will work **допізна** (until late), and Dmytro responds enthusiastically with **звичайно** (of course). They also schedule a **зустріч** (meeting).
-## Планува́ння (Planning)
-When you want to schedule an event or talk about a **план** (plan), you can use this simple structure. In Ukrainian, planning involves combining the day, the time, the auxiliary verb, and the main action. The core pattern looks like this: **У** (On) + day + time + **буду** (I will) + infinitive verb.
-To use this formula, you first need to know the days of the week. Notice how we use the preposition **у** (in/on) or **в** (in/on) before the day to say "on [Day]".
-*   **у понеділок** (on Monday)
-*   **у вівторок** (on Tuesday)
-*   **у середу** (on Wednesday)
-*   **у четвер** (on Thursday)
-*   **у п'ятницю** (on Friday)
-*   **у суботу** (on Saturday)
-*   **в неді́лю** (on Sunday)
-You can make your plan more specific by adding a time-of-day adverb. We use **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening). These adverbs do not require any extra prepositions — you simply place them next to your verb. You can also add clock time using **о** (at): **о дев'я́тій** (at nine), **о тре́тій** (at three), **о шостій** (at six).
-Let's combine these elements into full sentences:
-*   **У суботу ввечері я буду диви́тися фільм.** (On Saturday evening I will watch a movie.)
-*   **У середу зранку я буду працювати.** (On Wednesday morning I will work.)
-*   **У п'ятницю о шостій я буду відпочивати.** (On Friday at six I will rest.)
-When you want to invite someone to join your plan, you have a handy toolkit of phrases. These phrases vary in their tone.
-*   **Ході́мо в кафе!** (Let's go to a cafe!) — This uses the warm imperative form to create a friendly, active invitation. It implies that you are already ready to go.
-*   **Може, підемо в кіно́?** (Maybe we'll go to the cinema?) — This is a soft suggestion using the word **може** (maybe), making it sound more like an open proposal.
-*   **Дава́й зустрі́немося о п'я́тій!** (Let's meet at five!) — This is a collaborative invitation using the chunk **зустрінемося** (let's meet).
-Before making an invitation, you might want to check if the person has a **ві́льний** (free) schedule. You can ask: **Ти будеш вільний у суботу?** (Will you be free on Saturday? — speaking to a male) or **Ти будеш ві́льна у суботу?** (Will you be free on Saturday? — speaking to a female).
-When someone invites you, you need to know how to respond. You can accept enthusiastically or decline politely.
-*   **Добре!** (Good!)
-*   **Чудово!** (Great!)
-*   **З задово́ленням!** (With pleasure!) — The word **задово́лення** means satisfaction or pleasure. This shows genuine enthusiasm.
-*   **На жаль, не мо́жу.** (Unfortunately, I cannot.) — This combines **на жаль** (unfortunately) with a polite refusal.
-<MatchUp client:only="react" pairs={[{"left": "Ходімо в кіно!", "right": "З задоволенням!"}, {"left": "Може, підемо в кафе?", "right": "Добре! О котрій?"}, {"left": "Ти будеш вільний у суботу?", "right": "На жаль, не можу."}, {"left": "Давай зустрінемося о п'ятій!", "right": "Чудово! До зустрічі!"}, {"left": "Ходімо в парк ввечері!", "right": "Звичайно буду!"}, {"left": "Може, підемо в кіно у п'ятницю?", "right": "Добре!"}]} instruction={"З'єднайте запрошення з відповідями (Match each invitation with the correct response)"} />
-<FillIn client:only="react" items={[{"sentence": "У ____ зранку я буду прибирати квартиру.", "answer": "суботу", "options": ["суботу", "неділю", "вівторок"]}, {"sentence": "У середу ____ я буду дивитися футбол.", "answer": "ввечері", "options": ["ввечері", "зранку", "вдень"]}, {"sentence": "У ____ я буду відпочивати — піду в кіно.", "answer": "п'ятницю", "options": ["п'ятницю", "понеділок", "середу"]}, {"sentence": "____ шостій ми будемо дивитися кіно.", "answer": "О", "options": ["О", "В", "На"]}, {"sentence": "У четвер я буду готувати ____ для родини.", "answer": "вечерю", "options": ["вечерю", "зустріч", "тиждень"]}, {"sentence": "У вівторок я ____ обідати з другом у кафе.", "answer": "буду", "options": ["буду", "будеш", "буде"]}, {"sentence": "У ____ він буде спати довго.", "answer": "неділю", "options": ["неділю", "суботу", "понеділок"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
-You might have noticed that Ukrainian uses both **у** and **в** before the days of the week. For example: **у суботу** but **в неділю**. Which one you choose depends on the sounds around the preposition — specifically, the sound at the end of the previous word and the sound at the start of the next word. The basic pattern: use **у** between consonant sounds (він **у** до́мі), and **в** after a vowel sound before a consonant (вона́ **в** домі). At the start of a sentence, use **у** before a consonant: **У** понеділок я буду працювати. This is the same euphony rule (милозву́чність) you saw in earlier modules — Ukrainian avoids awkward clusters of similar sounds. Here are some examples of how this works:
-*   **Він** **у** понеділок бу́де працювати. (consonant + у + consonant)
-*   Я буду працювати **в** понеділок. (vowel + в + consonant)
-*   **У** суботу я буду відпочивати. (sentence start + у + consonant)
+**Петро** outlines his busy week using the word **тиждень** (week). Be careful not to confuse this with **неді́ля** (Sunday). While they sound similar to words in other Slavic languages, in Ukrainian, **тиждень** is the entire seven-day period, and **неділя** is specifically the day of rest at the end of it.
 
-At A1, the key takeaway is: both **у** and **в** are correct — the choice depends on the surrounding sounds, and you will develop a feel for it naturally.
+## Планува́ння (Planning)
+
+To say that an event happens *on* a certain day, English uses the preposition "on". Ukrainian uses the preposition **у** (or its phonetic variant **в**) followed by the day of the week. Because we are showing the time when an action takes place, the day of the week must change its ending if it is a feminine noun. This happens because we are using the temporal accusative case. The masculine and neuter days remain exactly the same, which makes them very easy to remember. The feminine days, however, change their final vowel to «у» or «ю».
+
+- **у понеділок** (on Monday) — masculine, no change.
+- **у вівторок** (on Tuesday) — masculine, no change.
+- **у середу** (on Wednesday) — feminine, changes from **середа́**.
+- **у четвер** (on Thursday) — masculine, no change.
+- **у п'ятницю** (on Friday) — feminine, changes from **п'я́тниця**.
+- **у суботу** (on Saturday) — feminine, changes from **субо́та**.
+- **в неді́лю** (on Sunday) — feminine, changes from **неділя**.
+
+:::caution
+English speakers frequently attempt to translate the phrase "on the weekend" word-for-word. In Ukrainian, you must use the specific phrase **на вихідни́х** (on the weekend). Never use the preposition **в** for this context.
+:::
+
+To specify the time of day, use the words **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening). You can easily combine these with the days:
+- **У суботу ввечері я буду диви́тися фільм.** *(On Saturday evening I will watch a film.)*
+
+When you want to ask someone "At what time?", the natural Ukrainian phrase is **О котрій годи́ні?**. English speakers often try to translate "at seven o'clock" literally by using the preposition "в" (in). This is a common mistake that immediately sounds unnatural. In Ukrainian, you must always use the preposition **о** followed by an ordinal number (first, second, third) in the locative case. Think of it as answering "on which hour?".
+
+- **о тре́тій** (at three)
+- **о п'я́тій** (at five)
+- **о шостій** (at six)
+- **о дев'я́тій** (at nine)
+
+If the number starts with a vowel sound, the preposition smoothly changes to **об** to avoid two vowels clashing. This makes pronunciation much easier:
+
+- **об одина́дцятій** (at eleven)
+
+Now that you can state the day and the time, you need the social tools to invite someone. You can use several natural communicative chunks to propose a plan to your friends or colleagues.
+
+- **Ході́мо в кафе!** *(Let's go to a cafe!)*
+- **Може, підемо в кіно́?** *(Maybe we'll go to the cinema?)*
+- **Ти будеш ві́льний у суботу?** *(Will you be free on Saturday? — asking a male)*
+- **Ти будеш ві́льна у суботу?** *(Will you be free on Saturday? — asking a female)*
+- **Дава́й зустрі́немося о п'ятій!** *(Let's meet at five!)*
+
+When someone invites you, you need a polite response. If you are free and willing, you can accept warmly:
+
+- **Добре!** *(Good!)*
+- **Чудово!** *(Wonderful!)*
+- **З задово́ленням!** *(With pleasure!)*
+
+If you have other plans, you should decline politely and clearly:
+
+- **На жаль, не мо́жу.** *(Unfortunately, I cannot.)*
+
+<FillIn client:only="react" items={[{"sentence": "У _____ я буду працювати.", "answer": "середу", "options": ["середа", "середу", "середою"]}, {"sentence": "_____ суботу зранку я буду прибирати квартиру.", "answer": "У", "options": ["У", "О", "На"]}, {"sentence": "_____ шостій ми будемо дивитися кіно.", "answer": "О", "options": ["У", "В", "О"]}, {"sentence": "У _____ він буде відпочивати.", "answer": "неділю", "options": ["неділя", "неділю", "неділі"]}, {"sentence": "У п'ятницю _____ буде вечірка.", "answer": "ввечері", "options": ["ввечері", "вечір", "вечора"]}, {"sentence": "_____ котрій ми зустрінемося?", "answer": "О", "options": ["У", "На", "О"]}]} instruction={"Оберіть правильне слово (Choose the correct word)"} />
+<MatchUp client:only="react" pairs={[{"left": "Ходімо в кіно!", "right": "З задоволенням!"}, {"left": "Може, підемо в кафе?", "right": "Добре! О котрій?"}, {"left": "Ти будеш вільний у суботу?", "right": "На жаль, не можу."}, {"left": "Давай зустрінемося о п'ятій!", "right": "Чудово! До зустрічі!"}, {"left": "У тебе є плани на тиждень?", "right": "Так, багато!"}, {"left": "Ти будеш вільна в неділю?", "right": "Звичайно буду!"}]} instruction={"З'єднайте репліки (Match the phrases)"} />
+
 ## Мій тиждень (My Week)
-Let's introduce Taras. He is a very organized person and likes to plan his entire **тиждень** (week) in advance. He breaks down his schedule one day at a time, making sure he balances work, studies, and time to **відпочивати** (to rest). 
-Here is Taras's model week:
-*   **У понеділок я буду працювати.** (On Monday I will work.)
-*   **Пі́сля робо́ти буду вчи́ти украї́нську.** (After work I will study Ukrainian.)
-*   **У вівторок я буду обі́дати з дру́гом у кафе.** (On Tuesday I will have lunch with a friend in a cafe.)
-*   **У середу ввечері я буду дивитися футбо́л.** (On Wednesday evening I will watch football.)
-*   **У четвер я буду готувати вече́рю для роди́ни.** (On Thursday I will cook dinner for the family.)
-*   **У п'ятницю я буду відпочивати — піду́ в кіно.** (On Friday I will rest — I will go to the cinema.)
-*   **У суботу зранку буду прибирати, а вдень гуля́ти в парку.** (On Saturday morning I will clean, and in the afternoon walk in the park.)
-*   **У неділю я буду спа́ти до́вго!** (On Sunday I will sleep long!)
-Notice how every single day uses the structure **буду** + infinitive. This is the most natural way to describe an ongoing or planned activity in the future. The phrase **я буду прибирати** means that the action of cleaning will be a process taking up his time. The verb **вчити** (to study/learn) is perfect for describing a continuous educational goal. When he says **я буду відпочивати**, he implies a continuous period of rest. 
-Now it is your turn to create your own schedule. You can use this simple template:
-**У** [day] **о** [time] **я буду** [infinitive verb].
-To make your sentences richer, you can answer three expansion questions:
-1.  **Де?** (Where?) — **у парку** (in the park), **в кафе** (in the cafe), **вдо́ма** (at home).
-2.  **З ким?** (With whom?) — **з другом** (with a friend), **з сім'є́ю** (with family), **сам** / **сама** (alone).
-3.  **Що са́ме?** (What exactly?) — **прибирати квартиру** (to clean the apartment), **готувати обід** (to cook lunch), **дивитися фільм** (to watch a movie).
-Let's look at a worked example that uses all these pieces:
-**У суботу о деся́тій я буду гуляти в парку з другом.** (On Saturday at ten I will walk in the park with a friend.)
-<FillIn client:only="react" items={[{"sentence": "У вівторок я ____ українську.", "answer": "буду вчити", "options": ["буду вчити", "вчив", "вчу"]}, {"sentence": "У середу ми ____ вечерю.", "answer": "будемо готувати", "options": ["будемо готувати", "готували", "готуємо"]}, {"sentence": "У четвер вона ____ допізна.", "answer": "буде працювати", "options": ["буде працювати", "працювала", "працює"]}, {"sentence": "У понеділок він ____ вдома.", "answer": "буде відпочивати", "options": ["буде відпочивати", "відпочивав", "відпочиває"]}, {"sentence": "У суботу зранку я ____ квартиру.", "answer": "буду прибирати", "options": ["буду прибирати", "прибирав", "прибираю"]}, {"sentence": "В неділю ми ____ в парку.", "answer": "будемо гуляти", "options": ["будемо гуляти", "гуляли", "гуляємо"]}]} instruction={"Виберіть правильну форму майбутнього часу (Choose the correct future tense form)"} />
-Now, try a mini-writing task. Plan your ideal weekend in four to six sentences using the model you just learned. Make sure your plan includes two days: **субо́та** (Saturday) and **неді́ля** (Sunday). Include the time of day (**зранку**, **вдень**, **ввечері**) or a specific clock time (**о котрій?**). Mention the place, and use the **буду** + infinitive structure.
-Here is a sample answer to guide you:
-**У суботу зранку я буду спати довго. Вдень я буду гуляти в парку. Ввечері ми бу́демо дивитися фільм. В неділю я буду готувати сніда́нок для родини.** (On Saturday morning I will sleep long. In the afternoon I will walk in the park. In the evening we will watch a movie. On Sunday I will cook breakfast for the family.)
+
+The Narrative Model: Taras's Busy Week. These grammatical pieces come together logically in a longer narrative. **Тара́с** is planning his entire week, and he combines days, times, and activities into a clear schedule.
+
+- **У понеділок я буду працювати.** *(On Monday I will work.)*
+- **Пі́сля робо́ти буду вчи́ти украї́нську.** *(After work I will study Ukrainian.)*
+- **У вівторок я буду обі́дати з дру́гом у кафе.** *(On Tuesday I will dine with a friend in a cafe.)*
+- **У середу ввечері я буду дивитися футбо́л.** *(On Wednesday evening I will watch football.)*
+- **У четвер я буду готувати вече́рю для роди́ни.** *(On Thursday I will cook dinner for the family.)*
+- **У п'ятницю я буду відпочивати — піду́ в кіно.** *(On Friday I will rest — I will go to the cinema.)*
+- **У суботу зранку буду прибирати, а вдень гуля́ти в парку.** *(On Saturday morning I will clean, and in the afternoon walk in the park.)*
+- **В неділю я буду спа́ти до́вго!** *(On Sunday I will sleep long!)*
+
+Notice how **Тарас** anchors each activity to a specific time and place. He uses the future tense effortlessly. 
+
+:::tip
+The verb **бу́ти** (to be) changes to match the speaker (**я буду**, **ми бу́демо**), but the second verb always remains in its infinitive dictionary form (**працювати**, **вчити**, **відпочивати**). You only conjugate the first word.
+:::
+
+Guided Writing Workshop. Now it is your turn to build a schedule. Use the "My Week" template to create your own personalized plan. Start with the basic grammatical framework: **У** [день] **я буду** [що робити]. For example, you can write **У вівторок я буду працювати** (On Tuesday I will work). Once you have established the core sentence, you should add layers of detail to make your schedule richer and more descriptive. Ask yourself specific questions: **о котрій?** (at what time?), **де?** (where?), and **з ким?** (with whom?).
+
+- **У суботу о деся́тій я буду гуляти в парку з другом.** *(On Saturday at ten I will walk in the park with a friend.)*
+
+When you talk about your schedule, you can use the natural Ukrainian construction for possession: **У мене́ є плани** (I have plans). Using this structure makes your spoken Ukrainian sound authentic and natural. Try mapping out your next few days right now using all the vocabulary you know for places, food, people, and daily activities.
+
+<FillIn client:only="react" items={[{"sentence": "У вівторок я _____ українську.", "answer": "буду вчити", "options": ["буду вчити", "вчив", "вчу"]}, {"sentence": "У середу ми _____ вечерю.", "answer": "будемо готувати", "options": ["будемо готувати", "готували", "готуємо"]}, {"sentence": "У четвер вона _____ допізна.", "answer": "буде працювати", "options": ["буде працювати", "працювала", "працює"]}, {"sentence": "У п'ятницю вони _____.", "answer": "будуть відпочивати", "options": ["будуть відпочивати", "відпочивали", "відпочивають"]}, {"sentence": "У суботу ти _____ квартиру.", "answer": "будеш прибирати", "options": ["будеш прибирати", "прибирав", "прибираєш"]}, {"sentence": "В неділю я _____ довго.", "answer": "буду спати", "options": ["буду спати", "спав", "сплю"]}]} instruction={"Оберіть правильну форму дієслова (Choose the correct verb form)"} />
+
 ## Summary
-When you want to organize your schedule and invite friends, you can use these phrases. The future tense for planning is built on a straightforward formula that you can adapt to any situation. 
-The core formula is: **У** [day] **о** [time] **я буду** [infinitive verb].
-For example: **У суботу о третій я буду готувати обід.** (On Saturday at three I will cook lunch.)
-You can modify the time of day using these adverbs:
-*   **зранку** (in the morning)
-*   **вдень** (in the afternoon)
-*   **ввечері** (in the evening)
-To bring people into your plans, use these invitations:
-*   **Ходімо!** (Let's go!)
-*   **Може, підемо?** (Maybe we'll go?)
-*   **Давай зустрінемося!** (Let's meet!)
-And to reply to those invitations, you have several options ranging from enthusiastic agreement to polite refusal:
-*   **Добре!** (Good!)
-*   **Чудово!** (Great!)
-*   **З задоволенням!** (With pleasure!)
-*   **На жаль, не можу.** (Unfortunately, I cannot.)
-Your days of the week review:
-*   **понеділок** (Monday)
-*   **вівторок** (Tuesday)
-*   **середа́** (Wednesday)
-*   **четвер** (Thursday)
-*   **п'я́тниця** (Friday)
-*   **субота** (Saturday)
-*   **неділя** (Sunday)
-Remember the euphony rule when attaching prepositions: we say **у суботу** but **в неділю** depending on the preceding sounds. Ukrainian naturally avoids awkward clusters of consonants or vowels to make pronunciation easier.
+
+Recap of the Planning Toolkit. The grammatical foundation of planning in Ukrainian is the compound future tense, which pairs the helper word **буду** (will) with an infinitive action verb. We anchor these future actions in time using the preposition **у** (or its phonetic variant **в**) for days of the week, and the preposition **о** (or **об**) for specific hours. This precise combination allows you to say exactly when and what you will be doing in any situation:
+
+- **У суботу о третій я буду готувати обід.** *(On Saturday at three I will cook lunch.)*
+
+You also learned the key communicative chunks for making invitations: **Ходімо!**, **Може, підемо?**, and **Давай зустрінемося!**. You can reply with **Добре!**, **З задоволенням!**, or **На жаль, не можу.**
+
+Final Review of Days. Review the days of the week carefully. When used with the preposition **у** to indicate when something happens, it is absolutely vital to remember the difference between the masculine and feminine noun endings. The masculine days remain unchanged in this context, while the feminine days must change their final vowel to «у» or «ю»:
+
+- **понеділок** → **у понеділок**
+- **вівторок** → **у вівторок**
+- **середа** → **у середу**
+- **четвер** → **у четвер**
+- **п'ятниця** → **у п'ятницю**
+- **субота** → **у суботу**
+- **неділя** → **в неділю**
+
+Self-Check. Before moving on to the next module, verify your skills with this checklist.
+
+- Can you say "On Wednesday at six I will be cleaning"? (**У середу о шостій я буду прибирати.**)
+- Can you invite a friend to a cafe? (**Може, підемо в кафе?**)
+- Can you politely decline an invitation? (**На жаль, не можу.**)
+- Can you plan your ideal weekend — what will you do on Saturday and Sunday?
 
 </TabItem>
 <TabItem label="Словник">
@@ -175,31 +182,30 @@ Remember the euphony rule when attaching prepositions: we say **у суботу*
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **бу́ду** | I will (future auxiliary verb) | ім. | ж. |
-| **прибира́ти** | to clean | дієсл. |  |
-| **кварти́ра** | apartment | ім. | ж. |
-| **відпочива́ти** | to rest | дієсл. |  |
-| **кафе́** | cafe | ім. | с. |
-| **план** | plan | ім. | ч. |
 | **ти́ждень** | week | ім. | ч. |
-| **ві́льний** | free (available) | прикм. |  |
 | **зу́стріч** | meeting | ім. | ж. |
+| **прибира́ти** | to clean | дієсл. |  |
 | **вечі́рка** | party | ім. | ж. |
+| **зустрі́немося** | let's meet | дієсл. |  |
 | **допі́зна** | until late | присл. |  |
 | **звича́йно** | of course | присл. |  |
-| **кіно́** | cinema | ім. | с. |
-| **вчи́ти** | to study/learn | дієсл. |  |
-| **зустрі́немося** | let's meet | дієсл. |  |
+| **кварти́ра** | apartment | ім. | ж. |
+| **вчи́ти** | to study / to learn | дієсл. |  |
 | **понеді́лок** | Monday | ім. | ч. |
 | **вівто́рок** | Tuesday | ім. | ч. |
 | **середа́** | Wednesday | ім. | ж. |
 | **четве́р** | Thursday | ім. | ч. |
 | **п'я́тниця** | Friday | ім. | ж. |
+| **субо́та** | Saturday | ім. | ж. |
+| **неді́ля** | Sunday | ім. | ж. |
+| **зра́нку** | in the morning | присл. |  |
 | **мо́же** | maybe | дієсл. |  |
-| **задово́лення** | pleasure, satisfaction | ім. | с. |
+| **пі́демо** | we will go / let's go | дієсл. |  |
+| **готува́ти** | to cook | дієсл. |  |
+| **вече́ря** | dinner | ім. | ж. |
+| **гуля́ти** | to walk / to stroll | дієсл. |  |
 | **спа́ти** | to sleep | дієсл. |  |
-| **вдо́ма** | at home | присл. |  |
-| **сам / сама** | alone (m/f) |  |  |
+| **до́вго** | long / a long time | присл. |  |
 
 ### Вирази
 
@@ -207,43 +213,43 @@ Remember the euphony rule when attaching prepositions: we say **у суботу*
 |-------|----------|
 | **з задоволенням** | with pleasure |
 | **на жаль** | unfortunately |
-| **Може, підемо?** | Maybe we'll go? |
+| **на вихідних** | on the weekend |
 | **Давай зустрінемося!** | Let's meet! |
-| **На жаль, не можу.** | Unfortunately, I cannot. |
+| **не можу** | I cannot |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "бу́ду", back: "I will (future auxiliary verb)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "прибира́ти", back: "to clean", subtitle: "дієсл." }, { front: "кварти́ра", back: "apartment", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпочива́ти", back: "to rest", subtitle: "дієсл." }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "план", back: "plan", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ти́ждень", back: "week", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ві́льний", back: "free (available)", subtitle: "прикм." }, { front: "зу́стріч", back: "meeting", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вечі́рка", back: "party", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "допі́зна", back: "until late", subtitle: "присл." }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "кіно́", back: "cinema", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вчи́ти", back: "to study/learn", subtitle: "дієсл." }, { front: "зустрі́немося", back: "let&#39;s meet", subtitle: "дієсл." }, { front: "понеді́лок", back: "Monday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вівто́рок", back: "Tuesday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "середа́", back: "Wednesday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "четве́р", back: "Thursday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "п&#39;я́тниця", back: "Friday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мо́же", back: "maybe", subtitle: "дієсл." }, { front: "задово́лення", back: "pleasure, satisfaction", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "сам / сама", back: "alone (m/f)" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ти́ждень", back: "week", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зу́стріч", back: "meeting", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "прибира́ти", back: "to clean", subtitle: "дієсл." }, { front: "вечі́рка", back: "party", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зустрі́немося", back: "let&#39;s meet", subtitle: "дієсл." }, { front: "допі́зна", back: "until late", subtitle: "присл." }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "кварти́ра", back: "apartment", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вчи́ти", back: "to study / to learn", subtitle: "дієсл." }, { front: "понеді́лок", back: "Monday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вівто́рок", back: "Tuesday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "середа́", back: "Wednesday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "четве́р", back: "Thursday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "п&#39;я́тниця", back: "Friday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зра́нку", back: "in the morning", subtitle: "присл." }, { front: "мо́же", back: "maybe", subtitle: "дієсл." }, { front: "пі́демо", back: "we will go / let&#39;s go", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гуля́ти", back: "to walk / to stroll", subtitle: "дієсл." }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "до́вго", back: "long / a long time", subtitle: "присл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"У": ["понеділок", "вівторок", "середу", "четвер", "п'ятницю", "суботу"], "В": ["неділю"]}} instruction={"Розподіліть дні тижня за прийменником (Sort the days of the week by preposition)"} />
+<MatchUp client:only="react" pairs={[{"left": "Я", "right": "буду прибирати"}, {"left": "Ти", "right": "будеш відпочивати"}, {"left": "Він", "right": "буде працювати"}, {"left": "Ми", "right": "будемо дивитися кіно"}, {"left": "Ви", "right": "будете вчити"}, {"left": "Вони", "right": "будуть готувати"}]} instruction={"З'єднайте займенник із формою дієслова (Match the pronoun with the verb form)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Тарас буде прибирати квартиру у суботу зранку.", "isTrue": true, "explanation": "У суботу зранку буду прибирати — this is Taras's plan in the model week."}, {"statement": "У четвер Тарас буде відпочивати.", "isTrue": false, "explanation": "У четвер він буде готувати вечерю для родини — cooking, not resting."}, {"statement": "Щоб запросити друга, можна сказати 'Ходімо в кафе!'.", "isTrue": true, "explanation": "Ходімо is a standard invitation phrase used in the module."}, {"statement": "Форма 'буду' не змінюється залежно від особи.", "isTrue": false, "explanation": "Буду (I), будеш (you), буде (he/she), будемо (we), будете (you pl.), будуть (they) — the auxiliary verb changes."}, {"statement": "Щоб відмовити від запрошення, можна сказати 'На жаль, не можу'.", "isTrue": true, "explanation": "На жаль, не можу is a polite refusal phrase taught in the module."}, {"statement": "У реченні 'я буду прибирати' дієслово 'прибирати' змінює форму.", "isTrue": false, "explanation": "The infinitive прибирати never changes — only the auxiliary буду changes to match the subject."}]} instruction={"Правда чи ні? (True or false?)"} />
+<GroupSort client:only="react" groups={{"Однина (Singular)": ["я буду", "ти будеш", "він буде", "вона буде"], "Множина (Plural)": ["ми будемо", "ви будете", "вони будуть"]}} instruction={"Розподіліть форми на однину та множину (Sort forms into singular and plural)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "У неділю я буду відпочивати в парку.", "errorWord": "У", "correctForm": "В", "options": ["У", "В", "На"], "explanation": "Before неділю we use В because of the euphony rule (В неділю, not У неділю)."}, {"sentence": "О шостій я буду готуватиму вечерю.", "errorWord": "готуватиму", "correctForm": "готувати", "options": ["готуватиму", "готувати", "готую"], "explanation": "With the auxiliary буду, the main verb must stay in the infinitive form: буду готувати."}, {"sentence": "У понеділок вона буде прибирала квартиру.", "errorWord": "прибирала", "correctForm": "прибирати", "options": ["прибирала", "прибирати", "прибирає"], "explanation": "The analytic future uses буду + infinitive. Past tense прибирала cannot follow буду."}, {"sentence": "Може, підемо в кафе зранок?", "errorWord": "зранок", "correctForm": "зранку", "options": ["зранок", "зранку", "зранки"], "explanation": "The adverb of time is зранку (in the morning), not the noun зранок."}, {"sentence": "Давай зустрінемося о п'ята!", "errorWord": "п'ята", "correctForm": "п'ятій", "options": ["п'ята", "п'ятій", "п'ять"], "explanation": "After о (at) we use the locative case: о п'ятій (at five)."}, {"sentence": "У вівторок я буду вільна зустріч.", "errorWord": "вільна зустріч", "correctForm": "вільна", "options": ["вільна зустріч", "вільна", "вільний час"], "explanation": "Ти будеш вільна? means 'Will you be free?' — вільна is a predicate adjective, not a noun phrase."}]} instruction={"Виправте помилку у реченні (Correct the mistake in the sentence)"} />
+<FillIn client:only="react" items={[{"sentence": "У _____ є плани на тиждень.", "answer": "мене", "options": ["мене", "я", "мій"]}, {"sentence": "У _____ є зустріч у вівторок.", "answer": "нього", "options": ["він", "його", "нього"]}, {"sentence": "У _____ є вечірка в п'ятницю.", "answer": "неї", "options": ["вона", "її", "неї"]}, {"sentence": "У _____ є час у суботу зранку.", "answer": "нас", "options": ["ми", "нас", "наш"]}, {"sentence": "У _____ є плани на вечір?", "answer": "тебе", "options": ["ти", "тебе", "твій"]}, {"sentence": "У _____ є зустріч з друзями.", "answer": "них", "options": ["вони", "їх", "них"]}]} instruction={"Вставте правильний займенник (Fill in the correct pronoun)"} />
 
-<Unjumble client:only="react" items={[{"words": "я / у / суботу / буду / зранку / прибирати / квартиру", "answer": "у суботу зранку я буду прибирати квартиру"}, {"words": "о / шостій / підемо / може / в / кафе", "answer": "може підемо в кафе о шостій"}, {"words": "вільний / у / ти / суботу / будеш", "answer": "ти будеш вільний у суботу"}, {"words": "буде / у / четвер / вона / допізна / працювати", "answer": "у четвер вона буде працювати допізна"}, {"words": "зустрінемося / давай / о / п'ятій", "answer": "давай зустрінемося о п'ятій"}, {"words": "в / неділю / я / спати / буду / довго", "answer": "в неділю я буду спати довго"}]} instruction={"Складіть речення з поданих слів (Put the words in the correct order)"} />
+<MatchUp client:only="react" pairs={[{"left": "мій", "right": "план"}, {"left": "твоя", "right": "квартира"}, {"left": "наша", "right": "зустріч"}, {"left": "ваше", "right": "кіно"}, {"left": "її", "right": "вечірка"}, {"left": "його", "right": "тиждень"}]} instruction={"З'єднайте займенник із відповідним іменником (Match the pronoun with the noun)"} />
 
-<Quiz client:only="react" questions={[{"question": "Як запросити друга до кафе?", "options": [{"text": "На жаль, не можу.", "correct": false}, {"text": "Може, підемо в кафе?", "correct": true}, {"text": "Добре! О котрій?", "correct": false}, {"text": "Чудово! До зустрічі!", "correct": false}]}, {"question": "Як сказати 'On Wednesday' по-українськи?", "options": [{"text": "у вівторок", "correct": false}, {"text": "у четвер", "correct": false}, {"text": "у середу", "correct": true}, {"text": "у п'ятницю", "correct": false}]}, {"question": "Яка форма правильна? 'У понеділок я ____'", "options": [{"text": "буду працювати", "correct": true}, {"text": "буду працюватиму", "correct": false}, {"text": "будую працювати", "correct": false}, {"text": "буду працював", "correct": false}]}, {"question": "Що означає 'з задоволенням'?", "options": [{"text": "Unfortunately", "correct": false}, {"text": "Of course", "correct": false}, {"text": "With pleasure", "correct": true}, {"text": "Good!", "correct": false}]}, {"question": "Який прийменник використовується перед 'неділю'?", "options": [{"text": "у", "correct": false}, {"text": "на", "correct": false}, {"text": "при", "correct": false}, {"text": "в", "correct": true}]}, {"question": "Що означає 'допізна'?", "options": [{"text": "in the morning", "correct": false}, {"text": "until late", "correct": true}, {"text": "in the afternoon", "correct": false}, {"text": "at five", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я будеш прибирати квартиру.", "errorWord": "будеш", "correctForm": "буду", "options": ["буду", "буде", "будемо"], "explanation": "З займенником 'я' використовується форма 'буду'."}, {"sentence": "Ти буду вчити українську.", "errorWord": "буду", "correctForm": "будеш", "options": ["будеш", "буде", "будете"], "explanation": "З займенником 'ти' використовується форма 'будеш'."}, {"sentence": "Він будете працювати допізна.", "errorWord": "будете", "correctForm": "буде", "options": ["буде", "будуть", "буду"], "explanation": "З займенником 'він' використовується форма 'буде'."}, {"sentence": "Ми будуть відпочивати у парку.", "errorWord": "будуть", "correctForm": "будемо", "options": ["будемо", "будете", "буде"], "explanation": "З займенником 'ми' використовується форма 'будемо'."}, {"sentence": "Ви буде готувати вечерю.", "errorWord": "буде", "correctForm": "будете", "options": ["будете", "будемо", "будуть"], "explanation": "З займенником 'ви' використовується форма 'будете'."}, {"sentence": "Вони будемо дивитися кіно.", "errorWord": "будемо", "correctForm": "будуть", "options": ["будуть", "будете", "буде"], "explanation": "З займенником 'вони' використовується форма 'будуть'."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<Observe client:only="react" examples={["У понеділок я буду працювати.", "У вівторок я буду вчитися.", "У середу ввечері я буду дивитися футбол.", "У четвер я буду готувати вечерю для родини.", "У п'ятницю я буду відпочивати.", "У суботу зранку буду прибирати, а вдень гуляти в парку.", "В неділю я буду спати довго!"]} prompt={"Look at all seven sentences. What pattern do you notice about the position of буду? What form does the second verb always take? Why does Sunday use 'В' while all other days use 'У'?"} />
+<Quiz client:only="react" questions={[{"question": "_____ є плани на суботу?", "options": [{"text": "У тебе", "correct": true}, {"text": "Ти", "correct": false}, {"text": "Твій", "correct": false}, {"text": "Тобі", "correct": false}]}, {"question": "_____ немає часу в понеділок.", "options": [{"text": "У мене", "correct": true}, {"text": "Я", "correct": false}, {"text": "Мій", "correct": false}, {"text": "Мені", "correct": false}]}, {"question": "_____ є зустріч о п'ятій.", "options": [{"text": "У нього", "correct": true}, {"text": "Він", "correct": false}, {"text": "Його", "correct": false}, {"text": "Йому", "correct": false}]}, {"question": "_____ є вечірка ввечері.", "options": [{"text": "У неї", "correct": true}, {"text": "Вона", "correct": false}, {"text": "Її", "correct": false}, {"text": "Їй", "correct": false}]}, {"question": "_____ є велика квартира.", "options": [{"text": "У них", "correct": true}, {"text": "Вони", "correct": false}, {"text": "Їх", "correct": false}, {"text": "Їм", "correct": false}]}, {"question": "_____ є вільний час у неділю.", "options": [{"text": "У нас", "correct": true}, {"text": "Ми", "correct": false}, {"text": "Наш", "correct": false}, {"text": "Нам", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
+<TrueFalse client:only="react" items={[{"statement": "Тарас буде працювати у понеділок.", "isTrue": true, "explanation": "Так, у понеділок Тарас буде працювати."}, {"statement": "У вівторок Тарас буде дивитися футбол.", "isTrue": false, "explanation": "Ні, у вівторок він буде обідати з другом. Футбол — у середу."}, {"statement": "У четвер Тарас буде готувати вечерю для родини.", "isTrue": true, "explanation": "Так, він готуватиме вечерю."}, {"statement": "У п'ятницю Тарас буде прибирати квартиру.", "isTrue": false, "explanation": "Ні, він буде відпочивати і піде в кіно. Прибирати він буде у суботу."}, {"statement": "У суботу вдень він буде гуляти в парку.", "isTrue": true, "explanation": "Так, зранку він буде прибирати, а вдень — гуляти."}, {"statement": "В неділю Тарас буде спати мало.", "isTrue": false, "explanation": "Ні, в неділю він буде спати довго!"}]} instruction={"Правда чи ні? (True or false?)"} />
+
+<Quiz client:only="react" questions={[{"question": "Що Тарас буде робити у понеділок після роботи?", "options": [{"text": "вчити українську", "correct": true}, {"text": "дивитися футбол", "correct": false}, {"text": "готувати вечерю", "correct": false}, {"text": "гуляти в парку", "correct": false}]}, {"question": "З ким Тарас буде обідати у вівторок?", "options": [{"text": "з другом", "correct": true}, {"text": "з родиною", "correct": false}, {"text": "з колегою", "correct": false}, {"text": "один", "correct": false}]}, {"question": "Що Тарас буде робити у середу ввечері?", "options": [{"text": "дивитися футбол", "correct": true}, {"text": "працювати допізна", "correct": false}, {"text": "спати довго", "correct": false}, {"text": "читати книгу", "correct": false}]}, {"question": "Куди Тарас піде у п'ятницю?", "options": [{"text": "в кіно", "correct": true}, {"text": "в кафе", "correct": false}, {"text": "в магазин", "correct": false}, {"text": "на вечірку", "correct": false}]}, {"question": "Коли Тарас буде прибирати?", "options": [{"text": "у суботу зранку", "correct": true}, {"text": "у неділю вдень", "correct": false}, {"text": "у п'ятницю ввечері", "correct": false}, {"text": "у понеділок", "correct": false}]}, {"question": "Який план у Тараса на неділю?", "options": [{"text": "спати довго", "correct": true}, {"text": "працювати", "correct": false}, {"text": "вчитися", "correct": false}, {"text": "готувати", "correct": false}]}]} instruction={"Оберіть правильну відповідь (Choose the correct answer)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- State Standard 2024, §4.2.4.1
-  _Future tense applied in planning and scheduling context._
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/)
-- [Present Tense](https://www.ukrainianlessons.com/present-tense/)
-- [Past Tense](https://www.ukrainianlessons.com/past-tense/)
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=42), стор. 42
+- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 125
+- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=89), стор. 89
+- [Вашуленко М. С. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-vashulenko-2019-1.pdf#page=83), стор. 83
+- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 48
 
 </TabItem>
 </Tabs>

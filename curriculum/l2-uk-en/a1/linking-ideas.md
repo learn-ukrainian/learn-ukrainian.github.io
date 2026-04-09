@@ -1,158 +1,108 @@
 ## Діало́ги (Dialogues)
 
-Two friends are meeting after work. Listen to how they connect their thoughts — not with pauses or separate sentences, but with small linking words that make Ukrainian flow naturally.
+Two friends are deciding what to order in a local cafe after a long walk through the city. They use basic linking words to explain their choices, contrast their preferences, and make plans together. Notice how these short conjunctions connect simple ideas and give clear reasons for their decisions. Instead of just naming items, they are building a logical, connected conversation.
 
-> — **Оля:** Приві́т, Марку! Ти хо́чеш ка́ву чи чай? *(Hi, Marko! Do you want coffee or tea?)*
-> — **Марко:** Каву, бо я ду́же вто́млений. *(Coffee, because I'm very tired.)*
-> — **Оля:** А я хо́чу чай, але́ без цу́кру. *(And I want tea, but without sugar.)*
-> — **Марко:** Ході́мо в кафе́, і я візьму́ ще ті́стечко. *(Let's go to a café, and I'll get a pastry too.)*
-> — **Оля:** Я теж хочу, але я на діє́ті! *(I want one too, but I'm on a diet!)*
-> — **Марко:** До́бре, але ті́льки одне́! *(Okay, but just one!)*
+> **Оле́на:** Ти хо́чеш ка́ву чи чай? *(Do you want coffee or tea?)*
+> **Марко́:** Каву, бо я ду́же вто́млений. *(Coffee, because I am very tired.)*
+> **Олена:** А я хо́чу чай, але́ без цу́кру. *(And I want tea, but without sugar.)*
+> **Марко:** До́бре. Ході́мо в кафе́, і я візьму́ ще ті́стечко. *(Good. Let's go to the cafe, and I will also take a pastry.)*
+> **Олена:** Я теж хочу, але я на діє́ті! *(I also want one, but I am on a diet!)*
 
+Later that evening, two colleagues catch up on their busy day and discuss why they missed each other's messages earlier. They use linking words to organize the sequence of their actions and explain the exact reasons behind missed connections. In everyday Ukrainian communication, stringing together events and providing quick justifications is a fundamental skill.
 
-Notice the four words doing all the heavy lifting here: **і** (and), **а** (and/but — a shift), **але** (but), **бо** (because). Each one connects thoughts in a different way.
+> **Анто́н:** Що ти роби́в сього́дні? *(What were you doing today?)*
+> **Іва́н:** Я працюва́в, а по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*
+> **Антон:** Я хоті́в зателефонува́ти, але ти не відпові́в. *(I wanted to call, but you did not answer.)*
+> **Іван:** Ви́бач, бо телефо́н був без зву́ку. *(Sorry, because the phone was on silent.)*
+> **Антон:** Ні́чого! За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(That is nothing! Tomorrow I am free, and we can meet.)*
 
-Now an evening text exchange. Дани́ло and Со́ня are catching up about their day.
+A married couple is debating where to go for their upcoming summer vacation. They use contrasting words to compare two very different destinations: the Carpathian Mountains and the seaside. This dialogue models how to use adjectives with contrasting conjunctions to weigh pros and cons. You can clearly see how adding a simple linking word changes the entire flow of the debate.
 
-> — **Соня:** Що ти роби́в сього́дні? *(What did you do today?)*
-> — **Данило:** Я працюва́в, а по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*
-> — **Соня:** Я хоті́ла зателефонува́ти, але ти не відпові́в. *(I wanted to call, but you didn't answer.)*
-> — **Данило:** Ви́бач, я не чув, бо телефо́н був без зву́ку. *(Sorry, I didn't hear it, because my phone was on silent.)*
-> — **Соня:** Нічого! *(No problem!)*
-> — **Данило:** За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(Tomorrow I'm free, and we can meet up.)*
+> **Ві́ктор:** Го́ри га́рні, але дале́ко. *(The mountains are beautiful, but far.)*
+> **Марі́я:** Мо́ре те́пле, бо за́раз лі́то. *(The sea is warm, because it is summer now.)*
+> **Віктор:** Я хочу в гори, а ти — на море. *(I want to go to the mountains, and you want to go to the sea.)*
+> **Марія:** Добре. Пої́демо в Карпа́ти, бо там деше́вше. *(Fine. Let's go to the Carpathians, because it is cheaper there.)*
 
+## Сполу́чники (Conjunctions)
 
-**Бо** explains a reason. **А** and **але** show contrast. **І** adds information. All four are natural, everyday Ukrainian — you'll hear them in every conversation.
+To build natural sentences, you need a way to link your thoughts together. The Ukrainian term for this grammatical "glue" is **сполу́чник** (conjunction), which comes directly from the verb **сполучи́ти** (to connect). These words connect individual items, short phrases, or whole sentences. Without them, communication sounds robotic and completely disconnected. For example, stating **Я люблю́ каву. Я люблю чай.** (I like coffee. I like tea.) feels very choppy. By adding a simple connecting word, you get a fluid, natural thought: **Я люблю каву і чай.** (I like coffee and tea.) Without a conjunction, you say: **Я хочу піти. Я втомлений.** (I want to go. I am tired.) With a connected thought, you say: **Я хочу піти, бо я втомлений.** (I want to go, because I am tired.)
 
-These four **сполучники** (conjunctions) are among the most common words in Ukrainian. Let's look at each one in detail.
+To add information together, Ukrainian grammar uses **сполучники суря́дності** (coordinating conjunctions). These are words that connect equal, balanced parts of a sentence. The most foundational word is **і** (and). Another common word for addition is **та** (and). This is a perfect synonym for **і**, frequently used in both everyday speech and formal writing for variety. When you say **ма́ма і та́то** (mom and dad) or **хліб та ма́сло** (bread and butter), the meaning remains exactly the same. You will also see the euphony rule applied: Ukrainians often swap **і** for **й** after a vowel to maintain the melodicity of the language, such as in the phrase **вона́ й він** (she and he).
 
-## Сполучники (Conjunctions)
+* Я чита́ю і пишу́. *(I read and write.)*
+* Це стіл і стіле́ць. *(This is a table and a chair.)*
 
-The Ukrainian word **сполучник** (conjunction) comes from **сполучити** — to connect, to link. That's exactly what conjunctions do: they connect words, phrases, or whole sentences. Without them, your Ukrainian sounds choppy and disconnected. Compare:
+When you want to contrast two ideas or simply switch focus, Ukrainian uses the word **а** (and/but). English speakers often default to using "and" for every situation, but in Ukrainian, if you are comparing two different subjects or highlighting a shift in action, you must use **а**. This is a soft contrast, not a direct contradiction. It smoothly marks a shift in attention. The classic example for learners is **Я люблю каву, а ти?** (I like coffee, and you?) or **Я — студе́нт, а ти — вчи́тель.** (I am a student, and you are a teacher.)
 
-- *Я люблю́ каву. Я люблю чай.* — two short, separate thoughts
-- **Я люблю каву і чай.** — one natural sentence
+* Він працю́є, а вона відпочива́є. *(He works, and she rests.)*
+* Це не стіл, а стілець. *(This is not a table, but a chair.)*
 
-Or:
+For a strong contrast, a contradiction, or an unexpected result, use the word **але** (but). This conjunction tells the listener that the second part of the sentence directly opposes the first part. While the word **та** can sometimes mean "but" in specific folk-style contexts (like the saying **мали́й, та вда́лий** meaning small but successful), the word **але** is the absolute A1 standard you should use for clear opposition.
 
-- *Я хочу піти. Я втомлений.* — disconnected
-- **Я хочу піти, бо я втомлений.** — a connected thought with a reason
-
-One conjunction replaces an entire sentence. That's efficient.
-
-In Ukrainian schools, the first group we learn are called **сполу́чники суря́дності** (coordinating conjunctions) because they connect equal parts.
-
-### І / Та — "and" (addition)
-
-**Та** is a full synonym of **і** — same meaning, same grammar. **Та** appears more in writing and literary style, while **і** dominates in speech. Both are correct everywhere: **мама і тато**, **хліб та масло**. (For "or", Ukrainians use **або** in statements and **чи** in questions, but here we focus on "and"). Four examples:
-
-- **Я чита́ю і пишу́.** *(I read and write.)*
-- **Він гра́є на гіта́рі та співа́є.** *(He plays guitar and sings.)*
-- **Він тако́ж пи́ше пісні́.** *(He also writes songs.)*
-- **Київ і Львів — краси́ві міста́.** *(Kyiv and Lviv are beautiful cities.)*
-- **Ми купи́ли хліб та молоко́.** *(We bought bread and milk.)*
-
-The pattern: **і** and **та** join equal, compatible things — two actions, two objects, two places.
-
-### А — "and" with a contrast or shift
-
-**А** doesn't mean "but" exactly — it shifts focus or contrasts two different subjects. Think of it as "and meanwhile" or "and on the other hand":
-
-- **Я люблю каву, а ти?** *(I like coffee, and you?)*
-- **Він працю́є, а вона́ відпочива́є.** *(He works, and she rests.)*
-- **Я читаю, а він ди́виться телеві́зор.** *(I'm reading, and he's watching TV.)*
-
-How is **а** different from **але**? **А** is a smooth pivot between two subjects or actions. **Але** is a real contradiction — one part limits or opposes the other. Think: **а** = "and meanwhile," **але** = "but actually."
-
-### Але — "but" (stronger contrast)
-
-When one part contradicts or limits the other, use **але**:
-
-- **Я хочу, але не мо́жу.** *(I want to, but I can't.)*
-- **Він молоди́й, але дуже розу́мний.** *(He's young, but very smart.)*
-- **Погода га́рна, але хо́лодно.** *(The weather is nice, but it's cold.)*
-
-Comma rule: **always put a comma before але** and **а**.
-
-Quick recap: **і/та** = addition. **А** = soft contrast or subject switch. **Але** = strong contrast or limitation.
+* Суп гаря́чий, але смачни́й. *(The soup is hot, but tasty.)*
+* Він молоди́й, але розу́мний. *(He is young, but smart.)*
+* Я хочу піти, але не мо́жу. *(I want to go, but I cannot.)*
 
 ## Бо і тому́ що (Because)
 
-Ukrainian has two ways to say "because": **бо** (short, conversational) and **тому що** (longer, common in writing). Both are fully correct Standard Ukrainian. **Бо** is not slang, not informal, not wrong — it appears in proverbs, literature, and everyday speech. It's simply the natural spoken form. Compare:
+Giving reasons is a massive step forward in your ability to communicate. You need to explain *why* you are doing something, *why* you are late, or *why* you prefer one thing over another. Ukrainian has two primary ways to say "because": **бо** and **тому що**. The word **бо** is the absolute workhorse of spoken Ukrainian. It is short, punchy, and incredibly natural. Both are correct. Both are Ukrainian. **бо** is NOT informal or wrong; it is simply the most common way people talk. The phrase **тому що** is longer and serves as the neutral or slightly more formal counterpart, frequently seen in writing or careful speech.
 
-- **Я не йду, бо я хво́рий.** *(I'm not going, because I'm sick.)*
-- **Я не йду, тому що я хворий.** *(I'm not going, because I'm sick.)*
+* Я не йду, бо я хво́рий. *(I am not going, because I am sick.)*
+* Я не йду, тому що я хворий. *(I am not going, because I am sick.)*
 
-The meaning is identical. The only difference is register: **бо** sounds more conversational, **тому що** more formal or written.
+There is a strict, non-negotiable punctuation rule that you must memorize for writing in Ukrainian: you must always put a comma before these connecting words. English often skips the comma before "because", but Ukrainian punctuation rules require a comma before **а**, **але**, **бо**, and **тому що**. Whenever you introduce a contrast or a reason in writing, you must pause and add that comma. It is a visual signal that the sentence is shifting direction or providing an explanation.
 
-### Comma rule
+* Ми не гуля́ємо, тому що йде дощ. *(We are not walking, because it is raining.)*
+* Я втомлений, бо бага́то працював. *(I am tired, because I worked a lot.)*
 
-Always put a comma before both **бо** and **тому що**:
+These conjunctions directly answer the question word **Чо́му?** (Why?). In English, it can sometimes feel slightly awkward to start a sentence with "Because," but in Ukrainian, this is how Ukrainians explain things. The "Why-Because" loop is the foundation of daily explanation. You hear a question starting with **Чому**, and you immediately fire back with an answer starting with **Бо** or **Тому що**.
 
-- **Я втомлений, бо бага́то працював.** *(I'm tired, because I worked a lot.)*
-- **Ми не гуля́ємо, бо йде дощ.** *(We're not going for a walk, because it's raining.)*
-- **Він не прийшо́в, бо забу́в.** *(He didn't come, because he forgot.)*
+* — Чому ти вчиш украї́нську? *(Why are you learning Ukrainian?)*
+* — Бо я люблю Украї́ну. *(Because I love Ukraine.)*
+* — Чому ти не їси́? *(Why are you not eating?)*
+* — Тому що я не голо́дний. *(Because I am not hungry.)*
+* — Чому ви тут? *(Why are you here?)*
+* — Бо ми чека́ємо дру́га. *(Because we are waiting for a friend.)*
 
-With **тому що**:
+When building these explanatory sentences, English speakers often fall into a syntax trap. They might translate "because interesting" directly into Ukrainian as **бо ціка́во**. However, Ukrainian grammar requires a complete structural basis in the second half of the clause. You cannot simply drop the subject. You must provide the full idea.
 
-- **Ми не гуляємо, тому що йде дощ.** *(We're not going for a walk, because it's raining.)*
-- **Я вчу украї́нську, тому що люблю Украї́ну.** *(I'm learning Ukrainian, because I love Ukraine.)*
+* Я читаю, бо це цікаво. *(I read, because it is interesting.)*
 
-### Чо́му? → Бо / Тому що…
+<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->
 
-The question **Чому?** (Why?) gets answered with **бо** or **тому що**. This is how Ukrainians explain things in everyday speech:
+<!-- INJECT_ACTIVITY: fill-in-reason-building -->
 
-- **— Чому ти вчиш українську?** — *Бо я люблю Україну.*
-- **— Чому ти не їси́?** — *Тому що я не голо́дний.*
-- **— Чому ви тут?** — *Бо ми чека́ємо дру́га.*
-**Чому?** always gets **бо** or **тому що** as the answer opener. (If you want to say "therefore" or "that's why", use **тому** on its own: *Я хворий, тому не йду*).
+<!-- INJECT_ACTIVITY: quiz-conjunction-matching -->
 
-<!-- INJECT_ACTIVITY: fill-in-bo-tomu-shcho -->
-
-Now let's see all five conjunctions working together. A couple is debating their vacation — **Карпати** (the Carpathians) or **море** (the sea):
-
-> — **Олег:** Го́ри га́рні, але дале́ко. *(The mountains are beautiful, but far away.)*
-> — **Ліна:** Море те́пле, бо лі́то. *(The sea is warm, because it's summer.)*
-> — **Олег:** Я хочу в гори, а ти — на море. *(I want the mountains, and you — the sea.)*
-> — **Ліна:** Пої́демо в Карпати, бо там деше́вше. *(Let's go to the Carpathians, because it's cheaper there.)*
-
-
-Four lines, four conjunctions: **але**, **бо**, **а**, **бо** — same words you already know, different functions, natural flow.
-
-<!-- INJECT_ACTIVITY: fill-in-choose-conjunction -->
-
-<!-- INJECT_ACTIVITY: quiz-which-conjunction -->
-
-<!-- INJECT_ACTIVITY: group-sort-conjunctions -->
+<!-- INJECT_ACTIVITY: group-sort-categories -->
 
 ## Підсумок — Summary
 
-Here are all five conjunctions in one place:
+Connecting your thoughts transforms how you sound in Ukrainian. You move away from reciting isolated vocabulary words and begin building real, flowing communication. Reviewing the four key types of linking words makes this process clearer.
 
-| Сполучник | Зна́чення | Приклад |
-|---|---|---|
-| **і / та** | and (addition) | **Я їм хліб і п'ю воду́.** |
-| **а** | and (contrast/shift) | **Я читаю, а він пи́ше.** |
-| **але** | but (contradiction) | **Я хочу, але не можу.** |
-| **бо** | because (spoken) | **Я не йду, бо хворий.** |
-| **тому що** | because (written) | **Я не йду, тому що хворий.** |
+For addition, use **і** or its synonym **та**. Both mean "and" and connect equal, balanced ideas without any contradiction. Remember the euphony rule: if the previous word ends in a vowel and the next word begins with a consonant, Ukrainians often swap **і** for **й** to keep the language melodious. 
 
-### Comma rules — three simple guidelines
+For soft contrast or shifting focus, use **а** (and/but). This is crucial for comparing two different subjects, like stating what you are doing versus what your friend is doing. It shows a change in direction, not a hard stop.
 
-**Rule 1:** Always put a comma before **а**, **але**, **бо**, and **тому що**.
+For strong contrast or opposing ideas, use **але** (but). This introduces limitations, unexpected outcomes, or direct contradictions to what was just stated.
 
-**Rule 2:** Put a comma before **і / та** only when connecting two full sentences with different subjects: **Сонце зайшло́, і ста́ло те́мно.** *(The sun set, and it got dark.)* — but NOT for joining two words: **хліб і масло** *(bread and butter)*.
+For explaining reasons, use **бо** (the short, spoken "because") or **тому що** (the longer, neutral "because"). Both directly answer the question **Чому?** (Why?).
 
-**Rule 3:** No comma before **і / та** between two verbs with the same subject: **Я читаю і пишу.** *(I read and write.)*
+| Conjunction | Meaning | Example |
+| :--- | :--- | :--- |
+| **і** / **та** | and | Я їм хліб і п'ю воду́. *(I am eating bread and drinking water.)* |
+| **а** | and (contrast) | Я читаю, а він пи́ше. *(I am reading, and he is writing.)* |
+| **але** | but | Я хочу, але не можу. *(I want to, but I cannot.)* |
+| **бо** | because | Я не йду, бо хворий. *(I am not going, because I am sick.)* |
+| **тому що** | because | Я не йду, тому що хворий. *(I am not going, because I am sick.)* |
 
-### Self-check
+Always remember the "Always Comma" rule: in written Ukrainian, always put a comma before **а**, **але**, **бо**, and **тому що**. You only place a comma before **і** when it connects two entirely separate, full sentences.
 
-Connect each pair with the best conjunction:
+Here is a quick self-check. Try to mentally connect these short, choppy sentence pairs using the correct conjunction before you continue your practice. 
 
-- *Я люблю каву. Я не люблю чай.* → **Я люблю каву, але не люблю чай.**
-- *Він не прийшов. Він хворий.* → **Він не прийшов, бо він хворий.**
-- *Я читаю. Моя́ сестра́ дивиться фільм.* → **Я читаю, а моя сестра дивиться фільм.**
-- *Ми купили хліб. Ми купили молоко.* → **Ми купили хліб і молоко.**
-- *Я хочу піти. Я дуже втомлений.* → **Я хочу піти, але я дуже втомлений.**
+* Я люблю каву. Я не люблю чай. *(Try connecting this with **а** or **але**.)*
+* Він вдо́ма. Він хворий. *(Try explaining the reason with **бо**.)*
+* Вона чита́є. Він пише. *(Try shifting the focus with **а**.)*
+* Сьогодні со́нячно. Сьогодні хо́лодно. *(Try introducing the contrast with **але**.)*
 
-Яке́ сло́во найкра́ще підхо́дить? Чому? *(Which word fits best? Why?)*
+Building longer, logically connected sentences is the first real step from simply "surviving" in a new language to actually "speaking" it with confidence.

@@ -1,0 +1,28 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 16,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "вихідні",
+      "давай",
+      "завжди",
+      "зазвичай",
+      "концерт",
+      "кіно",
+      "музей",
+      "ніколи",
+      "раз",
+      "рідко",
+      "спорт",
+      "театр",
+      "футбол",
+      "ходімо",
+      "часто",
+      "іноді"
+    ]
+  },
+  "all_grounded": true
+}

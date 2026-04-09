@@ -1,0 +1,181 @@
+vocabulary:
+- word: прокидатися
+  translation: to wake up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash face/hands
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: одяга́тися
+  translation: to get dressed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first, at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then, next
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: збира́тися
+  translation: to get ready
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поверта́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: навча́тися
+  translation: to study
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поспіша́ти
+  translation: to hurry
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: після цього
+  translation: after this
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нарешті
+  translation: finally
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вра́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пі́зно
+  translation: late
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вмива́ти
+  translation: to wash (someone else)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: одяга́ти
+  translation: to dress (someone else)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зворотні дієслова
+  translation: reflexive verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk, to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лежа́ти
+  translation: to lie down
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дивитися в телефон
+  translation: to look at one's phone
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пити каву
+  translation: to drink coffee
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти на роботу
+  translation: to go to work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: повертатися додому
+  translation: to return home
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́но
+  translation: early
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: шви́дко
+  translation: quickly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́зом
+  translation: together
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бу́дні
+  translation: weekdays
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вихідни́й
+  translation: day off, weekend day
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: себе́
+  translation: oneself
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true

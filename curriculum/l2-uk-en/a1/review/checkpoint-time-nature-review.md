@@ -2,23 +2,41 @@
 No linguistic errors found.
 
 ## Exercise Check
-All 3 exercise markers are present, mapped correctly to the plan's `activity_hints`, and placed perfectly after their respective modeling sections (`fill-in-day-paragraph` after Reading, `fill-in-time-weather` after Grammar Summary, and `match-questions-answers` after Dialogue).
+- `<!-- INJECT_ACTIVITY: fill-in-mixed-review -->` correctly tests time/weather chunks and is logically placed after the Grammar Summary. 
+- `<!-- INJECT_ACTIVITY: match-up-logical-logic -->` correctly tests logical conversational Q&A and is placed after the Dialogue.
+- `<!-- INJECT_ACTIVITY: fill-in-routine-sequence -->` correctly tests routine sequences and is placed after the Dialogue.
+The markers align perfectly with the `activity_hints` in the plan regarding type and focus. The quantity is correct, and they are placed appropriately to test the material just reviewed.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all sections from the plan perfectly. The grammar summary explicitly lists all 7 requested patterns ("Pattern 1 — Time... Pattern 7 — Frequency"), and the dialogue strictly follows the requested weekend outing scenario. |
-| 2. Linguistic accuracy | 10/10 | Flawless Ukrainian. No Russianisms, Surzhyk, or calques. Uses natural phrasing ("о десятій ранку біля метро", "тепло і сонячно, без дощу"). |
-| 3. Pedagogical quality | 10/10 | Exceptional pedagogical flow. Moves from self-assessment to reading comprehension in context, then explicitly summarizes the grammar patterns, and finally models them in a connected dialogue. Explicitly delaying euphony to M28 ("the choice between у and в follows a phonetic rule you'll study in M28") is a great pedagogical choice. |
-| 4. Vocabulary coverage | 10/10 | Successfully integrates time, days, months, weather, frequency, sequence, and hobbies into a cohesive checkpoint. |
-| 5. Exercise quality | 10/10 | Exercise markers are placed perfectly after the sections that model the target skills. |
-| 6. Engagement & tone | 10/10 | Engaging and encouraging without being overly effusive. The final paragraph ("When you say навесні, взимку, іде дощ — you're thinking in Ukrainian") is highly motivating and grounds the achievement in concrete language use. |
-| 7. Structural integrity | 10/10 | Markdown is clean, word count is within target (1270 words vs 1200 target), and headers exactly match the plan. |
-| 8. Cultural accuracy | 10/10 | Natural conversational models, avoiding any awkward literal translations from English. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogue between Olya and Dmytro is highly natural for A1. It plausibly weaves together weather ("Тепло і сонячно"), time ("О десятій ранку"), days ("в суботу"), and frequency ("Я завжди гуляю в суботу") into a single coherent conversation. |
+| 1. Plan adherence | 10/10 | Covers all 5 sections exactly as outlined in the plan. All grammatical patterns and vocabulary categories (time, calendar, weather, routine) are reviewed. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, or Calques. Gender and case usage is correct. The phonetic rule for `у/в` euphony is factually accurate. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical notes, especially the clarification on "неділя" (Sunday) vs "тиждень" (week), which is a very common false friend for learners. Good use of context to explain the difference between "Котра година?" and "О котрій годині?". |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary themes (time expressions, days, months, seasons, weather adverbs, frequency) are naturally integrated into the text and dialogue. |
+| 5. Exercise quality | 10/10 | Exercise markers are present, correctly placed, and correspond perfectly to the plan's requirements to test the consolidated knowledge. |
+| 6. Engagement & tone | 8/10 | DEDUCT: Contains gamified/self-congratulatory openers ("You have reached a significant milestone in your Ukrainian journey.") and empty filler ("These tools are absolutely essential for a vibrant social life in any Ukrainian-speaking environment.") which violate the tone guidelines. |
+| 7. Structural integrity | 10/10 | Clean markdown, no missing headings, correct ordering. Word count is 1468, well above the 1200 target. |
+| 8. Cultural accuracy | 10/10 | Decolonized perspective, accurately explaining Ukrainian time and calendar structures on their own terms. |
+| 9. Dialogue & conversation quality | 10/10 | The dialogue is a natural, multi-turn conversation about planning a weekend, utilizing the targeted vocabulary effectively with realistic phrasing ("Ходімо в музей!"). |
 
 ## Findings
-None. 
+[6. Engagement & tone] [minor]
+Location: Що ми знаємо? (What Do We Know?) — "You have reached a significant milestone in your Ukrainian journey. The last five modules introduced the foundational vocabulary..."
+Issue: Uses gamified/self-congratulatory language ("significant milestone in your Ukrainian journey") which is explicitly discouraged by the prompt guidelines.
+Fix: Remove the self-congratulatory opening sentence.
 
-## Verdict: PASS
-The module is exceptionally well-written, structurally sound, and pedagogically excellent. It fulfills its role as an A1 checkpoint perfectly with flawless, idiomatic Ukrainian.
+[6. Engagement & tone] [minor]
+Location: Що ми знаємо? (What Do We Know?) — "These tools are absolutely essential for a vibrant social life in any Ukrainian-speaking environment. You need this specific vocabulary to make concrete plans..."
+Issue: Uses empty filler language ("absolutely essential for a vibrant social life") that adds words but zero pedagogical information.
+Fix: Remove the filler sentence.
+
+## Verdict: REVISE
+The module is structurally and linguistically excellent, acting as a strong, comprehensive checkpoint. However, it contains minor tone violations (gamified language and empty filler) that need to be removed to adhere strictly to the project's stylistic guidelines.
+
+<fixes>
+- find: "You have reached a significant milestone in your Ukrainian journey. The last five modules introduced the foundational vocabulary of daily communication: time, the calendar, weather, and your daily routine."
+  replace: "The last five modules introduced the foundational vocabulary of daily communication: time, the calendar, weather, and your daily routine."
+- find: "These tools are absolutely essential for a vibrant social life in any Ukrainian-speaking environment. You need this specific vocabulary to make concrete plans with friends, understand local transport schedules, and simply talk about the world around you."
+  replace: "You need this specific vocabulary to make concrete plans with friends, understand local transport schedules, and simply talk about the world around you."
+</fixes>

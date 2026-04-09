@@ -2,494 +2,399 @@ version: '1.0'
 module: when-and-where
 level: a1
 inline:
-- id: quiz-comma-placement
-  type: quiz
-  instruction: Яке речення написано правильно? (Which sentence has correct punctuation?)
-  items:
-  - question: Яке речення правильне? (Which is correct?)
-    options:
-    - Я знаю, що він тут.
-    - Я знаю що він тут.
-    - Я, знаю що він тут.
-    correct: 0
-  - question: Яке речення правильне?
-    options:
-    - Ти знаєш де вона живе?
-    - Ти знаєш, де вона живе?
-    - Ти знаєш де, вона живе?
-    correct: 1
-  - question: Яке речення правильне?
-    options:
-    - Скажи коли ти прийдеш.
-    - Скажи, коли, ти прийдеш.
-    - Скажи, коли ти прийдеш.
-    correct: 2
-  - question: Яке речення правильне?
-    options:
-    - Він каже, що вона в Києві.
-    - Він каже що вона в Києві.
-    - Він, каже що вона в Києві.
-    correct: 0
-  - question: Яке речення правильне?
-    options:
-    - Я не знаю коли він прийде.
-    - Я не знаю, коли він прийде.
-    - Я не знаю, коли, він прийде.
-    correct: 1
-  - question: Яке речення правильне?
-    options:
-    - Я думаю що це правильно.
-    - Я, думаю що це правильно.
-    - Я думаю, що це правильно.
-    correct: 2
-  - question: Яке речення правильне?
-    options:
-    - Ми не знаємо, де вони.
-    - Ми не знаємо де вони.
-    - Ми, не знаємо де вони.
-    correct: 0
-  - question: Яке речення правильне?
-    options:
-    - Вона казала що приїде в березні.
-    - Вона казала, що приїде, в березні.
-    - Вона казала, що приїде в березні.
-    correct: 2
-- id: quiz-question-or-conjunction
-  type: group-sort
-  instruction: 'Розподіліть речення: виділене слово — питальне чи сполучник? (Sort:
-    is the highlighted word a question word or a conjunction?)'
-  groups:
-  - label: Питальне слово (Question word)
-    items:
-    - Де ти живеш?
-    - Що це?
-    - Коли ти прийдеш?
-    - Де кафе «Вітер»?
-  - label: Сполучник (Conjunction)
-    items:
-    - Я знаю, де ти живеш.
-    - Я знаю, що це книжка.
-    - Скажи, коли прийдеш.
-    - Я думаю, що це правильно.
 - id: fill-in-conjunction-choice
   type: fill-in
-  instruction: Вставте що, де або коли (Fill in що, де, or коли)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
-  - sentence: Я знаю, ___ він тут.
+  - sentence: Я знаю, _____ він тут.
     answer: що
     options:
     - що
     - де
     - коли
-  - sentence: Я не знаю, ___ він живе.
+  - sentence: Я не знаю, _____ вона живе.
     answer: де
     options:
     - що
     - де
     - коли
-  - sentence: Скажи, ___ ти прийдеш.
+  - sentence: Скажи, _____ ти прийдеш.
     answer: коли
     options:
     - що
     - де
     - коли
-  - sentence: Я думаю, ___ це правильно.
+  - sentence: Ми бачимо, _____ це кафе.
     answer: що
     options:
     - що
     - де
     - коли
-  - sentence: Він каже, ___ вона в Києві.
-    answer: що
-    options:
-    - що
-    - де
-    - коли
-  - sentence: Ти знаєш, ___ кафе?
+  - sentence: Він не знає, _____ знаходиться магазин.
     answer: де
     options:
     - що
     - де
     - коли
-  - sentence: Зателефонуй, ___ прийдеш.
+  - sentence: Вона розуміє, _____ треба працювати.
     answer: коли
     options:
     - що
     - де
     - коли
-  - sentence: Я не знаю точно, ___ вона приїхала.
+  - sentence: Я думаю, _____ це добре.
+    answer: що
+    options:
+    - що
+    - де
+    - коли
+  - sentence: Скажи мені, _____ ти вдома.
     answer: коли
     options:
     - що
     - де
     - коли
-- id: fill-in-build-sentences
+- id: quiz-comma-placement
+  type: quiz
+  instruction: Оберіть речення з правильною пунктуацією (Choose the sentence with
+    correct punctuation)
+  items:
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Я думаю, що це так.
+    - Я думаю що це так.
+    - Я, думаю що це так.
+    - Я думаю що, це так.
+    correct: 0
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Він знає де мій телефон.
+    - Він знає, де мій телефон.
+    - Він знає де, мій телефон.
+    - Він, знає де мій телефон.
+    correct: 1
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Скажи коли ти будеш готовий.
+    - Скажи коли, ти будеш готовий.
+    - Скажи, коли ти будеш готовий.
+    - Скажи, коли, ти будеш готовий.
+    correct: 2
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Я бачу що ти працюєш.
+    - Я бачу що, ти працюєш.
+    - Я, бачу що ти працюєш.
+    - Я бачу, що ти працюєш.
+    correct: 3
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Коли я вдома, я відпочиваю.
+    - Коли я вдома я відпочиваю.
+    - Коли, я вдома я відпочиваю.
+    - Коли я, вдома я відпочиваю.
+    correct: 0
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Ти знаєш що Олена в Києві?
+    - Ти знаєш, що Олена в Києві?
+    - Ти, знаєш що Олена в Києві?
+    - Ти знаєш що, Олена в Києві?
+    correct: 1
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Я не знаю де саме цей парк.
+    - Я не знаю, де саме цей парк.
+    - Я не знаю де саме, цей парк.
+    - Я не, знаю де саме цей парк.
+    correct: 1
+  - question: 'Оберіть правильний варіант:'
+    options:
+    - Коли ми працюємо ми не говоримо.
+    - Коли, ми працюємо ми не говоримо.
+    - Коли ми працюємо, ми не говоримо.
+    - Коли ми працюємо ми, не говоримо.
+    correct: 2
+- id: quiz-function-id
+  type: quiz
+  instruction: Яка роль виділеного слова? (What is the role of the highlighted word?)
+  items:
+  - question: Яка роль слова 'де' у реченні 'Де ти зараз живеш?'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 0
+  - question: Яка роль слова 'де' у реченні 'Я знаю, де він працює.'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 3
+  - question: Яка роль слова 'що' у реченні 'Що це на столі?'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 2
+  - question: Яка роль слова 'що' у реченні 'Я думаю, що це гарне місце.'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 3
+  - question: Яка роль слова 'коли' у реченні 'Коли ти прийдеш додому?'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 1
+  - question: Яка роль слова 'коли' у реченні 'Скажи, коли ти будеш готовий.'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 3
+  - question: Яка роль слова 'де' у реченні 'Я не знаю, де мій телефон.'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 3
+  - question: Яка роль слова 'що' у реченні 'Що він робить там?'
+    options:
+    - Запитує про місце (Asks about a place)
+    - Запитує про час (Asks about time)
+    - Запитує про предмет/дію (Asks about an object/action)
+    - З'єднує дві частини речення (Connects two parts)
+    correct: 2
+- id: fill-in-sentence-builder
   type: fill-in
-  instruction: Доповніть речення правильним закінченням (Complete each sentence with
-    the correct ending)
+  instruction: Доповніть складне речення (Complete the complex sentence)
   items:
-  - sentence: Я думаю, що він ___.
-    answer: тут
+  - sentence: Я думаю, що _____
+    answer: це гарне місце
     options:
-    - тут
-    - де він
-    - коли він
-  - sentence: Він каже, що вона ___.
-    answer: в Києві
+    - це гарне місце
+    - де мій телефон
+    - коли він прийде
+  - sentence: Він не знає, де _____
+    answer: мій телефон
     options:
-    - в Києві
-    - де вона
-    - коли вона
-  - sentence: Я не знаю, де ___.
-    answer: кафе
+    - мій телефон
+    - що це
+    - коли він вдома
+  - sentence: Скажи мені, коли _____
+    answer: ти будеш готовий
     options:
-    - кафе
-    - що кафе
-    - коли кафе
-  - sentence: Скажи мені, коли ти ___.
-    answer: вільний
+    - ти будеш готовий
+    - де кафе
+    - що він робить
+  - sentence: Вона каже, що _____
+    answer: вона вдома
     options:
-    - вільний
-    - де вільний
-    - що вільний
-  - sentence: Ми думаємо, що він ___.
-    answer: прийде
+    - вона вдома
+    - де парк
+    - коли ми працюємо
+  - sentence: Я бачу, що _____
+    answer: ти працюєш
     options:
-    - прийде
-    - де прийде
-    - коли прийде
-  - sentence: Вона казала, що ___.
-    answer: приїде в березні
+    - ти працюєш
+    - де мій брат
+    - коли я прийду
+  - sentence: Ти знаєш, де _____
+    answer: нове кафе
     options:
-    - приїде в березні
-    - де приїде
-    - коли приїде
+    - нове кафе
+    - що це
+    - коли він там
 workbook:
-- id: wb-group-sort-conjunctions
-  type: group-sort
-  instruction: Розподіліть речення за сполучником (Sort sentences by which conjunction
-    belongs in the blank)
-  groups:
-  - label: що (that)
-    items:
-    - Я думаю, ___ він прийде.
-    - Він каже, ___ вона в Києві.
-    - Ми бачимо, ___ ти стараєшся.
-  - label: де (where)
-    items:
-    - Я не знаю, ___ вона живе.
-    - Ти знаєш, ___ кафе?
-    - Вони не знають, ___ ми.
-  - label: коли (when)
-    items:
-    - Скажи, ___ ти прийдеш.
-    - Я не знаю, ___ він закінчить роботу.
-    - Зателефонуй, ___ прийдеш.
-- id: wb-unjumble-sentences
-  type: unjumble
-  instruction: Складіть правильне речення зі слів (Build a correct sentence from the
+- type: match-up
+  instruction: З'єднайте частини складного речення (Match the parts of the complex
+    sentence)
+  pairs:
+  - left: Я думаю, що
+    right: це правильно.
+  - left: Він не знає, де
+    right: нове кафе.
+  - left: Скажи, коли
+    right: ти будеш готовий.
+  - left: Я бачу, що
+    right: ти працюєш.
+  - left: Ми чуємо, де
+    right: грає музика.
+  - left: Вона розуміє, що
+    right: це важливо.
+- type: unjumble
+  instruction: Складіть правильне речення зі слів (Form the correct sentence from
     words)
   items:
   - words:
-    - знаю,
-    - він
-    - що
-    - Я
-    - тут.
-    correct_order:
-    - Я
-    - знаю,
-    - що
-    - він
-    - тут.
-    hint: Я знаю + що + він тут
-  - words:
-    - де
-    - не
-    - Я
-    - знаю,
-    - він.
-    correct_order:
-    - Я
-    - не
-    - знаю,
-    - де
-    - він.
-    hint: Я не знаю + де + він
-  - words:
-    - прийдеш.
-    - Скажи,
-    - коли
-    - ти
-    correct_order:
-    - Скажи,
-    - коли
-    - ти
-    - прийдеш.
-    hint: Скажи + коли + ти прийдеш
-  - words:
     - думаю,
+    - Я
     - це
     - що
-    - Я
-    - правильно.
+    - добре.
     correct_order:
     - Я
     - думаю,
     - що
     - це
-    - правильно.
-    hint: Я думаю + що + це правильно
+    - добре.
   - words:
     - каже,
-    - вона
-    - що
     - Він
-    - в
-    - Києві.
+    - вдома.
+    - що
+    - вона
     correct_order:
     - Він
     - каже,
     - що
     - вона
-    - в
-    - Києві.
-    hint: Він каже + що + вона в Києві
+    - вдома.
   - words:
-    - знаєш,
+    - знаю,
     - де
-    - Ти
-    - кафе?
+    - Я
+    - телефон.
+    - мій
     correct_order:
-    - Ти
-    - знаєш,
+    - Я
+    - знаю,
     - де
-    - кафе?
-    hint: Ти знаєш + де + кафе
-- id: wb-error-correction-conjunctions
-  type: error-correction
-  instruction: Знайдіть і виправте неправильний сполучник (Find and correct the wrong
-    conjunction)
+    - мій
+    - телефон.
+  - words:
+    - Скажи
+    - коли
+    - готовий.
+    - будеш
+    - мені,
+    - ти
+    correct_order:
+    - Скажи
+    - мені,
+    - коли
+    - ти
+    - будеш
+    - готовий.
+  - words:
+    - бачу,
+    - Я
+    - працюєш.
+    - ти
+    - що
+    correct_order:
+    - Я
+    - бачу,
+    - що
+    - ти
+    - працюєш.
+  - words:
+    - не
+    - де
+    - знає,
+    - Вона
+    - парк.
+    correct_order:
+    - Вона
+    - не
+    - знає,
+    - де
+    - парк.
+- type: error-correction
+  instruction: Знайдіть і виправте помилку у з'єднанні (Find and fix the connection
+    mistake)
   items:
-  - sentence: Я думаю, де він тут.
-    error: де
-    correction: що
-    error_type: word
-    options:
-    - що
-    - коли
-    - де
-    explanation: 'Думати + що: thoughts and beliefs always use «що». «Де» asks about
-      a location.'
-  - sentence: Ти знаєш, що вона живе?
+  - sentence: Я не знаю, що мій телефон.
     error: що
     correction: де
     error_type: word
     options:
     - де
     - коли
-    - що
-    explanation: 'Знаєш де: for locations, use «де», not «що».'
-  - sentence: Скажи, де ти прийдеш.
+    - хто
+    explanation: Телефон — це предмет, ми шукаємо місце (де).
+  - sentence: Скажи мені, де ти прийдеш додому.
     error: де
     correction: коли
     error_type: word
     options:
     - коли
     - що
-    - де
-    explanation: Arriving is about time, not place — use «коли», not «де».
-  - sentence: Він каже, коли вона в Києві.
+    - який
+    explanation: Питаємо про час (коли).
+  - sentence: Він думає, де це правильно.
+    error: де
+    correction: що
+    error_type: word
+    options:
+    - що
+    - коли
+    - хто
+    explanation: Він висловлює думку, тому з'єднуємо словом 'що'.
+  - sentence: Ми бачимо, коли це новий парк.
     error: коли
     correction: що
     error_type: word
     options:
     - що
     - де
+    - хто
+    explanation: З дієсловом 'бачити' часто використовуємо 'що' для констатації факту.
+  - sentence: Я розумію, де треба йти працювати.
+    error: де
+    correction: коли
+    error_type: word
+    options:
     - коли
-    explanation: Reporting a fact uses «що». «Коли» would mean he says *when* she
-      is in Kyiv.
-  - sentence: Я не знаю, що він живе.
+    - що
+    - хто
+    explanation: Час іти (коли).
+  - sentence: Я знаю, що мій брат. Він у школі.
     error: що
     correction: де
     error_type: word
     options:
     - де
     - коли
-    - що
-    explanation: For location (where someone lives), use «де».
-  - sentence: Зателефонуй, що прийдеш.
-    error: що
-    correction: коли
-    error_type: word
-    options:
-    - коли
-    - де
-    - що
-    explanation: 'Зателефонуй + «коли»: call *when* you arrive — this is about timing,
-      not a reported fact.'
-- id: wb-true-false-rules
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: In Ukrainian, you always write a comma before що, де, коли when they
-      connect two clauses.
-    correct: true
-    explanation: Так — це обов'язкове правило (This is a mandatory rule). The comma
-      is always there — no exceptions.
-  - statement: «Де ти живеш?» — тут «де» є сполучником (a conjunction).
-    correct: false
-    explanation: No — тут «де» is a question word. It stands at the start of the sentence
-      and the sentence ends with «?». A conjunction sits in the middle after a comma.
-  - statement: «Я знаю, де ти живеш.» — тут «де» є сполучником (a conjunction).
-    correct: true
-    explanation: Yes — тут «де» connects «я знаю» and «де ти живеш». It has a comma
-      before it and is not the first word in the sentence.
-  - statement: «Думати» pairs most often with «де».
-    correct: false
-    explanation: 'No — «думати» pairs almost exclusively with «що»: «Я думаю, що...».
-      Use «де» with «знати» and «казати» when asking about location.'
-  - statement: You can omit the comma before «що» in informal writing.
-    correct: false
-    explanation: No — Ukrainian always requires the comma before subordinating conjunctions.
-      This rule has no informal exception.
-  - statement: «Коли я прийду, ми поговоримо» — the comma comes after the subordinate
-      clause because «коли» opens the sentence.
-    correct: true
-    explanation: Yes — when «коли» opens the whole sentence, the comma comes AFTER
-      the subordinate clause, before the main clause.
-- id: wb-match-up-sentences
-  type: match-up
-  instruction: З'єднайте українське речення з англійським перекладом (Match the Ukrainian
-    sentence with its English translation)
-  pairs:
-  - left: Я знаю, що він тут.
-    right: I know that he is here.
-  - left: Я не знаю, де вона живе.
-    right: I don't know where she lives.
-  - left: Скажи, коли ти прийдеш.
-    right: Tell me when you will come.
-  - left: Я думаю, що це правильно.
-    right: I think that this is correct.
-  - left: Він каже, що вона в Києві.
-    right: He says that she is in Kyiv.
-  - left: Зателефонуй, коли прийдеш.
-    right: Call when you arrive.
-- id: wb-quiz-question-or-conjunction
-  type: quiz
-  instruction: Яку роль виконує виділене слово? (What role does the highlighted word
-    play?)
-  items:
-  - question: '«Де ти живеш?» — слово «де»:'
-    options:
-    - Питальне слово — питає де (question word — asks where)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Прислівник часу (time adverb)
-    - Вигук (exclamation)
-    correct: 0
-  - question: '«Я знаю, де ти живеш.» — слово «де»:'
-    options:
-    - Питальне слово — питає де (question word — asks where)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Прийменник місця (place preposition)
-    - Вигук (exclamation)
-    correct: 1
-  - question: '«Що це?» — слово «що»:'
-    options:
-    - Питальне слово — питає що (question word — asks what)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Іменник (noun)
-    - Частка (particle)
-    correct: 0
-  - question: '«Я думаю, що це правильно.» — слово «що»:'
-    options:
-    - Питальне слово — питає що (question word — asks what)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Займенник (pronoun)
-    - Прислівник (adverb)
-    correct: 1
-  - question: '«Коли ти прийдеш?» — слово «коли»:'
-    options:
-    - Питальне слово — питає коли (question word — asks when)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Прислівник місця (place adverb)
-    - Вигук (exclamation)
-    correct: 0
-  - question: '«Скажи, коли прийдеш.» — слово «коли»:'
-    options:
-    - Питальне слово — питає коли (question word — asks when)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Займенник (pronoun)
-    - Прийменник (preposition)
-    correct: 1
-  - question: '«Ти знаєш, де кафе?» — слово «де»:'
-    options:
-    - Питальне слово — питає де (question word — asks where)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Прийменник місця (place preposition)
-    - Частка (particle)
-    correct: 1
-  - question: '«Де Олена живе?» — слово «де»:'
-    options:
-    - Питальне слово — питає де (question word — asks where)
-    - Сполучник — з'єднує частини речення (conjunction — connects two clauses)
-    - Іменник (noun)
-    - Займенник (pronoun)
-    correct: 0
-- id: wb-translate
-  type: translate
-  instruction: Оберіть правильний переклад (Choose the correct Ukrainian translation)
+    - хто
+    explanation: Брат знаходиться в певному місці (де).
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
   items:
   - source: I know that he is here.
     options:
     - text: Я знаю, що він тут.
       correct: true
-    - text: Я знаю що він тут.
-      correct: false
     - text: Я знаю, де він тут.
       correct: false
-    - text: Що я знаю, він тут.
+    - text: Я знаю що він тут.
       correct: false
-  - source: Tell me when you will come.
+  - source: Tell me when you are ready.
     options:
-    - text: Скажи мені що ти прийдеш.
-      correct: false
-    - text: Скажи, коли ти прийдеш.
+    - text: Скажи мені, коли ти будеш готовий.
       correct: true
-    - text: Скажи мені де ти прийдеш.
+    - text: Скажи мені коли ти будеш готовий.
       correct: false
-    - text: Коли скажи, ти прийдеш.
+    - text: Скажи мені, що ти будеш готовий.
       correct: false
-  - source: I don't know where she lives.
+  - source: He does not know where the store is.
     options:
-    - text: Я не знаю, де вона живе.
+    - text: Він не знає, де магазин.
       correct: true
-    - text: Я не знаю де вона живе.
+    - text: Він не знає, що магазин.
       correct: false
-    - text: Я не знаю, що вона живе.
+    - text: Він не знає де магазин.
       correct: false
-    - text: Де я не знаю, вона живе.
-      correct: false
-  - source: She said she would come in March.
-    options:
-    - text: Вона казала коли приїде в березні.
-      correct: false
-    - text: Вона казала, де приїде в березні.
-      correct: false
-    - text: Вона казала, що приїде в березні.
-      correct: true
-    - text: Що вона казала, приїде в березні.
-      correct: false
-  - source: Do you know where the café is?
-    options:
-    - text: Ти знаєш де кафе?
-      correct: false
-    - text: Ти знаєш, що кафе?
-      correct: false
-    - text: Де ти знаєш кафе?
-      correct: false
-    - text: Ти знаєш, де кафе?
-      correct: true
   - source: I think that this is correct.
     options:
     - text: Я думаю, що це правильно.
@@ -498,5 +403,42 @@ workbook:
       correct: false
     - text: Я думаю, де це правильно.
       correct: false
-    - text: Що я думаю, це правильно.
+  - source: Do you hear where the music is playing?
+    options:
+    - text: Ти чуєш, де грає музика?
+      correct: true
+    - text: Ти чуєш, що грає музика?
       correct: false
+    - text: Ти чуєш де грає музика?
+      correct: false
+  - source: When I am at home, I rest.
+    options:
+    - text: Коли я вдома, я відпочиваю.
+      correct: true
+    - text: Коли я вдома я відпочиваю.
+      correct: false
+    - text: Що я вдома, я відпочиваю.
+      correct: false
+- type: true-false
+  instruction: Правда чи ні? (True or False?)
+  items:
+  - statement: Складне речення має головне слово і залежну частину.
+    correct: true
+    explanation: Так, головне (main) дієслово з'єднується із залежною частиною.
+  - statement: Перед словами 'що', 'де', 'коли' кома не потрібна.
+    correct: false
+    explanation: В українській мові перед 'що', 'де', 'коли' завжди потрібна кома.
+  - statement: Слово 'що' може бути запитанням і з'єднанням.
+    correct: true
+    explanation: Так, 'Що це?' — запитання, 'Я знаю, що це' — з'єднання.
+  - statement: В англійській мові завжди потрібна кома перед 'that', як і в українській
+      перед 'що'.
+    correct: false
+    explanation: В англійській мові кома перед 'that' зазвичай не ставиться, але в
+      українській перед 'що' вона обов'язкова.
+  - statement: Речення 'Коли я вдома, я відпочиваю' — це складне речення.
+    correct: true
+    explanation: Так, воно має дві частини, з'єднані словом 'коли'.
+  - statement: У реченні 'Я знаю, де ти' головне дієслово — 'де'.
+    correct: false
+    explanation: Головне дієслово тут — 'знаю', а 'де' з'єднує частини.

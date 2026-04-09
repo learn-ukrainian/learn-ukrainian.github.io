@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module comprehensively covers every narrative and grammar point from
+    the plan, including clear examples. However, it fails to include the exact required
+    vocabulary term "видова пара" (it uses just
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The text contains 8 instances of the calque "давайте + [дієслово]" ("давайте
+    розглянемо", "давайте проаналізуємо"), which is a Russianism for the imperative.
+    Authentic Ukrainian uses synthetic forms (
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Exceptional pedagogical framework. Explanations like "Префікс працює
+    як важка кришка на каструлі: він закриває дію" and the differentiation between
+    standard prohibitions and warnings ("Не падай" vs "О'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required vocabulary is mostly integrated beautifully into context ("тло
+    розповіді", "результативність", "наказовий спосіб"). However, "видова пара" is
+    missing and must be injected.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 planned exercise markers are placed perfectly after their corresponding
+    theory sections to reinforce immediate learning.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, professional, and engaging ("Уявіть собі, що ви — режисер
+    кінофільму"). It avoids patronizing language and maintains an authentic teacher
+    persona.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: The text exceeds the 4000-word target (4687 words) with rich, substantive
+    content and follows all Markdown heading structures. Deducting 1 point for a minor
+    missing closing guillemet formatting artifa
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strong culturally authentic approach. Focuses deeply on the psychological
+    rationale behind Ukrainian aspect choices rather than simply translating English
+    tenses.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly realistic, clearly demonstrating context (teacher/student,
+    coworkers, mother/son). Names and settings are natural and culturally appropriate.
+findings: []

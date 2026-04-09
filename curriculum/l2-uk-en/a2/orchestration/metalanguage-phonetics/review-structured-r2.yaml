@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Covers almost all points, including complex phonetic rules. DEDUCT: Missed
+    explicitly comparing Ukrainian and English sound systems in the dialogue. Missed
+    explicit reading practice text with `безпека'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Exceptional accuracy. Correctly identifies [г]-[х] as a voiced-voiceless
+    pair per Ukrainian phonetics. Correctly explains partial softening of labials
+    and velars. No Russianisms or Calques detected.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Explanations are clear and well-structured. Good use of phonetic mnemonics
+    ("Ми винили рій", "МаВПА БУФ", "Де ти з'їси ці лини, дз").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 16 required and 12 recommended words are naturally integrated into
+    the explanations.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Markers are correctly mapped to plan types. Clustering 3 markers at the
+    end makes sense for the transcription finale.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Tone is academic but encouraging ("Наша фінальна транскрипція виглядає
+    так", "Ця деталь робить українське мовлення дуже мелодійним").
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Word count (4606) meets the 4000 target. Sections follow the outline
+    perfectly. DEDUCT: Minor grammar agreement error ("Ваші вуха і ваша уважність
+    — це ваш найкращий інструмент").'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Compares Ukrainian terminal voicing rules favorably against Russian/German
+    ("дзвінкі приголосні ніколи не втрачають свою природну дзвінкість"). Purely decolonized
+    perspective.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogue fits the "academic register" perfectly, but is slightly transactional.
+    Missed the English comparison required by the plan. Also contains a typo ("правильно!"
+    with lowercase п).
+findings: []

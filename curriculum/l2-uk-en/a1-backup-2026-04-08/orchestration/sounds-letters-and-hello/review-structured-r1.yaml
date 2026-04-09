@@ -1,0 +1,44 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the requirement to include Захарійчук's vowel notation `[•]`. Expanded
+    the Большакова quote beyond the plan's boundaries. Missed recommended vocabulary
+    "тато" and "сон".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'CRITICAL: "Привіт, Оля!" uses nominative instead of vocative. CRITICAL:
+    Included the non-standard word "точуть" in the poem quote.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of the difference between sounds and letters.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Used all required vocabulary naturally, but missed 2 recommended words.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: Missing marker (`match-up`), hallucinated marker (`match-false-friends`),
+    duplicated marker (`group-sort`), and poor placement (`quiz` at the very end).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, warm, and clear tone. Does not rely on generic hype.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean formatting, headings match the plan, word count is excellent.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: References Ukrainian textbooks perfectly, capturing the authentic way
+    the language is taught to native speakers.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Natural phrasing, but compromised by the vocative case error.
+findings: []

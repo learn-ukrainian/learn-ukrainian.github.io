@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all 4 main sections, hits all plan points, uses the dialogue situations
+    properly. Word count is an excellent 5063.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Very good overall, but contains a severe AI hallucination (`конкре ভাবনা
+    швидкий результат`) and a non-standard word `безкінечно`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent explanations. Beautifully explains "якщо + доконаний" vs "якщо
+    + недоконаний" (process vs result).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covers almost all plan vocabulary, though a few are injected too literally
+    with their prompt translations.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Appropriate use of inject markers corresponding to all `activity_hints`
+    in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Engaging, teacher-like tone. Uses metaphors (the camera lens) effectively
+    without being overly casual.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: Multiple instances of robotic prompt leakage where English meta-notes
+    from the plan's vocabulary hints were copy-pasted directly into the prose (e.g.,
+    `*(impossibility (unreal conditionals imply this)
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Appropriate cultural context and examples (Lviv coffee, Carpathians).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between Natalia and Bohdan is natural and perfectly contrasts
+    real vs. unreal conditional forms.
+findings: []

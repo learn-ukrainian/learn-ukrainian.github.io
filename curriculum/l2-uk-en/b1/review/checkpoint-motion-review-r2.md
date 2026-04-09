@@ -1,53 +1,63 @@
 ## Linguistic Scan
-Found 1 linguistic issue (proverb calque).
+Found one Russianism/colloquial borrowing ("парковці"). No other linguistic errors, Surzhyk, calques, or Russian characters were found.
 
 ## Exercise Check
-All 6 `<!-- INJECT_ACTIVITY: {id} -->` markers are present, ordered correctly after their respective theory blocks, and match the types specified in the plan's `activity_hints`.
+The plan provided exactly 6 `activity_hints`. The writer generated 13 `<!-- INJECT_ACTIVITY: {id} -->` markers, fragmenting the exercises unnecessarily and deviating from the planned comprehensive mixed tasks. The IDs also do not neatly match the plan's expected format (e.g., the plan called for a single 12-item mixed quiz covering M27-M36, but the writer split it into 5 separate markers). I have issued a finding to consolidate them back to the 6 planned markers.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Text missed the preposition vs. adverb distinction for `навпроти` (Блок 1) and the figurative uses of `нести/вести` requested in the plan (Блок 5). |
-| 2. Linguistic accuracy | 9/10 | Generally excellent and natural, but uses a Russian calqued version of a proverb: «Сім разів відміряй — один відріж» instead of the standard Ukrainian «Сім разів відмір — один раз відріж». |
-| 3. Pedagogical quality | 10/10 | Superb. Clear, detailed explanations of spatial prepositions and motion verbs. The distinction between «в/на» and «з/із» is perfectly taught. |
-| 4. Vocabulary coverage | 9/10 | All required vocabulary is used in context, but the recommended word `перевірка` was missed as a noun. |
-| 5. Exercise quality | 10/10 | All 6 markers are placed correctly and align perfectly with the plan's instructions. |
-| 6. Engagement & tone | 9/10 | The text is encouraging and clear, avoiding overly corporate speak while maintaining a solid pedagogical tone. |
-| 7. Structural integrity | 8/10 | The module is well-structured, but the word count (4875) is >20% over the target (4000). |
-| 8. Cultural accuracy | 9/10 | Good use of Ukrainian geography (Kyiv, Carpathians, Dnipro), but the proverb was a calque. |
-| 9. Dialogue & conversation quality | 7/10 | The oral exam dialogue is highly transactional and stilted ("Ні, я не поїду відразу додому. Я обов'язково заїду..."). |
+| 1. Plan adherence | 10/10 | The writer successfully covered all outline sections, including preposition vs. adverb nuances and all groups of prefixed verbs ("Коли ви хочете описати близькість... є кілька чудових варіантів на вибір: «біля»... «коло»... «поруч з»"). |
+| 2. Linguistic accuracy | 8/10 | Found a colloquial borrowing/Russianism: "на безпечній парковці". VESUM confirms this word form does not exist in standard Ukrainian. The standard word is "автостоянці". |
+| 3. Pedagogical quality | 10/10 | Excellent breakdown and scaffolding. The distinction between prepositions and adverbs is explained with perfect clarity: ("Він стояв навпроти школи... Але у реченні «Я живу навпроти» — це самостійний прислівник"). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary terms from the plan are introduced naturally within the text (e.g., "односпрямований рух", "маршрут", "переносне значення"). |
+| 5. Exercise quality | 7/10 | The writer over-generated 13 `INJECT_ACTIVITY` markers instead of the 6 comprehensive ones requested in the `activity_hints` plan. This fragments the exercises and risks failing the YAML generator mapping. |
+| 6. Engagement & tone | 10/10 | The tone is highly supportive, warm, and natural for a teacher conducting a final review ("Не поспішайте, аналізуйте кожну свою помилку і радійте правильним відповідям!"). |
+| 7. Structural integrity | 10/10 | The module is exceptionally well-structured. The word count is 4354 words (comfortably over the 4000-word target), and all markdown tags and headers correctly follow the plan. |
+| 8. Cultural accuracy | 10/10 | Uses perfectly authentic Ukrainian geographical settings (Київ, Рівне, Львів, Карпати, Яремче, Бориспіль) and features a highly plausible, decolonized domestic travel narrative. |
+| 9. Dialogue & conversation quality | 8/10 | The student's response in the "Oral exam" dialogue is entirely robotic because the writer simply copy-pasted the exact prompt instruction from the plan rather than expanding it into a natural spoken sentence. |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: Блок 1: Просторові прийменники (Paragraph 4)
-Issue: The plan asked to cover the distinction between preposition and adverb using `навпроти школи` vs `сидів навпроти`, but the text omitted this specific example.
-Fix: Add the `навпроти` example to the discussion of adverbs.
 
-[1. Plan adherence] [major]
-Location: Блок 5: Повітряний і водний рух та переносне значення (Paragraph 2)
-Issue: The plan explicitly asked to include figurative expressions with `нести` and `вести`, but the text only includes expressions with `іти`, `летіти`, and `спадати`.
-Fix: Insert examples for `нести` and `вести`.
+[Linguistic accuracy] [CRITICAL]
+Location: Блок 6: Подорожні розповіді ("Ми залишили нашу машину на безпечній парковці навпроти готелю")
+Issue: The word "парковці" is a Russianism/colloquial borrowing not attested in standard dictionaries like СУМ or VESUM. The standard Ukrainian word is "автостоянка" or "стоянка".
+Fix: Replace with "на безпечній автостоянці".
 
-[4. Vocabulary coverage] [major]
-Location: Вступ: як працювати з контрольною (Paragraph 2)
-Issue: The recommended vocabulary word `перевірка` (check/verification) is missing from the prose as a noun.
-Fix: Modify the sentence about checking knowledge to use the noun `перевірка`.
+[Exercise quality] [MAJOR]
+Location: Throughout the module (e.g., `<!-- INJECT_ACTIVITY: quiz-case-agreement-and-preposition-choice -->`, `<!-- INJECT_ACTIVITY: travel-comprehension-questions -->`)
+Issue: The writer injected 13 activity markers, fragmenting the practice into tiny pieces. The plan's `activity_hints` explicitly requests exactly 6 comprehensive exercises. Injecting 13 random IDs will break the pipeline's YAML generator mapping.
+Fix: Delete the 7 redundant markers and rename the remaining ones to match the 6 planned hints (`quiz-mixed-motion`, `match-up-prefixes`, `group-sort-prefixes`, `error-correction-motion`, `fill-in-travel-narrative`, `free-write-journey`).
 
-[2. Linguistic accuracy] [critical]
-Location: Блок 5: Повітряний і водний рух та переносне значення (Paragraph 3)
-Issue: The proverb "Сім разів відміряй — один відріж" is a literal calque of the Russian "Семь раз отмерь — один отрежь". The standard Ukrainian form is "Сім разів відмір — один раз відріж".
-Fix: Replace the proverb with the standard Ukrainian form.
+[Dialogue & conversation quality] [MAJOR]
+Location: Блок 6: Подорожні розповіді ("> — **Студент:** Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова, обійшов центр і зайшов у кав'ярню.")
+Issue: The student's response is completely robotic and transactional because the writer simply pasted the exact setting string from the plan rather than expanding it into a natural conversational sentence.
+Fix: Expand the dialogue response to sound like a natural spoken answer while retaining the requested sequence of prefixed verbs.
 
 ## Verdict: REVISE
-The module is incredibly detailed, highly accurate, and pedagogically sound for a B1 checkpoint. However, it requires minor revisions to fix a calqued proverb, add missing plan points (`навпроти`, `нести/вести`), and inject a missing recommended vocabulary word to fully meet the plan's requirements.
+The content is extremely detailed, well-paced, and comprehensive, but it contains a critical vocabulary error (парковці), robotic dialogue, and a major formatting issue with the exercise markers that will disrupt the downstream pipeline. Applying the determinative fixes below will bring this module up to standard.
 
 <fixes>
-- find: "Дуже часто це слово самостійно використовується в реченні просто як прислівник."
-  replace: "Дуже часто це слово самостійно використовується в реченні просто як прислівник. Так само працює і слово **навпроти** *(opposite)*: воно може бути прийменником («навпроти школи») або самостійним прислівником («він сидів навпроти»)."
-- find: "ви скажете, що ця чудова думка несподівано **спала на думку** *(came to mind / literally: fell on mind)*."
-  replace: "ви скажете, що ця чудова думка несподівано **спала на думку** *(came to mind / literally: fell on mind)*. Також ми використовуємо дієслова «нести» та «вести» в діловому спілкуванні: наприклад, доросла людина має **нести відповідальність** *(to bear responsibility)* за свої дії, а хороший лідер вміє правильно **вести переговори** *(to conduct negotiations)*."
-- find: "Наша найголовніша мета на сьогодні — це перевірити ваше глибоке розуміння цілої системи просторових зв'язків та префіксів, а не стимулювати механічне чи бездумне запам'ятовування окремих слів."
-  replace: "Наша найголовніша мета на сьогодні — це комплексна **перевірка** *(check/verification)* вашого глибокого розуміння цілої системи просторових зв'язків та префіксів, а не механічне чи бездумне запам'ятовування окремих слів."
-- find: "Воно звучить так: **«Сім разів відміряй — один відріж»** *(Measure seven times — cut once)*."
-  replace: "Воно звучить так: **«Сім разів відмір — один раз відріж»** *(Measure seven times — cut once)*."
+- find: "на безпечній парковці навпроти готелю"
+  replace: "на безпечній автостоянці навпроти готелю"
+- find: "<!-- INJECT_ACTIVITY: quiz-case-agreement-and-preposition-choice -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: quiz-verb-choice-base-pairs -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: fill-in-conjugation-drill-motion -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: prefix-selection-arrival-departure -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: aspect-pair-generation -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: prefix-selection-all-groups -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz-mixed-motion -->"
+- find: "<!-- INJECT_ACTIVITY: matching-prefix-meanings -->"
+  replace: "<!-- INJECT_ACTIVITY: match-up-prefixes -->"
+- find: "<!-- INJECT_ACTIVITY: literal-vs-figurative-id -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: travel-comprehension-questions -->\n"
+  replace: ""
+- find: "> — **Студент:** Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова, обійшов центр і зайшов у кав'ярню."
+  replace: "> — **Студент:** Зранку я вийшов з дому і відразу пішов до зупинки. Звідти я швидко доїхав до вокзалу. Коли я нарешті приїхав до Львова, я із задоволенням обійшов увесь центр міста, а ввечері зайшов у кав'ярню."
 </fixes>

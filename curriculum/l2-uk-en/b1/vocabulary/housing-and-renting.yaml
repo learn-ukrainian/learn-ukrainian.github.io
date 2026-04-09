@@ -1,0 +1,427 @@
+vocabulary:
+- word: гурто́житок
+  translation: dormitory
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: водопостача́ння
+  translation: water supply
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: еле́ктрика
+  translation: electricity
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: цвіль
+  translation: mould
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: плі́снява
+  translation: mould
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ліфт
+  translation: elevator
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: протіка́ти
+  translation: to leak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пола́годити
+  translation: to fix/repair
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: під ключ
+  translation: turnkey (ready to move in)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: окре́мо
+  translation: separately
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кварти́ра
+  translation: apartment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: оре́нда
+  translation: rent/rental
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: оренда́р
+  translation: tenant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: орендода́вець
+  translation: landlord
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: договір оренди
+  translation: lease agreement
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: завда́ток
+  translation: deposit
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: комунальні послуги
+  translation: utilities
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: опа́лення
+  translation: heating
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вмебльо́вана
+  translation: furnished
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пове́рх
+  translation: floor/storey
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пло́ща
+  translation: area/square footage
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ремо́нт
+  translation: renovation/repair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: приватний будинок
+  translation: private house
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: новобудо́ва
+  translation: new building
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хрущо́вка
+  translation: Khrushchyovka (type of Soviet apartment building)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: віта́льня
+  translation: living room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спа́льня
+  translation: bedroom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дитя́ча
+  translation: nursery/children's room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: передпо́кій
+  translation: hallway/entryway
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: санву́зол
+  translation: bathroom and toilet
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сумі́щений
+  translation: joint/combined (bathroom)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: роздільний
+  translation: separate (bathroom)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на кухні
+  translation: in the kitchen
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на балконі
+  translation: on the balcony
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ме́блі
+  translation: furniture
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ша́фа
+  translation: wardrobe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дива́н
+  translation: sofa
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: холоди́льник
+  translation: fridge
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: плита́
+  translation: stove
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пральна машина
+  translation: washing machine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: оголо́шення
+  translation: advertisement
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: квадратні метри
+  translation: square meters
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: євроремо́нт
+  translation: European-style renovation
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: від власника
+  translation: from the owner
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бабуся-ремонт
+  translation: grandma's renovation (old-style interior)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перша здача
+  translation: first rental
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рієлтор
+  translation: realtor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Я телефоную щодо оголошення про оренду
+  translation: I am calling regarding the rental ad
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чи квартира ще вільна?
+  translation: Is the apartment still available?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Коли можна подивитися?
+  translation: When is it possible to view?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки коштує оренда?
+  translation: How much does the rent cost?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чи входять комунальні послуги у вартість?
+  translation: Are utilities included in the price?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: оплата за перший і останній місяць
+  translation: payment for the first and last month
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підписувати договір
+  translation: to sign a contract
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зни́жка
+  translation: discount
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вивіз сміття
+  translation: garbage collection
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чи можна з тваринами?
+  translation: Is it allowed with pets?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чи можна палити?
+  translation: Is it allowed to smoke?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: злама́тися
+  translation: to break down
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: не працює
+  translation: does not work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перегорі́ти
+  translation: to burn out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шумні сусіди
+  translation: noisy neighbors
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: аварійна служба
+  translation: emergency service
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: санте́хнік
+  translation: plumber
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: електрик
+  translation: electrician
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́йстер
+  translation: repairman/specialist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: надіслати майстра
+  translation: to send a repairman
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: інфраструкту́ра
+  translation: infrastructure
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поруч із
+  translation: next to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

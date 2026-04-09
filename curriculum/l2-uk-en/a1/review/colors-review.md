@@ -1,29 +1,49 @@
 ## Linguistic Scan
-No linguistic errors found.
+No linguistic errors found. The distinction between `синій` and `блакитний` is handled with excellent accuracy, and the note regarding `голубий` aligns perfectly with the cultural guidance in the plan. Gender agreement across all examples (e.g., `зелене листя` as neuter collective, `синя ваза`, `білий светр`) is flawless. 
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->` (Logically placed after soft/hard stem theory; tests the M09 agreement rules. Matches plan: `fill-in`, 10 items)
-- `<!-- INJECT_ACTIVITY: group-sort-hard-soft -->` (Logically placed to consolidate the `синій` exception. Matches plan: `group-sort`, 10 items)
-- `<!-- INJECT_ACTIVITY: quiz-blue-shades -->` (Logically placed after the `синій ≠ блакитний` explanation. Matches plan: `quiz`, 6 items)
-- `<!-- INJECT_ACTIVITY: quiz-object-colors -->` (Logically placed as a capstone vocabulary check. Matches plan: `quiz`, 8 items)
-
-All four planned markers are present, logically sequenced, and perfectly aligned with the curriculum's pedagogical goals.
+- `<!-- INJECT_ACTIVITY: quiz-color-match -->`: Matches "quiz" (8 items) for basic colors. Placed well.
+- `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->`: Matches "fill-in" (10 items) for gender agreement. **ISSUE**: Placed prematurely. It tests the soft-stem pattern (`син__ книга`), but is injected *before* the concept of soft-stem adjectives is taught.
+- `<!-- INJECT_ACTIVITY: group-sort-hard-soft -->`: Matches "group-sort" (10 items). Placed well after the soft-stem explanation.
+- `<!-- INJECT_ACTIVITY: quiz-blue-shade -->`: Matches "quiz" (6 items) for `синій` vs `блакитний`. Placed well.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module flawlessly hits every single plan requirement. It covers all 12 basic colors, the hard vs. soft stem distinction, the `синій` vs `блакитний` difference, and executes the dialogues perfectly. It even successfully cites the correct references from the Большакова ("Сонце — стиглий помаранч") and Кравцова textbooks ("Синьо-жовтий прапор маєм"). |
-| 2. Linguistic accuracy | 10/10 | Impeccable. Proper gender agreement, correct capitalization, and an accurate presentation of the м'яка/тверда група rules. The distinction and explanation regarding "голубий" vs "блакитний" is culturally and linguistically precise. |
-| 3. Pedagogical quality | 10/10 | Excellent PPP (Presentation, Practice, Production) flow. Dialogue 2 successfully recycles M09 structures ("яка", "яке") to teach color agreement organically. The side-by-side contrast between "велика книга" and "синя книга" is a highly effective way to isolate the soft-stem vowel shift. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are integrated naturally into the prose (e.g., "помаранчевий апельсин", "рожева троянда"). |
-| 5. Exercise quality | 10/10 | Exercise markers are correctly placed immediately after the relevant theory and correspond exactly to the plan's `activity_hints` specifications. |
-| 6. Engagement & tone | 10/10 | The tone is educational and engaging without being corporate or gamified. Using the Ukrainian flag and the regional variations of the вишиванка (Полісся vs Полтавщина) to anchor the colors is brilliant cultural teaching. |
-| 7. Structural integrity | 9/10 | The module is exceptionally well-structured with clear markdown. The only slight deviation is the word count (1520 words vs. 1200 target, a ~26% overshoot). However, this expansion is entirely justified by the richness of the cultural hooks and grammatical clarity. |
-| 8. Cultural accuracy | 10/10 | 100% accurate and decolonized. The distinction between "синій" and "блакитний" is properly grounded in Ukrainian reality, not treated as a translation quirk. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, situated in realistic contexts (a flower market, choosing an outfit), and effectively model the target grammar without sounding like a robotic textbook. |
+| 1. Plan adherence | 8/10 | Missed referencing "Большакова Grade 2 (p.38)" as the inspiration for the first dialogue, which was explicitly required in the plan's `content_outline`. All other plan points were executed flawlessly. |
+| 2. Linguistic accuracy | 10/10 | Excellent precision in phonetic and morphological descriptions. Flawless gender agreement (`червоні троянди`, `зелене листя`, `синя ваза`). Accurate caution against inventing hard-stem forms like `синий`. |
+| 3. Pedagogical quality | 10/10 | Follows PPP flow perfectly. Introduces the familiar hard-stem paradigm (`великий/велика`) to explicitly contrast with the new soft-stem paradigm (`синій/синя`), making the morphology shift obvious. |
+| 4. Vocabulary coverage | 10/10 | All required (`червоний`, `жовтий`, `синій`, `блакитний`, etc.) and recommended (`помаранчевий`, `фіолетовий`, `світло-`, `темно-`) vocabulary is seamlessly integrated into the text and dialogues. |
+| 5. Exercise quality | 7/10 | DEDUCT: The marker `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->` is placed BEFORE the soft-stem pattern for `синій` is taught. The plan specifically notes this exercise tests `син__ книга`, which learners cannot answer yet. |
+| 6. Engagement & tone | 10/10 | Tone is encouraging and natural ("Colors bring the world to life," "Describing personal belongings... brings these new words into your home"). No corporate gamification filler. |
+| 7. Structural integrity | 8/10 | DEDUCT: The module's word count is 1197, which is slightly below the strict 1200 word target. (Adding the missing Bolshakova reference will bring this over the threshold). |
+| 8. Cultural accuracy | 10/10 | Beautiful integration of the `синьо-жовтий` meaning from Kravtsova Grade 2 and the regional embroidery styles of the `вишиванка` (Polissia vs Poltava). |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly natural, contextual, and situational (shopping for flowers, discussing outfits). They embed target vocabulary effortlessly without reading like robotic lists. |
 
 ## Findings
-None. The module is exceptionally well-written, accurate, and pedagogically sound. The slight word count overshoot is a worthy trade-off for the depth provided.
+[Plan adherence] [major]
+Location: Under "Діалоги — Dialogues", introductory paragraph before the first dialogue.
+Issue: The plan explicitly requires mentioning the "colors poem" from "Большакова Grade 2, p.38" as inspiration for the first dialogue. This textbook reference was omitted.
+Fix: Insert the reference to Большакова Grade 2 (p.38) in the introductory sentence.
 
-## Verdict: PASS
-Zero findings mentioning errors, mistakes, or inaccuracies. All dimensions ≥9. This is a gold-standard module that perfectly executes a dense pedagogical plan.
+[Structural integrity] [minor]
+Location: Entire module.
+Issue: Word count is 1197, which is just below the 1200 word target.
+Fix: Adding the missing reference to Большакова Grade 2 will automatically push the word count above the 1200 threshold.
+
+[Exercise quality] [major]
+Location: Under "Кольори — Colors", before the paragraph starting "While the hard-stem pattern covers most colors..."
+Issue: The marker `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->` is placed BEFORE the soft-stem pattern for 'синій' is taught. The plan specifically notes this exercise tests 'син__ книга'. A learner cannot complete this before learning the soft-stem endings.
+Fix: Move `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->` to after the soft-stem explanation.
+
+## Verdict: REVISE
+The module is exceptionally well-written, linguistically precise, and culturally rich. However, it requires a deterministic fix to correct the premature placement of an exercise marker testing unlearned material, and another to include a missing required textbook citation (which will resolve the minor word count deficit).
+
+<fixes>
+- find: "<!-- INJECT_ACTIVITY: quiz-color-match -->\n\n<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->\n\nWhile the hard-stem pattern"
+  replace: "<!-- INJECT_ACTIVITY: quiz-color-match -->\n\nWhile the hard-stem pattern"
+- find: "while the feminine dark blue is **синя** with a **-я**.\n\n<!-- INJECT_ACTIVITY: group-sort-hard-soft -->\n\n## Синій ≠ блакитний — Blue ≠ Blue"
+  replace: "while the feminine dark blue is **синя** with a **-я**.\n\n<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->\n\n<!-- INJECT_ACTIVITY: group-sort-hard-soft -->\n\n## Синій ≠ блакитний — Blue ≠ Blue"
+- find: "Today, the scene is a bustling outdoor flower market in Kyiv, where Natalka is choosing the perfect gift."
+  replace: "Inspired by the colors poem in Большакова Grade 2 (p.38), today the scene is a bustling outdoor flower market in Kyiv, where Natalka is choosing the perfect gift."
+</fixes>

@@ -1,36 +1,262 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 88,
+  "grounded_items": 47,
+  "ungrounded": [
+    {
+      "word": "працює",
+      "exercise_type": "quiz",
+      "context": "Де Тарас? Він працює _____.",
+      "role": "context"
+    },
+    {
+      "word": "олег",
+      "exercise_type": "quiz",
+      "context": "Де Олег? Він _____.",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "quiz",
+      "context": "Де мій телефон? Він _____.",
+      "role": "context"
+    },
+    {
+      "word": "ми",
+      "exercise_type": "unjumble",
+      "context": "Ми",
+      "role": "answer"
+    },
+    {
+      "word": "живемо",
+      "exercise_type": "fill-in",
+      "context": "Ми живемо _____.",
+      "role": "context"
+    },
+    {
+      "word": "лікар",
+      "exercise_type": "fill-in",
+      "context": "Лікар _____.",
+      "role": "context"
+    },
+    {
+      "word": "концерт",
+      "exercise_type": "fill-in",
+      "context": "Концерт _____.",
+      "role": "context"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "fill-in",
+      "context": "Твій телефон _____.",
+      "role": "context"
+    },
+    {
+      "word": "відкриті",
+      "exercise_type": "group-sort",
+      "context": "Він на... (відкриті простори, події)",
+      "role": "context"
+    },
+    {
+      "word": "простори",
+      "exercise_type": "group-sort",
+      "context": "Він на... (відкриті простори, події)",
+      "role": "context"
+    },
+    {
+      "word": "події",
+      "exercise_type": "group-sort",
+      "context": "Він на... (відкриті простори, події)",
+      "role": "context"
+    },
+    {
+      "word": "закриті",
+      "exercise_type": "group-sort",
+      "context": "Він у / в... (закриті простори, міста)",
+      "role": "context"
+    },
+    {
+      "word": "міста",
+      "exercise_type": "group-sort",
+      "context": "Він у / в... (закриті простори, міста)",
+      "role": "context"
+    },
+    {
+      "word": "живе",
+      "exercise_type": "unjumble",
+      "context": "живе",
+      "role": "answer"
+    },
+    {
+      "word": "паркі",
+      "exercise_type": "error-correction",
+      "context": "Діти зараз у паркі.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «робота» використовує прийменник «на» (на роботі).",
+      "role": "context"
+    },
+    {
+      "word": "використовує",
+      "exercise_type": "true-false",
+      "context": "Слово «робота» використовує прийменник «на» (на роботі).",
+      "role": "context"
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "true-false",
+      "context": "Слово «робота» використовує прийменник «на» (на роботі).",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
+      "role": "context"
+    },
+    {
+      "word": "країн",
+      "exercise_type": "true-false",
+      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
+      "role": "context"
+    },
+    {
+      "word": "та",
+      "exercise_type": "true-false",
+      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
+      "role": "context"
+    },
+    {
+      "word": "міст",
+      "exercise_type": "true-false",
+      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
+      "role": "context"
+    },
+    {
+      "word": "часто",
+      "exercise_type": "true-false",
+      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "true-false",
+      "context": "Слово «кафе» не змінює закінчення (в кафе).",
+      "role": "context"
+    },
+    {
+      "word": "змінює",
+      "exercise_type": "true-false",
+      "context": "Слово «кафе» не змінює закінчення (в кафе).",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "true-false",
+      "context": "Слово «кафе» не змінює закінчення (в кафе).",
+      "role": "context"
+    },
+    {
+      "word": "приміщення",
+      "exercise_type": "true-false",
+      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
+      "role": "context"
+    },
+    {
+      "word": "зазвичай",
+      "exercise_type": "true-false",
+      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
+      "role": "context"
+    },
+    {
+      "word": "використовують",
+      "exercise_type": "true-false",
+      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
+      "role": "context"
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно казати «на пошті» і «на вокзалі».",
+      "role": "context"
+    },
+    {
+      "word": "казати",
+      "exercise_type": "true-false",
+      "context": "Правильно казати «на пошті» і «на вокзалі».",
+      "role": "context"
+    },
+    {
+      "word": "всі",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "чоловічого",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "роду",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "місцевому",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "role": "context"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "unjumble",
+      "context": "лежить",
+      "role": "answer"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 24,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 21,
     "not_tested": [
-      "банк",
-      "банку",
       "вокзал",
-      "вокзалі",
-      "вулиця",
-      "вулиці",
-      "кафе",
-      "лікарня",
-      "лікарні",
-      "магазин",
-      "магазині",
-      "місто",
-      "місті",
-      "на",
-      "парк",
-      "парку",
       "площа",
-      "площі",
-      "пошта",
-      "пошті",
-      "робота",
-      "роботі",
-      "школа",
-      "школі"
+      "пошта"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

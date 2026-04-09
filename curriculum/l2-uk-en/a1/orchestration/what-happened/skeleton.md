@@ -1,45 +1,30 @@
-## Dialogues (~330 words total)
+## Dialogues (~330 words)
+- P1 (~120 words): [Dialogue 1: Monday morning catch-up between coworkers. Taras asks Olena what she did yesterday. Focus: Gender-specific verb forms in questions and answers. Examples: "Що ти робив учора?" (to Taras), "Я читав книжку", "Я готувала вечерю" (from Olena), "Він гуляв у парку".]
+- P2 (~60 words): [Linguistic analysis of Dialogue 1. Explanation of how the same activity (reading, cooking) changes ending based on whether Taras or Olena is speaking. Highlight names (Тарас, Олена) and their gender agreement with the verbs.]
+- P3 (~100 words): [Dialogue 2: Weekend recap. Focus on narrative flow and plural forms. Examples: "Як ти провів вихідні?", "Я гуляв у місті", "Я ходила в кафе", "Ми їли торт і пили каву". Introduces "ми" and "вони" plural endings.]
+- P4 (~50 words): [Brief note on the natural transition from present to past in conversation. Contrast "Я зараз працюю" (present) with "Вчора я працював" (past) to set the stage for formal grammar rules.]
 
-- P1 (~20 words): Brief scene-setting — Monday morning at the office, two colleagues meet by the coffee machine and catch up on the weekend.
-- Dialogue 1 (~110 words): 8-turn exchange. Oksana asks Dmytro: "Що ти робив учора?" He answers: "Я читав книжку." She asks: "А яку?" He: "Детектив. А ти?" She: "Я готувала вечерю." He: "А що робив Тарас?" She: "Він гуляв у парку." He: "А Олена?" She: "Вона працювала весь день." Margin gloss: робив (♂) / робила (♀) — same verb, different ending.
-- P2 (~20 words): Transition — the next day, Bohdan and Mariia compare their full weekends; note "провів/провела вихідні."
-- Dialogue 2 (~110 words): 8-turn exchange. Bohdan: "Як ти провела вихідні?" Mariia: "Чудово! У суботу я ходила в кафе з подругою." Bohdan: "А в неділю?" Mariia: "У неділю я дивилася фільм вдома. А ти?" Bohdan: "Я провів суботу вдома — готував і читав. А в неділю ми гуляли в парку з братом." Mariia: "Як приємно!" Margin gloss: ходила / провела / дивилася (♀); провів / готував / гуляли (♂/pl).
-- P3 (~20 words): One-sentence bridge — "notice that every verb changed its ending depending on who is speaking — that is exactly what you will learn now."
-- Exercise (fill-in, ~50 words): 3 quick gap-fill sentences from Dialogue 1, isolating the gender ending: "Тарас {гуляв|гуляла|гуляли} у парку." / "Олена {працювала|працював|працювали} весь день." / "Що ти {робив|робила|робили} учора, Маріє?" — sets up the grammar section.
+## Минулий час (Past Tense) (~350 words)
+- P1 (~90 words): [Formal rule for past tense formation. Removing the infinitive suffix -ти to get the stem. Adding suffixes: -в (masculine), -ла (feminine), -ло (neuter), -ли (plural). Model verb: читати (чита- + в/ла/ло/ли).]
+- P2 (~100 words): [The "Gender, Not Person" insight. Crucial pedagogical shift: explaining that unlike the present tense (я читаю, ти читаєш), the past tense doesn't care about person (1st, 2nd, 3rd) but only about gender. Examples: "Я читав" (male), "Ти читав" (male), "Він читав" (male) vs "Я читала" (female), "Ти читала" (female), "Вона читала" (female).]
+- P3 (~80 words): [The verb "бути" (to be) in the past. This is the most common past tense verb. Paradigms: був, була, було, були. Comparison with English: "I was" (m) -> я був, "I was" (f) -> я була. Note that "є" (present) is never used in the past.]
+- P4 (~80 words): [The neuter and plural forms. Use of "воно" for impersonal weather (Було тепло, було холодно) and "вони" for groups. Emphasis that in the plural (-ли), gender distinctions disappear (ми гуляли, ви гуляли, вони гуляли).]
 
----
+## Практика (Practice) (~350 words)
+- P1 (~90 words): [Drilling core A1 verbs in the past. Providing a text-based table for working (працював/ла), walking (гуляв/ла), and cooking (готував/ла). Special focus on reflexive verbs like "дивитися": explain the suffix -ся remains but changes to -сь in feminine/plural in some dialects, but focus on the standard "дивився", "дивилася", "дивилися".]
+- P2 (~80 words): [Time markers for the past. Introducing "учора" (yesterday) and "минулого тижня" (last week). Explain that "минулого" agrees with the masculine noun "тиждень". Example sentences: "Учора я працював", "Минулого тижня вона готувала борщ".]
+- <!-- INJECT_ACTIVITY: matching-pronoun-ending --> [matching, focus: Match pronoun to the correct past tense ending (він, вона, воно, вони), 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-past-tense-forms --> [fill-in, focus: Form past tense (він / вона / вони) for core verbs (читати, готувати, гуляти), 6 items]
+- P3 (~90 words): [Question formation and conversational response. How to ask "What did you do?". Masculine: "Що ти робив?". Feminine: "Що ти робила?". Explain that the question itself reveals who you are talking to. Response pattern: "Я + [verb with gender ending] + [object]".]
+- <!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement --> [fill-in, focus: Choose correct gender based on the subject (Марія, Мій брат, Вони), 3 items]
+- P4 (~90 words): [Common L2 pitfalls for English speakers. Warning against the "є був" error (I was) and the habit of using masculine as a "default" for everything. Remind learners that if "я" is a woman, she MUST say "я працювала".]
 
-## Минулий час (Past Tense) (~330 words total)
-
-- P1 (~70 words): Introduce the core insight — Ukrainian past tense is not built on person (я/ти/він) but on **gender**. Compare present tense briefly: "я читаю / ти читаєш / він читає" (person endings) vs past tense: "я читав / ти читав / він читав" (same form — all masculine). Same для жіночого роду: "я читала / ти читала / вона читала." Show this contrast in a two-column mini-table: Present (person changes) | Past (gender changes).
-- P2 (~80 words): Step-by-step formation rule. Take the infinitive → remove -ти → add the gender ending. Walk through **читати**: читати → чита- → він читав / вона читала / воно читало / вони читали. Then **гуляти**: гуляти → гуля- → він гуляв / вона гуляла / воно гуляло / вони гуляли. Repeat with **працювати**: він працював / вона працювала / воно працювало / вони працювали. Box the four endings: -в (він), -ла (вона), -ло (воно), -ли (вони).
-- P3 (~60 words): Highlight the special pattern for reflexive verbs (-ся). **дивитися**: він дивився / вона дивилася / воно дивилося / вони дивилися — the -ся stays after the gender ending. Two example sentences: "Тарас дивився фільм." / "Ірина дивилася серіал." Contrast with "читати" (no -ся) to make the pattern visible.
-- P4 (~70 words): The gender-for-я insight — the same speaker says different forms depending on their own gender: "Я читав книжку." (male speaker) vs "Я читала книжку." (female speaker). Same meaning, same person, different ending. Reinforce with Що ти робив/робила? — show both question forms side by side. Add: "Вони завжди закінчується на -ли — множина не розрізняє рід." Four example sentences with різними суб'єктами: Він / Вона / Я (м.) / Я (ж.).
-- Exercise (matching, ~50 words): Match pronoun/name to correct past tense form of **говорити**: він → говорив | вона → говорила | воно → говорило | вони → говорили | Тарас → говорив | Олена → говорила. Reinforces the paradigm just taught before moving to practice.
-
----
-
-## Практика (Practice) (~330 words total)
-
-- P1 (~70 words): Present the six core A1.3 verbs in a full past-tense paradigm table: читати, працювати, гуляти, готувати, дивитися, говорити — four columns (він / вона / воно / вони). Briefly note that the stem of each verb is already familiar; only the ending is new. Point out the -ся pattern again in the дивитися row.
-- Exercise 1 (fill-in, ~60 words): 6 gap-fill sentences testing form selection based on a named subject — items from activity_hints: "Учора він {читав|читала|читати} книжку." / "Олена {готувала|готував|готували} вечерю." / "Ми {гуляли|гуляв|гуляла} в парку." / "Вони {працювали|працював|працювало} разом." / "Тарас {дивився|дивилася|дивилися} фільм." / "Що ти {робив|робила|робили} учора, Іване?"
-- P2 (~80 words): Build sentences about the past using time expressions. Introduce **учора** (yesterday) and **минулого тижня** (last week) with four model sentences: "Учора я читав цікаву книжку." / "Минулого тижня вона працювала в офісі." / "У суботу ми гуляли в парку." / "В неділю вони готували вечерю разом." Show how the time word comes first (fronted for emphasis — natural Ukrainian word order) but doesn't change the verb form.
-- Exercise 2 (fill-in gender-based, ~60 words): 3 sentences where the subject's gender determines the ending — from activity_hints: "Марія {дивилася|дивився|дивилися} фільм." / "Мій брат {гуляв|гуляла|гуляли} у парку." / "Вони {провели|провів|провела} вихідні разом." Learner must identify subject gender to choose correctly.
-- P3 (~60 words): Short production prompt — two model mini-conversations using Що ти робив/робила учора?: "— Що ти робив учора, Андрію? — Я читав і гуляв у парку. — А ввечері? — Ввечері я дивився фільм." And the female version: "— Що ти робила учора, Оксано? — Я готувала вечерю і потім говорила з мамою." Learner notices both forms of the question.
-
----
-
-## Summary (~330 words total)
-
-- P1 (~80 words): Recap the formation rule in plain language: infinitive stem + -в (він), -ла (вона), -ло (воно), -ли (вони). Restate the key insight in a highlighted box: "In Ukrainian, the past tense ending agrees with the GENDER of the subject — not the grammatical person. Я читав and він читав are identical because both subjects are masculine. Я читала and вона читала are identical because both are feminine." Contrast explicitly with English ("I read / she read" — no gender marking).
-- P2 (~70 words): Gather all six verbs in past tense side-by-side (він / вона) for quick visual review: читав/читала, працював/працювала, гуляв/гуляла, готував/готувала, дивився/дивилася, говорив/говорила. Add plural row: читали, працювали, гуляли, готували, дивилися, говорили. Label the endings visually: **-в / -ла / -ло / -ли**. Remind: вони always ends in -ли regardless of gender.
-- P3 (~80 words): Useful phrases for talking about the past — four ready-made conversation starters: "Що ти робив/робила учора?" / "Як ти провів/провела вихідні?" / "Учора я {verb}-в/-ла {object}." / "Ми {verb}-ли разом." Show each with a completed example. Note the paired question forms robiv/robyla are both correct — one for masculine, one for feminine interlocutors.
-- Self-check (~100 words): Bulleted Q&A checklist —
-  - Can you form the past tense of **читати** for all four forms? (читав / читала / читало / читали)
-  - What ending does **вони** always take? (-ли)
-  - What past-tense form would a female speaker use for "I worked"? (я працювала)
-  - How do you ask "What did you do?" to a male friend? (Що ти робив?)
-  - How to a female friend? (Що ти робила?)
-  - Production task: Tell your partner three things you did last week using three different verbs — use your correct gender ending for **я**.
+## Підсумок (~290 words)
+- P1 (~120 words): [Recap of the past tense suffixes: -в, -ла, -ло, -ли. Summary table in text form. Focus on the transformation: infinitive -> past stem -> gender ending. Reminder: Past tense shows GENDER.]
+- P2 (~170 words): [Self-check questions and production task.
+  - Як ми утворюємо минулий час? (Infinitive stem + suffix)
+  - Яке закінчення має жіночий рід? (-ла)
+  - Як запитати друга про вчорашній день? (Що ти робив учора?)
+  - Task: Tell your partner 3 things you did yesterday using different verbs (Я снідав, я гуляв, я читав).]
 
 Grand total: ~1320 words

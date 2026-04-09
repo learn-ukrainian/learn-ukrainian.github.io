@@ -1,0 +1,55 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'Covered most points well, but missed two specific elements: 1) The reading
+    passage ("Зранку мені було холодно...") from Section 1 was omitted. 2) The grammatical
+    contrast between "Гімн волі" (Genitive'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Found multiple critical linguistic errors: 1) "Давайте" + verb used 9
+    times instead of proper imperatives. 2) "підтримуючим" used as a participle-adjective.
+    3) The non-existent word "навсупроти" used '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding flow. Grammar rules are explained clearly, not just listed.
+    Excellent contrast with English logic ("I am thirty" vs "Мені тридцять") and good
+    use of impersonal logic.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are naturally
+    embedded into the prose and dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'Markers are placed logically after their respective sections. However,
+    the marker `<!-- INJECT_ACTIVITY: dialogue-dative-advice -->` uses an activity
+    type `dialogue` which is not present in the plan''s'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is appropriately supportive and engaging. Mild deduction for
+    the repetitive use of the non-standard "Давайте" opener, but the persona is otherwise
+    excellent.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 5486, well over the 4000 target. All required H2 headings
+    are present and properly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent decolonized approach. References to Khreshchatyk, Ukrainian
+    perspectives on age, and the distinction between "дякувати" vs "благодарить" show
+    strong cultural awareness.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Conversations are natural and contextualized. The family walking on Khreshchatyk
+    and the friends discussing stress are believable, multi-turn exchanges with named
+    speakers.
+findings: []

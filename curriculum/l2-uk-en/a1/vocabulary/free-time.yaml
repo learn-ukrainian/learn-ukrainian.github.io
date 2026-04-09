@@ -1,8 +1,50 @@
 vocabulary:
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: і́ноді
+  translation: sometimes
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: і́нколи
+  translation: sometimes
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: рі́дко
+  translation: rarely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: вихідні́
   translation: weekend
   expression: false
   pos: прикм.
+  gender: ''
+  verified: true
+- word: вільний час
+  translation: free time
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: спорт
@@ -18,7 +60,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: кіно́
-  translation: cinema (indeclinable)
+  translation: cinema
   expression: false
   pos: ім.
   gender: с.
@@ -29,52 +71,28 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: конце́рт
-  translation: concert
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: музе́й
   translation: museum
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: ча́сто
-  translation: often
+- word: конце́рт
+  translation: concert
   expression: false
-  pos: присл.
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ході́мо
+  translation: let's go!
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: і́ноді
-  translation: sometimes
+- word: дава́й
+  translation: let's (informal)
   expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: і́нколи
-  translation: sometimes (variant of іноді)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: рі́дко
-  translation: rarely
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: за́вжди́
-  translation: always
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зазвича́й
-  translation: usually
-  expression: false
-  pos: присл.
+  pos: дієсл.
   gender: ''
   verified: true
 - word: раз
@@ -95,16 +113,46 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: Ходімо!
-  translation: Let's go!
+- word: на тиждень
+  translation: per week
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: дава́й
-  translation: let's (informal suggestion)
-  expression: false
-  pos: дієсл.
+- word: на місяць
+  translation: per month
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кожен день
+  translation: every day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати у
+  translation: to play (sports/games)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати на
+  translation: to play (instrument)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ходити в
+  translation: to go to (building)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ходити на
+  translation: to go to (event)
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: малюва́ти
@@ -119,224 +167,32 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: гра́ти
-  translation: to play
+- word: готува́ти
+  translation: to cook
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: слу́хати
-  translation: to listen
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: диви́тися
-  translation: to watch
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ходи́ти
-  translation: to go (regularly)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: сні́дати
-  translation: to eat breakfast
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: баскетбо́л
-  translation: basketball
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: те́ніс
-  translation: tennis
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: волейбо́л
-  translation: volleyball
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гіта́ра
-  translation: guitar
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: піані́но
-  translation: piano (indeclinable)
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: скри́пка
-  translation: violin
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: серіа́л
-  translation: TV series
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: му́зика
-  translation: music
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: по́тім
-  translation: then / afterwards
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: спра́вді
-  translation: really
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: чудо́во
-  translation: wonderful / great
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: звича́йно
-  translation: of course
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: або́
-  translation: or
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: вве́чері
-  translation: in the evening
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ніколи не
-  translation: never (double negation — ніколи always requires не before the verb)
+- word: слухати музику
+  translation: to listen to music
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: дивитися серіали
-  translation: to watch series
+- word: займатися спортом
+  translation: to practice sports
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: грати у баскетбол
-  translation: to play basketball
+- word: Що ти робиш у вихідні?
+  translation: What are you doing this weekend?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: грати у теніс
-  translation: to play tennis
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: грати у волейбол
-  translation: to play volleyball
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: грати на гітарі
-  translation: to play guitar (грати на + instrument)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: грати на піаніно
-  translation: to play piano
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: грати на скрипці
-  translation: to play violin
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ходити в кіно
-  translation: to go to the cinema
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ходити в театр
-  translation: to go to the theater
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ходити на концерт
-  translation: to go to a concert
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ходити в музей
-  translation: to go to the museum
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Як часто?
-  translation: How often?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: раз на тиждень
-  translation: once a week
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: двічі на тиждень
-  translation: twice a week
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: тричі на тиждень
-  translation: three times a week
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: раз на місяць
-  translation: once a month
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: кожен день
-  translation: every day
+- word: До зустрічі!
+  translation: See you!
   expression: true
   pos: ''
   gender: ''

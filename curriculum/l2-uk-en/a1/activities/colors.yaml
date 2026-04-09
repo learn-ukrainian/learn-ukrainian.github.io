@@ -2,417 +2,427 @@ version: '1.0'
 module: colors
 level: a1
 inline:
+- id: quiz-color-match
+  type: quiz
+  instruction: Оберіть правильний колір (Choose the correct color)
+  items:
+  - question: Якого кольору троянда?
+    options:
+    - червона
+    - чорна
+    - зелена
+    - сіра
+    correct: 0
+  - question: Якого кольору соняшник?
+    options:
+    - жовтий
+    - синій
+    - білий
+    - фіолетовий
+    correct: 0
+  - question: Якого кольору лілія?
+    options:
+    - біла
+    - зелена
+    - чорна
+    - коричнева
+    correct: 0
+  - question: Якого кольору сонце?
+    options:
+    - жовте
+    - чорне
+    - синє
+    - зелене
+    correct: 0
+  - question: Якого кольору трава?
+    options:
+    - зелена
+    - рожева
+    - біла
+    - сіра
+    correct: 0
+  - question: Якого кольору небо вночі?
+    options:
+    - синє
+    - жовте
+    - червоне
+    - біле
+    correct: 0
+  - question: Якого кольору небо вдень?
+    options:
+    - блакитне
+    - чорне
+    - зелене
+    - коричневе
+    correct: 0
+  - question: Якого кольору листя?
+    options:
+    - зелене
+    - синє
+    - біле
+    - фіолетове
+    correct: 0
 - id: fill-in-gender-agreement
   type: fill-in
-  instruction: Choose the correct color form to match the noun's gender. (**Виберіть
-    правильну форму кольору**.)
+  instruction: Вставте правильну форму прикметника (Insert the correct adjective form)
   items:
-  - sentence: Це ___ олівець. (red pencil)
-    answer: червоний
-    options:
-    - червоний
-    - червона
-    - червоне
-  - sentence: Це ___ книга. (red book)
-    answer: червона
-    options:
-    - червоний
-    - червона
-    - червоне
-  - sentence: Це ___ вікно. (white window)
-    answer: біле
-    options:
-    - білий
-    - біла
-    - біле
-  - sentence: Це ___ сукня. (black dress)
-    answer: чорна
+  - sentence: Це ____ стіл.
+    answer: чорний
     options:
     - чорний
     - чорна
     - чорне
-  - sentence: Це ___ светр. (white sweater)
-    answer: білий
+    - чорні
+  - sentence: Це ____ кімната.
+    answer: біла
     options:
     - білий
     - біла
     - біле
-  - sentence: Це ___ пальто. (grey coat)
+    - білі
+  - sentence: Тут є ____ вікно.
     answer: сіре
     options:
     - сірий
     - сіра
     - сіре
-  - sentence: Це ___ ваза. (dark-blue vase)
-    answer: синя
+    - сірі
+  - sentence: Там ____ крісло.
+    answer: червоне
     options:
-    - синій
-    - синя
-    - синє
-  - sentence: Це ___ море. (dark-blue sea)
-    answer: синє
+    - червоний
+    - червона
+    - червоне
+    - червоні
+  - sentence: Де ____ сукня?
+    answer: жовта
     options:
-    - синій
-    - синя
-    - синє
-  - sentence: Це ___ стіл. (brown table)
-    answer: коричневий
-    options:
-    - коричневий
-    - коричнева
-    - коричневе
-  - sentence: Це ___ троянда. (pink rose)
-    answer: рожева
+    - жовтий
+    - жовта
+    - жовте
+    - жовті
+  - sentence: Який ____ светр!
+    answer: рожевий
     options:
     - рожевий
     - рожева
     - рожеве
-- id: group-sort-hard-soft
-  type: group-sort
-  instruction: Sort each word into the correct adjective group. Hard-stem (**тверда
-    група**) ends in **-ий**. The one soft-stem exception (**м'яка група**) ends in
-    **-ій**.
-  groups:
-  - label: Тверда група (-ий)
-    items:
-    - червоний
-    - жовтий
-    - зелений
-    - білий
-    - чорний
-    - сірий
-    - коричневий
-    - рожевий
-  - label: М'яка група (-ій)
-    items:
-    - синій
-    - синя
-    - синє
-    - сині
-    - темно-синій
-    - синьо-жовтий
-- id: quiz-blue-shades
-  type: quiz
-  instruction: Choose **синій** (dark blue) or **блакитний** (light blue). Think about
-    the shade!
-  items:
-  - question: The blue stripe on the Ukrainian flag is ___.
-    options:
-    - синій
-    - блакитний
-    - фіолетовий
-    correct: 0
-  - question: ___ небо вдень. (The sky on a clear afternoon.)
-    options:
-    - Блакитне
-    - Синє
-    - Зелене
-    correct: 0
-  - question: ___ море вночі. (The sea at night.)
-    options:
-    - Синє
-    - Блакитне
-    - Сіре
-    correct: 0
-  - question: ___ стрічка — pale, like a ribbon on a spring dress.
-    options:
-    - Блакитна
-    - Синя
-    - Біла
-    correct: 0
-  - question: ___ олівець — dark, like deep ink.
-    options:
-    - Синій
-    - Блакитний
-    - Фіолетовий
-    correct: 0
-  - question: 'A pale, sky-colored vase: ___ ваза.'
-    options:
-    - блакитна
-    - синя
-    - сіра
-    correct: 0
-- id: quiz-object-colors
-  type: quiz
-  instruction: '**Якого кольору?** — What color is this? Choose the correct answer.'
-  items:
-  - question: Якого кольору класична троянда?
-    options:
-    - Червона
-    - Синя
-    - Сіра
-    - Жовта
-    correct: 0
-  - question: Якого кольору соняшник?
-    options:
-    - Жовтий
-    - Синій
-    - Червоний
-    - Сірий
-    correct: 0
-  - question: Якого кольору листя?
-    options:
-    - Зелене
-    - Жовте
-    - Біле
-    - Фіолетове
-    correct: 0
-  - question: Якого кольору сукня Лізи (з діалогу)?
-    options:
-    - Чорна
-    - Біла
-    - Сіра
-    - Синя
-    correct: 0
-  - question: Якого кольору светр у діалозі?
-    options:
-    - Білий
-    - Чорний
-    - Синій
-    - Рожевий
-    correct: 0
-  - question: Якого кольору пальто Лізи?
-    options:
-    - Сіре
-    - Чорне
-    - Біле
-    - Коричневе
-    correct: 0
-  - question: Якого кольору черевики Лізи?
-    options:
-    - Коричневі
-    - Чорні
-    - Білі
-    - Сині
-    correct: 0
-  - question: Якого кольору ваза у квітковому магазині?
-    options:
-    - Синя
-    - Червона
-    - Зелена
-    - Біла
-    correct: 0
-workbook:
-- type: match-up
-  instruction: Match each noun to the color adjective from the lesson. The form must
-    agree with the noun's gender.
-  pairs:
-  - left: стіл
-    right: коричневий
-  - left: книга
-    right: червона
-  - left: вікно
-    right: біле
-  - left: листя
-    right: зелене
-  - left: сукня
-    right: чорна
-  - left: светр
-    right: білий
-  - left: пальто
-    right: сіре
-  - left: черевики
-    right: коричневі
-- type: fill-in
-  instruction: 'Complete each sentence with the correct form of **синій**. Pattern:
-    **синій / синя / синє / сині**.'
-  items:
-  - sentence: Це ___ стіл.
-    answer: синій
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ ваза.
-    answer: синя
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ море.
-    answer: синє
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ олівці.
-    answer: сині
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ книга.
-    answer: синя
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ небо.
-    answer: синє
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ светр.
-    answer: синій
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-  - sentence: Це ___ ніч.
-    answer: синя
-    options:
-    - синій
-    - синя
-    - синє
-    - сині
-- type: error-correction
-  instruction: Find the gender agreement error. Choose the correct color form.
-  items:
-  - sentence: Це зелена вікно.
-    error: зелена
-    correction: зелене
-    error_type: word
+    - рожеві
+  - sentence: У мене є ____ сумка.
+    answer: зелена
     options:
     - зелений
     - зелена
     - зелене
-    explanation: '**Вікно** is neuter (n) — the adjective must end in **-е**: **зелене
-      вікно**.'
-  - sentence: Це білий книга.
-    error: білий
-    correction: біла
-    error_type: word
+    - зелені
+  - sentence: Це ____ пальто.
+    answer: коричневе
+    options:
+    - коричневий
+    - коричнева
+    - коричневе
+    - коричневі
+  - sentence: Тут є ____ лілії.
+    answer: білі
     options:
     - білий
     - біла
     - біле
-    explanation: '**Книга** is feminine (f) — the adjective must end in **-а**: **біла
-      книга**.'
-  - sentence: Це чорне стіл.
-    error: чорне
-    correction: чорний
-    error_type: word
+    - білі
+  - sentence: Це ____ олівець.
+    answer: помаранчевий
     options:
-    - чорний
+    - помаранчевий
+    - помаранчева
+    - помаранчеве
+    - помаранчеві
+- id: group-sort-hard-soft
+  type: group-sort
+  instruction: Розподіліть форми на тверду і м'яку групи (Sort forms into hard and
+    soft groups)
+  groups:
+  - label: Тверда група (-ий, -а, -е, -і)
+    items:
+    - білий
     - чорна
-    - чорне
-    explanation: '**Стіл** is masculine (m) — the adjective must end in **-ий**: **чорний
-      стіл**.'
-  - sentence: Це синій ваза.
-    error: синій
-    correction: синя
-    error_type: word
-    options:
+    - червоне
+    - зелені
+    - жовтий
+    - сіра
+  - label: М'яка група (-ій, -я, -є, -і)
+    items:
     - синій
     - синя
     - синє
-    explanation: '**Ваза** is feminine (f). **Синій** is soft-stem, so its feminine
-      form is **синя** (soft **-я**, not hard **-а**).'
-  - sentence: Це сірий пальто.
-    error: сірий
-    correction: сіре
-    error_type: word
+    - сині
+- id: quiz-blue-shade
+  type: quiz
+  instruction: 'Оберіть правильний відтінок: синій чи блакитний (Choose the right
+    shade)'
+  items:
+  - question: Яке небо вдень?
     options:
+    - блакитне
+    - синє
+    - блакитний
+    - синій
+    correct: 0
+  - question: Яке глибоке море?
+    options:
+    - синє
+    - блакитне
+    - синій
+    - блакитний
+    correct: 0
+  - question: Яке небо вночі?
+    options:
+    - синє
+    - блакитне
+    - синя
+    - блакитна
+    correct: 0
+  - question: Яка верхня смуга прапора України?
+    options:
+    - синя
+    - блакитна
+    - синє
+    - блакитне
+    correct: 0
+  - question: Світлий відтінок синього — це...
+    options:
+    - блакитний
+    - синій
+    - чорний
     - сірий
-    - сіра
-    - сіре
-    explanation: '**Пальто** is neuter (n) — the adjective must end in **-е**: **сіре
-      пальто**.'
-  - sentence: Це рожевий троянда.
-    error: рожевий
-    correction: рожева
+    correct: 0
+  - question: Темний відтінок — це...
+    options:
+    - синій
+    - блакитний
+    - жовтий
+    - білий
+    correct: 0
+workbook:
+- id: match-up-colors
+  type: match-up
+  instruction: З'єднайте іменник із правильним прикметником (Match the noun with the
+    correct adjective)
+  pairs:
+  - left: сонце
+    right: жовте
+  - left: троянда
+    right: червона
+  - left: кімната
+    right: біла
+  - left: олівець
+    right: синій
+  - left: трава
+    right: зелена
+  - left: черевики
+    right: коричневі
+- id: fill-in-pronouns
+  type: fill-in
+  instruction: Вставте правильний займенник (Insert the correct pronoun)
+  items:
+  - sentence: ____ кімната біла.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: ____ светр червоний.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: ____ вікно синє.
+    answer: моє
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: ____ сумка коричнева.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: ____ крісло сіре.
+    answer: моє
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: ____ черевики чорні.
+    answer: мої
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+- id: error-correction-colors
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в узгодженні (Find and fix the agreement
+    error)
+  items:
+  - sentence: Це червоний сумка.
+    error: червоний
+    correction: червона
     error_type: word
     options:
-    - рожевий
-    - рожева
-    - рожеве
-    explanation: '**Троянда** is feminine (f) — the adjective must end in **-а**:
-      **рожева троянда**.'
-- type: true-false
-  instruction: True or false? Read each statement about Ukrainian color adjectives.
+    - червона
+    - червоне
+    - червоні
+    explanation: Сумка is feminine, so it takes the ending -а (червона).
+  - sentence: Тут стоїть синя стіл.
+    error: синя
+    correction: синій
+    error_type: word
+    options:
+    - синій
+    - синє
+    - сині
+    explanation: Стіл is masculine, so it takes the ending -ій (синій).
+  - sentence: Моє светр дуже теплий.
+    error: Моє
+    correction: Мій
+    error_type: word
+    options:
+    - Мій
+    - Моя
+    - Мої
+    explanation: Светр is masculine, so it needs the masculine pronoun мій.
+  - sentence: Мені подобається жовтий лілії.
+    error: жовтий
+    correction: жовті
+    error_type: word
+    options:
+    - жовті
+    - жовта
+    - жовте
+    explanation: Лілії is plural, so it takes the plural ending -і (жовті).
+  - sentence: Де твоя зелений пальто?
+    error: зелений
+    correction: зелене
+    error_type: word
+    options:
+    - зелене
+    - зелена
+    - зелені
+    explanation: Пальто is neuter, so it takes the ending -е (зелене).
+  - sentence: Яке гарне кімната!
+    error: Яке
+    correction: Яка
+    error_type: word
+    options:
+    - Яка
+    - Який
+    - Які
+    explanation: Кімната is feminine, so the question word is яка.
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence out of
+    the words)
   items:
-  - statement: '**Синій** ends in **-ій** because it is a soft-stem adjective (м''яка
-      група).'
-    correct: true
-    explanation: Correct! **Синій** is the only basic color with a soft stem. All
-      other basic colors use the hard stem (тверда група) and end in **-ий**.
-  - statement: '**Синій** and **блакитний** can always be used interchangeably.'
-    correct: false
-    explanation: No! **Синій** = dark, deep blue (sea, night sky, flag). **Блакитний**
-      = light, sky blue. Native speakers notice the difference immediately.
-  - statement: The Ukrainian flag is described as **синьо-жовтий**.
-    correct: true
-    explanation: 'Correct! The blue stripe is **синій** (deep blue) and the yellow
-      stripe is **жовтий**. The compound adjective is hyphenated: **синьо-жовтий прапор**.'
-  - statement: For a feminine noun, you add **-е** to the color adjective stem.
-    correct: false
-    explanation: 'No! Feminine nouns take **-а** (hard stem): **червона книга**. The
-      ending **-е** is for neuter nouns: **червоне вікно**.'
-  - statement: '**Помаранчевий**, **коричневий**, and **фіолетовий** all belong to
-      the тверда група.'
-    correct: true
-    explanation: Correct! All three end in **-ий** — they are hard-stem adjectives
-      (тверда група).
-  - statement: In modern standard Ukrainian, **голубий** is preferred over **блакитний**.
-    correct: false
-    explanation: No! **Блакитний** is the standard modern choice. **Голубий** appears
-      in older texts but **блакитний** is the recommended form today.
-- type: translate
-  instruction: Choose the correct Ukrainian translation.
+  - words:
+    - кольору
+    - твоя
+    - Якого
+    - кімната?
+    correct_order:
+    - Якого
+    - кольору
+    - твоя
+    - кімната?
+  - words:
+    - стіл
+    - коричневий.
+    - Мій
+    correct_order:
+    - Мій
+    - стіл
+    - коричневий.
+  - words:
+    - Де
+    - чорна
+    - моя
+    - сукня?
+    correct_order:
+    - Де
+    - моя
+    - чорна
+    - сукня?
+  - words:
+    - синя
+    - подобається
+    - Мені
+    - ваза.
+    correct_order:
+    - Мені
+    - подобається
+    - синя
+    - ваза.
+  - words:
+    - є
+    - У
+    - мене
+    - светр.
+    - білий
+    correct_order:
+    - У
+    - мене
+    - є
+    - білий
+    - светр.
+  - words:
+    - Яка
+    - сумка!
+    - гарна
+    correct_order:
+    - Яка
+    - гарна
+    - сумка!
+- id: count-syllables-colors
+  type: count-syllables
+  instruction: Порахуйте склади в словах (Count the syllables in the words)
   items:
-  - source: a black dress
-    options:
-    - text: чорна сукня
-      correct: true
-    - text: чорний сукня
-      correct: false
-    - text: чорне сукня
-      correct: false
-  - source: a white sweater
-    options:
-    - text: білий светр
-      correct: true
-    - text: біла светр
-      correct: false
-    - text: біле светр
-      correct: false
-  - source: a grey coat
-    options:
-    - text: сіре пальто
-      correct: true
-    - text: сірий пальто
-      correct: false
-    - text: сіра пальто
-      correct: false
-  - source: a dark-blue vase
-    options:
-    - text: синя ваза
-      correct: true
-    - text: синій ваза
-      correct: false
-    - text: синє ваза
-      correct: false
-  - source: yellow sunflowers
-    options:
-    - text: жовті соняшники
-      correct: true
-    - text: жовтий соняшники
-      correct: false
-    - text: жовта соняшники
-      correct: false
-  - source: a light-pink dress
-    options:
-    - text: світло-рожева сукня
-      correct: true
-    - text: світло-рожевий сукня
-      correct: false
-    - text: рожева-світло сукня
-      correct: false
+  - word: колір
+    correct: 2
+  - word: блакитний
+    correct: 3
+  - word: синій
+    correct: 2
+  - word: помаранчевий
+    correct: 5
+  - word: жовтий
+    correct: 2
+  - word: фіолетовий
+    correct: 5
+- id: true-false-colors
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Прапор України червоно-чорний.
+    correct: false
+    explanation: Прапор України синьо-жовтий.
+  - statement: Троянди часто бувають червоні.
+    correct: true
+    explanation: Так, червоні троянди дуже популярні.
+  - statement: Слово 'синій' — це світлий відтінок блакитного.
+    correct: false
+    explanation: Синій — це темний відтінок, а блакитний — світлий.
+  - statement: Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.
+    correct: true
+    explanation: Стіл — він (чоловічий рід).
+  - statement: '''Зелена вікно'' — це правильно.'
+    correct: false
+    explanation: Вікно — воно, тому 'зелене вікно'.
+  - statement: Слово 'небо' середнього роду.
+    correct: true
+    explanation: Закінчення -о означає середній рід (воно).

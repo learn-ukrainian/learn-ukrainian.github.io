@@ -1,0 +1,325 @@
+vocabulary:
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: to be able to, can
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́сити
+  translation: to have to, must
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to eat breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: встава́ти
+  translation: to get up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лягати спати
+  translation: to go to sleep, to go to bed
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: почина́тися
+  translation: to start, to begin (intransitive)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk, to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виклада́ти
+  translation: to teach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відповіда́ти
+  translation: to reply, to answer
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: назива́тися
+  translation: to be called
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: одяга́тися
+  translation: to get dressed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мовча́ти
+  translation: to be silent, to say nothing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: почува́тися
+  translation: to feel (about oneself)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чистити зуби
+  translation: to brush one's teeth
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бутербро́д
+  translation: sandwich, open-faced sandwich
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: робо́та
+  translation: work, job
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: докуме́нт
+  translation: document
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лист
+  translation: letter (correspondence)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: матема́тика
+  translation: mathematics, math
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієвідмі́на
+  translation: conjugation group
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: куди́
+  translation: where to (direction)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: чому́
+  translation: why
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first, at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then, after that
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: уве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вра́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́втра
+  translation: tomorrow
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зно́ву
+  translation: again
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: звича́йно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вча́сно
+  translation: on time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́зом
+  translation: together
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ціка́во
+  translation: interesting, how interesting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ніхто́
+  translation: nobody, no one
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Мені подобається...
+  translation: I like...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як ти себе почуваєш?
+  translation: How do you feel?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна разом?
+  translation: Can we go together? / May I join you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відповідати на листи
+  translation: to reply to letters/emails
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: через роботу
+  translation: because of work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їхати на роботу
+  translation: to go to work (by vehicle)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

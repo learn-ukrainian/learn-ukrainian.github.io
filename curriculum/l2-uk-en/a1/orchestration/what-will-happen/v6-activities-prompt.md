@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,8 +27,8 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-buty-future-forms -->`
-- `<!-- INJECT_ACTIVITY: fill-in-analytic-future -->`
+- `<!-- INJECT_ACTIVITY: matching-pronoun-to-be -->`
+- `<!-- INJECT_ACTIVITY: fill-in-future-formation -->`
 - `<!-- INJECT_ACTIVITY: fill-in-tense-distinction -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -102,135 +102,121 @@ required:
 <module_content>
 ## Dialogues
 
-A fair. Music. Bright lights. A woman in a shawl sits behind a crystal ball. She looks up at you and smiles.
+When we talk about our lives, we constantly shift between the past, the present, and the future. In the previous lessons, we focused heavily on what already happened. We learned to describe completed actions and past states using past tense verbs that change based on gender. We talked about yesterday, last week, and what we did during our time off. But human conversations are equally focused on what comes next. We make plans, we set goals, and we imagine future possibilities. Moving from what we did to what we will do requires a new grammatical tool. In Ukrainian, talking about the future is surprisingly straightforward, especially when we focus on ongoing plans and intentions. Observe how native speakers discuss their upcoming activities in different real-world situations.
 
-> **Ворожка:** Ти будеш багато подорожувати. *(You will travel a lot.)*
-> **Ворожка:** Будеш знаходити нових друзів. *(You will find new friends.)*
-> **Ворожка:** Будеш отримувати подарунки. *(You will receive gifts.)*
-> **Ворожка:** Будеш щаслива! *(You will be happy!)*
-> **Клієнт:** Справді? А коли це буде? *(Really? And when will that be?)*
-> **Ворожка:** Скоро! Твоє майбутнє — яскраве! *(Soon! Your future is bright!)*
+:::note
+The future tense is essential for making plans. Notice how the speakers in these dialogues use a special form of the verb "to be" combined with an action verb.
+:::
 
-The **ворожка** (fortune teller) keeps repeating one word: **будеш** — "you will." Every prediction follows the same pattern: **будеш** + infinitive. The infinitive is the base form of a verb — the "-ти" form you already know: **подорожувати** (to travel), **знаходити** (to find), **отримувати** (to receive). This is the Ukrainian future tense, and it is remarkably simple.
+> **Ворожка:** Сідай. Я бачу твоє майбутнє. *(Sit down. I see your future.)*
+> **Клієнт:** Що там? Що ви бачите? *(What is there? What do you see?)*
+> **Ворожка:** Ти **будеш** багато **подорожувати**. *(You will travel a lot.)*
+> **Клієнт:** Це добре. А робота? *(That is good. And work?)*
+> **Ворожка:** У тебе **буде** цікава робота. Ти **будеш знаходити** нових друзів. *(You will have interesting work. You will find new friends.)*
+> **Клієнт:** А гроші? *(And money?)*
+> **Ворожка:** Ти **будеш отримувати** подарунки. Ти **будеш** щасливий! *(You will receive gifts. You will be happy!)*
 
-Now listen to two friends planning their week. Every form of **буду** appears in this conversation — count them.
+Notice how the fortune teller uses the word **будеш** (you will) before every action. Now, observe two friends discussing a much closer future — tomorrow.
 
-> **Андрій:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
-> **Марина:** Завтра я буду працювати. *(Tomorrow I will work.)*
-> **Андрій:** А ввечері? *(And in the evening?)*
-> **Марина:** Ввечері я буду готувати вечерю. *(In the evening I will cook dinner.)*
-> **Андрій:** А що буде робити Олена? *(And what will Olena do?)*
-> **Марина:** Вона буде читати. *(She will read.)*
-> **Андрій:** А ви будете гуляти? *(And will you [all] go for a walk?)*
-> **Марина:** Так, ми будемо гуляти в парку! *(Yes, we will walk in the park!)*
+> **Максим:** Що ти **будеш робити завтра**? *(What will you do tomorrow?)*
+> **Олег:** **Завтра** я **буду працювати**. *(Tomorrow I will work.)*
+> **Максим:** А **ввечері**? *(And in the evening?)*
+> **Олег:** **Ввечері** я **буду готувати** вечерю. А що **буде робити** Олена? *(In the evening I will prepare dinner. And what will Olena do?)*
+> **Максим:** Вона **буде читати**. *(She will read.)*
+> **Олег:** А ви **будете гуляти**? *(And will you walk?)*
+> **Максим:** Так, ми **будемо гуляти** в парку! *(Yes, we will walk in the park!)*
 
-*Every person of **буду** appears in this dialogue — **буду**, **будеш**, **буде**, **будемо**, **будете**. Did you catch them all?*
+Finally, observe how families plan their weekends. The pattern remains consistent even when multiple people are involved.
 
-Here is another conversation — weekend plans between colleagues.
-
-> **Оксана:** Що ви будете робити на вихідних? *(What will you do on the weekend?)*
-> **Тарас:** У суботу ми будемо відпочивати. *(On Saturday we will rest.)*
-> **Оксана:** А в неділю? *(And on Sunday?)*
-> **Тарас:** У неділю я буду готувати. *(On Sunday I will cook.)*
-> **Тарас:** А чоловік буде гуляти з дітьми. *(And my husband will walk with the kids.)*
-> **Оксана:** Чудово! А я буду дивитися футбол. *(Wonderful! And I will watch football.)*
-> **Тарас:** Ти завжди будеш дивитися футбол! *(You will always watch football!)*
-
-*Notice **«Чудово!»** — a useful reaction meaning "Wonderful!" And the playful teasing at the end: **завжди будеш дивитися** — "you'll always watch."*
-
-<!-- INJECT_ACTIVITY: match-buty-future-forms -->
+> **Анна:** Що ви **будете робити на вихідних**? *(What will you do on the weekend?)*
+> **Ігор:** У суботу ми **будемо відпочивати**. *(On Saturday we will rest.)*
+> **Анна:** А в неділю? *(And on Sunday?)*
+> **Ігор:** У неділю я **буду готувати**. Чоловік **буде гуляти** з дітьми. *(On Sunday I will cook. My husband will walk with the children.)*
+> **Анна:** Звучить добре! А я **буду дивитися футбол**. *(Sounds good! And I will watch football.)*
+> **Ігор:** Ти завжди **будеш дивитися футбол**! *(You will always watch football!)*
 
 ## Майбутній час (Future Tense)
 
-Ukrainian textbooks call this **майбутній час** (future tense). Ukrainian actually has two ways to form the future, but at A1 you only need one: the **складений майбутній** (analytic future). The pattern is straightforward — take the helper verb **буду** (conjugated for person) and add any infinitive after it. Think of it like English "will + verb": **Я буду читати** = "I will read." The infinitive **читати** never changes. Only **буду** shifts to match the subject.
+Grade 3-4 textbooks in Ukrainian schools introduce the concept of **майбутній час** (future tense) using a systematic approach. Ukrainian actually has two different ways to form the future tense, depending on whether you are talking about an ongoing process or a single completed result. At the A1 level, we focus exclusively on one — the analytic future form. This is the most common and accessible way to express future plans, intentions, and ongoing actions in tomorrow's schedule. If you understand how the English future tense works with the word "will," you already have a solid mental anchor for this Ukrainian structure. In English, you take the word "will" and add a base verb, like "will read" or "will work." Ukrainian does exactly the same thing, but instead of a single word like "will," we use a conjugated form of the verb **бути** (to be) followed by the infinitive of your main action verb.
 
-Here is the full conjugation — six forms of **бути** (to be) in the future, each paired with the infinitive **читати** (to read):
+To use this structure, you only need to memorize six forms of the verb **бути**. These forms act as your future tense helpers. Notice how their endings closely resemble the present tense endings you already know from standard first-conjugation verbs.
 
-| Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | **я буду читати** | **ми будемо читати** |
-| 2nd | **ти будеш читати** | **ви будете читати** |
-| 3rd | **він / вона буде читати** | **вони будуть читати** |
+| Займенник (Pronoun) | Дієслово бути (Verb 'to be') | Значення (Meaning) |
+| :--- | :--- | :--- |
+| **я** | **буду** | I will |
+| **ти** | **будеш** | you will (informal/singular) |
+| **він / вона / воно** | **буде** | he / she / it will |
+| **ми** | **будемо** | we will |
+| **ви** | **будете** | you will (formal/plural) |
+| **вони** | **будуть** | they will |
 
-The pattern is always the same: one of the six forms of **бути** + the infinitive. The infinitive stays identical every time — **читати**, **працювати**, **гуляти** — it does not matter which verb follows. Only **буду** carries the person information.
+<!-- INJECT_ACTIVITY: matching-pronoun-to-be -->
 
-Now compare all three tenses you know, using the same verb **читати**:
+The most important rule of the analytic future is the invariant infinitive rule. When you build a sentence using this structure, the main action verb — words like **читати** (to read), **працювати** (to work), or **відпочивати** (to rest) — never changes its ending. It stays frozen in its dictionary form. The only word that changes to match the speaker is your helper verb.
+*   Я **буду читати**. (I will read.)
+*   Ти **будеш читати**. (You will read.)
+*   Він / вона **буде читати**. (He / she will read.)
+*   Ми **будемо читати**. (We will read.)
+*   Ви **будете читати**. (You will read.)
+*   Вони **будуть читати**. (They will read.)
 
-- **Минулий** (past): **Я читав / читала книжку вчора.** *(I read a book yesterday.)* — The verb takes a gender ending, as you learned in M49.
-- **Теперішній** (present): **Я читаю книжку зараз.** *(I am reading a book now.)* — The verb takes a person ending.
-- **Майбутній** (future): **Я буду читати книжку завтра.** *(I will read a book tomorrow.)* — The helper **буду** carries person; the main verb stays as the infinitive.
+As you can see, the infinitive remains exactly the same in every sentence. Contrast this new future form with the tenses you already know. The past tense relies on gender endings, the present tense relies on person endings attached directly to the verb, and the future tense relies on **буду** plus the infinitive.
+*   Минулий (past): Я **читав** книжку. (I read a book. - masculine speaker)
+*   Минулий (past): Я **читала** книжку. (I read a book. - feminine speaker)
+*   Теперішній (present): Я **читаю** книжку. (I am reading a book.)
+*   Майбутній (future): Я **буду читати** книжку. (I will read a book.)
 
-Three tenses, three different strategies: past relies on gender, present on person endings, and future on the helper verb **буду** + infinitive.
-
-:::note
-You may hear forms like **читатиму** or **робитиму** — this is the synthetic future, another way to express the same meaning. It is natural and common, but it is A2 material. At A1, always use **буду + infinitive** — it works in every situation and is fully correct. The Litvinova Grade 7 textbook confirms both forms are equivalent.
-:::
+Note that the synthetic future (like **прочитаю**) exists in the language, but it is material for the A2 level. For now, the analytic form gives you everything you need to talk about your plans.
 
 ## Практика (Practice)
 
-The beauty of the analytic future is its predictability. Take any verb you know, keep it in the infinitive, and put the right form of **буду** before it. Here are six core verbs — all six persons for each:
+With the mechanics of the analytic future established, grouping and practicing the core A1 verbs solidifies the pattern. Because the infinitive never changes, you can take any action verb you have learned so far and instantly talk about your future plans. You simply plug the infinitive into the structure after your chosen form of **бути**. Here is how our most frequent daily verbs look in action:
+*   **читати** (to read) → я **буду читати**, ти **будеш читати**, він **буде читати**
+*   **працювати** (to work) → я **буду працювати**, ти **будеш працювати**, вона **буде працювати**
+*   **готувати** (to cook) → я **буду готувати**, ти **будеш готувати**, ми **будемо готувати**
+*   **гуляти** (to walk) → я **буду гуляти**, ти **будеш гуляти**, ви **будете гуляти**
+*   **дивитися** (to watch) → я **буду дивитися**, ти **будеш дивитися**, вони **будуть дивитися**
+*   **говорити** (to speak) → я **буду говорити**, ти **будеш говорити**, ми **будемо говорити**
 
-- **читати** (to read) → **буду читати, будеш читати, буде читати, будемо читати, будете читати, будуть читати**
-- **працювати** (to work) → **буду працювати, будеш працювати, буде працювати, будемо працювати, будете працювати, будуть працювати**
-- **готувати** (to cook) → **буду готувати, будеш готувати, буде готувати, будемо готувати, будете готувати, будуть готувати**
-- **гуляти** (to walk) → **буду гуляти, будеш гуляти, буде гуляти, будемо гуляти, будете гуляти, будуть гуляти**
-- **дивитися** (to watch) → **буду дивитися, будеш дивитися, буде дивитися, будемо дивитися, будете дивитися, будуть дивитися**
-- **говорити** (to speak) → **буду говорити, будеш говорити, буде говорити, будемо говорити, будете говорити, будуть говорити**
+To make your sentences specific, you need time markers. These are the adverbs and phrases that signal exactly when your future action will happen. These words naturally trigger the use of the future tense.
+*   **завтра** (tomorrow)
+*   **наступного тижня** (next week)
+*   **у суботу** (on Saturday)
+*   **ввечері** (in the evening)
+*   **скоро** (soon)
 
-The infinitive form stays identical regardless of which verb follows **буду**. The only thing you conjugate is **бути** itself.
+<!-- INJECT_ACTIVITY: fill-in-future-formation -->
 
-<!-- INJECT_ACTIVITY: fill-in-analytic-future -->
+When you want to know about someone else's plans, you will rely on a standard, highly frequent question format. The most common way to ask about future intentions is: **Що ти будеш робити?** (What will you do?). If you are speaking formally or addressing a group, you simply change the pronoun and the helper verb: **Що ви будете робити?** (What will you do?). The word order in Ukrainian questions is flexible, but starting with the question word **що** (what) followed by the pronoun, the helper verb, and the main verb is standard and natural.
 
-Now build full sentences. Pay attention to the **time expressions** — they tell the listener *when* the action will happen:
-
-- **Завтра** я буду працювати з дев'ятої до п'ятої. *(Tomorrow I will work from nine to five.)*
-- **Ввечері** ми будемо дивитися фільм. *(In the evening we will watch a film.)*
-- **У суботу** вони будуть гуляти в парку. *(On Saturday they will walk in the park.)*
-- Що ви будете їсти **на вечерю**? *(What will you eat for dinner?)*
-- **Наступного тижня** він буде відпочивати. *(Next week he will rest.)*
-- **Вранці** вона буде готувати сніданок. *(In the morning she will cook breakfast.)*
-
-:::tip
-Key time words for the future: **завтра** (tomorrow), **ввечері** (in the evening), **вранці** (in the morning), **у суботу** (on Saturday), **наступного тижня** (next week).
-:::
-
-<!-- INJECT_ACTIVITY: fill-in-tense-distinction -->
+Building natural sentences about intentions and full-day plans requires combining time markers with the future structure. By using familiar vocabulary, you can describe a complete schedule step by step.
+*   **Завтра** я **буду працювати** з дев'ятої до п'ятої. (Tomorrow I will work from nine to five.)
+*   **Ввечері** ми **будемо дивитися** фільм. (In the evening we will watch a film.)
+*   **У суботу** вони **будуть гуляти** в парку. (On Saturday they will walk in the park.)
+*   Що ви **будете їсти** на вечерю? (What will you eat for dinner?)
+*   Вранці я **буду снідати**. (In the morning I will have breakfast.)
+*   Вдень я **буду працювати**. (In the afternoon I will work.)
+*   Ввечері ми **будемо відпочивати**. (In the evening we will rest.)
 
 ## Summary
 
-To form the analytic future in Ukrainian, take **буду** (conjugated for person) and add the infinitive of any verb. The infinitive never changes — regardless of gender, number, or person. There are six forms of **бути** in the future: **буду, будеш, буде, будемо, будете, будуть**. That is the entire system. Pick the right form of **бути**, add any infinitive, and you have the future tense.
+The essential mechanics of discussing future plans rely on a simple two-part formula. The analytic future formation requires the conjugated auxiliary verb **бути** (**буду** / **будеш** / **буде** / **будемо** / **будете** / **будуть**) followed by an infinitive. The infinitive is the basic, unaltered "dictionary form" of the verb, ending in **-ти** (like **читати**, **робити**, **відпочивати**). This infinitive never changes its ending, regardless of who is speaking or how many people are involved. Only the **буду** part conjugates to match the subject. This grammatical structure is your primary tool at the A1 level for talking about processes, ongoing actions, and personal intentions that will happen tomorrow, next week, or next year.
 
-Here are all three tenses side by side, using the same verb **читати**:
+With the addition of this future structure, you now have a complete framework to describe any event in time. Each tense has its own unique structural marker that makes it instantly recognizable. The past tense is marked by gender endings (**-в**, **-ла**, **-ло**, **-ли**) attached to the verb stem. The present tense is marked by person endings attached directly to the verb stem, requiring you to modify the word based on the pronoun. The future tense stands apart because it uses a separate helper word (**буду**) plus the infinitive.
 
-- **Учора я читав / читала.** → Минулий час (gender ending)
-- **Зараз я читаю.** → Теперішній час (person ending)
-- **Завтра я буду читати.** → Майбутній час (**буду** + infinitive)
+Observe the three tenses in action with the verb **читати**:
+*   Учора я **читав**. (Past — gender)
+*   Зараз я **читаю**. (Present — person)
+*   Завтра я **буду читати**. (Future — буду + infinitive)
 
-You can now speak about yesterday, today, and tomorrow in Ukrainian.
+The core question to spark any conversation about the future is: **Що ти будеш робити?** (What will you do?). To answer, you simply reply with **Я буду** plus your intended action.
 
-The single most useful future-tense question at A1 is **«Що ти будеш робити?»** — "What will you do?" Memorise it as a chunk. Here are three model exchanges:
+Now, perform a final self-check to ensure you can apply these rules to your own life:
+*   Що ти **будеш робити завтра** вранці? (What will you do tomorrow morning?)
+*   Що ти **будеш робити наступного тижня**? (What will you do next week?)
+*   Що **будуть робити** твої друзі ввечері? (What will your friends do in the evening?)
 
-> **— Що ти будеш робити завтра?** *(What will you do tomorrow?)*
-> **— Завтра я буду працювати.** *(Tomorrow I will work.)*
-
-> **— Що вона буде робити ввечері?** *(What will she do in the evening?)*
-> **— Вона буде читати книжку.** *(She will read a book.)*
-
-> **— Що ви будете робити у суботу?** *(What will you do on Saturday?)*
-> **— У суботу ми будемо відпочивати.** *(On Saturday we will rest.)*
-
-## Підсумок
-
-Check yourself — can you answer these without looking back?
-
-- What is the analytic future? → **буду** + infinitive
-- What changes in **«ми будемо читати»**? → Only **будемо** — the infinitive stays fixed
-- How do you say "She will rest"? → **Вона буде відпочивати.**
-- How do you say "They will cook"? → **Вони будуть готувати.**
-- What is the future of **«Ти читаєш»**? → **Ти будеш читати.**
-- How do you ask "What will you do tomorrow?" → **Що ти будеш робити завтра?**
-
-If you answered all six, you have the Ukrainian future tense. In the next module, you will use it to talk about your own plans — **«Мої плани»**.
+<!-- INJECT_ACTIVITY: fill-in-tense-distinction -->
 
 </module_content>
 
@@ -320,30 +306,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -363,29 +389,50 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -417,68 +464,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

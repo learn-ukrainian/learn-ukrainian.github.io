@@ -7,15 +7,15 @@ pipeline: v6
 build_status: draft
 ---
 
+import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -23,183 +23,163 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <TabItem label="Урок">
 
 ## Що ми зна́ємо? (What Do We Know?)
-Phase A1.6 taught you to talk about food, order at cafés, shop at markets, and use the accusative case for things and people. Before moving on, let's check how well you remember it all. Can you comfortably perform these tasks in Ukrainian?
-- [x] Name 10 foods and 5 drinks (М36)
-- [x] Say what you eat and drink using the accusative case (М37)
-- [x] Order food and drinks at a café (М38)
-- [x] Ask for prices and buy things at a market (М39)
-- [x] Use the accusative case for people (М40)
-Here is a quick vocabulary warm-up. Cover the English words below. Can you recall 10 foods and 5 drinks in Ukrainian without looking? Then you are ready.
-**Ї́жа** (food): **борщ** (borscht), **варе́ники** (dumplings), **сала́т** (salad), **хліб** (bread), **сир** (cheese), **пі́ца** (pizza), **ка́ша** (porridge), **яє́чня** (fried eggs), **суп** (soup), **котле́та** (cutlet).
-**Напо́ї** (drinks): **ка́ва** (coffee), **чай** (tea), **вода́** (water), **сік** (juice), **молоко́** (milk).
-Let's do a quick grammar warm-up. Check if these four patterns feel completely natural to you:
-1. Я їм ___: **борщ** (borscht) → **борщ**, **салат** (salad) → **салат**, **суп** (soup) → **суп**.
-2. Я п'ю ___: **кава** (coffee) → **ка́ву**, **вода** (water) → **воду́**, **сік** (juice) → **сік**.
-3. Ме́ні ___, будь ла́ска: **піца** (pizza) → **пі́цу**, **кава** (coffee) → **каву**.
-4. Я ба́чу ___: **Оле́на** (Olena) → **Оле́ну**, **брат** (brother) → **бра́та**, **друг** (friend) → **дру́га**.
-If all four feel natural, you are in a great place. If not, revisit modules M37 and M40. Let's test your knowledge!
-<Quiz client:only="react" questions={[{"question": "Я їм ___.", "options": [{"text": "салату", "correct": false}, {"text": "салата", "correct": false}, {"text": "салат", "correct": true}]}, {"question": "Я бачу ___.", "options": [{"text": "брат", "correct": false}, {"text": "брату", "correct": false}, {"text": "брата", "correct": true}]}, {"question": "Я п'ю ___.", "options": [{"text": "вода", "correct": false}, {"text": "воду", "correct": true}, {"text": "води", "correct": false}]}, {"question": "Я знаю ___.", "options": [{"text": "Олени", "correct": false}, {"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}]}, {"question": "Я люблю ___.", "options": [{"text": "борща", "correct": false}, {"text": "борщу", "correct": false}, {"text": "борщ", "correct": true}]}, {"question": "Я чекаю ___.", "options": [{"text": "друг", "correct": false}, {"text": "другу", "correct": false}, {"text": "друга", "correct": true}]}, {"question": "Я купую ___.", "options": [{"text": "хліба", "correct": false}, {"text": "хліб", "correct": true}, {"text": "хлібу", "correct": false}]}, {"question": "Я бачу ___.", "options": [{"text": "лікар", "correct": false}, {"text": "лікаря", "correct": true}, {"text": "лікарю", "correct": false}]}, {"question": "Я їм ___.", "options": [{"text": "піца", "correct": false}, {"text": "піцу", "correct": true}, {"text": "піци", "correct": false}]}, {"question": "Я люблю ___.", "options": [{"text": "мами", "correct": false}, {"text": "мама", "correct": false}, {"text": "маму", "correct": true}]}]} instruction={"Оберіть правильну форму (Choose the correct accusative form)"} />
+
+The Food and Shopping phase combines vocabulary and grammar for practical use. Over the last five modules, you learned how to identify everyday foods, order a meal at a cafe, and navigate a local market. You also learned how to introduce the people around you. The primary goal of this checkpoint is to integrate talking about food, buying things, and interacting with people into a single, natural flow of communication.
+
+First, review your core vocabulary foundation. You should comfortably recognize general categories like **ї́жа** (food) and **напо́ї** (drinks), as well as ten essential food items: **хліб** (bread), **сир** (cheese), **молоко́** (milk), **я́блуко** (apple), **помідо́р** (tomato), **карто́пля** (potato), **яйце́** (egg), **м'я́со** (meat), **ри́ба** (fish), and **цу́кор** (sugar). You also need to know five basic drinks: **вода́** (water), **сік** (juice), **чай** (tea), **ка́ва** (coffee), and **пи́во** (beer). These words are the building blocks you need before we change their endings.
+
+In practical situations, you rely heavily on fixed functional phrases. At a cafe, the most important pattern is **Ме́ні ка́ву, будь ла́ска** (Coffee for me, please) when ordering your drink. At a market, your essential question is **Скі́льки ко́шту́є...?** (How much does ... cost?) when checking prices. When paying, always remember that the national currency of Ukraine is the **гри́вня** (hryvnia).
+
+:::tip
+The word **гривня** behaves like a regular feminine noun. It changes its ending based on numbers, which is an essential grammar rule for shopping!
+:::
+
+Evaluate your own progress. Can you confidently answer "yes" to these questions?
+* Can you name 10 foods and 5 drinks in Ukrainian?
+* Can you say what you eat and drink using the accusative case?
+* Can you order a meal and a drink at a cafe?
+* Can you ask for prices and buy products at a market?
+* Can you introduce a person using the correct accusative form?
+
+<GroupSort client:only="react" groups={{"Неістоти — Inanimate (що?)": ["борщ", "хліб", "сік", "чай", "сир", "кава"], "Істоти — Animate (кого?)": ["брата", "лікаря", "сусіда", "друга", "вчителя", "маму"]}} instruction={"Розподіліть слова за категоріями (Sort the words into categories)"} />
+
 ## Чита́ння (Reading Practice)
-Read about Anna's day. Notice how she uses the accusative case for food, drinks, and people. Try to find at least six accusative forms as you read.
-**День А́нни** (Anna's Day)
-А́нна прокидається. Вона́ їсть **ка́шу** (porridge) і п'є **каву з молоко́м** (coffee with milk) на сніда́нок. По́тім вона іде́ на **ри́нок** (market).
+
+Read the following text to put your skills into context. Meet Anna. She is a university student living in Kyiv. On a typical Saturday morning, she follows a classic routine: she goes to the local market to buy fresh food, stops by a small cafe for lunch, and then meets a friend. This short story tests every single skill you learned in this phase.
+
+First, Anna goes to the market to buy some vegetables. She talks to the seller (**продаве́ць**).
+
 <div class="dialogue">
 
-<div class="dialogue-line">— Скі́льки ко́шту́ють помідо́ри?</div>
+<div class="dialogue-line"><span class="speaker">А́нна:</span> Скільки ко́шту́ють ці помідо́ри? *(How much do these tomatoes cost?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Три́дцять гри́вень. *(Thirty hryvnias.)*</div>
 
-<div class="dialogue-line">— Три́дцять гри́вень кілогра́м.</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Це ду́же де́шево. Да́йте кілогра́м, будь ласка. *(This is very cheap. Give me a kilogram, please.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Анна:</span> А скільки коштують огірки́? *(And how much do the cucumbers cost?)*</div>
 
-<div class="dialogue-line">— Да́йте кілограм, будь ласка.</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Соро́к гривень. *(Forty hryvnias.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Анна:</span> До́бре, дайте кілограм. *(Good, give me a kilogram.)*</div>
 
 </div>
 
-Анна купу́є **хліб** (bread), **сир** (cheese), **я́блука** (apples) і **салат** (salad).
-Потім вона іде в **кафе́** (café).
+After finishing her shopping, Anna transitions to a small cafe called «Сма́чно». She finds a free table.
+
 <div class="dialogue">
 
-<div class="dialogue-line">— Тут ві́льно?</div>
+<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> Що ви хо́чете? *(What do you want?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Анна:</span> Мені борщ і воду́ з лимо́ном, будь ласка. *(Borsch and water with lemon for me, please.)*</div>
 
-<div class="dialogue-line">— Так, сіда́йте.</div>
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Це все? *(Is that all?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Анна:</span> Так, дякую. Раху́нок, будь ласка. *(Yes, thank you. The bill, please.)*</div>
 
-<div class="dialogue-line">— Мені **борщ** (borscht) і **воду** (water), будь ласка.</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Мо́жна ка́рткою? *(Is it possible by card?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Так, звича́йно. *(Yes, of course.)*</div>
 
 </div>
 
-Ра́птом вона ба́чить по́другу:
-— О, я бачу **Олену** (Olena)! Оле́но, приві́т!
-Олена підхо́дить до не́ї. Анна ка́же:
-— Ти зна́єш мого **брата Миха́йла** (brother Mykhailo)? Це мій брат.
-Вони́ обі́дають ра́зом.
+:::note
+Notice the use of **звичайно** (of course). It is a very common, polite way to agree or accept a request in conversational Ukrainian.
+:::
+
+Finally, Anna sees her friend Olena and introduces her brother Taras.
+
 <div class="dialogue">
 
-<div class="dialogue-line">— Раху́нок, будь ласка. Мо́жна ка́рткою?</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Оле́но, приві́т! *(Olena, hi!)*</div>
 
+<div class="dialogue-line"><span class="speaker">Оле́на:</span> Привіт, А́нно! Як спра́ви? *(Hi, Anna! How are things?)*</div>
 
-<div class="dialogue-line">— Звича́йно.</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Добре. Олено, ти зна́єш мого бра́та Тара́са? *(Good. Olena, do you know my brother Taras?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> Ні, я не зна́ю Тараса. Дуже приє́мно! *(No, I do not know Taras. Very nice to meet you!)*</div>
 
 </div>
 
-Check your understanding. Answer these three questions using full Ukrainian sentences. Try to answer them aloud before moving on.
-1. Що Анна купує на ри́нку?
-2. Що вона замовля́є в кафе?
-3. Кого вона бачить у кафе?
-<FillIn client:only="react" items={[{"sentence": "— Що ти їш на сніданок? — Я їм ___ і п'ю каву.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "— Потім іду на ринок. Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "— Тридцять ___.", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}, {"sentence": "— Дайте ___ яблук, будь ласка.", "answer": "кілограм", "options": ["кілограм", "літр", "пляшку"]}, {"sentence": "— ___ борщ і воду, будь ласка.", "answer": "Мені", "options": ["Мені", "Я", "Меня"]}, {"sentence": "— Рахунок, будь ласка. Можна ___?", "answer": "карткою", "options": ["карткою", "картка", "картки"]}, {"sentence": "— О, я бачу ___! Олено, привіт!", "answer": "Олену", "options": ["Олену", "Олена", "Олени"]}, {"sentence": "— Ти знаєш мого ___?", "answer": "брата", "options": ["брата", "брат", "братом"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+<Quiz client:only="react" questions={[{"question": "You want to order coffee:", "options": [{"text": "Мені каву, будь ласка.", "correct": true}, {"text": "Скільки коштує?", "correct": false}, {"text": "Тут вільно?", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": false}]}, {"question": "You ask for the price:", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Можна карткою?", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}, {"text": "Дорого!", "correct": false}]}, {"question": "You want to pay with a card:", "options": [{"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Можна карткою?", "correct": true}, {"text": "Дорого!", "correct": false}, {"text": "Дешево!", "correct": false}]}, {"question": "You ask for the bill:", "options": [{"text": "Все було дуже смачно!", "correct": false}, {"text": "Мені борщ.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Можна меню?", "correct": false}]}, {"question": "You ask for 1 kg of apples:", "options": [{"text": "Дайте кілограм яблук.", "correct": true}, {"text": "Скільки коштує?", "correct": false}, {"text": "Можна меню?", "correct": false}, {"text": "Все було дуже смачно!", "correct": false}]}, {"question": "You think the price is high:", "options": [{"text": "Дешево!", "correct": false}, {"text": "Дорого!", "correct": true}, {"text": "Нормальна ціна.", "correct": false}, {"text": "Скільки коштує?", "correct": false}]}, {"question": "You ask if a seat is free:", "options": [{"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Можна меню?", "correct": false}, {"text": "Тут вільно?", "correct": true}, {"text": "Що ви рекомендуєте?", "correct": false}]}, {"question": "You compliment the food:", "options": [{"text": "Все було дуже смачно!", "correct": true}, {"text": "Можна карткою?", "correct": false}, {"text": "Це гостре?", "correct": false}, {"text": "Дешево!", "correct": false}]}]} instruction={"Оберіть правильну фразу (Choose the correct phrase)"} />
+
 ## Грама́тика (Grammar Summary)
-**Чоти́ри ключови́х шабло́ни A1.6**
-You learned all of these patterns in modules M36 through M40. Here is a quick-reference summary so you have everything in one place.
-**Pattern 1: Food and drink vocabulary chunks**
-You know words for **їжа** (food), **напої** (drinks), and meals: **сніданок** (breakfast), **обід** (lunch), **вече́ря** (dinner).
-Notice how we group words to say "with": **кава з молоком** (coffee with milk), **борщ зі смета́ною** (borscht with sour cream), **хліб із си́ром** (bread with cheese).
-- Я їм кашу на сніданок. (I eat porridge for breakfast.)
-- Я п'ю каву з молоком. (I drink coffee with milk.)
-**Pattern 2: Accusative case for inanimate nouns**
-When an object receives an action (like being eaten, bought, or ordered), its ending changes. Masculine inanimate nouns do not change. They look exactly like their dictionary forms: **борщ** → **борщ**, **хліб** → **хліб**, **сік** → **сік**. Feminine nouns ending in -а/-я change to -у/-ю: **кава** → **каву**, **вода** → **воду**, **піца** → **піцу**, **яєчня** → **яє́чню**.
-| Nominative (Що це?) | Accusative (Що ти їш?) | Example Sentence |
-|---|---|---|
-| **вода** (water) | **воду** | Я п'ю **воду**. (I am drinking water.) |
-| **піца** (pizza) | **піцу** | Я їм **піцу**. (I am eating pizza.) |
-| **суп** (soup) | **суп** | Я замовля́ю **суп**. (I am ordering soup.) |
-| **каша** (porridge) | **кашу** | Я їм **кашу**. (I am eating porridge.) |
-**Pattern 3: Ordering and prices**
-You can navigate a café and a market using these fixed phrases. Note how they build on the vocabulary you already know:
-- **Мені ___, будь ласка.** (To me ___, please. / I'll have ___, please.)
-- **Скільки ко́шту́є?** (How much does it cost?)
-- **Скільки коштують помідори?** (How much do the tomatoes cost?)
-- **Дайте ___, будь ласка.** (Give [me] ___, please.)
-- **Рахунок, будь ласка.** (The bill, please.)
-- **Можна карткою?** (Can I pay by card?)
-Remember the currency forms depending on the number: **одна́ гри́вня** (1), **дві гри́вні** (2), **п'ять гривень** (5+).
-**Pattern 4: Accusative case for animate nouns**
-When a person is the object of an action (whom you see or know), the rules differ. Feminine animate nouns follow the same rule as inanimate: **Олена** → **Олену**, **ма́ма** → **ма́му**. Masculine animate nouns take the genitive ending (-а/-я): **брат** → **брата**, **лі́кар** → **лі́каря**, **друг** → **друга**, **вчи́тель** → **вчи́теля**.
-Compare these two sentences. One uses an inanimate object, and the other uses an animate object:
-- Я бачу **борщ**. (I see the borscht. — inanimate, masculine, no change)
-- Я бачу **брата**. (I see the brother. — animate, masculine, ends in -а)
-<GroupSort client:only="react" groups={{"Inanimate (що?)": ["борщ", "хліб", "сік", "чай", "сир", "суп"], "Animate (кого?)": ["брата", "лікаря", "сусіда", "друга", "вчителя", "маму"]}} instruction={"Розподіліть слова за категоріями (Sort by category)"} />
+
+To describe your daily routine, use the nouns **їжа** (food) and **напої** (drinks), along with specific meals: **сніда́нок** (breakfast), **обід** (lunch), and **вече́ря** (dinner). When you eat or buy something, the object is the direct target of your action, requiring the accusative case. Masculine and neuter inanimate nouns do not change their endings: you buy **борщ** (borsch), **сік** (juice), or **яблуко** (apple). Feminine nouns ending in **-а** or **-я** change to **-у** or **-ю**. Therefore, **кава** becomes **каву**, and **вода** becomes **воду**.
+
+The grammar rules shift slightly when the target of your action is a person. For animate nouns, feminine words follow the exact same pattern as objects: the ending **-а** changes to **-у**. You see **ма́му** (mom) and you know **Оле́ну** (Olena). However, masculine animate nouns take the genitive ending **-а** or **-я**. You see **брата** (brother) or wait for **дру́га** (friend).
+
+When asking about prices, use the question **Скільки коштує?** (How much does it cost?). The form of the currency **гривня** changes depending on the number. For the number one, it is **одна́ гривня** (one hryvnia). For two, three, and four, the form is **дві гри́вні**, **три гривні**, **чоти́ри гривні**. For five or more, it changes to **п'ять гривень**, **де́сять гривень**, **два́дцять гривень**. 
+
+Finally, remember that some phrases are best learned as complete chunks. When you order, say **Мені каву, будь ласка** (Coffee for me, please). Use the instrumental preposition **з** (with) for combinations like **кава з молоко́м** (coffee with milk). For quantities, use chunks like **кілограм я́блук** (a kilogram of apples). Learn them as single vocabulary items right now without worrying about the underlying case rules.
+
+<Quiz client:only="react" questions={[{"question": "Я їм ___.", "options": [{"text": "салат", "correct": true}, {"text": "салата", "correct": false}, {"text": "салату", "correct": false}]}, {"question": "Я бачу ___.", "options": [{"text": "брат", "correct": false}, {"text": "брата", "correct": true}, {"text": "брату", "correct": false}]}, {"question": "Я п'ю ___.", "options": [{"text": "воду", "correct": true}, {"text": "вода", "correct": false}, {"text": "води", "correct": false}]}, {"question": "Я знаю ___.", "options": [{"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олени", "correct": false}]}, {"question": "Я люблю ___.", "options": [{"text": "борщ", "correct": true}, {"text": "борща", "correct": false}, {"text": "борщу", "correct": false}]}, {"question": "Я чекаю ___.", "options": [{"text": "друга", "correct": true}, {"text": "друг", "correct": false}, {"text": "другу", "correct": false}]}, {"question": "Я купую ___.", "options": [{"text": "хліб", "correct": true}, {"text": "хліба", "correct": false}, {"text": "хлібу", "correct": false}]}, {"question": "Я бачу ___.", "options": [{"text": "лікаря", "correct": true}, {"text": "лікар", "correct": false}, {"text": "лікарю", "correct": false}]}, {"question": "Я їм ___.", "options": [{"text": "піцу", "correct": true}, {"text": "піца", "correct": false}, {"text": "піци", "correct": false}]}, {"question": "Я люблю ___.", "options": [{"text": "маму", "correct": true}, {"text": "мама", "correct": false}, {"text": "мами", "correct": false}]}]} instruction={"Оберіть правильну форму (Choose the correct form)"} />
+
 ## Діало́г (Connected Dialogue)
-Ната́ля та Дмитро́ почина́ють день. Чита́йте і сте́жте за відмі́нками. (Natalia and Dmytro start their day. Read and watch the cases.)
-**(Сніданок / Breakfast)**
+
+Consider a complete, realistic scenario: hosting a dinner party (**вечеря**) at your home. This situation involves the full cycle of preparation. You start with your morning breakfast, go to the local market to buy fresh ingredients, stop at a cafe for a quick break, and interact with a friend.
+
+Read this connected sequence of conversations. A host (**Господи́ня**) interacts with different people throughout the day.
+
+First, she talks to a friend (**Друг**) at breakfast:
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Що ти їш на сніданок? *(What are you eating for breakfast?)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Що ти їш на сніданок? *(What do you eat for breakfast?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Я їм кашу і п'ю каву з молоком. А ти? *(I am eating porridge and drinking coffee with milk. And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Я їм яєчню і хліб із сиром. *(I am eating fried eggs and bread with cheese.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Господиня:</span> Я їм ка́шу. І п'ю каву з молоком. *(I eat porridge. And I drink coffee with milk.)*</div>
 
 </div>
 
-**(На ринку / At the market)**
+Then, she talks to a seller (**Продавець**) at the market:
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Скільки коштують помідори? *(How much do the tomatoes cost?)*</div>
+<div class="dialogue-line"><span class="speaker">Господиня:</span> Скільки коштують помідори? *(How much do the tomatoes cost?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Тридцять гривень. *(Thirty hryvnias.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Продаве́ць:</span> П'ятна́дцять гривень кілограм. *(Fifteen hryvnias a kilo.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> До́рого! А яблука? *(Expensive! And the apples?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Два́дцять гривень. Ду́же смачні́! *(Twenty hryvnias. Very tasty!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> До́бре, дайте кілограм я́блук, будь ласка. *(Okay, give me a kilo of apples, please.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Господиня:</span> Дайте кілограм, будь ласка. *(Give me a kilogram, please.)*</div>
 
 </div>
 
-**(У кафе / At the café)**
+Later, ordering at a cafe:
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Тут вільно? *(Is it free here?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> Так, сідайте! *(Yes, sit down!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Мені борщ і воду, будь ласка. *(I'll have borscht and water, please.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> О, я бачу Олену! Олено, привіт! Ти знаєш мого брата Дмитра́? *(Oh, I see Olena! Olena, hi! Do you know my brother Dmytro?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Ні, не зна́ю. Дуже приє́мно, Дмитре! *(No, I don't. Very nice to meet you, Dmytro!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Звичайно. *(Of course.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Наталя:</span> Все було́ дуже сма́чно! *(Everything was very tasty!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Господиня:</span> Мені борщ і воду, будь ласка. *(Borsch and water for me, please.)*</div>
 
 </div>
 
-Did you spot all the key grammar patterns in the dialogue? Let's highlight a few:
-1. Accusative inanimate nouns: **кашу**, **яєчню**, **воду**, **борщ**.
-2. Accusative animate nouns: **Олену**, **брата Дмитра**.
-3. Everyday café and market phrases: **Мені борщ**, **Дайте кілограм**, **Рахунок, будь ласка**.
-<Quiz client:only="react" questions={[{"question": "You want to order coffee:", "options": [{"text": "Скільки коштує?", "correct": false}, {"text": "Мені каву, будь ласка.", "correct": true}, {"text": "Тут вільно?", "correct": false}]}, {"question": "You ask for the price:", "options": [{"text": "Що ви рекомендуєте?", "correct": false}, {"text": "Можна карткою?", "correct": false}, {"text": "Скільки коштує?", "correct": true}]}, {"question": "You want to pay with a card:", "options": [{"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Можна карткою?", "correct": true}, {"text": "Дорого!", "correct": false}]}, {"question": "You ask for the bill:", "options": [{"text": "Мені борщ.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Все було дуже смачно!", "correct": false}]}, {"question": "You ask for 1 kg of apples:", "options": [{"text": "Скільки коштує?", "correct": false}, {"text": "Можна меню?", "correct": false}, {"text": "Дайте кілограм яблук.", "correct": true}]}, {"question": "You think the price is high:", "options": [{"text": "Дорого!", "correct": true}, {"text": "Дешево!", "correct": false}, {"text": "Добре!", "correct": false}]}, {"question": "You ask if a seat is free:", "options": [{"text": "Можна меню?", "correct": false}, {"text": "Тут вільно?", "correct": true}, {"text": "Рахунок, будь ласка.", "correct": false}]}, {"question": "You compliment the food:", "options": [{"text": "Можна карткою?", "correct": false}, {"text": "Дуже приємно!", "correct": false}, {"text": "Все було дуже смачно!", "correct": true}]}]} instruction={"Що сказати? Оберіть правильну фразу (What do you say? Choose the correct phrase)"} />
+Finally, she meets her friend Olena:
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Господиня:</span> О, я ба́чу Олену! Олено, привіт! Ти знаєш мого брата? *(Oh, I see Olena! Olena, hi! Do you know my brother?)*</div>
+
+</div>
+
+:::caution
+Do not translate the English phrase "I will have...". Instead, use the direct request **Дайте, будь ласка** (Give me, please) or state your desire with **Я хо́чу** (I want). This is the authentic way to communicate in a store or cafe.
+:::
+
+Notice how the dialogue focuses on concrete statements. Using verbs like **хоті́ти** (to want) and **дава́ти** (to give) makes your speech clear and direct.
+
+<FillIn client:only="react" items={[{"sentence": "— Що ти їш на сніданок? — Я їм ___ і п'ю каву.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "— Потім іду на ринок. Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "— Тридцять ___.", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}, {"sentence": "— Дайте ___ яблук, будь ласка.", "answer": "кілограм", "options": ["кілограм", "літр", "пляшку"]}, {"sentence": "— Потім у кафе: ___ борщ і воду, будь ласка.", "answer": "Мені", "options": ["Мені", "Я", "Мене"]}, {"sentence": "— Рахунок, будь ласка. Можна ___?", "answer": "карткою", "options": ["карткою", "картка", "картки"]}, {"sentence": "— О, я бачу ___! Олено, привіт!", "answer": "Олену", "options": ["Олену", "Олена", "Олени"]}, {"sentence": "— Ти знаєш мого ___?", "answer": "брата", "options": ["брата", "брат", "братом"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
 ## Підсумок — Summary
-Phase A1.6 — Food and Shopping — is done. Here is what you can now do in Ukrainian:
-- ✓ Talk about **їжа та напої** (food and drinks) and meals (М36).
-- ✓ Use the accusative case for inanimate nouns to describe what you eat and drink: **борщ**, **каву**, **воду**, **піцу** (М37).
-- ✓ Order at a **кафе** (café) with confidence: «Мені борщ, будь ласка» / «Рахунок, будь ласка» / «Можна карткою?» (М38).
-- ✓ Shop at the **ринок** (market): «Скільки коштує?» / «Дайте кілограм» / **гривня**, **гривні**, **гривень** (М39).
-- ✓ Use the accusative case for animate nouns to talk about people: «Я бачу Олену» / «Я знаю брата» (М40).
-**Насту́пний крок — A1.7: Спілкува́ння.** (Next step — A1.7: Communication.) You will learn to make plans, write messages, and talk on the phone. You are ready for A1.7!
+
+The Food and Shopping phase covers essential daily interactions. You started by identifying simple foods, and you can now navigate a busy market, order a full meal at a cafe, pay your bill correctly, and introduce your friends to each other. You have built functional communicative competence.
+
+Verify that you can confidently do the following:
+* You can talk about common food and drinks.
+* You can use the accusative case correctly for inanimate objects.
+* You can use the accusative case correctly for people.
+* You can order food at a cafe and ask for the bill.
+* You can shop at a market and ask for prices.
+* You can pay for things using the correct form of the currency.
+
+Next: A1.7 — Communication. You will learn how to make phone calls, write simple emails, and make plans with your friends.
 
 </TabItem>
 <TabItem label="Словник">
@@ -210,89 +190,66 @@ Phase A1.6 — Food and Shopping — is done. Here is what you can now do in Ukr
 |-------|----------|-------------|-----|
 | **ї́жа** | food | ім. | ж. |
 | **напо́ї** | drinks | ім. | ч. |
-| **варе́ники** | dumplings | ім. |  |
-| **сала́т** | salad | ім. | ч. |
-| **пі́ца** | pizza | ім. | ж. |
-| **ка́ша** | porridge | ім. | ж. |
-| **яє́чня** | fried eggs | ім. | ж. |
-| **котле́та** | cutlet | ім. | ж. |
-| **ка́ва** | coffee | ім. | ж. |
-| **вода́** | water | ім. | ж. |
 | **молоко́** | milk | ім. | с. |
-| **сніда́нок** | breakfast | ім. | ч. |
-| **вече́ря** | dinner | ім. | ж. |
-| **ри́нок** | market | ім. |  |
-| **кафе́** | café | ім. | с. |
-| **раху́нок** | bill (at a restaurant) | ім. | ч. |
-| **гри́вня** | hryvnia (Ukrainian currency, 1) | ім. | ж. |
-| **гри́вні** | hryvnias (2–4) | ім. | ж. |
-| **гри́вень** | hryvnias (5+, genitive plural) | ім. |  |
-| **помідо́ри** | tomatoes | ім. |  |
-| **я́блука** | apples | ім. | с. |
-| **смета́на** | sour cream | ім. | ж. |
-| **офіціа́нт** | waiter | ім. | ч. |
-| **продаве́ць** | seller, vendor | ім. | ч. |
-| **сма́чно** | tasty, delicious | присл. |  |
-| **до́рого** | expensive | ім. | ж. |
-| **ві́льно** | free, available (of a seat) | присл. |  |
-| **звича́йно** | of course | присл. |  |
-| **ра́зом** | together | ім. | ч. |
-| **ра́птом** | suddenly | присл. |  |
-| **підхо́дити** | to approach, to come up to | дієсл. |  |
-| **замовля́ти** | to order | дієсл. |  |
-| **ко́штува́ти** | to cost | дієсл. |  |
-| **купува́ти** | to buy | дієсл. |  |
+| **я́блуко** | apple | ім. | с. |
+| **помідо́р** | tomato | ім. | ч. |
+| **карто́пля** | potato | ім. | ж. |
+| **яйце́** | egg | ім. | с. |
+| **м'я́со** | meat | ім. | с. |
+| **ри́ба** | fish | ім. | ж. |
+| **цу́кор** | sugar | ім. | ч. |
+| **вода́** | water | ім. | ж. |
+| **пи́во** | beer | ім. | с. |
+| **продаве́ць** | seller | ім. | ч. |
 | **кілогра́м** | kilogram | ім. | ч. |
-| **ка́ртка** | card (payment card) | ім. | ж. |
+| **огіро́к** | cucumber | ім. | ч. |
+| **лимо́н** | lemon | ім. | ч. |
+| **ма́ма** | mother | ім. | ж. |
+| **сніда́нок** | breakfast | ім. | ч. |
+| **ка́ша** | porridge | ім. | ж. |
+| **ри́нок** | market | ім. |  |
+| **кафе́** | cafe | ім. | с. |
+| **звича́йно** | of course | присл. |  |
+| **де́шево** | cheap | присл. |  |
+| **господи́ня** | hostess | ім. | ж. |
+| **дава́ти** | to give | дієсл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **борщ зі сметаною** | borscht with sour cream |
-| **хліб із сиром** | bread with cheese |
-| **Мені ___, будь ласка.** | I'll have ___, please. |
-| **Дайте ___, будь ласка.** | Give [me] ___, please. |
-| **Тут вільно?** | Is this seat free? |
-| **Сідайте!** | Sit down! (polite) |
+| **Мені каву, будь ласка** | Coffee for me, please |
+| **Рахунок, будь ласка** | The bill, please |
+| **Дуже приємно!** | Very nice to meet you! |
+| **Що ви хочете?** | What do you want? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ї́жа", back: "food", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "напо́ї", back: "drinks", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "варе́ники", back: "dumplings", subtitle: "ім." }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "яє́чня", back: "fried eggs", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "котле́та", back: "cutlet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "раху́нок", back: "bill (at a restaurant)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гри́вня", back: "hryvnia (Ukrainian currency, 1)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вні", back: "hryvnias (2–4)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вень", back: "hryvnias (5+, genitive plural)", subtitle: "ім." }, { front: "помідо́ри", back: "tomatoes", subtitle: "ім." }, { front: "я́блука", back: "apples", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "смета́на", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "продаве́ць", back: "seller, vendor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "tasty, delicious", subtitle: "присл." }, { front: "до́рого", back: "expensive", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ві́льно", back: "free, available (of a seat)", subtitle: "присл." }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "ра́зом", back: "together", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́птом", back: "suddenly", subtitle: "присл." }, { front: "підхо́дити", back: "to approach, to come up to", subtitle: "дієсл." }, { front: "замовля́ти", back: "to order", subtitle: "дієсл." }, { front: "ко́штува́ти", back: "to cost", subtitle: "дієсл." }, { front: "купува́ти", back: "to buy", subtitle: "дієсл." }, { front: "кілогра́м", back: "kilogram", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ртка", back: "card (payment card)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ї́жа", back: "food", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "напо́ї", back: "drinks", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "помідо́р", back: "tomato", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "карто́пля", back: "potato", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "м&#39;я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пи́во", back: "beer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "продаве́ць", back: "seller", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кілогра́м", back: "kilogram", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "огіро́к", back: "cucumber", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "де́шево", back: "cheap", subtitle: "присл." }, { front: "господи́ня", back: "hostess", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дава́ти", back: "to give", subtitle: "дієсл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<TrueFalse client:only="react" items={[{"statement": "Анна їсть кашу на сніданок.", "isTrue": true, "explanation": "У тексті: «Вона їсть кашу і п'є каву з молоком на сніданок.»"}, {"statement": "Анна п'є чай вранці.", "isTrue": false, "explanation": "У тексті: «п'є каву з молоком» — не чай."}, {"statement": "Помідори коштують тридцять гривень кілограм.", "isTrue": true, "explanation": "У тексті: «Тридцять гривень кілограм.»"}, {"statement": "Анна купує хліб, сир, яблука і салат на ринку.", "isTrue": true, "explanation": "У тексті: «Анна купує хліб, сир, яблука, і салат.»"}, {"statement": "Анна замовляє борщ і каву в кафе.", "isTrue": false, "explanation": "У тексті: «Мені борщ і воду» — не каву."}, {"statement": "Анна бачить Олену в кафе.", "isTrue": true, "explanation": "У тексті: «О, я бачу Олену!»"}, {"statement": "Анна платить карткою.", "isTrue": true, "explanation": "У тексті: «Можна карткою? — Звичайно.»"}, {"statement": "Анна обідає сама.", "isTrue": false, "explanation": "У тексті: «Вони обідають разом.»"}]} instruction={"Правда чи ні? Про день Анни. (True or false? About Anna's day.)"} />
+<MatchUp client:only="react" pairs={[{"left": "Скільки коштує?", "right": "How much does it cost?"}, {"left": "Мені каву, будь ласка.", "right": "Coffee for me, please."}, {"left": "Рахунок, будь ласка.", "right": "The bill, please."}, {"left": "Можна карткою?", "right": "Can I pay by card?"}, {"left": "Дайте кілограм.", "right": "Give me a kilogram."}, {"left": "Тут вільно?", "right": "Is it free here?"}]} instruction={"З'єднайте українські та англійські фрази (Match the Ukrainian and English phrases)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "вода", "right": "воду"}, {"left": "кава", "right": "каву"}, {"left": "піца", "right": "піцу"}, {"left": "каша", "right": "кашу"}, {"left": "яєчня", "right": "яєчню"}, {"left": "брат", "right": "брата"}, {"left": "лікар", "right": "лікаря"}, {"left": "друг", "right": "друга"}]} instruction={"З'єднайте називний відмінок із знахідним (Match nominative to accusative)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я їм каша на сніданок.", "errorWord": "каша", "correctForm": "кашу", "options": ["кашу", "каші", "кашею"], "explanation": "The object of the action requires the accusative case (каша -> кашу)."}, {"sentence": "Я бачу Тарас.", "errorWord": "Тарас", "correctForm": "Тараса", "options": ["Тараса", "Тарасу", "Тарасом"], "explanation": "Animate masculine nouns take the genitive ending (-а/-я) in the accusative case."}, {"sentence": "Помідори коштують тридцять гривні.", "errorWord": "гривні", "correctForm": "гривень", "options": ["гривень", "гривня", "гривнях"], "explanation": "Numbers 5 and above take the genitive plural (гривень)."}, {"sentence": "Я п'ю вода з лимоном.", "errorWord": "вода", "correctForm": "воду", "options": ["воду", "води", "водою"], "explanation": "Feminine inanimate nouns ending in -а change to -у in the accusative case."}, {"sentence": "Я знаю Олена.", "errorWord": "Олена", "correctForm": "Олену", "options": ["Олену", "Олени", "Оленою"], "explanation": "Animate feminine nouns change -а to -у in the accusative case."}, {"sentence": "Кава коштує три гривень.", "errorWord": "гривень", "correctForm": "гривні", "options": ["гривні", "гривня", "гривнях"], "explanation": "Numbers 2, 3, and 4 take the nominative plural (гривні)."}]} instruction={"Знайдіть і виправте помилку (Find and fix the error)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я п'ю кава на сніданок.", "errorWord": "кава", "correctForm": "каву", "options": ["каву", "кавою", "каві"], "explanation": "Feminine nouns ending in -а/-я change to -у/-ю in the accusative: кава → каву."}, {"sentence": "Я їм піца з сиром.", "errorWord": "піца", "correctForm": "піцу", "options": ["піцу", "піцою", "піці"], "explanation": "Feminine noun: піца → піцу in the accusative."}, {"sentence": "Я бачу Олена у кафе.", "errorWord": "Олена", "correctForm": "Олену", "options": ["Олену", "Оленою", "Олені"], "explanation": "Animate feminine noun: Олена → Олену in the accusative."}, {"sentence": "Я знаю мого брат.", "errorWord": "брат", "correctForm": "брата", "options": ["брата", "братом", "брату"], "explanation": "Animate masculine noun: брат → брата in the accusative."}, {"sentence": "Я люблю мій вчитель.", "errorWord": "вчитель", "correctForm": "вчителя", "options": ["вчителя", "вчителем", "вчителю"], "explanation": "Animate masculine noun ending in -ь: вчитель → вчителя in the accusative."}, {"sentence": "Я замовляю вода в кафе.", "errorWord": "вода", "correctForm": "воду", "options": ["воду", "водою", "воді"], "explanation": "Feminine noun: вода → воду in the accusative."}]} instruction={"Знайдіть і виправте помилку у відмінку (Find and correct the case error)"} />
+<TrueFalse client:only="react" items={[{"statement": "Анна купує помідори та огірки на ринку.", "isTrue": true, "explanation": "She asks about the price of tomatoes and cucumbers at the market."}, {"statement": "Помідори коштують сорок гривень.", "isTrue": false, "explanation": "Tomatoes cost 30 hryvnias. Cucumbers cost 40 hryvnias."}, {"statement": "Анна п'є каву з молоком у кафе.", "isTrue": false, "explanation": "She orders borsch and water with lemon."}, {"statement": "Анна купує борщ і воду.", "isTrue": true, "explanation": "She says: 'Мені борщ і воду з лимоном, будь ласка.'"}, {"statement": "Олена знає Тараса.", "isTrue": false, "explanation": "Olena says: 'Ні, я не знаю Тараса'."}, {"statement": "Тарас — це брат Анни.", "isTrue": true, "explanation": "Anna asks: 'Ти знаєш мого брата Тараса?'"}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Unjumble client:only="react" items={[{"words": "їм / Я / кашу / на / сніданок", "answer": "Я їм кашу на сніданок"}, {"words": "каву / п'ю / Я / молоком / з", "answer": "Я п'ю каву з молоком"}, {"words": "Олену / бачу / Я / кафе / в", "answer": "Я бачу Олену в кафе"}, {"words": "яблук / кілограм / будь / Дайте / ласка", "answer": "Дайте кілограм яблук будь ласка"}, {"words": "помідори / Скільки / коштують", "answer": "Скільки коштують помідори"}, {"words": "мого / брата / знаєш / Ти", "answer": "Ти знаєш мого брата"}, {"words": "борщ / замовляю / Я / кафе / у", "answer": "Я замовляю борщ у кафе"}, {"words": "хліб / купую / Я / ринку / на", "answer": "Я купую хліб на ринку"}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order)"} />
+<Order client:only="react" items={["— Що ви хочете?", "— Мені борщ і воду з лимоном, будь ласка.", "— Це все?", "— Так, дякую. Рахунок, будь ласка.", "— Можна карткою?", "— Так, звичайно."]} correct_order={[0, 1, 2, 3, 4, 5]} instruction={"Розставте речення в правильному порядку (Put the sentences in the correct order)"} />
 
-<Translate client:only="react" questions={[{"source": "I'm drinking water.", "options": [{"text": "Я п'ю вода.", "correct": false}, {"text": "Я п'ю воду.", "correct": true}, {"text": "Я їм воду.", "correct": false}]}, {"source": "The bill, please.", "options": [{"text": "Меню, будь ласка.", "correct": false}, {"text": "Рахунок, дякую.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": true}]}, {"source": "Can I pay by card?", "options": [{"text": "Можна карткою?", "correct": true}, {"text": "Рахунок карткою?", "correct": false}, {"text": "Можна готівкою?", "correct": false}]}, {"source": "I see Olena.", "options": [{"text": "Я знаю Олену.", "correct": false}, {"text": "Я бачу Олену.", "correct": true}, {"text": "Я бачу Олена.", "correct": false}]}, {"source": "Give me a kilo of apples, please.", "options": [{"text": "Дайте кілограм яблук, будь ласка.", "correct": true}, {"text": "Дайте яблука, будь ласка.", "correct": false}, {"text": "Скільки коштують яблука?", "correct": false}]}, {"source": "Is this seat free?", "options": [{"text": "Де вільно?", "correct": false}, {"text": "Вільно тут?", "correct": false}, {"text": "Тут вільно?", "correct": true}]}]} instruction={"Оберіть правильний переклад (Choose the correct Ukrainian translation)"} />
-
+<Anagram client:only="react" items={[{"scrambled": "м о л о к о", "answer": "молоко", "hint": "milk"}, {"scrambled": "я б л у к о", "answer": "яблуко", "hint": "apple"}, {"scrambled": "к а р т о п л я", "answer": "картопля", "hint": "potato"}, {"scrambled": "с н і д а н о к", "answer": "сніданок", "hint": "breakfast"}, {"scrambled": "г р и в н я", "answer": "гривня", "hint": "hryvnia"}, {"scrambled": "р а х у н о к", "answer": "рахунок", "hint": "bill / check"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- Synthesis of M36-M40 content
-  _No new material — review and integration of A1.6 phase._
-
-**Граматика — Grammar (МійКлас)**
-
-- [МійКлас: Діалог](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999) (miyklas.com.ua)
-- [МійКлас: Іменник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979) (miyklas.com.ua)
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
-- [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=165), стор. 165
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=161), стор. 161
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=80), стор. 80
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=25), стор. 25
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=161), стор. 161
 
 </TabItem>
 </Tabs>

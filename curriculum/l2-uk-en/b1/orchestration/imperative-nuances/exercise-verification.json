@@ -1,0 +1,418 @@
+{
+  "total_items": 279,
+  "grounded_items": 214,
+  "ungrounded": [
+    {
+      "word": "ідіть",
+      "exercise_type": "group-sort",
+      "context": "ідіть",
+      "role": "answer"
+    },
+    {
+      "word": "йте",
+      "exercise_type": "group-sort",
+      "context": "Закінчення -й / -йте",
+      "role": "context"
+    },
+    {
+      "word": "грайте",
+      "exercise_type": "group-sort",
+      "context": "грайте",
+      "role": "answer"
+    },
+    {
+      "word": "важку",
+      "exercise_type": "fill-in",
+      "context": "____ цю важку сумку, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "сумку",
+      "exercise_type": "fill-in",
+      "context": "____ цю важку сумку, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "fill-in",
+      "context": "Діти, ____ цей текст виразно.",
+      "role": "context"
+    },
+    {
+      "word": "уважним",
+      "exercise_type": "fill-in",
+      "context": "Іване, ____ дуже уважним на уроці!",
+      "role": "context"
+    },
+    {
+      "word": "чашку",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ чашку гарячого чаю на стіл.",
+      "role": "context"
+    },
+    {
+      "word": "гарячого",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ чашку гарячого чаю на стіл.",
+      "role": "context"
+    },
+    {
+      "word": "чаю",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ чашку гарячого чаю на стіл.",
+      "role": "context"
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ чашку гарячого чаю на стіл.",
+      "role": "context"
+    },
+    {
+      "word": "почекай",
+      "exercise_type": "fill-in",
+      "context": "____ тут і трохи почекай мене.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "fill-in",
+      "context": "____ тут і трохи почекай мене.",
+      "role": "context"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "fill-in",
+      "context": "Я кажу правду, просто ____ мені.",
+      "role": "context"
+    },
+    {
+      "word": "речі",
+      "exercise_type": "fill-in",
+      "context": "Мамо, ____ свої речі в мою кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "кімнату",
+      "exercise_type": "fill-in",
+      "context": "Мамо, ____ свої речі в мою кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "свіжий",
+      "exercise_type": "fill-in",
+      "context": "____ цей свіжий хліб дуже обережно!",
+      "role": "context"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "fill-in",
+      "context": "____ цей свіжий хліб дуже обережно!",
+      "role": "context"
+    },
+    {
+      "word": "старе",
+      "exercise_type": "fill-in",
+      "context": "____ на це старе сімейне фото.",
+      "role": "context"
+    },
+    {
+      "word": "сімейне",
+      "exercise_type": "fill-in",
+      "context": "____ на це старе сімейне фото.",
+      "role": "context"
+    },
+    {
+      "word": "фото",
+      "exercise_type": "fill-in",
+      "context": "____ на це старе сімейне фото.",
+      "role": "context"
+    },
+    {
+      "word": "поступка",
+      "exercise_type": "match-up",
+      "context": "Байдужість / Поступка (Concession)",
+      "role": "context"
+    },
+    {
+      "word": "урочистий",
+      "exercise_type": "match-up",
+      "context": "Урочистий патріотичний заклик",
+      "role": "context"
+    },
+    {
+      "word": "патріотичний",
+      "exercise_type": "match-up",
+      "context": "Урочистий патріотичний заклик",
+      "role": "context"
+    },
+    {
+      "word": "проблему",
+      "exercise_type": "match-up",
+      "context": "Нехай вони вирішують цю проблему самі.",
+      "role": "answer"
+    },
+    {
+      "word": "відмова",
+      "exercise_type": "match-up",
+      "context": "Відмова від контролю над ситуацією",
+      "role": "context"
+    },
+    {
+      "word": "над",
+      "exercise_type": "match-up",
+      "context": "Відмова від контролю над ситуацією",
+      "role": "context"
+    },
+    {
+      "word": "друга",
+      "exercise_type": "quiz",
+      "context": "Вам дуже душно в кімнаті, і ви просите друга відчинити вікно",
+      "role": "context"
+    },
+    {
+      "word": "учнів",
+      "exercise_type": "quiz",
+      "context": "Шкільний вчитель просить учнів про тривалий процес читання.",
+      "role": "context"
+    },
+    {
+      "word": "забороняєте",
+      "exercise_type": "quiz",
+      "context": "Ви суворо і категорично забороняєте відчиняти вікно.",
+      "role": "context"
+    },
+    {
+      "word": "відчиняти",
+      "exercise_type": "quiz",
+      "context": "Ви суворо і категорично забороняєте відчиняти вікно.",
+      "role": "context"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "quiz",
+      "context": "Ви просите свого знайомого виконати одну конкретну дію — куп",
+      "role": "context"
+    },
+    {
+      "word": "написано",
+      "exercise_type": "quiz",
+      "context": "В інструкції до державного іспиту написано правило, яке діє ",
+      "role": "context"
+    },
+    {
+      "word": "діє",
+      "exercise_type": "quiz",
+      "context": "В інструкції до державного іспиту написано правило, яке діє ",
+      "role": "context"
+    },
+    {
+      "word": "весь",
+      "exercise_type": "quiz",
+      "context": "В інструкції до державного іспиту написано правило, яке діє ",
+      "role": "context"
+    },
+    {
+      "word": "дружньо",
+      "exercise_type": "quiz",
+      "context": "Ви дуже гостинно і дружньо просите свого гостя сісти за стіл",
+      "role": "context"
+    },
+    {
+      "word": "гостя",
+      "exercise_type": "quiz",
+      "context": "Ви дуже гостинно і дружньо просите свого гостя сісти за стіл",
+      "role": "context"
+    },
+    {
+      "word": "сісти",
+      "exercise_type": "quiz",
+      "context": "Ви дуже гостинно і дружньо просите свого гостя сісти за стіл",
+      "role": "context"
+    },
+    {
+      "word": "написати",
+      "exercise_type": "quiz",
+      "context": "Ви просите людину швидко написати вашу адресу.",
+      "role": "context"
+    },
+    {
+      "word": "тепло",
+      "exercise_type": "quiz",
+      "context": "Ви тепло і щиро заохочуєте співрозмовника почати довгу розмо",
+      "role": "context"
+    },
+    {
+      "word": "кавою",
+      "exercise_type": "quiz",
+      "context": "Ви тепло і щиро заохочуєте співрозмовника почати довгу розмо",
+      "role": "context"
+    },
+    {
+      "word": "пізно",
+      "exercise_type": "error-correction",
+      "context": "Давай пішли швидше додому, бо вже пізно!",
+      "role": "context"
+    },
+    {
+      "word": "синку",
+      "exercise_type": "error-correction",
+      "context": "Синку, ніколи не забудь свої ключі від дому!",
+      "role": "context"
+    },
+    {
+      "word": "зробить",
+      "exercise_type": "error-correction",
+      "context": "зробить",
+      "role": "answer"
+    },
+    {
+      "word": "зробив",
+      "exercise_type": "error-correction",
+      "context": "Хай він зробив цю важку вправу самостійно.",
+      "role": "context"
+    },
+    {
+      "word": "вправу",
+      "exercise_type": "error-correction",
+      "context": "Хай він зробив цю важку вправу самостійно.",
+      "role": "context"
+    },
+    {
+      "word": "самостійно",
+      "exercise_type": "error-correction",
+      "context": "Хай він зробив цю важку вправу самостійно.",
+      "role": "context"
+    },
+    {
+      "word": "поставь",
+      "exercise_type": "error-correction",
+      "context": "Будь ласка, акуратно поставь цю чашку на стіл.",
+      "role": "context"
+    },
+    {
+      "word": "вірь",
+      "exercise_type": "error-correction",
+      "context": "Мамо, вірь мені, це абсолютна правда.",
+      "role": "context"
+    },
+    {
+      "word": "абсолютна",
+      "exercise_type": "error-correction",
+      "context": "Мамо, вірь мені, це абсолютна правда.",
+      "role": "context"
+    },
+    {
+      "word": "правда",
+      "exercise_type": "error-correction",
+      "context": "Мамо, вірь мені, це абсолютна правда.",
+      "role": "context"
+    },
+    {
+      "word": "шкільне",
+      "exercise_type": "match-up",
+      "context": "Загальне шкільне правило",
+      "role": "answer"
+    },
+    {
+      "word": "незнайомця",
+      "exercise_type": "match-up",
+      "context": "Дуже тактовне прохання до незнайомця",
+      "role": "answer"
+    },
+    {
+      "word": "патріотичне",
+      "exercise_type": "match-up",
+      "context": "Патріотичне суспільне гасло",
+      "role": "answer"
+    },
+    {
+      "word": "суспільне",
+      "exercise_type": "match-up",
+      "context": "Патріотичне суспільне гасло",
+      "role": "answer"
+    },
+    {
+      "word": "гасло",
+      "exercise_type": "match-up",
+      "context": "Патріотичне суспільне гасло",
+      "role": "answer"
+    },
+    {
+      "word": "категорична",
+      "exercise_type": "match-up",
+      "context": "Категорична заборона",
+      "role": "answer"
+    },
+    {
+      "word": "заборона",
+      "exercise_type": "match-up",
+      "context": "Категорична заборона",
+      "role": "answer"
+    },
+    {
+      "word": "спільна",
+      "exercise_type": "group-sort",
+      "context": "Спільна дія (Ми)",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Форма «ходімо» є правильною літературною нормою для заклику ",
+      "role": "context"
+    },
+    {
+      "word": "літературною",
+      "exercise_type": "true-false",
+      "context": "Форма «ходімо» є правильною літературною нормою для заклику ",
+      "role": "context"
+    },
+    {
+      "word": "нормою",
+      "exercise_type": "true-false",
+      "context": "Форма «ходімо» є правильною літературною нормою для заклику ",
+      "role": "context"
+    },
+    {
+      "word": "заклику",
+      "exercise_type": "true-false",
+      "context": "Форма «ходімо» є правильною літературною нормою для заклику ",
+      "role": "context"
+    },
+    {
+      "word": "грубим",
+      "exercise_type": "true-false",
+      "context": "Слово «прошу» робить наше звернення дуже грубим і неприємним",
+      "role": "context"
+    },
+    {
+      "word": "неприємним",
+      "exercise_type": "true-false",
+      "context": "Слово «прошу» робить наше звернення дуже грубим і неприємним",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 30,
+    "tested_in_exercises": 15,
+    "not_tested": [
+      "берегти",
+      "вимикати",
+      "додати",
+      "доконаний",
+      "наказовий",
+      "нарізати",
+      "перемішати",
+      "рецепт",
+      "спонукання",
+      "спосіб",
+      "тримаймося",
+      "тримайся",
+      "шанувати",
+      "єднатися",
+      "інструкція"
+    ]
+  },
+  "all_grounded": false
+}

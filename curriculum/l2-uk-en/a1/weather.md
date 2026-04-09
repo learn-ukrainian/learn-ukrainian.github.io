@@ -1,115 +1,96 @@
 ## Діало́ги (Dialogues)
 
-Іва́нко and Га́ля stand at a window on a grey morning. They want to go hiking — but the sky looks terrible. Should they go today, or wait until tomorrow?
+Morning routines often begin with a glance outside the window to check the conditions. Deciding what to wear for the day or planning an outdoor trip with a friend requires basic vocabulary to describe the environment. Ivan and Halya are looking out their window, trying to figure out if today is a good day for a hike in the mountains. 
 
-> — **Іванко:** Яка сього́дні пого́да? *(What's the weather like today?)*
-> — **Галя:** Сьогодні хо́лодно і йде дощ. *(It's cold today and it's raining.)*
-> — **Іванко:** Ой... А за́втра? *(Oh... And tomorrow?)*
-> — **Галя:** Завтра бу́де те́пло і со́нячно. *(Tomorrow it will be warm and sunny.)*
-> — **Іванко:** До́бре! Тоді́ завтра гуля́ємо! *(Great! Then tomorrow we walk!)*
-> — **Галя:** Так! Завтра буде га́рний день. *(Yes! Tomorrow will be a nice day.)*
+Ivan asks the most common question about the daily conditions, and Halya responds by describing both the temperature and the rain. Notice how Halya uses the word **бу́де** (will be) as a fixed chunk to predict the conditions for the next day.
 
+> **Іва́нко:** Яка сього́дні пого́да? *(What is the weather like today?)*
+> **Га́ля:** Сьогодні хо́лодно і йде дощ. *(Today it is cold and it is raining.)*
+> **Іванко:** А за́втра? *(And tomorrow?)*
+> **Галя:** Завтра буде те́пло і со́нячно. *(Tomorrow it will be warm and sunny.)*
+> **Іванко:** До́бре! Тоді́ завтра гуля́ємо! *(Good! Then we walk tomorrow!)*
 
-Three phrases to notice here. **Яка погода** (what weather) — this is how you ask about the weather. **Холодно** (cold) — no subject, no "it is," just the state. And **буде тепло** (will be warm) — **буде** works as a simple future marker. Treat it as a chunk for now, not a full grammar lesson.
+The word **погода** (weather) is a feminine noun. When asking about it, use the feminine question word **яка** (what kind of). The adverb **сьогодні** (today) sets the context for the current day, and **завтра** (tomorrow) looks ahead. These time adverbs help ground your conversation in the present or the future.
 
-There's something interesting about Ukrainian weather sentences: the weather just IS. There is no dummy subject like English "it." **Сьогодні холодно** means exactly "today cold." The language skips the filler word English needs. This makes weather talk shorter and more direct.
+People also have strong opinions about different times of the year. When discussing your favorite time of year, you can connect the seasons to the typical conditions you experience during those months. The phrase **пора ро́ку** translates to "season" (literally "time of the year").
 
-Now Іванко and Галя talk about their favourite seasons:
+> **Іванко:** Яка пора року тобі́ подо́бається? *(Which season do you like?)*
+> **Галя:** Ме́ні подобається лі́то. *(I like summer.)*
+> **Іванко:** Чо́му? *(Why?)*
+> **Галя:** Тому́ що влі́тку тепло і сонячно. А тобі? *(Because in summer it is warm and sunny. And you?)*
+> **Іванко:** Мені подобається о́сінь. Восени́ краси́во. *(I like autumn. In autumn it is beautiful.)*
 
-> — **Іванко:** Яка пора ро́ку тобі́ подо́бається? *(What season do you like?)*
-> — **Галя:** Ме́ні подобається лі́то. *(I like summer.)*
-> — **Іванко:** Чо́му? *(Why?)*
-> — **Галя:** Тому́ що влі́тку тепло і сонячно. А тобі? *(Because in summer it's warm and sunny. And you?)*
-> — **Іванко:** Мені подобається о́сінь. *(I like autumn.)*
-> — **Галя:** Восени́ краси́во? *(Is it beautiful in autumn?)*
-> — **Іванко:** Так! А взи́мку? *(Yes! And in winter?)*
-> — **Галя:** Взимку холодно, але́ красиво. Йде сніг! *(In winter it's cold, but beautiful. It snows!)*
-
-
-Notice the season adverbs: **взимку** (in winter), **навесні́** (in spring), **влітку** (in summer), **восени** (in autumn). These are frozen adverbs you already know from M23. They don't change form. Now pair each with the weather: **взимку** — **холодно**, **влітку** — **тепло**, **восени** — **прохоло́дно**.
+This conversation uses the verb construction **мені подобається** (I like / it is pleasing to me) alongside the adverbs **тепло** (warm), **сонячно** (sunny), and **красиво** (beautiful). Ukrainian relies heavily on these descriptive adverbs to convey states and environments accurately.
 
 ## Яка погода? (What's the Weather?)
 
-Ukrainian weather sentences have no subject — just a state adverb sitting alone as the whole sentence. **Сьогодні холодно** — "today it's cold." Compare the four temperature adverbs side by side: **холодно** (cold), **прохолодно** (cool), **тепло** (warm), **спекотно** (hot). Each word is an adverb that doubles as a full predicate — nothing else needed. No subject, no verb "to be." As Заболо́тний teaches in Grade 8: безособо́ві речення (impersonal sentences) express natural phenomena. The weather simply exists.
+English requires a subject and a verb to build a sentence, even when neither makes logical sense. You say "It is cold", using the empty pronoun "it". Ukrainian grammar takes a different, much more direct approach. According to the textbook *Заболо́тний Grade 8* (page 126), Ukrainian uses **безособо́ві речення** (impersonal sentences) to convey natural phenomena. You simply state the adverb without any subject or the verb "to be" to establish the fact. You say **холодно** (cold) to mean "It is cold", and **тепло** (warm) to mean "It is warm". A common mistake for English speakers is trying to translate word-for-word, resulting in incorrect phrases like **Це є тепло** (This is warm) or **Воно́ є сонячно** (It is sunny). These literal translations sound highly unnatural to native speakers. Drop the subject and verb entirely.
 
-Beyond temperature, you need sky conditions: **хма́рно** (cloudy), **я́сно** (clear), **сонячно** (sunny). These work exactly the same way — standalone adverbs as full sentences. Compare: **Сьогодні ясно і сонячно** versus **Сьогодні хмарно**. You can toggle between days using time adverbs: **Вчо́ра було́ хмарно. Сьогодні ясно. Завтра буде сонячно.** Notice **було** (was) and **буде** (will be) — they work as simple time chunks. **Вчора** (yesterday) states the past, **сьогодні** (today) the present, and **завтра** (tomorrow) the future.
+:::caution
+Never use **це є** or **воно є** to describe the weather. Ukrainian drops the subject entirely. Use the bare adverb: **Сьогодні тепло** (Today it is warm).
+:::
 
+The core vocabulary for discussing temperature consists of four essential adverbs. Use **холодно** (cold) for winter days, **прохоло́дно** (cool) for crisp autumn mornings, **тепло** (warm) for pleasant spring afternoons, and **спекотно** (hot) for the peak of summer. You can modify these states by adding the adverb **ду́же** (very) before the weather word.
 
+*   **Сьогодні дуже спекотно.** — Today it is very hot.
+*   **Вчо́ра було́ прохолодно.** — Yesterday it was cool.
+*   **Сьогодні дуже тепло.** — Today it is very warm.
+*   **Вчора було холодно.** — Yesterday it was cold.
 
-Precipitation and movement. Each weather phenomenon in Ukrainian has its own verb:
+The word **вчора** means "yesterday". When talking about the past, you must add the neuter past-tense verb **було** (it was) before the adverb.
 
-- **Іде́ дощ.** — It's raining (literally "rain goes").
-- **Іде сніг.** — It's snowing ("snow goes").
-- **Дме ві́тер.** — The wind is blowing.
-- **Світи́ть со́нце.** — The sun is shining.
+Ukrainian personifies precipitation, treating it as an active participant. Instead of saying "it is raining", you say that the rain or snow "goes" or "walks". The verb **іти́** (to go on foot) describes this action. This creates fixed, highly idiomatic paradigms.
 
-There's a lovely moment in a Grade 5 textbook (Avramenko, p.27) where a little sister hears her brother say **пі́де дощ** and asks: *«А хіба́ дощ мо́же ходи́ти?»* — "Can rain really walk?" This confusion shows that **іде дощ** is an idiom, not literal walking. Rain "goes" the same way English rain "falls" — nobody pictures it tripping. Learn all four verbs as fixed chunks: **іде** (goes — for rain and snow), **дме** (blows — for wind), **світить** (shines — for the sun). Note that **іде дощ** is the natural conversational form, not the single verb **дощи́ть**.
+*   **Іде́ дощ.** — It is raining (literally "rain goes").
+*   **Іде сніг.** — It is snowing (literally "snow goes").
 
-Temperature in numbers uses **гра́дуси** (degrees). **Сьогодні два́дцять гра́дусів** — "Today it's twenty degrees." For positive and negative temperatures, use **плюс** and **мі́нус**: **Плюс три́дцять** (plus thirty — hot), **Мінус де́сять** (minus ten — very cold). In everyday speech, Ukrainians often drop **градусів**: simply **Сьогодні мінус десять.** Ukrainian weather forecasts always use Celsius — **плюс двадцять** (20°C) is **тепло**, **плюс тридцять** (30°C) is **спекотно**, **мінус десять** (−10°C) is **ду́же холодно**.
+While the single verb **дощи́ть** (it rains) exists in the dictionary, the phrase **іде дощ** is the natural conversational form you will hear on the street. Other weather events use different verbs: **світи́ть со́нце** (the sun is shining) and **дме ві́тер** (the wind is blowing).
+
+<!-- INJECT_ACTIVITY: fill-in-weather-dialogue -->
 
 ## Погода і по́ри року (Weather and Seasons)
 
-Connect weather to all four seasons using the adverbs from M23. Here are four mini-portraits — each season in two weather facts and one image from nature:
+Linking weather states to the seasons you learned earlier provides excellent conversational practice. Use the seasonal adverbs **взи́мку** (in winter), **навесні́** (in spring), **влітку** (in summer), and **восени** (in autumn) to establish the time context, and then add the typical environmental conditions.
 
-- **Взимку холодно. Іде сніг. Все бі́ле.** — In winter it's cold. It snows. Everything is white.
-- **Навесні тепло. Іде дощ. Все зеле́не.** — In spring it's warm. It rains. Everything is green.
-- **Влітку спекотно. Світить сонце. Все кві́тне.** — In summer it's hot. The sun shines. Everything blooms.
-- **Восени прохолодно. Дме вітер. Ли́стя жо́вте.** — In autumn it's cool. The wind blows. The leaves are yellow.
+*   **Взимку холодно. Іде сніг.** — In winter it is cold. It snows.
+*   **Навесні тепло. Все зеле́не.** — In spring it is warm. Everything is green.
+*   **Влітку спекотно. Світить сонце.** — In summer it is hot. The sun shines.
+*   **Восени прохолодно. Іде дощ.** — In autumn it is cool. It rains.
 
-Each portrait follows the same pattern: season adverb + temperature + precipitation or sky + nature image. This is the Grade 4 textbook pattern: *«Сади́ цвіту́ть навесні, улі́тку трав поля́ шовко́ві, а восени врожа́й збира́ють, узи́мку сні́гу всі чека́ють.»*
+These short, descriptive sentences form the foundation of natural storytelling in Ukrainian.
 
-<!-- INJECT_ACTIVITY: fill-in-weather-for-season -->
+Beyond temperature and precipitation, you often need to describe the appearance of the sky. The three main adverbs for the sky are **хма́рно** (cloudy), **я́сно** (clear), and **сонячно** (sunny). There is a logical link between the state of the sky and the type of weather you can expect.
 
-Weather descriptions naturally combine with opinions. You already know **подобається** (like) from M15. Now pair it with seasons and weather:
+*   **Сьогодні ясно і сонячно.** — Today it is clear and sunny.
+*   **За́раз дуже хмарно.** — Right now it is very cloudy.
+*   **Сонце не світить. Хмарно.** — The sun is not shining. It is cloudy.
 
-- **Мені подобається зима́. Іде сніг і все біле.** — I like winter. It snows and everything is white.
-- **Я люблю́ літо. Спекотно і сонячно.** — I love summer. It's hot and sunny.
-- **Мені подобається весна́. Тепло і все зелене.** — I like spring. It's warm and everything is green.
+If the sky is covered in heavy clouds, you might soon say **іде дощ**. 
 
-The pattern is simple: **Мені подобається** + season, then a separate sentence with the weather reason. This recycles **подобається** and **люблю** from M15 while adding your new weather vocabulary.
+:::tip
+The word **ясно** (clear) is also frequently used in conversation to mean "I understand" or "It is clear to me."
+:::
 
-<!-- INJECT_ACTIVITY: match-weather-context -->
+When exact details matter, you can discuss the temperature using numbers. Ukraine uses the Celsius scale, so any numbers you hear will reflect that system. The noun **гра́дус** (degree) is masculine. Combine it with the words **плюс** (plus) or **мі́нус** (minus) to specify the exact conditions outside. If someone asks **Яка температу́ра?** (What is the temperature?), you reply with the number.
 
-Now put everything together in one more conversation. Іванко asks Галя about her dream weather:
+*   **Сьогодні плюс два́дцять гра́дусів.** — Today it is plus twenty degrees.
+*   **Сьогодні двадцять градусів.** — Today is twenty degrees.
+*   **Зараз мінус де́сять.** — Right now it is minus ten.
 
-> — **Іванко:** Яка твоя́ ідеа́льна погода? *(What's your ideal weather?)*
-> — **Галя:** Плюс двадцять, сонячно і без ві́тру. *(Plus twenty, sunny, and no wind.)*
-> — **Іванко:** А взимку ти лю́биш сніг? *(And in winter, do you like snow?)*
-> — **Галя:** Так, але коли́ не дуже холодно! *(Yes, but when it's not too cold!)*
-> — **Іванко:** У Ки́єві за́раз мінус п'ять. *(In Kyiv right now it's minus five.)*
-> — **Галя:** О, це дуже холодно! А у тебе́? *(Oh, that's very cold! And where you are?)*
-> — **Іванко:** У мене́ сьогодні тепло. Плюс п'ятна́дцять і хмарно. *(Here today it's warm. Plus fifteen and cloudy.)*
-> — **Галя:** Добре! Не холодно — і добре! *(Good! Not cold — and that's fine!)*
+You can also pair these adverbs with location phrases to describe the environment. For example, **На ву́лиці тепло** means "It is warm outside" (literally "on the street"). Using the phrase **на вулиці** (outside) is a very common way to describe outdoor conditions in daily conversation.
 
-
-Notice **ідеальна** (ideal), **без вітру** (without wind — **без** means "without"), and how Галя and Іванко compare weather in different cities using **у Києві** (in Kyiv) and **у мене** (where I am).
+<!-- INJECT_ACTIVITY: match-up-weather-season -->
+<!-- INJECT_ACTIVITY: fill-in-season-weather -->
 
 ## Підсумок — Summary
 
-You have learned three ways to describe weather. First, state adverbs for temperature: **холодно** (cold), **прохолодно** (cool), **тепло** (warm), **спекотно** (hot), plus sky conditions **хмарно** (cloudy), **ясно** (clear), **сонячно** (sunny). Second, movement verbs for precipitation: **іде дощ**, **іде сніг**, **дме вітер**, **світить сонце**. Third, season-weather combinations: **взимку холодно**, **влітку спекотно**. Together these cover everything a real weather conversation needs.
+You can now describe the environment around you in Ukrainian. The fundamental question is **Яка сьогодні погода?** (What is the weather like today?). To answer, you rely on impersonal adverbs without subjects or verbs: **холодно** (cold), **тепло** (warm), **спекотно** (hot), and **прохолодно** (cool). Precipitation is personified as a moving object, giving us the natural conversational phrases **іде дощ** (it is raining) and **іде сніг** (it is snowing). We also use active verbs for other phenomena, such as **дме вітер** (the wind is blowing) and **світить сонце** (the sun is shining). When you look at the sky, you can describe it as **хмарно** (cloudy), **ясно** (clear), or **сонячно** (sunny). Connecting these conditions to the time of year allows you to build rich sentences like **взимку холодно** (in winter it is cold) or **влітку спекотно** (in summer it is hot).
 
-:::tip Інструме́нти пого́ди — Weather Toolkit
-- **Пита́ння:** Яка сьогодні погода?
-- **Температу́ра:** холодно · прохолодно · тепло · спекотно
-- **О́пади:** іде дощ · іде сніг
-- **Не́бо:** хмарно · ясно · сонячно
-- **Вітер/сонце:** дме вітер · світить сонце
-- **Градуси:** плюс двадцять · мінус десять
-- **Час:** сьогодні · завтра · вчора
-- **Пори року:** взимку · навесні · влітку · восени
-:::
+Use this self-check to practice your new vocabulary. Read the questions below and try to answer them aloud in complete Ukrainian sentences. Think about the current conditions outside your window, the temperature, and your personal preferences.
 
-<!-- INJECT_ACTIVITY: fill-in-dialogue-weather -->
+*   Яка сьогодні погода у твоє́му мі́сті?
+*   Яка температура сьогодні: плюс чи мінус?
+*   Яка твоя́ улю́блена пора року? Чому?
+*   Що йде взимку: дощ чи сніг?
 
-### Переві́р себе́ — Self-check
-
-Try these on your own. Say each answer out loud in Ukrainian before checking:
-
-- Опиши́ сього́днішню пого́ду трьома́ реченнями. *(Describe today's weather in three sentences.)*
-- Яка погода взимку там, де ти живе́ш? *(What's the weather like in winter where you live?)*
-- Яка твоя улю́блена пора року? Чому? *(What's your favourite season? Why?)*
-- Say in Ukrainian: "Tomorrow it will be warm and sunny."
-- Say in Ukrainian: "I like autumn because it's cool."
-- How do you say "it's raining" in Ukrainian? And "it's snowing"?
-
-Next up: **My Day** (M25) builds a full daily schedule. You'll need today's weather to decide what to wear and where to go — all the vocabulary from this module feeds directly into M25 morning routines and outdoor plans. **Сьогодні тепло? Тоді гуляємо!**
+This vocabulary will allow you to plan your days, discuss your favorite seasons, and easily start conversations with native speakers.

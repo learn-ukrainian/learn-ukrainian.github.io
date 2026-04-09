@@ -1,0 +1,477 @@
+version: '1.0'
+module: metalanguage-words-and-cases
+level: a2
+inline:
+- id: match-up-match-ukrainian-grammar-terms-etc-to-english-equivalents
+  type: match-up
+  instruction: З'єднайте українські терміни з їхніми англійськими відповідниками
+  pairs:
+  - left: іменник
+    right: noun
+  - left: прикметник
+    right: adjective
+  - left: дієслово
+    right: verb
+  - left: займенник
+    right: pronoun
+  - left: прислівник
+    right: adverb
+  - left: прийменник
+    right: preposition
+  - left: сполучник
+    right: conjunction
+  - left: числівник
+    right: numeral
+- id: group-sort-sort-a-list-of-24-words-into-five-buckets
+  type: group-sort
+  instruction: Розподіліть слова за частинами мови
+  groups:
+  - label: Іменник (noun)
+    items:
+    - стіл
+    - мама
+    - радість
+    - місто
+    - лікар
+  - label: Прикметник (adjective)
+    items:
+    - великий
+    - гарна
+    - синє
+    - теплі
+  - label: Дієслово (verb)
+    items:
+    - читати
+    - писати
+    - бігати
+    - знати
+    - бачити
+  - label: Займенник (pronoun)
+    items:
+    - я
+    - ти
+    - ми
+    - цей
+    - хтось
+  - label: Прислівник (adverb)
+    items:
+    - швидко
+    - тут
+    - завтра
+    - добре
+    - завжди
+- id: fill-in-complete-the-case-name-and-its-question-pair-e-g
+  type: fill-in
+  instruction: Доповніть назву відмінка та його питання
+  items:
+  - sentence: 1. Називний — ___? ___?
+    answer: хто, що
+    options:
+    - хто, що
+    - кого, чого
+    - кому, чому
+  - sentence: 2. ___ — кого? чого?
+    answer: Родовий
+    options:
+    - Родовий
+    - Давальний
+    - Місцевий
+  - sentence: 3. Давальний — ___? ___?
+    answer: кому, чому
+    options:
+    - кому, чому
+    - кого, що
+    - ким, чим
+  - sentence: 4. Знахідний — ___? ___?
+    answer: кого, що
+    options:
+    - кого, що
+    - кого, чого
+    - кому, чому
+  - sentence: 5. ___ — ким? чим?
+    answer: Орудний
+    options:
+    - Орудний
+    - Місцевий
+    - Кличний
+  - sentence: 6. Місцевий — на ___? на ___?
+    answer: кому, чому
+    options:
+    - кому, чому
+    - ким, чим
+    - кого, що
+- id: quiz-identify-the-part-of-speech-and-case-of-underlined-words-in-simple-sentences
+  type: quiz
+  instruction: Визначте частину мови та відмінок виділеного слова
+  items:
+  - question: Я бачу великого **кота**.
+    options:
+    - іменник, Знахідний відмінок
+    - іменник, Називний відмінок
+    - прикметник, Знахідний відмінок
+    - займенник, Родовий відмінок
+    correct: 0
+  - question: '**Вона** читає цікаву книгу.'
+    options:
+    - займенник, Називний відмінок
+    - іменник, Називний відмінок
+    - займенник, Знахідний відмінок
+    - прикметник, Родовий відмінок
+    correct: 0
+  - question: Студент дав зошит **вчителю**.
+    options:
+    - іменник, Давальний відмінок
+    - іменник, Місцевий відмінок
+    - дієслово, Давальний відмінок
+    - іменник, Родовий відмінок
+    correct: 0
+  - question: На **столі** лежить книга.
+    options:
+    - іменник, Місцевий відмінок
+    - іменник, Орудний відмінок
+    - прикметник, Місцевий відмінок
+    - іменник, Давальний відмінок
+    correct: 0
+  - question: Брат пише **ручкою**.
+    options:
+    - іменник, Орудний відмінок
+    - іменник, Знахідний відмінок
+    - прислівник, Орудний відмінок
+    - іменник, Давальний відмінок
+    correct: 0
+  - question: Це будинок моєї **мами**.
+    options:
+    - іменник, Родовий відмінок
+    - іменник, Давальний відмінок
+    - прикметник, Родовий відмінок
+    - іменник, Знахідний відмінок
+    correct: 0
+  - question: Я люблю **тепле** молоко.
+    options:
+    - прикметник, Знахідний відмінок
+    - прикметник, Називний відмінок
+    - іменник, Знахідний відмінок
+    - прислівник, Називний відмінок
+    correct: 0
+  - question: '**Хтось** стукає у двері.'
+    options:
+    - займенник, Називний відмінок
+    - іменник, Називний відмінок
+    - займенник, Родовий відмінок
+    - числівник, Називний відмінок
+    correct: 0
+- id: match-up-match-ukrainian-grammar-terms-to-their-english-equivalents
+  type: match-up
+  instruction: З'єднайте українські терміни з їхніми англійськими значеннями
+  pairs:
+  - left: істота
+    right: animate noun
+  - left: неістота
+    right: inanimate noun
+  - left: збігатися
+    right: to coincide
+  - left: об'єкт дії
+    right: object of an action
+  - left: відмінок
+    right: grammatical case
+  - left: відмінювання
+    right: declension
+  - left: однина
+    right: singular
+  - left: множина
+    right: plural
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку в узгодженні роду
+  items:
+  - sentence: Мій мама працює лікарем.
+    error: Мій
+    correction: Моя
+    error_type: word
+    options:
+    - Моя
+    - Моє
+    - Мої
+    explanation: Мама — це іменник жіночого роду, тому потрібен займенник «моя».
+  - sentence: Це велика стіл.
+    error: велика
+    correction: великий
+    error_type: word
+    options:
+    - великий
+    - велике
+    - великі
+    explanation: Стіл — це іменник чоловічого роду, тому прикметник має бути «великий».
+  - sentence: Яке гарний місто!
+    error: гарний
+    correction: гарне
+    error_type: word
+    options:
+    - гарне
+    - гарна
+    - гарні
+    explanation: Місто — це іменник середнього роду, тому потрібен прикметник «гарне».
+  - sentence: Він прочитав цікавий книгу.
+    error: цікавий
+    correction: цікаву
+    error_type: word
+    options:
+    - цікаву
+    - цікаве
+    - цікаві
+    explanation: Книга — жіночий рід, Знахідний відмінок має закінчення -у.
+  - sentence: Це теплий вікно.
+    error: теплий
+    correction: тепле
+    error_type: word
+    options:
+    - тепле
+    - тепла
+    - теплі
+    explanation: Вікно — середній рід, закінчення прикметника -е.
+  - sentence: Моя брат живе в Києві.
+    error: Моя
+    correction: Мій
+    error_type: word
+    options:
+    - Мій
+    - Моє
+    - Мої
+    explanation: Брат — чоловічий рід, тому займенник має бути «мій».
+- type: quiz
+  instruction: Визначте рід іменника за його закінченням
+  items:
+  - question: До якого роду належить слово «родина»?
+    options:
+    - жіночий рід
+    - чоловічий рід
+    - середній рід
+    - це множина, рід не визначається
+    correct: 0
+  - question: До якого роду належить слово «дім»?
+    options:
+    - чоловічий рід
+    - жіночий рід
+    - середній рід
+    - це множина
+    correct: 0
+  - question: До якого роду належить слово «море»?
+    options:
+    - середній рід
+    - чоловічий рід
+    - жіночий рід
+    - це дієслово
+    correct: 0
+  - question: До якого роду належить слово «парк»?
+    options:
+    - чоловічий рід
+    - жіночий рід
+    - середній рід
+    - це прикметник
+    correct: 0
+  - question: До якого роду належить слово «сестра»?
+    options:
+    - жіночий рід
+    - чоловічий рід
+    - середній рід
+    - це множина
+    correct: 0
+  - question: До якого роду належить слово «сонце»?
+    options:
+    - середній рід
+    - жіночий рід
+    - чоловічий рід
+    - це множина
+    correct: 0
+- type: true-false
+  instruction: Правда чи ні? Виберіть правильну відповідь за текстом.
+  items:
+  - statement: Слово «іменник» походить від слова «ім'я».
+    correct: true
+    explanation: Так, іменник називає предмет і має «ім'я».
+  - statement: Іменники відповідають на питання «який? яка? яке?».
+    correct: false
+    explanation: Іменники відповідають на питання «хто? що?». На питання «який?» відповідає
+      прикметник.
+  - statement: Дієслово показує дію предмета.
+    correct: true
+    explanation: Дієслова — це «мотор» речення, вони відповідають на питання «що робити?».
+  - statement: В українській мові є шість відмінків.
+    correct: false
+    explanation: В українській мові є сім відмінків (Називний, Родовий, Давальний,
+      Знахідний, Орудний, Місцевий, Кличний).
+  - statement: Слово «стяг» — це дієслово.
+    correct: false
+    explanation: Слово «стяг» відповідає на питання «що?», це іменник (прапор).
+  - statement: Форма знахідного відмінка для істот завжди збігається з формою родового
+      відмінка.
+    correct: true
+    explanation: Так, це правило з українського підручника. Бачу (кого?) друга — немає
+      (кого?) друга.
+  - statement: Прикметник завжди має такий самий рід, число і відмінок, як і його
+      іменник.
+    correct: true
+    explanation: Прикметник «приклеюється» до іменника і повторює всі його форми.
+  - statement: Кличний відмінок відповідає на питання «кого? що?».
+    correct: false
+    explanation: Кличний відмінок не має питань, це форма для звертання.
+- type: translate
+  instruction: Оберіть правильний український переклад для граматичного терміна
+  items:
+  - source: Noun
+    options:
+    - text: іменник
+      correct: true
+    - text: дієслово
+      correct: false
+    - text: прикметник
+      correct: false
+    - text: прислівник
+      correct: false
+  - source: Verb
+    options:
+    - text: дієслово
+      correct: true
+    - text: займенник
+      correct: false
+    - text: числівник
+      correct: false
+    - text: іменник
+      correct: false
+  - source: Adjective
+    options:
+    - text: прикметник
+      correct: true
+    - text: прийменник
+      correct: false
+    - text: дієслово
+      correct: false
+    - text: прислівник
+      correct: false
+  - source: Pronoun
+    options:
+    - text: займенник
+      correct: true
+    - text: іменник
+      correct: false
+    - text: сполучник
+      correct: false
+    - text: числівник
+      correct: false
+  - source: Adverb
+    options:
+    - text: прислівник
+      correct: true
+    - text: прикметник
+      correct: false
+    - text: прийменник
+      correct: false
+    - text: дієслово
+      correct: false
+  - source: Preposition
+    options:
+    - text: прийменник
+      correct: true
+    - text: прислівник
+      correct: false
+    - text: займенник
+      correct: false
+    - text: сполучник
+      correct: false
+  - source: Plural
+    options:
+    - text: множина
+      correct: true
+    - text: однина
+      correct: false
+    - text: відмінок
+      correct: false
+    - text: рід
+      correct: false
+  - source: Gender
+    options:
+    - text: рід
+      correct: true
+    - text: відмінок
+      correct: false
+    - text: число
+      correct: false
+    - text: особа
+      correct: false
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - називає
+    - Іменник
+    - предмет.
+    correct_order:
+    - Іменник
+    - називає
+    - предмет.
+  - words:
+    - відповідає
+    - на
+    - Дієслово
+    - питання
+    - робити?
+    - що
+    correct_order:
+    - Дієслово
+    - відповідає
+    - на
+    - питання
+    - що
+    - робити?
+  - words:
+    - показує
+    - Прикметник
+    - ознаку
+    - предмета.
+    correct_order:
+    - Прикметник
+    - показує
+    - ознаку
+    - предмета.
+  - words:
+    - мова
+    - сім
+    - має
+    - Українська
+    - відмінків.
+    correct_order:
+    - Українська
+    - мова
+    - має
+    - сім
+    - відмінків.
+  - words:
+    - закінчення.
+    - змінюють
+    - свої
+    - Слова
+    - у
+    - реченні
+    correct_order:
+    - Слова
+    - у
+    - реченні
+    - змінюють
+    - свої
+    - закінчення.
+  - words:
+    - це
+    - для
+    - форма
+    - Кличний
+    - відмінок
+    - —
+    - звертання.
+    correct_order:
+    - Кличний
+    - відмінок
+    - —
+    - це
+    - форма
+    - для
+    - звертання.

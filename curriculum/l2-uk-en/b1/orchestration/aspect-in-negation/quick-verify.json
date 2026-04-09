@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 5/19 required vocab: {'word': 'обговорювати', 'pos': 'verb:impf', 'translation': \"to discuss (impf — не обговорювали = didn't discuss)\"}, {'word': 'вирішувати', 'pos': 'verb:impf', 'translation': 'to decide (impf — process of deciding)'}, {'word': 'вирішити', 'pos': 'verb:pf', 'translation': \"to decide (pf — ще не вирішили = haven't decided yet)\"}, {'word': 'відповідати', 'pos': 'verb:impf', 'translation': 'to answer/respond (impf)'}, {'word': 'незавершений', 'pos': 'adj', 'translation': 'unfinished, incomplete (ще не + pf context)'}"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-09T02:16:14.921296+00:00"
+}

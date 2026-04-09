@@ -1,67 +1,73 @@
 ## Linguistic Scan
-
-**Russianisms:** None found. All Ukrainian vocabulary verified against VESUM (86/86 core words confirmed).
-
-**Surzhyk:** None found.
-
-**Calques:** None found.
-
-**Paronyms:** None found.
-
-**Russian characters (ы, э, ё, ъ):** None found.
-
-**Factual claims verified:**
-- Правопис 2019 §26 confirms Ь after д, т, з, с, дз, ц, л, н (end of word/syllable) and after д, т, з, с, дз, ц, л, н **та р** before о mid-word — module correctly presents this, including Р's special status.
-- Правопис 2019 §7 confirms apostrophe after б, п, в, м, ф, р before я, ю, є, ї — module correctly states this rule with attribution to Захарійчук.
-- Правопис 2019 §26 explicitly lists "ларьо́к" as a standard example of Р+Ь+О, confirming the module's usage despite VESUM not containing it.
-- Літвінова Grade 5 p.126 (confirmed via textbook RAG) uses the mnemonic «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи» for exactly the consonants listed.
-- Заболотний Grade 10 confirms: "Дзвінкі приголосні переважно не оглушуються" with exception list including легко [лехко] — module correctly presents non-devoicing.
-- Karaman Grade 10 classification confirms сонорні (М, Н, В, Л, Р, Й) as a separate group from шумні дзвінкі/глухі — module's presentation is correct.
-- Voiced-voiceless 8-pair table matches standard textbook classification (Karaman Grade 10, Golub Grade 5).
-- Г as глотковий [ɦ] fricative, Ґ as задньоязиковий [g] stop — matches Karaman Grade 10 classification. Module correctly warns against calling Г "soft."
-- VESUM confirms: ґрати = noun (ґрата, plural); грати = verb — minimal pair is accurate.
-
-**No linguistic errors found.**
+No linguistic errors found. The phonetic transcriptions and minimal pairs are accurate, and no Russianisms, Surzhyk, calques, or paronyms were detected.
 
 ## Exercise Check
-
-7 activity injection markers found, matching all 7 plan `activity_hints`:
-
-| Plan hint | Marker ID | After section | Correct placement |
-|-----------|-----------|---------------|-------------------|
-| odd-one-out (М'який знак) | `odd-one-out` | М'який знак | ✅ |
-| fill-in (Апостроф) | `fill-in-soft-or-apostrophe` | Апостроф | ✅ |
-| error-correction (Апостроф) | `error-correction-apostrophe` | Апостроф | ✅ |
-| group-sort (Апостроф) | `group-sort-soft-apostrophe` | Апостроф | ✅ |
-| match-up (Дзвінкі і глухі) | `match-voiced-voiceless` | Дзвінкі і глухі | ✅ |
-| true-false (Дзвінкі і глухі) | `true-false-voicing` | Дзвінкі і глухі | ✅ |
-| quiz (Вимова) | `quiz-g-vs-gx` | Вимова | ✅ |
-
-All markers placed after relevant teaching sections. Distribution is even — 1 in section 1, 3 in section 2 (matching the plan's 3 apostrophe activities), 2 in section 3, 1 in section 4. No clustering issues.
+All `<!-- INJECT_ACTIVITY: {id} -->` markers are present and correctly positioned after their respective teaching sections. The injected markers match the 7 `activity_hints` required by the plan exactly in type, focus, and section placement.
 
 ## Scores
-
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | All 5 content_outline sections present with correct ordering. Three-way consonant distinction (м'які/пом'якшені/тверді) covered per plan with Авраменко Grade 5 and Большакова Grade 2 citations. Mnemonic «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи» attributed to Літвінова Grade 5 as planned. Apostrophe rule (б,п,в,м,ф,р + я,ю,є,ї) from Захарійчук Grade 1 p.97 — cited and demonstrated. All 8 voiced-voiceless pairs listed. И/І minimal pairs from plan present (бик-бік, дим-дім, лист-ліс, кит-кіт). Г vs Ґ phonetic description matches plan exactly. Self-check covers all plan questions. All 7 activities placed. Підсумок section slightly under its 200-word sub-target but total module at 1472 (target 1200) is 23% over — well within bounds. All plan references cited in text. |
-| 2. Linguistic accuracy | 10/10 | All Ukrainian words VESUM-verified. Правопис 2019 §26 confirms Ь rules as presented. §7 confirms apostrophe rule. Phonetic descriptions of Г [ɦ] (fricative) vs Ґ [g] (stop) match Karaman Grade 10 classification. Non-devoicing rule ("дуб = [дуб]") confirmed by Заболотний Grade 10: "дзвінкі приголосні переважно не оглушуються." Exception "легко [лехко]" correctly presented. Three-way consonant classification matches textbooks. No Russianisms, no Surzhyk, no calques, no paronyms, no Russian characters. |
-| 3. Pedagogical quality | 9/10 | Strong PPP flow: each section introduces concept → demonstrates with examples → provides practice markers. Multiple examples per concept: Ь section has 4 pattern groups (-нь, -ль, -ть, -зь) with 3+ words each. Apostrophe section walks through 6 examples with phonetic breakdowns (сім'я → М hard + й + а). Voiced/voiceless section uses experiential "hand on throat" technique from textbook pedagogy. И/І section has 4 minimal pairs drilled explicitly. Mnemonic provided for Ь consonants. The "say Х then add voice" instruction for Г is a concrete articulation exercise. Grammar scope respects A1 (correctly defers prefix apostrophe rule to A2). |
-| 4. Vocabulary coverage | 10/10 | All 7 required vocab words appear naturally in prose: сім'я (apostrophe section, 3 occurrences), день (Ь section, 2 occurrences), сіль (Ь section, 2 occurrences), м'ясо (apostrophe section, 3 occurrences), п'ять (apostrophe section, 3 occurrences), гарно (Г section + summary), риба (Р section + summary). All 5 recommended words used: батько (Ь section), учитель (Ь section), дев'ять (apostrophe section), комп'ютер (apostrophe section), м'який (apostrophe section with correct note about no Ь). Words introduced in context, never as bare lists. |
-| 5. Exercise quality | 9/10 | All 7 plan activity hints have corresponding markers. Types match exactly (odd-one-out, fill-in, error-correction, group-sort, match-up, true-false, quiz). Each marker appears after the relevant teaching content. Item counts in plan hints respected. Activity IDs are descriptive and match their pedagogical focus. Cannot evaluate distractor quality since activities are YAML-generated externally, but marker logic and placement are correct. |
-| 6. Engagement & tone | 9/10 | Opens with a specific hook: "Now meet a letter that breaks that rule: Ь." Uses concrete experiential teaching: "Place your fingers lightly on your throat. Say з — you feel vibration." Punchy phrasing: "One letter, one job, zero sounds." Cultural identity noted naturally: "Ґ is an important part of Ukrainian phonetic identity." No motivational filler, no "Let us now explore," no "incredibly melodic." The :::caution blocks serve genuine disambiguation purpose (non-devoicing, Г≠"soft"). Minimal meta-commentary — "Walk through the core examples" is the only borderline instance. |
-| 7. Structural integrity | 10/10 | All 5 H2 sections present and correctly ordered (М'який знак → Апостроф → Дзвінкі і глухі → Вимова → Підсумок). Clean markdown with proper :::tip, :::note, :::caution blocks. Table formatting correct. No duplicate summaries. No stray tags or formatting artifacts. Word count 1472 vs 1200 target — 23% over, well within bounds. H3 subsections (И vs І, Г vs Ґ, Р) logically organized within Вимова. |
-| 8. Cultural accuracy | 10/10 | "Ґ is uniquely Ukrainian — an important part of Ukrainian phonetic identity." Ukrainian sounds presented on their own terms: "И sits in a mid-tongue position" — no "like English X." Non-devoicing presented as "a defining Ukrainian feature," not as "unlike Russian." Г explicitly not called "soft" with explanation of Ukrainian phonetic terminology. No "like Russian but..." framing anywhere. Module consistently presents Ukrainian phonetics as a self-contained system. |
-| 9. Dialogue quality | 8/10 | No formal dialogues present. This is a phonetics module focused on sound system mechanics — the plan contains no dialogue hints or conversation activities. The self-check Q&A in Підсумок provides interactive engagement. The module could theoretically include a short pronunciation practice dialogue (two speakers drilling minimal pairs), which would strengthen this dimension, but its absence is plan-appropriate and not an error. |
+| 1. Plan adherence | 8/10 | The text misses textbook citations for Авраменко Grade 5, Большакова Grade 2, and Літвінова Grade 5 ("In Ukrainian phonetics, there is a three-way distinction..." / "Ukrainian students memorize these letters..."). It omits the voiceless partners for Г and Ґ ("Never call Г "soft""). It also omits the phonetic breakdown for комп'ютер, the word м'яч, and the summary question to name 3 voiced-voiceless pairs. |
+| 2. Linguistic accuracy | 10/10 | Exceptional phonetic accuracy. Clearly explains palatalization and non-devoicing with accurate minimal pairs. No Russianisms or linguistic errors found. |
+| 3. Pedagogical quality | 10/10 | Explanations are highly physical and practical (e.g., the "hands on ears" test for voiced consonants). The progression is clear and effectively emphasizes the meaning-altering nature of sounds. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (сім'я, день, сіль, м'ясо, п'ять, гарно, риба, батько, учитель, дев'ять, комп'ютер, м'який, об'єкт) are used naturally within the explanatory prose. |
+| 5. Exercise quality | 10/10 | Markers perfectly correspond to the plan's requirements and are strategically placed to test what was just taught. |
+| 6. Engagement & tone | 10/10 | Tone is encouraging and highly educational. It highlights the aesthetic beauty of the language ("defining and beautiful features", "highly resonant, musical sounds") without falling into empty filler. |
+| 7. Structural integrity | 10/10 | Clean Markdown structure. H2 headers align perfectly with the plan outline. Word count securely exceeds the minimum at 2024 words. |
+| 8. Cultural accuracy | 10/10 | Properly frames unique Ukrainian sounds on their own terms (particularly the Г/Ґ distinction and the Resilience Rule) rather than relying on external comparisons. |
+| 9. Dialogue & conversation quality | 4/10 | The introductory dialogues are purely transactional, robotic interrogations (e.g., "> **Оленка:** Хто це там? / > **Тарас:** Це батько. / > **Оленка:** А там учитель? / > **Тарас:** Так, там учитель."). They lack natural conversational flow and reactions. |
 
 ## Findings
+[1. Plan adherence] [major]
+Location: "In Ukrainian phonetics, there is a three-way distinction: consonants can be truly soft (**м'які**), partially softened (**пом'якшені**), or hard (**тверді**)."
+Issue: Missing the required textbook citations for Авраменко Grade 5 and Большакова Grade 2.
+Fix: Add the citations to the text.
 
-No critical or major findings.
+[1. Plan adherence] [major]
+Location: "Ukrainian students memorize these letters using a famous phrase: **«ДЗіДЗьо, Де Ти З’їСи Ці ЛиНи»**"
+Issue: Missing the citation for the Літвінова Grade 5 mnemonic.
+Fix: Attribute the mnemonic to the Літвінова Grade 5 textbook.
 
-[STRUCTURAL] [minor]
-Location: Підсумок section — "Four new pieces of the Ukrainian sound system..." through "...ґудзик."
-Issue: Section runs approximately 170-180 words against a 200-word sub-target (~10-15% under). The Q&A format is pedagogically effective but slightly thin on synthesis prose before the self-check questions.
-Fix: Could add 1-2 sentences bridging the sound system overview to the self-check (e.g., reinforcing how these four pieces connect to reading fluency). However, total module word count is 1472 (23% over 1200 target), making this a non-blocking observation.
+[1. Plan adherence] [major]
+Location: "Never call **Г** "soft" — in Ukrainian phonetics, it is an independent, firm sound. On the other hand, **Ґ** is a voiced stop."
+Issue: Missing the phonetic explanation that Г's voiceless partner is Х, and Ґ's partner is К.
+Fix: Insert the explanation of their voiceless partners as requested by the plan.
 
-## Verdict: PASS
+[1. Plan adherence] [minor]
+Location: "You will see this clearly in words like **комп'ютер** (computer) and **об'єкт** (object)."
+Issue: Missing the phonetic breakdown for "комп'ютер [комп-йутер]" and the required reading practice word "м'яч".
+Fix: Add the phonetic breakdown and the missing word.
 
-**Justification:** Zero linguistic errors found — all Ukrainian forms, phonetic claims, and grammatical descriptions verified against Правопис 2019, VESUM, and Grade 1-10 textbook sources via RAG. All 9 dimensions score ≥8, with 7 of 9 at ≥9. The single dimension below 9 (Dialogue, 8/10) reflects the inherent nature of a phonetics module rather than any quality deficiency — the plan contains no dialogue activities and the module type doesn't naturally accommodate conversation practice. All plan content points covered with textbook citations. All 7 activity markers correctly placed. All required and recommended vocabulary used in context. Word count exceeds target by 23%. The module teaches Ukrainian phonetics on its own terms with accurate, textbook-grounded pedagogy and zero decolonization issues.
+[1. Plan adherence] [minor]
+Location: "Fourth, does a voiced consonant like "б" change its sound at the end of a word? No, it does not."
+Issue: The summary section missed the plan point to "Name 3 voiced-voiceless pairs."
+Fix: Insert the question into the summary text.
+
+[9. Dialogue & conversation quality] [major]
+Location: All four dialogues at the start of sections (e.g., "> **Оленка:** Хто це там? *(Who is that there?)*\n> **Тарас:** Це батько. *(This is a father.)*...")
+Issue: The dialogues are extremely robotic, purely transactional ("Is X there? Yes, X is there."), and feel like interrogations rather than natural speech.
+Fix: Rewrite the dialogues to include natural greetings, reactions, and conversational flow while remaining simple.
+
+## Verdict: REVISE
+The module provides excellent phonetic and linguistic explanations, but requires revision due to missing plan citations, incomplete phonetic points, and severely robotic, interrogative dialogues that violate the conversational quality constraints.
+
+<fixes>
+- find: "In Ukrainian phonetics, there is a three-way distinction: consonants can be truly soft (**м'які**), partially softened (**пом'якшені**), or hard (**тверді**)."
+  replace: "As outlined in textbooks like *Авраменко Grade 5* (p.75) and *Большакова Grade 2* (p.46), Ukrainian phonetics uses a three-way distinction: consonants can be truly soft (**м'які**), partially softened (**пом'якшені**), or hard (**тверді**)."
+- find: "Ukrainian students memorize these letters using a famous phrase: **«ДЗіДЗьо, Де Ти З’їСи Ці ЛиНи»**"
+  replace: "According to the *Літвінова Grade 5* mnemonic, Ukrainian students memorize these letters using a famous phrase: **«ДЗіДЗьо, Де Ти З’їСи Ці ЛиНи»**"
+- find: "Never call **Г** \"soft\" — in Ukrainian phonetics, it is an independent, firm sound. On the other hand, **Ґ** is a voiced stop."
+  replace: "Its voiceless partner is **Х** — say **Х** then add voice to get **Г**. Never call **Г** \"soft\" — in Ukrainian phonetics, it is an independent, firm sound. On the other hand, **Ґ** is a voiced stop (its voiceless partner is **К**)."
+- find: "You will see this clearly in words like **комп'ютер** (computer) and **об'єкт** (object)."
+  replace: "You will see this clearly in words like **комп'ютер** [комп-йутер] (computer), **об'єкт** (object), and **м'яч** (ball)."
+- find: "Fourth, does a voiced consonant like \"б\" change its sound at the end of a word? No, it does not."
+  replace: "Fourth, can you name three voiced-voiceless pairs? (For example: **Б-П**, **Д-Т**, **Г-Х**). And does a voiced consonant like \"б\" change its sound at the end of a word? No, it does not."
+- find: "> **Оленка:** Хто це там? *(Who is that there?)*\n> **Тарас:** Це батько. *(This is a father.)*\n> **Оленка:** А там учитель? *(And is a teacher there?)*\n> **Тарас:** Так, там учитель. *(Yes, a teacher is there.)*"
+  replace: "> **Оленка:** Привіт! Хто це там? *(Hi! Who is that over there?)*\n> **Тарас:** Це мій батько. *(This is my father.)*\n> **Оленка:** А поруч — учитель? *(And nearby — is that a teacher?)*\n> **Тарас:** Так, це наш учитель. *(Yes, that is our teacher.)*"
+- find: "> **Тато:** Це наша сім'я. *(This is our family.)*\n> **Син:** М'ясо тут? *(Is the meat here?)*\n> **Тато:** Так, м'ясо тут. *(Yes, the meat is here.)*"
+  replace: "> **Тато:** Ось наша сім'я в кафе. *(Here is our family in a cafe.)*\n> **Син:** Смачно! А м'ясо де? *(Tasty! And where is the meat?)*\n> **Тато:** Твоє м'ясо тут. *(Your meat is right here.)*"
+- find: "> **Анна:** Це великий дуб? *(Is this a big oak tree?)*\n> **Марко:** Так, це старий дуб. *(Yes, this is an old oak tree.)*\n> **Анна:** А там коза? *(And is a goat there?)*\n> **Марко:** Ні, там коса. *(No, a braid is there.)*"
+  replace: "> **Анна:** Подивись! Це такий великий дуб! *(Look! This is such a big oak tree!)*\n> **Марко:** Так, це дуже старий дуб. *(Yes, this is a very old oak tree.)*\n> **Анна:** Ой, а там коза? *(Oh, and is that a goat over there?)*\n> **Марко:** Ні, це не коза. Це дівчина, і в неї довга коса. *(No, that is not a goat. It's a girl, and she has a long braid.)*"
+- find: "> **Максим:** Що це там? *(What is this there?)*\n> **Юля:** Це великий бик. *(This is a big bull.)*\n> **Максим:** А там дім? *(And is a house there?)*\n> **Юля:** Ні, це дим. *(No, this is smoke.)*"
+  replace: "> **Максим:** Обережно! Що це там? *(Careful! What is that there?)*\n> **Юля:** Не бійся, це просто великий бик. *(Don't be afraid, it's just a big bull.)*\n> **Максим:** А там далі — це дім? *(And over there — is that a house?)*\n> **Юля:** Ні, це не дім. Це просто дим. *(No, it's not a house. It's just smoke.)*"
+</fixes>

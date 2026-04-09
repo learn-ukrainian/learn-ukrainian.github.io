@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module is comprehensive but misses several specific examples requested
+    by the plan. Dative "адресат" (допомагати другові), Instrumental "керування" (цікавитися,
+    пишатися), Cause prepositions (від,
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains several typos: "Знахідним відміком", "остатно відправити", "повсяідденних
+    предметів", "Над цим складним проєкт". Uses the "давайте + дієслово" calque repeatedly
+    ("Давайте детально повторимо ц'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: Contains a major pedagogical contradiction. Early in the text, it explicitly
+    teaches that "за" is the norm for fetching ("ми зазвичай використовуємо прийменник
+    за... сходити за кавою"). However, in th
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required vocabulary is successfully and naturally integrated into the
+    text (e.g., "комплексний (comprehensive) аналіз", "чесна діагностика").
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The required 6 markers are placed correctly and logically follow the teaching
+    content. The swap of a match-up for a diagnostic quiz is acceptable given the
+    context.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent academic yet accessible teacher persona that perfectly suits
+    a B1+ summary review module without resorting to generic filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module is incredibly dense and thorough, hitting a very impressive
+    5069 words (well above the 4000-word target). All headings perfectly match the
+    plan outline.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of culturally authentic names (Іван Петрович) and contextualized
+    examples surrounding housing in Kyiv and Lviv.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The academic dialogue between the student and professor effectively demonstrates
+    target grammar (vocative, numerals, cases) in a formal, realistic setting.
+findings: []

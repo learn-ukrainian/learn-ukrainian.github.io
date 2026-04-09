@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-04-09T03:27:52.500684",
+  "phase": "vocab",
+  "agent": "gemini (gemini-3-flash-preview)",
+  "ok": true,
+  "returncode": 0,
+  "prompt_chars": 11315,
+  "response_chars": 2303,
+  "duration_s": 22.7
+}

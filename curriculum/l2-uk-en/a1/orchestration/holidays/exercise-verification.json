@@ -1,28 +1,136 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 79,
+  "grounded_items": 59,
+  "ungrounded": [
+    {
+      "word": "спеціальна",
+      "exercise_type": "quiz",
+      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "role": "context"
+    },
+    {
+      "word": "вишита",
+      "exercise_type": "quiz",
+      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "role": "context"
+    },
+    {
+      "word": "сорочка",
+      "exercise_type": "quiz",
+      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "role": "context"
+    },
+    {
+      "word": "третій",
+      "exercise_type": "quiz",
+      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "role": "context"
+    },
+    {
+      "word": "четвер",
+      "exercise_type": "quiz",
+      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "role": "context"
+    },
+    {
+      "word": "травня",
+      "exercise_type": "quiz",
+      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "role": "context"
+    },
+    {
+      "word": "повага",
+      "exercise_type": "quiz",
+      "context": "Повага до військових, 1 жовтня — це...",
+      "role": "context"
+    },
+    {
+      "word": "до",
+      "exercise_type": "quiz",
+      "context": "Повага до військових, 1 жовтня — це...",
+      "role": "context"
+    },
+    {
+      "word": "військових",
+      "exercise_type": "quiz",
+      "context": "Повага до військових, 1 жовтня — це...",
+      "role": "context"
+    },
+    {
+      "word": "жовтня",
+      "exercise_type": "quiz",
+      "context": "Повага до військових, 1 жовтня — це...",
+      "role": "context"
+    },
+    {
+      "word": "перша",
+      "exercise_type": "quiz",
+      "context": "Дідух, Свята вечеря, перша зірка — це...",
+      "role": "context"
+    },
+    {
+      "word": "зірка",
+      "exercise_type": "quiz",
+      "context": "Дідух, Свята вечеря, перша зірка — це...",
+      "role": "context"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні 25 грудня. З ___!",
+      "role": "context"
+    },
+    {
+      "word": "червня",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні 28 червня. З Днем ___!",
+      "role": "context"
+    },
+    {
+      "word": "твоє",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні твоє свято! З днем ___!",
+      "role": "context"
+    },
+    {
+      "word": "універсальне",
+      "exercise_type": "fill-in",
+      "context": "Універсальне привітання: ___ святом!",
+      "role": "context"
+    },
+    {
+      "word": "привітання",
+      "exercise_type": "fill-in",
+      "context": "Універсальне привітання: ___ святом!",
+      "role": "context"
+    },
+    {
+      "word": "паску",
+      "exercise_type": "error-correction",
+      "context": "паску",
+      "role": "answer"
+    },
+    {
+      "word": "традиція",
+      "exercise_type": "true-false",
+      "context": "Кутя — це традиція на Різдво.",
+      "role": "context"
+    },
+    {
+      "word": "мир",
+      "exercise_type": "error-correction",
+      "context": "Бажаю щастя, здоров'я, мир.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 13,
     "not_tested": [
-      "великдень",
       "вишиванка",
       "вітати",
-      "колядка",
-      "кутя",
-      "незалежність",
-      "новий",
-      "парад",
-      "паска",
-      "писанка",
-      "прапор",
-      "різдво",
-      "рік",
-      "салют",
-      "святкувати",
-      "свято"
+      "святкувати"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

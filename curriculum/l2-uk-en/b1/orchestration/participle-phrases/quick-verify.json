@@ -1,0 +1,13 @@
+{
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 3"
+    }
+  ],
+  "timestamp": "2026-04-09T22:41:38.885488+00:00"
+}

@@ -1,117 +1,44 @@
-## Діалоги (Dialogues) (~385 words total)
+## Діалоги (Dialogues) (~380 words total)
+- P1 (~100 words): [Dialogue 1: At a hostel. Marko (Canada) and Olena (Kyiv) meet. Introductions using "Привіт!", "Як тебе звати?", "Мене звати Марко", "Звідки ти?", "Я з Канади", and "Дуже приємно!".]
+- P2 (~100 words): [Dialogue 2: At a conference. Formal register. "Добрий день!", "Як вас звати?", "Мене звати Петро", "Мені також!", "Ви з України?", and "Я з Києва".]
+- P3 (~100 words): [Dialogue 3: Introducing someone else. Focusing on third person and identification. "Це Андрій. Він зі Львова. Він — інженер. А це Оксана. Вона з Одеси. Вона — лікарка."]
+- P4 (~80 words): [Analysis of the dialogues: Pointing out the differences between informal (тебе/ти) and formal (вас/ви) greetings and the lack of the verb "to be" in identity statements like "Я з Канади".]
 
-- P1 (~55 words): Framing paragraph — set the scene: three real conversations. Explain that these dialogues model the key phrases of the module. Learner should read, then listen (audio cue), then shadow. Note the difference between informal (hostel) and formal (conference) registers — same meaning, different words.
-
-- Dialogue 1 (~100 words): Hostel, informal. Full exchange:
-  — Привіт! Як тебе звати?
-  — Мене звати Марко. А тебе?
-  — Мене звати Олена. Звідки ти?
-  — Я з Канади. А ти?
-  — Я з України. Дуже приємно!
-  — Мені також!
-  Inline gloss: тебе = you (informal/object), звати = to call, звідки = where from. Short note: Мені також = "Me too / Likewise." No grammar analysis yet — just absorb the pattern.
-
-- Dialogue 2 (~100 words): Conference, formal. Full exchange:
-  — Добрий день! Як вас звати?
-  — Мене звати Петро Коваленко. Дуже приємно!
-  — Мені також! Я — Оксана Мельник. Ви з України?
-  — Так, я з Києва. А ви?
-  — Я з Канади, але я вчу українську.
-  Inline gloss: вас = you (formal/object), але = but. Note: вас replaces тебе — this single swap shifts the entire register from informal to formal.
-
-- Dialogue 3 (~90 words): Introducing someone else (third person). Narrated introduction:
-  — Це Андрій. Він зі Львова. Він — інженер.
-  — А це Оксана. Вона з Одеси. Вона — лікарка.
-  — Дуже приємно познайомитись!
-  Inline gloss: він = he, вона = she, інженер/лікарка = engineer/doctor. Note: Це stays the same regardless of gender — Це Андрій, Це Оксана, Це місто. It never changes.
-
-- Exercise (fill-in, ~40 words): 6 items — complete the mini-dialogue. E.g., "— Як ___ звати? (formal) → вас"; "— Мені ___! → також"; "— Звідки ___? → ти / ви". Tests phrase recall, not grammar analysis.
-
----
-
-## Мене звати... (My name is...) (~275 words total)
-
-- P1 (~80 words): Explain the construction literally: мене = me (object form of я), звати = to call. Literally "me they-call." Ukrainian doesn't use "My name IS X" — there is no verb "to be" and no "my name." The subject (they) is invisible. Contrast with English habit: don't say *Моє ім'я є... — that's an English calque. The correct Ukrainian phrase is simply: Мене звати Тарас.
-
-- P2 (~75 words): Asking someone's name. Two registers:
-  Informal: Як тебе звати? (to a child, friend, peer)
-  Formal: Як вас звати? (to a stranger, elder, professional setting)
-  Third person: Як його звати? (asking about a man) / Як її звати? (asking about a woman)
-  Key insight: тебе/вас/його/її slot changes with person — мене звати stays fixed. Give examples: — Як його звати? — Його звати Богдан.
-
-- P3 (~70 words): Responding and reacting. Дуже приємно! = Very pleased (to meet you). Said AFTER both names are exchanged — not as a greeting. Response: Мені також! = Me too / Likewise. Variant: Приємно познайомитись! = Pleased to meet you (lit. "pleasant to get acquainted"). All three are interchangeable in context. Model the mini-exchange: — Мене звати Марта. — Мене звати Іван. Дуже приємно! — Мені також!
-
-- Exercise (quiz, ~50 words): 6 items — formal or informal? Situation given in English (e.g., "You meet your professor"), learner chooses Як тебе звати? or Як вас звати?. Tests register awareness, the key sociolinguistic skill of this section.
-
----
+## Мене звати... (My name is...) (~270 words total)
+- P1 (~70 words): [Explanation of the "Мене звати" construction. Clarify that it literally means "Me they call" and that Ukrainian does not use "My name IS" (no verb 'є' in this context). Contrast with English "My name is...".]
+- P2 (~70 words): [Asking questions: "Як тебе звати?" (informal) vs "Як вас звати?" (formal). Explain when to use each based on social context (peers vs strangers/elders).]
+- P3 (~60 words): [Talking about others: Introduce "Як його звати?" (his) and "Як її звати?" (her). Note that 'його' and 'її' remain stable here.]
+- P4 (~70 words): [Responses and etiquette: Using "Дуже приємно!" (Very pleasant) or "Приємно познайомитись!" (Pleasant to meet). Explain that these are used AFTER names are exchanged.]
+- <!-- INJECT_ACTIVITY: fill-in-self-intro --> [fill-in, focus: Complete self-introduction using "Мене звати...", "Я з...", "Я —...", 6 items]
 
 ## Це... (This is...) (~220 words total)
+- P1 (~70 words): [Concept of "Це" as a universal identifier for "this is / it is / these are". Emphasize that no verb "to be" is required. Examples: "Це кава", "Це Київ", "Це Андрій".]
+- P2 (~80 words): [Question formation: "Хто це?" (Who is this?) vs "Що це?" (What is this?). Emphasize word order: the question word must come first in Ukrainian.]
+- P3 (~70 words): [Practice with identification: Providing examples of identifying objects and people in the room to solidify the "Це + Noun" pattern.]
+- <!-- INJECT_ACTIVITY: quiz-register-choice --> [quiz, focus: Formal or informal? Choose the right introduction based on the scenario, 6 items]
 
-- P1 (~70 words): Introduce Це as the universal pointer word. Це = this is / it is / these are — one form for all genders and numbers. Examples:
-  Це кава. (This is coffee.)
-  Це Київ. (This is Kyiv.)
-  Це Андрій. (This is Andriy.)
-  Це студенти. (These are students.)
-  Emphasis: Це never changes. Don't try to make it agree with the noun — it doesn't.
+## Особові займенники (Personal Pronouns) (~120 words total)
+- P1 (~60 words): [Introduction to singular pronouns: "я" (I), "ти" (you, informal), "він" (he), "вона" (she), "воно" (it). Explain that these are the anchors for all future sentences.]
+- P2 (~60 words): [Introduction to plural and formal pronouns: "ми" (we), "ви" (you, formal/plural), "вони" (they). Highlight the orthographic rule of capitalizing "Ви" when addressing one person formally in writing.]
 
-- P2 (~75 words): Forming questions. Two question words:
-  Що це? = What is this? (for things, places, concepts)
-  Хто це? = Who is this? (for people and animals)
-  Critical word-order rule: question word goes FIRST. Що це? ✓ — never *Це що? ✗. Same for Хто це? ✓ vs *Це хто? ✗.
-  Practice: show image prompts and model answers. — Що це? — Це університет. / — Хто це? — Це Оксана. Вона — лікарка.
+## Я — студент (I am a student) (~170 words total)
+- P1 (~60 words): [The "Zero Copula" rule: In the present tense, Ukrainian omits the verb "is/am/are". Explain the use of the punctuation dash (—) in writing to mark the missing verb. Examples: "Я — студент", "Він — лікар".]
+- P2 (~60 words): [Gendered professions: Introducing masculine and feminine pairs for jobs. Examples: "студент/студентка", "лікар/лікарка", "вчитель/вчителька", "програміст/програмістка". Stress that feminine forms are standard.]
+- P3 (~50 words): [Nationalities: Basic nominative forms for men and women. Examples: "українець/українка", "американець/американка", "канадієць/канадка".]
+- <!-- INJECT_ACTIVITY: match-up-gendered-professions --> [match-up, focus: Match professions with male/female forms (e.g., лікар -> лікарка), 8 items]
 
-- P3 (~40 words): Negative: Це не кава. Це чай. (This is not coffee. This is tea.) Це не Андрій. Це Тарас. The negative particle не goes directly before the noun — same pattern as the affirmative, just insert не.
+## Звідки? (Where from?) (~220 words total)
+- P1 (~70 words): [Asking "Звідки ти?" (informal) and "Звідки ви?" (formal). Explain that this question focuses on origin/nationality rather than current residence.]
+- P2 (~80 words): [Responding with "Я з..." (I am from...). List examples: "Я з України", "Я з Канади", "Я зі Штатів", "Я з Німеччини". Explain "з" vs "зі" for phonetic ease.]
+- P3 (~70 words): [Pedagogical note: Advise learners to treat these as "memorized chunks" for now. Briefly mention that country names change endings (Genitive) but don't introduce the grammar rules yet.]
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-final --> [fill-in, focus: Complete the dialogue with correct phrases (greetings, name, origin, profession), 6 items]
 
-- Exercise (match-up, ~35 words): 8 items — match the question word (Хто? or Що?) to the noun. E.g., вчителька → Хто, Київ → Що, студент → Хто, кава → Що, лікар → Хто, університет → Що, Олена → Хто, Україна → Що.
+## Підсумок — Summary (~150 words)
+- P1 (~150 words): [Recap of the key "Who Am I" formulas. Self-check bulleted list: 
+  - Як вас звати? — Мене звати...
+  - Хто це? — Це мой друг.
+  - Хто ви? — Я — вчителька.
+  - Звідки ви? — Я з України.
+  - Приємно познайомитись! — Мені також!]
 
----
-
-## Особові займенники (Personal Pronouns) (~115 words total)
-
-- P1 (~115 words): Present all seven nominative pronouns in a structured list with English equivalents and one example sentence each:
-  я — I → Я — студентка.
-  ти — you (informal, singular) → Ти — з Канади?
-  він — he → Він — лікар.
-  вона — she → Вона — з Одеси.
-  ми — we → Ми — з України.
-  ви — you (formal singular OR any plural) → Ви — з Києва?
-  вони — they → Вони — студенти.
-  Two cultural notes inline: (1) Ви (capital В) is used when addressing one person formally — the same word that means "you all" also means "you" politely. (2) In writing, formal Ви to one person is sometimes capitalized — learners will see both. These pronouns anchor every sentence from now on.
-
----
-
-## Я — студент (I am a student) (~165 words total)
-
-- P1 (~75 words): Explain zero copula directly. In English: "I AM a student." In Ukrainian: Я — студент. No verb. The dash (—) marks where "is/am/are" would be in English — Ukrainian omits it entirely in the present tense. It applies to all persons: Він — лікар. Вона — вчителька. Ми — студенти. Ти — програміст? Learners raised on European languages will feel the missing verb — reassure them: the dash IS the grammar signal.
-
-- P2 (~90 words): Vocabulary — nationalities and professions, nominative, gendered pairs:
-  Nationalities: українець / українка, американець / американка, канадієць / канадка, британець / британка, німець / німкеня.
-  Professions: студент / студентка, вчитель / вчителька, лікар / лікарка, програміст / програмістка, інженер / інженерка, журналіст / журналістка.
-  Pattern to notice: -ка / -иця / -ня endings mark the feminine. Learners should memorize pairs, not derive — derivation rules are B1 morphology. For now: hear the pair, know both forms.
-
-- Exercise (match-up, ~embedded in section): Pairs activity already planned under activity_hints — match 8 male/female profession forms. Placed here directly after vocabulary introduction.
-
----
-
-## Звідки? (Where from?) (~225 words total)
-
-- P1 (~75 words): Introduce the question Звідки ти? (informal) / Звідки ви? (formal) = Where are you from? Model the answer pattern: Я з + country. Examples:
-  Я з України.
-  Я з Канади.
-  Я зі Штатів. (note: зі before consonant clusters)
-  Я з Німеччини.
-  Я з Великої Британії.
-  Я з Австралії.
-  Teach these as FIXED CHUNKS. The country forms here are genitive (України = of Ukraine), but learners do NOT need to know that yet — just memorize the phrase. Genitive is A2 grammar (M29).
-
-- P2 (~80 words): Extend to third person and city-level origin:
-  Він з Києва. Вона зі Львова. Вони з Харкова.
-  Combining everything: Це Андрій. Він — інженер. Він з Києва.
-  And Це Марта. Вона — лікарка. Вона з Канади.
-  These "ID sentences" (Це + noun + pronoun + profession + origin) are the full production target of this module — learner can now introduce any person in Ukrainian.
-
-- P3 (~45 words): Boundaries note — what NOT to say yet. Do NOT introduce Де ви живете? (Where do you live?) here. That requires locative case + verb conjugation (taught M16 and M29). Звідки? is about origin — it uses a frozen chunk, no conjugation needed. Learning boundary kept clean.
-
-- Exercise (fill-in, ~25 words): 6 items — complete the self-introduction. E.g., "Мене звати ___. Я з ___. Я — ___." Free-production prompt with word bank. Final synthesis activity of the module.
-
-Grand total: ~1385 words
+Grand total: ~1530 words

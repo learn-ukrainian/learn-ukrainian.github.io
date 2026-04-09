@@ -23,6 +23,12 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: йти
+  translation: to go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: споча́тку
   translation: first, at first
   expression: false
@@ -48,7 +54,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: навча́тися
-  translation: to study
+  translation: to study, to learn
   expression: false
   pos: дієсл.
   gender: ''
@@ -65,10 +71,10 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: нарешті
+- word: наре́шті
   translation: finally
-  expression: true
-  pos: ''
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
 - word: вра́нці
@@ -83,38 +89,14 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: вмива́ти
-  translation: to wash (someone else)
+- word: встава́ти
+  translation: to get up, to get out of bed
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: одяга́ти
-  translation: to dress (someone else)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зворотні дієслова
-  translation: reflexive verbs
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: гуля́ти
-  translation: to walk, to stroll
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: лежа́ти
-  translation: to lie down
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: дивитися в телефон
-  translation: to look at one's phone
+- word: чистити зуби
+  translation: to brush teeth
   expression: true
   pos: ''
   gender: ''
@@ -125,29 +107,41 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: йти на роботу
-  translation: to go to work
-  expression: true
-  pos: ''
+- word: лежа́ти
+  translation: to lie down
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: повертатися додому
-  translation: to return home
-  expression: true
-  pos: ''
+- word: диви́тися
+  translation: to look, to watch
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: ра́но
-  translation: early
+- word: гуля́ти
+  translation: to walk, to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: телефо́н
+  translation: phone
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: до́вго
-  translation: for a long time
+- word: робо́та
+  translation: work, job
   expression: false
-  pos: присл.
-  gender: ''
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: навча́ння
+  translation: studies, learning
+  expression: false
+  pos: ім.
+  gender: с.
   verified: true
 - word: шви́дко
   translation: quickly
@@ -155,27 +149,9 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: ра́зом
-  translation: together
+- word: пові́льно
+  translation: slowly
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: бу́дні
-  translation: weekdays
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вихідни́й
-  translation: day off, weekend day
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: себе́
-  translation: oneself
-  expression: false
-  pos: ім.
+  pos: присл.
   gender: ''
   verified: true

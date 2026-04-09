@@ -11,12 +11,6 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: після обіду
-  translation: in the afternoon
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: вве́чері
   translation: in the evening
   expression: false
@@ -27,6 +21,24 @@ vocabulary:
   translation: at night
   expression: false
   pos: присл.
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash (oneself)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: одяга́тися
+  translation: to get dressed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
 - word: обі́дати
@@ -41,28 +53,76 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: сніда́нок
+  translation: breakfast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обід
+  translation: lunch
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: відпочива́ти
   translation: to rest
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: пі́сля
-  translation: after
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гуля́ти
+  translation: to walk / to stroll
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вивча́ти
+  translation: to study / to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first / at first
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: вмива́тися
-  translation: to wash up
+- word: по́тім
+  translation: then
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: одяга́тися
-  translation: to get dressed
+- word: наре́шті
+  translation: finally
   expression: false
-  pos: дієсл.
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пі́сля
+  translation: after
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
 - word: та́ко́ж
@@ -77,22 +137,16 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: ві́льний
-  translation: free
-  expression: false
-  pos: прикм.
+- word: після обіду
+  translation: after lunch / in the afternoon
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: споча́тку
-  translation: first, to start with
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: по́тім
-  translation: then, next
-  expression: false
-  pos: присл.
+- word: лягати спати
+  translation: to go to bed
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: після того
@@ -113,68 +167,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: бу́ду
-  translation: I will (future auxiliary)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пі́зно
-  translation: late
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: за́йнятий
-  translation: busy
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: о́фіс
-  translation: office
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кафе́
-  translation: café
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: серіа́л
-  translation: TV series
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: бутербро́д
-  translation: sandwich
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: перед сном
-  translation: before bed
+- word: Що ти будеш робити завтра?
+  translation: What will you do tomorrow?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: після роботи
-  translation: after work
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: те саме
-  translation: the same
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: від ранку до вечора
-  translation: from morning to evening
+- word: о якій годині?
+  translation: at what time? / at what hour?
   expression: true
   pos: ''
   gender: ''

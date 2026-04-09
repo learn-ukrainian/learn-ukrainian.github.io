@@ -1,0 +1,13 @@
+{
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/4 required vocab: комплексний (comprehensive — combining multiple skills)"
+    }
+  ],
+  "timestamp": "2026-04-09T21:14:03.266406+00:00"
+}

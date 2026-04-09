@@ -1,0 +1,346 @@
+version: '1.0'
+module: checkpoint-time-nature
+level: a1
+inline:
+- id: fill-in-day-paragraph
+  type: fill-in
+  instruction: Вставте правильне слово (Insert the correct word)
+  items:
+  - sentence: ____ я прокидаюся і снідаю.
+    answer: Спочатку
+    options:
+    - Спочатку
+    - Потім
+    - Нарешті
+  - sentence: ____ я йду на роботу.
+    answer: Потім
+    options:
+    - Потім
+    - Вранці
+    - Вночі
+  - sentence: Я працюю з дев'ятої ____ п'ятої.
+    answer: до
+    options:
+    - до
+    - і
+    - по
+  - sentence: ____ я гуляю в парку.
+    answer: Після обіду
+    options:
+    - Після обіду
+    - Вранці
+    - Вночі
+  - sentence: Я гуляю, тому що сьогодні ____ і сонячно.
+    answer: тепло
+    options:
+    - тепло
+    - холодно
+    - дощ
+  - sentence: ____ я вечеряю і слухаю музику.
+    answer: Ввечері
+    options:
+    - Ввечері
+    - Вдень
+    - Вранці
+  - sentence: ____ я лягаю спати о дванадцятій.
+    answer: Нарешті
+    options:
+    - Нарешті
+    - Спочатку
+    - Потім
+- id: fill-in-time-weather
+  type: fill-in
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - sentence: Зустріч ____ годині.
+    answer: о п'ятій
+    options:
+    - о п'ятій
+    - в п'ятій
+    - у п'ята
+  - sentence: Ми йдемо в кіно ____.
+    answer: у суботу
+    options:
+    - у суботу
+    - в суботі
+    - на суботу
+  - sentence: Мій день народження ____.
+    answer: у січні
+    options:
+    - у січні
+    - в січень
+    - січень
+  - sentence: Сьогодні ____ і холодно.
+    answer: іде дощ
+    options:
+    - іде дощ
+    - іде дощова
+    - дощить
+  - sentence: Взимку дуже ____.
+    answer: холодно
+    options:
+    - холодно
+    - спекотно
+    - тепло
+  - sentence: Я прокидаюся о сьомій ____.
+    answer: ранку
+    options:
+    - ранку
+    - рано
+    - вранці
+- id: match-questions-answers
+  type: match-up
+  instruction: З'єднайте питання з відповідями (Match the questions with the answers)
+  pairs:
+  - left: Котра година?
+    right: Десята тридцять.
+  - left: О котрій зустріч?
+    right: О першій.
+  - left: Яка сьогодні погода?
+    right: Тепло і сонячно.
+  - left: Коли твій день народження?
+    right: У жовтні.
+  - left: Що ти робиш у суботу?
+    right: Граю у футбол.
+  - left: Як часто ти читаєш?
+    right: Кожен день ввечері.
+  - left: Ходімо в парк!
+    right: Добре, о котрій?
+  - left: Що ти будеш робити завтра?
+    right: Буду працювати.
+workbook:
+- type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Яка правильна відповідь на питання 'Котра година?'
+    options:
+    - Зараз третя година.
+    - Зараз о третій.
+    - О котрій третій.
+    - Зараз третій.
+    correct: 0
+  - question: Яка правильна відповідь на питання 'О котрій зустріч?'
+    options:
+    - Зустріч третя.
+    - Зустріч о першій.
+    - Зустріч першій.
+    - О першій зустріч.
+    correct: 1
+  - question: Як сказати 'in winter' по-українськи?
+    options:
+    - У зима
+    - В зиму
+    - Взимку
+    - Зимою
+    correct: 2
+  - question: Яка правильна послідовність подій дня?
+    options:
+    - Потім → спочатку → нарешті
+    - Спочатку → потім → нарешті
+    - Нарешті → потім → спочатку
+    - Спочатку → нарешті → потім
+    correct: 1
+  - question: Як сказати 'It is sunny' по-українськи?
+    options:
+    - Є сонце.
+    - Сонячно.
+    - Сонячний.
+    - Буде сонячно.
+    correct: 1
+  - question: Яка правильна форма для 'in January'?
+    options:
+    - У січень
+    - В січень
+    - У січні
+    - Січень
+    correct: 2
+- type: true-false
+  instruction: Правда чи ні? (True or false?) Читайте текст і вирішіть.
+  items:
+  - statement: Автор прокидається о сьомій ранку у понеділок.
+    correct: true
+    explanation: 'У тексті: ''У понеділок я прокидаюся о сьомій ранку.'''
+  - statement: Автор вивчає українську у вівторок ввечері.
+    correct: false
+    explanation: 'У тексті: ''У середу ввечері я вивчаю українську.'' Не вівторок,
+      а середа.'
+  - statement: В суботу автор завжди гуляє в парку.
+    correct: true
+    explanation: 'У тексті: ''В суботу я завжди гуляю в парку.'''
+  - statement: Взимку автор часто гуляє надворі.
+    correct: false
+    explanation: 'У тексті: ''Взимку іде сніг, і я рідко гуляю.'' Рідко — не часто.'
+  - statement: Навесні автор часто ходить у кіно.
+    correct: true
+    explanation: 'У тексті: ''Навесні тепло і сонячно — я часто ходжу в кіно.'''
+  - statement: Автор вечеряє рівно о восьмій годині.
+    correct: false
+    explanation: 'У тексті: ''Нарешті вечеряю о пів на восьму.'' О пів на восьму =
+      19:30, не 20:00.'
+  - statement: Іноді автор грає у футбол у суботу.
+    correct: true
+    explanation: 'У тексті: ''В суботу я завжди гуляю в парку. Іноді граю у футбол.'''
+- type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  groups:
+  - label: КОЛИ? (When?)
+    items:
+    - вранці
+    - ввечері
+    - вдень
+    - вночі
+    - зранку
+    - завтра
+  - label: ЯК ЧАСТО? (How often?)
+    items:
+    - завжди
+    - часто
+    - іноді
+    - рідко
+    - ніколи
+    - кожен день
+- type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  items:
+  - words:
+    - прокидаюся
+    - я
+    - ранку
+    - о
+    - сьомій
+    correct_order:
+    - я
+    - прокидаюся
+    - о
+    - сьомій
+    - ранку
+  - words:
+    - суботу
+    - ми
+    - в
+    - у
+    - парк
+    - ідемо
+    correct_order:
+    - ми
+    - ідемо
+    - в
+    - парк
+    - у
+    - суботу
+  - words:
+    - сонячно
+    - тепло
+    - навесні
+    - і
+    correct_order:
+    - навесні
+    - тепло
+    - і
+    - сонячно
+  - words:
+    - сніг
+    - взимку
+    - іде
+    correct_order:
+    - взимку
+    - іде
+    - сніг
+  - words:
+    - годині
+    - зустріч
+    - першій
+    - о
+    correct_order:
+    - зустріч
+    - о
+    - першій
+    - годині
+  - words:
+    - ввечері
+    - часто
+    - я
+    - книги
+    - читаю
+    correct_order:
+    - я
+    - часто
+    - читаю
+    - книги
+    - ввечері
+  - words:
+    - до
+    - п'ятої
+    - з
+    - дев'ятої
+    - я
+    - працюю
+    correct_order:
+    - я
+    - працюю
+    - з
+    - дев'ятої
+    - до
+    - п'ятої
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Котра зараз годину?
+    error: годину
+    correction: година
+    error_type: word
+    options:
+    - година
+    - години
+    - годині
+    explanation: 'After ''котра'', use nominative: ''Котра година?'' (What time is
+      it?)'
+  - sentence: Взимку дуже холодний.
+    error: холодний
+    correction: холодно
+    error_type: word
+    options:
+    - холодно
+    - холодна
+    - холодне
+    explanation: 'Weather uses impersonal adverbs: ''холодно'', not the adjective
+      ''холодний''.'
+  - sentence: Навесна тепло і сонячно.
+    error: Навесна
+    correction: Навесні
+    error_type: word
+    options:
+    - Навесні
+    - Навесно
+    - На весні
+    explanation: The correct form is 'навесні' — a fixed adverb meaning 'in spring'.
+  - sentence: Зустріч в п'ятій годині.
+    error: в п'ятій
+    correction: о п'ятій
+    error_type: phrase
+    options:
+    - о п'ятій
+    - в п'ятій
+    - на п'ятій
+    explanation: 'Time expressions use ''о/об'' + locative: ''о п''ятій годині'' (at
+      five o''clock).'
+  - sentence: Я ніколи рідко ходжу в кіно.
+    error: ніколи рідко
+    correction: рідко
+    error_type: phrase
+    options:
+    - рідко
+    - ніколи
+    - іноді
+    explanation: Use only one frequency adverb. 'Ніколи рідко' is contradictory —
+      choose one.
+  - sentence: Спочатку нарешті я снідаю.
+    error: Спочатку нарешті
+    correction: Спочатку
+    error_type: phrase
+    options:
+    - Спочатку
+    - Нарешті
+    - Потім
+    explanation: '''Спочатку'' means ''first'' and ''нарешті'' means ''finally'' —
+      they cannot both describe the same opening action.'

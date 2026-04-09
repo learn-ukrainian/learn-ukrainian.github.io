@@ -1,0 +1,281 @@
+{
+  "total_items": 233,
+  "grounded_items": 189,
+  "ungrounded": [
+    {
+      "word": "прилітати",
+      "exercise_type": "match-up",
+      "context": "прилітати",
+      "role": "context"
+    },
+    {
+      "word": "прибігати",
+      "exercise_type": "match-up",
+      "context": "прибігати",
+      "role": "context"
+    },
+    {
+      "word": "приводити",
+      "exercise_type": "match-up",
+      "context": "приводити",
+      "role": "context"
+    },
+    {
+      "word": "поїздом",
+      "exercise_type": "fill-in",
+      "context": "Завтра я обов'язково ____ до Києва поїздом за п'ять годин.",
+      "role": "context"
+    },
+    {
+      "word": "п'ять",
+      "exercise_type": "fill-in",
+      "context": "Завтра я обов'язково ____ до Києва поїздом за п'ять годин.",
+      "role": "context"
+    },
+    {
+      "word": "йтимемо",
+      "exercise_type": "fill-in",
+      "context": "Ми довго йтимемо, але точно ____ до вершини гори.",
+      "role": "context"
+    },
+    {
+      "word": "добіжиш",
+      "exercise_type": "fill-in",
+      "context": "добіжиш",
+      "role": "answer"
+    },
+    {
+      "word": "впевнений",
+      "exercise_type": "fill-in",
+      "context": "Ти впевнений, що ____ до зупинки за п'ять хвилин?",
+      "role": "context"
+    },
+    {
+      "word": "добіжать",
+      "exercise_type": "fill-in",
+      "context": "добіжать",
+      "role": "answer"
+    },
+    {
+      "word": "спортсмени",
+      "exercise_type": "fill-in",
+      "context": "Наші спортсмени ____ до фінішу найпершими.",
+      "role": "context"
+    },
+    {
+      "word": "найпершими",
+      "exercise_type": "fill-in",
+      "context": "Наші спортсмени ____ до фінішу найпершими.",
+      "role": "context"
+    },
+    {
+      "word": "доведе",
+      "exercise_type": "fill-in",
+      "context": "доведе",
+      "role": "answer"
+    },
+    {
+      "word": "долетить",
+      "exercise_type": "fill-in",
+      "context": "долетить",
+      "role": "answer"
+    },
+    {
+      "word": "найприродніше",
+      "exercise_type": "quiz",
+      "context": "Як найприродніше запитати друга про його успішну подорож?",
+      "role": "context"
+    },
+    {
+      "word": "успішну",
+      "exercise_type": "quiz",
+      "context": "Як найприродніше запитати друга про його успішну подорож?",
+      "role": "context"
+    },
+    {
+      "word": "найбільше",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово найбільше акцентує увагу на подоланій відстані ",
+      "role": "context"
+    },
+    {
+      "word": "акцентує",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово найбільше акцентує увагу на подоланій відстані ",
+      "role": "context"
+    },
+    {
+      "word": "витрачених",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово найбільше акцентує увагу на подоланій відстані ",
+      "role": "context"
+    },
+    {
+      "word": "зусиллях",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово найбільше акцентує увагу на подоланій відстані ",
+      "role": "context"
+    },
+    {
+      "word": "друзів",
+      "exercise_type": "quiz",
+      "context": "Коли ви заходите в гості до друзів, ви скажете:",
+      "role": "context"
+    },
+    {
+      "word": "піднявся",
+      "exercise_type": "quiz",
+      "context": "Кур'єр піднявся на п'ятий поверх пішки без ліфта з важкою ко",
+      "role": "context"
+    },
+    {
+      "word": "п'ятий",
+      "exercise_type": "quiz",
+      "context": "Кур'єр піднявся на п'ятий поверх пішки без ліфта з важкою ко",
+      "role": "context"
+    },
+    {
+      "word": "поверх",
+      "exercise_type": "quiz",
+      "context": "Кур'єр піднявся на п'ятий поверх пішки без ліфта з важкою ко",
+      "role": "context"
+    },
+    {
+      "word": "важкою",
+      "exercise_type": "quiz",
+      "context": "Кур'єр піднявся на п'ятий поверх пішки без ліфта з важкою ко",
+      "role": "context"
+    },
+    {
+      "word": "коробкою",
+      "exercise_type": "quiz",
+      "context": "Кур'єр піднявся на п'ятий поверх пішки без ліфта з важкою ко",
+      "role": "context"
+    },
+    {
+      "word": "їхали",
+      "exercise_type": "quiz",
+      "context": "Ви їхали машиною цілий день і були дуже виснажені. Ви скажет",
+      "role": "context"
+    },
+    {
+      "word": "виснажені",
+      "exercise_type": "quiz",
+      "context": "Ви їхали машиною цілий день і були дуже виснажені. Ви скажет",
+      "role": "context"
+    },
+    {
+      "word": "дім",
+      "exercise_type": "error-correction",
+      "context": "Коли гості дійшли в наш дім, ми пили чай.",
+      "role": "context"
+    },
+    {
+      "word": "пили",
+      "exercise_type": "error-correction",
+      "context": "Коли гості дійшли в наш дім, ми пили чай.",
+      "role": "context"
+    },
+    {
+      "word": "чай",
+      "exercise_type": "error-correction",
+      "context": "Коли гості дійшли в наш дім, ми пили чай.",
+      "role": "context"
+    },
+    {
+      "word": "важкої",
+      "exercise_type": "error-correction",
+      "context": "Після дуже довгої та важкої дороги я втомлено сказав: ми нар",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "error-correction",
+      "context": "Після дуже довгої та важкої дороги я втомлено сказав: ми нар",
+      "role": "context"
+    },
+    {
+      "word": "доносить",
+      "exercise_type": "error-correction",
+      "context": "Листоноша доносить свіжі газети кожного ранку.",
+      "role": "context"
+    },
+    {
+      "word": "добігає",
+      "exercise_type": "error-correction",
+      "context": "Мій собака добігає до мене, коли я відкриваю двері квартири.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "error-correction",
+      "context": "Мій собака добігає до мене, коли я відкриваю двері квартири.",
+      "role": "context"
+    },
+    {
+      "word": "фразою",
+      "exercise_type": "true-false",
+      "context": "Запитання «Як ти доїхав?» є найбільш природною українською ф",
+      "role": "context"
+    },
+    {
+      "word": "чиєїсь",
+      "exercise_type": "true-false",
+      "context": "Запитання «Як ти доїхав?» є найбільш природною українською ф",
+      "role": "context"
+    },
+    {
+      "word": "першому",
+      "exercise_type": "true-false",
+      "context": "Слово «принести» має наголос на першому складі: прИнести.",
+      "role": "context"
+    },
+    {
+      "word": "складі",
+      "exercise_type": "true-false",
+      "context": "Слово «принести» має наголос на першому складі: прИнести.",
+      "role": "context"
+    },
+    {
+      "word": "пр",
+      "exercise_type": "true-false",
+      "context": "Слово «принести» має наголос на першому складі: прИнести.",
+      "role": "context"
+    },
+    {
+      "word": "инести",
+      "exercise_type": "true-false",
+      "context": "Слово «принести» має наголос на першому складі: прИнести.",
+      "role": "context"
+    },
+    {
+      "word": "повернулися",
+      "exercise_type": "true-false",
+      "context": "Щоб сказати, що ви успішно повернулися у своє житло, треба с",
+      "role": "context"
+    },
+    {
+      "word": "довгій",
+      "exercise_type": "true-false",
+      "context": "Префікс «при-» акцентує увагу на довгій відстані та великих ",
+      "role": "context"
+    },
+    {
+      "word": "великих",
+      "exercise_type": "true-false",
+      "context": "Префікс «при-» акцентує увагу на довгій відстані та великих ",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 23,
+    "tested_in_exercises": 19,
+    "not_tested": [
+      "вершина",
+      "доплисти",
+      "посилка",
+      "припливти"
+    ]
+  },
+  "all_grounded": false
+}

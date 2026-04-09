@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: означальний (attributive, defining)"
+    }
+  ],
+  "timestamp": "2026-04-08T22:10:36.492189+00:00"
+}

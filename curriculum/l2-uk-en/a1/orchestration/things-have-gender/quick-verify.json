@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: книга (book, f)"
-    }
-  ],
-  "timestamp": "2026-03-30T09:34:54.456245+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-09T00:07:44.081936+00:00"
 }

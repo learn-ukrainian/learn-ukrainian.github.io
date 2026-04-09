@@ -2,361 +2,432 @@ version: '1.0'
 module: please-do-this
 level: a1
 inline:
-- id: fill-in-imperative-forms
-  type: fill-in
-  instruction: Утворіть форму наказового способу (Form the imperative)
-  items:
-  - sentence: Друже, ___ цей текст!
-    answer: читай
-    options:
+- id: group-sort-imperative-register
+  type: group-sort
+  instruction: Розподіліть дієслова за формою (Sort the verbs by form)
+  groups:
+  - label: Ти (Informal)
+    items:
     - читай
+    - пиши
+    - слухай
+    - дай
+    - скажи
+  - label: Ви (Formal / Plural)
+    items:
     - читайте
-    - читати
-  - sentence: Учні, ___ сторінку двадцять три!
-    answer: читайте
+    - пишіть
+    - слухайте
+    - дайте
+    - скажіть
+- id: fill-in-imperative-formation
+  type: fill-in
+  instruction: Утворіть наказовий спосіб (Form the imperative)
+  items:
+  - sentence: 'Ти (читати): _____, будь ласка.'
+    answer: читай
+  - sentence: 'Ви (писати): _____, будь ласка.'
+    answer: пишіть
+  - sentence: 'Ти (слухати): _____, будь ласка.'
+    answer: слухай
+  - sentence: 'Ви (дивитися): _____, будь ласка.'
+    answer: дивіться
+  - sentence: 'Ти (говорити): _____, будь ласка.'
+    answer: говори
+  - sentence: 'Ви (дати): _____, будь ласка.'
+    answer: дайте
+  - sentence: 'Ти (сказати): _____, будь ласка.'
+    answer: скажи
+  - sentence: 'Ви (іти): _____, будь ласка.'
+    answer: ідіть
+  - sentence: 'Ти (відкрити): _____, будь ласка.'
+    answer: відкрий
+  - sentence: 'Ви (сісти): _____, будь ласка.'
+    answer: сядьте
+- id: quiz-polite-choice
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Олеже, _____ меню, будь ласка.
+    options:
+    - дай
+    - даєш
+    - дати
+    - дайте
+    correct: 0
+  - question: Пане Іване, _____ книжку, будь ласка.
+    options:
+    - дайте
+    - дай
+    - даєте
+    - дати
+    correct: 0
+  - question: Діти, _____ текст на сторінці десять.
     options:
     - читайте
     - читай
     - читають
-  - sentence: Оленко, ___ три речення.
-    answer: пиши
+    - читати
+    correct: 0
+  - question: Олено, _____ сюди, будь ласка.
     options:
-    - пиши
-    - пишіть
-    - писати
-  - sentence: Клас, ___ три речення!
-    answer: пишіть
+    - іди
+    - ідіть
+    - ідеш
+    - іти
+    correct: 0
+  - question: Студенти, _____ три речення.
     options:
     - пишіть
     - пиши
     - пишуть
-  - sentence: Іване, ___ уважно!
-    answer: слухай
-    options:
-    - слухай
-    - слухайте
-    - слухати
-  - sentence: Усі, ___ уважно!
-    answer: слухайте
-    options:
-    - слухайте
-    - слухай
-    - слухають
-  - sentence: Марко, ___ у словник.
-    answer: дивись
-    options:
-    - дивись
-    - дивіться
-    - дивитися
-  - sentence: Усі, ___ у словник!
-    answer: дивіться
-    options:
-    - дивіться
-    - дивись
-    - дивляться
-  - sentence: Друже, ___ повільно, будь ласка.
-    answer: говори
-    options:
-    - говори
-    - говоріть
-    - говорити
-  - sentence: Пані вчителько, ___ повільно, будь ласка.
-    answer: говоріть
-    options:
-    - говоріть
-    - говори
-    - говорять
-- id: quiz-correct-imperative
-  type: quiz
-  instruction: Оберіть правильну форму (Choose the correct form)
-  items:
-  - question: Вчителю, ___ сторінку двадцять три, будь ласка!
-    options:
-    - читай
-    - читайте
-    - читати
-    correct: 1
-  - question: Оленко, ___ мені підручник!
-    options:
-    - дайте
-    - дати
-    - дай
-    correct: 2
-  - question: Андрію, ___ швидше!
-    options:
-    - іди
-    - ідіть
-    - іти
+    - писати
     correct: 0
-  - question: Пане директоре, ___, будь ласка.
+  - question: Друже, _____, що ти хочеш.
     options:
     - скажи
     - скажіть
+    - кажеш
     - сказати
-    correct: 1
-  - question: Маринко, ___ у словник!
+    correct: 0
+  - question: Вчителю, _____ сторінку, будь ласка.
     options:
-    - дивіться
-    - дивитися
-    - дивись
-    correct: 2
-  - question: Клас, ___ підручники!
-    options:
-    - відкрий
-    - відкрити
     - відкрийте
-    correct: 2
-  - question: Мамо, ___ нам каву, будь ласка!
-    options:
-    - дайте
-    - дай
-    - дати
-    correct: 1
-  - question: Діти, ___ тут!
+    - відкрий
+    - відкриваєте
+    - відкрити
+    correct: 0
+  - question: Максиме, _____ тут, будь ласка.
     options:
     - сядь
     - сядьте
+    - сідає
     - сісти
-    correct: 1
-- id: group-sort-ty-vy
-  type: group-sort
-  instruction: Розподіліть форми за категоріями (Sort the forms by category)
-  groups:
-  - label: Ти-форма (до друга)
-    items:
-    - читай
-    - пиши
-    - слухай
-    - дивись
-    - говори
-    - іди
-    - дай
-    - скажи
-  - label: Ви-форма (до вчителя або групи)
-    items:
-    - читайте
-    - пишіть
-    - слухайте
-    - дивіться
-    - говоріть
-    - ідіть
-    - дайте
-    - скажіть
-- id: fill-in-context-ty-vy
+    correct: 0
+- id: fill-in-contextual-names
   type: fill-in
-  instruction: Вставте правильну форму (Fill in the correct form)
+  instruction: Вставте правильну форму дієслова (Insert the correct verb form)
   items:
-  - sentence: Олено, ___ книжку, будь ласка!
+  - sentence: Олено, _____ книжку!
     answer: дай
     options:
     - дай
     - дайте
-    - дати
-  - sentence: Пане Іване, ___ книжку, будь ласка!
+  - sentence: Пане Іване, _____ книжку!
     answer: дайте
     options:
-    - дайте
     - дай
-    - дати
-  - sentence: Тарасе, ___ цей текст!
+    - дайте
+  - sentence: Діти, _____ вчителя!
+    answer: слухайте
+    options:
+    - слухай
+    - слухайте
+  - sentence: Максиме, _____ текст!
     answer: читай
     options:
     - читай
     - читайте
-    - читати
-  - sentence: Пані Оксано, ___ текст, будь ласка!
-    answer: читайте
+  - sentence: Друзі, _____ сюди!
+    answer: дивіться
     options:
-    - читайте
-    - читай
-    - читають
-  - sentence: Діти, ___ тут!
-    answer: сядьте
-    options:
-    - сядьте
-    - сядь
-    - сісти
-  - sentence: Ігоре, ___ мені, будь ласка!
+    - дивись
+    - дивіться
+  - sentence: Маріє, _____ мені, будь ласка.
     answer: скажи
     options:
     - скажи
     - скажіть
-    - сказати
 workbook:
-- type: match-up
-  instruction: З'єднайте інфінітив з формою для 'ти' (Match the infinitive to its
-    ти-imperative)
+- id: match-up-pronouns
+  type: match-up
+  instruction: З'єднайте займенник із дієсловом (Match the pronoun with the verb)
   pairs:
-  - left: читати
-    right: читай
-  - left: писати
-    right: пиши
-  - left: слухати
-    right: слухай
-  - left: дивитися
-    right: дивись
-  - left: говорити
-    right: говори
-  - left: іти
-    right: іди
-  - left: дати
-    right: дай
-  - left: сказати
-    right: скажи
-- type: match-up
-  instruction: З'єднайте ти-форму з ви-формою (Match each ти-form to its ви-form)
-  pairs:
-  - left: читай
-    right: читайте
-  - left: пиши
-    right: пишіть
-  - left: слухай
-    right: слухайте
-  - left: дивись
-    right: дивіться
-  - left: говори
-    right: говоріть
-  - left: іди
-    right: ідіть
-  - left: дай
-    right: дайте
-  - left: скажи
-    right: скажіть
-- type: true-false
-  instruction: Правда чи ні? (True or false?)
+  - left: Читай текст
+    right: ти
+  - left: Слухайте вчителя
+    right: ви
+  - left: Пиши речення
+    right: ти
+  - left: Дивіться сюди
+    right: ви
+  - left: Дай меню
+    right: ти
+  - left: Скажіть, будь ласка
+    right: ви
+- id: fill-in-implied-pronoun
+  type: fill-in
+  instruction: Вставте правильний займенник (Insert the correct pronoun)
   items:
-  - statement: Вчителька у діалозі використовує ви-форми, бо говорить до всього класу.
-      (The teacher uses ви-forms because she speaks to the whole class.)
-    correct: true
-    explanation: 'Correct: відкрийте, читайте, пишіть — all ви-forms for a group.'
-  - statement: Олесь використав ти-форму, коли говорив до офіціанта. (Oles used the
-      ти-form when speaking to the waiter.)
-    correct: false
-    explanation: No — he said принесіть (ви-form). The waiter is a stranger.
-  - statement: Будь ласка перетворює команду на ввічливе прохання. (Будь ласка turns
-      a command into a polite request.)
-    correct: true
-    explanation: 'Correct: дай → дай, будь ласка; дайте → дайте, будь ласка.'
-  - statement: Ти-форма 'читай' закінчується на '-іть'. (The ти-form читай ends in
-      -іть.)
-    correct: false
-    explanation: No — читай ends in -й. The -іть ending belongs to consonant-stem
-      ви-forms like пишіть.
-  - statement: 'Дієслово ''дати'' — нерегулярне: форма ''дай'' не утворюється за стандартним
-      правилом. (The verb дати is irregular: дай does not follow the standard rule.)'
-    correct: true
-    explanation: 'Correct: дати → дай / дайте must be memorized as irregular.'
-  - statement: До групи людей завжди вживаємо ти-форму. (We always use the ти-form
-      for a group of people.)
-    correct: false
-    explanation: 'No — to a group we always use the ви-form: Діти, сідайте! Учні,
-      читайте!'
-- type: error-correction
-  instruction: Виправте помилкову форму наказового способу (Correct the wrong imperative
-    form)
+  - sentence: _____, читай текст, будь ласка.
+    answer: Ти
+    options:
+    - Ти
+    - Ви
+  - sentence: _____, пишіть речення!
+    answer: Ви
+    options:
+    - Ти
+    - Ви
+  - sentence: _____, слухай мене.
+    answer: Ти
+    options:
+    - Ти
+    - Ви
+  - sentence: _____, дивіться сюди.
+    answer: Ви
+    options:
+    - Ти
+    - Ви
+  - sentence: _____, відкрий підручник.
+    answer: Ти
+    options:
+    - Ти
+    - Ви
+  - sentence: _____, скажіть мені.
+    answer: Ви
+    options:
+    - Ти
+    - Ви
+- id: true-false-rules
+  type: true-false
+  instruction: Правда чи ні? (True or False?)
   items:
-  - sentence: Вчителю, читай текст, будь ласка!
+  - statement: We use 'ти' for close friends.
+    correct: true
+    explanation: Informal 'ти' is used for friends and family.
+  - statement: The ending '-те' or '-іть' is for 'ти' (informal).
+    correct: false
+    explanation: These endings are for 'ви' (formal/plural).
+  - statement: Adding 'будь ласка' makes a command polite.
+    correct: true
+    explanation: It transforms a direct command into a standard, polite request.
+  - statement: You use 'Ви' (formal) when talking to a teacher.
+    correct: true
+    explanation: Formal 'Ви' is used to address teachers, strangers, and groups.
+  - statement: The imperative of 'писати' for 'ти' is 'пиши'.
+    correct: true
+    explanation: 'Drop the -ти and add -и: пиши.'
+  - statement: The informal imperative of 'читати' is 'читайте'.
+    correct: false
+    explanation: The informal form (ти) is 'читай'. 'Читайте' is formal (ви).
+- id: quiz-reading-comprehension
+  type: quiz
+  instruction: Відповідь на запитання за текстом (Answer questions about the text)
+  items:
+  - question: Яке закінчення має дієслово для 'Ви'?
+    options:
+    - -те або -іть
+    - -й
+    - -ти
+    - -ю
+    correct: 0
+  - question: Що робить фраза 'будь ласка'?
+    options:
+    - Робить прохання ввічливим
+    - Змінює час
+    - Робить слово множиною
+    - Змінює особу
+    correct: 0
+  - question: Яку форму використовують друзі (Олег і Максим)?
+    options:
+    - Ти (неформальну)
+    - Ви (формальну)
+    - Він (третю особу)
+    - Ми (множину)
+    correct: 0
+  - question: Як утворити форму 'ти' для слова 'читати'?
+    options:
+    - читай
+    - читайте
+    - читає
+    - читаю
+    correct: 0
+  - question: Що вчитель каже студентам?
+    options:
+    - Відкрийте підручники!
+    - Відкрий підручник!
+    - Відкривати підручники!
+    - Відкривають підручники!
+    correct: 0
+  - question: Яка правильна форма для слова 'сказати' (ти)?
+    options:
+    - скажи
+    - сказай
+    - скажіть
+    - сказати
+    correct: 0
+- id: error-correction-imperative
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and fix the error)
+  items:
+  - sentence: Пане Іване, скажи, будь ласка!
+    error: скажи
+    correction: скажіть
+    error_type: register
+    options:
+    - скажіть
+    - сказав
+    - сказати
+    explanation: 'For ''Пане Іване'', we use the formal ''Ви'' form: скажіть.'
+  - sentence: Олеже, дайте мені книжку.
+    error: дайте
+    correction: дай
+    error_type: register
+    options:
+    - дай
+    - дав
+    - даєш
+    explanation: 'For a friend ''Олеже'', we use the informal ''ти'' form: дай.'
+  - sentence: Студенти, читай текст на сторінці два.
     error: читай
     correction: читайте
-    error_type: word
+    error_type: register
     options:
     - читайте
     - читати
     - читають
-    explanation: 'Addressing a teacher requires the formal ви-form: читайте.'
-  - sentence: Оленко, дайте мені підручник!
-    error: дайте
-    correction: дай
-    error_type: word
-    options:
-    - дай
-    - дати
-    - даєш
-    explanation: 'Olenka is a friend — use the informal ти-form: дай.'
-  - sentence: Пане Іване, скажи адресу, будь ласка!
-    error: скажи
-    correction: скажіть
-    error_type: word
-    options:
-    - скажіть
-    - сказати
-    - скажемо
-    explanation: 'Пане Іване is a formal address — use the ви-form: скажіть.'
-  - sentence: Діти, слухай уважно!
-    error: слухай
-    correction: слухайте
-    error_type: word
-    options:
-    - слухайте
-    - слухати
-    - слухають
-    explanation: Діти is a group — the ви-form слухайте is required.
-  - sentence: Друже, говоріть повільно!
-    error: говоріть
-    correction: говори
-    error_type: word
-    options:
-    - говори
-    - говорити
-    - говорять
-    explanation: 'Друже (friend) is informal — use the ти-form: говори.'
-  - sentence: Маринко, відкрийте підручник!
-    error: відкрийте
-    correction: відкрий
-    error_type: word
-    options:
-    - відкрий
-    - відкрити
-    - відкриває
-    explanation: 'Маринка is addressed informally — use the ти-form: відкрий.'
-- type: fill-in
-  instruction: Вставте правильний наказовий спосіб (Fill in the correct imperative)
-  items:
-  - sentence: Пані вчителько, ___ нам сторінку, будь ласка!
-    answer: покажіть
-    options:
-    - покажіть
-    - покажи
-    - показати
-  - sentence: Андрію, ___ мені меню!
-    answer: дай
-    options:
-    - дай
-    - дайте
-    - дати
-  - sentence: Офіціанте, ___ каву, будь ласка!
-    answer: принесіть
-    options:
-    - принесіть
-    - принеси
-    - принести
-  - sentence: Тарасе, ___ підручник!
-    answer: відкрий
-    options:
-    - відкрий
-    - відкрийте
-    - відкрити
-  - sentence: Учні, ___ три речення!
-    answer: напишіть
-    options:
-    - напишіть
-    - напиши
-    - написати
-  - sentence: Ігоре, ___ повільно, я не розумію.
-    answer: говори
-    options:
-    - говори
-    - говоріть
-    - говорити
-  - sentence: Хлопці, ___ сюди!
-    answer: ідіть
-    options:
-    - ідіть
-    - іди
-    - іти
-  - sentence: Маринко, ___ уважно!
-    answer: слухай
+    explanation: 'For plural ''Студенти'', we use the ''Ви'' form: читайте.'
+  - sentence: Друже, слухайте мене.
+    error: слухайте
+    correction: слухай
+    error_type: register
     options:
     - слухай
-    - слухайте
     - слухати
+    - слухав
+    explanation: 'For a friend ''Друже'', we use ''ти'': слухай.'
+  - sentence: Маріє, відкрийте підручник, будь ласка.
+    error: відкрийте
+    correction: відкрий
+    error_type: register
+    options:
+    - відкрий
+    - відкрила
+    - відкрити
+    explanation: 'For singular friend ''Маріє'', we use ''ти'': відкрий.'
+  - sentence: Вчителю, дивись на це речення.
+    error: дивись
+    correction: дивіться
+    error_type: register
+    options:
+    - дивіться
+    - дивись
+    - дивитися
+    explanation: 'For ''Вчителю'', we use the formal ''Ви'' form: дивіться.'
+- id: unjumble-imperative
+  type: unjumble
+  instruction: Складіть речення (Make a sentence)
+  items:
+  - words:
+    - мені
+    - книжку,
+    - Дай
+    - будь
+    - ласка.
+    correct_order:
+    - Дай
+    - мені
+    - книжку,
+    - будь
+    - ласка.
+  - words:
+    - текст
+    - сторінці
+    - Читайте
+    - на
+    - два.
+    correct_order:
+    - Читайте
+    - текст
+    - на
+    - сторінці
+    - два.
+  - words:
+    - сюди,
+    - будь
+    - Дивіться
+    - ласка.
+    correct_order:
+    - Дивіться
+    - сюди,
+    - будь
+    - ласка.
+  - words:
+    - це
+    - Пишіть
+    - речення.
+    correct_order:
+    - Пишіть
+    - це
+    - речення.
+  - words:
+    - відкрий
+    - Олено,
+    - підручник.
+    correct_order:
+    - Олено,
+    - відкрий
+    - підручник.
+  - words:
+    - мені,
+    - Скажіть
+    - будь
+    - ласка.
+    correct_order:
+    - Скажіть
+    - мені,
+    - будь
+    - ласка.
+- id: translate-imperative
+  type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: Please open the textbook. (formal)
+    options:
+    - text: Відкрийте підручник, будь ласка.
+      correct: true
+    - text: Відкрий підручник, будь ласка.
+      correct: false
+    - text: Відкривати підручник, будь ласка.
+      correct: false
+  - source: Tell me, please. (informal)
+    options:
+    - text: Скажи мені, будь ласка.
+      correct: true
+    - text: Скажіть мені, будь ласка.
+      correct: false
+    - text: Сказати мені, будь ласка.
+      correct: false
+  - source: Read the sentence. (formal)
+    options:
+    - text: Читайте речення.
+      correct: true
+    - text: Читай речення.
+      correct: false
+    - text: Читають речення.
+      correct: false
+  - source: Look here! (informal)
+    options:
+    - text: Дивись сюди!
+      correct: true
+    - text: Дивіться сюди!
+      correct: false
+    - text: Дивиться сюди!
+      correct: false
+  - source: Sit down, please. (formal)
+    options:
+    - text: Сядьте, будь ласка.
+      correct: true
+    - text: Сядь, будь ласка.
+      correct: false
+    - text: Сісти, будь ласка.
+      correct: false
+  - source: Give me the menu. (informal)
+    options:
+    - text: Дай мені меню.
+      correct: true
+    - text: Дайте мені меню.
+      correct: false
+    - text: Давати мені меню.
+      correct: false

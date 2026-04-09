@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**DEDUCT:** The plan explicitly required a `dialogue_situations` block
+    ("Weekend morning in Київ — a couple decides how to get around..."), which was
+    completely omitted. Missed textbook references: Ва'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: '**DEDUCT:** "знаходитися" замість "перебувати", "Микола має... кафе"
+    (calque), and the critical phonetic claim that "ж" is a soft consonant ("м''який
+    шиплячий «ж»").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: '**REWARD:** Excellent PPP flow. The contrast between unidirectional and
+    multidirectional is explained very logically with clear, relatable scenarios.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: '**REWARD:** All required and recommended vocabulary items (including
+    preview words like літати/плавати) are integrated naturally into the text.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: '**REWARD:** Exercise markers perfectly match the `activity_hints` in
+    both quantity and placement, directly testing the taught content.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: '**REWARD:** Natural teacher voice ("Уявіть типову життєву ситуацію").
+    Avoids corporate gamification. **DEDUCT:** Minor filler phrasing at times.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: '**REWARD:** Word count is 4911 (exceeds 4000-word target). All H2 headings
+    from the plan are present and ordered correctly.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: '**REWARD:** Explicitly flags the Russicism "відправлятися" vs "відбуває"
+    as a decolonization point, effectively executing the Заболотний Grade 7 note.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: '**DEDUCT:** The required dialogue between the characters (Чоловік and
+    Дружина) was completely skipped.'
+findings: []

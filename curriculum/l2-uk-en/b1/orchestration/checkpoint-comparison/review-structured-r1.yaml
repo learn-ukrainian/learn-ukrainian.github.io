@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module missed a significant number of word-formation affixes required
+    by the plan (e.g., `-ів-`, `-уват-`, `-еньк-`, `над-`, `анти-`, `-ач`, `-тель`,
+    `-ист`, `-ття`, and zero-derivation). It also '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: General grammar is excellent, but the writer repeatedly used the calque
+    "давайте + дієслово" instead of the proper Ukrainian imperative ("Давайте згадаємо",
+    "давайте обговоримо"). The word "відправка"
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The explanations of grammatical concepts (like consonant alternations
+    [г], [ж], [з] -> [жч]) are clear, accurate, and pedagogical. The only weakness
+    is the omission of the requested suffix examples, w
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Required vocabulary (повторення, самооцінка, комплексний, діагностика)
+    was successfully integrated into the text. Recommended vocabulary was omitted.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are placed logically immediately after the relevant theory
+    and match the plan's specifications perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is excellent — an encouraging teacher persona without any corporate
+    or gamified language. ("Вітаю на фінальному етапі...", "Це перетворює вивчення
+    мови на захопливий логічний пазл").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4239 words (exceeding the 4000 target). All H2 sections
+    from the plan are present and well-structured.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent decolonial note on avoiding the Russianism "самий кращий" in
+    favor of the native Ukrainian "найкращий".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The panel discussion dialogue naturally models comparative degrees and
+    transactional vocabulary without sounding overly robotic.
+findings: []

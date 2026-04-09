@@ -1,4 +1,40 @@
 vocabulary:
+- word: диви́тися
+  translation: to watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́тися
+  translation: to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: тро́хи
+  translation: a little
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: до́бре
+  translation: well
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: уве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: говори́ти
   translation: to speak
   expression: false
@@ -35,71 +71,11 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: диви́тися
-  translation: to watch
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вчи́тися
-  translation: to learn (reflexive)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: люби́ти
-  translation: to love
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: тро́хи
-  translation: a little
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: до́бре
-  translation: well
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: уве́чері
-  translation: in the evening
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: по́тім
-  translation: then, afterwards
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: неле́гко
-  translation: not easy
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ціка́во
-  translation: interesting
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: оби́два
-  translation: both
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: серіа́л
-  translation: TV series
+- word: украї́нською
+  translation: in Ukrainian
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
 - word: сло́во
   translation: word
@@ -107,87 +83,33 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: нові слова
-  translation: new words
-  expression: true
-  pos: ''
+- word: нови́й
+  translation: new
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: друг
-  translation: friend
+- word: Молоде́ць
+  translation: Well done!
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: мовне кафе
-  translation: language café
+- word: мо́ва
+  translation: language
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Ти говориш українською?
+  translation: Do you speak Ukrainian?
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: онлайн
-  translation: online
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: дієвідмі́на
-  translation: verb conjugation group
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: осо́ба
-  translation: person (grammatical)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: однина́
-  translation: singular
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: множина́
-  translation: plural
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: чита́ти
-  translation: to read
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: слу́хати
-  translation: to listen
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: крича́ти
-  translation: to shout, to cry out
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: хоті́ти
-  translation: to want
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: могти́
-  translation: to be able to, can
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: самопере́ві́рка
-  translation: self-check
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true

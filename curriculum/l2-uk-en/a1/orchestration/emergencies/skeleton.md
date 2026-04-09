@@ -1,38 +1,34 @@
-## Dialogues (~300 words total)
-- Dialogue 1 (~120 words): Emergency call to 112 — Адам witnesses a car accident on вулиця Хрещатик. Full exchange: оператор greets (Служба порятунку, слухаю вас) → Адам reports (Допоможіть! Тут аварія! Людина не рухається!) → оператор asks location (Де ви?) → Адам gives address (На вулиці Хрещатик, біля метро Майдан Незалежності) → оператор confirms (Швидка вже їде. Як вас звати?) → Адам gives name and phone number (Мене звати Адам. Мій номер — нуль дев'яносто три...) → оператор closes (Дякую. Залишайтеся на місці). Bold key emergency phrases.
-- Dialogue 2 (~120 words): Lost passport scenario — Адам asks a passerby for directions to the police station (Вибачте, де тут поліція? → Прямо і наліво). Then at the station: greeting, reports (Я загубив паспорт), officer asks where (Де ви його загубили? → Я не знаю. Може, в метро), officer collects personal info — прізвище (Сміт), номер телефону (нуль дев'яносто три...), ends with instruction to fill out a form (Заповніть цю форму, будь ласка). Bold words: загубив, прізвище, форма.
-- P3 (~60 words): Brief note after dialogues — what to observe: (1) emergency imperatives Допоможіть!/Викличте! open both calls; (2) location comes before name when talking to emergency services; (3) паспорт / форма / прізвище are key police vocabulary. Encourages re-reading both dialogues aloud.
+## Dialogues (~330 words total)
+- P1 (~40 words): Introduction to high-stress communication. Explain that in emergencies, Ukrainian shifts to short, direct functional chunks where clarity is more important than perfect grammar.
+- P2 (~120 words): Dialogue 1 — Calling 112. Adam calls from вулиця Хрещатик to report an аварія (car accident). Operator asks "Що сталося?" (What happened?) and "Де ви?" (Where are you?). Adam provides location: "біля метро Майдан Незалежності" and personal info: "Мене звати Адам. Мій номер — нуль дев'яносто три...".
+- P3 (~110 words): Dialogue 2 — Lost documents at the Поліція (Police). Adam asks for directions ("Вибачте, де тут поліція?") and reports his loss ("Я загубив паспорт"). The officer asks for his прізвище (surname) and number, then provides a форма (form) to fill out.
+- P4 (~60 words): Analysis of the communicative strategy used in both dialogues. Highlight the pattern: Alert ("Допоможіть!") -> Problem ("Тут аварія" / "Я загубив паспорт") -> Location ("Я на вулиці...") -> Personal Identity.
+- <!-- INJECT_ACTIVITY: dialogue-order --> [order, Put the dialogue with the 112 operator in the correct order, 6 items]
 
-## Екстрені ситуації (Emergencies) (~300 words total)
-- P1 (~80 words): Introduce 112 (один один два) as Ukraine's universal emergency number — works for ambulance, police, and fire brigade from any phone. Note that 103 reaches ambulance directly and 102 reaches police. Frame these as survival chunks the learner must memorise before their first trip to Ukraine. Emphasis: you don't need grammar — you need the phrase.
-- P2 (~100 words): Core emergency phrase set — present as a labelled chunk list with English glosses: Допоможіть! (Help!), Викличте швидку! (Call an ambulance!), Викличте поліцію! (Call the police!), Тут аварія! (There's an accident here!), Тут пожежа! (There's a fire here!), Людині погано! (Someone is feeling unwell!), Мені потрібна допомога! (I need help!). Note that Допоможіть and Викличте are imperatives reviewed from M43 — no new grammar, just new vocabulary.
-- P3 (~80 words): Giving your location to the operator — present as a mini-pattern drill: Я на вулиці... (I'm on … street), Я біля... (I'm near...), Я в метро... (I'm in the metro...), Адреса: вулиця Хрещатик, будинок десять. Cross-reference A1.5 prepositions (біля, навпроти, поруч). Tip: know your hotel address in Ukrainian — programme it into your phone before you travel.
-- Exercise (~40 words): **Quiz** — 5 items from activity_hints: choose the correct emergency phrase for the described situation (car crash → Тут аварія! Викличте швидку!; fire → Тут пожежа! Допоможіть!; person ill → Людині погано! Викличте швидку!; lost passport → Я загубив паспорт; stolen wallet → Викличте поліцію! Допоможіть!).
+## Екстрені ситуації (Emergencies) (~330 words total)
+- P1 (~70 words): Emergency Numbers in Ukraine. Explain the universal number 112 (один один два) and the specific services: 101 (пожежна), 102 (поліція), and 103 (швидка). Emphasize that these are non-negotiable memorization items.
+- P2 (~80 words): The Power of the Imperative. Teach the core survival calls: "Допоможіть!" (Help!) and "Викличте швидку!" (Call an ambulance!). Note that these use the plural/formal imperative (-іть) because you are usually addressing a stranger or a service operator.
+- P3 (~90 words): Identifying the Situation. Introduce specific labels for the problem: "Тут аварія!" (There is an accident!), "Тут пожежа!" (There is a fire!), and "Людині погано!" (Someone is feeling bad!). Explain "Мені потрібна допомога!" as a general need statement.
+- P4 (~90 words): Stating your Location. Teach the address formula: Вулиця -> Будинок -> Квартира. Use phrases like "Я на вулиці Шевченка," "Я біля метро," and "Адреса: будинок номер десять." Reinforce the use of prepositions "на" and "біля" from previous modules.
+- <!-- INJECT_ACTIVITY: phrase-choice-quiz --> [quiz, Choose the correct emergency phrase for the situation, 5 items]
+- <!-- INJECT_ACTIVITY: fill-in-emergency-call --> [fill-in, Complete the emergency phone call, 6 items]
 
-## Допомога (Getting Help) (~300 words total)
-- P1 (~90 words): At the hospital (лікарня) — three essential phrases: Мені потрібен лікар (I need a doctor — note мені потрібен as a fixed chunk, no grammar analysis), У мене болить... (My … hurts — vocabulary reviewed from M53: голова, спина, рука, нога), У мене алергія на... (I'm allergic to... — followed by the allergen in accusative: ці таблетки, горіхи, пеніцилін). Point out алергія is an international word learners already recognise.
-- P2 (~80 words): Communication help phrases for when Ukrainian is too fast or too complex: Я не розумію (I don't understand), Повторіть, будь ласка (Please repeat — imperative from M43), Говоріть повільніше, будь ласка (Please speak more slowly), Ви говорите англійською? (Do you speak English?). Frame these as your "emergency brake" — use them immediately rather than nodding and hoping.
-- P3 (~90 words): Personal information checklist for emergencies — present as a table-like bulleted list with examples: Мене звати Адам (name), Моє прізвище — Сміт (surname), Мій номер телефону — нуль дев'яносто три... (phone), Я з Канади / Великої Британії (country of origin), Мій паспорт / Я загубив паспорт (document), Мій готель — «Прем'єр Палас» (hotel). Note all items reviewed from M02, M10, M20 — applied here to a critical real-life situation.
-- Exercise 1 (~20 words label): **Fill-in** — 6 items: complete the emergency phone call (Алло! {Допоможіть}! Тут аварія! / {Викличте} швидку допомогу! / Я на {вулиці} Хрещатик / Мене {звати} Адам / Мій номер {телефону} — нуль дев'яносто три / Мені потрібна {допомога}!).
-- Exercise 2 (~20 words label): **Order** — put 6 lines of a 112 dialogue in correct sequence (Служба порятунку → Допоможіть! Тут пожежа! → Де ви? → На вулиці Шевченка, будинок п'ять → Зрозуміло. Як вас звати? → Мене звати Анна. Дякую!).
+## Допомога (Getting Help) (~330 words total)
+- P1 (~100 words): Medical Assistance. Teach "Мені потрібен лікар" (I need a doctor). Re-introduce the structure "У мене болить..." (My ... hurts) from M53 with key body parts: голова (head), живіт (stomach), горло (throat). Explain that "Мені погано" is the general way to say you feel ill.
+- P2 (~80 words): Pharmacy and Precautions. Phrases for the pharmacy: "Дайте, будь ласка, таблетки" and the critical safety phrase "У мене алергія на..." (I have an allergy to...). Contrast this with "Мені потрібні ліки" (I need medicine).
+- P3 (~90 words): Personal Data for Officials. How to provide identification: "Моє прізвище — Сміт," "Я з Америки/Канади," and "Мій паспорт у готелі." Explain the difference between ім'я (first name) and прізвище (surname) in a bureaucratic context.
+- P4 (~60 words): Overcoming the Language Barrier. Essential phrases for when you don't understand: "Я не розумію," "Повторіть, будь ласка" (Please repeat), and "Ви говорите англійською?" (Do you speak English?).
+- <!-- INJECT_ACTIVITY: report-issue-fill-in --> [fill-in, Reporting an issue at the police station or hospital, 5 items]
 
-## Summary (~300 words total)
-- P1 (~60 words): Brief recap paragraph — ties together the three scenarios practised: calling 112 for an accident or fire, going to the поліція for a lost document, visiting the лікарня for a health issue. Reminds learner that the same personal information block (ім'я, прізвище, номер телефону, адреса) is needed in all three situations.
-- P2 (~80 words): Emergency survival kit — formatted as a clearly labelled reference block:
-  - **112** — universal emergency number (один один два)
-  - **Допоможіть! Викличте швидку / поліцію!** — first words to say
-  - **Тут аварія / пожежа!** — describe the emergency
-  - **Я на вулиці... / Я біля...** — give your location
-  - **У мене болить... / Мені потрібен лікар.** — at the hospital
-  - **Я загубив/загубила [document].** — at the police station
-  - **Ім'я, прізвище, номер телефону, країна, адреса** — personal info always needed
-- P3 — Self-check (~80 words): Bulleted Q&A practice prompts (as specified in plan):
-  - What is Ukraine's universal emergency number? → 112 (один один два)
-  - How do you shout "Help!" in Ukrainian? → Допоможіть!
-  - How do you call an ambulance? → Викличте швидку!
-  - How do you give your street address? → Я на вулиці [name], будинок [number].
-  - How do you say "I lost my passport"? → Я загубив/загубила паспорт.
-  - How do you ask a doctor to repeat something? → Повторіть, будь ласка.
-- Exercise (~80 words label): **Fill-in** — 5 items for police station / hospital scenario: Добрий день. Я {загубив} паспорт / Моє {прізвище} — Сміт / Мені {потрібен} лікар / У мене {алергія} на ці таблетки / Я не розумію. {Повторіть}, будь ласка.
+## Підсумок (~330 words total)
+- P1 (~80 words): Emergency Survival Recap. 112 is your main tool. Use "Допоможіть!" and "Викличте швидку!" immediately. Remember that speed and clarity in Ukrainian "chunks" beat perfect case endings in these moments.
+- P2 (~70 words): Location Recap. Always state the Street (вулиця) and Building (будинок). If you are outside, use landmarks: "біля метро," "навпроти готелю."
+- P3 (~60 words): Medical/Personal Recap. Use "У мене болить..." for pain and "Я загубив..." for lost items. Keep your прізвище and номер телефону ready.
+- P4 (~120 words): Self-check:
+    - Can you call 112 and state there is an accident? (Тут аварія!)
+    - Can you give your current address including street and building? (Вулиця..., будинок...)
+    - Can you tell a doctor what hurts? (У мене болить...)
+    - Can you report a lost passport to the police? (Я загубив паспорт. Моє прізвище...)
+    - Do you know the difference between 101, 102, and 103?
 
 Grand total: ~1320 words

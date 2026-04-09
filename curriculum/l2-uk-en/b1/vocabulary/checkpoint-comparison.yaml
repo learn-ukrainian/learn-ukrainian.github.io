@@ -1,6 +1,6 @@
 vocabulary:
 - word: повто́рення
-  translation: review (systematic revision of material)
+  translation: review
   expression: false
   pos: ім.
   gender: с.
@@ -12,19 +12,19 @@ vocabulary:
   gender: ж.
   verified: true
 - word: ко́мплексний
-  translation: comprehensive (combining multiple skills)
+  translation: comprehensive
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: діагно́стика
-  translation: diagnostics (identifying knowledge gaps)
+  translation: diagnostics
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: ру́брика
-  translation: rubric (assessment criteria)
+  translation: assessment criteria (rubric)
   expression: false
   pos: ім.
   gender: ж.
@@ -35,74 +35,104 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: проста форма вищого ступеня
-  translation: simple comparative form
+- word: оці́нювати
+  translation: to evaluate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: порі́внювати
+  translation: to compare
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пріорите́ти
+  translation: priorities
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ре́йтинги
+  translation: rankings
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ступені порівняння
+  translation: degrees of comparison
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: складена форма вищого ступеня
-  translation: compound comparative form
+- word: офіці́йно-ділови́й
+  translation: official-business
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: науко́вий
+  translation: scientific
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: суплетивні форми
+  translation: suppletive forms
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: найвищий ступінь порівняння
-  translation: superlative degree
-  expression: true
-  pos: ''
+- word: підси́лений
+  translation: emphatic
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: підсилені форми
-  translation: reinforced forms
-  expression: true
-  pos: ''
+- word: якнайшви́дше
+  translation: as quickly as possible
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
-- word: складена форма найвищого ступеня
-  translation: compound superlative form
-  expression: true
-  pos: ''
+- word: щонайкра́щого
+  translation: the very best
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: словотві́р
-  translation: word formation
+- word: дефі́с
+  translation: hyphen
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: назви діячів
-  translation: agent nouns
-  expression: true
-  pos: ''
+- word: фемінітиви
+  translation: feminine forms
+  expression: false
+  pos: ім.
   gender: ''
   verified: true
-- word: ціна́
-  translation: price
+- word: кравчи́ня
+  translation: tailor (female)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: зни́жка
-  translation: discount
+- word: подво́єння
+  translation: doubling
   expression: false
   pos: ім.
-  gender: ж.
+  gender: с.
   verified: true
-- word: готі́вка
-  translation: cash
+- word: по-ново́му
+  translation: in a new way
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ре́шта
-  translation: change (money back)
-  expression: false
-  pos: ім.
-  gender: ж.
+  pos: присл.
+  gender: ''
   verified: true
 - word: зда́ча
-  translation: change (colloquial)
+  translation: change (money)
   expression: false
   pos: ім.
   gender: ж.
@@ -125,11 +155,23 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: ва́ги
-  translation: scales
+- word: раху́нок
+  translation: account (bank)
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
+  verified: true
+- word: пере́каз
+  translation: transfer (money)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: курс валют
+  translation: exchange rate
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: поси́лка
   translation: parcel
@@ -149,219 +191,21 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
-- word: раху́нок
-  translation: account (bank)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пере́каз
-  translation: transfer (money)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: курс валют
-  translation: exchange rate
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пилотя́г
-  translation: vacuum cleaner
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: поту́жність
-  translation: power
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: наді́йність
-  translation: reliability
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: компа́ктність
-  translation: compactness
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: чистота́
-  translation: cleanliness
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: продукти́вність
-  translation: productivity
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: енергоефективний
-  translation: energy-efficient
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: залі́зний
-  translation: iron / made of iron
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: смачни́й
-  translation: tasty
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: льві́вський
-  translation: Lviv's / from Lviv
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: пари́зький
-  translation: Parisian
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: коза́цький
-  translation: Cossack's
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: жовтува́тий
-  translation: yellowish
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: гарне́нький
-  translation: pretty / cute
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: прекра́сний
-  translation: wonderful
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: безме́жний
-  translation: boundless / limitless
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: надважли́вий
-  translation: crucial / extremely important
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: антикри́зовий
-  translation: anti-crisis
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: триповерхо́вий
-  translation: three-story
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чита́ч
-  translation: reader
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: продаве́ць
-  translation: seller / shop assistant
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: робітни́к
-  translation: worker
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вчи́тель
-  translation: teacher
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лі́кар
-  translation: doctor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: письме́нниця
-  translation: female writer
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пека́рня
-  translation: bakery
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: чита́льня
-  translation: reading room
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: схо́вище
-  translation: shelter / repository
+- word: дося́гнення
+  translation: achievement
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: відкриття́
-  translation: discovery
+- word: закономі́рності
+  translation: patterns
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: пі́дпис
-  translation: signature
+- word: си́нтаксис
+  translation: syntax
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: якнайкра́щий
-  translation: the very best
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: щонайшви́дше
-  translation: as fast as possible
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: заповнити прогалини
-  translation: fill the gaps
-  expression: true
-  pos: ''
-  gender: ''
   verified: true

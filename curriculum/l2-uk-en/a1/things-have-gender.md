@@ -1,100 +1,110 @@
-## Діало́ги (Dialogues)
+## Діало́ги — Dialogues
 
-Every Ukrainian noun belongs to one of three gender families: **він** (he), **вона́** (she), or **воно́** (it). Before learning the rules, meet gender in action through two short conversations.
+Imagine walking into a pet shop. You are looking at the different animals and the items they need. In English, unless you know the specific sex of an animal, you refer to it as an "it." The basket it sleeps in is definitely an "it." In Ukrainian, this perspective shifts entirely. Every single noun, whether it is a living breathing creature or a woven basket, has a specific grammatical gender. It is either masculine, feminine, or neuter. Observe a conversation between two friends to see how this works in practice.
 
-> — **Марі́я:** Приві́т! Диви́сь, це моя́ кімна́та. *(Hi! Look, this is my room.)*
-> — **Оле́нка:** Кла́сно! У тебе́ є стіл? *(Cool! Do you have a table?)*
-> — **Марія:** Так, є. Це мій стіл, а ось моє́ лі́жко. *(Yes. This is my table, and here's my bed.)*
-> — **Оленка:** А що ще є? *(What else is there?)*
-> — **Марія:** Є ла́мпа — моя лампа. І ще є крі́сло. *(There's a lamp — my lamp. And there's an armchair too.)*
-> — **Оленка:** Моє крісло ду́же зру́чне! *(My armchair is very comfortable!)*
-> — **Марія:** А моє — нове́! *(And mine is new!)*
+> **Марі́я:** Диви́сь, **кіт** (cat)! *(Look, a cat!)*
+> **Оле́нка:** Так, **він** (he) спить. Тут **ко́шик** (basket). *(Yes, he is sleeping. Here is a basket.)*
+> **Марія:** Кошик — він. *(A basket is a "he".)*
+> **Оленка:** А там моя́ улю́блена **ри́бка** (fish). **Вона́** (she) пла́ває. *(And there is my favorite fish. She is swimming.)*
+> **Марія:** Вели́кий **аква́ріум** (aquarium)! Він ду́же га́рний. *(A big aquarium! He is very beautiful.)*
+> **Оленка:** О, дивись! **Черепа́ха** (turtle). Вона тут. *(Oh, look! A turtle. She is here.)*
+> **Марія:** Мале́ньке **кошеня́** (kitten)! **Воно́** (it) теж тут. *(A little kitten! It is also here.)*
+> **Оленка:** І вели́ке **дзе́ркало** (mirror). Воно там. *(And a big mirror. It is there.)*
 
+Notice how Марія and Оленка talk about the animals and objects. The word **кіт** is masculine, so they use the pronoun **він**. The basket, **кошик**, is also masculine, so it is also a "he." The **рибка** and the **черепаха** are feminine, referred to as **вона**. The mirror, **дзеркало**, and the little **кошеня** are neuter, using **воно**.
 
-Did you notice? **Стіл** gets **мій**, **кімната** gets **моя**, **ліжко** gets **моє**. Every noun belongs to a gender family. That family decides which form of "my" goes with it.
+Now consider a different situation. You are on a video call with a friend, showing them your room. The furniture around you also follows these strict rules of grammatical gender.
 
-> — **Оленка:** Що у тебе в су́мці? *(What do you have in your bag?)*
-> — **Марія:** У ме́не є кни́га, телефо́н і фо́то. *(I have a book, a phone, and a photo.)*
-> — **Оленка:** А у мене є ру́чка і зо́шит. *(And I have a pen and a notebook.)*
-> — **Марія:** Кни́га — це ціка́во! Яка́ кни́га? *(A book — that's interesting! What book?)*
-> — **Оленка:** Це моя́ кни́га. Вона́ украї́нська! *(This is my book. It's Ukrainian!)*
-> — **Марія:** А мій зо́шит нови́й. *(And my notebook is new.)*
+> **Оле́г:** Приві́т! Дивись, це моя **кімна́та** (room). *(Hi! Look, this is my room.)*
+> **А́нна:** Кла́сно! У тебе́ є **стіл** (table)? *(Cool! Do you have a table?)*
+> **Олег:** Так, у мене́ є стіл. Це мій стіл. *(Yes, I have a table. This is my table.)*
+> **Анна:** А де **лі́жко** (bed)? *(And where is the bed?)*
+> **Олег:** Моє́ ліжко тут. А там вели́ка **ша́фа** (wardrobe). *(My bed is here. And there is a big wardrobe.)*
 
+In this brief exchange, the gender emerges naturally through the possessive words. Oleg says **моя кімната** (my room) because room is feminine. He says **мій стіл** (my table) because table is masculine, and **моє ліжко** (my bed) because bed is neuter.
 
-These nouns fall into **три гру́пи** (three groups) — three families. One family goes with **він** and **мій**. One goes with **вона** and **моя**. One goes with **воно** and **моє**. Ukrainian grammar calls this **рід** (gender) — and every single noun has one.
+Finally, observe a quick conversation about everyday items you carry with you in a bag.
 
-## Він, вона, воно (The Gender Test)
+> **Макси́м:** Що у тебе є? *(What do you have?)*
+> **Іри́на:** У мене є **кни́га** (book), **телефо́н** (phone) і **фо́то** (photo). *(I have a book, a phone, and a photo.)*
+> **Максим:** А у мене є **ру́чка** (pen) і **зо́шит** (notebook). *(And I have a pen and a notebook.)*
 
-Ukrainian has three grammatical genders, taught to every Ukrainian student starting in Grade 3 (Vashulenko p. 110, Ponomarova p. 86). **Чолові́чий рід** (masculine) — use **він** and **мій**. **Жіно́чий рід** (feminine) — use **вона** and **моя**. **Сере́дній рід** (neuter) — use **воно** and **моє**. Every Ukrainian noun belongs to exactly one of these three families — permanently. A noun's gender never changes.
+Even in a simple list, a Ukrainian speaker unconsciously categorizes these items: **телефон** and **зошит** are masculine, **книга** and **ручка** are feminine, while **фото** is neuter.
 
-Here is the test, step by step. Take **стіл** (table). Ask yourself: **стіл — він**? Yes — that feels right. **Стіл — вона**? No — sounds wrong. Result: **стіл** is **чоловічий рід** (masculine). Now try **книга** (book): **книга — вона**? Yes — **жіночий рід** (feminine). Try **вікно́** (window): **вікно — воно**? Yes — **середній рід** (neuter). Now confirm with possessives: **мій стіл** (m) → **моя книга** (f) → **моє вікно** (n). The він/вона/воно test and the possessive test always agree.
+## Він, вона, воно — The Gender Test
 
-In M06 you learned **У мене є** (I have) with family members. The same structure works for objects. **У мене є стіл.** **У мене є книга.** **У мене є вікно.** Now you know each of those nouns carries a gender, which matters the moment you say **мій**, **моя**, or **моє**.
+For an English speaker, the idea that a table is masculine and a book is feminine feels abstract. English primarily reserves gender for living things with a biological sex. A table is an "it." A book is an "it." You must set this habit aside. In Ukrainian, grammatical gender, known as **рід** (gender), is a permanent, structural feature of every single noun. You cannot change a word's gender, just as you cannot change its core meaning.
 
-<!-- INJECT_ACTIVITY: quiz-vin-vona-vono -->
+As outlined in Ukrainian primary school materials like the Grade 3 textbook by Ponomarova, the Ukrainian language divides all nouns into three categories. These are **чолові́чий рід** (masculine gender), **жіно́чий рід** (feminine gender), and **сере́дній рід** (neuter gender). To determine which category a word belongs to, students use a simple substitution test with personal pronouns. Can you replace the noun with "he," "she," or "it"? If the word is a **стіл**, you refer to it as **він**. If the word is a **книга**, you refer to it as **вона**. If the word is a **вікно́** (window), you refer to it as **воно**.
 
-Do you have to test every noun from scratch forever? No. Look at the ending. Ukrainian endings carry the gender with them — a built-in shortcut that native speakers use instinctively. This covers about 90% of all nouns you will meet at the A1 level. Exceptions exist, but they come later.
+<!-- INJECT_ACTIVITY: quiz-pronoun-choice -->
 
-Here are the patterns, confirmed by Vashulenko Grade 3, p. 112. Masculine nouns usually end in a consonant: **стіл** (-л), **телефон** (-н), **зошит** (-т), **ключ** (-ч), **комп'ю́тер** (-р), **стіле́ць** (-ць). Feminine nouns usually end in **-а** or **-я**: **книга** (-а), **лампа** (-а), **кімната** (-а), **ручка** (-а), **су́мка** (-а), **стіна́** (-а). Neuter nouns usually end in **-о** or **-е**: **вікно** (-о), **ліжко** (-о), **крісло** (-о), **дзе́ркало** (-о). When you learn a new noun, notice the ending first — it announces the gender before you even need to test with він/вона/воно.
+This concept becomes much more intuitive when you attach a possessive pronoun to the noun.
+ This is known as the "My" test. Instead of just trying to memorize that a table is masculine, you practice saying "my table." The word for "my" changes depending on the gender of the noun it describes.
 
-## Предме́ти навко́ло (Objects Around Us)
+If a noun is masculine, you use **мій** (my). You say **мій стіл** (my table) and **мій телефон** (my phone). This firmly establishes the word in the masculine category. If a noun is feminine, you use **моя** (my). You say **моя книга** (my book) and **моя кімната** (my room). If a noun is neuter, you use **моє** (my). You say **моє вікно** (my window) and **моє ліжко** (my bed). By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
 
-Your room, bag, and desk are full of Ukrainian nouns waiting to be named. Here are common objects organized by gender. For each one, check the ending, then confirm with він/вона/воно — both tests point to the same family.
+<!-- INJECT_ACTIVITY: fill-in-possessives -->
 
-**Чоловічий рід** (він, мій) — **стіл** (table), **стілець** (chair), **телефон** (phone), **комп'ютер** (computer), **зошит** (notebook), **ключ** (key). Every noun ends in a consonant — the ending signals masculine before you even say the word. A few short sentences to make each word stick:
+While the "My" test helps you confirm a word's gender,
+ you also need a way to predict the gender of a new word you encounter. Fortunately, Ukrainian spelling is highly systematic. You can predict the gender of approximately ninety percent of nouns simply by looking at the last letter of the word in its basic, dictionary form. The Vashulenko textbook for the third grade outlines these primary rules.
 
-- **Це мій стіл.** *(This is my table.)*
-- **Він дерев'я́ний.** *(It's wooden.)*
-- **Де мій телефон?** *(Where is my phone?)*
-- **Він тут.** *(It's here.)*
-- **Ось він, мій ключ.** *(Here it is, my key.)*
+If a noun ends in a consonant, it is almost certainly masculine. Look at words like **телефон**, **зошит**, and **ключ** (key). The final sounds are consonants, placing them firmly in the masculine category.
 
-**Жіночий рід** (вона, моя) — **книга** (book), **лампа** (lamp), **сумка** (bag), **ручка** (pen), **кімната** (room), **стіна** (wall). Every noun ends in **-а** — the pattern is visible in every example:
+If a noun ends in the vowel **-а** or the vowel **-я**, it is typically feminine. Consider words like **ла́мпа** (lamp), **кімната**, **книга**, and **ручка**. The open vowel ending is the strongest indicator of the feminine gender.
 
-- **Це моя книга.** *(This is my book.)*
-- **Вона ціка́ва.** *(It's interesting.)*
-- **Моя сумка — си́ня.** *(My bag is blue.)*
-- **Де ручка?** *(Where's the pen?)*
-- **Ось вона, моя ручка.** *(Here it is, my pen.)*
-- **Це кімната — моя кімната.** *(This is a room — my room.)*
+If a noun ends in the vowel **-о** or the vowel **-е**, it is neuter. Words such as **вікно**, **ліжко**, **мі́сто** (city), and **дзеркало** all follow this exact pattern.
 
-**Середній рід** (воно, моє) — **вікно** (window), **ліжко** (bed), **крісло** (armchair), **дзеркало** (mirror), **фото** (photo). All end in **-о**. Note that **фото** is a borrowed word — it never changes its ending — but **воно** and **моє** still apply:
+:::tip
+There are a few exceptions to these rules, particularly words ending in a soft sign. However, at this stage, mastering the primary consonant, -а/-я, and -о/-е patterns allows you to correctly identify the vast majority of nouns you encounter.
+:::
 
-- **Це моє вікно.** *(This is my window.)*
-- **Воно вели́ке.** *(It's big.)*
-- **Де моє ліжко?** *(Where's my bed?)*
-- **Ось воно.** *(Here it is.)*
-- **У мене є дзеркало і фото.** *(I have a mirror and a photo.)*
+<!-- INJECT_ACTIVITY: quiz-gender-endings -->
+
+## Предме́ти навко́ло — Objects Around Us
+
+To make these rules concrete, organize common vocabulary by gender. We start with masculine objects you find in a study or carry in a bag. Read these words carefully and note the final consonant sound that defines their gender.
+
+The word for a table is a **стіл**. The word for a chair is a **стіле́ць** (chair). Your mobile device is a **телефон**, and your computer is a **комп'ю́тер** (computer). When you need to write something down, you use a **зошит**, and you unlock your door with a **ключ**. Every single one of these items belongs to the masculine gender. You refer to any of them as **він**, and if they belong to you, you use the possessive **мій**.
+
+Now consider the feminine and neuter objects around you. The feminine words all share the characteristic open vowel endings. You read a **книга**. You turn on a **лампа** for light. You carry your belongings in a **су́мка** (bag), write with a **ручка**, and sit inside a **кімната** surrounded by a **стіна́** (wall). All of these end in **-а**, marking them as feminine (**вона**, **моя**).
+
+Neuter nouns describe other essential items, clearly marked by their **-о** or **-е** endings. You look out a **вікно**. You sleep in a **ліжко**. You relax in a comfortable **крі́сло** (armchair). You check your reflection in a **дзеркало**, and you frame a **фото** for memories. These are all neuter objects (**воно**, **моє**).
 
 <!-- INJECT_ACTIVITY: group-sort-gender -->
 
-Now link what you know. **У мене є** works the same way it did in M06 with family — just swap in objects. **У мене є стіл.** **У мене є книга.** **У мене є вікно.** Add a possessive and you get two connected sentences: **Це мій стіл.** **Це моя книга.** **Це моє вікно.** Same noun, two structures — and gender ties them together.
+You previously learned how to talk about your family using the phrase **У мене є** (I have). You practiced saying things like "У мене є брат" (I have a brother) and "У мене є сестра́" (I have a sister). This exact same grammatical construction is used to talk about inanimate objects. The gender of the object does not change the structure of the sentence. The phrase **У мене є** remains constant.
 
-<!-- INJECT_ACTIVITY: fill-in-possessive -->
+If you want to state that you own a table, you simply combine the phrase with the vocabulary word. You say **У мене є стіл** (I have a table). If you want to state that you have a book, you say **У мене є книга** (I have a book). If you are describing a room and want to say it has a window, you say **У мене є вікно** (I have a window).
+
+This is a powerful pattern. By learning one fixed phrase, you can instantly communicate ownership or possession of any new vocabulary word you learn, regardless of whether that word is masculine, feminine, or neuter.
+
+:::note
+The phrase **У мене є** translates literally to "At me there is." The noun that follows it is the subject of the sentence, which is why it stays in its basic dictionary form. You do not need to change the ending of the object you possess in this specific construction.
+:::
 
 ## Підсумок — Summary
 
-Three steps to determine any noun's gender. Step 1 — try **він/вона/воно** with the noun: which fits? Step 2 — check the ending: consonant → **чоловічий**, **-а/-я** → **жіночий**, **-о/-е** → **середній**. Step 3 — use the matching possessive: **мій** / **моя** / **моє**. Both methods give the same answer. Use whichever is faster for you. With practice, gender recognition becomes automatic — just like native Ukrainian speakers do it.
+Determining the grammatical gender of a Ukrainian noun is a foundational skill. It dictates how you use pronouns, how you form plurals later on, and how adjectives change to match the noun. Master this process by following a reliable three-step strategy.
 
-Test yourself with these questions:
+First, apply the pronoun test. Ask yourself which personal pronoun replaces the noun naturally. Does the object feel like a **він**, a **вона**, or a **воно**?
 
-- Яко́го ро́ду сло́во **стіл**? → Чолові́чого. Закі́нчення на при́голосний (-л). → **Мій стіл.**
-- Якого роду **книга**? → Жіно́чого. Закінчення -а. → **Моя книга.**
-- А **вікно**? → Сере́днього. Закінчення -о. → **Моє вікно.**
-- Say "I have a chair" in Ukrainian. → **У мене є стілець.**
-- Say "This is my mirror." → **Це моє дзеркало.**
+Second, reinforce this with the "My" test. Pair the noun with a possessive pronoun to build a strong auditory and visual association. Say the combination out loud. Is it **мій** (masculine), **моя** (feminine), or **моє** (neuter)?
 
-<!-- INJECT_ACTIVITY: quiz-gender-by-ending -->
+Third, check the ending of the dictionary form of the word. This is your visual proof.
 
-In the next module you will meet adjectives: **вели́кий** (big), **мале́нький** (small), **си́ній** (blue). Every adjective must agree with its noun's gender — **великий стіл** (m), **вели́ка книга** (f), **велике вікно** (n). The gender system you learned today is the foundation. Every adjective, every possessive, every demonstrative pronoun in Ukrainian depends on gender — and you now have all three.
+Here is your quick-reference summary of the typical noun endings:
 
-Here are all the nouns from this module with their gender:
+*   **Чоловічий рід** (Masculine gender): The word ends in a consonant. Examples include **стіл**, **зошит**, and **телефон**. You use **він** and **мій**.
+*   **Жіночий рід** (Feminine gender): The word ends in the vowel **-а** or **-я**. Examples include **книга**, **сумка**, and **кімната**. You use **вона** and **моя**.
+*   **Середній рід** (Neuter gender): The word ends in the vowel **-о** or **-е**. Examples include **вікно**, **ліжко**, and **дзеркало**. You use **воно** and **моє**.
 
-| Він (чоловічий) | Вона (жіночий) | Воно (середній) |
-|---|---|---|
-| стіл (table) | книга (book) | вікно (window) |
-| стілець (chair) | лампа (lamp) | ліжко (bed) |
-| телефон (phone) | ручка (pen) | крісло (armchair) |
-| комп'ютер (computer) | сумка (bag) | дзеркало (mirror) |
-| зошит (notebook) | кімната (room) | фото (photo) |
-| ключ (key) | стіна (wall) | |
+Perform a self-check to ensure these concepts are clear.
+
+What gender is the word **стіл**? It is masculine (**чоловічий рід**). We know this because it ends in a consonant sound, and we refer to it by saying **мій стіл**.
+
+What gender is the word **книга**? It is feminine (**жіночий рід**). The visual proof is the **-а** ending, and we claim ownership by saying **моя книга**.
+
+What gender is the word **вікно**? It is neuter (**середній рід**). It ends in the vowel **-о**, and we pair it with the neuter possessive, saying **моє вікно**.
+
+Finally, how do you say "I have a chair" in Ukrainian? You combine the fixed possession phrase with the masculine noun for chair. The correct sentence is **У мене є стілець**. Keep practicing this structure with all the new objects around you.

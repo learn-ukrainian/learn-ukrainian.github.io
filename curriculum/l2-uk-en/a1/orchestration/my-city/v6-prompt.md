@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -236,293 +237,346 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- **Confirmed (16/16):** аптека (noun), бібліотека (noun), магазин (noun), ресторан (noun), готель (noun), вокзал (noun), тут (adv), там (adv/part), лікарня (noun), супермаркет (noun), пошта (noun), музей (noun), церква (noun), далеко (adv), близько (adv/prep), біля (prep)
-- **Not found:** — (all 16 plan vocabulary words confirmed in VESUM)
-
----
-
-## Textbook Excerpts
-
-### Section: Місця в місті (City Places)
-> "У містах є музеї, театри, супермаркети. Вулицями міст їздять тролейбуси, трамваї, автобуси, маршрутні таксі."
-> **Source:** Bolshakova, Grade 1 (Буквар, tier 2) — primary vocabulary introduction of city institutions. Confirms: музей, театр, супермаркет are all Grade 1-level words.
-
-### Section: Де це? (Where Is It?) — прийменники в/на
-> "Прийменник **на** вживають з назвами установ, приміщень: **пошта** → *піти на пошту*; **вокзал** → *приїхати на вокзал*. З рештою просторових іменників вживають прийменник **в (у)**: зайти **в** школу, побувати **у** Франції."
-> **Source:** Avramenko, Grade 11 (tier 2), §§ prepositions в і на — authoritative rule table for в vs на with spatial nouns. Directly confirms на пошті / на вокзалі vs в аптеці / у бібліотеці.
-
-### Section: Де це? — location words тут/там/біля
-> "Прийменник можна замінити синонімічним, не порушивши змісту: жити **край лісу** (**біля лісу**)"
-> "До джерела було вже **близько**" (pronominal adverb vs preposition distinction)
-> **Source:** Avramenko, Grade 7 (tier 1) — confirms **біля** (simple preposition) and **близько** (adverb/preposition) as core Ukrainian spatial vocabulary.
-
-### Section: Діалоги — address & street context
-> "Назви вулиць пишуться з великої букви. Вулиця, **біля якої парк** — Паркова вулиця."
-> "Як називається вулиця, **на якій** ти живеш? — вулиця Сумська, будинок 21"
-> **Source:** Bolshakova, Grade 2 (tier 2) — confirms на вулиці + genitive street name (вулиці Шевченка) as the natural form for dialogue context. Validates Dialogue 1 model: *Аптека на вулиці Шевченка.*
-
-### Section: в/на + Locative (grammar rule)
-> "Прийменник в (у) уживають з іменниками, що позначають **види навчальних закладів**: у школі, у коледжі. Прийменник **на** вживають з іменниками, що позначають **вулиці, проспекти, площі**: на проспекті Миру, на вулиці Басейній."
-> **Source:** Glazova, Grade 11 (tier 2), §16 — confirms на вулиці rule, validates the plan's preposition summary table.
-
----
+- Confirmed: аптека, бібліотека, магазин, ресторан, готель, вокзал, тут, там, лікарня, супермаркет, пошта, музей, церква, далеко, близько, біля.
+- Not found: None.
 
 ## Grammar Rules
-
-- **в/у vs на with locative nouns:** Правопис §23 — alternation of у/в based on surrounding consonant/vowel context (милозвучність). Use **у** before consonant clusters (у бібліотеці, у лікарні), **в** before vowels (в аптеці). Rule confirmed across Avramenko Gr.11, Glazova Gr.11.
-- **на пошті / на вокзалі** (not *в пошті / в вокзалі*): Confirmed by Avramenko Gr.11 preposition table — ці іменники belong to the "на" category (чітко обмежений простір / установи типу пошта, вокзал).
-- **на вулиці [Name]**: Street names take на (not в), confirmed Glazova Gr.11 §16.
-- **біля + genitive:** Confirmed as standard preposition; Grade 4 Zakharichuk explicitly notes місцевий відмінок uses прийменники, and Grade 7 Avramenko lists біля among simple prepositions with genitive.
-
----
+- **Prepositions У/В**: Правопис § 23 — Детально регламентує чергування У та В для досягнення милозвучності (наприклад, "у центрі", "в аптеці", "у бібліотеці").
+- **Місцевий відмінок (Locative)**: Іменники на позначення місць у місті вживаються з прийменниками **в/у** або **на**.
+  - **в/у**: у магазині, у ресторані, в аптеці, у лікарні, у готелі, в музеї.
+  - **на**: на пошті, на вокзалі, на стадіоні, на площі.
+- **Чергування приголосних**: При творенні місцевого відмінка відбувається чергування **к — ц** (аптека — в аптеці, бібліотека — у бібліотеці) та **г — з** (ріг — на розі).
 
 ## Calque Warnings
-
-- **"знаходитися" for location** (e.g., *Де знаходиться аптека?*): **CALQUE** ⚠️ — Антоненко-Давидович (ad-148) is explicit: this is a direct calque from Russian *находиться*. Ukrainian natural alternatives: **є** (*Де є аптека?*), **стоїть** (*Аптека стоїть на розі*), or simply drop the verb (*Аптека — на вулиці Шевченка*). **The plan correctly avoids this** — it uses *де тут аптека?* and *є біля*. ✅ But the module writer must NOT introduce *знаходиться*.
-- **"розташована/розташований"** for buildings/cities: **CALQUE** ⚠️ — Антоненко-Давидович (ad-176): *розташуватися* applies only to people/military units temporarily settling, NOT buildings or cities. Do not write *Бібліотека розташована в центрі* — use *Бібліотека є в центрі* / *Бібліотека — у центрі міста*.
-- **"біля дому"**: ✅ OK — standard Ukrainian. Антоненко-Давидович raises no objection to this preposition use.
-- **"відпочиваю в парку"**: ✅ OK — *відпочивати* is a legitimate Ukrainian verb. Style guide only flags the deverbal noun *відпочиваючий* (calque), not the verb itself.
-
----
+- **на вокзалі**: OK — нормативний прийменник для вокзалів та станцій.
+- **у центрі**: OK — нормативна конструкція.
+- **на розі**: OK — сталий вираз для позначення розташування на перетині вулиць.
+- **біля дому**: OK — нормативне вживання прийменника **біля** з родовим відмінком.
 
 ## CEFR Check
-
-- **аптека**: A1 ✅ — correct level
-- **бібліотека**: A1 ✅ — correct level
-- **вокзал**: A1 ✅ — correct level
-- **супермаркет**: A1 ✅ — correct level
-- **музей**: A1 ✅ — correct level
-- **церква**: A1 ✅ — correct level
-- **магазин**: A1 ✅ (confirmed via супермаркет lookup which returned магазин at A1)
-- **No words above A1 target** among the plan vocabulary checked.
-
-**Bonus note:** *поліклініка* (returned as near-match for аптека) is A2 — not in the plan, but avoid using it in the module. *Храм* (near-match for церква) is B1 — use *церква* only.
+- **аптека**: A1 — OK
+- **магазин**: A1 — OK
+- **вокзал**: A1 — OK
+- **пошта**: A1 — OK
+- **музей**: A1 — OK
+- **бібліотека**: A1 — OK
+(Примітка: Базова лексика міської інфраструктури відповідає рівню A1 згідно з міжнародними стандартами та програмою PULS.)
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: My City
-**Module:** my-city | **Phase:** A1.5 [Places]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: My City
+**Module:** my-city | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/my-city.md
+
+# Педагогіка A1: My City
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The "My City" theme is foundational for A1 learners, moving them from personal information to describing their environment. The approach must be communicative, visual, and context-driven.
+
+1.  **Visual Association:** Begin with core vocabulary using visual aids, such as a labeled city map or illustrations. The textbook for Grade 1 (Source 35) effectively uses images to introduce basic concepts like `місто`, `вулиця`, `парк`, `метро`, and `супермаркет`. This grounds the language in recognizable concepts.
+2.  **From Location to Action:** After establishing key nouns for places, introduce verbs of motion (`йти`, `їхати`) and existence (`жити`, `бути`, `знаходитися`). Structure lessons around simple communicative goals, such as "Saying where you live" or "Asking where the museum is."
+3.  **Grammar in Context:** Introduce grammatical cases as needed to fulfill a communicative function. The Locative case (`у місті`, `на вулиці`) should be taught for answering "Where?" (`Де?`), and the Genitive case (`до музею`) for answering "Where to?" (`Куди?`). Textbooks for older students heavily utilize exercises that require correct case endings for geographical names (Source 12, Source 15).
+4.  **Dialogue-Based Learning:** Use simple dialogues as primary teaching tools. The Ukrainian Lessons Podcast transcripts (Sources 1, 3, 4) provide excellent models for natural conversations about travel, booking accommodation, and arranging to meet in the city. These demonstrate how vocabulary and grammar are used in real-life situations. For example, planning a trip involves discussing transportation (`поїзд`, `автобус`, `таксі`) and destinations (`вокзал`, `Коломия`, `Львів`) (Source 13).
+5.  **Cultural Integration:** Weave in simple cultural facts. Mentioning that Kyiv has a `метро` (Source 14), that Lviv has a famous `оперний театр` (Source 13), or that many cities have a `музей писанок` (Source 13, Source 25) makes the language more engaging and provides authentic context.
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Крок 1: Основні поняття (Core Concepts).** Introduce the word `місто` itself and contrast it with `село`. Present foundational, high-frequency nouns that exist in any city: `будинок`, `вулиця`, `парк`, `центр` (Source 35, Source 6).
+2.  **Крок 2: Дієслова місця та руху (Verbs of Place and Motion).** Introduce `жити` (e.g., `Я живу в Києві`), `бути` (e.g., `Музей у центрі`), `йти` (by foot), and `їхати` (by transport). This allows for the formation of simple but complete sentences.
+3.  **Крок 3: Прийменники та Місцевий відмінок (Prepositions and the Locative Case).** Teach the prepositions `в/у` and `на` to express location. Explain their use with the Locative case to answer the question `Де?`. Start with masculine nouns: `у парку`, `у магазині`. Then feminine: `на вулиці`, `в аптеці`.
+4.  **Крок 4: Громадські місця (Public Places).** Expand vocabulary to include key public venues that are central to city life: `магазин`, `кав'ярня`, `ресторан`, `музей`, `театр`, `кінотеатр`, `аптека`, `лікарня`, `школа` (Source 36, Source 37, Source 14).
+5.  **Крок 5: Транспорт (Transportation).** Introduce common modes of city transport: `автобус`, `метро`, `трамвай`, `тролейбус`, `таксі`. Also include associated places: `зупинка` (bus stop), `станція` (station), `вокзал` (train station), `аеропорт` (airport) (Source 14, Source 35, Source 37).
+6.  **Крок 6: Напрямки та Родовий відмінок (Directions and the Genitive Case).** Introduce the question `Куди?` (Where to?) and the preposition `до` with the Genitive case: `Я йду до магазину`, `Ми їдемо до Києва` (Source 12).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я живу *в місто Київ*.` | `Я живу *в місті Києві*.` | This error comes from directly translating "in the city of Kyiv" and failing to apply the Locative case to both the generic noun (`місто`) and the proper name (`Київ`). It's crucial to teach that for location (`Де?`), both parts decline (Source 15, Source 12). |
+| `Я їду *на Київ*.` | `Я їду *до Києва* / *в Київ*.` | English speakers often overuse `на`. For movement towards cities, `до` (to) or `в` (into) are standard. `На` is used for events or regions, which is a more advanced concept. The distinction must be made early. Models can be seen in travel dialogues (Source 1). |
+| `Де є вокзал?` | `Де (є) вокзал?` / `Де знаходиться вокзал?` | Learners often include `є` in questions where it's unnatural for native speakers, a direct translation from "Where is...". While not strictly incorrect, `Де вокзал?` or the more formal `Де знаходиться вокзал?` is more common. |
+| `Вулиця Грушевського, 6` (вимова) | `вулиця Грушевського, *шість*` (вимова) | English speakers reading an address will often pronounce the number in English or use the nominative form. The address format itself is a cultural and linguistic norm that must be taught explicitly (Source 14). |
+| `Я хочу іти в музей.` | `Я хочу *піти* / *сходити* в музей.` | While `іти` is the basic verb of motion, in the context of a plan or intention, a perfective verb (`піти` - to go, one-way) or a different verb (`сходити` - to go and come back) is often more natural. This introduces the concept of verbal aspect in a practical context. |
+| `Я в аптекі.` | `Я в аптеці.` | Incorrect ending for feminine nouns in the Locative case. The `-і` ending is a key feature of the Locative case for many feminine nouns and must be drilled (Sources 36, 37 show correct usage). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is highly susceptible to Russian influence. It is imperative to build the learner's understanding of Ukrainian cities on a purely Ukrainian foundation.
+
+1.  **Ukrainian Toponyms Only:** From day one, use only the official Ukrainian spellings and pronunciations for all cities: `Київ` (not Kiev), `Львів` (not Lviv), `Харків` (not Kharkov), `Дніпро` (not Dnipro or Dnepropetrovsk). This is non-negotiable.
+2.  **Avoid Russian Comparisons:** Never teach Ukrainian grammar or vocabulary related to cities by comparing it to Russian. For example, do not say "The preposition 'в' is like Russian 'в'". Teach the Ukrainian system on its own terms, using examples from Ukrainian life and literature.
+3.  **Contextualize Monuments and Street Names:** When mentioning landmarks, be aware of the ongoing decolonization process. Explain simply that many streets and squares are being renamed to honor Ukrainian heroes instead of Russian figures. Source 7 (`ext-realna_istoria-41`) provides direct context on the removal of Pushkin monuments, explaining that their presence was a tool of Russification. Mentioning a `пам'ятник Шевченку` (Source 3) is a positive, decolonized alternative to Russian imperial figures.
+4.  **Ukrainian Urban Identity:** Frame Ukrainian cities as European cities with their own unique history and architecture. Discussing places like Острозька академія (Source 5), a museum in a former palace (Source 5), or modern art exhibits like "Ukraine WOW" (Source 2) helps build an image of Ukraine that is independent of the shared Soviet past. Even a seemingly neutral word like `вокзал` has a specific cultural context in Ukraine (e.g., the beautiful Kyiv central station).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+- **Місця (Places):**
+  - ★★★: `місто`, `вулиця`, `будинок`, `центр`, `парк`, `магазин`, `дім` (home)
+  - ★★☆: `музей`, `театр`, `кіно`, `кав'ярня`, `ресторан`, `аптека`, `лікарня`, `школа`, `університет`, `площа`, `міст`
+  - ★☆☆: `вокзал`, `аеропорт`, `бібліотека`, `готель`, `церква`, `ринок`, `завод` (Sources 35, 36, 14, 2, 4)
+- **Транспорт (Transport):**
+  - ★★★: `автобус`, `машина` (car), `таксі`
+  - ★★☆: `метро`, `трамвай`, `тролейбус`, `поїзд`
+  - ★☆☆: `літак` (airplane) (Sources 35, 1, 13)
+
+### Дієслова (Verbs)
+- ★★★: `бути`, `жити`, `йти`, `їхати`, `хотіти`, `бачити`, `знати`
+- ★★☆: `працювати`, `любити`, `знаходитися`, `купувати`
+- ★☆☆: `відвідувати`, `гуляти` (to stroll), `повертатися` (to return) (Sources 1, 3, 4)
+
+### Прикметники (Adjectives)
+- ★★★: `великий`, `маленький`, `новий`, `старий`, `гарний`, `центральний`
+- ★★☆: `високий`, `довгий`, `цікавий`
+- ★☆☆: `головний`, `сучасний`
+
+### Прислівники (Adverbs)
+- ★★★: `тут`, `там`
+- ★★☆: `далеко`, `близько`, `прямо`
+- ★☆☆: `вранці`, `ввечері`, `сьогодні`, `завтра` (Source 18)
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Matching Activity (Source 36):**
+    *   **Завдання:** Match the person to their workplace. This reinforces the names of city institutions.
+    *   **Формат:** A two-column matching exercise.
+        ```
+        Хто?              Де?
+        лікар             школа
+        вчитель           лікарня
+        продавець         бібліотека
+        бібліотекар        магазин
+        ```
+    *   **Follow-up:** Create sentences based on the matches: `Лікар працює в лікарні.`
+
+2.  **Directional Dialogue Prompt (Source 14):**
+    *   **Завдання:** Create a dialogue based on a situation.
+    *   **Ситуація:** Вам потрібно дізнатися, як доїхати до музею.
+    *   **Приклад діалогу:**
+        > — Вибачте, ви не знаєте, де Національний художній музей?
+        > — Так, знаю. Вам потрібно сісти на метро на станції «Вокзальна» і доїхати до станції «Майдан Незалежності». Музей на вулиці Грушевського, 6.
+        > — Дякую!
+        > — Будь ласка.
+
+3.  **Fill-in-the-Blanks with Place Names (Source 12):**
+    *   **Завдання:** Complete the sentences with city names, using the correct grammatical case.
+    *   **Формат:**
+        > 1. Велопробіг відбувся в місті ______. (Львів)
+        > 2. Ми їдемо до міста ______. (Одеса)
+        > 3. Я живу за містом ______. (Харків)
+    *   **Очікувана відповідь:** 1. ...в місті Львові. 2. ...до міста Одеси. 3. ...за містом Харковом.
+
+4.  **Visual Vocabulary Building (Source 35):**
+    *   **Завдання:** Label the parts of a city picture.
+    *   **Формат:** An illustration of a city scene with arrows pointing to different elements. Learners must write the correct word next to each arrow.
+    *   **Слова для довідки:** `будинок`, `вулиця`, `парк`, `метро`, `супермаркет`, `площа`, `машина`, `автобус`.
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/verb-of-motion-basics`
+- `grammar/cases/locative-case`
+- `grammar/cases/genitive-case`
+- `vocabulary/a1/transportation`
+- `decolonization/toponyms-and-identity`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/around-the-city.md
 
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 85
-> **Score:** 0.50
->
-> Запишіть, дотримуючись правил уживання великої букви та лапок. Йогурт (в)олошкове (п)оле, (с)пасо-(п)реображенський (с)обор 
-> (Чернігів), (д)омініканський (с)обор (Львів), (м)узей історії Ки-
-> єва, (к)омета (г)аллея, вебсайт (ш)коляр, (з)ахідне (п)оділля,
-> (д)ень (п)сихолога, автомобіль (т)есла, станція метро (п)окров-
-> ська, (ф)ранцузька (р)еспубліка, (г)алактика (с)пляча (к)расуня, 
-> вулиця (с)ічових (с)трільців, (к)ерченська (п)ротока. 225 
-> 226 
-> 227 
-> 228
-> 229
-> 230
-> 231
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 228
-> **Score:** 0.25
->
-> 228
-> Розвиток мовлення
-> мовленнєвого етикету. Використайте звертання та слова (сполучення) увічли-
-> вості. Ви можете скористатися поданими нижче зразками.
-> СИТУАЦІЯ А. Ви перебуваєте в незнайомому місті й шукаєте потрібну вулицю 
-> (будівлю). З якими словами ви звернетеся до перехожого? Що скажете на про-
-> щання?
-> Скажіть, будь ласка, де...; перепрошую, ви не знаєте...; вибачте, 
-> ви не скажете...; добродію, будьте ласкаві, підкажіть...; шановний, 
-> якщо ваша ласка, скажіть мені...; дякую вам; на все добре; 
-> приємної подорожі; чи не скажете ви...; вибачте, точно не знаю; 
-> ви мені дуже допомогли; до побачення; немає за що.
-> СИТУАЦІЯ Б. Ви зайшли до книгарні й хочете купити тлумачний словник.
-
-## Місця в місті (City Places)
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 85
-> **Score:** 0.50
->
-> Запишіть, дотримуючись правил уживання великої букви та лапок. Йогурт (в)олошкове (п)оле, (с)пасо-(п)реображенський (с)обор 
-> (Чернігів), (д)омініканський (с)обор (Львів), (м)узей історії Ки-
-> єва, (к)омета (г)аллея, вебсайт (ш)коляр, (з)ахідне (п)оділля,
-> (д)ень (п)сихолога, автомобіль (т)есла, станція метро (п)окров-
-> ська, (ф)ранцузька (р)еспубліка, (г)алактика (с)пляча (к)расуня, 
-> вулиця (с)ічових (с)трільців, (к)ерченська (п)ротока. 225 
-> 226 
-> 227 
-> 228
-> 229
-> 230
-> 231
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 81
-> **Score:** 0.33
->
-> назви транспортних засобів, 
-> магазинів і виробів
-> літак «Мрія», мотоцикл «Ява», су-
-> пермаркет «Сільпо», печиво «Дніпро» 
-> назви 
-> періодичних 
-> видань, 
-> мистецьких творів
-> журнал «Vo­gue», газета «Порад­ни­
-> ця», повість «Климко», мульт­фільм 
-> «Рататуй»
-> Потрібно розрізняти загальні назви й утворені від них умовні власні 
-> назви: біла церква (храм білого кольору) — Біла Церква (місто); сві-
-> тить сонечко — дитсадок «Сонечко». Назви періодичних видань, мистецьких творів і виробів, а також умов­
-> ні назви пишемо з великої букви та в лапках: часопис «Дніпро», пісня 
-> «Червона рута», цукерки «Ліщина».
-
-## Де це? (Where Is It?)
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 129
-> **Score:** 0.33
->
-> 129
-> 	 Запиши прислівники, написані прописним шрифтом. Зверни 
-> увагу: не з прислівниками переважно пишемо разом, якщо до 
-> них можна дібрати синоніми. Наприклад: недалеко — близько, 
-> недобре — погано. 
-> 309.		Прочитай текст.  
-> У закутку саду, там, де сиро та вогко, самотньо мешкав 
-> стоножич Томас. Жуки, черв’яки, слимаки й інша дрібнота 
-> дуже поважали його. Томас легко й граційно переставляв 
-> свої дев’яносто шість ніг. Чотири ноги він, на жаль, загу-
-> бив, невідомо де. 
-> Томас (не)дріботів, (не)виступав, (не)марширував, 
-> (не)плазував. Він тихо котився на оксамитових коліщат-
-> ках. Щоразу неочікувано навідувався у вогкі закутки саду 
-> й незалежно оглядав знайомі місця (За Дж. Крюсом).
-> 	 Поясни правопис не з дієсловами. Випиши перше речення дру-
-> гого абзацу, розкриваючи дужки.
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 20
-> **Score:** 0.50
->
-> 20
-> близько, — його домівка. Я зарубав на носі, як поводи-
-> тися із цим красенем! (За В. Перепелюком).
-> 	 Спиши текст, замінюючи підкреслені сполучення слів фразео-
-> логізмами з вправи 43. Поясни значення виділеного фразеоло-
-> гізму.
-> 46.		Прочитай фразеологізми. З’єднай їх із відповідними зна-
-> ченнями, запиши. Скористайся словником фразеологізмів.
-> Ані рудої миші; берегти як зіницю ока; блудити словами; 
-> дірка від бублика; з дорогою душею; накивати п’ятами.
-> Старанно доглядати; безлюдно; говорити без потре-
-> би; немає нічого; із задоволенням; утекти.
-> 47.		Розгляньте діаграму. Обговоріть її зміст. Визначте, що ви 
-> вже вивчили із цього розділу, а що будете вивчати.
-
-## Підсумок — Summary
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 85
-> **Score:** 0.50
->
-> Запишіть, дотримуючись правил уживання великої букви та лапок. Йогурт (в)олошкове (п)оле, (с)пасо-(п)реображенський (с)обор 
-> (Чернігів), (д)омініканський (с)обор (Львів), (м)узей історії Ки-
-> єва, (к)омета (г)аллея, вебсайт (ш)коляр, (з)ахідне (п)оділля,
-> (д)ень (п)сихолога, автомобіль (т)есла, станція метро (п)окров-
-> ська, (ф)ранцузька (р)еспубліка, (г)алактика (с)пляча (к)расуня, 
-> вулиця (с)ічових (с)трільців, (к)ерченська (п)ротока. 225 
-> 226 
-> 227 
-> 228
-> 229
-> 230
-> 231
-
-## Grammar Reference
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 238
-> **Score:** 0.25
->
-> 235
-> ДОДАТКИ
-> Додаток 1
-> СЛОВНИЧОК СИНОНІМІВ
-> БЛИЗЬКО, недалеко, поблизу, неподалiк, пiд носом, рукою подати, 
-> не за горами. БОЯЗКИЙ, несмiливий, полохливий, лякливий, легкодухий, розм. страхопудний. ВВIЧЛИВИЙ, чемний, вихований, коректний, тактовний, ґpечний. ГОВОРИТИ (передавати словами думки, повідомляти), казати, 
-> промовляти, проказувати, балакати, мовити, повідати, поет. ректи, 
-> розм. цідити. ГОРИЗОНТ, обрій, круговид, виднокруг, виднокрай, крайнебо, овид, 
-> небосхил, небокрай. ДОРОГА, шлях, путь, шосе, траса, автострада, розм. гостинець, путі-
-> вець. ДУМАТИ, мислити, розмiрковувати, роздумувати, мiркувати, мати 
-> на думці, розм. кумекати, розм. метикувати, розм. мiзкувати. ЗАВЖДИ, повсякчас, завше, постiйно, день i нiч, будь-коли, доки 
-> cвіт стоїть, хоч коли.
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 129
-> **Score:** 0.33
->
-> 129
-> 	 Запиши прислівники, написані прописним шрифтом. Зверни 
-> увагу: не з прислівниками переважно пишемо разом, якщо до 
-> них можна дібрати синоніми. Наприклад: недалеко — близько, 
-> недобре — погано. 
-> 309.		Прочитай текст.  
-> У закутку саду, там, де сиро та вогко, самотньо мешкав 
-> стоножич Томас. Жуки, черв’яки, слимаки й інша дрібнота 
-> дуже поважали його. Томас легко й граційно переставляв 
-> свої дев’яносто шість ніг. Чотири ноги він, на жаль, загу-
-> бив, невідомо де. 
-> Томас (не)дріботів, (не)виступав, (не)марширував, 
-> (не)плазував. Він тихо котився на оксамитових коліщат-
-> ках. Щоразу неочікувано навідувався у вогкі закутки саду 
-> й незалежно оглядав знайомі місця (За Дж. Крюсом).
-> 	 Поясни правопис не з дієсловами. Випиши перше речення дру-
-> гого абзацу, розкриваючи дужки.
+# Педагогіка A1: Around The City
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Прийменник як службова частина мови
-> **Source:** МійКлас — [Прийменник як службова частина мови](https://www.miyklas.com.ua/p/ukrainska-mova/7-klas/priimennik-48228/priimennik-iak-sluzhbova-chastina-movi-nepokhidni-i-pokhidni-priimenniki-48229)
+The core methodological approach for teaching "Around The City" at the A1 level is communicative and situational. The goal is not to exhaustively list vocabulary but to equip the learner with functional chunks to solve a real-world problem: getting lost and asking for directions. The approach should mirror how a native speaker would help a foreigner, simplifying language into clear, actionable steps.
 
-### Теорія:
+Instruction should be built around a core dialogue pattern, as demonstrated in Ukrainian Lessons Podcast episodes (Source 22, Source 23). This involves:
+1.  **Gaining attention politely:** Starting with `Вибачте, будь ласка...` (Source 23).
+2.  **Asking the core question:** Using the simple construction `Де [назва місця]?` (e.g., `Де вокзал?`, `Де центр?`) (Source 23).
+3.  **Understanding a simple response:** Processing basic directional adverbs (`прямо`, `праворуч`, `ліворуч`) and verbs (`ідіть`, `поверніть`) (Source 22).
+4.  **Clarifying transport:** Differentiating between types of transport like `автобус` (bus) and `поїзд` (train), which dictates whether one needs an `автовокзал` or `залізничний вокзал` (Source 22).
 
-*www.ua.pistacja.tv*  
-**Прийменник** — службова незмінна частина мови, що виражає відношення між предметами, відношення дії та ознаки до предмета, залежність іменника, числівника, займенника від інших слів у реченні і разом з ними вказує на об’єкт дії, напрям, місце, час, причину, мету.
-Приклад:
-Ще ****в ****дитинстві я ходив ****у**** трави, ****в**** гомінливі трепетні ліси…\(В.
+Ukrainian elementary textbooks introduce related concepts through simple, repetitive structures. For example, exercises focus on using prepositions with locations (`Підійшли до річки`, `Сховався за деревом`) (Source 10) or listing related items to build semantic fields (`Яблука, груші, сливи... — це фрукти`) (Source 28). This method of grouping and association should be used for city vocabulary (e.g., `музей`, `церква`, `магазин` are all places in a city).
 
-### Словосполучення з прийменником ПО
-> **Source:** МійКлас — [Словосполучення з прийменником ПО](https://www.miyklas.com.ua/p/ukrainska-mova/11-klas/sintaksichna-norma-380223/slovospoluchennia-z-priimennikom-po-380391)
+The learning process should be scaffolded, starting with recognizing place names, then forming a question, and finally understanding a multi-step answer. Role-playing dialogues is a highly effective activity at this stage (Source 12, Source 20).
 
-### Теорія:
-Прийменник **по** вживають, коли треба вказати
+## Послідовність введення (Introduction Sequence)
 
-Зверни увагу\!
-При
+1.  **Core Question & Basic Locations:** Start with the most fundamental survival question: `Де...?` (Where is?). Pair it with the most essential, high-frequency A1-level locations.
+    *   `Де центр?` (Where is the center?) (Source 23)
+    *   `Де вокзал?` (Where is the station?) (Source 22)
+    *   `Де метро?` (Where is the metro?) (Source 23)
+    *   `Де туалет?` <!-- VERIFY -->
+    This immediately gives the learner a functional tool.
 
-... (truncated for context window)
+2.  **Simple Positional Answers:** Introduce the simplest possible answers a person might point and give.
+    *   `Тут` (Here)
+    *   `Там` (There)
+    *   `Он там` (Over there) (Source 23)
+
+3.  **Essential Directional Commands:** Introduce the imperative verbs and adverbs for giving basic directions. Always teach the formal "ви" forms first (`-іть` ending) as they are safest for speaking to strangers.
+    *   `Ідіть прямо` (Go straight) (Source 22)
+    *   `Поверніть праворуч` (Turn right) (Source 22)
+    *   `Поверніть ліворуч` (Turn left) (Source 22)
+
+4.  **Key Nouns for Navigation:** Introduce nouns that act as landmarks in directions.
+    *   `вулиця` (street) (Source 28)
+    *   `перехрестя` (intersection) (Source 22)
+    *   `церква` (church) (Source 2, Source 9)
+    *   `магазин` (shop) (Source 28)
+
+5.  **Combining into Short Instructions:** Practice combining the elements from steps 3 and 4.
+    *   `Ідіть прямо по вулиці...` (Go straight on ... street) (Source 22).
+    *   `На перехресті поверніть праворуч` (At the intersection, turn right) (Source 22).
+
+6.  **Transportation Vocabulary:** Introduce basic modes of transport and the places associated with them. It is crucial to distinguish between `автовокзал` and `залізничний вокзал`.
+    *   `автобус` (bus) → `автовокзал` (bus station) (Source 22)
+    *   `поїзд` (train) → `залізничний вокзал` (railway station) (Source 22)
+    *   `метро` (metro/subway) (Source 23)
+
+7.  **The Concept of "Needing to Take":** Introduce the impersonal construction `треба їхати` (one needs to go/travel).
+    *   `Треба їхати на метро.` (You need to go by metro.) (Source 23) This is a critical A1 structure that avoids complex verb conjugations.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Вибачаюся` | `Вибачте` | `Вибачаюся` is a reflexive verb meaning "I apologize myself," which is a calque from Russian and considered unnatural and slightly self-centered in modern Ukrainian. The correct form for apologizing or getting someone's attention is the imperative `Вибачте` (Excuse me / Forgive me) (Source 26). |
+| `Де є центр?` | `Де центр?` | English speakers often try to insert the verb "to be" (`є`) in simple "Where is X?" questions, directly translating from English. In Ukrainian, the verb "to be" is omitted in present tense location questions. The structure is simply `Де + [ іменник ]?` (Source 23). |
+| `Іти до праворуч` | `Ідіть праворуч` or `Поверніть праворуч` | Learners may confuse adverbs of direction (`праворуч` - to the right) with nouns of place, incorrectly adding a preposition like `до` (to). The adverbs `праворуч`, `ліворуч`, and `прямо` do not require prepositions when used with verbs of motion (Source 22). |
+| Asking for the "train station" and getting the "bus station" | `Залізничний вокзал` (for trains) vs. `Автовокзал` (for buses) | In English, "station" can be ambiguous. In Ukrainian, the distinction is critical. `Вокзал` by itself often implies the main railway station, but it's best to be specific. A speaker asking for a `поїзд` (train) needs the `залізничний вокзал`; someone asking for an `автобус` (bus) needs the `автовокзал` (Source 22). |
+| Using informal `Іди` with a stranger | `Ідіть` | Learners might encounter the informal `ти` forms (`іди`, `поверни`) first. It is crucial to emphasize that when asking for directions from a stranger, the formal `ви` form (`ідіть`, `поверніть`) is mandatory for politeness and respect (Source 22). |
+| `Це далеко?` (with rising intonation) | `Це далеко?` | This is a positive interference. Unlike English, which often uses auxiliary verbs for questions ("**Is it** far?"), Ukrainian can often form a yes/no question simply by applying a rising intonation to a declarative sentence (Source 23). This is an easy win for learners. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is highly susceptible to colonial narratives, and it is imperative to address this from the beginning.
+
+1.  **The "Empty Land" Myth:** The Russian imperial narrative often claims that southern and eastern Ukrainian cities were "founded" by Russian monarchs (like Catherine II) on empty, wild land. This is false. Content must explicitly state that these cities were often built upon or agglomerated from pre-existing Cossack settlements. The city of Dnipro, for instance, was established on the site of the Cossack sloboda `Половиця` (Source 9). The textbook should present this as the norm: a Ukrainian settlement was renamed and absorbed, its history erased.
+
+2.  **Authentic Toponymy:** Ukrainian place names have deep historical and geographical roots. Village names often derive from geography (`Грядина` - from garden beds, Source 2), local crafts (`гончарі` - potters, Source 1), or ancient landmarks (`Добрий Дуб` - a sacred oak, Source 2). Presenting vocabulary like `куток` (a neighborhood or corner of a village) (Source 2) and `урочище` (a distinct natural landmark) (Source 2) grounds the learner in an authentic Ukrainian perception of space, rather than a generic, universal one.
+
+3.  **No Russian Analogies:** Do not teach Ukrainian directions or locations by comparing them to Russian. For example, never say "вулиця is like Russian улица." Teach Ukrainian on its own terms. Phonetics, grammar, and vocabulary should be presented as a self-contained system. The presence of Cossack, Polish, and other historical layers (Source 3) should be highlighted to show Ukraine's history is European and distinct.
+
+4.  **Transportation Hubs as Ukrainian Spaces:** While `вокзал` is an internationalism (from Vauxhall Gardens), its culture in Ukraine is distinctly Ukrainian. Train travel is a major part of Ukrainian life (Source 22). Frame `вокзали` not as generic transport hubs, but as vibrant centers of Ukrainian life, often with their own markets (`ринок`) and social dynamics (Source 22).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+*   **Places (Місця):**
+    *   `місто` (city) ★★★ (Source 9)
+    *   `село` (village) ★★★ (Source 10)
+    *   `центр` (center) ★★★ (Source 23)
+    *   `вулиця` (street) ★★★ (Source 28)
+    *   `площа` (square) ★★ (Source 28)
+    *   `музей` (museum) ★★ (Source 15)
+    *   `церква` (church) ★★ (Source 9)
+    *   `магазин` (shop) ★★ (Source 28)
+    *   `школа` (school) ★★ (Source 28)
+    *   `бібліотека` (library) ★★ (Source 28)
+    *   `пошта` (post office) ★★ (Source 28)
+    *   `парк` (park) ★ (Source 9)
+    *   `річка` (river) ★ (Source 10)
+*   **Transport (Транспорт):**
+    *   `вокзал` (station) ★★★ (Source 22)
+    *   `залізничний вокзал` (railway station) ★★★ (Source 22)
+    *   `автовокзал` (bus station) ★★★ (Source 22)
+    *   `метро` (metro/subway) ★★★ (Source 23)
+    *   `станція` (station, e.g., metro station) ★★★ (Source 23)
+    *   `поїзд` (train) ★★ (Source 22)
+    *   `автобус` (bus) ★★ (Source 22)
+*   **Navigation Points (Орієнтири):**
+    *   `перехрестя` (intersection) ★★★ (Source 22)
+    *   `будинок` (building, house) ★★ (Source 10)
+    *   `дорога` (road) ★ (Source 4)
+
+### Дієслова (Verbs - Imperative Formal)
+*   `ідіть` (go) ★★★ (Source 22)
+*   `поверніть` (turn) ★★★ (Source 22)
+*   `скажіть` (tell me/say) ★★★ (Source 23)
+*   `вибачте` (excuse me) ★★★ (Source 23)
+*   `дивіться / бачите` (look / you see) ★★ (Source 23)
+
+### Прислівники (Adverbs)
+*   `прямо` (straight) ★★★ (Source 22)
+*   `праворуч` / `направо` (to the right) ★★★ (Source 22)
+*   `ліворуч` / `наліво` (to the left) ★★★ (Source 22)
+*   `тут` (here) ★★★ <!-- VERIFY -->
+*   `там` / `он там` (there / over there) ★★★ (Source 23)
+*   `далеко` (far) ★★ (Source 23)
+*   `близько` (near) ★★ (Source 23)
+*   `пішки` (on foot) ★ (Source 25)
+
+### Ключові фрази (Key Phrases)
+*   `Будь ласка` (Please / You're welcome) ★★★ (Source 23)
+*   `Дякую` / `Дуже дякую` (Thank you / Thank you very much) ★★★ (Source 23)
+*   `Де...?` (Where is...?) ★★★ (Source 23)
+*   `Треба їхати на...` (You need to go by...) ★★ (Source 23)
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Role-Play Dialogue (Situational Practice)**
+*   **Task:** Based on the model from Ukrainian Lessons Podcast (Source 20, Source 22), create a dialogue. One learner is lost and asks for directions to the museum. The other gives simple, two-step directions.
+*   **Student A (Lost Tourist):** `Вибачте, будь ласка. Скажіть, будь ласка, де музей?`
+*   **Student B (Local):** `Ідіть прямо по цій вулиці, а потім поверніть праворуч. Музей буде там.`
+*   **Student A:** `Дуже дякую!`
+*   **Student B:** `Будь ласка.`
+
+**2. Fill-in-the-Preposition (Grammar Focus)**
+*   **Task:** Complete the sentences with the correct preposition from the box: `до`, `в/у`, `на`, `за`. (Inspired by Source 10).
+    *   1. Ми підійшли ____ будинку. (We approached the house.)
+    *   2. Голуби потрапили ____ пастку. (The doves got into the trap.) (Source 10)
+    *   3. Ми сіли ____ метро. (We got on the metro.)
+    *   4. Школа знаходиться ____ тим поворотом. (The school is behind that turn.)
+*   **Answers:** 1. до, 2. в, 3. на, 4. за
+
+**3. Location Identification on a Simple Map (Visual Comprehension)**
+*   **Task:** Provide a simple, schematic map of a town center with 4-5 labeled buildings (e.g., `Школа`, `Вокзал`, `Церква`, `Магазин`). Ask the learner "Where is the X?" and have them respond using simple prepositions. (Adapted from the map task in Source 5).
+*   **Question:** `Де школа?`
+*   **Possible Answer:** `Школа біля церкви.` (The school is near the church.)
+*   **Question:** `Де магазин?`
+*   **Possible Answer:** `Магазин на вулиці Шевченка.` (The shop is on Shevchenko street.)
+
+**4. Building Sentences (Syntax Practice)**
+*   **Task:** Give the learner scrambled words and have them form a correct sentence giving a direction.
+    *   1. `прямо / Ідіть / вулиці / по` -> `Ідіть прямо по вулиці.` (Source 22)
+    *   2. `наліво / На / поверніть / перехресті` -> `На перехресті поверніть наліво.` (Source 22)
+    *   3. `треба / на / Їхати / метро` -> `Треба їхати на метро.` (Source 23)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/polite-expressions`
+- `grammar/cases/prepositional`
+- `grammar/verbs/imperative-mood`
+- `vocabulary/a1/transport`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -535,7 +589,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Місця в місті (City Places)` (~300 words)
 - `## Де це? (Where Is It?)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -590,7 +643,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -691,67 +744,40 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
+## Діалоги — Dialogues (~300 words total)
+- P1 (~60 words): [Introductory paragraph establishing the setting: Alina is showing her friend Igor a hand-drawn map of her neighborhood in Kyiv (мій район у Києві). Concept of defining one's space.]
+- D1 (~120 words): [Dialogue 1: Igor is a tourist asking for help. Focus on polite opening (Вибачте, будь ласка) and asking for specific places: pharmacy (аптека), library (бібліотека), and park (парк). Response uses locative case: на вулиці Шевченка, у центрі, біля парку.]
+- D2 (~120 words): [Dialogue 2: Alina describes her immediate surroundings to Igor. Use of the existence marker "є" and the preposition "біля" with genitive chunks (біля дому, біля метро). Vocabulary includes shop (магазин), cafe (кафе), and school (школа).]
 
-- D1 (~110 words): Dialogue "New in the city" — Аліна asks a stranger for directions. 6–7 turns: — Вибачте, де тут аптека? — Аптека на вулиці Шевченка, біля парку. — А бібліотека? — Бібліотека в центрі міста. — Це далеко? — Ні, близько. — Дякую! — Будь ласка! Introduces аптека, бібліотека, вулиця, центр; prepositions на + loc, в + loc; location adverbs далеко/близько. Polite register modelled on Заболотний Gr.6 p.228: Вибачте / Будь ласка.
+## Місця в місті — City Places (~330 words total)
+- P1 (~80 words): [Foundational vocabulary list of 15+ city places, grouped by gender to aid memory. Masculine: магазин, супермаркет, банк, готель, вокзал, музей, театр. Feminine: аптека, бібліотека, лікарня, пошта, церква, школа. Neuter: кафе, кіно (кінотеатр), озеро.]
+- P2 (~80 words): [Review and expansion of the Locative case (M.в.) specifically for city buildings. Explanation of the в/у vs. на distinction: standard enclosures (в аптеці, у банку, в готелі, у музеї) vs. platforms/open concepts (на пошті, на вокзалі, на стадіоні, на площі).]
+- P3 (~80 words): [Combining places with verbs of action to provide context. Examples: купувати ліки (в аптеці), читати книги (у бібліотеці), дивитися фільм (у кінотеатрі), купувати продукти (у магазині), обідати (у ресторані).]
+- <!-- INJECT_ACTIVITY: match-place-activity --> [match-up: Match the city place to the typical activity, 8 items: аптека ↔ купувати ліки, бібліотека ↔ читати.]
+- <!-- INJECT_ACTIVITY: quiz-preposition-v-na --> [quiz: Choose the correct preposition (в or на) for city locations, 8 items: ___ пошті, ___ банку, ___ вокзалі.]
+- P4 (~90 words): [Transportation hubs and infrastructure. Introducing the words вокзал (railway station), автовокзал (bus station), зупинка (bus stop), and аеропорт. Emphasize that "вокзал" by default implies trains in Ukraine.]
 
-- D2 (~110 words): Dialogue "My neighborhood" — Ігор and Аліна compare neighborhoods. 6–7 turns: — Що є біля твого дому? — Біля дому є магазин і кафе. — А лікарня? — Лікарня там, далеко від центру. — У тебе є стадіон? — Так, стадіон на вулиці Лесі Українки. Introduces магазин, кафе, лікарня, стадіон; biля + gen as chunk; є = there is/are (recycled from M06).
+## Де це? — Where Is It? (~330 words total)
+- P1 (~80 words): [Relative distance adverbs: тут (here), там (there), близько (near/close), далеко (far). Contrastive examples: Магазин тут, а школа далеко. Центр близько, а вокзал далеко.]
+- P2 (~80 words): [The preposition "біля" (near/next to). Introduce this as a functional chunk with Genitive endings for common places: біля дому, біля парку, біля університету, біля метро. Explain that "біля" is used for physical proximity.]
+- P3 (~90 words): [Existence and description with "є" (there is/are). Constructing sentences to describe a neighborhood: У моєму місті є великий парк. Тут є два музеї та один стадіон. Using numbers from previous modules to quantify places.]
+- <!-- INJECT_ACTIVITY: fill-in-describe-city --> [fill-in: Complete sentences describing a city scene using "є" and city vocabulary, 6 items: У моєму місті ___ велика площа.]
+- <!-- INJECT_ACTIVITY: quiz-situational-place --> [quiz: Situational comprehension — choose where you would go based on a need, 6 items: Мені потрібні гроші (I need money) → ___ (банк).]
+- P4 (~80 words): [Specific location markers: на розі (on the corner), у центрі (in the center), поруч (nearby). Practical examples for navigation: Аптека на розі вулиці. Музей поруч з готелем.]
 
-- P3 (~30 words): One-sentence bridge: these two dialogues use place names in context — now meet all the city vocabulary in full.
+## Підсумок — Summary (~340 words total)
+- P1 (~150 words): [Comprehensive recap of city vocabulary with their required Locative prepositions. 
+  - В/У: аптеці, бібліотеці, банку, готелі, магазині, музеї, ресторані, лікарні, школі, університеті. 
+  - НА: пошті, вокзалі, стадіоні, зупинці, площі.]
+- P2 (~100 words): [Review of orientation and distance words: тут, там, далеко, близько, біля + Genitive. Contrast "близько" (adverb: near) with "біля" (preposition: near/by something).]
+- P3 (~90 words): [Self-check Q&A list for the learner to practice aloud:
+  - Де ви живете? (Я живу в...)
+  - Що є біля вашого дому? (Біля дому є...)
+  - Де ви купуєте ліки? (Я купую ліки в...)
+  - Центр міста далеко чи близько?
+  - Які музеї є у вашому місті?]
 
-- P4 (~80 words): Cultural note — Ukrainian city landmarks. Every місто has: ринок (market square), площа (square), вокзал, пошта. Kyiv's iconic Хрещатик — the main вулиця. Short paragraph grounding vocabulary in real Ukrainian urban geography; names: Майдан Незалежності, Хрещатик, Львівська площа.
-
----
-
-## Місця в місті (~330 words total)
-
-- P1 (~90 words): Full city vocabulary — 17 places with gender labels. Present as a paired list (Ukrainian → English → gender): аптека (pharmacy, f), бібліотека (library, f), лікарня (hospital, f), пошта (post office, f), церква (church, f), зупинка (bus stop, f) / магазин (shop, m), супермаркет (supermarket, m), ресторан (restaurant, m), банк (bank, m), вокзал (train station, m), готель (hotel, m), музей (museum, m), театр (theatre, m), кінотеатр (cinema, m), стадіон (stadium, m), університет (university, m) / кафе (café, n). Genders flagged because locative endings differ.
-
-- P2 (~90 words): Locative forms — two prepositions rule. В/у: аптека → в аптеці, бібліотека → у бібліотеці, магазин → в магазині, банк → у банку, готель → у готелі, ресторан → у ресторані, музей → в музеї, університет → в університеті. На: пошта → на пошті, вокзал → на вокзалі, стадіон → на стадіоні, зупинка → на зупинці. Pattern note: на is used for transit and service infrastructure — пошта, вокзал, стадіон, зупинка. All other places use в/у.
-
-- Exercise: **quiz** — В or на? 8 items (аптека, пошта, вокзал, бібліотека, стадіон, готель, зупинка, музей). Learner chooses preposition; immediate feedback with rule reminder.
-
-- P3 (~100 words): What you do there — 8 full sentences modelling verb + place in locative: Я купую ліки в аптеці. Я читаю книги у бібліотеці. Я їм піцу в ресторані. Я п'ю каву в кафе. Я надсилаю листи на пошті. Я дивлюся фільм у кінотеатрі. Я відпочиваю в парку. Я їду додому на вокзалі. Recycled verbs from A1.3 (купую, читаю, їм, п'ю) in new locative context.
-
-- Exercise: **match-up** — Match place to activity. 8 pairs: аптека ↔ купувати ліки, бібліотека ↔ читати книги, ресторан ↔ їсти, кінотеатр ↔ дивитися фільм, вокзал ↔ їхати потягом, банк ↔ міняти гроші, стадіон ↔ грати у футбол, пошта ↔ надсилати листи.
-
----
-
-## Де це? (~330 words total)
-
-- P1 (~70 words): Core location adverbs — four words, four contrasts. Тут (here) vs там (there): Аптека тут. Вокзал там. Далеко (far) vs близько (near): Університет далеко від дому. Магазин близько. Short table-style paragraph with 6 example sentences using all four adverbs in city contexts. Note: недалеко = близько (synonym from Заболотний Gr.5 Synonyms appendix).
-
-- P2 (~90 words): Biля + genitive — teach as memorized chunks, not grammar. Rule stated simply: biля завжди + родовий відмінок — but we learn it as fixed phrases: біля парку (near the park), біля дому (near the house), біля університету (near the university), біля вокзалу (near the station), біля кафе (near the café — indeclinable). Six example sentences: Аптека біля парку. Музей біля університету. Зупинка біля вокзалу. Магазин біля мого дому. Grammar box: кафе never changes — біля кафе, у кафе, near any case.
-
-- P3 (~70 words): У центрі / на розі / у районі. Three location phrases for describing neighborhood position: у центрі міста (in the city center), на розі вулиці (on the corner of the street), у нашому районі (in our neighborhood). Introduced via three contrasting sentences: Театр у центрі міста. Аптека на розі вулиці Шевченка. Бібліотека у нашому районі.
-
-- P4 (~60 words): Describing your city with є. Construction: У + city/place + є + noun: У Києві є метро. У нашому місті є великий парк і два музеї. У цьому районі є стадіон і кінотеатр. Є recycled from M06 — now used with city places. Negative: Біля мого дому немає вокзалу.
-
-- Exercise: **quiz** — Where would you go? 6 situations: "You need medicine" → аптека; "You want to watch a film" → кінотеатр; "Your train departs at 9:00" → вокзал; "You want to borrow a book" → бібліотека; "You want to eat dinner" → ресторан; "You want to send a parcel" → пошта.
-
----
-
-## Підсумок (~330 words total)
-
-- P1 (~80 words): City vocabulary recap organized by preposition. В/у: аптека → в аптеці, бібліотека → у бібліотеці, лікарня → у лікарні, магазин → в магазині, банк → у банку, готель → у готелі, ресторан → у ресторані, музей → в музеї, університет → в університеті, кінотеатр → у кінотеатрі. На: пошта → на пошті, вокзал → на вокзалі, стадіон → на стадіоні, зупинка → на зупинці. Pattern rule restated: на = transit + service infrastructure.
-
-- P2 (~60 words): Location words bullet recap. тут — here | там — there | далеко — far | близько / недалеко — near | біля + gen — next to | у центрі — in the center | на розі — on the corner | у районі — in the neighborhood. Each with a one-phrase example: Магазин тут. Вокзал там. Університет далеко. Парк близько. Аптека біля дому.
-
-- P3 (~70 words): Self-check — bulleted Q&A list (not prose):
-  - Де ти купуєш ліки? → В аптеці.
-  - Де ти їси? → У ресторані / у кафе.
-  - Де ти читаєш книги? → У бібліотеці.
-  - Де ти їдеш на потязі? → З вокзалу.
-  - Що є біля твого дому? → Біля мого дому є … (learner fills in).
-  - Твій університет далеко чи близько? → (open answer).
-
-- Exercise: **fill-in** — Describe your city. 6 sentence starters with blanks: У моєму місті є ___. Біля мого дому є ___. Я купую продукти ___. Вокзал ___ від мого дому. Театр ___. Я люблю відпочивати ___.
-
-- P4 (~50 words): Preview bridge — one short paragraph. You now know where things are. Next module (M31 — Where To?) introduces куди — movement toward places using accusative: Я іду до бібліотеки. Я їду на вокзал. The same places, a new question: not де (location) but куди (destination).
-
-- Exercise: **quiz** — 6-item mixed review: 3 vocabulary (Ukrainian → meaning) + 3 grammar (choose locative or genitive in context). Covers: в аптеці vs до аптеки, biля парку, У нашому місті є ___.
-
-Grand total: ~1320 words
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format

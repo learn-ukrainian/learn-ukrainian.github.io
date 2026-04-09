@@ -2,49 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: The text misses the plan point regarding the *Заболотний Grade 5* reference
-    to 38 sounds, as well as the explicit detail that stress "moves between forms
-    of the same word" in the intro section. Additi
+  score: 10
+  evidence: The module strictly follows the plan outline, integrating all specific
+    examples (`замок/замок`, `мука/мука`, intonation arrows, and `goroh.pp.ua` mention).
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: 'Flawless. Phonetic properties are described accurately, syllable divisions
-    (like `ра-нок`) follow Ukrainian phonetic rules instead of blindly splitting roots,
-    and the intonation contours (falling for '
+  score: 8
+  evidence: The syllable division for `ранок` (`ран-ок` instead of `ра-нок`) and `відпочинок`
+    (`ві-дпо-чи-нок` instead of `від-по-чи-нок`) is incorrect. The text misclassifies
+    "А у тебе?" as a yes/no question.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: Exceptional. The "break into syllables -> find stress -> read smoothly"
-    method and the practical tip of tapping the table for each syllable mirror actual
-    Grade 1 teaching methods in Ukraine.
+  evidence: Exceptional use of the "calling the turtle" technique (`черепаааха`) to
+    explain stress. Very clear distinction between English vowel reduction and Ukrainian
+    core vowels.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Covered almost all terms perfectly in context, but missed the required
-    word **столиця** (capital) from the plan.
+  score: 10
+  evidence: All required and recommended vocabulary words are introduced naturally
+    in context with accurate stress patterns.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Appropriate marker placements directly following the relevant concepts.
-    They flow nicely with the lessons rather than being clustered at the end.
+  evidence: 4 injected activity markers present, all matching the type and focus specified
+    in the plan hints, evenly distributed after their respective sections.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: Very natural, grounded tone. It avoids generic language hype, offering
-    actionable, specific instructions ("write it down with the stress mark immediately").
+  evidence: Very natural teacher voice, encouraging but substantial. "Stress and melody
+    are the physical heartbeat..." is a great opening for the summary.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Markdown is perfectly clean, with exact matching headings from the `content_outline`.
+  evidence: Clean markdown, perfect H2 header mapping, word count target cleanly exceeded
+    (1571 > 1200 words).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Deeply decolonized and authentic. Uses references to real Ukrainian textbooks
-    (Білоус) and natural names (Кирилко, Соломійка).
+  evidence: Factually correct, treats Ukrainian phonetics on its own terms, contrasting
+    cleanly with French, Polish, and English.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues demonstrate the concepts (intonation) in a very authentic, non-robotic
-    way.
+  score: 7
+  evidence: The dialogue uses "Бариста" and "Клієнт" but employs informal register
+    ("твоя", "у тебе"), which is inappropriate for a service encounter. Changing the
+    characters to friends ("Оксана" and "Максим") fi
 findings: []

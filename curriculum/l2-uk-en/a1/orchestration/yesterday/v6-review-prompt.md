@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 49: Yesterday (A1, A1.8 [Past, Future, Graduation])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -145,135 +145,132 @@ references:
 <generated_module_content>
 ## Dialogues
 
-> — **Тара́с:** Приві́т, Окса́но! Як пройшо́в твій день? *(Hi, Oksana! How was your day?)*
-> — **Окса́на:** До́бре! Зра́нку я проки́нулася о сьо́мій. *(Good! In the morning I woke up at seven.)*
-> — **Тарас:** Що ти роби́ла зранку? *(What did you do in the morning?)*
-> — **Оксана:** Я посні́дала і пішла́ на робо́ту. *(I had breakfast and went to work.)*
-> — **Тарас:** А вдень? *(And in the afternoon?)*
-> — **Оксана:** Вдень я працюва́ла і обі́дала з коле́гою. *(In the afternoon I worked and had lunch with a colleague.)*
-> — **Тарас:** А вве́чері? *(And in the evening?)*
-> — **Оксана:** Ввечері я диви́лася серіа́л і лягла́ спа́ти о деся́тій. *(In the evening I watched a TV series and went to bed at ten.)*
+Being able to say what you did in the past is useful, but the real power of language comes from telling a story. Up until now, we have looked at isolated past tense sentences. Moving from a single statement to a connected narrative changes how you communicate. Compare a present tense fact like **Сьогодні я працюю** (Today I am working) with a past narrative like **Учора я працював** (Yesterday I worked). Knowing how to chain these actions together allows you to describe exactly what happened, step by step.
 
-Тарас walks Оксана through her entire day using three simple questions — **зранку** (in the morning), **вдень** (in the afternoon), **ввечері** (in the evening). These three time markers are the spine of every past-day story in Ukrainian. Notice that Оксана uses **-ла** endings throughout: **прокинулася**, **поснідала**, **пішла**, **працювала**, **обідала**, **дивилася**, **лягла**. She is female, so every verb matches.
+Sequencing actions is crucial when facts matter. In the situation below, a witness speaks to a police officer about a stolen bicycle. The witness uses past tense verbs to build a precise timeline of events.
 
-Now a second conversation — this time with a male speaker.
+> **Свідок:** Я припаркував велосипед біля магазину. *(I parked the bicycle near the store.)*
+> **Поліцейський:** А потім? *(And then?)*
+> **Свідок:** Потім зайшов у кав'ярню. *(Then I went into the cafe.)*
+> **Поліцейський:** Ви довго там були? *(Were you there long?)*
+> **Свідок:** Ні. Коли вийшов, велосипед зник. *(No. When I came out, the bicycle disappeared.)*
+> **Поліцейський:** Ви бачили когось? *(Did you see anyone?)*
+> **Свідок:** Бачив чоловіка в куртці та кепці. *(I saw a man in a jacket and a cap.)*
 
-> — **Марі́я:** Що ти роби́в у субо́ту? *(What did you do on Saturday?)*
-> — **Іва́н:** О, я мав чудо́вий день! *(Oh, I had a wonderful day!)*
-> — **Марія:** Розкажи́! *(Tell me!)*
-> — **Іван:** Зранку я ходи́в на ри́нок і купи́в фру́кти. *(In the morning I went to the market and bought fruit.)*
-> — **Марія:** А по́тім? *(And then?)*
-> — **Іван:** Потім я готува́в обід. А вдень гуля́в у парку. *(Then I cooked lunch. And in the afternoon I walked in the park.)*
-> — **Марія:** А ввечері? *(And in the evening?)*
-> — **Іван:** Ввечері ми з дру́гом ходи́ли в рестора́н. *(In the evening my friend and I went to a restaurant.)*
-> — **Марія:** Як фа́йно! *(How nice!)*
+The words **велосипед** (bicycle) and **магазин** (store) are masculine, while **кав'ярня** (cafe) and **куртка** (jacket) are feminine. The sequence of verbs — **припаркував** (parked), **зайшов** (went in), **вийшов** (came out) — creates a clear, undeniable timeline of the incident.
 
-Compare the two stories. Оксана says **прокинулася**, **пішла**, **дивилася** — all with **-ла** or **-лася**. Іван says **ходив**, **купив**, **готував**, **гуляв** — all with **-в**. The gender rule is simple: pick your form at the start and keep it for the whole story. If you are male, every past verb ends in **-в** or **-вся**. If you are female, every past verb ends in **-ла** or **-лася**. Never switch mid-story.
+:::note
+When the order of events matters, using clear past tense verbs in sequence is essential. In official situations, a well-structured narrative establishes the facts without confusion.
+:::
 
-## Ро́зповідь про день (Narrating a Day)
+Narrating a day is just as common in casual conversation. Friends frequently catch up on a typical work day and discuss their routines.
 
-Every good story about your day has a frame. In Ukrainian, four adverbs create that frame — four time slots that carry you from morning to night:
+> **Олег:** Як пройшов твій день? *(How was your day?)*
+> **Тарас:** Добре! Зранку я прокинувся о сьомій. *(Good! In the morning I woke up at seven.)*
+> **Олег:** Що ти робив зранку? *(What did you do in the morning?)*
+> **Тарас:** Я поснідав і пішов на роботу. *(I had breakfast and went to work.)*
+> **Олег:** А вдень? *(And in the afternoon?)*
+> **Тарас:** Вдень я працював і обідав з колегою. *(In the afternoon I worked and had lunch with a colleague.)*
+> **Олег:** А ввечері? *(And in the evening?)*
+> **Тарас:** Ввечері я дивився фільм і рано ліг спати. *(In the evening I watched a film and went to sleep early.)*
 
-- **Зранку** (in the morning) — Зранку я посні́дав.
-- **Вдень** (in the afternoon) — Вдень я обі́дав.
-- **Ввечері** (in the evening) — Ввечері я диви́вся фільм.
-- **Вночі́** (at night) — Вночі я спав.
+And here is how someone might describe a fun weekend:
 
-These words never change form. They work the same way whether you are male, female, talking about yourself or someone else. They are adverbs — **незмі́нні** — and they simply answer the question **коли́?** (when?).
+> **Максим:** Що ти робила у суботу? *(What did you do on Saturday?)*
+> **Ірина:** О, я мала чудовий день! *(Oh, I had a wonderful day!)*
+> **Максим:** Розкажи! *(Tell me!)*
+> **Ірина:** Зранку я ходила на ринок і купила фрукти. *(In the morning I went to the market and bought fruit.)*
+> **Максим:** А потім? *(And then?)*
+> **Ірина:** Потім я готувала обід. А вдень гуляла в парку. *(Then I cooked lunch. And in the afternoon I walked in the park.)*
+> **Максим:** А ввечері? *(And in the evening?)*
+> **Ірина:** Ввечері ми з подругою ходили в ресторан. *(In the evening my friend and I went to a restaurant.)*
+> **Максим:** Як файно! *(How nice!)*
 
-But time slots alone give you snapshots, not a story. To connect events into a flowing narrative, you need sequencing words:
+Notice how the words **потім** (then) and the phrase **а потім** (and then) act as the glue between different verbs. They keep the story moving forward efficiently. Furthermore, in a connected story, we do not need to repeat the subject **я** (I) in every single sentence. Once the context is established, the verbs themselves carry the narrative perfectly.
 
-- **споча́тку** (first) — Спочатку я поснідав.
-- **потім** (then) — Потім я пішо́в на роботу.
-- **пі́сля цього́** (after that) — Після цього я обідав.
-- **наре́шті** (finally) — Нарешті я ліг спати.
+## Розповідь про день (Narrating a Day)
 
-Compare these two versions of the same three events:
+To structure any story, you need clear time anchors. The daily routine is typically divided into four main parts. We use **зранку** (in the morning) for the start of the day. As the day progresses, we use **вдень** (in the afternoon). Later, we transition to **ввечері** (in the evening), and finally **вночі** (at night). 
 
-Without connectors (choppy): **Я поснідав. Я пішов на роботу. Я обідав.**
+:::caution
+Pay attention to the spelling of **вдень**. Written as one word, it means "in the daytime" or "in the afternoon". Do not confuse it with the two-word phrase **в день** (on the day), which is used differently, such as in **в день народження** (on the birthday).
+:::
 
-With connectors (flowing): **Спочатку я поснідав. Потім я пішов на роботу. Після цього я обідав.**
+Using the correct time markers gives the listener a clear map of when events occurred. Beyond basic time markers, sequencing words create a chronological chain. Without them, a story is just a list of disconnected facts. Start the sequence with **спочатку** (first). To transition to the next action, use **потім** (then). For further actions, use **після цього** (after that). To conclude the narrative, use **нарешті** (finally). These connectors turn separate thoughts into a fluid story.
 
-Which version sounds like a story? The second one. The connectors **спочатку → потім → після цього → нарешті** turn a list of facts into a narrative.
+*   **Спочатку я поснідав.** *(First I had breakfast.)*
+*   **Потім я пішов на роботу.** *(Then I went to work.)*
+*   **Після цього я обідав.** *(After that I had lunch.)*
 
-Now the verbs themselves. Here are the six daily routine verbs you need, with both gender forms side by side:
+This logical flow makes your Ukrainian sound much more natural and cohesive.
 
-| Infinitive | He (male) | She (female) |
-|---|---|---|
-| **проки́нутися** (to wake up) | проки́нувся | прокинулася |
-| **посні́дати** (to have breakfast) | поснідав | поснідала |
-| **піти** (to go) | пішов | пішла |
-| **обі́дати** (to have lunch) | обідав | обідала |
-| **поверну́тися** (to return) | поверну́вся | поверну́лася |
-| **лягти́ спати** (to go to bed) | ліг спати | лягла спати |
+The daily routine relies on a core set of action verbs. Because the Ukrainian past tense must agree with the grammatical gender of the speaker, males use the **-в** or **-вся** ending, while females use the **-ла** or **-лася** ending. The most frequent verbs for narrating a day follow this pattern:
 
-Most pairs follow a clear pattern: **-в / -ла** or **-вся / -лася**. But two pairs look different from the rest. **Пішов / пішла** — the male form has **-шов**, not a simple **-в**. And **ліг / лягла** — the male form has no suffix at all, just **ліг**. These are irregular, so learn them as fixed pairs:
+| Дієслово (Infinitive) | Чоловічий рід (Masculine) | Жіночий рід (Feminine) |
+| :--- | :--- | :--- |
+| **прокинутися** *(to wake up)* | **прокинувся** | **прокинулася** |
+| **поснідати** *(to have breakfast)* | **поснідав** | **поснідала** |
+| **піти** *(to go)* | **пішов** | **пішла** |
+| **обідати** *(to have lunch)* | **обідав** | **обідала** |
+| **повернутися** *(to return)* | **повернувся** | **повернулася** |
+| **лягти спати** *(to lie down to sleep)* | **ліг спати** | **лягла спати** |
 
-- **Він пішов на роботу.** *(He went to work.)*
-- **Вона́ пішла на роботу.** *(She went to work.)*
-- **Він ліг спати о десятій.** *(He went to bed at ten.)*
-- **Вона лягла спати о десятій.** *(She went to bed at ten.)*
+Notice that for the verb meaning to lie down (**лягти**), the masculine form **ліг** drops the **-в** suffix entirely, while the feminine form **лягла** keeps the standard **-ла** ending. This is a common pattern for verbs with stems ending in a consonant.
 
 <!-- INJECT_ACTIVITY: ordering-daily-routine -->
 
-## Мій учора́шній день (My Yesterday)
+## Мій учорашній день (My Yesterday)
 
-Here is a complete story of one person's day. Read it through — every verb is in the **-ла** form because the speaker, Anna, is female.
+A complete narrative relies on these structural elements. Anna describes her yesterday below. Since Anna is female, every past tense verb she uses ends in **-ла** or **-лася**. Her story chains actions logically using time markers.
 
-:::note
-**Учо́ра був звича́йний день.** Зранку я прокинулася о пів на сьому. Я поснідала — ї́ла ка́шу і пила́ ка́ву. Потім я пішла на роботу. Вдень я обідала в кафе́ бі́ля о́фісу. Я замо́вила сала́т і сік. Після робо́ти я ходи́ла в магази́н і купи́ла проду́кти. Ввечері я готува́ла вече́рю і дивилася серіал. О одина́дцятій я лягла спати.
+*   **Учора був звичайний день.** *(Yesterday was an ordinary day.)*
+*   **Зранку я прокинулася о пів на сьому.** *(In the morning I woke up at half past six.)*
+*   **Я поснідала — їла кашу і пила каву.** *(I had breakfast — I ate porridge and drank coffee.)*
+*   **Потім я пішла на роботу.** *(Then I went to work.)*
+*   **Вдень я обідала в кафе біля офісу.** *(In the afternoon I had lunch in a cafe near the office.)*
+*   **Я замовила салат і сік.** *(I ordered a salad and juice.)*
+*   **Після роботи я ходила в магазин і купила продукти.** *(After work I went to the store and bought groceries.)*
+*   **Ввечері я готувала вечерю і дивилася серіал.** *(In the evening I cooked dinner and watched a TV series.)*
+*   **О одинадцятій я лягла спати.** *(At eleven I went to sleep.)*
 
-*(Yesterday was an ordinary day. In the morning I woke up at half past six. I had breakfast — I ate porridge and drank coffee. Then I went to work. In the afternoon I had lunch at a café near the office. I ordered a salad and juice. After work I went to the store and bought groceries. In the evening I cooked dinner and watched a TV series. At eleven I went to bed.)*
+This narrative is highly structured. Starting with **звичайний день** (ordinary day) sets the context immediately. Notice the strict gender agreement between the speaker and her actions. Because Anna is speaking, every verb aligns with her feminine gender: **прокинулася** (woke up), **поснідала** (had breakfast), **пішла** (went), **обідала** (had lunch), **купила** (bought), **готувала** (cooked), and **лягла** (lay down). If a man were telling this exact same story, all of those endings would shift to the masculine forms. 
+
+:::tip
+The pronoun **я** (I) remains the same, so the verb ending is the only indicator of the speaker's gender. Memorize the ending that matches your own gender and use it consistently.
 :::
 
-Count the past-tense verbs Anna uses: **прокинулася**, **поснідала**, **їла**, **пила**, **пішла**, **обідала**, **замовила**, **ходила**, **купила**, **готувала**, **дивилася**, **лягла** — twelve verbs, all with **-ла** or **-лася**. Not a single **-в** form. This is gender consistency in action. Anna chose her gender at the first verb and never switched.
+It is your turn to build a narrative. Use the following template to structure your thoughts:
 
-Now it is your turn. Build your own **учорашній день** (yesterday) using this template:
+*   **Учора...** *(Yesterday...)*
+*   **Зранку я...** *(In the morning I...)*
+*   **Потім...** *(Then...)*
+*   **Вдень я...** *(In the afternoon I...)*
+*   **Ввечері я...** *(In the evening I...)*
 
-- **Учора...** *(Yesterday...)*
-- **Зранку я ___.**
-- **Потім ___.**
-- **Вдень я ___.**
-- **Ввечері ___.**
-- **О ___ годи́ні я ліг/лягла спати.**
+Combine these past-tense verbs with places you already know, such as a **кафе** (cafe), a **парк** (park), or a **магазин** (store). Add food items like **каша** (porridge), **кава** (coffee), or a **салат** (salad). You can also include the people you interacted with, whether it was a **друг** (friend), a **колега** (colleague), or a **подруга** (female friend). Everything you learned in A1 comes together here to help you share your personal story clearly and accurately.
 
-Plug in verbs from the table above. Add places you already know — **кафе**, **парк**, **магазин**, **робо́та** (work). Add people — **друг** (friend, male), **коле́га** (colleague), **по́друга** (friend, female). Remember: pick your gender at the start. If you are male, use **прокинувся**, **поснідав**, **пішов**, **ліг**. If you are female, use **прокинулася**, **поснідала**, **пішла**, **лягла**. Keep it consistent to the very last verb.
-
-<!-- INJECT_ACTIVITY: fill-in-time-markers -->
-
-<!-- INJECT_ACTIVITY: fill-in-gender-consistency -->
+<!-- INJECT_ACTIVITY: fill-in-narrative-flow -->
+<!-- INJECT_ACTIVITY: gender-consistency-drill -->
 
 ## Summary
 
-Everything you need to narrate your day fits into four categories:
+The narration toolkit contains the elements needed to describe past experiences. Telling a coherent story requires organizing verbs with time anchors and maintaining strict grammatical consistency.
 
-**1. Time frame** — the skeleton of the story:
-**зранку** → **вдень** → **ввечері** → **вночі**
+*   **Time structure:** **зранку** → **вдень** → **ввечері** → **вночі**.
+*   **Sequencing:** **спочатку**, **потім**, **після цього**, **нарешті**.
+*   **Daily routine past forms:** **прокинувся/-лася**, **поснідав/-ла**, **пішов/пішла**, **обідав/-ла**, **повернувся/-лася**, **ліг/лягла спати**.
+*   **Gender consistency:** male speakers use **-в/-вся** forms throughout, female speakers use **-ла/-лася** throughout.
 
-**2. Sequence chain** — the connectors that turn sentences into a story:
-**спочатку** → **потім** → **після цього** → **нарешті**
+Before you finish, perform a final self-check on your storytelling skills. Ask yourself these questions when building a narrative:
 
-**3. Past-tense forms** — the six essential daily verbs:
-**прокинувся / прокинулася**, **поснідав / поснідала**, **пішов / пішла**, **обідав / обідала**, **повернувся / повернулася**, **ліг спати / лягла спати**. The irregular pairs — **пішов/пішла** and **ліг/лягла** — look different from the regular **-в / -ла** pattern. Know them cold.
+*   **Чи використав я принаймні 5 дієслів у минулому часі?** *(Did I use at least 5 verbs?)*
+*   **Чи всі дієслова мають однаковий рід (чоловічий або жіночий)?** *(Are all verbs the same gender?)*
+*   **Чи є в моїй розповіді «спочатку» і «потім»?** *(Are there "first" and "then"?)*
 
-**4. Gender rule** — choose male or female at sentence one and never switch mid-story.
-
-After 49 modules, you can introduce yourself, ask for things, talk about your family, describe your home, order food, and tell the time. Now you can tell the full story of your day. **Учора я прокинувся, поснідав і пішов** — three verbs, one sentence, a whole morning. That is what narrative sounds like in Ukrainian. In мо́дуль 50, you will learn the future tense — and the same skeleton (**зранку / вдень / ввечері**) will work for **за́втра** (tomorrow) too.
-
-The same past-narration toolkit works in any situation — not just daily routines. Here is a short scene at a police station:
-
-> — **Поліце́йський:** Де ви припаркува́ли велосипе́д? *(Where did you park the bicycle?)*
-> — **Сві́док:** Я припаркува́в велосипед біля магази́ну. *(I parked the bicycle near the store.)*
-> — **Свідок:** Потім я зайшо́в у кав'я́рню. *(Then I went into a café.)*
-> — **Свідок:** Я ви́йшов — велосипед зник. *(I came out — the bicycle was gone.)*
-> — **Поліцейський:** Ви ба́чили когось? *(Did you see anyone?)*
-> — **Свідок:** Я ба́чив чолові́ка в ку́ртці та ке́пці. *(I saw a man in a jacket and cap.)*
-
-Five past-tense verbs — **припаркував**, **зайшов**, **вийшов**, **зник**, **бачив** — in a real-world situation. Same toolkit, different context. Past narration works everywhere.
-
-**Deterministic word count: 1324 words** (calculated by pipeline, do NOT estimate manually)
-
+Tell the story of your yesterday using at least 5 verbs aloud, either to a partner or to yourself. Make absolutely sure to include what you ate for breakfast, using **поснідав** or **поснідала**, and mention when you went to sleep, using **ліг спати** or **лягла спати**. Practice this daily until the sequence feels natural and your verb endings match your gender automatically.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1506 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -361,8 +358,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -449,61 +446,16 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 114 words | Not found: 65 words
+Verified: 138 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іва — NOT IN VESUM
-  ✗ Іван — NOT IN VESUM
-  ✗ Зра — NOT IN VESUM
-  ✗ Марія — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Поліце — NOT IN VESUM
+  ✗ Ірина — NOT IN VESUM
+  ✗ Олег — NOT IN VESUM
   ✗ Поліцейський — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Сві — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
-  ✗ Учо — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ велосипе — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ втра — NOT IN VESUM
-  ✗ годи — NOT IN VESUM
-  ✗ гом — NOT IN VESUM
-  ✗ готува — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ деся — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дцятій — NOT IN VESUM
-  ✗ зайшо — NOT IN VESUM
-  ✗ замо — NOT IN VESUM
-  ✗ звича — NOT IN VESUM
-  ✗ зповідь — NOT IN VESUM
-  ✗ йний — NOT IN VESUM
-  ✗ йський — NOT IN VESUM
-  ✗ кав'я — NOT IN VESUM
-  ✗ кти — NOT IN VESUM
   ✗ лася — NOT IN VESUM
-  ✗ магази — NOT IN VESUM
-  ✗ наре — NOT IN VESUM
-  ✗ незмі — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нні — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нувся — NOT IN VESUM
-  ✗ нулася — NOT IN VESUM
-  ✗ нутися — NOT IN VESUM
-  ✗ одина — NOT IN VESUM
-  ✗ посні — NOT IN VESUM
-  ✗ працюва — NOT IN VESUM
-  ✗ припаркува — NOT IN VESUM
-  ✗ проду — NOT IN VESUM
-  ✗ пройшо — NOT IN VESUM
-  ✗ проки — NOT IN VESUM
-  ✗ пці — NOT IN VESUM
-  ✗ рестора — NOT IN VESUM
 
-All 114 other words are confirmed to exist in VESUM.
+All 138 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

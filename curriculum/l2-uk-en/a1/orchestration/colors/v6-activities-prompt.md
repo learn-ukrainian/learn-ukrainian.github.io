@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
+- `<!-- INJECT_ACTIVITY: quiz-color-match -->`
 - `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->`
 - `<!-- INJECT_ACTIVITY: group-sort-hard-soft -->`
-- `<!-- INJECT_ACTIVITY: quiz-blue-shades -->`
-- `<!-- INJECT_ACTIVITY: quiz-object-colors -->`
+- `<!-- INJECT_ACTIVITY: quiz-blue-shade -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -90,125 +90,91 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Dialogues
 
-Colors are everywhere around you — in flower markets, in wardrobes, on the Ukrainian flag. Listen to how Ukrainians talk about them in two everyday situations.
+Colors bring the world to life. From the vibrant streets to the quiet corners of your home, the ability to describe hues is essential for expressing yourself in Ukrainian. Today, the scene is a bustling outdoor flower market in Kyiv, where Natalka is choosing the perfect gift. Notice how the colors naturally flow as adjectives describing the beautiful items on display.
 
-### Dialogue 1 — At the flower market
+Natalka approaches the flower seller to buy a bouquet and a gift bag.
 
-Наталка is choosing flowers for a friend's birthday. The **продавець** (seller) helps her pick the perfect bouquet.
+> **Наталка:** Доброго ранку! Якого кольору ці квіти? *(Good morning! What color are these flowers?)*
+> **Продавець:** Це **червоні троянди**, **білі лілії** і **жовті соняшники**. *(These are red roses, white lilies, and yellow sunflowers.)*
+> **Наталка:** Дуже гарні. А ця ваза? *(Very beautiful. And this vase?)*
+> **Продавець:** Це **синя ваза**. Тут є **зелене листя**. *(This is a blue vase. Here are green leaves.)*
+> **Наталка:** **Яка гарна сумка! Якого вона кольору?** *(What a beautiful bag! What color is it?)*
+> **Продавець:** **Червона. А є ще синя і зелена.** *(Red. And there is also a blue and a green one.)*
+> **Наталка:** **Мені подобається синя.** *(I like the blue one.)*
+> **Продавець:** **А мені — жовта!** *(And I like the yellow one!)*
 
-> **Наталка:** Добрий день! Я шукаю квіти для подруги. *(Good day! I'm looking for flowers for a friend.)*
-> **Продавець:** Добрий день! Ось червоні троянди. *(Good day! Here are red roses.)*
-> **Наталка:** Гарні! А жовті соняшники є? *(Pretty! Are there yellow sunflowers?)*
-> **Продавець:** Так, ось жовті соняшники. І білі лілії. *(Yes, here are yellow sunflowers. And white lilies.)*
-> **Наталка:** Якого кольору ця ваза? *(What color is this vase?)*
-> **Продавець:** Синя. Дуже гарна синя ваза! *(Dark blue. A very nice dark-blue vase!)*
-> **Наталка:** А зелене листя є? *(And is there green foliage?)*
-> **Продавець:** Так, зелене листя для букета. *(Yes, green leaves for the bouquet.)*
-> **Наталка:** Мені подобається синя ваза. Беру! *(I like the dark-blue vase. I'll take it!)*
+:::tip
+**Мені подобається** is a very useful fixed phrase meaning "I like." You can memorize it as a single chunk for now, and we will explore its grammatical structure in a later module.
+:::
 
-Notice the phrase **Мені подобається** (I like). Treat it as a memorized chunk — the same way you learned **У мене є** (I have). The grammar behind it belongs to A2; for now, just use it as a ready-made phrase whenever you want to say "I like something."
+Describing personal belongings and the immediate environment brings these new words into your home. As you build your vocabulary, detailing your room and your clothing becomes a practical daily activity.
 
-### Dialogue 2 — Choosing an outfit
+Dmytro is visiting Liza. They are choosing outfits for an upcoming party, looking through her wardrobe and observing her room.
 
-Дмитро is helping his friend Ліза pick an outfit for a party. They are looking through her wardrobe.
+> **Дмитро:** **Якого кольору твоя кімната?** *(What color is your room?)*
+> **Ліза:** **Біла.** *(White.)*
+> **Дмитро:** **А стіл?** *(And the table?)*
+> **Ліза:** **Стіл коричневий. А крісло — сіре.** *(The table is brown. And the armchair is grey.)*
+> **Дмитро:** Добре. Де твоя **чорна сукня**? *(Good. Where is your black dress?)*
+> **Ліза:** Вона там. А де твій **білий светр**? *(It is there. And where is your white sweater?)*
+> **Дмитро:** Тут. У мене є **сіре пальто** і **коричневі черевики**. *(Here. I have a grey coat and brown shoes.)*
 
-> **Дмитро:** Ліза, яка ця сукня? *(Liza, what is this dress like?)*
-> **Ліза:** Чорна. Це чорна сукня. *(Black. It's a black dress.)*
-> **Дмитро:** А светр? Який він? *(And the sweater? What is it like?)*
-> **Ліза:** Білий. Ось білий светр. *(White. Here's a white sweater.)*
-> **Дмитро:** А пальто яке? *(And the coat — what is it like?)*
-> **Ліза:** Сіре. Моє пальто сіре. *(Grey. My coat is grey.)*
-> **Дмитро:** Мені подобається сіре пальто! А черевики? *(I like the grey coat! And the shoes?)*
-> **Ліза:** Коричневі. Мої черевики коричневі. *(Brown. My shoes are brown.)*
+## Кольори — Colors
 
-Spot the pattern in this dialogue. The color adjective ending changes to match the noun's gender — exactly the rule from M09. **Сукня** (dress) is feminine, so the color is **чорна**. **Светр** (sweater) is masculine: **білий**. **Пальто** (coat) is neuter: **сіре**. And **черевики** (shoes) is plural: **коричневі**. Colors follow the same agreement rules as every other adjective.
+Color adjectives are your primary tool for describing physical objects. In Ukrainian, these words follow the same adjective patterns you learned previously. They must agree in gender with the noun they describe. The majority of Ukrainian colors belong to what is called the hard-stem group, meaning they take the standard endings: **-ий** for masculine, **-а** for feminine, and **-е** for neuter.
 
-## Кольори (Colors)
+The "Hard-Stem Rainbow" contains our most common colors. Think of the natural world: we see the **червоне сонце** (red sun), the **жовте жито** (yellow rye), and the **зелена трава** (green grass). Here are the basic hard-stem colors, presented with their masculine, feminine, and neuter forms:
+* **чорний / чорна / чорне** (black)
+* **білий / біла / біле** (white)
+* **сірий / сіра / сіре** (grey)
+* **червоний / червона / червоне** (red)
+* **жовтий / жовта / жовте** (yellow)
+* **зелений / зелена / зелене** (green)
 
-Remember the question words from M09 — **який?** (which/what kind?, masculine), **яка?** (feminine), **яке?** (neuter), **які?** (plural)? Colors are adjectives (**прикметники**), so they answer these same questions. In the poem "Кріт і Сонце" from Большакова Grade 2, a mole asks what color the sun is, and children answer: **червоне, жовте, золоте, оранжеве** — all neuter forms, because **сонце** (sun) is neuter. The adjective always matches its noun.
-
-### Hard-stem colors — тверда група
-
-Most basic colors belong to the **тверда група** (hard group), with endings **-ий / -а / -е**. Here are the six core hard-stem colors:
-
-| Color | Masculine (-ий) | Feminine (-а) | Neuter (-е) |
-|-------|-----------------|---------------|-------------|
-| red | **червоний** | **червона** | **червоне** |
-| yellow | **жовтий** | **жовта** | **жовте** |
-| green | **зелений** | **зелена** | **зелене** |
-| black | **чорний** | **чорна** | **чорне** |
-| white | **білий** | **біла** | **біле** |
-| grey | **сірий** | **сіра** | **сіре** |
-
-The pattern is simple: drop **-ий** from the masculine form, then add **-а** for feminine or **-е** for neuter. Three quick examples: **червоний олівець** (red pencil, M), **червона книга** (red book, F), **червоне вікно** (red window, N). You already know this pattern from M09 — colors work exactly the same way.
-
-### The soft-stem exception — м'яка група
-
-One basic color breaks the pattern. **Синій** (dark blue) ends in **-ій**, not **-ий**. This makes it a **м'яка група** (soft group) adjective. Ukrainian textbooks — Вашуленко Grade 3 p.130 and Авраменко Grade 6 p.132 — both use **синій** as THE classic example of a soft-stem adjective. Compare side by side with a hard-stem word:
-
-| | Masculine | Feminine | Neuter |
-|---|---|---|---|
-| hard: **великий** (big) | великий стіл | велика книга | велике вікно |
-| soft: **синій** (dark blue) | синій стіл | синя книга | синє вікно |
-
-The soft stem changes **-ій → -я → -є** instead of **-ий → -а → -е**. The difference is small — just one letter — but it matters. Listen for it: **синя книга**, not *"сина книга."*
-
-Here is the key memory hook: among all twelve basic colors in this module, **синій** is the ONLY soft-stem one. Everything else follows the hard pattern. Think of **синій** as special in grammar the way it is special in culture — it is the blue of Ukraine's flag.
+<!-- INJECT_ACTIVITY: quiz-color-match -->
 
 <!-- INJECT_ACTIVITY: fill-in-gender-agreement -->
 
-<!-- INJECT_ACTIVITY: group-sort-hard-soft -->
-
-## Синій ≠ блакитний (Blue ≠ Blue)
-
-Ukrainian has TWO separate words for blue where English has only one. **Синій** means dark, deep blue — the color of the sea at night, dark ink, a deep winter sky. You would say **синє море** (dark-blue sea), **синій олівець** (dark-blue pencil), **синя ніч** (dark-blue night). **Блакитний** (light blue, sky blue) means something completely different — a clear afternoon sky, a pale ribbon, baby blue. You would say **блакитне небо** (light-blue sky) or **блакитна стрічка** (light-blue ribbon). In English, both are just "blue." In Ukrainian, choosing the wrong one sounds immediately off to a native speaker.
-
-### The flag — синьо-жовтий прапор
-
-The Ukrainian flag provides the perfect cultural anchor for this distinction. A well-known poem by Наталка Поклад, taught in Grade 2 (Кравцова p.22), says:
-
-*Синьо-жовтий прапор маєм: синє — небо, жовте — жито.*
-
-The flag's blue stripe is **синій** — deep and strong — not **блакитний**. The compound color adjective **синьо-жовтий** (blue-and-yellow) is written with a hyphen, because it joins two distinct colors into one word. The word **прапор** (flag) is masculine — so in full: **синьо-жовтий прапор**, a **державний символ** (state symbol).
+While the hard-stem pattern covers most colors, there is an important exception. Among the basic colors, only **синій** (dark blue) follows the soft-stem pattern. As explained in textbooks like Vashulenko Grade 3 (p.130), adjectives divide into **тверда група** (hard group, ending in **-ий**) and **м'яка група** (soft group, ending in **-ій**). Notice the morphological shift in the soft group endings: masculine takes **-ій**, feminine takes **-я**, and neuter takes **-є**. Compare a standard hard adjective with our soft color: **новий стіл** (new table) versus **синій стіл** (dark blue table).
 
 :::caution
-You may encounter the word **голубий** for light blue. In modern standard Ukrainian, prefer **блакитний**. While **голубий** does appear in some older texts, **блакитний** is the standard recommended choice.
+Pay close attention to **синій** (dark blue). It is the only basic color that uses the soft-stem endings (**-ій**, **-я**, **-є**). Do not accidentally write **синий** or **сина** using the hard-stem pattern!
 :::
 
-### More colors for your palette
+The **синій** paradigm requires careful memorization because it sounds and looks distinct from the hard-stem words. Look at these explicit examples: a **синій олівець** (dark blue pencil) for masculine, a **синя ручка** (dark blue pen) for feminine, and a **синє вікно** (dark blue window) for neuter. Contrast this with a hard-stem adjective you know, like **великий** (big): the feminine form **велика** has an **-а**, while the feminine dark blue is **синя** with a **-я**.
 
-Four more colors round out your vocabulary — all hard-stem (**-ий / -а / -е**): **коричневий / коричнева / коричневе** (brown — the color of chocolate and wood); **рожевий / рожева / рожеве** (pink — **рожева троянда**, a pink rose); **помаранчевий / помаранчева / помаранчеве** (orange — **помаранчевий апельсин**, an orange orange, echoing Большакова's poem: *"Сонце — стиглий помаранч"*); **фіолетовий / фіолетова / фіолетове** (purple — **фіолетова квітка**, a purple flower).
+<!-- INJECT_ACTIVITY: group-sort-hard-soft -->
 
-You can also modify any color with the prefixes **темно-** (dark) and **світло-** (light), always hyphenated: **темно-зелений ліс** (dark-green forest), **світло-синє небо** (light-blue-ish sky), **темно-коричневий стіл** (dark-brown table), **світло-рожева сукня** (light-pink dress). The prefix changes the shade; the base adjective still agrees in gender as normal.
+## Синій ≠ блакитний — Blue ≠ Blue
 
-One more cultural hook: the **вишиванка** (traditional Ukrainian embroidered shirt) uses specific color schemes that vary by region. In **Полісся**, the dominant colors are **червоний і чорний** (red and black). In **Полтавщина**, they are **червоний і синій** (red and dark blue). Even in folk art, Ukrainians distinguish shades of blue precisely.
+Ukrainian has a unique distinction that English lacks: there are TWO distinct words for "blue," and they are not interchangeable. The word **синій** refers exclusively to dark, deep shades of blue. Think of the ink in your pen, the deep ocean (**синє море**), or the night sky (**синє небо вночі**). On the other hand, **блакитний** refers to light blue or sky blue, like a clear daytime sky (**блакитне небо вдень**). 
 
-<!-- INJECT_ACTIVITY: quiz-blue-shades -->
+:::note
+You might occasionally hear the word **голубий** used for light blue in everyday speech, but this is a Russian-influenced word. Authentic Ukrainian strongly prefers **блакитний** for the color of the clear sky.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-object-colors -->
+This distinction is beautifully illustrated by the colors of the Ukrainian flag (**прапор**). The flag is officially described as **синьо-жовтий** (blue-and-yellow). The textbook Kravtsova Grade 2 gives us a poetic memory aid: «**Синьо-жовтий прапор маєм: синє — небо, жовте — жито.**» (We have a blue-and-yellow flag: blue is the sky, yellow is the rye). Even though modern flags often use a lighter shade, the traditional word **синій** is preserved to symbolize the vast, deep, infinite nature of the sky above the golden fields.
+
+<!-- INJECT_ACTIVITY: quiz-blue-shade -->
+
+A broader palette allows for richer descriptions. You will often need other common colors, which all conveniently follow the standard hard-stem pattern. These include **коричневий** (brown), **рожевий** (pink), **помаранчевий** (orange), and **фіолетовий** (purple). You can easily associate them with everyday objects: a **рожева квітка** (pink flower) or a **фіолетова фіалка** (purple violet).
+
+Sometimes you need a specific shade. You can create compound colors using the modifiers **темно-** (dark-) and **світло-** (light-). The grammar rule is simple: these prefixes are always joined to the color with a hyphen. For example, you can say **темно-зелений** (dark green) or **світло-синій** (light blue).
 
 ## Підсумок — Summary
 
-Here is what you now know about colors in Ukrainian.
+The essential rules for color agreement are straightforward. Just like the adjectives you learned in Module 09, colors must agree with the gender of the noun they describe. Comparing the two paradigms side-by-side reveals the pattern. The hard-stem pattern gives us **червоний стіл** (red table), **червона книга** (red book), and **червоне вікно** (red window). The soft-stem pattern gives us **синій стіл**, **синя книга** (dark blue book), and **синє вікно**. These rules also apply to plurals. In the plural, the ending is **-і** for all genders, so you would say **зелені дерева** (green trees) or **червоні яблука** (red apples).
 
-**Hard-stem colors** (**тверда група**) follow the pattern **-ий / -а / -е / -і**: **червоний стіл** (M) → **червона книга** (F) → **червоне вікно** (N) → **червоні олівці** (Pl). Drop **-ий**, add **-а** for feminine, **-е** for neuter, **-і** for plural. This one pattern covers nine colors: **жовтий, зелений, чорний, білий, сірий, коричневий, рожевий, помаранчевий, фіолетовий**.
+Colors carry deep meaning in Ukrainian culture. Consider the traditional embroidered shirt, the **вишиванка**. The classic colors of the Polissia region are **червоний і чорний** (red and black), immortalized in the famous song «Два кольори» where red symbolizes love and black symbolizes sorrow. However, regional styles vary, and the embroidery of the Poltava region often features **червоний і синій** (red and blue).
 
-**Синій** is the single soft-stem color (**м'яка група**), with the pattern **-ій / -я / -є / -і**: **синій стіл** (M) → **синя книга** (F) → **синє вікно** (N) → **сині олівці** (Pl). Drop **-ій**, add **-я** for feminine, **-є** for neuter, **-і** for plural. The soft stem feels different from the hard one — practice it until the shift is automatic, because you will reach for this word every time you describe the sky, the sea, or the flag.
-
-**Синій** and **блакитний** are not interchangeable. **Прапор України синьо-жовтий** — the flag's blue is **синій**, deep and strong. A clear afternoon sky is **блакитне** — light and pale. You now see a distinction that Ukrainian has always had and English does not.
-
-### Self-check
-
-Test yourself before moving on:
-
-- **What color is the Ukrainian flag?** → **Синьо-жовтий** (**синій** і **жовтий**).
-- **Describe 3 things in your room using colors.** → For example: **Мій стіл коричневий. Моя книга синя. Моє вікно велике і біле.**
-- **What is the difference between синій and блакитний?** → **Синій** = dark blue (sea, night sky, flag). **Блакитний** = light blue (daytime sky, pale ribbon).
-- **Which color adjective has a soft stem (-ій)?** → **Синій** — the only one among the basic colors.
-- **How do you ask "what color?"** → **Якого кольору?** (for example: **Якого кольору ця сукня?** — **Чорна.**)
-- **What colors does a traditional вишиванка from Полісся use?** → **Червоний і чорний.**
+A quick self-check ensures you have mastered these concepts:
+*   **Якого кольору прапор України?** (What color is the flag of Ukraine?) — **Синьо-жовтий: синє — небо, жовте — жито.**
+*   What is the difference between **синій** and **блакитний**? — **Синій** is dark or deep blue; **блакитний** is light or sky blue.
+*   What ending does the word **синій** take in the feminine gender? — It takes the ending **-я**: **синя**.
+*   How do you say "dark green" in Ukrainian? — **Темно-зелений**.
+*   Name three objects in your room and their colors. — For example: **біла шафа** (white wardrobe), **коричневий стіл**, **сіре крісло**.
 
 </module_content>
 
@@ -298,30 +264,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -337,42 +343,74 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-gender
-- **group-sort** — Він, вона чи воно?: Sort nouns by grammatical gender using ending rules
+### Pattern: phonetics-stress [§4.1.5]
+**Наголос** (Word stress)
+- **quiz** — Де наголос?: Обрати правильне місце наголосу — критично для української вимови / Choose the correct stress position — critical for Ukrainian pronunciation
+  - Instruction: *Оберіть слово з правильним наголосом*
+- **odd-one-out** — Четверте зайве за наголосом: Обрати слово з іншою моделлю наголосу / Pick the word with different stress pattern
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in: Наголос — це вимова, не написання. Тестувати через вибір, не вписування
+
+### Pattern: grammar-gender [§4.2.1.1, §4.2.2]
+**Рід іменників** (Noun gender)
+- **group-sort** — Він, вона чи воно?: Розподілити іменники за граматичним родом за закінченням / Sort nouns by grammatical gender using ending rules
   - Instruction: *Розподіліть слова за родами*
-- **quiz** — Який рід?: Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
-- **fill-in** — Мій, моя чи моє?: Choose possessive that matches noun gender
+- **quiz** — Який рід?: Визначити рід за закінченням: приголосний=чол., -а/-я=жін., -о/-е=серед. / Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
+- **fill-in** — Мій, моя чи моє?: Обрати присвійний займенник, що узгоджується з родом іменника / Choose possessive that matches noun gender
   - Instruction: *Вставте правильне слово*
-- **match-up** — Іменник + займенник: Match nouns to він/вона/воно
+- **match-up** — Іменник + займенник: Зіставити іменники з він/вона/воно / Match nouns to він/вона/воно
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: На рівні A1 завжди давати варіанти для вибору
 
-### Pattern: grammar-adjectives
-- **fill-in** — Який? Яка? Яке?: Choose adjective ending to match noun gender
+### Pattern: grammar-adjectives [§4.2.1.2]
+**Прикметники та узгодження** (Adjectives and agreement)
+- **fill-in** — Який? Яка? Яке?: Обрати правильне закінчення прикметника за родом іменника / Choose adjective ending to match noun gender
   - Instruction: *Вставте правильну форму*
-- **error-correction** — Знайди помилку в узгодженні: Find gender/number agreement errors between adjective and noun
-- **match-up** — Іменник + прикметник: Match nouns to correct adjective forms
+- **error-correction** — Знайди помилку в узгодженні: Знайти помилку в узгодженні прикметника й іменника за родом/числом / Find gender/number agreement errors between adjective and noun
+- **match-up** — Іменник + прикметник: Зіставити іменники з правильними формами прикметників / Match nouns to correct adjective forms
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Узгодження — це граматика, а не лексика. Переклад не тестує закінчення
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -404,68 +442,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

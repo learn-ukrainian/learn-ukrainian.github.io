@@ -2,48 +2,54 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Missed the `-сь` variant in the explanation despite being in the objectives.
-    Word count is slightly over (1339 vs 1200 target).
+  score: 10
+  evidence: The module covers all objectives and outline sections perfectly. It includes
+    the exact textbook references (Караман Grade 10 p. 176, Кравцова Grade 4 p. 113)
+    and hits the dialogue beats accurately.
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: All Ukrainian text, verb endings, and vocabulary are perfectly correct
-    and natural. Pronunciation rules are accurate.
+  evidence: Excellent. The phonetic explanation for `-шся` and `-ться` ([с':а], [ц':а])
+    is completely accurate. Forms and conjugations (e.g., irregular "йти", "я йду",
+    "ти йдеш") are correct.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: Excellent PPP flow. Great contrast between actions directed at others
-    (вмивати) and oneself (вмиватися). Good integration of the Kravtsova textbook.
+  evidence: Strong PPP flow. The contrast between reflexive ("одягатися") and non-reflexive
+    ("одягати дитину") is a highly effective way to explain intransitivity and the
+    `-ся` suffix at the A1 level.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words from the plan are introduced naturally
-    within the text and dialogues.
+  evidence: All required words (прокидатися, вмиватися, одягатися, снідати, йти, спочатку,
+    потім) and recommended sequence words are integrated naturally into the dialogues
+    and prose.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Inject markers perfectly match the plan's hints and are placed in logical
-    progression after the concepts are taught.
+  evidence: The 4 injected activity markers correspond exactly to the planned exercises
+    and are placed immediately after the concepts are taught, respecting the learning
+    sequence.
 - dimension: 6
   name: Engagement & tone
-  score: 6
-  evidence: Heavy use of English meta-commentary and "telling instead of showing"
-    ("Their conversation is about to teach you...", "grammar heart of this module",
-    "Here's something that trips up learners").
+  score: 10
+  evidence: The tone is professional, clear, and encouraging. The transitions between
+    sections flow well without resorting to gamified language or corporate filler.
 - dimension: 7
   name: Structural integrity
-  score: 7
-  evidence: 'An empty heading `### The reflexive test` appears right before `### Self-check:
-    Your turn`. Pronunciation transcriptions use double quotes instead of standard
-    linguistic bracket notation `[]`.'
+  score: 10
+  evidence: The markdown is exceptionally clean. Word count is 1521, well above the
+    1200 target. All required H2 headers are present and correctly formatted.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Decolonized approach. Focuses natively on Ukrainian reflexive patterns
-    without comparing to Russian.
+  evidence: Authentic, everyday Ukrainian morning routines. Using natural collocations
+    like "чистити зуби" alongside the target vocabulary adds value and reflects real-life
+    language use.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogues are natural, named, and feel like real roommate conversations.
+  evidence: The dialogues are natural and well-contextualized. They showcase the grammar
+    naturally without feeling robotic, and the contrast between weekday and weekend
+    routines works perfectly.
 findings: []

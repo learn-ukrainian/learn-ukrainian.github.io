@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/7 required vocab: замовляти (to order)"
-    }
-  ],
-  "timestamp": "2026-03-30T14:09:38.712701+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-09T00:40:57.469038+00:00"
 }

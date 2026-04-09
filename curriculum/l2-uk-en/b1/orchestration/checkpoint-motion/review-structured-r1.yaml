@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text missed the `dialogue_situations` meta-requirement for an Oral
+    Exam setting with an Examiner and Student, writing only the train station dialogue.
+    It also missed the explicit contrast `літак л
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains a critical gibberish artifact ("найбли कूलзу"), a conjugation
+    typo ("їзздиш"), and several common calques/Russicisms ("приймаєте рішення", "знаходиться",
+    "відправиться").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. It breaks down the prefixes into logical groups
+    (arrival vs departure, crossing vs passing) and clearly explains the difficult
+    rules for case government.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words (контрольна робота, різноспрямований,
+    маршрут, самооцінка, etc.) are present and naturally integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Over-fragmented with 13 markers instead of the 6 planned, but the markers
+    logically follow the taught sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very supportive, natural teacher persona. Uses great examples to make
+    spatial rules concrete.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Meets the 4000-word target perfectly (4305). However, a broken unicode
+    string artifact slipped into the prose.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate geography and authentic examples from Ukrainian realia (Lviv,
+    Carpathians, Yaremche, Boryspil).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The train station dialogue is natural and useful, but the planned Oral
+    Exam dialogue was completely absent.
+findings: []

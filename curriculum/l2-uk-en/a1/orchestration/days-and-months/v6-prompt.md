@@ -1,33 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Підсумок — Summary'
-- NOTE: Latin characters mixed with Cyrillic: r
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -60,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-25% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-25% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -270,343 +252,357 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (26/26 — 100%):**
-- понеділок ✅ (noun)
-- вівторок ✅ (noun)
-- середа ✅ (noun)
-- четвер ✅ (noun)
-- п'ятниця ✅ (noun)
-- субота ✅ (noun)
-- неділя ✅ (noun)
-- тиждень ✅ (noun)
-- зима ✅ (noun)
-- весна ✅ (noun)
-- літо ✅ (noun)
-- осінь ✅ (noun)
-- січень ✅ (noun)
-- **лютий ✅ — ⚠️ ADJECTIVE in VESUM (6 adj matches), NOT noun**
-- березень ✅ (noun)
-- квітень ✅ (noun)
-- травень ✅ (noun)
-- червень ✅ (noun)
-- липень ✅ (noun)
-- серпень ✅ (noun)
-- вересень ✅ (noun)
-- жовтень ✅ (noun)
-- листопад ✅ (noun)
-- грудень ✅ (noun)
-- день ✅ (noun)
-- народження ✅ (noun)
-
-**Not found:** none
-
-**⚠️ CRITICAL NOTE — лютий:** VESUM registers it as an **adjective** (6 adj matches), not a noun. This is correct — лютий (February) is a substantivized adjective in Ukrainian. Its case forms follow **adjective declension**: у лю́тому (locative, not *у лютні*). The plan already implies "у лютому" via the chunk pattern — this is correct. Writer must NOT use noun-pattern declension for лютий.
-
----
-
-## Textbook Excerpts
-
-### Section: Дні тижня (Days of the Week)
-> «Пригадайте назви днів тижня. Послідовно запишіть їх. У середу я планую ? . Для цього мені потрібно ? . Я маю зробити ? . Розкажіть, як ви плануєте свій день (один із днів тижня на вибір).»
-> Source: Vashulenko, Grade 2 (2019), p. 83 — **exact match for the "planning your week" activity pattern**
-
-> «Пригадай назви днів тижня. Запиши їх правильно: Понеділок, ?, ?, ?, ?, ?, ?»
-> Source: Vashulenko, Grade 3 (2020), p. 79 — shows all 7 days listed from понеділок in sequence
-
-> «ТИЖДЕНЬ — НЕДІЛЯ. У сучасній українській літературній мові проміжок часу в сім днів називають тижнем… Сьомий день тижня, день відпочинку, називають неділею.»
-> Source: Voron, Grade 9, p. 121 — **confirms the neділя/тиждень distinction** (план note is correct)
-
-### Section: Місяці і пори року (Months and Seasons)
-> «Наші назви місяців прозорі. Легко встановити те, яка ознака покладена в основу називання. Січень дістав свою назву від «сікти»… Лютий названо за люті, злі, жорстокі морози… Березень — місяць, коли збирають березовий сік. Квітень — місяць цвітіння. Травень — буйні рости трав. Червень — від червець… Липень — цвітіння медоносної липи. Серпень — час збору урожаю. Вересень — пора цвітіння вересу. Жовтень — місяць жовтого листя. Листопад — у самому слові чути шелест листя. Грудень — земля змерзається у груддя.»
-> Source: Воron, Grade 9, p. 60 — "УКРАЇНСЬКИЙ МІСЯЦЕЛІК" — **gold-standard etymology source for all 12 months, directly usable in the module**
-
-> «Ступив Новий рік на Землю… Тільки не ми! — обізвалися Червень, Липень і Серпень…»
-> Source: Kravcova, Grade 2 (2019), p. 60 — months personified by season grouping: зимові (Грудень/Січень/Лютий), весняні (Березень/Квітень/Травень), літні (Червень/Липень/Серпень), осінні (Вересень/Жовтень/Листопад)
-
-### Section: Діалоги — день народження
-> «Зазнач дату свого народження за зразком: 15.11.2012 → п'ятнадцяте листопада дві тисячі дванадцятого року. Я народився (народилася) ... (число) ... (місяць) ... (рік).»
-> Source: Vashulenko, Grade 2 (2019), p. 92 — **exact birthday date pattern** including ordinal for day + genitive month
-
-### Section: Діалоги — planning the week
-> «Розкажіть, як ви плануєте свій день (один із днів тижня на вибір). Що ви в цей день будете робити? Наведіть приклад такого плану за зразком. Планування — ключ до успіху в житті.»
-> Source: Vashulenko, Grade 2 (2019), p. 83 — validates the week-planning dialogue pattern in Plan
-
----
+- Confirmed: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя, тиждень, зима, весна, літо, осінь, січень, лютий, березень, квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень, день, народження, взимку, навесні, влітку, восени.
+- Not found: None.
 
 ## Grammar Rules
-
-- **Days of week + months → малої літери (lowercase):** Правопис §45–§49 do not list them as proper nouns (власні назви). All textbook examples confirm: понеділок, вівторок, січень, лютий etc. are written with **мала літера** as загальні назви (common nouns). This contrasts with English capitalization — a key teaching point. Confirmed by textbook evidence: Grade 3 Vashulenko p.79 "Понеділок, ?, ?, ?, ?, ?, ?" (capital only because it opens the sentence).
-
-- **Preposition у/в + accusative for days:** у понеділок, у вівторок, у середу, у четвер, у п'ятницю, **в суботу**, **в неділю** — the у/в alternation follows standard phonetic rule (§ у-в: use **в** before vowels and when preceding word ends in vowel; use **у** after consonants). Субота and неділя take **в** because the preceding word typically ends in a vowel in speech flow.
-
-- **Seasonal adverbs — irregular chunks:** взимку, навесні, влітку, восени — these are **pronominal adverbs** (прислівники), not prepositional phrases. They cannot be broken into у + noun at A1 — teach as frozen forms.
-
-- **лютий — adjective declension:** As a substantivized adjective: Nom. лютий, Gen. лютого, Dat. лютому, Acc. лютий, Instr. лютим, Loc. у лютому. Plan's chunk "у лютому" is confirmed correct.
-
----
+- Lowercase calendar terms: Правопис § 54 (by exclusion) and СУМ-11 confirm that names of days (понеділок) and months (січень) are common nouns and are written with a lowercase letter.
+- Prepositions for time: 
+  - Days (Accusative): "у понеділок", "у середу", "у п'ятницю".
+  - Months (Locative): "у січні", "у травні", "у червні".
+  - Seasons (Adverbs): "взимку", "навесні", "влітку", "восени".
 
 ## Calque Warnings
-
-- **вільний день** — OK. This is natural Ukrainian. The style guide discussion around "вихідний день" (day off) vs. "вільний день" (free day) notes both are used. No calque. ✅
-
-- **у понеділок** — OK. Natural Ukrainian prepositional phrase. No calque. ✅
-
-- **вивчати українську** — OK. Natural Ukrainian. No calque. ✅
-
-- **⚠️ WATCH: "пара днів"** — Антоненко-Давидович explicitly flags this as a Russianism: *"Так сказати по–українському не можна"*. Correct form: **кілька днів** / **два–три дні**. The dialogue plan doesn't use this phrase, but if any dialogue says "через пару днів" → rewrite to "через кілька днів".
-
-- **день народження** — OK. This is the standard Ukrainian collocation. Not a calque. ✅
-
----
+- день народження: OK — Standard Ukrainian phrase for "birthday".
+- у понеділок: OK — Standard usage of preposition "у" with Accusative for days of the week.
+- у вихідні: OK — Natural way to say "on the weekend" (confirmed via GRAC).
 
 ## CEFR Check
-
-- понеділок: **A1** — ✅ on target
-- субота: **A1** — ✅ on target
-- тиждень: **A1** — ✅ on target
-- зима: **A1** (взимку also A1) — ✅ on target
-- осінь: **A1** — ✅ on target
-- січень: **A1** — ✅ on target
-- день: **A1** — ✅ on target
-
-**No words above A1 level.** All vocabulary is confirmed A1-appropriate per PULS CEFR database.
+- понеділок: A1 — OK
+- січень: A1 — OK
+- зима: A1 — OK
+- тиждень: A1 — OK
+- травень: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Days and Months
-**Module:** days-and-months | **Phase:** A1.4 [Time and Nature]
-**Textbook grades searched:** 3, 4, 5
+# Knowledge Packet: Days and Months
+**Module:** days-and-months | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/days-and-months.md
+
+# Педагогіка A1: Days And Months
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The native Ukrainian pedagogical approach to teaching days and months is highly contextual and practical, even from Grade 1. It avoids rote memorization in isolation, instead embedding the vocabulary into immediate, usable structures.
+
+1.  **Context First, Vocabulary Second:** Teachers introduce days of the week through the concept of a weekly schedule (`розклад`). The primary structure is "What do you do *on* Monday?" (`Що ти робиш у понеділок?`). This immediately forces the use of the preposition `у/в` and the required case change, making the grammar intuitive. Большакова (Source 5) presents this as a fill-in-the-blank exercise: `Зразок. У понеділок я … .`. This pattern is reinforced in multiple sources (Source 27, 28).
+
+2.  **Grouping for Memory:** Months are not taught as a list of twelve, but are thematically grouped by seasons (`пори року`). Textbooks consistently ask learners to name the spring months (`весняні місяці`), autumn months (`осінні місяці`), etc. (Source 2, 6, 31, 42). This chunking aids memorization and connects the vocabulary to the natural world.
+
+3.  **Etymological Anchoring:** A core feature of Ukrainian pedagogy is explaining the folk etymology of the month names. This is not treated as a dry linguistic exercise but as a storytelling tool that makes the words memorable and culturally rich. For example, `вересень` is linked to the blooming of heather (`верес`), `листопад` to falling leaves (`листя падає`), and `січень` to cutting wood (`сікти`) (Source 8, 19, 20, 41). This narrative approach transforms abstract names into vivid images, which is highly effective for retention.
+
+4.  **From Nominative to Prepositional Case Immediately:** Ukrainian pedagogy does not dwell on the nominative forms. Textbooks and lesson materials immediately pivot to the practical forms `у понеділок` (Accusative) and `у січні` (Locative). The structure is often presented in a simple two-column table: `Що?` (понеділок) -> `Коли?` (у понеділок) (Source 1). This pattern-based learning helps students acquire the case endings as part of the vocabulary chunk itself, rather than as a separate grammar rule.
+
+5.  **Focus on Soft Consonants:** Pronunciation, especially of the soft sign `ь` at the end of many month names (`січень`, `березень`), is a key focus. The ULP podcast explicitly drills this, contrasting hard and soft sounds and providing triggers for softness (the vowels `я, є, і` and the soft sign `ь`) (Source 41).
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction should be staged to build from simple recognition to active use in sentences.
+
+1.  **Step 1: Introduce Days of the Week (Nominative).**
+    Present the seven days as a list, starting with `понеділок`. Emphasize that the Ukrainian week begins on Monday (Source 41).
+    - `понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя`
+    - Also introduce the concept of "weekdays" (`робочі дні`) and "weekend" (`вихідні`) (Source 41).
+
+2.  **Step 2: Introduce "On [Day]" (Accusative Case).**
+    Immediately teach the construction `у/в + [день тижня]`. This is the most common use case.
+    - Masculine nouns do not change: `у понеділок`, `у вівторок`, `у четвер`.
+    - **Crucially, highlight the feminine nouns that change:** `середа` → `у середу`, `п'ятниця` → `у п'ятницю`.
+    - Neuter nouns also don't change: `неділя` (fem.) → `у неділю` (Source 1, 44). This is the highest-frequency grammatical transformation and must be mastered early.
+
+3.  **Step 3: Introduce Months Grouped by Season (Nominative).**
+    Present the twelve months, but organized into the four seasons (`зима, весна, літо, осінь`).
+    - **Зима:** `грудень, січень, лютий`
+    - **Весна:** `березень, квітень, травень`
+    - **Літо:** `червень, липень, серпень`
+    - **Осінь:** `вересень, жовтень, листопад`
+    This structure is a standard pedagogical tool in Ukrainian schools (Source 2, 42). Briefly mention the etymological meaning to aid memory (e.g., `квітень` from `квітка` - flower) (Source 3, 8).
+
+4.  **Step 4: Introduce "In [Month]" (Locative Case).**
+    Teach the construction `у/в + [місяць]`. This requires the Locative case.
+    - The core pattern is adding the ending `-і`: `у січні`, `у березні`, `у квітні`.
+    - Point out that the fleeting vowel `е` often drops: `березень` → `у березні` (Source 45).
+    - Special forms must be highlighted: `лютий` → `у лютому`, `травень` → `у травні`. (Source 45).
+
+5.  **Step 5: Introduce Basic Dates (Ordinal Number + Genitive Month).**
+    For A1, this should be limited to recognition and simple production of birthdays or holidays. The core pattern is: `[number, neuter]` + `[month, genitive]`.
+    - Example: `Перше вересня` (The first of September).
+    - To say "on the first of September", the structure is `Першого вересня`.
+    - The key rule is that months in dates *always* use the Genitive case (Source 26). Example: `п'ятого березня`, `двадцять четвертого грудня` (Source 1, 26).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrectly) | ✅ Правильно (Correctly) | Чому (Why) |
+| :--- | :--- | :--- |
+| "The week starts on Sunday." | `Тиждень починається в понеділок.` | English speakers assume a universal Sunday start. Ukrainian and many European calendars start the work week on Monday (`понеділок`) (Source 41, 43). |
+| `Я їду в Україну в неділя.` | `Я їду в Україну в неділю.` | Learners forget the Accusative case ending for feminine days of the week when using the preposition `в/у` to mean "on" a day (Source 44). |
+| `Російською, неділя це "week".` | `Неділя` це "Sunday". `Тиждень` це "week". | This is a critical false cognate. Russian `неделя` means "week," while Ukrainian `неділя` means "Sunday." This confusion must be addressed directly and early (Source 41). |
+| `Мій день народження в березень.` | `Мій день народження в березні.` | Learners often forget to apply the Locative case (`-і` ending) to months when using `в/у` to mean "in" a month. They use the base nominative form instead (Source 45). |
+| `Дата сьогодні — п'яте березень.` | `Дата сьогодні — п'яте березня.` | When stating a date, the month must be in the Genitive case (`-я` or `-а` ending for masculine nouns), not the Nominative. This is a fixed rule (Source 26). |
+| `лютий` (pronounced with a hard 'т') | `лютий` (pronounced with a soft 'т') | English speakers lack the hard/soft consonant distinction. The `и` vowel softens the preceding consonant. This requires explicit pronunciation practice (Source 41). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is a powerful tool for decolonization and establishing Ukrainian as a language distinct from Russian from the very first lessons.
+
+1.  **Native Slavic Month Names vs. Latin Borrowings:** This is the most important distinction. **Emphasize that Ukrainian retains its original, nature-based Slavic month names** (`січень, квітень, листопад`). In contrast, Russian uses Latin-derived names (`январь, апрель, ноябрь`), similar to English. This is a clear and immediate demonstration of Ukrainian's distinct linguistic heritage (Source 41, 19). The writer should present this not as an oddity, but as a point of cultural pride and authenticity.
+
+2.  **`Неділя` vs. `Воскресенье`:** The Ukrainian word for Sunday, `неділя`, comes from `не ділати` — "not to do/work," reflecting a day of rest (Source 43). The Russian word, `воскресенье`, means "Resurrection" and is a purely religious term imposed later. Teaching the origin of `неділя` reinforces the native, pre-Christian roots of the vocabulary.
+
+3.  **Avoid Russian as a Phonetic Bridge:** **Never** teach Ukrainian sounds by comparing them to Russian (e.g., "Ukrainian `и` is like Russian `ы`"). This creates phonetic interference and reinforces a colonial mindset. Ukrainian phonology must be taught on its own terms, using minimal pairs within Ukrainian itself and referencing the International Phonetic Alphabet (IPA) or audio guides designed for English speakers learning Ukrainian. The goal is to build a new, separate phonetic system in the learner's mind (Source 41).
+
+4.  **Grammatical Independence:** Grammatical structures like the use of Accusative for days vs. Locative for months should be presented as internal rules of Ukrainian, without reference to how Russian does it. This avoids positioning Ukrainian as a "dialect" or "variant" and reinforces its status as a complete and independent language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+**Іменники (Nouns):**
+*   ★★★ `понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя`
+*   ★★★ `січень, лютий, березень, квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень`
+*   ★★★ `тиждень`, `місяць`, `рік`
+*   ★★★ `зима, весна, літо, осінь`
+*   ★★ `вихідні` (weekend), `день`, `ранок`, `вечір`
+
+**Прислівники (Adverbs):**
+*   ★★★ `сьогодні`, `завтра`, `вчора`
+*   ★★ `вранці`, `вдень`, `ввечері`, `вночі`
+*   ★★ `коли?`
+*   ★ `щодня`, `щотижня`, `щороку` (Source 1)
+
+**Прикметники (Adjectives):**
+*   ★★★ `перший`, `останній`
+*   ★★ `улюблений` (favorite)
+*   ★★ `минулий` (last), `наступний` (next) (Source 46)
+
+**Дієслова (Verbs):**
+*   ★★★ `бути`, `робити`, `починатися`
+*   ★★ `мати`, `любити`, `подобатися`
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Activity: My Weekly Schedule (Fill-in-the-blank)**
+    This exercise from a Grade 2 textbook immediately puts the vocabulary into a practical, personal context.
+    *   **Prompt:** `Запиши, які справи ти робиш кожного дня тижня.` (Write what things you do each day of the week.)
+    *   **Format:**
+        `Зразок. У понеділок я … .`
+        `У вівторок я … .`
+        `У середу я … .`
+    (Source: 2-klas-ukrmova-bolshakova-2019-2_s0070)
+
+2.  **Activity: Answering Factual Questions (Q&A)**
+    This exercise from a Grade 4 textbook checks comprehension and active use of both cardinal and ordinal numbers with time-related vocabulary.
+    *   **Prompt:** `Запиши повні відповіді на запитання.` (Write full answers to the questions.)
+    *   **Format:**
+        `1. Скільки днів має тиждень?`
+        `2. Котрим за порядком днем тижня є понеділок? вівторок?`
+        `4. Скільки місяців триває рік?`
+    (Source: 4-klas-ukrayinska-mova-varzatska-2021-1_s0095)
+
+3.  **Activity: Case Transformation Table (What? -> When?)**
+    A simple but powerful exercise from a Grade 5 textbook for learners with Hungarian as L1, drilling the transformation from nominative to the correct prepositional case.
+    *   **Prompt:** The table implicitly asks the learner to fill in the form for "when."
+    *   **Format:**
+| Що? | Коли? |
+|---|---|
+| понеділок | у понеділок |
+| середа | у середу |
+| січень | у січні |
+| квітень | у квітні |
+    (Source: 5-klas-ukrmova-uhor-2022-1_s0019)
+
+4.  **Activity: Sentence Building with Activities (Sentence Scramble)**
+    This Grade 6 exercise combines days of the week with places and activities, forcing the learner to construct a logical sentence.
+    *   **Prompt:** `Утворіть речення. Підкресліть обставину.` (Form sentences. Underline the adverbial modifier.)
+    *   **Format:**
+        `Зразок: Чілла запланувала в суботу відвідати музей просто неба.`
+        `Давид — субота — стадіон` -> `Давид у суботу був на стадіоні.`
+        `Наталка — понеділок — екскурсія` -> `Наталка в понеділок була на екскурсії.`
+    (Source: 6-klas-ukrmova-betsa-2023_s0046)
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/introduction-to-cases`
+- `pedagogy/a1/numbers-cardinal-and-ordinal`
+- `pedagogy/a1/seasons-and-weather`
+- `culture/ukrainian-folk-etymology`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 110
-> **Score:** 0.50
->
-> ЧИСЛІВНИК
-> -  
->  
->  
->  
->  - 
->   
->  
->  
->  
-> ....
-> ^\Ґ| Ч ислівник як частина мови
-> 254. Прочитайте запитання.
-> Скільки місяців має рік? Скільки днів має тиждень? 
-> Який за порядком лічби день тижня вівторок? Котра на 
-> малюнку за порядком лічби лялька в рожевій сукні, 
-> котра — у блакитній, а котре — яблуко? Які числа ви бачи­
-> те на листках календаря?
-> 2015
-> ВЕРЕСЕНЬ
-> 2
-> Середа
-> 2015
-> ВЕРЕСЕНЬ
-> З
-> Четвер
-> •  Запишіть відповіді на запитання. Підкресліть слова, що відпо­
-> відають на питання скільки? котрий? котра? котре? Які зі слів 
-> позначають кількість предметів, а які — порядок їх під час 
-> лічби?
-> Слова, що означають кількість предметів або їх 
-> порядок під час лічби, називаються числівниками.
+# Педагогіка A1: This And That
 
-## Дні тижня (Days of the Week)
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 110
-> **Score:** 0.50
->
-> ЧИСЛІВНИК
-> -  
->  
->  
->  
->  - 
->   
->  
->  
->  
-> ....
-> ^\Ґ| Ч ислівник як частина мови
-> 254. Прочитайте запитання.
-> Скільки місяців має рік? Скільки днів має тиждень? 
-> Який за порядком лічби день тижня вівторок? Котра на 
-> малюнку за порядком лічби лялька в рожевій сукні, 
-> котра — у блакитній, а котре — яблуко? Які числа ви бачи­
-> те на листках календаря?
-> 2015
-> ВЕРЕСЕНЬ
-> 2
-> Середа
-> 2015
-> ВЕРЕСЕНЬ
-> З
-> Четвер
-> •  Запишіть відповіді на запитання. Підкресліть слова, що відпо­
-> відають на питання скільки? котрий? котра? котре? Які зі слів 
-> позначають кількість предметів, а які — порядок їх під час 
-> лічби?
-> Слова, що означають кількість предметів або їх 
-> порядок під час лічби, називаються числівниками.
 
-> **Source:** ponomarova, Grade 3
-> **Section:** Сторінка 77
-> **Score:** 0.50
->
-> 77
-> 2. Допоможи Щебетунчикові вставити пропущені назви 
-> днів тижня. Перевір їх написання за словником. Спиши 
-> текст,  підкресли  орфограми  в  дібраних  словах.
-> Якщо до слова не можна дібрати перевірне слово,
-> то його написання треба перевіряти за словником.
-> Тиждень починає … .  Після нього приходить … .
-> За ним настає … . Четвертий день тижня — … .
-> А п’ятий — … . П’ять днів працюємо, а в … і … 
-> відпочиваємо.
-> 3. Прочитай і розв’яжи задачу Родзинки.
-> Марійка з дідусем вирушили в похід на третій 
-> день тижня. А повернулися з походу через три дні.
-> Поміркуй, у який день тижня Марійка з дідусем
-> вирушили в похід, а в який повернулись.
-> 5. Запиши слова у дві колонки: до першої — ті, що переві-
-> ряються за правилом, до другої — ті, що перевіряються
-> за словником. Підкресли орфограми.
-> 5
-> 4.
+## Методичний підхід (Methodological Approach)
 
-## Місяці і пори року (Months and Seasons)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 105
-> **Score:** 0.50
->
-> 105
->  
->  Послухайте текст Антоніни Назаренко «Який це 
-> місяць?» і дайте відповідь на запитання, яке міститься 
-> в заголовку.
->  Про які зміни в природі розповідає Антоніна 
-> Назаренко?
->  З чого зрозуміло, що це рання весна?
->  Як же називається цей весняний місяць?
-> Весна днем красна.
-> Притрушує, пригрітих, сльозяться, передчуттям, підтри- 
-> мують, повернувшись.
-> Прочитай правильно
-> 48
-> Степан Мацюцький
-> У  ГОСТЯХ  У  ВЕСНИ
-> Ще ховаються по байраках сірі брили злежаного снігу. 
-> Уночі морозець притрушує білою пудрою зелене листя осо-
-> ки на болоті, а вже красується золотими сережками ліщина 
-> і на пригрітих сонцем галявинах випинаються молодими 
-> соковитими стрілами трави.
-> У таку пору я поспішаю в ліс. Поспішаю в гості до самої 
-> весни.
-> Ранок теплий, сонячний. Дихає свіжістю земля.
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-## Підсумок — Summary
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 110
-> **Score:** 0.50
->
-> ЧИСЛІВНИК
-> -  
->  
->  
->  
->  - 
->   
->  
->  
->  
-> ....
-> ^\Ґ| Ч ислівник як частина мови
-> 254. Прочитайте запитання.
-> Скільки місяців має рік? Скільки днів має тиждень? 
-> Який за порядком лічби день тижня вівторок? Котра на 
-> малюнку за порядком лічби лялька в рожевій сукні, 
-> котра — у блакитній, а котре — яблуко? Які числа ви бачи­
-> те на листках календаря?
-> 2015
-> ВЕРЕСЕНЬ
-> 2
-> Середа
-> 2015
-> ВЕРЕСЕНЬ
-> З
-> Четвер
-> •  Запишіть відповіді на запитання. Підкресліть слова, що відпо­
-> відають на питання скільки? котрий? котра? котре? Які зі слів 
-> позначають кількість предметів, а які — порядок їх під час 
-> лічби?
-> Слова, що означають кількість предметів або їх 
-> порядок під час лічби, називаються числівниками.
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-## Grammar Reference
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 110
-> **Score:** 0.33
->
-> ЧИСЛІВНИК
-> -  
->  
->  
->  
->  - 
->   
->  
->  
->  
-> ....
-> ^\Ґ| Ч ислівник як частина мови
-> 254. Прочитайте запитання.
-> Скільки місяців має рік? Скільки днів має тиждень? 
-> Який за порядком лічби день тижня вівторок? Котра на 
-> малюнку за порядком лічби лялька в рожевій сукні, 
-> котра — у блакитній, а котре — яблуко? Які числа ви бачи­
-> те на листках календаря?
-> 2015
-> ВЕРЕСЕНЬ
-> 2
-> Середа
-> 2015
-> ВЕРЕСЕНЬ
-> З
-> Четвер
-> •  Запишіть відповіді на запитання. Підкресліть слова, що відпо­
-> відають на питання скільки? котрий? котра? котре? Які зі слів 
-> позначають кількість предметів, а які — порядок їх під час 
-> лічби?
-> Слова, що означають кількість предметів або їх 
-> порядок під час лічби, називаються числівниками.
+## Послідовність введення (Introduction Sequence)
 
----
-**Total textbook excerpts found:** 6
-**Grades searched:** 3, 4, 5
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
+
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -619,7 +615,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Дні тижня (Days of the Week)` (~300 words)
 - `## Місяці і пори року (Months and Seasons)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -676,7 +671,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -776,51 +771,43 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
+## Діалоги — Dialogues (~330 words total)
+- P1 (~40 words): Introduce the context of time management and scheduling in Ukraine. Explain that planning revolves around the "тиждень" (week) and begins strictly on "понеділок" (Monday).
+- P2 (~120 words): Dialogue 1 — Planning the week. Олена and Марко discuss their schedules. Use days as markers: "Що ти робиш у понеділок?" (working), "А у вівторок?" (Ukrainian class), "У суботу?" (walking), "Неділя — вільний день."
+- P3 (~50 words): Linguistic breakdown of Dialogue 1. Highlight the question "Що ти робиш у...?" and the concept of "вільний день" (free day) vs. "робочий день" (work day).
+- P4 (~100 words): Dialogue 2 — Birthdays and Seasons. Андрій and Софія discuss their birthdays. Use months and seasons: "Коли у тебе день народження?" "У березні." "Якого числа?" "П'ятнадцятого березня." "Це весна?" "Так, початок весни."
+- P5 (~20 words): Quick check: Note that "Якого числа?" (What date?) and the response "П'ятнадцятого березня" (The 15th of March) are learned as chunks for now.
 
-- D1 (~110 words): Dialogue 1 — Planning the week. Taras asks Olena about her schedule across 4 turns. Lines include: "— Що ти робиш у понеділок? — Я працюю. А у вівторок? — У вівторок я вивчаю українську. — А у суботу? — У суботу гуляю з друзями. Неділя — вільний день!" Introduces у/в + day as pure chunk — no grammar label, just exposure. Spoken register (ти forms).
-- D2 (~110 words): Dialogue 2 — Birthday and months. Two friends: "— Коли у тебе день народження? — У березні. — Якого числа? — П'ятнадцятого березня. А у тебе? — У мене в серпні. — О, це літо! Тепло і сонячно." Shows у/в + month and а season comment (це літо) naturally. Introduces день народження as a fixed phrase.
-- P1 (~110 words): Brief framing paragraph between or after dialogues — note the recurring pattern: у + [day/month] keeps appearing. Learner's takeaway: Ukrainian uses у/в before time words. No grammar terms yet — just "you'll see this pattern again and again."
+## Дні тижня — Days of the Week (~330 words total)
+- P1 (~80 words): Present the seven days in order: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя. Explicitly state the two golden rules: Ukrainian days are NOT capitalized, and the week starts on Monday.
+- P2 (~90 words): Explain how to say "on [day]" using "у/в" + the day form. Detail the masculine stability (у понеділок, у вівторок, у четвер) versus the feminine vowel shift (середа -> у середу, п’ятниця -> у п’ятницю, неділя -> в неділю).
+- P3 (~80 words): Focus on "неділя" (Sunday). Address the common error for Slavic-language learners: "неділя" is Sunday, while "тиждень" is the whole week. Explain the etymology "не ділати" (no work) to anchor the meaning.
+- P4 (~80 words): Expand vocabulary for time-blocks: "робочі дні" (work days, Mon-Fri) vs. "вихідні" (weekend, Sat-Sun). Use examples: "У робочі дні я в офісі," "У вихідні я вдома."
+- <!-- INJECT_ACTIVITY: fill-in-days-order --> [fill-in, focus: ordering the days of the week, 7 items]
 
----
+## Місяці і пори року — Months and Seasons (~340 words total)
+- P1 (~80 words): Introduce the 12 months grouped by the four seasons: Зима (грудень, січень, лютий), Весна (березень, квітень, травень), Літо (червень, липень, серпень), Осінь (вересень, жовтень, листопад). All lowercase.
+- P2 (~90 words): The story of the months. Connect names to nature: "березень" (birch), "квітень" (flower), "липень" (linden tree), "вересень" (heather), "листопад" (leaf fall). Contrast this native Slavic system with the Latin names in English and Russian.
+- P3 (~80 words): Explain "in [month]" using "у/в" + the month name in Locative. Focus on the "-і" ending (у січні, у квітні) and the dropping of the vowel "е" (березень -> у березні, жовтень -> у жовтні). Note the exception for "лютий" -> "у лютому."
+- P4 (~90 words): Teaching the seasons as adverbs for "when." Introduce irregular forms that must be memorized: взимку (in winter), навесні (in spring), влітку (in summer), восени (in autumn). Compare them to the base nouns: зима, весна, літо, осінь.
+- <!-- INJECT_ACTIVITY: match-up-months-seasons --> [match-up, focus: connecting months to their corresponding season, 8 pairs]
+- <!-- INJECT_ACTIVITY: fill-in-day-month-chunks --> [fill-in, focus: using correct 'in/on' chunks for days, months, and seasons, 6 items]
 
-## Дні тижня (~330 words total)
+## Підсумок — Summary (~300 words total)
+- P1 (~100 words): Provide a consolidated reference table mapping the base noun (Що?) to the time expression (Коли?).
+    - понеділок -> у понеділок
+    - середа -> у середу
+    - січень -> у січні
+    - зима -> взимку
+- P2 (~80 words): Final recap on decolonization. Reiterate why using "березень" instead of "март" and starting on Monday are vital steps in thinking like a Ukrainian. Mention the soft sign "ь" in months like "січень."
+- P3 (~120 words): Interactive Self-Check. Answer the following questions based on today:
+    - Який сьогодні день тижня? (Сьогодні ...)
+    - Який зараз місяць? (Зараз ...)
+    - Яка зараз пора року? (Зараз ...)
+    - Коли у тебе день народження? (Мій день народження у ...)
+    - Що ти робиш у суботу? (У суботу я ...)
 
-- P1 (~80 words): Introduce the 7 days as a visual list, all lowercase (explicit contrast with English capitals): понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя. Point out the week starts on понеділок in Ukrainian calendars (not Sunday). Note: неділя = Sunday AND an archaic/dialectal word for "week"; standard "week" = тиждень.
-- P2 (~90 words): Etymology micro-notes to aid memory — 3 examples: четвер ← четвертий (4th day), п'ятниця ← п'ять (5th day), середа = "middle" of the week. One sentence on субота (Sabbath origin, borrowed). Framing: these aren't random sounds — the days tell a story.
-- Exercise: fill-in — "Put days of the week in sequence" (7 items from activity_hints, e.g.: понеділок, ___, середа → вівторок).
-- P3 (~100 words): "On" a day = у/в + the chunk form. Full list of all 7 forms: у понеділок, у вівторок, у середу, у четвер, у п'ятниця → у п'ятницю, в суботу, в неділю. Highlight that endings change (середа→середу, п'ятниця→п'ятницю, субота→суботу) but неділя→неділю follows the same pattern. Explicit instruction: memorize each full chunk — don't try to construct it yet.
-- P4 (~60 words): Short reinforcement — 4 model sentences using different days: "Я навчаюся у вівторок і в четвер. Тато працює у понеділок. У п'ятницю ми дивимося фільм. В суботу я сплю довго."
-
----
-
-## Місяці і пори року (~330 words total)
-
-- P1 (~90 words): Four seasons as the organizing frame. Introduce зима (f), весна (f), літо (n), осінь (f) with one sentence of sensory association each (e.g., "Зима — сніг і холод. Весна — квіти і тепло. Літо — сонце і море. Осінь — листя і дощ."). Then present the 12 months grouped under each season: Зима: грудень, січень, лютий. Весна: березень, квітень, травень. Літо: червень, липень, серпень. Осінь: вересень, жовтень, листопад. All lowercase.
-- P2 (~80 words): Etymology 3 months to make them memorable: березень ← береза (birch tree blooms), липень ← липа (linden tree flowers), листопад ← листя + падати (leaves fall). Point out Ukrainian months come from nature — not from Roman gods like January/February. This is a Ukrainian linguistic fingerprint. All months are masculine gender.
-- Exercise: match-up — "Match the month to the correct season" (8 pairs from activity_hints: січень↔зима, квітень↔весна, липень↔літо, жовтень↔осінь, лютий↔зима, травень↔весна, серпень↔літо, листопад↔осінь).
-- P3 (~100 words): "In" a month = у/в + locative chunk. Full list of all 12 locative forms: у січні, у лютому, в березні, у квітні, у травні, в червні, в липні, в серпні, у вересні, в жовтні, в листопаді, в грудні. For seasons — irregular adverbial forms (memorize as chunks): взимку, навесні, влітку, восени. 2 model sentences: "Мій день народження в жовтні. Влітку я їжджу на море."
-- P4 (~60 words): Short reinforcement — 4 sentences mixing months and seasons: "У грудні холодно — це зима. Навесні квітнуть дерева. В серпні ми відпочиваємо. Восени починається школа."
-- Exercise: fill-in — "Use the correct 'in/on' chunk" (6 items from activity_hints: Я працюю ___ (у понеділок), Мій день народження ___ (у березні), Ми гуляємо ___ (в суботу), ___ холодно (Взимку), Я вивчаю українську ___ (у вівторок), Вони відпочивають ___ (у серпні)).
-
----
-
-## Підсумок (~150 words total)
-
-- P1 (~150 words): Vocabulary recap as structured self-check. Present three labeled lists then four self-check questions:
-  - **Дні тижня:** понеділок → неділя (chunk: у понеділок / в суботу / в неділю)
-  - **Місяці:** січень → грудень (chunk: у січні / в серпні)
-  - **Пори року:** зима, весна, літо, осінь (chunks: взимку, навесні, влітку, восени)
-  Self-check questions (answer in Ukrainian):
-  - Який сьогодні день?
-  - Який зараз місяць?
-  - Яка зараз пора року?
-  - Коли у тебе день народження?
-  - Що ти робиш у суботу?
-
----
-
-Grand total: ~1340 words
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format

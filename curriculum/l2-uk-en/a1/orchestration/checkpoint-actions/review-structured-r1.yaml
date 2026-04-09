@@ -3,50 +3,48 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 10
-  evidence: Covers all required outline sections. Word counts meet the minimums. Seamlessly
-    integrates the specific A1.3 review requirements.
+  evidence: Covers all grammar points and sections specified in the `content_outline`.
+    Fits the 1200 word target comfortably (1785 words) and explicitly recaps M15-M20
+    as requested.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Contains a well-known textbook calque ("Як ти себе почуваєш?" instead
-    of "Як ти почуваєшся?"). Otherwise, conjugation forms, idioms, and vocabulary
-    usage are accurate.
+  score: 10
+  evidence: All Ukrainian text is correct. No Russianisms, Surzhyk, or calques. Correctly
+    highlights the naturalness rule of using "ставити питання" instead of the literal
+    translation "задавати".
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent breakdown of Group I and Group II rules, using the 3rd person
-    plural to practically identify groups. The flow logically progresses from recognition
-    to explicit rules to connected speech.
+  score: 9
+  evidence: Provides clear explanations with examples. Deducting slightly for a minor
+    translation issue where "гуляти" is translated literally as "walk" instead of
+    "go for a walk" in the dialogue context, which s
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: Seamlessly integrates A1.3 vocabulary (actions, morning routine, time
-    expressions) without introducing unauthorized new words.
+  evidence: The module effectively uses the review vocabulary across all sections
+    without introducing unneeded new words.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: All required exercise markers are present, mapped to the correct plan
-    items, and strategically placed immediately after the relevant instructional sections.
+  evidence: All 4 exercise markers from the plan are present and placed logically
+    after their corresponding pedagogical sections.
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Contains minor meta-commentary ("This is not a test. It is a mirror",
-    "This is a major milestone"), which borders on telling instead of showing, but
-    the overall tone remains supportive and clear.
+  score: 10
+  evidence: The text maintains a supportive and encouraging teacher persona without
+    any corporate or gamified filler.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Perfect markdown structure, dialogue tags are correctly applied, and all
-    headers match the plan.
+  score: 8
+  evidence: 'Deducting due to an incomplete/dangling sentence right before the "Читання"
+    header: "If these patterns feel familiar, ". Otherwise well structured.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Natural framing of routines and professions without any culturally discordant
-    elements.
+  evidence: Culturally appropriate contexts and names are utilized seamlessly.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogue is highly natural, multi-turn, and effectively synthesizes all
-    grammar points (both verb groups, modals, questions, reflexives) into a realistic
-    Saturday morning conversation.
+  evidence: Natural conversational exchange between Viktor and Olena, demonstrating
+    appropriate refusal strategies like "Не можу" instead of just "Ні".
 findings: []

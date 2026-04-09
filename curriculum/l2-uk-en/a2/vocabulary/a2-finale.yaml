@@ -1,0 +1,133 @@
+vocabulary:
+- word: маршру́тка
+  translation: minibus
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прогу́лянка
+  translation: walk, stroll
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дізна́тися
+  translation: to find out, to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гото́вий
+  translation: ready
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: прибуття́
+  translation: arrival
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: замо́вити
+  translation: to order
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пора́дити
+  translation: to recommend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: буді́вля
+  translation: building
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вра́ження
+  translation: impression
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: віта́ємо
+  translation: congratulations
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зупи́нка
+  translation: stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: йти пішки
+  translation: to go on foot
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: реєстра́ція
+  translation: registration
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бронюва́ння
+  translation: reservation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: волі́ти
+  translation: to prefer
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Радий тебе бачити!
+  translation: Glad to see you!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на мою думку
+  translation: in my opinion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені здається
+  translation: it seems to me
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: На добраніч!
+  translation: Good night!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

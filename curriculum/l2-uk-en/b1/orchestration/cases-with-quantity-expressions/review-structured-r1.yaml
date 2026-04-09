@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The writer perfectly adapted the grammar outline, and even intelligently
+    corrected a pedagogical error in the plan (distinguishing 4th declension from
+    pluralia tantum, which the plan incorrectly confl
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'A critical factual error in numeral declension: "«з двісті двадцятьма
+    п''ятьма студентами»" fails to decline the hundreds in the instrumental case.
+    An incorrect morphological form "вісімма" instead of '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb explanations. The point about the historical dual case ("двоїна")
+    explaining the stress shift in "два брАти" is culturally and linguistically brilliant
+    for B1 learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items seamlessly integrated into
+    context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly spaced and logically aligned with the taught concepts.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. The dialogue flows naturally.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Perfect markdown structure and mapping to the exact headers mandated by
+    the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Translating "a dozen apples" as "з десяток яблук" instead of "дюжина"
+    shows deep cultural competence regarding Ukrainian approximation habits.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The "Census" dialogue perfectly demonstrates complex quantity expressions
+    in a highly realistic, culturally grounded context without feeling like a textbook
+    drill.
+findings: []

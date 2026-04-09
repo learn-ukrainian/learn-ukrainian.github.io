@@ -1,7 +1,116 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 88,
+  "grounded_items": 70,
+  "ungrounded": [
+    {
+      "word": "цей",
+      "exercise_type": "fill-in",
+      "context": "____ (Оксана), читай цей текст, будь ласка!",
+      "role": "context"
+    },
+    {
+      "word": "текст",
+      "exercise_type": "fill-in",
+      "context": "____ (Оксана), читай цей текст, будь ласка!",
+      "role": "context"
+    },
+    {
+      "word": "принести",
+      "exercise_type": "fill-in",
+      "context": "Тарасе, ____ (принести) стільці!",
+      "role": "context"
+    },
+    {
+      "word": "писати",
+      "exercise_type": "fill-in",
+      "context": "Андрію, ____ (писати) лист!",
+      "role": "context"
+    },
+    {
+      "word": "мені",
+      "exercise_type": "fill-in",
+      "context": "____ (Олена), дай мені квиток, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "fill-in",
+      "context": "Петре, ____ (робити) це швидко!",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "fill-in",
+      "context": "Петре, ____ (робити) це швидко!",
+      "role": "context"
+    },
+    {
+      "word": "швидко",
+      "exercise_type": "fill-in",
+      "context": "Петре, ____ (робити) це швидко!",
+      "role": "context"
+    },
+    {
+      "word": "сюди",
+      "exercise_type": "fill-in",
+      "context": "____ (матуся), прийди сюди!",
+      "role": "context"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "fill-in",
+      "context": "Діти, ____ (читати) текст!",
+      "role": "context"
+    },
+    {
+      "word": "читати",
+      "exercise_type": "fill-in",
+      "context": "Діти, ____ (читати) текст!",
+      "role": "context"
+    },
+    {
+      "word": "йду",
+      "exercise_type": "match-up",
+      "context": "Я не йду,",
+      "role": "answer"
+    },
+    {
+      "word": "хворий",
+      "exercise_type": "quiz",
+      "context": "Я не йду, ____ хворий.",
+      "role": "context"
+    },
+    {
+      "word": "він",
+      "exercise_type": "fill-in",
+      "context": "Я знаю, ____ він тут.",
+      "role": "context"
+    },
+    {
+      "word": "тут",
+      "exercise_type": "unjumble",
+      "context": "ти тут.",
+      "role": "answer"
+    },
+    {
+      "word": "прийдеш",
+      "exercise_type": "fill-in",
+      "context": "Скажи, ____ ти прийдеш.",
+      "role": "context"
+    },
+    {
+      "word": "сполучники",
+      "exercise_type": "group-sort",
+      "context": "Сполучники (Conjunctions)",
+      "role": "context"
+    },
+    {
+      "word": "дієслова",
+      "exercise_type": "group-sort",
+      "context": "Дієслова (Verbs)",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {},
-  "all_grounded": true
+  "all_grounded": false
 }

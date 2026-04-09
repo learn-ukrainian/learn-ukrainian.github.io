@@ -1,56 +1,67 @@
 ## Linguistic Scan
-Linguistic errors found:
-- **Surzhyk/Unnatural phrasing:** The phrase "він стіл?" used to test gender is grammatically incorrect. Native speakers do not combine pronouns and nouns this way to test gender; the correct equative form is "стіл — він". 
-- **Stress error:** "У мене́" has incorrect stress; it should be "У ме́не".
+No linguistic errors found. The grammar points are accurate and properly contextualized. All Ukrainian forms have been verified against VESUM.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-vin-vona-vono -->` (matches 'quiz' in plan)
-- `<!-- INJECT_ACTIVITY: group-sort-gender -->` (matches 'group-sort' in plan)
-- `<!-- INJECT_ACTIVITY: fill-in-possessive -->` (matches 'fill-in' in plan)
-- `<!-- INJECT_ACTIVITY: quiz-gender-by-ending -->` (matches 'quiz' in plan)
-
-All 4 activity markers are present, map directly to the plan's activity hints, and are logically placed after the relevant teaching sections.
+- `<!-- INJECT_ACTIVITY: quiz-pronoun-choice -->`: Focuses on `він/вона/воно`, but is currently placed after the paragraph teaching `мій/моя/моє`. It should be moved up slightly to immediately follow the `він/вона/воно` explanation.
+- `<!-- INJECT_ACTIVITY: quiz-gender-endings -->`: Matches plan focus ("What gender? Look at the ending"). Correctly placed right after the ending rules are presented.
+- `<!-- INJECT_ACTIVITY: group-sort-gender -->`: Matches plan focus ("Sort objects"). Correctly placed after the vocabulary has been introduced by gender.
+- `<!-- INJECT_ACTIVITY: fill-in-possessives -->`: Focuses on matching the possessive `мій/моя/моє` to the noun, but is currently placed at the very end of the module, right after teaching the phrase `У мене є`. This is disjointed because the learner just read about a different grammar pattern. It should be moved up to immediately follow the `мій/моя/моє` paragraph.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | All sections and points are covered. However, H2 headers include stress marks (`## Діало́ги (Dialogues)`), which breaks the exact string matching required by the pipeline against the `meta.yaml` outline. |
-| 2. Linguistic accuracy | 8/10 | Good overall, but "**він стіл**?" is incorrect grammatical usage, and "У **мене́**" has a stress error. |
-| 3. Pedagogical quality | 8/10 | Excellent PPP flow. Deducted because teaching students to literally say "він стіл?" to test gender teaches them a broken grammatical structure from the start. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items are naturally integrated into the text and examples. |
-| 5. Exercise quality | 10/10 | Activity markers match the plan's hints perfectly and are placed at the correct pedagogical moments. |
-| 6. Engagement & tone | 9/10 | Dialogues are natural and effective. Slight meta-commentary ("A few short sentences to make each word stick:"). |
-| 7. Structural integrity | 8/10 | Markdown structure is clean, but the inclusion of stress marks in H2 headings violates the exact-match requirement for the audit script. |
-| 8. Cultural accuracy | 10/10 | Correctly references the Ukrainian Grade 3 textbook approach to teaching gender. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues feel natural, contextualize the grammar perfectly, and feature distinct speakers. |
+| 1. Plan adherence | 10/10 | The module strictly follows the outline, including all specific dialogues (pet shop, video call, what's in your bag), textbook references (Ponomarova, Vashulenko), and the 3-step summary. |
+| 2. Linguistic accuracy | 10/10 | No linguistic errors. Gender assignments and grammatical explanations are flawless. All proper vocabulary uses correct forms. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical pacing. Introduces the concept abstractly, then uses possessives to make it concrete, then gives reliable spelling rules, followed by practical application. |
+| 4. Vocabulary coverage | 10/10 | Every single required and recommended vocabulary word is integrated naturally into the prose (e.g., seamlessly grouping them by gender in the "Objects Around Us" section). |
+| 5. Exercise quality | 8/10 | Two exercise markers (`quiz-pronoun-choice` and `fill-in-possessives`) are misplaced relative to the concepts they test, which could cause a jarring experience for learners. |
+| 6. Engagement & tone | 10/10 | The tone is highly engaging without being corporate or patronizing. Phrases like "You must set this habit aside" provide strong, clear guidance. |
+| 7. Structural integrity | 10/10 | All H2 headings match the plan perfectly. The word count is 1773 words, which comfortably exceeds the 1200-word target. |
+| 8. Cultural accuracy | 10/10 | Beautifully incorporates real Ukrainian school textbooks (Ponomarova and Vashulenko) as authoritative sources for the gender rules, reflecting authentic education. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, utilize named speakers, and organically demonstrate the target grammar in relatable situations. |
 
 ## Findings
-
-[Structural integrity] [Critical]
-Location: `## Діало́ги (Dialogues)` and `## Предме́ти навко́ло (Objects Around Us)`
-Issue: Headers contain stress marks. The audit script requires EXACT string matching with the `content_outline` in `meta.yaml`. The stress marks will cause the pipeline to fail the outline compliance check.
-Fix: Remove stress marks from the H2 headers to match the plan exactly.
-
-[Linguistic accuracy] [Critical]
-Location: `Ask yourself: **він стіл**? Yes — that feels right. **Вона стіл**? No — sounds wrong. **Воно стіл**? Also wrong.`
-Issue: The phrase "він стіл?" is grammatically incorrect and resembles Surzhyk or baby-talk. Native speakers test gender by using an equative structure like "стіл — він" or using demonstratives. Teaching learners to say "він стіл" teaches a broken syntactic pattern.
-Fix: Change the test to the standard pedagogical format: `Ask yourself: **стіл — він**? Yes — that feels right. **Стіл — вона**? No — sounds wrong.`
-
-[Linguistic accuracy] [Major]
-Location: `— **Марія:** У мене́ є кни́га, телефо́н і фо́то.`
-Issue: Incorrect stress position on the pronoun "мене". It should be "ме́не", not "мене́".
-Fix: Change `У мене́` to `У ме́не`.
+[5. Exercise quality] [major]
+Location: `## Він, вона, воно — The Gender Test` and `## Предмети навколо — Objects Around Us`
+Issue: `quiz-pronoun-choice` (testing `він/вона/воно`) is placed after the `мій/моя/моє` paragraph. `fill-in-possessives` (testing `мій/моя/моє`) is placed at the end of the module after teaching `У мене є`. This means exercises appear significantly after the concept is taught, or immediately after an unrelated concept, which creates a jarring learning experience.
+Fix: Move `quiz-pronoun-choice` to immediately follow the paragraph teaching `він, вона, воно`. Move `fill-in-possessives` to replace the old location of `quiz-pronoun-choice` (immediately following the `мій/моя/моє` paragraph). Remove the marker from the end of the section.
 
 ## Verdict: REVISE
-The module is high-quality, engaging, and follows the plan well. However, it contains a critical pedagogical/linguistic error in how the gender test is demonstrated ("він стіл?"), and a critical structural issue with stress marks in the headers that will break the pipeline audit. These must be fixed before the module can pass.
+The content itself is excellent, linguistically sound, and culturally accurate. However, the misplacement of two activity markers disrupts the pedagogical flow and violates the rule against placing exercises after unrelated concepts. Applying the deterministic marker movement fixes will perfect this module.
 
 <fixes>
-- find: "## Діало́ги (Dialogues)"
-  replace: "## Діалоги (Dialogues)"
-- find: "## Предме́ти навко́ло (Objects Around Us)"
-  replace: "## Предмети навколо (Objects Around Us)"
-- find: "Take **стіл** (table). Ask yourself: **він стіл**? Yes — that feels right. **Вона стіл**? No — sounds wrong. **Воно стіл**? Also wrong. Result: **стіл** is **чоловічий рід** (masculine). Now try **книга** (book): **вона книга**? Yes — **жіночий рід** (feminine). Try **вікно́** (window): **воно вікно**? Yes — **середній рід** (neuter)."
-  replace: "Take **стіл** (table). Ask yourself: **стіл — він**? Yes — that feels right. **Стіл — вона**? No — sounds wrong. Result: **стіл** is **чоловічий рід** (masculine). Now try **книга** (book): **книга — вона**? Yes — **жіночий рід** (feminine). Try **вікно́** (window): **вікно — воно**? Yes — **середній рід** (neuter)."
-- find: "У мене́ є кни́га, телефо́н і фо́то."
-  replace: "У ме́не є кни́га, телефо́н і фо́то."
+- find: |
+    If the word is a **вікно** (window), you refer to it as **воно**.
+
+    This concept becomes much more intuitive when you attach a possessive pronoun to the noun.
+  replace: |
+    If the word is a **вікно** (window), you refer to it as **воно**.
+
+    <!-- INJECT_ACTIVITY: quiz-pronoun-choice -->
+
+    This concept becomes much more intuitive when you attach a possessive pronoun to the noun.
+- find: |
+    By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
+
+    <!-- INJECT_ACTIVITY: quiz-pronoun-choice -->
+
+    While the "My" test helps you confirm a word's gender,
+  replace: |
+    By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
+
+    <!-- INJECT_ACTIVITY: fill-in-possessives -->
+
+    While the "My" test helps you confirm a word's gender,
+- find: |
+    You do not need to change the ending of the object you possess in this specific construction.
+    :::
+
+    <!-- INJECT_ACTIVITY: fill-in-possessives -->
+
+    ## Підсумок — Summary
+  replace: |
+    You do not need to change the ending of the object you possess in this specific construction.
+    :::
+
+    ## Підсумок — Summary
 </fixes>

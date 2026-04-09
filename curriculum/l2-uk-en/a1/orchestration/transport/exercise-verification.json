@@ -1,25 +1,348 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 125,
+  "grounded_items": 69,
+  "ungrounded": [
+    {
+      "word": "подорожує",
+      "exercise_type": "quiz",
+      "context": "Він подорожує ______.",
+      "role": "context"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "quiz",
+      "context": "Вона їде ______.",
+      "role": "context"
+    },
+    {
+      "word": "ти",
+      "exercise_type": "quiz",
+      "context": "Ти їдеш ______.",
+      "role": "context"
+    },
+    {
+      "word": "їдеш",
+      "exercise_type": "quiz",
+      "context": "Ти їдеш ______.",
+      "role": "context"
+    },
+    {
+      "word": "йдете",
+      "exercise_type": "quiz",
+      "context": "Ви йдете в аеропорт. Ваш транспорт — це...",
+      "role": "context"
+    },
+    {
+      "word": "ваш",
+      "exercise_type": "quiz",
+      "context": "Ви йдете в аеропорт. Ваш транспорт — це...",
+      "role": "context"
+    },
+    {
+      "word": "стоїте",
+      "exercise_type": "quiz",
+      "context": "Ви стоїте на зупинці. Ваш транспорт — це...",
+      "role": "context"
+    },
+    {
+      "word": "їдете",
+      "exercise_type": "quiz",
+      "context": "Ви їдете в інше місто (city). Це...",
+      "role": "context"
+    },
+    {
+      "word": "інше",
+      "exercise_type": "quiz",
+      "context": "Ви їдете в інше місто (city). Це...",
+      "role": "context"
+    },
+    {
+      "word": "місто",
+      "exercise_type": "quiz",
+      "context": "Ви їдете в інше місто (city). Це...",
+      "role": "context"
+    },
+    {
+      "word": "містом",
+      "exercise_type": "quiz",
+      "context": "Ви їдете прямо в центр містом. Це...",
+      "role": "context"
+    },
+    {
+      "word": "цей",
+      "exercise_type": "quiz",
+      "context": "Цей транспорт не змінює закінчення:",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "quiz",
+      "context": "Цей транспорт не змінює закінчення:",
+      "role": "context"
+    },
+    {
+      "word": "змінює",
+      "exercise_type": "quiz",
+      "context": "Цей транспорт не змінює закінчення:",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "quiz",
+      "context": "Цей транспорт не змінює закінчення:",
+      "role": "context"
+    },
+    {
+      "word": "зупинки",
+      "exercise_type": "fill-in",
+      "context": "Ідіть ______ до зупинки.",
+      "role": "context"
+    },
+    {
+      "word": "орудний",
+      "exercise_type": "group-sort",
+      "context": "Орудний (автобусом)",
+      "role": "context"
+    },
+    {
+      "word": "місцевий",
+      "exercise_type": "group-sort",
+      "context": "на + Місцевий (на метро)",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Слова «метро» та «таксі» ніколи не змінюють закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "та",
+      "exercise_type": "true-false",
+      "context": "Слова «метро» та «таксі» ніколи не змінюють закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "ніколи",
+      "exercise_type": "true-false",
+      "context": "Слова «метро» та «таксі» ніколи не змінюють закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Слова «метро» та «таксі» ніколи не змінюють закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно говорити: «Я їду на автобусом».",
+      "role": "context"
+    },
+    {
+      "word": "говорити",
+      "exercise_type": "true-false",
+      "context": "Правильно говорити: «Я їду на автобусом».",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Для потяга ми кажемо: «Він рушає».",
+      "role": "context"
+    },
+    {
+      "word": "потяга",
+      "exercise_type": "true-false",
+      "context": "Для потяга ми кажемо: «Він рушає».",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Для потяга ми кажемо: «Він рушає».",
+      "role": "context"
+    },
+    {
+      "word": "купуємо",
+      "exercise_type": "true-false",
+      "context": "Ми купуємо квиток «до Львова», а не «в Львів».",
+      "role": "context"
+    },
+    {
+      "word": "львів",
+      "exercise_type": "true-false",
+      "context": "Ми купуємо квиток «до Львова», а не «в Львів».",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово «відправлятися» — це найкращий вибір для транспорту",
+      "role": "context"
+    },
+    {
+      "word": "найкращий",
+      "exercise_type": "true-false",
+      "context": "Дієслово «відправлятися» — це найкращий вибір для транспорту",
+      "role": "context"
+    },
+    {
+      "word": "вибір",
+      "exercise_type": "true-false",
+      "context": "Дієслово «відправлятися» — це найкращий вибір для транспорту",
+      "role": "context"
+    },
+    {
+      "word": "транспорту",
+      "exercise_type": "true-false",
+      "context": "Дієслово «відправлятися» — це найкращий вибір для транспорту",
+      "role": "context"
+    },
+    {
+      "word": "чекаємо",
+      "exercise_type": "true-false",
+      "context": "Ми чекаємо потяг на зупинці.",
+      "role": "context"
+    },
+    {
+      "word": "починає",
+      "exercise_type": "match-up",
+      "context": "потяг починає їхати",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "match-up",
+      "context": "йти ногами, не машиною",
+      "role": "context"
+    },
+    {
+      "word": "ногами",
+      "exercise_type": "match-up",
+      "context": "йти ногами, не машиною",
+      "role": "context"
+    },
+    {
+      "word": "машиною",
+      "exercise_type": "match-up",
+      "context": "йти ногами, не машиною",
+      "role": "context"
+    },
+    {
+      "word": "метром",
+      "exercise_type": "error-correction",
+      "context": "Він їде метром.",
+      "role": "context"
+    },
+    {
+      "word": "києва",
+      "exercise_type": "error-correction",
+      "context": "до Києва",
+      "role": "answer"
+    },
+    {
+      "word": "київ",
+      "exercise_type": "error-correction",
+      "context": "Один квиток в Київ, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "дістати",
+      "exercise_type": "error-correction",
+      "context": "Як дістати до вокзалу?",
+      "role": "context"
+    },
+    {
+      "word": "відправляється",
+      "exercise_type": "error-correction",
+      "context": "Потяг відправляється о восьмій.",
+      "role": "context"
+    },
+    {
+      "word": "таксієм",
+      "exercise_type": "error-correction",
+      "context": "Ми їдемо таксієм.",
+      "role": "context"
+    },
+    {
+      "word": "запитати",
+      "exercise_type": "quiz",
+      "context": "Як правильно запитати дорогу?",
+      "role": "context"
+    },
+    {
+      "word": "дорогу",
+      "exercise_type": "quiz",
+      "context": "Як правильно запитати дорогу?",
+      "role": "context"
+    },
+    {
+      "word": "під",
+      "exercise_type": "quiz",
+      "context": "Який транспорт їде під землею?",
+      "role": "context"
+    },
+    {
+      "word": "землею",
+      "exercise_type": "quiz",
+      "context": "Який транспорт їде під землею?",
+      "role": "context"
+    },
+    {
+      "word": "що",
+      "exercise_type": "quiz",
+      "context": "Що каже касир, коли продає квиток?",
+      "role": "context"
+    },
+    {
+      "word": "каже",
+      "exercise_type": "quiz",
+      "context": "Що каже касир, коли продає квиток?",
+      "role": "context"
+    },
+    {
+      "word": "продає",
+      "exercise_type": "quiz",
+      "context": "Що каже касир, коли продає квиток?",
+      "role": "context"
+    },
+    {
+      "word": "відповідаємо",
+      "exercise_type": "quiz",
+      "context": "Як ми відповідаємо, якщо хтось каже «Дякую!»?",
+      "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "quiz",
+      "context": "Як ми відповідаємо, якщо хтось каже «Дякую!»?",
+      "role": "context"
+    },
+    {
+      "word": "хтось",
+      "exercise_type": "quiz",
+      "context": "Як ми відповідаємо, якщо хтось каже «Дякую!»?",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати, що ви їдете автомобілем?",
+      "role": "context"
+    },
+    {
+      "word": "автомобілем",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати, що ви їдете автомобілем?",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 13,
-    "tested_in_exercises": 0,
-    "not_tested": [
-      "автобус",
-      "дістатися",
-      "зупинка",
-      "квиток",
-      "літак",
-      "маршрутка",
-      "метро",
-      "наліво",
-      "направо",
-      "потяг",
-      "прямо",
-      "таксі",
-      "трамвай"
-    ]
+    "tested_in_exercises": 13,
+    "not_tested": []
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,60 +1,39 @@
 ## Linguistic Scan
-No critical linguistic errors found. The phonetic rules are explained accurately according to Pravopys 2019. (Minor orthographic punctuation issues and one stylistic phrasing issue noted in findings).
+No linguistic errors found. The explanations of the `у/в`, `і/й`, and `з/із/зі` euphony rules are highly accurate and align perfectly with Правопис 2019 (§ 17, 18, 23-25). 
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-u-or-v -->` - Present, placed after the "У чи В?" rule section.
-- `<!-- INJECT_ACTIVITY: quiz-i-or-y -->` - Present, placed after the "І чи Й? З, із, чи зі?" rule section.
-- `<!-- INJECT_ACTIVITY: fill-in-z-iz-zi -->` - Present, placed after the "І чи Й? З, із, чи зі?" rule section.
-- `<!-- INJECT_ACTIVITY: quiz-which-sounds-natural -->` - Present, placed after the Summary section.
-
-All markers match the plan's `activity_hints` in focus and type. Placements are logically sound, testing the concepts immediately after they are taught.
+All four activity hints from the plan are represented with correct marker IDs (`quiz-u-v-choice`, `quiz-naturalness-comparison`, `quiz-i-y-choice`, `fill-in-z-iz-zi`). They are logically placed directly following the relevant teaching sections. No issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | The writer merged Dialogue 1 and Dialogue 2 into a single proofreading scene, which improved flow but caused them to miss the specific motivational vocabulary (`город`, `яблуко`) and recommended vocabulary (`театр`) from the plan. |
-| 2. Linguistic accuracy | 9/10 | Ukrainian grammar and phonetics are explained perfectly. There is a minor orthographic issue: using English-style punctuation (periods inside guillemets `«... .»`) instead of Ukrainian style (`«...».`). |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow. The "listen-and-feel" advice is great pedagogical practice for euphony. Plentiful examples for each rule. |
-| 4. Vocabulary coverage | 8/10 | Required grammar words (у/в, і/й, з/із/зі) and most recommended words (Київ, Львів, офіс, парк) are used well. However, `театр`, `яблуко`, and `город` are completely missing from the text. |
-| 5. Exercise quality | 10/10 | Placeholders match the plan exactly and are positioned perfectly to test the preceding sections. |
-| 6. Engagement & tone | 10/10 | Engaging dialogue setting ("Дарина... has sharper ears for how Ukrainian flows"). Culturally enriching mention of "солов'їна мова". |
-| 7. Structural integrity | 10/10 | Markdown structure is clean, all sections from the outline are present, word count is within an acceptable range. |
-| 8. Cultural accuracy | 10/10 | Correct presentation of Ukrainian euphony not as an arbitrary rule but as a natural flow. Accurate representation of the language. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogue is natural and serves the pedagogical purpose well, though it deviated structurally from the planned scenes. |
+| 1. Plan adherence | 8/10 | The plan explicitly requested: `Text mentions: у городі/в городі, і яблука/й яблука, у школі/в школі.` The generated Dialogue 1 completely omitted the `і/й яблука` and `у/в школі` examples. |
+| 2. Linguistic accuracy | 10/10 | The phonetic rules are stated with precision. Exceptions like "у Франції" (before ф), "у Львові" (before льв), and "зі школи" (before шк) are handled flawlessly. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow (PPP). The analogy of building a "V-C-V sandwich" helps visualize the abstract concept of euphony, breaking down the mechanical reasoning behind the rules. |
+| 4. Vocabulary coverage | 10/10 | All required alternating prepositions/conjunctions and recommended nouns (Київ, Львів, офіс, парк, театр) are used effectively in context. |
+| 5. Exercise quality | 10/10 | The 4 injected markers perfectly match the focus and type counts specified in the plan. |
+| 6. Engagement & tone | 10/10 | The tone is warm and encouraging. Phrases like "well-oiled gears" and "keep the melody flowing" add excellent linguistic flavor without relying on generic/gamified filler. |
+| 7. Structural integrity | 10/10 | The markdown is clean, headers perfectly match the outline, and the module exceeds the word target (1655 words). |
+| 8. Cultural accuracy | 10/10 | Geography and contexts are standard and culturally appropriate. |
+| 9. Dialogue & conversation quality | 7/10 | There is a critical logic error in Dialogue 2. The student asks "Ти і Олена йдете в кіно?", the friend corrects the grammar, but then the *student* says "Ні, я і Максим йдемо в парк" and answers for the friend's group. |
 
 ## Findings
+[Plan adherence] [Major]
+Location: Dialogue 1
+Issue: The plan explicitly required the inclusion of the examples `і яблука/й яблука` and `у школі/в школі` as part of the essay proofreading exercise, but they are missing from the text.
+Fix: Add these corrections to the friend's line in the first dialogue.
 
-[1. Plan adherence] [major]
-Location: `У чи В? (У or В?)` and `І чи Й? З, із, чи зі?` sections.
-Issue: The writer failed to include the vocabulary words `город`, `яблуко`, and `театр` which were specified in the plan's motivation and recommended vocabulary lists.
-Fix: Inject these words into the example lists and sentences.
-
-[2. Linguistic accuracy] [minor]
-Location: `— Олексій: Слухай. «Я живу́ в Льво́ві.»` (and other similar dialogue lines)
-Issue: English-style typographic punctuation is used, where the period is placed inside the Ukrainian guillemets («... .» instead of «...».). In Ukrainian typography, periods go outside the quotes.
-Fix: Move the periods outside the guillemets.
-
-[2. Linguistic accuracy] [minor]
-Location: `— Олексій: Тепе́р мій есе́й звучи́ть по-спра́вжньому га́рно!`
-Issue: "по-справжньому гарно" is a bit awkward and borders on a stylistic calque for "truly good". "справді гарно" is more natural.
-Fix: Replace "по-справжньому" with "справді".
+[Dialogue & conversation quality] [Critical]
+Location: Dialogue 2 `> **Студент:** А, добре. Ні, я і Максим йдемо в парк.`
+Issue: The conversational logic breaks. The student asks if the friend is going to the cinema, but then the student answers their own question on behalf of the friend. The friend should be the one answering "No, Maksym and I are going to the park."
+Fix: Reassign the speaker roles in the second half of Dialogue 2 so the Friend answers the question about their plans.
 
 ## Verdict: REVISE
-The module is of excellent pedagogical quality and correctly teaches the complex euphony rules. However, the writer missed several required vocabulary words from the plan and used English-style quote punctuation. These minor errors must be corrected before publishing.
+The explanations of Ukrainian phonetics are exceptionally well done, but the module requires a structural fix to the dialogue logic and the inclusion of the missing plan examples. 
 
 <fixes>
-- find: "— **Олексій:** Слу́хай. «Я живу́ в Льво́ві.» *(Listen. \"I live in Lviv.\")*"
-  replace: "— **Олексій:** Слу́хай. «Я живу́ в Льво́ві». *(Listen. \"I live in Lviv.\")*"
-- find: "— **Олексій:** Зрозумі́в! А да́лі: «Вона́ працю́є у о́фісі.» *(Got it! And next: \"She works in the office.\")*"
-  replace: "— **Олексій:** Зрозумі́в! А да́лі: «Вона́ працю́є у о́фісі». *(Got it! And next: \"She works in the office.\")*"
-- find: "— **Олексій:** Ось тут: «Макси́м й Семе́н.» *(Here: \"Maksym y Semen.\")*"
-  replace: "— **Олексій:** Ось тут: «Макси́м й Семе́н». *(Here: \"Maksym y Semen.\")*"
-- find: "**«У саду́ ти́хо»** (\"It's quiet in the garden\")."
-  replace: "**«У горо́ді ти́хо»** (\"It's quiet in the garden\")."
-- find: "- мама **й** тато — vowel А before, consonant Т after\n- вона **й** він — vowel А before"
-  replace: "- мама **й** тато — vowel А before, consonant Т after\n- я́блука **й** гру́ші — vowel А before, consonant Г after\n- вона **й** він — vowel А before"
-- find: "- працює **в** офісі — \"працює\" ends in vowel Є, \"офісі\" starts with vowel О (в works between two vowels too)"
-  replace: "- працює **в** офісі — \"працює\" ends in vowel Є, \"офісі\" starts with vowel О (в works between two vowels too)\n- ми **в** теа́трі — \"ми\" ends in vowel И, \"театрі\" starts with consonant Т"
-- find: "— **Олексій:** Тепе́р мій есе́й звучи́ть по-спра́вжньому га́рно! *(Now my essay sounds truly good!)*"
-  replace: "— **Олексій:** Тепе́р мій есе́й звучи́ть спра́вді га́рно! *(Now my essay sounds truly good!)*"
+- find: "> **Друг:** Краще сказати «у городі», бо слово «був» закінчується на приголосний. *(It is better to say \"у городі\", because \"був\" ends in a consonant.)*\n> **Студент:** Зрозумів. А як правильно: «в Києві» чи «у Києві»? Де ти живеш? *(Understood. And what is correct: \"в Києві\" or \"у Києві\"? Where do you live?)*"
+  replace: "> **Друг:** Краще сказати «у городі», бо слово «був» закінчується на приголосний. А замість «й яблука» та «в школі» у твоєму тексті краще «і яблука» та «у школі». *(It is better to say \"у городі\", because \"був\" ends in a consonant. And instead of \"й яблука\" and \"в школі\" in your text, it's better \"і яблука\" and \"у школі\".)*\n> **Студент:** Зрозумів. А як правильно: «в Києві» чи «у Києві»? Де ти живеш? *(Understood. And what is correct: \"в Києві\" or \"у Києві\"? Where do you live?)*"
+- find: "> **Друг:** Ти й Олена. Так швидше. *(You and Olena. It is faster this way.)*\n> **Студент:** А, добре. Ні, я і Максим йдемо в парк. *(Ah, good. No, I and Maksym are going to the park.)*\n> **Друг:** А Олена й Тарас? *(And Olena and Taras?)*\n> **Студент:** Вони йдуть у театр. *(They are going to the theater.)*"
+  replace: "> **Друг:** Ти й Олена. Так швидше. А щодо кіно — ні, я і Максим йдемо в парк. *(You and Olena. It is faster this way. As for the cinema — no, I and Maksym are going to the park.)*\n> **Студент:** А Олена й Тарас? *(And Olena and Taras?)*\n> **Друг:** Вони йдуть у театр. *(They are going to the theater.)*"
 </fixes>

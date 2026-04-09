@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 42: Hey, Friend! (A1, A1.7 [Communication])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -201,82 +201,167 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
-It's Taras's birthday — **Тара́су вісімна́дцять ро́кі́в** (Taras is eighteen) — and everyone is at the party. He spots friends across the room and calls them over. Listen to how every name changes when someone is called directly.
-> — **Тара́с:** Оле́но, приві́т! Як спра́ви? *(Olena, hi! How are you?)*
-> — **Оле́на:** До́бре, дякую, Тара́се! А в тебе́? *(Good, thanks, Taras! And you?)*
-> — **Тарас:** Теж добре! Олено, ти зна́єш мого бра́та? *(Also good! Olena, do you know my brother?)*
-> — **Олена:** Ні. *(No.)*
-> — **Тарас:** Андрію, ходи́ сюди́! Це Олена. *(Andrii, come here! This is Olena.)*
-> — **Тарас:** Олено, це Андрі́й. *(Olena, this is Andrii.)*
-> — **Олена:** Привіт, Андрію! *(Hi, Andrii!)*
-> — **Андрій:** Привіт! Ра́дий ба́чити! *(Hi! Glad to see you!)*
+## Діалоги (Dialogues)
 
-Notice the names: **Олена** became **Олено**, **Тарас** became **Тарасе**, **Андрій** became **Андрію**. Every single time someone was addressed directly, the name changed its ending.
-Now the scene shifts. A family is getting ready to leave the house — everyone is busy, everyone is calling everyone else.
-> — **Марко́:** Ма́мо, де мій телефо́н? *(Mom, where's my phone?)*
-> — **Ма́ма:** На столі́, синку́. *(On the table, son.)*
-> — **Оля:** Тату́, а де ключі́? *(Dad, where are the keys?)*
-> — **Та́то:** У кише́ні, до́чко. *(In the pocket, daughter.)*
-> — **Оля:** Бабу́сю, ми йдемо́! *(Grandma, we're going!)*
-> — **Бабу́ся:** Добре, бу́дьте обере́жні! *(Okay, be careful!)*
-> — **Оля:** Діду́сю, до поба́чення! *(Grandpa, goodbye!)*
+Imagine you are at a lively birthday party in Ukraine. The traditional music is playing loudly, people are talking in groups, and you need to get your friend's attention across the crowded room. In English, you would simply shout their name exactly as it is written. In Ukrainian, calling out to someone or addressing them directly requires a specific grammatical shift. You cannot just use their regular, dictionary-form name; you must change its ending to show that you are talking to them, rather than about them. 
 
-Family vocatives here: **мама** → **мамо**, **тато** → **тату**, **сино́к** → **синку**, **дочка́** → **дочко**, **бабуся** → **бабусю**, **діду́сь** → **дідусю**. Every name and family word changed when someone was spoken to directly.
-Notice how every name CHANGED. **Олена** became **Олено**. **Тарас** became **Тарасе**. **Мама** became **мамо**. This is **кли́чний відмі́нок** (the vocative case) — the "calling case." The next two sections explain exactly how the pattern works.
+Let us look at a typical interaction as guests arrive at the party. The birthday person is greeting friends as they walk through the door. Notice how the names change when they speak directly to each other. Pay special attention to how **Олена** (Olena), **Тарас** (Taras), and **Андрій** (Andriy) are addressed.
+
+> **Іменинник:** **Олено, привіт! Як справи?** *(Olena, hi! How are you?)*
+> **Олена:** **Добре, дякую, Тарасе! А в тебе?** *(Good, thanks, Taras! And you?)*
+> **Іменинник:** **Теж добре. Олено, ти знаєш мого брата?** *(Also good. Olena, do you know my brother?)*
+> **Олена:** **Ні.** *(No.)*
+> **Іменинник:** **Андрію, ходи сюди! Це Олена.** *(Andriy, come here! This is Olena.)*
+> **Іменинник:** **Олено, це Андрій.** *(Olena, this is Andriy.)*
+
+Later at the same party, the birthday person interacts with different family members in the kitchen. Family words also change their endings when you address them directly. Pay attention to how the words for mom, dad, son, daughter, and grandma transform in conversation when someone is asking a question or giving an instruction.
+
+> **Син:** **Мамо, де мій телефон?** *(Mom, where is my phone?)*
+> **Мама:** **На столі, синку.** *(On the table, son.)*
+> **Дочка:** **Тату, а де ключі?** *(Dad, and where are the keys?)*
+> **Тато:** **У кишені, дочко.** *(In the pocket, daughter.)*
+> **Син:** **Бабусю, ми йдемо!** *(Grandma, we are going!)*
+> **Бабуся:** **Добре, будьте обережні!** *(Good, be careful!)*
+> **Бабуся:** **До побачення, Андрію!** *(Goodbye, Andriy!)*
+
+Did you notice the consistent pattern of direct address in those two dialogues? When the speaker talked about someone, they used the regular name, like saying **Це Олена** (This is Olena) or **Це Андрій** (This is Andriy). But when they spoke directly to them, **Олена** (Olena) became **Олено** (Olena), **Тарас** (Taras) became **Тарасе** (Taras), and **мама** (mom) became **мамо** (mom). This shift is not an optional stylistic choice; it is a fundamental rule of natural Ukrainian communication.
+
+*   **Добрий ранок, пане Іване!** *(Good morning, Mr. Ivan!)*
+*   **Добрий вечір, пані Оксано!** *(Good evening, Ms. Oksana!)*
+*   **До побачення, вчителю!** *(Goodbye, teacher!)*
+*   **На добраніч, синку!** *(Good night, son!)*
+*   **Смачного, друзі!** *(Bon appetit, friends!)*
+
+<!-- INJECT_ACTIVITY: dialogue-flow-practice -->
+
 ## Кличний відмінок (The Vocative Case)
-Ukrainian has seven grammatical cases, and one of them — **кличний відмінок** (the vocative case) — exists specifically for calling someone or addressing them directly. In English, you just say the name as-is: "Olena, come here!" In Ukrainian, the name's ending changes: **Олена** → **Олено, ходи сюди!** This is not a formal or old-fashioned feature. It is everyday, mandatory speech. Every Ukrainian speaker uses it constantly — in texts, at home, with friends, with strangers. Ukrainian Grade 4 grammar uses a helpful shorthand: **Кл. (!)** — the exclamation mark is your memory hook. You're calling someone, so the ending changes.
-Here is the core distinction. Compare these two sentences:
-- **Олена прийшла́.** *(Olena arrived.)* — nominative case, talking ABOUT her
-- **Олено, ходи сюди!** *(Olena, come here!)* — vocative case, talking TO her
-In the first sentence, **Олена** is the subject — you are describing what she did. In the second, **Олено** is being addressed — you are speaking directly to her. Using the nominative form to address someone in Ukrainian sounds wrong. It is roughly like saying "Hey, him!" instead of "Hey, you!" in English. Ukrainians immediately notice if you skip the vocative — it marks you as a non-native speaker.
-The vocative is alive and vibrant in modern Ukrainian. You hear it everywhere: **Слу́хай, Тарасе!** (Listen, Taras!), **Ви́бачте, па́не!** (Excuse me, sir!), **Дякую, мамо!** (Thanks, Mom!). In songs, in text messages, in street conversations — the vocative is one of the ways Ukrainian encodes human connection directly into grammar. Every time you address someone, the language itself changes shape to acknowledge that relationship.
-Go back to the dialogues above and look at every vocative pair: **Олена** → **Олено**, **Тарас** → **Тарасе**, **Андрій** → **Андрію**, **мама** → **мамо**, **тато** → **тату**, **бабуся** → **бабусю**, **синок** → **синку**, **дочка** → **дочко**. Each speaker used the correct form automatically — that natural, effortless use is the goal. The patterns below will show you exactly how to form it.
-<!-- INJECT_ACTIVITY: quiz-vocative -->
-## Закі́нчення кли́чного (Vocative Endings)
-### Feminine: -а → -о
-The most common pattern. Feminine names and nouns ending in **-а** change to **-о** in the vocative (hard group):
-- **Олена** → **Олено**
-- **мама** → **мамо**
-- **сестра́** → **се́стро** *(sister)*
-- **Окса́на** → **Окса́но**
-- **по́друга** → **по́друго** *(female friend)*
-Names ending in **-ка** follow the same rule: **Ната́лка** → **Ната́лко**, **Ірка** → **Ірко**. Long names ending in **-ина/-іна** also take **-о**: **Катери́на** → **Катери́но**, **Тетя́на** → **Тетя́но**. The rule is simple: if the name ends in **-а** and the stem is hard, replace **-а** with **-о**.
-### Feminine exceptions: soft and mixed groups
-Names ending in **-і́я** do NOT become **-іо**. They become **-і́є**: **Марі́я** → **Марі́є**, **Софія** → **Софіє**. Diminutive names with **-уся́/-юся** take **-ю**: **бабуся** → **бабусю** *(grandma)*, **Настуся** → **Настусю**. As Avramenko's Grade 6 textbook notes, forms like **На́сте** and **Катре** also exist, but **бабусю** and **Настусю** are the standard affectionate forms you will use most. Female patronymics ending in **-івна** follow **-о**: **Іва́нівна** → **Іва́нівно**.
-### Masculine: hard consonant → -е
-Masculine names and nouns with a hard consonant at the end add **-е**:
-- **Тарас** → **Тарасе**
-- **Іва́н** → **Іва́не**
-- **брат** → **бра́те** *(brother)*
-- **пан** → **пане** *(Mr./sir)*
-Full name address follows the same pattern. From Litvinova Grade 6: **пан Євге́н** → **пане Євге́не**, **Іван Ві́кторович** → **Іване Ві́кторовичу**. Masculine patronymics in **-ович** take **-у**: **Іва́нович** → **Іва́новичу**. Note: **па́ні** (Mrs./Ms.) is невідмі́нюване — it does not change in any case, including vocative. You simply say **пані Оксано!** where **пані** stays the same and only the name takes the vocative ending.
-### Masculine: soft consonant / -й → -ю
-Masculine names ending in a soft consonant or **-й** add **-ю**:
-- **Андрій** → **Андрію**
-- **дідусь** → **дідусю** *(grandpa)*
-- **вчи́тель** → **вчи́телю** *(teacher)*
-Two consonant alternations happen before **-е**: **друг** → **дру́же** *(friend)* (г → ж) and **коза́к** → **коза́че** *(Cossack)* (к → ч). These follow standard Ukrainian phonetic patterns — the back consonant softens before **-е**.
-One more form to memorize: **тато** → **тату**. This is an exception — тато doesn't fit neatly into either the -е or -ю pattern. The vocative ending is **-у**, and it simply needs to be learned as a special case alongside **син** → **си́ну** and **дід** → **ді́ду**.
-<!-- INJECT_ACTIVITY: fill-in-vocative -->
-<!-- INJECT_ACTIVITY: group-sort-vocative -->
+
+Ukrainian grammar features seven cases, and one of them is used exclusively for calling, addressing, or getting someone's attention. This is called the **кличний відмінок** (Vocative Case). As you already know, Ukrainian relies on changing word endings to show grammatical relationships within a sentence. While the other six cases indicate who is doing an action or where an object is located, the vocative case serves a purely communicative function. In English you just say the name: "Olena, come here!". In Ukrainian the name CHANGES: **Олено, ходи сюди!** (Olena, come here!). When you address a person, you must alter their name or title to match this specific grammatical role. This is not optional — Ukrainians always use the vocative when addressing someone.
+
+In Ukrainian elementary schools, fourth-grade students learn a simple but effective trick to remember when to use this form. Teachers introduce the vocative case with a Grade 4 helper word and punctuation mark: **Кл. (!)** (Voc. (!)). The exclamation mark acts as a visual reminder that you are "shouting," calling out, or directly addressing someone. This punctuation mark triggers the ending change. Whenever you use a person's name with an exclamation mark or a comma in direct speech, you must apply the vocative ending. This mental trigger ensures that the name correctly reflects the social interaction taking place.
+
+:::note
+The vocative case is entirely independent of the other cases. It does not answer any questions (like "who?" or "what?"), because its only job is to get someone's attention.
+:::
+
+Understanding the difference between talking about someone and talking to someone is critical for your fluency. The nominative case is the dictionary form, used when someone is the subject of a sentence. Why the vocative matters: **Олена прийшла.** (Olena came.) is in the nominative, because you are talking ABOUT her. However, if you want to address her, you must use the vocative: **Олено, ходи сюди!** (Olena, come here!), because you are talking TO her. Using the nominative to address a person sounds incredibly unnatural to native speakers. It feels as awkward as saying "Hey, him!" instead of "Hey, you!" in English. Let us compare these two states:
+
+**Називний відмінок** (Nominative):
+*   **Це мій тато.** *(This is my dad.)*
+*   **Тут працює вчитель.** *(A teacher works here.)*
+*   **Там стоїть Олена.** *(Olena is standing there.)*
+*   **Мій брат читає.** *(My brother is reading.)*
+
+**Кличний відмінок** (Vocative):
+*   **Тату, я тебе бачу!** *(Dad, I see you!)*
+*   **Вчителю, добрий ранок!** *(Teacher, good morning!)*
+*   **Олено, йди туди!** *(Olena, go there!)*
+*   **Брате, що ти читаєш?** *(Brother, what are you reading?)*
+
+The vocative case is much more than just a grammatical rule; it is a living marker of Ukrainian linguistic identity. While this grammatical feature has mostly disappeared from standard Russian, surviving only in a few archaic religious terms, it remains vibrant and absolutely necessary in everyday Ukrainian conversation. By using the vocative case correctly, you are not just following a textbook rule. You are actively speaking authentic, decolonized Ukrainian and showing deep respect for the natural structure and historical continuity of the language. When you use the vocative case, native speakers instantly recognize that you are making a genuine effort to understand the rhythm of their language, rather than just translating English words directly into Ukrainian.
+
+## Закінчення кличного (Vocative Endings)
+
+Let us break down the specific rules for forming the vocative case, starting with feminine names and nouns that end in the letter **-а**. This is the most common feminine pattern you will encounter. To create the vocative form, you simply replace the final **-а** with the letter **-о**. 
+
+*   **Олена** → **Олено** (Olena)
+*   **мама** → **мамо** (mom)
+*   **сестра** → **сестро** (sister)
+*   **Оксана** → **Оксано** (Oksana)
+*   **подруга** → **подруго** (friend, f)
+
+This rule also applies to informal or diminutive names ending in **-ка**, such as **Наталка** → **Наталко** (Natalka) and **Ірка** → **Ірко** (Irka). Furthermore, longer names ending in **-а** follow this exactly: **Катерина** → **Катерино** (Kateryna), **Тетяна** → **Тетяно** (Tetiana). Note that the polite title **пані** (Mrs. / Ms.) is an exception and does not change its form when used to address someone.
+
+*   **Олено, де мій зошит?** *(Olena, where is my notebook?)*
+*   **Мамо, я хочу їсти.** *(Mom, I want to eat.)*
+*   **Сестро, ти йдеш у кіно?** *(Sister, are you going to the cinema?)*
+*   **Подруго, це твоя книга?** *(Friend, is this your book?)*
+*   **Катерино, добрий день!** *(Kateryna, good day!)*
+
+Feminine names that end in **-ія** or the soft letter **-я** follow a slightly different but closely related pattern. If a name ends in **-ія**, the ending shifts to **-іє**. For example, **Марія** (Mariia) becomes **Маріє** (Mariia — vocative, never "Маріо!"). If a feminine word or name ends in a soft **-ся** or is a diminutive form ending in **-я**, the ending changes to **-ю**. 
+
+*   **Марія** → **Маріє** (Mariia)
+*   **Юлія** → **Юліє** (Yuliia)
+*   **бабуся** → **бабусю** (grandma)
+*   **Галя** → **Галю** (Halia)
+*   **Наталя** → **Наталю** (Natalia)
+
+Notice how the soft quality of the final consonant is preserved by using the soft vowel **-ю** or **-є**. 
+
+*   **Маріє, як справи?** *(Mariia, how are things?)*
+*   **Юліє, ходи сюди!** *(Yuliia, come here!)*
+*   **Бабусю, ти дуже добра.** *(Grandma, you are very kind.)*
+*   **Наталю, де ти живеш?** *(Natalia, where do you live?)*
+
+:::caution
+Do not confuse the feminine ending **-ю** (like in **бабусю**) with the masculine soft ending **-ю** (like in **Андрію**). While they look identical, they come from different spelling patterns.
+:::
+
+Now let us look at masculine names and nouns. Most standard masculine words end in a hard consonant. To form the vocative for these words, you do not replace anything; you simply add the letter **-е** directly to the end of the hard consonant. This makes the word slightly longer and easier to call out across a room.
+
+*   **Тарас** → **Тарасе** (Taras)
+*   **Іван** → **Іване** (Ivan)
+*   **брат** → **брате** (brother)
+*   **пан** → **пане** (Mr. / sir)
+*   **Богдан** → **Богдане** (Bohdan)
+
+Whenever you use the formal title **пан**, it must also take this ending, as in **Добрий день, пане!** (Good day, sir!).
+
+*   **Тарасе, що ти робиш?** *(Taras, what are you doing?)*
+*   **Іване, це твій телефон?** *(Ivan, is this your phone?)*
+*   **Брате, йди сюди!** *(Brother, come here!)*
+*   **Пане, де тут аптека?** *(Sir, where is the pharmacy here?)*
+*   **Богдане, ти студент?** *(Bohdan, are you a student?)*
+
+If a masculine word ends in a soft consonant or the letter **-й**, the added vowel changes to match the softness. Instead of adding **-е**, you must add the letter **-ю** to the end of the word. This maintains the softness of the final sound and creates a smooth, natural flow when speaking.
+
+*   **Андрій** → **Андрію** (Andriy)
+*   **Сергій** → **Сергію** (Serhiy)
+*   **дідусь** → **дідусю** (grandpa)
+*   **вчитель** → **вчителю** (teacher, m)
+
+Replacing the **-й** with **-ю** is one of the most frequent transformations you will make when addressing Ukrainian men.
+
+*   **Андрію, ти маєш брата?** *(Andriy, do you have a brother?)*
+*   **Сергію, це твоя машина?** *(Serhiy, is this your car?)*
+*   **Дідусю, читай казку!** *(Grandpa, read a fairy tale!)*
+*   **Вчителю, я маю питання.** *(Teacher, I have a question.)*
+
+There are a few special cases and consonant alternations that you should memorize because they occur in very common words. The word for dad takes an exceptional **-у** ending: **тато** → **тату** (dad). You must memorize this. The word for son also takes an **-у** ending: **син** → **синку** (son). Additionally, some masculine consonants change their sound entirely to make pronunciation easier. For example, the consonant **г** changes to **ж** in **друг** → **друже** (friend, m), and the consonant **к** changes to **ч** in **козак** → **козаче** (Cossack).
+
+*   **Тату, я йду додому.** *(Dad, I am going home.)*
+*   **Синку, будь обережний!** *(Son, be careful!)*
+*   **Друже, ти маєш рацію.** *(Friend, you are right.)*
+*   **Козаче, куди ти йдеш?** *(Cossack, where are you going?)*
+
+<!-- INJECT_ACTIVITY: vocative-form-practice -->
+<!-- INJECT_ACTIVITY: vocative-choice-quiz -->
+<!-- INJECT_ACTIVITY: ending-sorting-activity -->
+
 ## Підсумок — Summary
-**Кличний відмінок** is the Ukrainian case of direct address. Every time you speak TO someone — not about them — the name or noun changes its ending. There are four main patterns at A1 level, and most names fall neatly into one of them.
-| Pattern | Називни́й → Кличний | Приклади |
-|---|---|---|
-| Feminine **-а** (hard) | -а → -о | **Олена** → **Олено**, **мама** → **мамо**, **сестра** → **сестро** |
-| Feminine **-ія** | -ія → -іє | **Марія** → **Маріє**, **Софія** → **Софіє** |
-| Feminine **-уся** | -уся → -усю́ | **бабуся** → **бабусю** |
-| Masculine hard | + **-е** | **Тарас** → **Тарасе**, **брат** → **брате**, **пан** → **пане** |
-| Masculine **-й**/soft | + **-ю** | **Андрій** → **Андрію**, **вчитель** → **вчителю** |
-| Exceptions | memorize | **тато** → **тату**, **син** → **сину**, **дід** → **діду** |
-| Special **г/к** | г→ж, к→ч + **-е** | **друг** → **друже**, **козак** → **козаче** |
-Can you call your own family? Try these: **мама** → ___, **тато** → ___, **брат** → ___, **сестра** → ___, **бабуся** → ___, **дідусь** → ___. And your own name or a friend's name — what does it become in vocative? (Answers: **мамо**, **тату**, **брате**, **сестро**, **бабусю**, **дідусю**.)
-<!-- INJECT_ACTIVITY: quiz-choose-vocative -->
 
-**Deterministic word count: 1265 words** (calculated by pipeline, do NOT estimate manually)
+Mastering the vocative case is a crucial step in sounding like a natural, fluent Ukrainian speaker. Remember that you must always change the ending of a name or title when you are addressing someone directly. The core patterns are very consistent across the language: feminine words ending in **-а** shift to **-о**, masculine words ending in hard consonants add **-е**, and masculine words ending in soft consonants or **-й** add **-ю**. By applying these simple vowel shifts, you ensure that your greetings, questions, and daily interactions flow smoothly and respect the traditional rules of Ukrainian communication. You will quickly find that these vowel shifts become automatic as your brain learns to associate the act of calling someone with adding these specific soft or hard sounds.
 
+Keep this vocative quick reference guide handy as you practice forming the vocative case. It covers the most frequent patterns you will encounter in everyday conversation.
+
+| Pattern | Nominative → Vocative | Example |
+| :--- | :--- | :--- |
+| Feminine **-а** | **-а** → **-о** | **Олена** → **Олено**, **мама** → **мамо** |
+| Feminine **-ія** | **-ія** → **-іє** | **Марія** → **Маріє** |
+| Feminine **-ся** | **-ся** → **-сю** | **бабуся** → **бабусю** |
+| Masculine hard | + **-е** | **Тарас** → **Тарасе**, **брат** → **брате** |
+| Masculine **-й** / soft | + **-ю** | **Андрій** → **Андрію**, **вчитель** → **вчителю** |
+| Special (**г**, **к**) | **г**→**ж**, **к**→**ч** + **-е** | **друг** → **друже** |
+| Special (**-у**) | irregular | **тато** → **тату**, **син** → **синку** |
+
+:::tip
+Whenever you say **Привіт!** (Hi!), **Добрий день!** (Good day!), or ask **Як справи?** (How are you?), immediately follow it with the vocative form of the person's name or title!
+:::
+
+Before moving on to the next module, take a moment to self-check your understanding of these rules. How do you call your family? **мама** (mom) → ? **тато** (dad) → ? **брат** (brother) → ? How do you correctly greet your friend Taras? Most importantly, do you clearly feel the functional difference between the sentence **Марія прийшла** (Mariia came) and the direct command **Маріє, ходи сюди!** (Mariia, come here!)? If you can confidently answer these questions and apply the correct endings,
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 2069 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -364,8 +449,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -452,61 +537,42 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 68 words | Not found: 71 words
+Verified: 120 words | Not found: 31 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Євге — NOT IN VESUM
-  ✗ Іва — NOT IN VESUM
   ✗ Іван — NOT IN VESUM
   ✗ Іване — NOT IN VESUM
   ✗ Ірка — NOT IN VESUM
   ✗ Ірко — NOT IN VESUM
-  ✗ Андрі — NOT IN VESUM
   ✗ Андрій — NOT IN VESUM
   ✗ Андрію — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Закі — NOT IN VESUM
-  ✗ Катре — NOT IN VESUM
+  ✗ Богдан — NOT IN VESUM
+  ✗ Богдане — NOT IN VESUM
+  ✗ Галю — NOT IN VESUM
+  ✗ Галя — NOT IN VESUM
+  ✗ Катерина — NOT IN VESUM
+  ✗ Катерино — NOT IN VESUM
+  ✗ Маріо — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
   ✗ Маріє — NOT IN VESUM
-  ✗ Називни — NOT IN VESUM
-  ✗ Настусю — NOT IN VESUM
-  ✗ Настуся — NOT IN VESUM
-  ✗ Ната — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
+  ✗ Наталка — NOT IN VESUM
+  ✗ Наталко — NOT IN VESUM
+  ✗ Наталю — NOT IN VESUM
+  ✗ Наталя — NOT IN VESUM
+  ✗ Оксана — NOT IN VESUM
   ✗ Оксано — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
   ✗ Олено — NOT IN VESUM
-  ✗ Оля — NOT IN VESUM
-  ✗ Слу — NOT IN VESUM
-  ✗ Софія — NOT IN VESUM
-  ✗ Софіє — NOT IN VESUM
+  ✗ Сергій — NOT IN VESUM
+  ✗ Сергію — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
   ✗ Тарасе — NOT IN VESUM
-  ✗ Тетя — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ вісімна — NOT IN VESUM
-  ✗ дий — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ друго — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ дьте — NOT IN VESUM
-  ✗ жні — NOT IN VESUM
-  ✗ ина — NOT IN VESUM
-  ✗ кише — NOT IN VESUM
-  ✗ кли — NOT IN VESUM
-  ✗ кторович — NOT IN VESUM
-  ✗ кторовичу — NOT IN VESUM
-  ✗ лка — NOT IN VESUM
-  ✗ лко — NOT IN VESUM
-  ✗ невідмі — NOT IN VESUM
-  ✗ нович — NOT IN VESUM
-  ✗ новичу — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нчення — NOT IN VESUM
+  ✗ Тетяна — NOT IN VESUM
+  ✗ Тетяно — NOT IN VESUM
+  ✗ Юлія — NOT IN VESUM
+  ✗ Юліє — NOT IN VESUM
 
-All 68 other words are confirmed to exist in VESUM.
+All 120 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

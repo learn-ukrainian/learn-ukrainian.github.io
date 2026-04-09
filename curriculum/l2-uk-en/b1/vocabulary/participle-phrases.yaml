@@ -1,0 +1,205 @@
+vocabulary:
+- word: пунктогра́ма
+  translation: punctuation rule
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: обставинне значення
+  translation: adverbial shade
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: трансформа́ція
+  translation: transformation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: означуване слово
+  translation: modified word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: постпози́ція
+  translation: postposition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: препози́ція
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підрядне речення
+  translation: subordinate clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: залежні слова
+  translation: dependent words
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дієприкме́тник
+  translation: participle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сполучне слово
+  translation: conjunctive word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: особовий займенник
+  translation: personal pronoun
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дія́ч
+  translation: agent (doer of action)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зміщений логічний зв'язок
+  translation: dangling participle
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: су́ржик
+  translation: mixed language (Surzhyk)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: руси́зм
+  translation: Russianism
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́лька
+  translation: calque
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мовна чистота
+  translation: linguistic purity
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стилістичні відмінності
+  translation: stylistic differences
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: багатослі́вний
+  translation: wordy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: золота середина
+  translation: golden mean
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: короткі прикметники
+  translation: short adjectives
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́вінь
+  translation: flood
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: рятува́льник
+  translation: rescuer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: знімальна група
+  translation: film crew
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: надзвичайні події
+  translation: emergency events
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: евакуюва́ти
+  translation: to evacuate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зруйновані мости
+  translation: destroyed bridges
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: гуманітарна допомога
+  translation: humanitarian aid
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сакральне мистецтво
+  translation: sacred art
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: моза́їка
+  translation: mosaic
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фре́ска
+  translation: fresco
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: храм
+  translation: temple
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дзвіни́ця
+  translation: bell tower
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: святи́ня
+  translation: shrine/sanctuary
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

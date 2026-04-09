@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -247,369 +247,342 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Note:** VESUM stores holiday names as lowercase lemmas (`різдво`, `великдень`). Capitalized forms (Різдво, Великдень) are orthographically correct per Ukrainian rules for proper names of holidays — the lemmas exist, the capitalization is a Правопис matter, not a VESUM matter.
-
-### Confirmed in VESUM ✅
-- **свято** — noun (inanim, n) ✅
-- **святкувати** — verb ✅
-- **Різдво** — verified as `різдво` (noun:inanim:n); instrumental = **різдвом** → З Різдвом! ✅
-- **Великдень** — verified as `великдень` (noun:inanim:m); instrumental = **великоднем** → З Великоднем! ✅ _(plan spells it correctly)_
-- **вітати** — verb ✅
-- **кутя** — noun ✅
-- **колядка** — noun ✅
-- **писанка** — noun ✅
-- **паска** — noun ✅
-- **парад** — noun ✅
-- **прапор** — noun ✅
-- **вишиванка** — noun ✅
-- **незалежність** — noun ✅
-- **салют** — noun ✅
-- **колядки, писанки, паски, прапори** — plural forms all confirmed ✅
-- **святити** — verb ✅ (for `святити кошик`)
-- **кошик** — noun ✅
-- **страва** — noun ✅
-- **вечеря** — noun ✅
-
-### Not found as multi-word phrase (expected — verified as components) ⚠️
-- **Новий рік** — not found as a single VESUM entry (expected: it is two words). Component lemmas `новий` (adj) and `рік` (noun:m) are standard Ukrainian. The phrase is correct.
-
-### Critical inflection note 🔴
-**Великдень** instrumental is **великоднем** (not ~~Великоднем~~, not ~~Великденем~~). The plan correctly writes `З Великоднем!` — confirmed ✅. Internal stem change: `великдень` → `великодн-` in oblique cases.
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги — Різдво / колядки / кутя
-> «Головне свято зими в християн — Різдво. Його здавна відзначають за спеціальним сценарієм, супроводжуючи величальними піснями — колядками.»
-> Source: Авраменко, Grade 6 Ukrainian Literature (tier 1, NUS 2023)
-
-> «Дніпро обняв дзвінкі Карпати, а в хаті вже кутя і сіно. Дозвольте заколядувати: — З Різдвом Христовим, Україно!»
-> Source: Zaharijchuk, Grade 1 Bukvar (tier 1, 2025) — Різдво shown on **25 грудня** ✅ confirms current date
-
-> «Наш народ вірить, що на Святвечір усі померлі колись предки приходять на землю… кожен, узявши раз-другий куті, знову кладе ложку в миску, щоб дати змогу своїм померлим родичам скуштувати святої страви.»
-> Source: Varzatska, Grade 4 (tier 2, 2021) — confirms кутя as ritual dish and Святвечір context
-
-### Section: Українські свята — Великдень
-> «Світле Христове Воскресіння, або Великдень, — найголовніша весняна подія для християн. Зі святкуванням Великодня пов'язано чимало традицій. До цього дня печуть паски, фарбують яйця…»
-> Source: Kravtsova, Grade 2 (tier 2, 2019)
-
-> «Важко уявити Великдень без писанки. [detailed craft instructions for making a писанка…]»
-> Source: Zaболотний, Grade 7 Ukrainian Language (tier 1, 2024) — confirms писанка as core Easter tradition
-
-> «На столі — духмяна паска, а круг неї — писанки.» (folk poem)
-> Source: Zaharijchuk, Grade 1 Bukvar (tier 1, 2025)
-
-### Section: Державні свята — День Незалежності
-> «24 серпня 1991 року Верховна Рада прийняла історичний документ – Акт проголошення незалежності України, в якому йшлося про створення самостійної України, територія якої є неподільною і недоторканною.»
-> Source: Hlibovska, Grade 11 History of Ukraine (tier 1, 2024) — confirms date and significance
-
-> «24 серпня 1991 р. — день проголошення незалежності України. Відтоді триває становлення нової України.»
-> Source: Galimov, Grade 11 History of Ukraine (tier 1, 2024)
-
-### Section: Підсумок — greeting pattern З + instrumental
-> «З Різдвом Христовим, Україно!» (used as a copywriting exercise)
-> Source: Varzatska, Grade 4 (tier 2, 2021) — confirms З + instrumental greeting as standard
-
-> «Бажаю тобі і твоїм друзям веселих новорічних і різдвяних свят!» / «будьте здорові, з Новим роком!»
-> Source: Savchenko, Grade 3 (tier 2, 2020) — confirms З Новим роком! formula
-
----
+- Confirmed: свято, святкувати, різдво (Різдво), великдень (Великдень), новий (Новий), рік (рік), вітати, кутя, колядка, писанка, паска, парад, прапор, вишиванка, незалежність, салют.
+- Not found: None (all plan words verified as existing in standard Ukrainian forms).
 
 ## Grammar Rules
-
-- **З + instrumental for greetings:** Confirmed by Антоненко-Давидович §8 (орудний відмінок) — instrumental expresses accompaniment/occasion, deeply native to Ukrainian. The formula «З + [noun in instrumental]!» is the standard holiday greeting pattern. Used extensively in Grades 1–4 textbooks.
-- **Велика буква для назв свят:** Правопис §45 covers capitalization of sentence-initial words. Holiday names (Різдво, Великдень, Новий рік) are written with a capital letter as proper names — confirmed by all textbook usage (Grade 1–6 sources consistently capitalize Різдво, Великдень, Новий рік).
-- **Великдень oblique stem:** Правопис §16 covers consonant alternations. The `великдень → великодн-` stem change in oblique cases (великодня, великоднем, etc.) is confirmed by VESUM's full paradigm. Writers must use `З Великоднем!` not ~~З Великднем~~.
-
----
+- **Holiday Capitalization**: Правопис §52 — In names of holidays, the first word is capitalized: *Новий рік*, *День учителя*. 
+- **National Holidays**: Правопис §52, Примітка 1 — In the names *День Незалежності України*, *День Соборності України*, *День Конституції України*, all words are capitalized.
+- **Greetings Pattern**: Greetings use the preposition *З* + the name of the holiday in the Instrumental case: *З Різдвом!*, *З Новим роком!*, *З Днем Незалежності!*.
 
 ## Calque Warnings
-
-- **святкувати** — OK. Authentic Ukrainian verb, confirmed in VESUM and textbooks. Not a calque.
-- **дивитися парад / ходити на концерт** — OK. Антоненко-Давидович search returned no warnings for these phrases. `Дивитися` = watch, `ходити на` = attend — both natural Ukrainian constructions.
-- **З Різдвом Христовим / З днем народження** — OK. The `З + instrumental` pattern is confirmed as native Ukrainian (not a Russianism). Антоненко-Давидович confirms the орудний відмінок часу/occasion is deeply Ukrainian (§8). No calque risk.
-- **святковий вечір** — OK. `Святковий` (festive) + `вечір` (evening) is natural Ukrainian. No calque.
-
----
+- **приймати участь**: Calque from Russian — The correct Ukrainian form is **брати участь**.
+- **наступаюче свято**: Calque from Russian — Use **прийдешнє свято** or simply **наближення свята**.
+- **салют**: OK, but **феєрверк** is often preferred for festive displays.
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|---|---|---|
-| свято | **A1** | ✅ On target |
-| святкувати | **A1** | ✅ On target |
-| вітати | **A1** | ✅ On target |
-| прапор | **A1** | ✅ On target |
-| вишиванка | **A1** | ✅ On target |
-| незалежність | **A2** | ⚠️ One level above — but essential for Independence Day content; introduce as cultural realia |
-| колядка | **A2** | ⚠️ One level above — cultural realia, not productive vocabulary |
-| паска | **A2** | ⚠️ One level above — cultural realia |
-| писанка | **A2** | ⚠️ One level above — cultural realia |
-| парад | **B1** | ⚠️ Two levels above — flag for passive recognition only |
-| кутя | **B1** | ⚠️ Two levels above — introduce as cultural realia with English gloss |
-| салют | not in PULS | ⚠️ Likely B1+ — introduce as passive recognition / cultural context word |
-
-**Pedagogical note on above-target words:** All A2/B1 words here are Ukrainian cultural realia — they have no A1 equivalent, cannot be substituted, and are the entire point of the module. Per standard L2 pedagogy, cultural realia can be introduced above the learner's productive level as **passive/recognition vocabulary**. They must be glossed in English and not tested productively in activities. Activities should not require learners to produce `кутя`, `парад`, or `салют` from memory — only recognize them.
+- **свято**: A1 — OK
+- **Різдво**: A1 — OK
+- **Великдень**: A1 — OK
+- **прапор**: A1 — OK
+- **незалежність**: A1 (Contextual) — OK for a module on national holidays.
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Holidays
-**Module:** holidays | **Phase:** A1.7 [Communication]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: Holidays
+**Module:** holidays | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/holidays.md
+
+# Педагогіка A1: Holidays
+
+
+
+## Методичний підхід (Methodological Approach)
+Holidays (**свя́та**) are a cornerstone of early language learning in Ukrainian schools, serving as a high-interest vehicle for cultural immersion and foundational grammar. The approach is holistic, combining language with tradition.
+
+1.  **Categorization as a Framework:** Ukrainian pedagogy introduces holidays by classifying them into three main groups: **релігійні** (religious), **традиційні** (traditional), and **державні** (state) (Source 1, 19). This helps learners organize vocabulary and cultural context from the start. A1 focuses on the most prominent examples from each category.
+
+2.  **Seasonal Cycles:** The curriculum is often structured around the seasons, particularly the **зимовий цикл свят** (winter cycle of holidays) (Source 3). This is because it is rich in distinct, memorable traditions (Миколая, Різдво, Новий Рік), each with its own songs and rituals that are easy for beginners to grasp (Source 3, 38, 39). The spring cycle with **Великдень** (Easter) is another major focus (Source 10, 37).
+
+3.  **Function-First Grammar:** Grammatical concepts are not taught in isolation but through their immediate function in holiday contexts.
+    *   The instrumental case is introduced via the universal greeting formula: `(Вітаю) з + [назва свята в орудному відмінку]` (Source 2).
+    *   The genitive case is introduced for making wishes: `Бажаю + [побажання в родовому відмінку]` (e.g., `щастя`, `здоров'я`, `миру`) (Source 2).
+
+4.  **Tangible & Sensory Vocabulary:** The vocabulary is tied to concrete objects, foods, and actions, which aids memorization. For Різдво, learners are taught **кутя**, **вертеп**, **колядки** (Source 6, 19). For Великдень, they learn **паска**, **крашанки**, **писанки** (Source 5, 10). This makes the language feel alive and useful.
+
+5.  **Songs and Poems as Core Material:** Simple, repetitive holiday songs (**колядки**, **щедрівки**) and poems are not supplementary but core teaching tools in primary grades (Source 36, 38, 39). Their rhythm and rhyme make pronunciation and sentence structure more intuitive for learners.
+
+## Послідовність введення (Introduction Sequence)
+The introduction of holidays and related language should follow a logical progression from simple, universal concepts to more specific cultural and grammatical structures.
+
+-   **Step 1: The Concept of "Свято" and Universal Greeting.**
+    -   Introduce the word **свя́то** (holiday).
+    -   Teach the most basic, all-purpose greeting: **«Зі свя́том!»** ("Happy Holiday!"). Explain that this can be used for almost any occasion when you're not sure of the specific greeting (Source 2).
+
+-   **Step 2: Foundational Greeting Formula (`З + Instrumental`).**
+    -   Introduce the core structure for greetings: `(Вітаю) з + [Іменник в Орудному відмінку]`.
+    -   Start with the two most internationally recognized holidays: **Нови́й рік** → **«З Нови́м ро́ком!»** and **Різдво́** → **«З Різдво́м (Христо́вим)!»**.
+    -   Add the most personal holiday: **день наро́дження** → **«З днем наро́дження!»** (Source 2). This provides three high-frequency, immediately useful examples.
+
+-   **Step 3: The Winter Cycle (Зимовий цикл).**
+    -   Introduce the holidays sequentially as they occur:
+        1.  **День Свято́го Микола́я** (Dec 19): Taught as the first winter holiday that brings gifts to children (Source 2, 3). Greeting: **«З Днем Свято́го Микола́я!»**.
+        2.  **Різдво́** (Dec 25): Presented as a major family holiday with key vocabulary: **Святве́чір** (Christmas Eve), **кутя́**, **коля́дки**, **верте́п** (Sources 3, 6, 8).
+        3.  **Нови́й Рік** (Jan 1): Taught with vocabulary like **яли́нка** (Christmas/New Year tree) and **подару́нки** (gifts) (Source 18).
+
+-   **Step 4: The Spring Cycle (Весняний цикл).**
+    -   Introduce **Вели́кдень / Па́сха** (Easter) as the next major holiday.
+    -   Teach associated vocabulary: **па́ска** (Easter bread), **кра́шанки** (dyed eggs), and **пи́санки** (decorated eggs) (Source 5, 10, 36).
+    -   Introduce the traditional call-and-response greeting: **«Христо́с Воскре́с!»** — **«Воі́стину Воскре́с!»** (Source 10).
+
+-   **Step 5: Foundational "Wish" Formula (`Бажаю + Genitive`).**
+    -   Once learners are comfortable with greetings, introduce the concept of making wishes.
+    -   Teach the pattern `Бажа́ю + [Іменник в Родовому відмінку]`.
+    -   Provide a memorizable list of the most common wishes: **ща́стя, здоро́в'я, ра́дості, коха́ння, ми́ру** (Source 2). This provides a gentle introduction to the genitive case through functional chunks.
+
+-   **Step 6: Introduction to State Holidays.**
+    -   Briefly introduce key state holidays primarily as vocabulary and cultural knowledge, without deep historical dives at A1.
+    -   **День Незале́жності Украї́ни** (Aug 24) (Source 9, 23).
+    -   **День Собо́рності Украї́ни** (Jan 22) (Source 1, 9). The concept of *соборність* (unity) can be simplified as "Схід і Захід разом" (East and West together) (Source 1).
+
+## Типові помилки L2 (Common L2 Errors)
+English speakers often fall into predictable traps due to language transfer or exposure to Russian-influenced Ukrainian. These must be actively corrected.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| «З наступаючим святом!» | «З прийдешнім святом!» або просто «З Новим роком!», «З Різдвом!» | The word `наступаючий` is a calque from Russian. Ukrainian uses `прийдешній` for "upcoming" or, more naturally, just names the holiday directly. The best practice is to avoid denoting the time proximity altogether (Source 27, 28, 31). |
+| «Вітаю з Новий рік» | «Вітаю з Новим роком» | Greetings with the preposition `з` require the instrumental case (`ким/чим?`), not the nominative. This is a core rule for all holiday greetings in Ukrainian (Source 2). |
+| «Я їм паску на Великдень.» (Meaning the holiday) | «Я їм паску на Великдень.» (Meaning the bread) | This is a vocabulary error. **Па́сха** can be a synonym for the holiday **Вели́кдень**, but **па́ска** is the specific Easter bread. Learners must be taught to differentiate them to avoid saying "I'm eating Easter (the holiday)" (Source 10, 11, 36). |
+| «Хочу привітати тебе...» | «Вітаю тебе...» | The `хочу + інфінітив` construction is a weak form often used by learners. Direct, active verbs are more natural in Ukrainian greetings. It's not a grammatical error, but a stylistic one to be corrected early (Source 13). |
+| «Коли є твій день народження?» | «Коли в тебе день народження?» | A direct, word-for-word translation from English ("When is your birthday?"). Ukrainian uses the structure "When at you is birthday?", similar to "I have" (`у мене є`). |
+| «Різдво сьомого січня.» | «Різдво двадцять п'ятого грудня.» | This is now a factual error. While some may still celebrate on Jan 7, the official state and church date in Ukraine has moved to Dec 25. Teaching Jan 7 as the primary date is outdated and ignores a significant decolonization step (Source 6, 8). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+**This is a mandatory section.** Teaching holidays is a prime opportunity to establish a decolonized understanding of Ukrainian culture from day one.
+
+1.  **The Christmas Date is Political:** The content writer MUST present **December 25th** as the primary and official date for Christmas (Різдво) in Ukraine (Source 8, 9). The shift from January 7th should be explained as a conscious political and cultural decision to "від'єднатися від традиції святкувати Різдво за старим календарем" and align with the majority of the Christian world, breaking from the Russian Orthodox calendar (Source 6, 7). This is non-negotiable.
+
+2.  **Ukrainian Traditions are NOT Russian:** Emphasize the uniqueness of Ukrainian holiday traditions.
+    *   **Вертеп** (nativity play): Explain that the Ukrainian tradition evolved into a unique travelling puppet theatre and then a live street performance, which is a hallmark of Ukrainian culture (Source 8).
+    *   **Дідух:** Teach the **дідух** (a sheaf of wheat) as the traditional Ukrainian Christmas decoration, symbolizing family ancestors and harvest, pre-dating the German tradition of the Christmas tree (**ялинка**) (Source 6).
+    *   **Колядування/Щедрування:** Highlight that the tradition of going from house to house singing carols is a strong, living tradition in Ukraine, unlike in Russia where it is far less prevalent. Mention the suppression of these traditions in the USSR (the "заарештована коляда") to underscore their role in preserving national identity (Source 8).
+
+3.  **No "Shared" East Slavic Ambiguity:** Avoid presenting Ukrainian traditions as generically "East Slavic." While roots may be shared, the lesson must focus on how these traditions manifest *specifically* in Ukraine. The mythology of Коляда turning into a goat to give birth to the new sun, for instance, provides a distinctly Ukrainian folkloric explanation for the "водіння кози" ritual (Source 8).
+
+4.  **Linguistic Purity:** Use only Ukrainian vocabulary. Do not use Russian names for holidays or traditions as parallels or translations. For example, use **Святвечір**, not the Russian `Сочельник`.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+This vocabulary should be introduced within the context of A1 holiday modules.
+
+**Іменники (Nouns):**
+*   ★★★ (Essential): **свя́то**, **Різдво́**, **Нови́й рік**, **Вели́кдень**, **день наро́дження**, **подару́нок** (gift), **яли́нка** (fir tree), **кутя́**, **па́ска** (Easter bread).
+*   ★★ (Useful): **коля́дка** (Christmas carol), **щедрі́вка** (New Year's carol), **верте́п** (nativity play), **пи́санка** (decorated Easter egg), **Святи́й Микола́й**, **День Незале́жності**, **гість** (guest).
+*   ★ (Can wait): **Святве́чір** (Christmas Eve), **діду́х**, **Водо́хреще** (Epiphany), **тради́ція**, **зви́чай**.
+
+**Дієслова (Verbs):**
+*   ★★★ (Essential): **святкува́ти** (to celebrate), **віта́ти** (to greet), **бажа́ти** (to wish), **дарува́ти** (to give a gift), **співа́ти** (to sing), **готува́ти** (to prepare).
+*   ★★ (Useful): **колядува́ти** (to sing carols), **щедрува́ти** (to sing New Year's songs), **прикраша́ти** (to decorate), **ходи́ти в го́сті** (to visit).
+*   ★ (Can wait): **посіва́ти** (to sow grains for New Year's), **ворожи́ти** (to tell fortunes).
+
+**Прикметники (Adjectives):**
+*   ★★★ (Essential): **новий**, **різдвя́ний**, **велико́дній**, **щасли́вий**, **до́брий**, **смачни́й**.
+*   ★★ (Useful): **держа́вний** (state), **релігі́йний** (religious), **традиці́йний**, **святи́й** (holy).
+
+**Фрази (Phrases):**
+*   ★★★: **З Нови́м ро́ком!**, **З Різдво́м!**, **З днем наро́дження!**, **Зі свя́том!**, **Смачно́го!** (Enjoy your meal!).
+*   ★★: **Христо́с Воскре́с! — Воі́стину Воскре́с!**, **Ще́дрий ве́чір, до́брий ве́чір!**
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Greeting Construction (based on Source 2)**
+*   **Завдання:** Складіть привітання. (Create a greeting.)
+*   **Інструкція:** Combine the holiday with the wish. For example: `Новий рік + щастя` → `З Новим роком! Бажаю щастя!`
+    1.  Різдво + достаток (wealth) → `________________`
+    2.  День народження + здоров'я → `________________`
+    3.  Великдень + мир (peace) → `________________`
+
+**2. Vocabulary Completion (based on Source 19)**
+*   **Завдання:** Вставте правильні слова. (Insert the correct words.)
+    *   `співають, готують, стоять, святкують, ходять`
+*   **Текст:**
+    1.  На Різдво діти і дорослі ... колядки.
+    2.  На Святвечір українці ... 12 пісних страв.
+    3.  У будинках ... прикрашені ялинки.
+    4.  На свята люди ... в гості до родичів.
+
+**3. Holiday Identification (based on Source 12, 36)**
+*   **Завдання:** Прочитайте і скажіть, що це за свято. (Read and say what holiday it is.)
+    1.  "На столі — духмяна паска, а круг неї — писанки." (Source 37) → **Це ...**
+    2.  "Добрий вечір тобі, пане господарю! Винеси ти нам ковбасок пару." (Source 39) → **Це ...**
+    3.  "Нова радість стала, яка не бувала: над вертепом звізда ясна світлом засіяла." (Source 38) → **Це ...**
+
+**4. Correcting Common Errors (based on Source 13, 27)**
+*   **Завдання:** Знайдіть помилку і напишіть правильно. (Find the mistake and write correctly.)
+    1.  `З наступаючим Різдвом!` → `________________`
+    2.  `Вітаю з День Незалежності!` → `________________`
+    3.  `Паска - моє улюблене свято.` → `________________` (when referring to the holiday, not the bread)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/instrumental-case`
+- `pedagogy/a1/genitive-case`
+- `culture/traditions/rizdvo-in-ukraine`
+- `culture/traditions/velykden-in-ukraine`
+- `vocabulary/food/holiday-dishes`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 114
-> **Score:** 0.50
->
-> 114
-> Комунікативні можливості речень
-> 291   Прочитайте текст. Про що в ньому йдеться? Які емоції викликає 
-> у вас це свято? Які очікування і передчуття у вас напередодні 
-> Різдва? Які речення за метою висловлювання використовує 
-> письменниця? Чому? Напишіть, що для вас означає це свято.
-> Різдво для мене — це не просто біблійний сюжет, можли-
-> вість замислитися над мудрістю Божого промислу, занурити-
-> ся в його барвистість. Це набагато більше. Бо моєму Різдву 
-> не одна тисяча літ.
+# Педагогіка A1: This And That
 
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 25
-> **Score:** 0.33
->
-> 25
-> НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ
-> стилем, 7 січня за новим стилем). У колядках цього періоду 
-> прославляють Сина Божого, а також змальовують образ 
-> Діви Марії, яка народила Ісуса. 
-> Щедрівка – це величальна пісня, яку виконують на 
-> Щедрий вечір (Маланку) напередодні Нового року. Цього 
-> вечора (31 грудня за старим стилем, 13 січня за новим сти-
-> лем) господині варили кутю, накривали багатий стіл, для 
-> якого можна було готувати й м’ясні страви, а не лише пісні, 
-> як на Святвечір. Молодь, переважно дівчата, ходила щедру-
-> вати, славила господарів, бажала гарного врожаю, достатку 
-> родині, приплоду худоби, доброго роїння бджіл тощо.
 
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 235
-> **Score:** 0.25
->
-> 235
-> Так тривало вже давно. Усе враз припинилося минулої 
-> зими напередодні Різдва.
-> — Любий, мені так шкода, — сказала мама, присівши на 
-> краєчку ліжка того ранку. — Я знаю, що ти його дуже любив, 
-> але дідусь більше не з нами.
-> Ця новина розчавила мене, неначе важезний чобіт малень-
-> ку мураху. Як це не з нами?… (О. Войтенко).
->  
-> ІІ   Напишіть текст утішання. Які з поданих нижче формул утішан-
-> ня доцільно використати в цій ситуації?
-> 1. Бог посилає випробування кожній людині, і їх потрібно 
-> долати. 2. Що сталося, на жаль, уже не змінити. Треба навчи-
-> тися із цим жити. 3. Не варто так перейматися, здоров’я 
-> важливіше. 4. Не звинувачуй себе, ти ж не хотів, щоб так 
-> сталося. 5. Не бачу причин для смутку! Перемелеться — 
-> борошно буде! 6. Трохи згодом життя налагодиться! Усе в тебе 
-> буде добре! 7.
 
-## Українські свята (Ukrainian Holidays)
+## Методичний підхід (Methodological Approach)
 
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 27
-> **Score:** 0.50
->
-> 27
-> НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ
-> Застеляйте столи, 
-> та все килимами. (Приспів)
-> Та кладіть калачі 
-> з ярої пшениці. (Приспів)
-> Бо прийдуть до тебе 
-> три празники в гості. (Приспів)
-> Ой перший же празник – 
-> то Різдво Христове. (Приспів)
-> А другий же празник – 
-> Василя святого. (Приспів)
-> А третій же празник – 
-> Святе Водохреща. (Приспів)
-> А що перший празник 
-> зішле тобі віку. (Приспів)
-> А що другий празник 
-> зішле тобі щастя. (Приспів)
-> А що третій празник 
-> зішле всім нам долю.
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-## Державні свята (National Holidays)
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 124
-> **Score:** 0.50
->
-> Розділ 5. Іменник 
-> 124
-> 7. Найменування історичних подій, знаменних дат, 
-> загальнонародних свят (із великої літери пишемо 
-> перше слово): День захисників і  захисниць Укра-
-> їни, Новий рік, Перше вересня.
-> Запам’ятайте: День Незалежності України, День 
-> Соборності України, День Конституції України.
-> 8. Офіційні назви установ та організацій, партій (із 
-> великої літери пишемо перше слово): Міністер-
-> ство освіти і науки України, Харківський націо-
-> нальний університет імені В.  Н.  Каразіна.
-> 9. Назви вокзалів, залізничних станцій, портів, 
-> аеропортів, станцій метро, зупинок наземного 
-> транспорту: Південний вокзал, аеропорт «Борис-
-> піль», станція метро «Позняки».
-> 10. Назви товарних знаків, марок, виробів: тістечко 
-> «Смакота», автомобіль «Вольво».
-> 11.
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 229
-> **Score:** 0.50
->
-> 229
-> Відомості із синтаксису й пунктуації. Кома між однорідними членами речення
-> й родової пам’яті, любові та святковості; оберегом і захистом 
-> від лихого ока та слова.
-> Елементи української вишивки все частіше використо-
-> вують у дизайні сучасного одягу. Не лише українці, а й гол-
-> лівудські красуні залюбки вбирають ніжну вишиту вдяган-
-> ку. Тепер носити вишиванку стало не тільки патріотично, 
-> а й модно та ексклюзивно.
-> (За матеріалами сайту «Еспресо»)
-> 2. Знайдіть у  тексті однорідні члени речення .
-> 3. Поясніть розділові знаки між ними .
-> 4. З’ясуйте за  словником значення незрозумілих слів . Запишіть їх до  свого 
-> словничка .
-> Вправа 370
-> 1.
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-## Підсумок — Summary
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 124
-> **Score:** 0.50
->
-> Розділ 5. Іменник 
-> 124
-> 7. Найменування історичних подій, знаменних дат, 
-> загальнонародних свят (із великої літери пишемо 
-> перше слово): День захисників і  захисниць Укра-
-> їни, Новий рік, Перше вересня.
-> Запам’ятайте: День Незалежності України, День 
-> Соборності України, День Конституції України.
-> 8. Офіційні назви установ та організацій, партій (із 
-> великої літери пишемо перше слово): Міністер-
-> ство освіти і науки України, Харківський націо-
-> нальний університет імені В.  Н.  Каразіна.
-> 9. Назви вокзалів, залізничних станцій, портів, 
-> аеропортів, станцій метро, зупинок наземного 
-> транспорту: Південний вокзал, аеропорт «Борис-
-> піль», станція метро «Позняки».
-> 10. Назви товарних знаків, марок, виробів: тістечко 
-> «Смакота», автомобіль «Вольво».
-> 11.
+## Послідовність введення (Introduction Sequence)
 
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 109
-> **Score:** 0.25
->
-> 109
-> 1. Лісосплав, сталевар. 2. Жовтоцвіт, чорнослив, чорнозем. 
-> 3. Газобалон, людинодень. 4. Сторіччя, п’ятиденка. 5. Авто-
-> магістраль, медіахолдинг. 6. Напівпітьма, напівмавпа.
-> 262   Ознайомтеся з інформацією, уміщеною в схемі. Сформулюйте 
-> за її змістом 4–5 запитань.
-> Увага! Однослівну назву, співвідносну зі словосполученням Святий вечір, 
-> пишемо разом і з великої букви, тобто Святвечір
-> РАЗОМ
->  Поєднані за допомогою сполучного голос-
-> ного звука дві основи, друга з яких — 
-> віддіє слівного походження:
-> медозбір, м’ясоїд, самохід, сінокіс, солевар, 
-> стрічкоріз, тепловоз, трубоклад, хлібодар, 
-> хліборіз
-> Утворені поєднанням прикметникової 
-> та іменникової основ за допомогою спо-
-> лучного голосного звука: 
-> густолісся, дрібноліс, синьоцвіт, чорноліс, 
-> червононіжка
-> Утворені з кількісного числівника у ...
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
 
-## Grammar Reference
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
 
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 29
-> **Score:** 0.33
->
-> 29
-> НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ
-> Віншую1 вас із Новим роком,
-> Новим роком, довгим віком,
-> Щоб ви дочекали відтепер за рік
-> До ста літ!
-> Гра «ТАК – НІ»
-> Підтвердьте або заперечте подані твердження за змістом 
-> пісні «Засівна».
-> 1. Засіваючи, діти вітають із Різдвом.
-> 2. Пшеницю порівнюють із рукавицею.
-> 3. Гроші пропонують вимірювати мискою.
-> 4. Господарям бажають, щоб у кожному кутку було по вінку.
-> 5. У пісні згадують про свійських тварин.
->  ÏÅÐÅÂ²ÐßªÌÎ
-> 1. Коли виконували колядки, а коли – щедрівки?
-> 2. Установіть відповідність. 
-> Різновид пісні
-> 1 жниварська
-> 2 щедрівка
-> 3 колядка
-> 4 купальська 
-> Тема
-> А мрії дівчини про швидке одруження
-> Б віншування господарів із Новим роком
-> В прославлення народження Сина Божого
-> Г подяка ниві за гарний урожай 
->  ÀÍÀË²ÇÓªÌÎ
-> 3.
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
 
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 13
-> **Score:** 0.50
->
-> 13
-> Пісні  зимового  циклу
-> До речі…
-> Чемні дітлахи знаходять під подушкою подарунок, а неслухняні — прутика. 
-> Ця різка слугує своєрідним попередженням дитині, що треба подумати над 
-> своєю поведінкою, виправитися. 
-> Головне свято зими в християн — Різдво. Його 
-> здавна відзначають за спеціальним сценарієм, 
-> супроводжуючи величальними піснями — колядка­
-> ми. У них прославляють народження Ісуса Христа, бажають здоров’я, успіху 
-> й процвітання родині, а ще — урожаю на ниві та в
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
 
-... (truncated for context window)
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -622,7 +595,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Українські свята (Ukrainian Holidays)` (~300 words)
 - `## Державні свята (National Holidays)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -680,7 +652,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -781,68 +753,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Вступ: Що таке свято? (~120 words)
+- P1 (~120 words): Introduce the general concept of "свято" (holiday) in Ukraine. Categorize holidays into religious (релігійні), traditional (традиційні), and state (державні). Introduce the universal, all-purpose greeting "Зі святом!" (Happy Holiday!) and the verb "святкувати" (to celebrate). Explain that holidays are essential for understanding the Ukrainian soul.
 
-- P1 (~30 words): Brief framing sentence introducing two holiday conversations: one about Різдво (Christmas), one about День Незалежності. Sets register — informal, between friends or host and guest.
+## Діалоги: Говоримо про свята (~330 words)
+- P1 (~110 words): Contextual introduction to the first dialogue. Two friends discuss the upcoming Christmas season. Mention the shift in the Ukrainian calendar: celebrating on December 25th (грудень) to align with Europe and break from the Russian Orthodox tradition.
+- P2 (~110 words): Dialogue 1 — Christmas Traditions. Two speakers (Українська родина та Іноземний гість) discuss what they do on Dec 24 and 25. Focus on: "Коли в тебе Різдво?", "Ми їмо кутю і співаємо колядки", and the specific greeting "З Різдвом Христовим!".
+- P3 (~110 words): Dialogue 2 — Independence Day. Setting: August 24th in a city center. Speakers discuss the atmosphere: "Сьогодні День Незалежності!", "Дивись, який гарний парад і прапори!", "Ввечері буде салют". End with the iconic exchange: "Слава Україні! — Героям слава!".
+- <!-- INJECT_ACTIVITY: quiz-holiday-match --> [quiz, Match holiday to date (e.g., Різдво → 25 грудня, День Незалежності → 24 серпня), 8 items]
 
-- Dialogue 1 (~120 words): Full multi-turn exchange before Christmas. Олена asks Том: — Коли в тебе Різдво? — Двадцять п'ятого грудня. А в тебе? — У нас — теж! Раніше святкували сьомого січня, але тепер — двадцять п'ятого. — Що ви робите на Різдво? — Ми співаємо колядки і їмо кутю. — Що таке кутя? — Це пшениця з медом і маком. Дуже смачно! — З Різдвом! — З Різдвом Христовим! Bold новых vocabulary inline: колядки, кутя, святкувати, пшениця.
+## Українські свята: Традиції та символи (~340 words)
+- P1 (~170 words): Christmas (Різдво) — The Winter Cycle. Detail the significance of December 25th. Describe "Свята вечеря" (Holy Supper) on Christmas Eve with its mandatory "12 страв" (12 dishes). Focus on "кутя" (ritual wheat porridge) as the most important dish. Explain "колядки" (carols) and "колядники" (carolers) who go door to door with a star. Mention the "дідух" (sheaf of wheat) as a traditional decoration.
+- P2 (~170 words): Easter (Великдень) — The Spring Cycle. Explain that this is the biggest religious celebration. Introduce "писанки" (artfully decorated eggs) as a unique Ukrainian art form. Distinguish between "Пасха" (the holiday name) and "паска" (the specific Easter bread). Describe the tradition of "святити кошик" (blessing the basket at church). Teach the ritual greeting: "Христос воскрес! — Воістину воскрес!".
+- <!-- INJECT_ACTIVITY: quiz-holiday-clues --> [quiz, Identify holiday based on clues (e.g., Кутя, колядки, 12 страв → Різдво), 8 items]
 
-- P2 (~20 words): One-line note on З Різдвом Христовим! vs З Різдвом! — both correct, Христовим is fuller form.
+## Державні свята: Громадянська ідентичність (~340 words)
+- P1 (~170 words): Independence Day (День Незалежності) — August 24, 1991. Explain that this is the most important "державне свято" (state holiday). Describe the festive atmosphere: military parades (парад), concerts, and the sea of blue and yellow flags (прапори). Use the phrase "вітати з Днем Незалежності" to show how we celebrate freedom and sovereignty.
+- P2 (~170 words): Other key celebrations. Introduce "Новий рік" (New Year, Jan 1) as the main secular holiday with the tree (ялинка) and gifts (подарунки). Explain "Вишиванковий день" (Vyshyvanka Day, 3rd Thursday of May) as a living tradition where everyone wears the embroidered shirt ("вишиванка") to show identity. Briefly mention Defenders' Day (October 1) and Constitution Day (June 28).
+- <!-- INJECT_ACTIVITY: group-sort-traditions --> [group-sort, Sort traditions and symbols by holiday: Різдво vs Великдень vs День Незалежності, 10 items]
 
-- Dialogue 2 (~120 words): Full exchange on Independence Day. Марк and Оксана: — Двадцять четверте серпня — День Незалежності! — Так, це головне державне свято України. — Що ви робите? — Вдень ми дивимося парад і ходимо на концерт у місто. — А ввечері? — Ввечері — салют і святковий вечір з друзями. Усі у вишиванках! — З Днем Незалежності! — Слава Україні! Bold vocabulary: парад, салют, святковий, вишиванка, державне свято.
+## Підсумок: Граматика вітань та побажань (~210 words)
+- P1 (~110 words): Grammar Recap — The Greeting Formula. Explain the pattern: "З + [Holiday in Instrumental Case]!". Show the transformations: Новий рік → "З Новим роком!", Різдво → "З Різдвом!", Великдень → "З Великоднем!", День народження → "З днем народження!". Relate this to the "з + noun" (with) construction they already know (e.g., кава з молоком).
+- P2 (~100 words): Wishes and the Calendar. Introduce the "Бажаю + Genitive" formula from the pedagogy brief: "Бажаю щастя, здоров'я, миру" (I wish you happiness, health, peace). Provide a quick calendar overview: 25.12, 01.01, 24.08. 
+- P3 (~60 words): Self-check Q&A. 
+  - Q: How do you greet someone on August 24? 
+  - A: З Днем Незалежності! 
+  - Q: What is the ritual response to "Христос воскрес!"? 
+  - A: Воістину воскрес! 
+  - Q: When is Christmas in Ukraine? 
+  - A: Двадцять п'ятого грудня.
+- <!-- INJECT_ACTIVITY: fill-in-greetings --> [fill-in, Complete the greeting: З ___! (Новим роком, Різдвом, Великоднем, святом), 8 items]
 
-- P3 (~40 words): Comprehension prompt — two questions for learner to answer from the dialogues: (1) Що їдять на Різдво? (2) Де люди бувають на День Незалежності? Learner answers in Ukrainian using dialogue vocabulary.
-
----
-
-## Українські свята (Ukrainian Holidays) (~330 words total)
-
-- P1 (~70 words): Різдво — date and the 2023 shift. Ukraine celebrates Christmas on December 25, not January 7. The January 7 date was the Russian Orthodox date; December 25 aligns with most of Europe and Ukraine's own historical tradition. Keyword: Різдво (n), грудень, сьоме січня, двадцять п'яте грудня. Note: Різдво is neuter — З Різдвом! → instrumental -ом.
-
-- P2 (~80 words): Свята вечеря (Holy Supper) on December 24 — the heart of Ukrainian Christmas. 12 страв (12 dishes, one per apostle). All пісні (fasting dishes — no meat). The first dish is кутя — wheat porridge with мед (honey), мак (poppy seeds), горіхи (nuts). After кутя, борщ, вареники, риба, узвар (dried fruit compote). Introduce: страва (f), піст (m), пісний, мед (m), мак (m).
-
-- P3 (~70 words): Колядки — traditional Christmas carols. Колядники go door to door on Christmas Eve singing carols, wishing the family здоров'я і щастя. Example line from known folk carol: «Ой перший же празник — то Різдво Христове» (from textbook, Zabotnyi Grade 6). Introduce: колядка (f, pl. колядки), колядувати, колядники, бажати (to wish).
-
-- P4 (~60 words): Великдень (Easter) — the biggest religious holiday, date changes each year (spring, after the full moon). The greeting exchange: Христос воскрес! — Воістину воскрес! Explain: learners say the second line in response when someone greets them. Introduce: воскресати/воскреснути (to rise), воістину (truly/indeed), весна.
-
-- P5 (~50 words): Three Великдень traditions: (1) писанка — decorated egg, unique Ukrainian folk art (pysanka, not just a dyed egg — traditional wax-resist patterns); (2) паска — tall, sweet Easter bread blessed at church; (3) святити кошик — blessing the Easter basket at church on Saturday night. Introduce: кошик (m), освячувати/святити.
-
-- Exercise — Quiz (~8 items): Match holiday to its tradition: кутя → Різдво; писанка → Великдень; Христос воскрес! → Великдень; колядки → Різдво; паска → Великдень; дванадцять страв → Різдво; узвар → Різдво; кошик → Великдень.
-
----
-
-## Державні свята (National Holidays) (~330 words total)
-
-- P1 (~80 words): День Незалежності — August 24, 1991. Ukraine declared independence from the Soviet Union. The most important державне свято (national holiday). Brief framing: what "незалежність" means — не залежати від іншої держави (not to depend on another state). Connect morphology: незалежність ← незалежний ← не + залежати. Introduce: незалежність (f), незалежний, держава (f), державний, проголошувати/проголосити (to declare).
-
-- P2 (~70 words): How День Незалежності is celebrated. Вдень — парад у центрі міста (military parade), концерти на площах, люди несуть синьо-жовті прапори. Ввечері — салют над містом. Many people wear вишиванка as a symbol of identity. Example sentence: Двадцять четверте серпня всі виходять на вулицю з прапорами. Introduce: прапор (m), синьо-жовтий, площа (f, square/plaza), нести (to carry).
-
-- P3 (~50 words): Greetings and calls for this holiday. З Днем Незалежності! — the standard greeting. Слава Україні! — Героям слава! — the national call-and-response, used since Maidan (2014) and now the official military greeting. Note: this is not just a holiday phrase — it's used year-round and has deep meaning.
-
-- P4 (~80 words): Four more holidays to recognize. (1) Новий рік (January 1) — biggest secular celebration; З Новим роком! (2) Вишиванковий день — third Thursday of May; everyone wears вишиванка, symbol of Ukrainian identity and resistance. (3) День Конституції — June 28; (4) День захисників і захисниць України — October 1 (note: офіційна назва includes both гендери, as seen in Litvinova Grade 6 textbook). Introduce: вишиванка (f), конституція (f), захисник/захисниця.
-
-- Exercise — Group Sort (~10 items): Sort into Різдво / Великдень / День Незалежності: кутя, писанка, парад, колядки, прапор, Христос воскрес!, салют, паска, вишиванка, Святвечір.
-
----
-
-## Підсумок — Summary (~330 words total)
-
-- P1 (~80 words): The З + instrumental greeting pattern. З Різдвом! З Великоднем! З Новим роком! З Днем Незалежності! З днем народження! The pattern is always: З + [holiday noun in instrumental case] + exclamation mark. Instrumental singular endings: -ом (m/n: Різдвом, роком, святом), -ею/-ею (f: незалежністю → but we use День Незалежності as the full phrase). Show the pattern as a formula box: З + ___ом/___ем/___ею = happy [occasion]!
-
-- P2 (~70 words): Connection to already-known instrumental. Learners know instrumental from з + noun in Unit 36 (кава з молоком, борщ з хлібом, вареники з сиром). It's the same case — just now applied to time/occasion. З Різдвом = "with Christmas" → "wishing you Christmas." З молоком = "with milk." Same preposition, same case, new meaning. Three parallel examples side by side.
-
-- P3 (~60 words): Holiday calendar — a quick visual summary. грудень 25 → Різдво (З Різдвом Христовим!). січень 1 → Новий рік (З Новим роком!). весна → Великдень (Христос воскрес!). травень (третій четвер) → Вишиванковий день. серпень 24 → День Незалежності (З Днем Незалежності! / Слава Україні!). жовтень 1 → День захисників і захисниць.
-
-- Self-check Q&A (~60 words):
-  - Як привітати з Різдвом? → З Різдвом Христовим!
-  - Що відповідають на «Христос воскрес!»? → Воістину воскрес!
-  - Коли День Незалежності? → Двадцять четверте серпня.
-  - Що таке кутя? → Пшениця з медом, маком і горіхами.
-  - Як привітати з Новим роком? → З Новим роком!
-
-- Exercise — Fill-in (~8 items): З ___! Complete with the correct instrumental form: Різдво → З Різдвом!, Великдень → З Великоднем!, Новий рік → З Новим роком!, день народження → З днем народження!, День Незалежності → З Днем Незалежності!, свято → Зі святом!, перемога → З перемогою!, весна → З весною!
-
-Grand total: ~1320 words
+Grand total: ~1340 words
 </skeleton>
 
 ## Output Format

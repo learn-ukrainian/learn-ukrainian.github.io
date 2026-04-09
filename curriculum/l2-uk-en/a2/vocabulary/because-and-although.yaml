@@ -1,0 +1,229 @@
+vocabulary:
+- word: допуст
+  translation: concession
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зате́
+  translation: but then, on the other hand
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: навпаки́
+  translation: on the contrary
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: незважаючи на
+  translation: despite
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тому що
+  translation: because
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бо
+  translation: because
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: хоча́
+  translation: although, even though
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: проте́
+  translation: however, yet
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: одна́к
+  translation: however
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: причи́на
+  translation: reason, cause
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сполу́чник
+  translation: conjunction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: складне речення
+  translation: complex sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тому́
+  translation: therefore, that is why
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: контро́льна
+  translation: test
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ле́кція
+  translation: lecture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чому́
+  translation: why
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ка́лька
+  translation: calque
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́ма
+  translation: comma
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ву́лик
+  translation: beehive
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бджоля́р
+  translation: beekeeper
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: контра́ст
+  translation: contrast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хоч
+  translation: although, even though
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: на́две́чір’я
+  translation: early evening
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: при́смерки
+  translation: twilight
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: протиста́влення
+  translation: opposition
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зуси́лля
+  translation: effort
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: крадькома́
+  translation: stealthily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: сніг
+  translation: snow
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: цвіт
+  translation: bloom
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: складносурядне речення
+  translation: compound sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: повече́ряти
+  translation: to have dinner
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пунктуа́ція
+  translation: punctuation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сполучна тканина
+  translation: connective tissue
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проє́кт
+  translation: project
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рівна інтонація
+  translation: even intonation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сполучники причини
+  translation: causal conjunctions
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сполучник допусту
+  translation: concessive conjunction
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

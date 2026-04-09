@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 16: Verbs Group I (A1, A1.3 [Actions])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -125,123 +125,99 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги (Dialogues)
 
-Ю́ля is in the kitchen. Something smells amazing. Сашко́ walks in and can't resist asking questions.
+Up to this point, you have learned how to name objects, describe their qualities, and express basic states of being. However, in Ukrainian, we do not just exist in the world; we actively participate in it. We do things. Action is the engine of any language, and verbs are the parts of speech that express these actions. Setting the scene in a shared kitchen, we can see how daily life unfolds through verbs like **читати** (to read) and **готувати** (to cook). By paying close attention to the endings of these action words, you will discover how Ukrainian clearly indicates exactly who is performing the action without needing complex sentence structures.
 
-> — **Сашко:** Що ти ро́биш, Ю́лю? *(What are you doing, Yulia?)*
-> — **Юля:** Я готу́ю вече́рю. А ти що робиш? *(I'm cooking dinner. And what are you doing?)*
-> — **Сашко:** Я чита́ю. *(I'm reading.)*
-> — **Юля:** Що чита́єш? *(What are you reading?)*
-> — **Сашко:** Я читаю кни́гу. А де Оле́на? *(I'm reading a book. And where's Olena?)*
-> — **Юля:** Вона́ слу́хає му́зику. *(She's listening to music.)*
-> — **Сашко:** Вона за́вжди́ слухає музику! *(She always listens to music!)*
-> — **Юля:** Так, але́ вона зна́є бага́то пісе́нь! *(Yes, but she knows many songs!)*
+> **Сашко:** Привіт! Що ти робиш? *(Hi! What are you doing?)*
+> **Юля:** Я готую вечерю. А ти? *(I am cooking dinner. And you?)*
+> **Сашко:** Я не готую. Я читаю. *(I am not cooking. I am reading.)*
+> **Юля:** А що робить Олена? *(And what is Olena doing?)*
+> **Сашко:** Вона слухає музику. *(She is listening to music.)*
+> **Юля:** Добре. *(Good.)*
 
-:::tip
-Помі́тив/-ла? Three different persons appeared in that exchange: **я готую** (I cook), **ти читаєш** (you read), **вона слухає** (she listens). Those endings — **-ю**, **-єш**, **-є** — are Group I conjugation. That's the pattern you're learning today.
-:::
+Take a moment to analyze the verb endings in that kitchen conversation. Notice how the ends of the action words shift depending on exactly who is speaking or who is being spoken about. When Yulia talks about herself, she says **готую** (I cook). When Sashko asks Yulia a direct question about her actions, he uses the form **робиш** (you do). When they both discuss Olena, who is a third person not directly addressed, Sashko says **слухає** (she listens). The central question **«Що ти робиш?»** (What are you doing?) acts as your universal key to unlocking present tense conversations and discovering what people are engaged in right now.
 
-Here's a second situation — two people meet after work.
+> **Максим:** Де ти працюєш? *(Where do you work?)*
+> **Анна:** Я працюю в офісі. А ти? *(I work in an office. And you?)*
+> **Максим:** Я не працюю, я навчаюся. *(I do not work, I am studying.)*
+> **Анна:** Ти знаєш українську? *(Do you know Ukrainian?)*
+> **Максим:** Так, я вивчаю! *(Yes, I am learning!)*
 
-> — **Андрі́й:** Де ти працю́єш? *(Where do you work?)*
-> — **Мари́на:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
-> — **Андрій:** Я не працюю — я навча́юся. Я студе́нт. *(I don't work — I study. I'm a student.)*
-> — **Марина:** Ти вивча́єш украї́нську? *(Are you studying Ukrainian?)*
-> — **Андрій:** Так, я вивча́ю! *(Yes, I'm studying it!)*
-> — **Марина:** До́бре! Я теж вивчаю. *(Great! I'm studying too.)*
-> — **Андрій:** Ти гуля́єш уве́чері? *(Do you walk in the evening?)*
-> — **Марина:** Так, я гуля́ю в парку. *(Yes, I walk in the park.)*
+<!-- INJECT_ACTIVITY: match-up-person-verb -->
 
-Count the verbs that appeared across both dialogues: **готува́ти** (to cook), **чита́ти** (to read), **слу́хати** (to listen), **зна́ти** (to know), **працюва́ти** (to work), **вивча́ти** (to study), **гуля́ти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **роби́ти** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
+## Перша дієвідміна (Group I Verbs)
 
-## Пе́рша дієвідмі́на (Group I Verbs)
+Ukrainian verbs are organized into two main families, which grammarians call conjugations. We will focus entirely on **Перша дієвідміна** (First Conjugation) or Group I verbs. You can usually identify these verbs in their dictionary form, known as the infinitive, because they typically end with the marker **-ати** or sometimes **-увати**. However, the absolute most reliable method to prove a verb belongs to Group I is the "They Test". If the form for **вони** (they) ends in **-уть** or **-ють**, then the verb firmly belongs to the First Conjugation. For instance, **вони читають** (they read) proves that the verb is a Group I action word.
 
-All seven verbs from the dialogues belong to Group I — the largest verb group in Ukrainian. How do you recognize a Group I verb? Look at its infinitive, the dictionary form. Group I infinitives end in **-а́ти** (**читати**, **слухати**, **гуляти**, **знати**, **вивчати**) or **-увати/-ювати** (**готувати**, **працювати**, **малюва́ти** — to draw). To conjugate any of these verbs in the present tense, you remove **-ти** from the infinitive and add person endings.
+The conjugation table below demonstrates the complete present tense pattern for the verb **читати** (to read). To conjugate the verb, you drop the final **-ти** from the infinitive and attach specific personal endings to the remaining stem.
 
-Here is the anchor example. Take **читати** (to read) — remove **-ти**, get the stem **чита́-**, and add endings:
+| Особа (Person) | Займенник (Pronoun) | Форма дієслова (Verb Form) |
+| :--- | :--- | :--- |
+| 1-ша однини | **я** (I) | **читаю** (I read) |
+| 2-га однини | **ти** (you) | **читаєш** (you read) |
+| 3-тя однини | **він / вона / воно** (he / she / it) | **читає** (he / she / it reads) |
+| 1-ша множини | **ми** (we) | **читаємо** (we read) |
+| 2-га множини | **ви** (you plural/formal) | **читаєте** (you read) |
+| 3-тя множини | **вони** (they) | **читають** (they read) |
 
-| Осо́ба (Person) | Однина́ (Singular) | Множина́ (Plural) |
-|---|---|---|
-| 1-ша (я / ми) | я **читаю** | ми **чита́ємо** |
-| 2-га (ти / ви) | ти **читаєш** | ви **чита́єте** |
-| 3-тя (він, вона / вони́) | він/вона **чита́є** | вони **чита́ють** |
+Notice the characteristic vowel **-є-** that elegantly links the stem to the ending for most persons. 
 
-This table comes from Варзацька, Grade 4 (p. 129) — the standard Ukrainian school approach. Notice the vowel **є** running through the forms from **ти** to **ви**: -**є**ш, -**є**, -**є**мо, -**є**те (with -**ють** for **вони**). That consistent **є** is the signature of Group I.
+Let us dive deep into six essential Group I verbs that will form the absolute foundation of your active vocabulary: **читати** (to read), **знати** (to know), **працювати** (to work), **слухати** (to listen), **гуляти** (to walk), and **готувати** (to cook). Most of these follow the straightforward pattern of dropping the **-ти** and adding the endings. However, there is a special note regarding **працювати** and **готувати**. When conjugating verbs with the **-увати** suffix, the **-ва-** portion drops out entirely before adding the endings, resulting in the streamlined forms **я працюю** (I work) and **я готую** (I cook), rather than the incorrect forms "працюваю" or "готуваю".
 
-Now apply the same pattern to all six essential verbs. Here are the three singular forms — the ones you'll use most:
+When pronouncing these verbs, give special phonetic focus to the characteristic vowel. The Ukrainian letter **є** in endings like **-єш** and **-є** sounds distinctly like "ye" when it follows another vowel. For example, in the word **знаєш** (you know), you must clearly pronounce the "ye" sound to ensure authentic pronunciation. Do not reduce it to a flat "e" sound. Emphasizing the clear, bright Ukrainian pronunciation of these specific endings is crucial for being understood correctly by native speakers and avoiding a foreign accent.
 
-| Infinitive | я | ти | він/вона |
-|---|---|---|---|
-| **читати** (to read) | читаю | читаєш | читає |
-| **знати** (to know) | зна́ю | зна́єш | знає |
-| **працювати** (to work) | працюю | працюєш | працю́є |
-| **слухати** (to listen) | слу́хаю | слу́хаєш | слухає |
-| **гуляти** (to walk) | гуляю | гуляєш | гуля́є |
-| **готувати** (to cook) | готую | готу́єш | готу́є |
-
-One detail about **-увати** verbs: when you conjugate **готувати** or **працювати**, the stem shortens. **Готувати** → **го́ту-** (not *готува-*), **працювати** → **пра́цю-** (not *працюва-*). The endings stay the same — only the stem changes.
-
-<!-- INJECT_ACTIVITY: fill-in-conjugation -->
-
-A quick note about **робити** (to do). It appeared in the dialogue question **Що ти робиш?** (What are you doing?). But **робити** belongs to Group II — its endings are different: **робиш**, **ро́бить** (with **-и-**, not **-є-**). For now, treat **Що ти робиш?** as a memorized chunk. You'll learn Group II conjugation in M17. Mixing up the two groups is the most common mistake at this stage, so keeping them separate is important.
+<!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->
 
 ## Я, ти, він/вона (Persons)
 
-At A1, three forms cover roughly 90% of your real conversations: **я** (I — the speaker), **ти** (you — the person you're talking to), and **він/вона** (he/she — someone you're talking about). You already know these pronouns from M10. Drill those three verb forms first. The plural forms — **ми** (we), **ви** (you, plural or formal), **вони** (they) — appear below for recognition, but there's no pressure to memorize all six right now.
+While it is important to understand the full paradigm of all six persons, we will prioritize the "Big Three" for your active usage. The forms for **я** (I), **ти** (you), and **він / вона** (he / she) will easily cover ninety percent of your beginner Ukrainian conversations. You talk about your own actions, you ask your conversation partner about theirs, and you describe what someone else is doing. The pattern is incredibly consistent: use the **-ю** ending for the self, the **-єш** ending for the partner, and the **-є** ending for the third person. Mastering just these three targeted endings unlocks massive communicative potential.
 
-Here are the three persons in action, building full sentences with nouns from M08 and adjectives from M09:
+Now  You can seamlessly combine these newly conjugated verbs with vocabulary you already know from previous modules. 
 
-- **Я читаю нову́ книгу.** — I'm reading a new book.
-- **Ти знаєш цю пі́сню?** — Do you know this song?
-- **Він слухає українську музику.** — He listens to Ukrainian music.
-- **Вона готує смачну́ вечерю.** — She's cooking a tasty dinner.
-- **Я гуляю в парку.** — I walk in the park.
-- **Ти працюєш тут?** — Do you work here?
+*   **Я читаю нову книгу.** (I am reading a new book.)
+*   **Ти знаєш цю пісню?** (Do you know this song?)
+*   **Вона слухає українську музику.** (She listens to Ukrainian music.)
 
-Each sentence follows the same structure: **person + verb form + object**. The verb ending tells you who is doing the action — **-ю** for я, **-єш** for ти, **-є** for він/вона.
+:::note
+You might notice that the object nouns change their final letters slightly, such as **книга** becoming **книгу** and **пісня** becoming **пісню**. This is the Ukrainian case system in action. For now, do not worry about the underlying grammar rules for the object; simply learn these specific combinations as memorized chunks.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-verb-forms -->
+English speakers often fall into the trap of applying the "No-Be" Rule incorrectly. Because English uses the verb "to be" to create continuous present tense actions like "I am reading", learners frequently try to insert the Ukrainian equivalent **є** into their sentences, resulting in the incorrect phrase **«Я є читаю»**. You must firmly stress to your brain that in Ukrainian, the present tense verb form already contains the continuous action. The single word **читаю** simultaneously means "I read" generally and "I am reading" right at this exact moment.
 
-You may have noticed something: **кни́га** became **книгу**, **пі́сня** became **пісню**, **му́зика** became **музику**. The noun changes form when it receives the action of the verb. That's the accusative case — it's coming in M20. For now, learn these as fixed phrases: **читаю книгу**, **слухаю музику**, **готую вечерю**. No rule required yet; just recognize the pattern.
+While the singular persons dominate basic dialogue, plurality in action is equally important for recognizing group dynamics. The plural forms expand your world to include **ми** (we), **ви** (you plural or formal), and **вони** (they). You will encounter these collective actions frequently in narratives and group settings.
 
-<!-- INJECT_ACTIVITY: match-person-to-form -->
+*   **Ми працюємо разом.** (We work together.)
+*   **Ви гуляєте в парку.** (You walk in the park.)
+*   **Вони знають правду.** (They know the truth.)
 
-Now the plural forms, presented as natural sentences — not for memorization, just for recognition:
-
-- **Ми готу́ємо вечерю.** — We're cooking dinner.
-- **Ви зна́єте українську?** — Do you (plural) know Ukrainian?
-- **Вони гуля́ють у парку.** — They walk in the park.
-
-The plural endings are **-ємо** (ми), **-єте** (ви), **-ють** (вони). Notice that **ви** is also used as polite singular — when addressing one person formally, like a teacher or a stranger. That's a preview for now; no need to drill it yet. What matters most is the singular trio: **-ю / -єш / -є**. If you can produce those three forms for any Group I verb, you can hold a basic conversation.
-
-<!-- INJECT_ACTIVITY: fill-in-context -->
+<!-- INJECT_ACTIVITY: quiz-subject-verb-agreement -->
+<!-- INJECT_ACTIVITY: fill-in-complete-sentence -->
 
 ## Підсумок — Summary
 
-Group I verbs have infinitives ending in **-ати**, **-увати**, or **-яти**. To conjugate them in the present tense, remove **-ти** and add these endings:
+ Think of this as the "Formula of Actions": you start with the infinitive dictionary form ending in **-ати**, deliberately drop the final **-ти**, and firmly attach your specific personal ending: **-ю, -єш, -є, -ємо, -єте, -ють**. This incredibly reliable mathematical formula works flawlessly for the six core verbs that will serve as the heavy foundation of your daily Ukrainian communication. Whenever you encounter a new verb that follows this precise pattern, you instantly possess the power to use it in six entirely different ways to describe reality.
 
-| я | ти | він/вона | ми | ви | вони |
-|---|---|---|---|---|---|
-| **-ю** | **-єш** | **-є** | **-ємо** | **-єте** | **-ють** |
+As a highly practical cultural note, you should begin encouraging yourself to narrate your daily life using these verbs. As you move through your routine, silently construct simple thoughts in your mind. Think **«Я працюю»** when you sit down at your desk, or **«Вона готує»** when you see someone in the kitchen. Even these exceptionally simple two-word thoughts actively build the essential habit of thinking directly in Ukrainian instead of exhaustively translating word-for-word from English in your head.
 
-The six core verbs you learned: **читати**, **знати**, **працювати**, **слухати**, **гуляти**, **готувати**. A helpful anchor to remember: **ти завжди -єш** — no matter which Group I verb, the **ти** form always ends in **-єш**: ти читаєш, ти слухаєш, ти гуляєш, ти працюєш. That form is the most useful one to drill first.
+Use the following self-check questions to measure your structural understanding before advancing:
 
-### Self-check
+*   Can you conjugate the verb **слухати** (to listen) completely for **я**, **ти**, and **він/вона**?
+*   How exactly do you ask someone the fundamental question "What are you doing?" using the correct verb form?
 
-Test yourself before moving on:
+Review this essential checklist of verbs. You should be able to instantly recognize their meanings and confidently construct basic sentences with them:
 
-- Conjugate **слухати** for я, ти, він/вона → **слухаю** / **слухаєш** / **слухає** ✓
-- What's the **ти** form of **працювати**? → **працюєш** ✓
-- Say "She reads a new book" in Ukrainian → **Вона читає нову книгу.** ✓
-- Ask "What are you doing?" → **Що ти робиш?** ✓
-- Say two things you do every day: **Я читаю...** **Я слухаю...** (open production — use any Group I verb)
+*   [ ] **читати** (to read)
+*   [ ] **знати** (to know)
+*   [ ] **працювати** (to work)
+*   [ ] **слухати** (to listen)
+*   [ ] **гуляти** (to walk)
+*   [ ] **готувати** (to cook)
 
-**Coming next:** M17 — Group II verbs (**говори́ти**, **робити**) — a different ending pattern with **-и-** instead of **-є-**.
-
-**Deterministic word count: 1291 words** (calculated by pipeline, do NOT estimate manually)
-
+In Module 17, you will seamlessly transition from these **-ати** verbs to explore the other half of the verbal universe: the **-ити** family, which forms the Second Conjugation.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1420 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -329,8 +305,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -417,51 +393,24 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 65 words | Not found: 40 words
+Verified: 57 words | Not found: 13 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Андрі — NOT IN VESUM
-  ✗ Андрій — NOT IN VESUM
-  ✗ Варзацька — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Помі — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
   ✗ Сашко — NOT IN VESUM
   ✗ Юля — NOT IN VESUM
   ✗ ати — NOT IN VESUM
-  ✗ бага — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ вжди — NOT IN VESUM
-  ✗ готува — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ дієвідмі — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ малюва — NOT IN VESUM
-  ✗ нську — NOT IN VESUM
-  ✗ пра — NOT IN VESUM
-  ✗ працюва — NOT IN VESUM
-  ✗ пісе — NOT IN VESUM
-  ✗ рша — NOT IN VESUM
-  ✗ слу — NOT IN VESUM
-  ✗ сня — NOT IN VESUM
-  ✗ студе — NOT IN VESUM
-  ✗ тив — NOT IN VESUM
+  ✗ готуваю — NOT IN VESUM
+  ✗ ити — NOT IN VESUM
+  ✗ працюваю — NOT IN VESUM
   ✗ увати — NOT IN VESUM
-  ✗ уве — NOT IN VESUM
-  ✗ украї — NOT IN VESUM
-  ✗ фісі — NOT IN VESUM
-  ✗ хаю — NOT IN VESUM
-  ✗ хає — NOT IN VESUM
-  ✗ хаєш — NOT IN VESUM
-  ✗ ювати — NOT IN VESUM
-  ✗ юся — NOT IN VESUM
+  ✗ уть — NOT IN VESUM
   ✗ ють — NOT IN VESUM
-  ✗ яти — NOT IN VESUM
   ✗ ємо — NOT IN VESUM
   ✗ єте — NOT IN VESUM
 
-All 65 other words are confirmed to exist in VESUM.
+All 57 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

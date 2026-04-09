@@ -1,0 +1,199 @@
+vocabulary:
+- word: наказовий спосіб
+  translation: imperative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: але́
+  translation: but (contradiction)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when (subordinating conjunction)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: писа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: да́ти
+  translation: to give
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: принести́
+  translation: to bring
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: святкува́ти
+  translation: to celebrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вари́ти
+  translation: to cook
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підготува́тися
+  translation: to prepare (oneself)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: усміха́тися
+  translation: to smile
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Різдво́
+  translation: Christmas
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Вели́кдень
+  translation: Easter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: свя́то
+  translation: holiday, celebration
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кутя́
+  translation: kutia (traditional Christmas wheat porridge)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: коля́дки
+  translation: Christmas carols
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: свічки́
+  translation: candles
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: я́рмарок
+  translation: fair, market
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: волонте́р
+  translation: volunteer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: організа́тор
+  translation: organizer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: завда́ння
+  translation: task, assignment
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: плака́т
+  translation: poster
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: напі́й
+  translation: drink, beverage
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: учи́тель
+  translation: teacher (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ві́льний
+  translation: free, available
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ра́дісно
+  translation: happily, joyfully
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ува́жно
+  translation: carefully, attentively
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: wonderful, great
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́зом
+  translation: together
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вже
+  translation: already
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first, at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: напередо́дні
+  translation: on the eve of
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true

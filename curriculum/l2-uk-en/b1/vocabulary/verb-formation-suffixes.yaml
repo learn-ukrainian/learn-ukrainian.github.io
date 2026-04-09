@@ -1,0 +1,595 @@
+vocabulary:
+- word: розповсю́дити
+  translation: to distribute/spread
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: недооціни́ти
+  translation: to underestimate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перевтоми́тися
+  translation: to overtire oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обговори́ти
+  translation: to discuss thoroughly
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знешко́дити
+  translation: to neutralize/render harmless
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: програмува́ти
+  translation: to program
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сині́ти
+  translation: to turn blue
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: червоні́ти
+  translation: to redden/blush
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кри́кнути
+  translation: to let out a single cry/shout
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розрізати
+  translation: to cut apart
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: префіксальний спосіб
+  translation: prefixal word formation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: суфіксальний спосіб
+  translation: suffixal word formation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: префіксально-суфіксальний спосіб
+  translation: prefix-suffix word formation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переписа́ти
+  translation: to rewrite
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́мкнути
+  translation: to turn off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: увімкну́ти
+  translation: to turn on
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заспіва́ти
+  translation: to start singing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дочита́ти
+  translation: to finish reading
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: штовхну́ти
+  translation: to give a single push
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: будува́ти
+  translation: to build
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: біли́ти
+  translation: to whiten/whitewash
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заземли́ти
+  translation: to ground
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: словотво́рення
+  translation: word formation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ко́рінь
+  translation: root
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: а́фікс
+  translation: affix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прикме́тник
+  translation: adjective
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: іме́нник
+  translation: noun
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: написа́ти
+  translation: to have written
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: входити
+  translation: to enter
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виходити
+  translation: to exit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прихо́дити
+  translation: to arrive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відходити
+  translation: to depart
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переходити
+  translation: to cross
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: просторова орієнтація
+  translation: spatial orientation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вибігати
+  translation: to run out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вилітати
+  translation: to fly out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виносити
+  translation: to carry out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw/paint
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: намалюва́ти
+  translation: to have drawn/painted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прочита́ти
+  translation: to have read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вписа́ти
+  translation: to inscribe/write in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вирізати
+  translation: to cut out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приєдна́ти
+  translation: to join/attach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прикріпи́ти
+  translation: to fasten/attach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: від'єдна́ти
+  translation: to detach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відрізати
+  translation: to cut off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переві́рити
+  translation: to verify/check again
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: наготува́ти
+  translation: to cook a lot
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: набра́ти
+  translation: to gather/collect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: запла́кати
+  translation: to start crying
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: почека́ти
+  translation: to wait a bit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розпові́сти́
+  translation: to tell/narrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: добудува́ти
+  translation: to finish building
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зроби́ти
+  translation: to do/finish
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спекти́
+  translation: to bake
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: недої́сти
+  translation: to not eat enough
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: недочу́ти
+  translation: to mishear/not hear well
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переоціни́ти
+  translation: to overestimate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підроби́ти
+  translation: to forge/fake
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обду́мати
+  translation: to think over
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: білі́ти
+  translation: to turn white/become white
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зелені́ти
+  translation: to turn green
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: жовті́ти
+  translation: to turn yellow
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чорні́ти
+  translation: to turn black
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малю́нок
+  translation: drawing/picture
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: та́не́ць
+  translation: dance
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: танцюва́ти
+  translation: to dance
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: будо́ва
+  translation: building/structure
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: програ́ма
+  translation: program
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фільтр
+  translation: filter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фільтрува́ти
+  translation: to filter
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: фотогра́фія
+  translation: photograph
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фотографува́ти
+  translation: to photograph
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: штовха́ти
+  translation: to push/shove
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: крича́ти
+  translation: to shout/yell
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стриба́ти
+  translation: to jump
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стрибну́ти
+  translation: to jump once
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сви́снути
+  translation: to whistle once
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: збро́я
+  translation: weapon/arms
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: озбро́їти
+  translation: to arm
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сві́тло
+  translation: light
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: освітли́ти
+  translation: to illuminate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шко́да́
+  translation: harm/damage
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: ба́рва
+  translation: color/dye
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: знеба́рвити
+  translation: to bleach/discolor
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обезво́днити
+  translation: to dehydrate
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: оціни́ти
+  translation: to evaluate/appraise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ціна́
+  translation: price/value
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: описа́ти
+  translation: to describe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перенаванта́жити
+  translation: to overload
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ванта́ж
+  translation: load/cargo
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: всю́ди
+  translation: everywhere
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: відтвори́ти
+  translation: to reproduce/recreate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підси́лити
+  translation: to reinforce/strengthen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: си́ла
+  translation: strength/power
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: перепи́сувати
+  translation: to be rewriting
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перевстанови́ти
+  translation: to reinstall
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

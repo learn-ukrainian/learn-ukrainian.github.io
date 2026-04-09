@@ -1,99 +1,76 @@
-Now I have all the evidence I need. Let me compile the full review.
-
 ## Linguistic Scan
-
-**Four separate checks:**
-
-1. **Russianisms**: None found. All vocabulary is standard Ukrainian.
-2. **Surzhyk**: None found.
-3. **Calques**: None found. "По-справжньому" verified in VESUM and Антоненко-Давидович (no flag).
-4. **Paronyms**: None found.
-
-**Russian characters (ы, э, ё, ъ)**: None found.
-
-**Factual errors about Ukrainian phonetics/grammar — 3 found:**
-
-**Error 1 (CRITICAL): Incorrect і/й rule formulation.**
-The module states: "**Use й between vowels** — it prevents a vowel-vowel hiatus" but then immediately gives an example that contradicts this: "вона **й** він — vowel А before, consonant В after (vowel + consonant also takes **й**)."
-
-Glazova Grade 10 states the rule correctly: *"Якщо попереднє слово закінчується на голосний, а наступне починається на голосний або приголосний, уживаємо... сполучник й."* The correct rule is: **after a vowel → й** (regardless of what follows), not "between vowels." The module's heading teaches a wrong rule, then contradicts itself within its own examples.
-
-**Error 2 (CRITICAL): працює в офісі listed under wrong rule.**
-The module states "**Rule 1 — Use в after a vowel before a consonant**" and lists "працює **в** офісі" as an example, with the annotation: *"'офісі' starts with vowel О."* But the rule says "before a consonant" — офісі starts with a **vowel**, not a consonant. This example contradicts the rule it's meant to illustrate.
-
-Per Правопис §23.2.1, в is used *"між буквами на позначення голосних"* (between vowels) AND per §23.2.6, after a vowel before most consonants. The correct simplified rule matching both Glazova and Правопис: "**Use в after a vowel**" (before vowel or consonant). The current heading is incomplete and the example proves it.
-
-**Error 3 (MAJOR): Self-check wrong analysis for з/із.**
-The module states: "Повернувся (з / із) Семеном. → **із** Семеном — consonant С before consonant С." The word "повернувся" ends in letter Я (vowel), NOT consonant С. The explanation claims consonant+consonant when the actual boundary is vowel+consonant. Per Заболотний Grade 7, "із" before [с] is correct (із is used before sibilants з, с, ц, ч, ш, ж) — so the ANSWER is defensible, but the REASONING is wrong. An A1 learner applying "consonant С before consonant С" would learn the wrong analytical method.
+Four critical errors found:
+1. **Incorrect phonetic claim**: the dialogue corrects "Я працюю в городі" to "у городі", claiming it is hard to pronounce. In reality, "Я працюю в городі" is the correct euphonic form (vowel + в + consonant).
+2. **Incorrect phonetic claim**: text states that "у Києві" causes the "у and the и sound" to collide, but "Києві" starts with a consonant (К). The collision is actually between the preposition "у" and the preceding vowel in "живу".
+3. **Incorrect grammatical rule**: text claims "У is the absolute king at the start of a sentence" and "always У". This is false; "В" is used at the start of a sentence if the following word starts with a vowel (e.g., "В Антарктиді...").
+4. **Incorrect grammatical classification**: text claims that in "я і Максим", the "і" provides a break between "surrounding consonant clusters". The word "я" is a vowel sound, not a consonant.
 
 ## Exercise Check
-
-**Activity markers found:**
-1. `<!-- INJECT_ACTIVITY: quiz-u-or-v -->` — after "У чи В?" section ✅
-2. `<!-- INJECT_ACTIVITY: quiz-i-or-y -->` — after "І чи Й?" section ✅
-3. `<!-- INJECT_ACTIVITY: fill-in-z-iz-zi -->` — after з/із/зі explanation ✅
-4. `<!-- INJECT_ACTIVITY: quiz-which-sounds-natural -->` — end of Summary ✅
-
-All 4 markers match the plan's 4 `activity_hints` (quiz У/В, quiz І/Й, fill-in З/ІЗ/ЗІ, quiz natural-sounding). Markers are well-placed after their teaching sections. No clustering at the end.
+- `<!-- INJECT_ACTIVITY: quiz-u-v-choice -->` (matches 'quiz' 'У or В?') — placed correctly after У/В section.
+- `<!-- INJECT_ACTIVITY: quiz-naturalness-comparison -->` (matches 'quiz' 'euphony comparison') — placed after У/В section.
+- `<!-- INJECT_ACTIVITY: quiz-i-y-choice -->` (matches 'quiz' 'І or Й?') — placed correctly after І/Й section.
+- `<!-- INJECT_ACTIVITY: fill-in-z-iz-zi -->` (matches 'fill-in' 'З, із, or зі?') — placed correctly after З/із/зі section.
+Count and types match the plan. Placement is logical.
 
 ## Scores
-
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | All 4 content_outline sections present with correct headings. All required vocabulary (у/в, і/й, з/із/зі) and all recommended vocabulary (Київ, Львів, офіс, парк, театр) appear in prose. Word count 1420 > 1200 target ✅. Plan's `dialogue_situations` specifies город/яблука/школа as proofreading examples but the module uses Київ/Львів/офіс instead — however the `content_outline` section 1 also uses Київ/Львів, so the writer followed the content_outline. The plan's textbook references (Авраменко Grade 5, Літвінова Grade 5) are used as source material but not explicitly cited in prose — acceptable for A1. Deduction: dialogue_situations deviation. |
-| 2. Linguistic accuracy | 6/10 | Three factual errors in rule formulation: (1) "Use й between vowels" contradicts its own example "вона й він — consonant В after" — Glazova Grade 10 confirms the rule is "after a vowel, use й"; (2) "Rule 1 — Use в after a vowel before a consonant" contradicted by its own example "працює в офісі" where офісі starts with vowel О — Правопис §23 confirms rule should be "after a vowel"; (3) Self-check claims "повернувся" ends in consonant С when it ends in vowel Я. All Ukrainian word forms verified in VESUM. No Russianisms, surzhyk, or calques. The errors are in the English rule explanations, not the Ukrainian examples themselves. |
-| 3. Pedagogical quality | 7/10 | Strong PPP flow: dialogues present the situation, rules extract the pattern, self-check provides practice. The proofreading scenario is excellent pedagogy — learner corrects errors, which mirrors how textbooks teach (Glazova Вправа 121 "Я — редактор"). 3+ examples per rule ✅. However, the wrong rule formulations (errors 1 & 2) mean learners would memorize incorrect rules that fail on the module's own examples. An A1 learner reading "Use в after a vowel before a consonant" and then seeing "офісі starts with vowel О" would be confused. |
-| 4. Vocabulary coverage | 9/10 | All required vocab used naturally in prose: у/в alternation demonstrated extensively, і/й throughout dialogues and rules, з/із/зі in dedicated section. All recommended: Київ (dialogues), Львів (dialogues), офіс (rule examples), парк (dialogues), театр (dialogue 2, plan content_outline). Words introduced in context, not as bare lists. |
-| 5. Exercise quality | 9/10 | 4 markers match 4 plan activity_hints exactly in type and focus. Well-distributed: one per teaching section. Self-check in Summary provides 7 inline items testing all three alternation pairs with explanations. Self-check items test language skill (sound environment analysis), not content recall ✅. One self-check item has wrong reasoning (Error 3). |
-| 6. Engagement & tone | 9/10 | No motivational openers, no meta-commentary, no "Let us explore." The proofreading scenario is engaging and natural. Cultural reference to "солов'їна мова" is specific and earned — placed at the end after demonstrating why. The only filler-adjacent line is "With practice, your ear will guide you" which is genuinely useful advice, not empty motivation. Tone is teacher-explaining, not lecturer-pontificating. |
-| 7. Structural integrity | 10/10 | Clean markdown with all 4 H2 headings matching plan sections. No duplicate summaries, no meta-commentary sections, no stray tags. Word count 1420 within target range (1200 minimum). Dialogue formatting uses consistent `<div class="dialogue">` structure. Activity markers cleanly placed. |
-| 8. Cultural accuracy | 10/10 | Ukrainian presented entirely on its own terms. No "like Russian" comparisons. Милозвучність explained as an inherent feature of Ukrainian, not in contrast to another language. "Солов'їна мова" reference is culturally accurate and widely attested. City examples (Київ, Львів, Одеса) are Ukrainian cities. |
-| 9. Dialogue quality | 9/10 | Named speakers (Дарина, Олексій) with distinct roles — Дарина as the corrector with sharper ears, Олексій as the writer learning. Multi-turn exchanges with natural reactions ("Стоп!", "Чому?", "Зрозумів!"). The proofreading scenario is a real situation (friends helping each other write). Not transactional or interrogative. Minor: dialogue lines are very short (3-5 words each), which is appropriate for A1 but makes some exchanges feel telegraphic ("Чому?" / answer). |
+| 1. Plan adherence | 10/10 | Covered all alternation rules (у/в, і/й, з/із/зі), included required dialogues, and cited both textbook references. Word count exceeded the target (1642 vs 1200) without fluff. |
+| 2. Linguistic accuracy | 5/10 | CRITICAL ERRORS: Falsely corrected "Я працюю в городі" to "у" (it should be "в" after a vowel); claimed "Києві" starts with an "и" sound; falsely claimed "У" is always used at the start of sentences (ignoring words starting with vowels); falsely classified "я" as a consonant cluster in "я і Максим". |
+| 3. Pedagogical quality | 8/10 | The V-C-V sandwich metaphor is excellent. However, the factual errors in the examples contradict the rules, which would confuse a learner. |
+| 4. Vocabulary coverage | 10/10 | Successfully integrated required words (у/в, і/й, з/із/зі) and recommended words (Київ, Львів, офіс, парк, театр) naturally into the prose. |
+| 5. Exercise quality | 10/10 | All 4 exercise markers from the plan are present and placed exactly where they should be after the relevant theory sections. |
+| 6. Engagement & tone | 9/10 | The tone is warm and encouraging. "Three distinct, well-oiled gears" is a great metaphor. |
+| 7. Structural integrity | 10/10 | Clean markdown, logical flow, word count well above the minimum threshold. |
+| 8. Cultural accuracy | 10/10 | Focused entirely on Ukrainian phonetics without framing it as an exception to other languages. |
+| 9. Dialogue & conversation quality | 8/10 | Dialogue fits the "proofreading" prompt well, though it suffers from the linguistic error identified in Dimension 2. |
 
 ## Findings
+[2. Linguistic accuracy] [CRITICAL]
+Location: Dialogue 1 — "> **Студент:** Я працюю в городі... > **Друг:** Краще сказати «у городі»."
+Issue: "Я працюю в городі" is actually correct because the preceding word ends in a vowel. The correction to "у" teaches the wrong phonetic rule.
+Fix: Change the student's phrase to end in a consonant (e.g., "Він був в городі") so the correction makes sense.
 
-**[LINGUISTIC ACCURACY] [SEVERITY: critical]**
-Location: "І чи Й?" section, heading and first example group
-Issue: Rule heading says "**Use й between vowels** — it prevents a vowel-vowel hiatus" but the second example is "вона **й** він — vowel А before, consonant В after (vowel + consonant also takes **й**)" — this directly contradicts the heading. Glazova Grade 10 states: "Якщо попереднє слово закінчується на голосний, а наступне починається на голосний або приголосний, уживаємо сполучник й." The rule is "after a vowel → й", not "between vowels."
-Fix: Change heading to "Use й after a vowel" and simplify the contradictory parenthetical.
+[2. Linguistic accuracy] [CRITICAL]
+Location: "If they had said **у Києві** (in Kyiv), the two vowels (**у** and the **и** sound) would collide uncomfortably."
+Issue: "Києві" starts with a 'К' (consonant), not an 'и' sound. The actual collision is between the preposition 'у' and the 'у' at the end of the previous word 'живу'.
+Fix: Correct the description of which vowels are colliding.
 
-**[LINGUISTIC ACCURACY] [SEVERITY: critical]**
-Location: "У чи В?" section, Rule 1 heading and third example
-Issue: "**Rule 1 — Use в after a vowel before a consonant:**" but the third example says "працює **в** офісі — 'офісі' starts with vowel О." Vowel О ≠ consonant. The example contradicts the rule. Правопис §23.2 confirms в is used after a vowel before vowels AND consonants. The rule should be "Use в after a vowel."
-Fix: Broaden Rule 1 heading to "Use в after a vowel."
+[2. Linguistic accuracy] [CRITICAL]
+Location: "The letter **У** is the absolute king at the start of a sentence... always **У**"
+Issue: This is a false rule. If the next word starts with a vowel, you must use "В" at the start of a sentence (e.g., "В Антарктиді...").
+Fix: Clarify that "У" is used at the start of a sentence before a word beginning with a consonant.
 
-**[PEDAGOGICAL QUALITY] [SEVERITY: major]**
-Location: "Підсумок" self-check, line: "Повернувся (з / із) Семеном."
-Issue: Explanation says "consonant С before consonant С" but "повернувся" ends in letter Я (vowel), not С. The answer "із" may be correct (із before sibilant [с] per Заболотний Grade 7), but the reasoning is factually wrong and teaches the wrong analytical method.
-Fix: Replace with the plan's own example "Максим із Семеном" which clearly demonstrates consonant М + consonant С.
+[2. Linguistic accuracy] [CRITICAL]
+Location: "The letter **й** is a semivowel... You use **й** between vowels." and "*   **Мама й тато вдома.** (Mom and dad are at home. — **Й** between vowels)"
+Issue: "тато" starts with a consonant, so it is not between two vowels. It is used after a vowel to avoid a clash.
+Fix: Rephrase the rule to state it is used after a word ending in a vowel.
 
-**[PEDAGOGICAL QUALITY] [SEVERITY: minor]**
-Location: "І чи Й?" section, tip box
-Issue: "Quick test: look at the letter before the conjunction and the letter after. Two consonants? → **і**. A vowel nearby? → **й**." — "A vowel nearby" is vague. Per Glazova, the deciding factor is the final letter of the preceding word.
-Fix: Simplify to "Does the word before end in a vowel? → й. In a consonant? → і."
-
-**[PEDAGOGICAL QUALITY] [SEVERITY: minor]**
-Location: "Підсумок" summary bullet for і/й
-Issue: "Vowel on either side? → **й**" is imprecise — the deciding factor is whether the word *before* ends in a vowel, not whether there's a vowel on "either side."
-Fix: Match the corrected tip formulation.
+[2. Linguistic accuracy] [CRITICAL]
+Location: "When you say **я і Максим** (I and Maksym), the **і** acts as a comfortable bridge between the surrounding consonant clusters."
+Issue: "я" is a vowel sound, not a consonant cluster.
+Fix: Explain that "і" is used as a special exception after words ending in я, ю, є, ї.
 
 ## Verdict: REVISE
-
-Two critical findings (wrong rule formulations that would teach A1 learners incorrect rules contradicted by the module's own examples) plus one major finding (wrong phonetic analysis in self-check). The Ukrainian examples themselves are correct — the errors are in the English explanations of the rules. All fixable with targeted find/replace.
+The module has excellent tone and pacing, but contains several critical factual errors regarding Ukrainian phonetic rules. These must be fixed before publishing.
 
 <fixes>
-- find: "**Rule 1 — Use в after a vowel before a consonant:**"
-  replace: "**Rule 1 — Use в after a vowel:**"
-- find: "- працює **в** офісі — \"працює\" ends in vowel Є, \"офісі\" starts with vowel О"
-  replace: "- працює **в** офісі — \"працює\" ends in vowel Є, \"офісі\" starts with vowel О (в works between two vowels too)"
-- find: "**Use й between vowels** — it prevents a vowel-vowel hiatus:"
-  replace: "**Use й after a vowel** — it keeps the flow smooth:"
-- find: "- вона **й** він — vowel А before, consonant В after (vowel + consonant also takes **й**)"
-  replace: "- вона **й** він — vowel А before"
-- find: "Quick test: look at the letter before the conjunction and the letter after. Two consonants? → **і**. A vowel nearby? → **й**."
-  replace: "Quick test: does the word before end in a vowel? → **й**. Does it end in a consonant? → **і**."
-- find: "- **і/й** — look at the sounds before and after the conjunction. Consonants on both sides? → **і**. Vowel on either side? → **й**."
-  replace: "- **і/й** — does the word before end in a vowel? → **й**. Does it end in a consonant? → **і**."
-- find: "- Повернувся (з / із) Семеном. → **із** Семеном — consonant С before consonant С"
-  replace: "- Максим (з / із) Семеном. → **із** Семеном — consonant М before, consonant С after"
+- find: |
+    > **Студент:** Я працюю в городі. *(I work in the garden.)*
+    > **Друг:** Краще сказати «у городі». Звук «в» тут важко вимовити. *(It is better to say "у городі". The sound "в" is hard to pronounce here.)*
+  replace: |
+    > **Студент:** Він був в городі. *(He was in the garden.)*
+    > **Друг:** Краще сказати «у городі», бо слово «був» закінчується на приголосний. *(It is better to say "у городі", because "був" ends in a consonant.)*
+- find: "If they had said **у Києві** (in Kyiv), the two vowels (**у** and the **и** sound) would collide uncomfortably."
+  replace: "If they had said **у Києві** (in Kyiv), the two vowels (the **у** in **живу** and the preposition **у**) would collide uncomfortably."
+- find: "Exceptions to know exist based on sentence position and natural pauses. The letter **У** is the absolute king at the start of a sentence. It provides a strong, clear, and resonant start, whereas starting with **в** would sound weak or muffled before another consonant."
+  replace: "Exceptions to know exist based on sentence position and natural pauses. The letter **У** is always used at the start of a sentence before a word beginning with a consonant. It provides a strong, clear start, whereas starting with **в** would sound muffled before another consonant."
+- find: "*   **У мене є братик.** (I have a little brother. — always **У**)"
+  replace: "*   **У мене є братик.** (I have a little brother. — **У** before a consonant)"
+- find: "The letter **й** is a semivowel that creates a fast, natural glide between two full vowels in a sentence. You use **й** between vowels."
+  replace: "The letter **й** is a semivowel that creates a fast, natural glide. You use **й** after a word ending in a vowel to avoid a vowel clash."
+- find: "*   **Мама й тато вдома.** (Mom and dad are at home. — **Й** between vowels)"
+  replace: "*   **Мама й тато вдома.** (Mom and dad are at home. — **Й** after a vowel)"
+- find: "In contrast, the letter **і** (i) is a full vowel that provides a necessary physical break between heavy consonants. When you say **я і Максим** (I and Maksym), the **і** acts as a comfortable bridge between the surrounding consonant clusters."
+  replace: "In contrast, the letter **і** (i) is a full vowel that provides a necessary physical break. While usually placed between consonants, it is also used after words ending in **я**, **ю**, **є**, or **ї** (like **я і Максим**) to maintain clarity and rhythm."
 </fixes>

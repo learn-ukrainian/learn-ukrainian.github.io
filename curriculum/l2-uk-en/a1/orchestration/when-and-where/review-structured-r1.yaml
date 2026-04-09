@@ -2,48 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covered all sections and dialog structures from the plan. Minor deduction
-    for skipping some recommended vocabulary (`чути`, `розуміти`, `головне`).
+  score: 10
+  evidence: Covered all 4 sections exactly as specified. Included the summary table
+    and the self-check. All required vocabulary is present.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Included a factually incorrect absolute rule (`Ukrainian ALWAYS places
-    a comma before що, де, коли when they serve as conjunctions — no exceptions.`).
-    Used a slightly unnatural calque (`добрий час`) a
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques. Punctuation around subordinate clauses
+    is flawless, adhering to Ukrainian orthography rules.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent breakdown of the difference between question words and conjunctions,
-    with very clear examples. Minor deduction for grouping "Скажи" under "Казати"
-    without noting it's a perfective pair, whic
+  score: 10
+  evidence: Excellent breakdown of the "Two Faces" concept. The explicit warning about
+    the English comma difference ("I think that...") is highly effective for English
+    learners.
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: All required vocabulary (`що, де, коли, знати, думати, казати`) used naturally
-    and repeatedly in context.
+  evidence: Included all required vocabulary. However, it missed incorporating the
+    recommended Ukrainian term "головне речення" directly into the text, relying only
+    on the English "main clause".
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Markers perfectly match the plan's `activity_hints` and are placed correctly
-    after the relevant explanations.
+  evidence: 4 exercise markers perfectly match the plan's `activity_hints` in both
+    type and focus. Placed logically after relevant theory.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: The dialogues are highly engaging, featuring named speakers in realistic,
-    highly communicative situations. The tone is encouraging but focused.
+  evidence: Clear, professional, and encouraging teacher tone without any corporate
+    filler or overly gamified language.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Clean structure, but leaked a generated AI artifact at the bottom of the
-    file (`**Deterministic word count...`).
+  score: 10
+  evidence: Word count is 1753, well above the 1200 target. All H2 headings perfectly
+    match the `content_outline`. Clean markdown.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Culturally neutral and accurate.
+  evidence: Natural interactions and culturally appropriate use of names in the dialogues.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are expanded beyond the plan beautifully, creating very natural
-    multi-turn conversations that seamlessly integrate the target grammar.
+  score: 6
+  evidence: 'Critical error in Dialogue 1: The guest uses the 2nd-person imperative
+    "зупинись?" to ask about their own future action, which is a grammatical and logical
+    impossibility.'
 findings: []

@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -44,7 +44,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -285,321 +285,338 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-### Batch 1 (голова → око)
-- ✅ голова — noun (3 lemma entries)
-- ✅ горло — noun (3 lemma entries)
-- ✅ живіт — noun (2 lemma entries)
-- ✅ рука — noun
-- ✅ нога — noun
-- ✅ болить — verb (lemma: боліти)
-- ✅ лікар — noun
-- ✅ аптека — noun
-- ✅ спина — noun
-- ✅ око — noun (3 lemma entries)
-
-### Batch 2 (вухо → випишу) — also verified plan dialogue words
-- ✅ вухо — noun (3 lemma entries)
-- ✅ зуб — noun (2 lemma entries)
-- ✅ ніс — noun (confirmed noun, not verb ніс < нести)
-- ✅ температура — noun
-- ✅ кашель — noun (2 lemma entries)
-- ✅ нежить — noun — ⚠️ **GENDER ERROR IN PLAN**: VESUM confirms `noun:inanim:m` (MASCULINE), plan labels it feminine (f). Fix: нежить (m).
-- ✅ таблетка — noun
-- ✅ хворий — adj (5 forms across adj lemma)
-- ✅ болять — verb (lemma: боліти) — plural form confirmed
-- ✅ застуда — noun
-- ✅ ліки — noun (3 entries)
-- ✅ краплі — noun (6 entries, lemma: крапля)
-- ✅ випишу — verb (lemma: виписати) ✅
-
-**Confirmed**: ALL 18 plan vocabulary words verified ✅
-**Not found**: none
-**Action required**: Fix нежить gender tag in plan from `f` → `m`
-
----
-
-## Textbook Excerpts
-
-### Section: Тіло (The Body) — частини тіла
-> "Обруч крутять навколо тіла, на **руці**, **нозі**. Обручі носять на **голові**."
-> Source: Большакова, Grade 1 (Буквар 2018), p. 8 — body parts appear naturally in Grade 1 context with locative case
-
-### Section: У мене болить... (symptoms + doctor)
-> "Голов­ний **біль** – ознака недуги. Отже, при виникненні головного болю треба не займатися самолікуванням, а звертатися за порадою до **лікаря**."
-> Source: Заболотний, Grade 10 (2018), p. 177 — confirms "головний біль" (masc.) and "звертатися до лікаря" as natural Ukrainian
-
-### Section: У мене болить... (sickbed scene — температура, болить)
-> "Після такої **температури** це навіть забагато зразу. [...] І **голова** крутиться від довгого лежання."
-> Source: Авраменко, Grade 6 (Ukrainian Literature, 2023), p. 124 — authentic illness vocabulary in literary context
-
-### Section: Dialogues — At the doctor's (лікар + хворий)
-> "В очах пацієнта відчувалася тривога [...] Після кількох запитань й огляду **лікар** зазначив, що, імовірно, **біль** є симптомом загострення."
-> Source: Заболотний, Grade 10 (2018), p. 19 — doctor-patient communication text; confirms лікар vocabulary register
-
----
+- Confirmed: голова, горло, живіт, рука, нога, болить, лікар, аптека, спина, око, вухо, зуб, ніс, температура, кашель, нежить, таблетка, хворий.
+- Not found: All words from the plan are confirmed in VESUM.
 
 ## Grammar Rules
-
-- **"У мене болить" construction** (dative possessive): Plan correctly notes this is dative (A2+ analysis) and instructs teaching it as a CHUNK at A1. ✅ No Правопис rule needed — chunk approach is pedagogically sound.
-- **біль is MASCULINE**: Антоненко-Давидович §ІМЕННИКИ confirms "іменник біль в українській мові – чоловічого роду" (contrast Russian feminine "боль"). Plan's use of "від головного болю" (genitive masculine) is grammatically correct ✅.
-- **Правопис query** on dative case returned §15 (Д→ДЖ alternation) — dative case rules are not a Правопис 2019 concern (spelling-only document); grammar is covered by the Ukrainian grammar reference, not Правопис.
-
----
+- **Gender of "нежить"**: Masculine (II declension). Genitive case: **нежитю**. The plan's "від нежиті" is a common error (treating it as feminine III declension); the correct form is **від нежитю**.
+- **Agreement of "боліти"**: Singular **болить** for singular body parts (голова болить), plural **болять** for plural (зуби болять). Confirmed by Grade 11 Avramenko examples.
+- **Symptom construction**: "Хворий на + [Accusative]" (e.g., хворий на грип). Правопис §108/Grade 11 Avramenko confirms this specific prepositional government.
 
 ## Calque Warnings
-
-- **"ліки від [хвороби]"** — ⚠️ **CALQUE** (Russicism). Антоненко-Давидович (§ПРИЙМЕННИКИ) explicitly: *"Це ліки від усяких хвороб" — так сказати по-українську не можна. Треба: "ліки **проти** ревматизму."*
-  - Plan dialogue: "Від головного болю? — Так. І від кашлю, будь ласка." and "А є щось від нежиті?"
-  - **Correct form**: таблетки **проти** головного болю / краплі **проти** нежиті / щось **проти** кашлю
-  - **Action**: Replace all `від [symptom]` in pharmacy dialogue with `проти [symptom]`
-  - Note: "головний біль" standalone phrase ✅ is correct; only the preposition + ліки combination triggers the calque rule.
-
-- **"випишу ліки"** — ✅ OK. Виписати ліки / рецепт is natural Ukrainian. No calque issue found.
-
-- **"від головного болю" (standalone genitive phrase without ліки)** — ✅ OK as standalone phrase / label (e.g., section heading or category label without ліки).
-
----
+- **нежить**: Often incorrectly treated as feminine. Must be masculine (e.g., "сильний нежить", "від нежитю").
+- **приймати ліки**: While common, "приймати" in the sense of "take" (decisions/medicine) is often a calque of the Russian "принимать". For medicine, **вживати ліки** or **пити таблетки** is more idiomatic Ukrainian. "Приймати рішення" is a known calque for **ухвалювати рішення**.
+- **болить голова**: Confirmed as a natural Ukrainian construction (Grade 11 Avramenko: "Від малих дітей болить голова").
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| голова | A1 | ✅ On target |
-| лікар | A1 | ✅ On target |
-| аптека | A1 | ✅ On target |
-| температура | A1 | ✅ On target |
-| хворий (adj) | A1 | ✅ On target |
-| таблетка | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab, flag in plan |
-| кашель | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab |
-| нежить | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab |
-
-**Note on A2 words at A1**: таблетка, кашель, нежить are PULS A2 but situationally essential for a health module. Ukrainian textbooks (Grade 1-2) regularly introduce situational vocabulary above the learner's current level when the context demands it. These are appropriate to include — but the plan should note they are "productive A1 situational vocabulary" or taught as chunks.
+- **голова**: Grade 1 — OK (A1)
+- **лікар**: Grade 2 — OK (A1)
+- **аптека**: Grade 1 — OK (A1)
+- **хворий**: Grade 2/5 — OK (A1)
+- **температура**: Found in Grade 3/4 contexts — OK (A1)
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Health
-**Module:** health | **Phase:** A1.8 [Past, Future, Graduation]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: Health
+**Module:** health | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/health.md
+
+# Педагогіка A1: Health
+
+
+
+## Методичний підхід (Methodological Approach)
+The pedagogical approach for teaching A1 Health topics should be heavily communicative and centered around practical, high-frequency situations. The source materials, particularly the Ukrainian Lessons Podcast dialogues (Sources 1, 3, 4, 10), demonstrate a clear pattern: introduce vocabulary through authentic conversations that model real-life scenarios like feeling unwell, describing symptoms, and making a doctor's appointment.
+
+The core of the methodology is built around the grammatical structure **`У мене болить...`** (`I have a pain in...` / `My... hurts`). This impersonal construction is fundamental and should be taught as a complete chunk. The teaching progression moves from the personal (describing one's own feelings) to the interactive (talking to a doctor, pharmacist, or friend).
+
+Ukrainian pedagogy focuses on situation-based learning. For instance, the dialogue in the clinic (Source 4, Source 10) is not just a vocabulary list; it's a script for a real-world task. The writer should create content that places the learner in these situations, asking them to perform tasks: listen to a dialogue and answer questions (`"Чому на думку лікаря Христина захворіла?"` from Source 1), or complete a conversation. This method anchors vocabulary to function, making it more memorable and practical than simple word lists.
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Step 1: Core Body Parts.** Introduce the most common body parts associated with general illness. This vocabulary is the foundation for describing symptoms.
+    *   **Words:** `голова` (head), `горло` (throat), `живіт` (stomach), `рука` (arm/hand), `нога` (leg/foot), `око`/`очі` (eye/eyes), `вухо`/`вуха` (ear/ears). (Source 2)
+    *   **Rationale:** These are the most frequent nouns used in basic complaints.
+
+2.  **Step 2: The "It Hurts" Construction.** Introduce the key phrase `У мене болить + [Body Part]`.
+    *   **Singular:** `У мене болить голова.` (My head hurts.) (Source 3, Source 5)
+    *   **Plural:** `У мене болять очі.` (My eyes hurt.) (Source 5)
+    *   **Rationale:** This structure is the most common and idiomatic way to express pain in Ukrainian. It must be taught as a fixed pattern, emphasizing the genitive `у мене` and the verb forms `болить/болять`.
+
+3.  **Step 3: Common Illnesses & Symptoms.** Expand vocabulary to include general conditions and symptoms.
+    *   **Words:** `температура` (temperature/fever), `кашель` (cough), `нежить` (runny nose), `грип` (flu), `застуда` (a cold). (Source 1, Source 3)
+    *   **Phrases:** `Мені погано` (I feel bad), `Я захворів / Я захворіла` (I got sick). (Source 3)
+    *   **Rationale:** This allows learners to move beyond simple pain to describe a state of being sick.
+
+4.  **Step 4: Making an Appointment.** Introduce the functional language needed to see a doctor.
+    *   **Phrase:** `Я хочу записатися на прийом до лікаря.` (I want to make an appointment with a doctor.) (Source 4, Source 10)
+    *   **Key nouns:** `лікар` (doctor), `клініка` (clinic), `лікарня` (hospital), `аптека` (pharmacy). (Source 4, Source 33)
+    *   **Rationale:** This is a crucial practical skill. The dialogues in Sources 4 and 10 provide a complete, authentic script for this interaction.
+
+5.  **Step 5: Understanding Doctor's Instructions.** Introduce basic imperative verbs for medical advice.
+    *   **Phrases:** `Приймайте ці таблетки` (Take these pills), `Пийте багато чаю` (Drink a lot of tea). (Source 1, Source 3)
+    *   **Key nouns:** `рецепт` (prescription), `таблетки` (pills), `ліки` (medicine). (Source 1)
+    *   **Rationale:** This completes the basic cycle of a doctor's visit, moving from problem to solution.
+
+## Типові помилки L2 (Common L2 Errors)
+Learners often transfer English structures or confuse similar-sounding Ukrainian words.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| *Моя голова болить.* (My head hurts.) | **У мене болить голова.** | This is a direct translation of the English possessive structure. Ukrainian uses the impersonal construction `У [person in genitive] болить [body part in nominative]` to express pain. This is a non-negotiable pattern. (Source 3, Source 5) |
+| *Я є хворий.* (I am sick.) | **Я хворий.** (for male) / **Я хвора.** (for female) or **Я захворів / захворіла.** | The verb `бути` (to be) is omitted in the present tense in this context. The focus is on the state (`хворий`) or the action of getting sick (`захворіти`). (Source 3) |
+| *Я беру ліки.* (I take medicine.) | **Я приймаю ліки.** | While `брати` means "to take," the verb `приймати` is the correct, established verb for consuming medicine, pills, etc. (Source 1). This is a common verb collocation error. |
+| *У мене болить ноги.* | **У мене болять ноги.** | The verb `боліти` must agree with the noun (the body part). If the noun is plural (`ноги`, `очі`, `вуха`), the verb must be in the plural form `болять`. (Source 5) |
+| *Я йду до лікарні, щоб купити ліки.* (I'm going to the hospital to buy medicine.) | **Я йду в аптеку, щоб купити ліки.** | A common false cognate mix-up. `Лікарня` is a hospital where you see a doctor. `Аптека` is a pharmacy/drugstore where you buy medicine. (Source 1, Source 33) |
+| *Дайте мені лікар.* (Give me a doctor.) | **Дайте мені ліки.** (Give me medicine.) | `Лікар` (doctor) and `ліки` (medicine) are easily confused by beginners. Emphasize the difference in pronunciation and meaning from the start. (Source 7, Source 3) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+**This section is mandatory.** The teaching of Ukrainian must be independent of Russian language comparisons, which can create phonetic and grammatical confusion.
+
+1.  **Independent Phonetics:** Teach Ukrainian medical vocabulary with Ukrainian phonetics only. Avoid saying, for example, that Ukrainian `живіт` is "like Russian живот." The Ukrainian `и` sound in `живіт` and `ліки` has its own distinct articulation, which is different from Russian `и`. Learners must build a new, separate phonetic category for this sound, referring only to Ukrainian audio examples.
+2.  **Avoid False Friends:** Do not use Russian to explain Ukrainian words. A common error is assuming that because `больница` (bol'nitsa) is "hospital" in Russian, the Ukrainian `лікарня` (likarnia) is secondary. Present `лікарня` as the primary and only word for hospital in the Ukrainian context. The root `-лік-` (from `ліки`, `лікувати`) is central to Ukrainian medical vocabulary.
+3.  **Grammar on Its Own Terms:** The `У мене болить` structure should be taught as a core feature of Ukrainian grammar, not as a deviation from a Slavic "norm" that might be perceived as being represented by Russian.
+4.  **Vocabulary Purity:** Ensure that all example vocabulary is standard modern Ukrainian. For instance, while a word like `боль` for "pain" might be understood due to Russian influence, the standard Ukrainian is `біль` (Source 5). The curriculum must exclusively use and reinforce `біль`.
+
+The goal is for the learner to build an independent mental model of the Ukrainian language, free from interference or comparison with Russian.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+*   ★★★ `голова` (head)
+*   ★★★ `горло` (throat)
+*   ★★★ `лікар` (doctor)
+*   ★★★ `температура` (temperature)
+*   ★★★ `таблетка` / `таблетки` (pill/pills)
+*   ★★★ `ліки` (medicine)
+*   ★★☆ `живіт` (stomach, abdomen) (Source 2)
+*   ★★☆ `рука` / `нога` (arm/hand / leg/foot) (Source 2)
+*   ★★☆ `око` / `очі` (eye/eyes), `вухо` / `вуха` (ear/ears) (Source 2)
+*   ★★☆ `нежить` (runny nose) (Source 1)
+*   ★★☆ `кашель` (cough) (Source 1)
+*   ★★☆ `аптека` (pharmacy) (Source 1)
+*   ★★☆ `лікарня` (hospital) (Source 4)
+*   ★★☆ `рецепт` (prescription) (Source 1)
+*   ★★☆ `біль` (pain) (Source 5)
+*   ★☆☆ `грип` (flu) (Source 1)
+*   ★☆☆ `застуда` (a cold) (Source 1)
+*   ★☆☆ `симптом` (symptom) (Source 3)
+
+### Дієслова (Verbs)
+*   ★★★ `боліти` / `болять` (to hurt)
+*   ★★★ `хворіти` / `захворіти` (to be sick / to get sick)
+*   ★★☆ `приймати` (to take [medicine])
+*   ★★☆ `мати` (as in `у мене є температура` - I have a temperature)
+*   ★★☆ `записатися (до лікаря)` (to make an appointment with a doctor)
+*   ★☆☆ `лікуватися` (to be treated, to treat oneself) (Source 1)
+*   ★☆☆ `міряти температуру` (to measure temperature) (Source 3)
+*   ★☆☆ `одужувати` (to get well) (Source 3)
+
+### Прикметники та інше (Adjectives & Other)
+*   ★★★ `хворий` / `хвора` (sick)
+*   ★★★ `здоровий` / `здорова` (healthy)
+*   ★★★ `У мене...` (I have...)
+*   ★★☆ `Мені погано.` (I feel bad.)
+*   ★★☆ `Мені краще.` (I feel better.)
+*   ★☆☆ `сильний` (strong, as in `сильний біль`)
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Role-Play: Making a Doctor's Appointment.** Based on the dialogues in Sources 4 and 10, create a script for students to practice.
+    *   **Student A (Patient):** `Добрий день. Я хочу записатися на прийом до терапевта.`
+    *   **Student B (Receptionist):** `Що вас турбує?`
+    *   **Student A:** `У мене болить голова і є температура.`
+    *   **Student B:** `Добре. Можу записати вас на завтра на 11 ранку.`
+    *   **Student A:** `Добре, мені підходить.`
+
+2.  **Sentence Building: "У мене болить..."** Provide a list of body parts and have students construct sentences.
+    *   **Prompt:** `голова` -> **Student writes/says:** `У мене болить голова.`
+    *   **Prompt:** `ноги` -> **Student writes/says:** `У мене болять ноги.`
+    *   **Prompt:** `вухо` -> **Student writes/says:** `У мене болить вухо.` (Based on the pattern established in Source 5)
+
+3.  **Matching: Symptom and Advice.** Create a matching exercise connecting a problem to a logical piece of advice.
+    *   **Column A (Проблема):** 1. `У мене температура.` 2. `У мене кашель.` 3. `Я хочу записатися до лікаря.`
+    *   **Column B (Порада):** A. `Приймайте ці таблетки.` B. `Зателефонуйте в клініку.` C. `Пийте гарячий чай.`
+    *   (Derived from the advice given in Sources 1 and 3).
+
+4.  **Dialogue Completion.** Provide a short dialogue with missing words for the student to fill in.
+    *   **Dialogue:**
+        `— Що з тобою?`
+        `— Мені ______. Здається, я ______.`
+        `— Що в тебе ______?`
+        `— У мене болить ______ і є ______.`
+    *   **Word Bank:** `захворіла`, `голова`, `болить`, `погано`, `температура`.
+    *   (This exercise format models the conversational flow seen in Source 3).
+
+## Пов'язані статті (Related Articles)
+*   [pedagogy/a1/body-parts](./pedagogy-a1-body-parts.md)
+*   [pedagogy/a1/genitive-case](./pedagogy-a1-genitive-case.md)
+*   [pedagogy/a1/verbs-of-being-and-feeling](./pedagogy-a1-verbs-of-being-and-feeling.md)
 
 ---
 
-## Dialogues
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 123
-> **Score:** 0.50
->
-> Послухавши пульс, вона підняла мені сорочку, схилилась і приклала 
-> маленьке холодне вухо до моїх грудей. Вона завжди вислу­ховувала хво-
-> рих просто так, вухом, без усякого лікарського причан­далля. І тільки вислухавши мене, вона сказала весело:
-> — Молодець! Усе гаразд! Скоро будеш здоровий. І ляснула мене долонею по пузі. — Еге! Гаразд! — буркнув я. — Оно вже і їсти не можу. Організм не прий­
-> має. І голова крутиться, підвестися несила. — Що? — вона здивовано глянула на тарілки, що стояли на стіль­ці. — 
-> А це хто снідав? — Та я ж... бачите... — зітхнув я.
-
-## Тіло (The Body)
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 129
-> **Score:** 0.50
->
-> Ух! Очі мої лізуть на лоба: я відчуваю, як жабеня, пірнувши в живіт, 
-> починає веселий свій танок десь аж біля пупа (...).
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 105
-> **Score:** 0.50
->
-> 105
-> Фонетика. Графіка. Орфоепія. Орфографія. Фонетика . Звуки мовлення
-> Вправа 152
-> Назвіть три органи з перелічених, не  задіяні у  вимові звуків .
-> Язик, зуби, нога, губи, права рука, нижня щелепа, підне-
-> біння, очі.
-> Вправа 153
-> 1. Прочитайте уривок вірша Оксани Лущевської .
-> Я — МОВ ЗАЙЧИК
-> Я — мов зайчик: ніс рожевий, великі вуха,
-> довкола принюхуюся і прислухаюся,
-> а серце теленькає-теленькає:
-> я всього боюся.
-> Вітер дмухне: «Хоч би не ураган…»
-> Дощ накрапає: «Аби не злива…»
-> Звідкись грюкне: «Лише б не грім і блискавка…»
-> Чи то даремно лякаюсь?
-> Я — мов зайчик. Зашипить: «Хоч би не зміюка…»
-> Гаркне: «Аби не пес…», крикне: «Лише б не крук…»
-> Загарчить: «Тільки б не вовцюган…»
-> Полохлива — не віриться!
-> 2. Прочитайте текст ще раз, замінивши підкреслені фрази звуками природи .
-> Вправа 154
-> 1.
-
-## У мене болить... (It Hurts...)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 123
-> **Score:** 0.50
->
-> Послухавши пульс, вона підняла мені сорочку, схилилась і приклала 
-> маленьке холодне вухо до моїх грудей. Вона завжди вислу­ховувала хво-
-> рих просто так, вухом, без усякого лікарського причан­далля. І тільки вислухавши мене, вона сказала весело:
-> — Молодець! Усе гаразд! Скоро будеш здоровий. І ляснула мене долонею по пузі. — Еге! Гаразд! — буркнув я. — Оно вже і їсти не можу. Організм не прий­
-> має. І голова крутиться, підвестися несила. — Що? — вона здивовано глянула на тарілки, що стояли на стіль­ці. — 
-> А це хто снідав? — Та я ж... бачите... — зітхнув я.
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 129
-> **Score:** 0.33
->
-> Ух! Очі мої лізуть на лоба: я відчуваю, як жабеня, пірнувши в живіт, 
-> починає веселий свій танок десь аж біля пупа (...).
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 89
-> **Score:** 0.33
->
-> 89
-> Iменник
-> І. Запишіть словосполучення, добираючи правильне закінчення.
-> Головн(ий/а) біль, нов(ий/а) шампунь, нелегк(ий/а) путь,
-> вищ(ий/а) ступінь, вітальн(ий/а) туш, яскрав(ий/а) гуаш,
-> сильн(ий/а) нежить, біл(ий/а) тюль, гірк(ий/а) полин, бара-
-> бан н(ий/а) дріб, нов(ий/а) рукопис, друг(ий/а) степінь,
-> яскрав(ий/а) емаль, висок(ий/а) насип.
-> ІІ. Складіть усно речення з одним поданим словосполученням.
-> СИТУАЦІЯ. Уявіть, що вам треба викликати 
-> лікаря для знайомого, який застудився. Ви теле-
-> фонуєте до лікарні.
-> Складіть усно 2–3 речення, щоб звернутися до 
-> працівника лікарні в цій ситуації. Використайте 
-> подані словосполучення.
-> головний біль
-> сильний нежить
-> висока температура
-> І. Спишіть речення, розставляючи пропущені розділові знаки. Надпи-
-> шіть скорочено над іменниками їхній рід.
-
-## Summary
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 129
-> **Score:** 0.50
->
-> Ух! Очі мої лізуть на лоба: я відчуваю, як жабеня, пірнувши в живіт, 
-> починає веселий свій танок десь аж біля пупа (...).
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 105
-> **Score:** 0.50
->
-> 105
-> Фонетика. Графіка. Орфоепія. Орфографія. Фонетика . Звуки мовлення
-> Вправа 152
-> Назвіть три органи з перелічених, не  задіяні у  вимові звуків .
-> Язик, зуби, нога, губи, права рука, нижня щелепа, підне-
-> біння, очі.
-> Вправа 153
-> 1. Прочитайте уривок вірша Оксани Лущевської .
-> Я — МОВ ЗАЙЧИК
-> Я — мов зайчик: ніс рожевий, великі вуха,
-> довкола принюхуюся і прислухаюся,
-> а серце теленькає-теленькає:
-> я всього боюся.
-> Вітер дмухне: «Хоч би не ураган…»
-> Дощ накрапає: «Аби не злива…»
-> Звідкись грюкне: «Лише б не грім і блискавка…»
-> Чи то даремно лякаюсь?
-> Я — мов зайчик. Зашипить: «Хоч би не зміюка…»
-> Гаркне: «Аби не пес…», крикне: «Лише б не крук…»
-> Загарчить: «Тільки б не вовцюган…»
-> Полохлива — не віриться!
-> 2. Прочитайте текст ще раз, замінивши підкреслені фрази звуками природи .
-> Вправа 154
-> 1.
-
-## Grammar Reference
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 123
-> **Score:** 0.50
->
-> Послухавши пульс, вона підняла мені сорочку, схилилась і приклала 
-> маленьке холодне вухо до моїх грудей. Вона завжди вислу­ховувала хво-
-> рих просто так, вухом, без усякого лікарського причан­далля. І тільки вислухавши мене, вона сказала весело:
-> — Молодець! Усе гаразд! Скоро будеш здоровий. І ляснула мене долонею по пузі. — Еге! Гаразд! — буркнув я. — Оно вже і їсти не можу. Організм не прий­
-> має. І голова крутиться, підвестися несила. — Що? — вона здивовано глянула на тарілки, що стояли на стіль­ці. — 
-> А це хто снідав? — Та я ж... бачите... — зітхнув я.
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 161
-> **Score:** 0.33
->
-> 161
-> ЗАХОПЛИВИЙ СВІТ ПРИГОДНИЦЬКИХ І ФАНТАСТИЧНИХ ПОВІСТЕЙ 
-> Грюкнувши дверима, вона зайшла в хату й швидким кро-
-> ком наблизилася до мого ліжка.
-> Поклала руку мені на лоба, потім узяла за пульс. І все це, 
-> не кажучи ні слова, мовчки, зосереджено, строго. Я завмер 
-> у безнадійному чеканні.
-> Скінчивши слухати пульс, вона підняла мені сорочку, 
-> схилилась і приклала маленьке холодне вухо до моїх гру-
-> дей. Вона завжди вислуховувала хворих просто так, вухом, 
-> без усякого лікарського причандалля.
-> І тільки вислухавши мене, вона сказала нарешті весело:
-> – Молодець, козаче! Усе гаразд! Скоро будеш здоровий.
-> І ляснула мене долонею по пузі.
-> – Еге! Гаразд! – буркнув я. – Оно вже і їсти не можу. Орга-
-> нізм не приймає.
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
-  
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-### Речення, його граматична основа
-> **Source:** МійКлас — [Речення, його граматична основа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372)
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-### Теорія:
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-*www.ua.pistacja.tv*  
-Речення
-Реченням називаємо одне або кілька слів, що виражають закінчену думку.
-Саме за допомогою речень ми спілкуємось, висловлюємо прохання, наказ, виражаємо емоції, повідомляємо інформацію.
-Приклад:
-- Весна іде, красу несе \(Нар. творчість\). 
-- Ліс. Тиша. Благодать. 
-Слова в реченні зв'язані між собою **за змістом** і **граматично**. **Граматичний зв'язок** — це поєднання за допомогою **закінчень** і **службових слів**. На початок і кінець речення вказує **інтонація**. Між реченнями робимо **паузи**.
-Ознаки речення
-1. Речення відображає дійсність. Інформаці
+## Послідовність введення (Introduction Sequence)
 
-... (truncated for context window)
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
+
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -767,42 +784,34 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Dialogues (~330 words total)
-- P1 (~35 words): Scene-setter — two situations every learner will face in Ukraine: a visit to the лікар and a stop at the аптека. Both dialogues use vocabulary introduced in this module; read them now for the full picture, then study the pieces.
-- Dialogue 1 (~115 words): At the doctor's office — 8-turn exchange. Лікар opens: «Що у вас болить?» Пацієнт: «У мене болить голова і горло.» Лікар: «Давно?» Пацієнт: «З учора. І в мене температура.» Лікар: «Ви кашляєте?» Пацієнт: «Так, трохи. І в мене нежить.» Лікар: «Зрозуміло. Це застуда. Я випишу ліки. Відпочивайте!» Пацієнт: «Дякую, лікарю!» — establishes key question «Що у вас болить?» and the three-symptom stack (болить голова/горло + температура + нежить + кашель).
-- P2 (~30 words): Callout box — two phrases to memorise from Dialogue 1: «Що у вас болить?» (What hurts you? — doctor's standard opening) and «З учора» (Since yesterday — useful time anchor at A1).
-- Dialogue 2 (~115 words): At the pharmacy — 7-turn exchange. Покупець: «Добрий день! У мене болить голова. Дайте, будь ласка, таблетки.» Фармацевт: «Від головного болю?» Покупець: «Так. І від кашлю, будь ласка.» Фармацевт: «Ось, будь ласка. Ще щось?» Покупець: «А є щось від нежиті?» Фармацевт: «Так, ось краплі.» Покупець: «Дякую! Скільки це коштує?» — introduces the pharmacy formula «Дайте, будь ласка, [ліки] від [symptom]» and shows три genitive chunks: від головного болю, від кашлю, від нежиті (treat as frozen phrases, no grammar analysis).
-- P3 (~35 words): Brief closing note — notice how both dialogues stay simple: one phrase to describe the problem (У мене болить…), one formula to ask for help (Дайте будь ласка…). That is the complete A1 toolkit.
-- Exercise: **quiz** — «Choose the logical response» (4 items from activity_hints: У мене болить голова / У мене сильний кашель / Що у вас болить? / Дайте щось від нежиті). Tests comprehension of the two dialogues just read; only concepts already introduced above.
-
----
+- P1 (~100 words): [Contextualizing the doctor's visit — explaining the standard opening phrase "Що у вас болить?" (What hurts?) and the cultural expectation of describing symptoms directly. Introducing the role of the "терапевт" (GP) and the "аптекар" (pharmacist).]
+- D1 (~120 words): [Dialogue at the doctor's office between Пацієнт and Лікар. Patient describes a combination of "болить голова і горло," "температура," "кашель," and "нежить." Doctor diagnoses "застуда" (a cold) and advises "відпочивайте" and "я випишу ліки" (I will prescribe medicine).]
+- D2 (~110 words): [Dialogue at the pharmacy. The patient uses polite forms "Дайте, будь ласка" to ask for "таблетки від головного болю" and "краплі від нежиті." Ending with the essential practical question "Скільки це коштує?" (How much does it cost?).]
+- <!-- INJECT_ACTIVITY: quiz-medical-responses --> [quiz, logical responses to health problems (e.g., matching a headache to headache pills), 4 items]
 
 ## Тіло (The Body) (~330 words total)
-- P1 (~130 words): Core body-part inventory — introduce 10 words with gender label and brief real-world note. Present in a short enumerated list: голова (f) — head; горло (n) — throat; спина (f) — back; живіт (m) — stomach; рука (f) — hand/arm; нога (f) — leg/foot; око (n) — eye; вухо (n) — ear; зуб (m) — tooth; ніс (m) — nose. Scope note for рука and нога: Ukrainian has one word where English has two — рука covers everything from shoulder to fingertip; нога covers hip to toe. These are the ten most useful for an A1 learner at a clinic; this is not a complete anatomy list.
-- P2 (~100 words): Gender in practice — at A1 you will mainly use these words after болить, but gender matters when you add an adjective (review from M09). Three contrast examples: велике о́ко (neuter -е), вели́кий ніс (masculine -ий), вели́ка рука́ (feminine -а). One more: боля́чий зуб (masculine), хво́ре го́рло (neuter). The takeaway: learn each body part with its gender tag now so adjective agreement is automatic later.
-- P3 (~100 words): Connecting body parts to the coming chunk — every word on the list above slots straight into the pattern you will learn next: У мене болить + [body part]. Walk through three quick examples to preview: У мене болить голова. / У мене болить живіт. / У мене болить спина. The body-part list is the input; the chunk is the output. Memorise the list now, and the next section gives you the grammar-free way to use it immediately.
-- Exercise: **match-up** — 8 pairs: голова ↔ head, живіт ↔ stomach, горло ↔ throat, спина ↔ back, рука ↔ hand/arm, нога ↔ leg/foot, зуб ↔ tooth, око ↔ eye. Tests the body-part vocabulary just taught.
-
----
+- P1 (~110 words): [Introducing core body parts essential for medical complaints: "голова" (head, f), "горло" (throat, n), "спина" (back, f), and "живіт" (stomach, m). Highlighting the grammatical gender of each to prepare for adjective agreement (e.g., "хвора спина").]
+- P2 (~130 words): [Extending to limbs and sensory organs: "рука" (arm/hand), "нога" (leg/foot), "око" (eye), "вухо" (ear), "зуб" (tooth), and "ніс" (nose). Crucial clarification: in Ukrainian "рука" refers to the whole limb from shoulder to fingertips, and "нога" from hip to toes, unlike the English distinction between hand/arm and foot/leg.]
+- P3 (~90 words): [A1-level recognition of adjective agreement with body parts. Using examples like "великий ніс" (masc), "велика рука" (fem), and "велике око" (neut). Emphasizing that while noun recognition is primary, noticing the endings helps build the grammatical reflex.]
+- <!-- INJECT_ACTIVITY: match-body-vocabulary --> [match-up, matching Ukrainian body parts to English translations, 8 items]
 
 ## У мене болить... (It Hurts...) (~330 words total)
-- P1 (~120 words): The magic chunk — «У мене болить» is the single most useful health phrase in Ukrainian. Literally it means «at me hurts», but learn it as an unanalysed block, the same way a child does. You do not need to know it uses the dative case (that is A2 grammar). Just attach any body part from the previous section: У мене болить голова. (I have a headache.) У мене болить живіт. (My stomach hurts.) У мене болить горло. (My throat hurts.) У мене болить спина. (My back hurts.) У мене болить зуб. (I have a toothache.) Five sentences, five body parts — that covers most clinic visits. Stress: у мене́ боли́ть.
-- P2 (~130 words): Beyond болить — five more symptom chunks you need. These also follow the «У мене + noun» pattern: У мене температура. (I have a fever.) У мене кашель. (I have a cough.) У мене нежить. (I have a runny nose — нежить is feminine despite looking masculine.) Two Мені phrases for general state: Мені холодно. (I'm cold / I feel cold.) Мені погано. (I feel bad / I'm not well.) And the direct statement: Я хворий. (I'm sick. — masculine) / Я хвора. (I'm sick. — feminine). Gender agreement here works exactly like M09 adjectives: male speaker says хворий, female speaker says хвора. Quick note: when multiple teeth hurt, the verb changes — У мене болять зуби. (болять = plural form of болить.) Just recognise this form; do not memorise it yet.
-- P3 (~80 words): Combining symptoms — real conversations stack symptoms. Two models from the doctor's dialogue: «У мене болить голова і горло» (head and throat, both with болить). «У мене нежить і кашель» (two noun symptoms, no verb needed). Try building: «Я хвора. У мене болить горло і є температура.» This is full A1 communication — no grammar analysis required, only chunk combination.
-- Exercise: **fill-in** — «Complete with the correct body part or symptom» (6 items from activity_hints): У мене болить ___ . Я хочу спати. / У мене болить ___ . Я не хочу їсти. / У мене болить ___ і є температура. / У мене ___, я постійно кашляю. / У мене болить ___, мені потрібен стоматолог. / Я ___. У мене болить голова і спина. Tests only vocabulary from this section and the Тіло section above.
+- P1 (~110 words): [Teaching the core construction "У мене болить" + Nominative noun. Explaining that this is a fixed chunk (literally: "At me hurts..."). Providing examples: "У мене болить голова," "У мене болить живіт." Explicitly warning against direct English translation like "Моя голова болить".]
+- P2 (~90 words): [Introducing the plural form "болять" for parts that come in pairs or groups: "У мене болять очі" (eyes), "У мене болять вуха" (ears), "У мене болять зуби" (teeth). Explaining the simple switch from -ить to -ять agreement.]
+- P3 (~130 words): [Describing symptoms and states that don't use the verb "боліти." Phrases for fever and respiratory issues: "У мене температура," "У мене кашель," "У мене нежить." Describing one's state: "Я хворий / Я хвора" and the general feeling "Мені погано" (I feel bad) or "Мені холодно" (I'm cold).]
+- <!-- INJECT_ACTIVITY: fill-in-symptoms-logic --> [fill-in, completing sentences with correct symptoms based on context (e.g., 'I want to sleep' -> 'headache'), 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-medical-chunks --> [fill-in, using target chunks like 'будь ласка', 'болить', 'температура' in doctor/pharmacy settings, 5 items]
 
----
-
-## Summary (~330 words total)
-- P1 (~120 words): Health toolkit recap — prose paragraph pulling together everything from the module. Three registers: talking about your body (голова, горло, живіт, спина, рука, нога, oko, вухо, зуб, ніс), describing what hurts (У мене болить [body part]), describing your general state (Я хворий/хвора, Мені погано, Мені холодно). Two situation-specific formulas: at the doctor — answer «Що у вас болить?» with «У мене болить…»; at the pharmacy — ask «Дайте, будь ласка, таблетки від головного болю / від кашлю / від нежиті». Treat the від-phrases as fixed chunks for now.
-- Self-check Q&A list (~120 words): Bulleted prompt-and-answer pairs:
-  - Як сказати «My throat hurts and I have a fever»? → У мене болить горло і є температура.
-  - Як сказати «I'm sick» (you are female)? → Я хвора.
-  - Що означає «Мені погано»? → I feel bad / I'm not well.
-  - Як попросити таблетки від кашлю в аптеці? → Дайте, будь ласка, таблетки від кашлю.
-  - Як лікар питає про симптоми? → Що у вас болить?
-  - Яка різниця між «болить» і «болять»? → болить = one thing hurts (зуб, голова); болять = several things hurt (зуби, очі).
-- P2 (~90 words): Looking ahead — M54 (Emergencies) builds directly on this module. You will use «Мені погано» and «У мене болить» in urgent situations and add phrases like «Викличте швидку!» (Call an ambulance!). Everything in this module travels forward intact: the chunk У мене болить…, the symptom nouns, Я хворий/хвора. Health vocabulary you learn now is vocabulary you keep forever.
-- Exercise: **fill-in** — «At the pharmacy or doctor» (5 items from activity_hints): Дайте, ___ , таблетки від головного болю. / Що у вас ___? / У мене ___ і болить горло. / Мені ___. Викличте лікаря! / Де тут найближча ___? Мені потрібні ліки. Tests pharmacy/doctor formula chunks introduced across the full module.
+## Підсумок (~330 words)
+- P1 (~100 words): [Recap of the "Health Toolkit": listing the 10 core body parts (голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс) and the primary symptoms (температура, кашель, нежить).]
+- P2 (~100 words): [Review of the functional structures: The "magic phrase" У мене болить/болять, the state descriptions (Мені погано, Я хворий), and the pharmacy request "Дайте таблетки від...".]
+- P3 (~130 words): [Self-check questions and model answers:
+  * Q: How do you tell a doctor your throat hurts?
+  * A: У мене болить горло.
+  * Q: How do you ask for headache pills?
+  * A: Дайте, будь ласка, таблетки від головного болю.
+  * Q: How do you say "My eyes hurt and I have a fever"?
+  * A: У мене болять очі і є температура.]
 
 Grand total: ~1320 words
 </skeleton>

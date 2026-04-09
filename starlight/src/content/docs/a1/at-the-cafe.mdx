@@ -12,8 +12,8 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
@@ -21,171 +21,107 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги (Dialogues)
+## Діало́ги — Dialogues
 
-Ростик and Іва́нка walk into a cozy **кафе́** (café) on a quiet Lviv street. A waiter approaches their table with two leather-bound menus.
+Welcome to a cozy **кафе́** (cafe) in the heart of Lviv. The city is famous for its rich **ка́ва** (coffee) culture, where locals spend hours talking over a warm cup. Before you can enjoy the atmosphere, you need to know how to navigate the interaction. Every cafe visit begins with a polite greeting, such as **До́брий день** (Good day), and a direct request to see what they offer. To start, you simply ask the waiter: **Мо́жна меню́?** (Can I have the menu?). Politeness is your strongest tool, so always keep **будь ла́ска** (please) and **дякую** (thank you) ready.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> До́брий день! Ось **меню́**. *(Good day! Here's the menu.)*</div>
+<div class="dialogue-line"><span class="speaker">Ростик:</span> Добрий день! Можна меню? *(Good day! Can I have the menu?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Офіціа́нт:</span> Ось, будь ласка. *(Here, please.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ростик:</span> Дякую. Що ви рекоменду́єте? *(Thank you. What do you recommend?)*</div>
+<div class="dialogue-line"><span class="speaker">Ростик:</span> Що ви рекоменду́єте? *(What do you recommend?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Борщ ду́же смачни́й. *(The borscht is very delicious.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> **Борщ** ду́же **смачни́й**. *(The borshch is very tasty.)*</div>
+<div class="dialogue-line"><span class="speaker">Ростик:</span> До́бре, мені́ борщ і хліб. А тобі́, Іва́нко? *(Good, I will have borscht and bread. And for you, Ivanka?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> До́бре, **мені́ борщ і хліб, будь ла́ска**. *(Good, borshch and bread for me, please.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> А що бу́дете пи́ти? *(And what will you drink?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> **Ка́ву з молоко́м**. *(Coffee with milk.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванка:</span> **Мені чай і ті́стечко, будь ласка**. *(Tea and a pastry for me, please.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Добре, одну́ **хвили́нку**. *(Good, one moment.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Іва́нка:</span> Мені ка́ву з молоко́м і ті́стечко. *(I will have a coffee with milk and a pastry.)*</div>
 
 </div>
 
-Notice the pattern: every order uses **мені** + the accusative form of the food or drink word. You practised accusative endings in M37 — now they're doing real work in a real café.
+This dialogue shows the core structure of ordering. When the waiter approaches, Rostyk asks for advice using the verb **рекомендува́ти** (to recommend). Once they decide, they use the pattern **Мені + [Accusative case]** to state their choices. You already know the accusative case from the previous module. Notice the noun genders: the feminine **кава** (coffee) changes to **каву**, while the masculine **чай** (tea) and neuter **тістечко** (pastry) stay exactly the same. Even when you are ordering a complex combination like **кава з молоком** (coffee with milk), only the main noun changes its ending.
 
-After the meal, Ростик signals the waiter.
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ростик:</span> **Раху́нок, будь ласка**. *(The bill, please.)*</div>
+<div class="dialogue-line"><span class="speaker">Ростик:</span> Ви́бачте, можна раху́нок? *(Excuse me, can I have the bill?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Так, одну́ хвили́нку. З вас сто два́дцять гри́вень. Ка́рткою чи готі́вкою? *(Yes, one minute. From you, one hundred twenty hryvnias. By card or by cash?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Ось, **будь ласка**. Сто два́дцять гри́вень. *(Here you go. One hundred twenty hryvnias.)*</div>
+<div class="dialogue-line"><span class="speaker">Ростик:</span> Карткою, будь ласка. *(By card, please.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Ось терміна́л. Дякую. *(Here is the terminal. Thank you.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іванка:</span> **Мо́жна ка́рткою?** *(Can we pay by card?)*</div>
+<div class="dialogue-line"><span class="speaker">Іванка:</span> Дуже сма́чно було́! Дякуємо! *(It was very delicious! We thank you!)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Так, звича́йно. *(Yes, of course.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ростик:</span> Все було́ дуже **сма́чно**! *(Everything was very delicious!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ростик & Іванка:</span> **Дякуємо!** *(Thank you!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Офіціант:</span> Дякуємо, **прихо́дьте** ще! *(Thank you, come again!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Офіціант:</span> Прихо́дьте ще! *(Come again!)*</div>
 
 </div>
 
-Notice how Ростик has to ask for the **рахунок** (bill) to be brought to the table. He might also leave **чайові́** (tips) before leaving.
+<FillIn client:only="react" items={[{"sentence": "— Добрий день! Ось _____.", "answer": "меню", "options": ["меню", "рахунок", "картка"]}, {"sentence": "— Дякую. Що ви _____?", "answer": "рекомендуєте", "options": ["рекомендуєте", "коштуєте", "платите"]}, {"sentence": "— Борщ дуже _____.", "answer": "смачний", "options": ["смачний", "гострий", "вільний"]}, {"sentence": "— Добре, _____ борщ і хліб, будь ласка.", "answer": "мені", "options": ["мені", "я", "мене"]}, {"sentence": "— А що будете _____?", "answer": "пити", "options": ["пити", "їсти", "читати"]}, {"sentence": "— Каву з молоком. — Добре, одну _____.", "answer": "хвилинку", "options": ["хвилинку", "годину", "каву"]}]} instruction={"Доповніть діалог у кафе (Complete the cafe dialogue with correct phrases)"} />
 
-Now test yourself — can you answer these questions from the dialogues?
+## Як замо́вити — How to Order
 
-- What did Ростик order? → **Мені борщ, хліб і каву з молоком.**
-- What did Іванка order? → **Мені чай і тістечко.**
-- How did they pay? → **Карткою** (by card).
+The most versatile request phrase you can learn at this level is **Можна мені...?**. Literally, it means "Is it possible for me...?" and it is the standard, polite way to ask for anything you need. Always follow this phrase with the item in the accusative case. Let us look at a few examples:
 
-<FillIn client:only="react" items={[{"sentence": "— Добрий день! Ось ___.", "answer": "меню", "options": ["меню", "рахунок", "картка"]}, {"sentence": "— Дякую. Що ви ___?", "answer": "рекомендуєте", "options": ["рекомендуєте", "коштуєте", "платите"]}, {"sentence": "— Борщ дуже ___.", "answer": "смачний", "options": ["смачний", "гострий", "вільний"]}, {"sentence": "— Добре, ___ борщ і хліб, будь ласка.", "answer": "мені", "options": ["мені", "я", "мене"]}, {"sentence": "— А що будете ___?", "answer": "пити", "options": ["пити", "їсти", "читати"]}, {"sentence": "— Каву з молоком. — Добре, одну ___.", "answer": "хвилинку", "options": ["хвилинку", "годину", "каву"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
+*   **Можна мені каву?** — Can I have a coffee?
+*   **Можна мені воду́?** — Can I have some water?
+*   **Можна мені сік?** — Can I have juice?
+*   **Можна мені меню?** — Can I have the menu?
 
-## Як замо́вити (How to Order)
+Another polite option is **Да́йте, будь ласка** (Give me, please), which is slightly more direct but perfectly acceptable. When you are finally ready to tell the waiter your decision, you will often use the phrase **Я бу́ду** (I will have). This is the standard way to state a final choice from the menu. 
 
-When you want to order (**замовля́ти**) at a Ukrainian **кафе**, there are four polite ways to do it. Each one uses the accusative case — the same endings you learned in M37.
+*   **Я буду пі́цу і чай.** — I will have pizza and tea.
+*   **Я буду сала́т і суп.** — I will have a salad and soup.
 
-**Pattern 1: Мені [accusative], будь ласка.**
-- **Мені каву, будь ласка.** — Coffee for me, please.
-- **Мені борщ, будь ласка.** — Borshch for me, please.
+You might also hear people say **Я хо́чу** (I want). While **Я хочу** is grammatically correct and widely used, it sounds slightly more demanding than **Я буду**. Both require the accusative case.
 
-**Pattern 2: Можна [accusative]?**
-- **Можна во́ду?** — May I have water?
-- **Можна хліб?** — May I have bread?
+Before you make a final decision, you may need to ask questions about the food. You can easily check for specific dietary preferences or tastes using simple questions. If you do not like spicy food, you ask: **Це го́стре?** (Is it spicy?). If you want to know the ingredients, you can ask: **Це з м'я́сом?** (Is it with meat?) or **Є вегетаріа́нське меню?** (Is there a vegetarian menu?). Often, you will see a delicious pastry in the display case but you do not know the name. In that situation, you simply point and ask: **А що це?** (And what is this?). To ask for the price, you say: **Скі́льки ко́шту́є?** (How much does it cost?). 
 
-**Pattern 3: Да́йте, будь ласка, [accusative].**
-- **Дайте, будь ласка, сала́т.** — Give me a salad, please.
-- **Дайте, будь ласка, сік.** — Give me juice, please.
+Sometimes you just need a bit more. You can handle extra quantities easily by saying: **Ще одну каву, будь ласка** (One more coffee, please). You can also add simple modifiers to your drink order. You might ask for a drink **без цу́кру** (without sugar) or **з лимо́ном** (with lemon). Finally, listen carefully for the most common question at any modern coffee counter: **Вам тут чи з собо́ю?** (For here or to go?). You just reply **Тут** (Here) or **З собою** (To go).
 
-**Pattern 4: Я хо́чу / Я бу́ду [accusative].**
-- **Я хо́чу пі́цу.** — I want pizza.
-- **Я буду суп.** — I'll have soup.
+<FillIn client:only="react" items={[{"sentence": "Мені _____, будь ласка.", "answer": "каву", "options": ["каву", "кава", "каві"]}, {"sentence": "Мені _____, будь ласка.", "answer": "воду", "options": ["воду", "вода", "водою"]}, {"sentence": "Мені _____, будь ласка.", "answer": "борщ", "options": ["борщ", "борщу", "борщем"]}, {"sentence": "Мені _____, будь ласка.", "answer": "салат", "options": ["салат", "салату", "салатом"]}, {"sentence": "Мені _____, будь ласка.", "answer": "суп", "options": ["суп", "супу", "супом"]}, {"sentence": "Дайте, будь ласка, _____.", "answer": "чай", "options": ["чай", "чаю", "чаєм"]}, {"sentence": "Я буду _____.", "answer": "піцу", "options": ["піцу", "піца", "піці"]}, {"sentence": "Можна _____?", "answer": "хліб", "options": ["хліб", "хліба", "хлібом"]}]} instruction={"Оберіть правильну форму для замовлення (Choose the correct accusative form to order)"} />
 
-All four are polite. **Я буду** is slightly more casual — something you'd say to a friend working behind the counter. **Дайте, будь ласка** is the most formal.
+## Культу́ра кафе — Cafe Culture
 
-Quick accusative reminder: masculine inanimate and neuter nouns keep their nominative form (**борщ** → **борщ**, **меню** → **меню**). Feminine nouns ending in **-а** change to **-у** (**ка́ва** → **каву**, **вода́** → **воду**, **пі́ца** → **піцу**).
+When it is time to order, there is one linguistic "Golden Rule" you must follow: always use the verb **замовля́ти** (to order). You might sometimes hear people use the word *заказа́ти*, but this is a direct calque from Russian and is considered incorrect in modern standard Ukrainian. You should always say **Я замовля́ю піцу** (I am ordering a pizza). 
 
-<FillIn client:only="react" items={[{"sentence": "Мені ___, будь ласка.", "answer": "каву", "options": ["каву", "кава", "каві"]}, {"sentence": "Мені ___, будь ласка.", "answer": "воду", "options": ["воду", "вода", "водою"]}, {"sentence": "Мені ___, будь ласка.", "answer": "борщ", "options": ["борщ", "борщу", "борщем"]}, {"sentence": "Мені ___, будь ласка.", "answer": "салат", "options": ["салат", "салату", "салатом"]}, {"sentence": "Мені ___, будь ласка.", "answer": "суп", "options": ["суп", "супу", "супом"]}, {"sentence": "Дайте, будь ласка, ___.", "answer": "чай", "options": ["чай", "чаю", "чаєм"]}, {"sentence": "Я буду ___.", "answer": "піцу", "options": ["піцу", "піца", "піці"]}, {"sentence": "Можна ___?", "answer": "хліб", "options": ["хліб", "хліба", "хлібом"]}]} instruction={"Вставте правильну форму (Insert the correct form)"} />
+Additionally, you need to recognize a special group of nouns like **кафе** (cafe) and **меню** (menu). These are indeclinable foreign words. This means they NEVER change their endings, no matter what case they are in. You say **Це кафе** (This is a cafe) and you also say **Я в кафе** (I am in the cafe). The ending stays exactly the same. Other common indeclinable words you will hear include **кака́о** (cocoa), **метро́** (subway), and **ескімо́** (popsicle). 
 
-Once you've ordered, you might want to ask about the **меню**. Here are six essential phrases:
+:::caution
+Never try to change the ending of **кафе** or **меню**. Forms like *кафі* or *менюю* do not exist in Ukrainian. Keep them exactly as they are in the dictionary.
+:::
 
-- **Що ви рекомендуєте?** — What do you recommend?
-- **Це го́стре?** — Is it spicy?
-- **Це з м'я́сом?** — Is it with meat?
-- **А що це?** — What is this?
-- **Скі́льки ко́штує?** — How much does it cost?
-- **Є вегетаріа́нське меню?** — Is there a vegetarian menu?
+Before you pay, note the cultural difference between a **кафе** and a **рестора́н**. A **кафе** is generally casual, and you might see the **меню** on the wall or a board. A **ресторан** is formal, and the waiter will always bring the menu to your table. When you finish eating, there is an important point of etiquette regarding the **рахунок** (bill). In a traditional **ресторан** (restaurant) or a formal cafe, the waiter rarely brings the bill automatically. This is done so you do not feel rushed to leave. You must catch their eye, raise your hand slightly, and ask: **Можна рахунок?** (Can I have the bill?). Once the bill arrives, you must consider the **чайові́** (tips). In most cities, leaving a 10% tip is standard for good service. You can usually leave cash in the folder they provide or ask to add it directly to your card payment.
 
-Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдеся́т гривень** (The borshch costs eighty hryvnias).
+When it comes to payment logistics, the waiter will almost always ask: **Карткою чи готівкою?** (By card or by cash?). Ukraine has one of the highest rates of contactless payment in Europe. Even a small street kiosk usually has a **термінал** (payment terminal). You can confidently reply **Карткою, будь ласка** (By card, please). If you pay with cash, they will take your **опла́та** (payment) and bring you the **ре́шта** (change).
 
-Try building questions from this mini-menu: **борщ** 80 грн, **піца** 150 грн, **кава** 45 грн. For example: **Скільки коштує кава?** — **Кава коштує со́рок п'ять гривень.** The numbers connect back to what you learned in earlier modules.
+Finally, you need a few social phrases to complete the cafe experience. If you enter a crowded place and see an empty chair at a shared table, you should politely ask: **Тут ві́льно?** (Is this seat free?). When the waiter brings your food, they will always say: **Смачно́го!** (Bon appétit!), and you should reply with **Дякую!** (Thank you!). As you leave, the best compliment you can give the staff is to smile and say: **Все було дуже смачно!** (Everything was very delicious!). 
 
-## Культу́ра кафе (Cafe Culture)
-
-Not every place with food is the same. Ukrainian has three distinct words for three distinct experiences:
-
-| | **Кафе** | **Рестора́н** | **Кав'я́рня** |
-|---|---|---|---|
-| Style | Casual, drop-in | Formal, reservations | Coffee-focused |
-| Menu | On a board or paper | Leather-bound, multi-page | Drinks + pastries |
-| Price | Budget-friendly | Higher | Mid-range |
-
-A **кафе** (café) is where you grab a quick **борщ** and **хліб** for lunch. A **ресторан** (restaurant) is where you celebrate a birthday with a white tablecloth. A **кав'ярня** (coffee shop) is where you spend two hours with a **кава** and a laptop. After Euromaidan in 2014, independent **кав'я́рні** exploded across Ukrainian cities, becoming community hubs — places to meet, work, and organize.
-
-When it's time to pay, remember: the **рахунок** (bill) does not come automatically in Ukraine. You say **Рахунок, будь ласка** when you're ready. **Чайові** (tips) are around 10% — common but never obligatory. Most people leave tips in cash even when paying by **ка́ртка** (card). Here are the key payment phrases:
-
-- **Можна карткою?** — Can I pay by card?
-- **Готі́вкою.** — In cash.
-- **Зали́ште ре́шту.** — Keep the change.
-- **Дякуємо, все було смачно!** — Thank you, everything was delicious!
-
-And here are six phrases for everyday café moments — from arriving to leaving:
-
-- **Ві́льно?** / **Тут вільно?** — Is this seat free?
-- **Можна меню?** — May I have the menu?
-- **Ще одну каву, будь ласка.** — One more coffee, please.
-- **Без цу́кру.** — Without sugar.
-- **З лимо́ном.** — With lemon.
-- **Все було дуже смачно!** — Everything was delicious!
-
-Each phrase fits a micro-situation: you walk in (**Тут вільно?**), you browse (**Можна меню?**), you reorder (**Ще одну каву**), you customize (**Без цукру**), and you leave happy (**Все було дуже смачно!**).
-
-<MatchUp client:only="react" pairs={[{"left": "Рахунок, будь ласка.", "right": "Asking for the bill"}, {"left": "Що ви рекомендуєте?", "right": "Asking for advice"}, {"left": "Мені борщ, будь ласка.", "right": "Ordering food"}, {"left": "Скільки коштує?", "right": "Asking the price"}, {"left": "Можна карткою?", "right": "Asking about payment method"}, {"left": "Дуже смачно!", "right": "Complimenting the food"}, {"left": "Тут вільно?", "right": "Asking for a seat"}, {"left": "Можна меню?", "right": "Asking to see the menu"}]} instruction={"З'єднайте фрази з функціями (Match phrases with their functions)"} />
-
-<Quiz client:only="react" questions={[{"question": "You want to order coffee. What do you say?", "options": [{"text": "Мені каву, будь ласка.", "correct": true}, {"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}]}, {"question": "You want to pay. What do you say?", "options": [{"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Можна меню?", "correct": false}, {"text": "Це гостре?", "correct": false}]}, {"question": "You want to know the price. What do you say?", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Тут вільно?", "correct": false}]}, {"question": "You want to ask for a recommendation. What do you say?", "options": [{"text": "Що ви рекомендуєте?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Все було дуже смачно!", "correct": false}]}, {"question": "You want to praise the food. What do you say?", "options": [{"text": "Все було дуже смачно!", "correct": true}, {"text": "Можна карткою?", "correct": false}, {"text": "Без цукру.", "correct": false}]}, {"question": "You want to know if a seat is free. What do you say?", "options": [{"text": "Тут вільно?", "correct": true}, {"text": "Ще одну каву, будь ласка.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": false}]}, {"question": "You want to ask if the dish is spicy. What do you say?", "options": [{"text": "Це гостре?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Скільки коштує?", "correct": false}]}, {"question": "You want to pay by card. What do you say?", "options": [{"text": "Можна карткою?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}]}]} instruction={"Що ви скажете? (What do you say?)"} />
+<Quiz client:only="react" questions={[{"question": "You want to order coffee. What do you say?", "options": [{"text": "Мені каву, будь ласка.", "correct": true}, {"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}, {"text": "Тут вільно?", "correct": false}]}, {"question": "You want to pay. What do you say?", "options": [{"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Можна меню?", "correct": false}, {"text": "Це гостре?", "correct": false}, {"text": "Мені воду, будь ласка.", "correct": false}]}, {"question": "You want to know the price. What do you say?", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Тут вільно?", "correct": false}, {"text": "Можна карткою?", "correct": false}]}, {"question": "You want to ask for a recommendation. What do you say?", "options": [{"text": "Що ви рекомендуєте?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Все було дуже смачно!", "correct": false}, {"text": "Скільки коштує?", "correct": false}]}, {"question": "You want to praise the food. What do you say?", "options": [{"text": "Все було дуже смачно!", "correct": true}, {"text": "Можна карткою?", "correct": false}, {"text": "Без цукру.", "correct": false}, {"text": "Ще одну каву, будь ласка.", "correct": false}]}, {"question": "You want to know if a seat is free. What do you say?", "options": [{"text": "Тут вільно?", "correct": true}, {"text": "Ще одну каву, будь ласка.", "correct": false}, {"text": "Рахунок, будь ласка.", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}]}, {"question": "You want to ask if the dish is spicy. What do you say?", "options": [{"text": "Це гостре?", "correct": true}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Скільки коштує?", "correct": false}, {"text": "Можна меню?", "correct": false}]}, {"question": "You want to pay by card. What do you say?", "options": [{"text": "Можна карткою?", "correct": true}, {"text": "Є вегетаріанське меню?", "correct": false}, {"text": "Що ви рекомендуєте?", "correct": false}, {"text": "Це гостре?", "correct": false}]}]} instruction={"Що ви скажете? (What do you say? Match the situation to the phrase)"} />
+<MatchUp client:only="react" pairs={[{"left": "Рахунок, будь ласка.", "right": "Asking for the bill"}, {"left": "Що ви рекомендуєте?", "right": "Asking for advice"}, {"left": "Мені борщ, будь ласка.", "right": "Ordering food"}, {"left": "Скільки коштує?", "right": "Asking the price"}, {"left": "Можна карткою?", "right": "Asking about payment method"}, {"left": "Дуже смачно!", "right": "Complimenting the food"}, {"left": "Тут вільно?", "right": "Asking for a seat"}, {"left": "Можна меню?", "right": "Asking to see the options"}]} instruction={"З'єднайте українські фрази з їхнім значенням (Match the Ukrainian phrases with their functions)"} />
 
 ## Підсумок — Summary
 
-Here's your café communication toolkit — screenshot this for your next visit to a Ukrainian **кафе**:
+You now have the complete communication toolkit needed to navigate a Ukrainian cafe with confidence. You understand that politeness is key, and you know how to use the accusative case to make clear, accurate requests. Here is a recap of the essential patterns you should memorize:
 
-| Situation | Phrase | Example |
-|---|---|---|
-| Order food | **Мені [acc], будь ласка** | Мені каву, будь ласка. |
-| Ask about menu | **Скі́льки ко́штує?** | Скільки коштує борщ? |
-| Request the bill | **Рахунок, будь ласка** | — |
-| Pay by card | **Можна карткою?** | — |
-| Compliment food | **Дуже смачно!** | Все було дуже смачно! |
+*   **To order:** Мені [accusative], будь ласка. *(Мені каву, будь ласка.)*
+*   **To ask:** Скільки коштує? Що рекомендуєте? *(How much does it cost? What do you recommend?)*
+*   **To pay:** Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*
+*   **To compliment:** Дуже смачно! Дякую! *(Very delicious! Thank you!)*
 
-Now put it all together. Imagine you walk into a Lviv **кав'ярня** with a friend. You need to: order a starter (**борщ**), a main (**салат**), a drink (**каву** або́ **сік**), ask about the price of one item, then ask for the bill and pay by card. Try it yourself before checking the model answers below:
+Remember that the phrase **будь ласка** (please) is your magic key for all interactions. It softens any request and shows respect for the person helping you. 
 
-- **Мені борщ, будь ласка.**
-- **Мені салат і каву, будь ласка.**
-- **Скільки коштує сік?**
-- **Рахунок, будь ласка.**
-- **Можна карткою?**
+Before you move to the next module, do a quick self-check. Can you perform all of these tasks?
 
-Ukrainian café culture carries a deeper meaning since 2022. Many Kyiv and Lviv **кав'ярні** stayed open through air-raid alerts, operating as volunteer coordination hubs. Ordering a **кава** in Ukraine today is a small act of normalcy in extraordinary times. As one Kyiv barista put it in 2023: **«Ми ва́римо каву — значить, ми живемо́.»** (We brew coffee — that means we're alive.)
+*   Can you greet the waiter and ask for a menu? (**Добрий день, можна меню?**)
+*   Can you order a drink and a main course using the accusative case? (**Мені каву і піцу.**)
+*   Can you ask if a dish is spicy or vegetarian? (**Це гостре? Є вегетаріанське меню?**)
+*   Can you ask for the bill and specify your payment method? (**Можна рахунок? Карткою, будь ласка.**)
+*   Do you remember to use the correct verb **замовляти** (to order) instead of the Russianism *заказати*?
 
-In the next module, you'll take your accusative skills from the **кафе** to the **ри́нок** (market). Same patterns, new vocabulary: **карто́пля** (potatoes), **я́блука** (apples), **молоко́** (milk). **Ході́мо!** (Let's go!)
+If you can confidently handle these situations, you are ready to order your next meal in Ukrainian!
 
 </TabItem>
 <TabItem label="Словник">
@@ -194,82 +130,66 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **кафе́** | café | ім. | с. |
-| **меню́** | menu | ім. | с. |
-| **раху́нок** | bill | ім. | ч. |
-| **замовля́ти** | to order | дієсл. |  |
-| **офіціа́нт** | waiter | ім. | ч. |
-| **сма́чно** | delicious (adverb) | присл. |  |
-| **рестора́н** | restaurant | ім. | ч. |
 | **рекомендува́ти** | to recommend | дієсл. |  |
-| **чайові́** | tip, gratuity | ім. |  |
+| **чайові́** | tips (gratuity) | ім. |  |
 | **готі́вка** | cash | ім. | ж. |
 | **ка́ртка** | card | ім. | ж. |
-| **го́стре** | spicy (neuter adjective) | ім. | с. |
-| **вегетаріа́нський** | vegetarian (adjective) | прикм. |  |
-| **смачни́й** | tasty, delicious (adjective) | прикм. |  |
-| **ка́ва** | coffee | ім. | ж. |
+| **го́стре** | spicy (food) | ім. | с. |
+| **вегетаріа́нський** | vegetarian | прикм. |  |
+| **кафе́** | cafe | ім. | с. |
+| **меню́** | menu | ім. | с. |
+| **раху́нок** | bill (check) | ім. | ч. |
+| **замовля́ти** | to order | дієсл. |  |
+| **офіціа́нт** | waiter | ім. | ч. |
+| **сма́чно** | delicious | присл. |  |
 | **молоко́** | milk | ім. | с. |
-| **ті́стечко** | pastry, small cake | ім. | с. |
-| **хвили́нка** | moment (diminutive of хвилина) | ім. | ж. |
-| **гри́вня** | hryvnia (Ukrainian currency) | ім. | ж. |
-| **звича́йно** | of course | присл. |  |
-| **вода́** | water | ім. | ж. |
-| **сала́т** | salad | ім. | ч. |
+| **ті́стечко** | pastry (cake) | ім. | с. |
+| **ви́бачте** | excuse me | дієсл. |  |
+| **терміна́л** | payment terminal | ім. | ч. |
+| **опла́та** | payment | ім. | ж. |
+| **ре́шта** | change (money back) | ім. | ж. |
 | **пі́ца** | pizza | ім. | ж. |
-| **кав'я́рня** | coffee shop | ім. | ж. |
-| **ко́штува́ти** | to cost | дієсл. |  |
-| **ре́шта** | change (money) | ім. | ж. |
+| **вода́** | water | ім. | ж. |
+| **м'я́со** | meat | ім. | с. |
 | **цу́кор** | sugar | ім. | ч. |
 | **лимо́н** | lemon | ім. | ч. |
-| **ві́льно** | free, available (of a seat) | присл. |  |
-| **м'я́со** | meat | ім. | с. |
-| **ри́нок** | market | ім. |  |
-| **карто́пля** | potatoes | ім. | ж. |
-| **я́блука** | apples | ім. | с. |
+| **сала́т** | salad | ім. | ч. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Що ви рекомендуєте?** | What do you recommend? |
-| **Мені [acc], будь ласка.** | [food/drink] for me, please. |
-| **Можна [acc]?** | May I have [food/drink]? |
-| **Дайте, будь ласка, [acc].** | Give me [food/drink], please. |
-| **Я буду [acc].** | I'll have [food/drink]. |
-| **Рахунок, будь ласка.** | The bill, please. |
-| **Можна карткою?** | Can I pay by card? |
-| **Готівкою.** | In cash. |
-| **Залиште решту.** | Keep the change. |
-| **Це гостре?** | Is it spicy? |
-| **Це з м'ясом?** | Is it with meat? |
-| **А що це?** | What is this? |
-| **Є вегетаріанське меню?** | Is there a vegetarian menu? |
-| **Вільно? / Тут вільно?** | Is this seat free? |
-| **Можна меню?** | May I have the menu? |
-| **Ще одну каву, будь ласка.** | One more coffee, please. |
-| **Без цукру.** | Without sugar. |
-| **З лимоном.** | With lemon. |
-| **Все було дуже смачно!** | Everything was very delicious! |
+| **будь ласка** | please |
+| **Можна меню?** | Can I have the menu? |
+| **Карткою чи готівкою?** | By card or by cash? |
 | **Приходьте ще!** | Come again! |
+| **Можна мені...?** | Can I have...? |
+| **Я буду** | I will have (ordering) |
+| **Це з м'ясом?** | Is it with meat? |
+| **Вам тут чи з собою?** | For here or to go? |
+| **З собою** | To go (takeaway) |
+| **Тут вільно?** | Is this seat free? |
+| **Смачного!** | Bon appétit! |
+| **Все було дуже смачно!** | Everything was very delicious! |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "меню́", back: "menu", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "раху́нок", back: "bill", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замовля́ти", back: "to order", subtitle: "дієсл." }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "delicious (adverb)", subtitle: "присл." }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рекомендува́ти", back: "to recommend", subtitle: "дієсл." }, { front: "чайові́", back: "tip, gratuity", subtitle: "ім." }, { front: "готі́вка", back: "cash", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ртка", back: "card", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "го́стре", back: "spicy (neuter adjective)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вегетаріа́нський", back: "vegetarian (adjective)", subtitle: "прикм." }, { front: "смачни́й", back: "tasty, delicious (adjective)", subtitle: "прикм." }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ті́стечко", back: "pastry, small cake", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "хвили́нка", back: "moment (diminutive of хвилина)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гри́вня", back: "hryvnia (Ukrainian currency)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кав&#39;я́рня", back: "coffee shop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ко́штува́ти", back: "to cost", subtitle: "дієсл." }, { front: "ре́шта", back: "change (money)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ві́льно", back: "free, available (of a seat)", subtitle: "присл." }, { front: "м&#39;я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "карто́пля", back: "potatoes", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "я́блука", back: "apples", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "рекомендува́ти", back: "to recommend", subtitle: "дієсл." }, { front: "чайові́", back: "tips (gratuity)", subtitle: "ім." }, { front: "готі́вка", back: "cash", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ртка", back: "card", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "го́стре", back: "spicy (food)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вегетаріа́нський", back: "vegetarian", subtitle: "прикм." }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "меню́", back: "menu", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "раху́нок", back: "bill (check)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замовля́ти", back: "to order", subtitle: "дієсл." }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "delicious", subtitle: "присл." }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ті́стечко", back: "pastry (cake)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ви́бачте", back: "excuse me", subtitle: "дієсл." }, { front: "терміна́л", back: "payment terminal", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "опла́та", back: "payment", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ре́шта", back: "change (money back)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "м&#39;я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Ordering food and drinks": ["Мені каву, будь ласка.", "Я буду суп.", "Дайте, будь ласка, салат.", "Можна воду?", "Мені борщ і хліб, будь ласка.", "Ще одну каву, будь ласка."], "Paying and leaving": ["Рахунок, будь ласка.", "Можна карткою?", "Готівкою.", "Залиште решту.", "Все було дуже смачно!", "Дякуємо!"]}} instruction={"Розподіліть фрази за категоріями (Sort the phrases by category)"} />
+<TrueFalse client:only="react" items={[{"statement": "У кафе завжди автоматично приносять рахунок.", "isTrue": false, "explanation": "In a formal cafe, the waiter rarely brings the bill automatically so you do not feel rushed."}, {"statement": "«Заказати» — це правильне українське слово.", "isTrue": false, "explanation": "Always use the verb 'замовляти' to order. 'Заказати' is a Russian calque and is incorrect in modern standard Ukrainian."}, {"statement": "Слово «кафе» не змінює своє закінчення.", "isTrue": true, "explanation": "It is an indeclinable foreign word, so the ending never changes."}, {"statement": "В Україні рідко можна платити карткою.", "isTrue": false, "explanation": "Ukraine has one of the highest rates of contactless payment in Europe."}, {"statement": "Щоб попросити меню, можна сказати «Можна меню?».", "isTrue": true, "explanation": "This is the polite and standard way to ask for the menu."}, {"statement": "Чайові часто складають 10%.", "isTrue": true, "explanation": "Leaving a 10% tip is standard for good service."}]} instruction={"Правда чи ні? (True or False?)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "In Ukraine, the bill comes to your table automatically.", "isTrue": false, "explanation": "You always ask for the bill by saying 'Рахунок, будь ласка.' It does not come automatically."}, {"statement": "'Мені каву, будь ласка' uses the accusative form of кава.", "isTrue": true, "explanation": "Кава is a feminine noun ending in -а. In the accusative it changes to каву."}, {"statement": "A кав'ярня is the same kind of place as a ресторан.", "isTrue": false, "explanation": "A кав'ярня is a coffee shop focused on drinks and pastries. A ресторан is a formal restaurant."}, {"statement": "'Можна карткою?' means 'Can I pay by card?'", "isTrue": true, "explanation": "This is the standard phrase for asking whether card payment is accepted."}, {"statement": "Чайові (tips) are mandatory in Ukrainian cafes.", "isTrue": false, "explanation": "About 10% is common, but tips are never obligatory in Ukraine."}, {"statement": "Борщ keeps the same form in 'Мені борщ, будь ласка' because it is a masculine inanimate noun.", "isTrue": true, "explanation": "Masculine inanimate nouns do not change form in the accusative — they stay the same as the nominative."}, {"statement": "'Що ви рекомендуєте?' means 'How much does it cost?'", "isTrue": false, "explanation": "'Що ви рекомендуєте?' means 'What do you recommend?' 'Скільки коштує?' means 'How much does it cost?'"}]} instruction={"Правда чи ні? (True or false?)"} />
+<Quiz client:only="react" questions={[{"question": "Що замовляє Ростик?", "options": [{"text": "Борщ і хліб", "correct": true}, {"text": "Каву з молоком", "correct": false}, {"text": "Піцу і чай", "correct": false}, {"text": "Салат і суп", "correct": false}]}, {"question": "Що замовляє Іванка?", "options": [{"text": "Каву з молоком і тістечко", "correct": true}, {"text": "Борщ і хліб", "correct": false}, {"text": "Воду з лимоном", "correct": false}, {"text": "Суп і салат", "correct": false}]}, {"question": "Як правильно сказати українською «to order»?", "options": [{"text": "Замовляти", "correct": true}, {"text": "Заказати", "correct": false}, {"text": "Замовлять", "correct": false}, {"text": "Заказувати", "correct": false}]}, {"question": "Що означає питання «Тут вільно?»?", "options": [{"text": "Is this seat free?", "correct": true}, {"text": "Is the food free?", "correct": false}, {"text": "Is the cafe open?", "correct": false}, {"text": "Can I pay cash?", "correct": false}]}, {"question": "Що каже офіціант, коли приносить їжу?", "options": [{"text": "Смачного!", "correct": true}, {"text": "Будь ласка!", "correct": false}, {"text": "Дякую!", "correct": false}, {"text": "Дуже смачно!", "correct": false}]}, {"question": "Що найчастіше запитують при оплаті?", "options": [{"text": "Карткою чи готівкою?", "correct": true}, {"text": "Де гроші?", "correct": false}, {"text": "Ви маєте термінал?", "correct": false}, {"text": "З вас сто гривень.", "correct": false}]}]} instruction={"Оберіть правильну відповідь за текстом (Choose the correct answer based on the text)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Мені кава, будь ласка.", "errorWord": "кава", "correctForm": "каву", "options": ["каву", "кави", "кавою"], "explanation": "Feminine nouns ending in -а take -у in the accusative: кава → каву."}, {"sentence": "Мені вода, будь ласка.", "errorWord": "вода", "correctForm": "воду", "options": ["воду", "води", "водою"], "explanation": "Feminine nouns ending in -а take -у in the accusative: вода → воду."}, {"sentence": "Я буду піца.", "errorWord": "піца", "correctForm": "піцу", "options": ["піцу", "піці", "піцою"], "explanation": "Feminine nouns ending in -а take -у in the accusative: піца → піцу."}, {"sentence": "Можна карточкою?", "errorWord": "карточкою", "correctForm": "карткою", "options": ["карткою", "картою", "карточкою"], "explanation": "The correct Ukrainian word is картка. 'Карточка' is a Russianism."}, {"sentence": "Це гострий?", "errorWord": "гострий", "correctForm": "гостре", "options": ["гостре", "гострий", "гостра"], "explanation": "'Це гостре?' asks about a dish in a neutral/neuter context. Use the neuter adjective form гостре."}, {"sentence": "Рахунок, будьте ласка.", "errorWord": "будьте", "correctForm": "будь", "options": ["будь", "будьте", "будемо"], "explanation": "The fixed polite phrase is 'будь ласка', not 'будьте ласка'."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
+<GroupSort client:only="react" groups={{"Змінюють закінчення на -у (Change ending to -у)": ["кава", "вода", "піца", "картка"], "Не змінюються (Do not change)": ["чай", "борщ", "кафе", "меню", "тістечко", "рахунок"]}} instruction={"Як змінюються ці слова у знахідному відмінку? (How do these words change in the Accusative case?)"} />
 
-<Translate client:only="react" questions={[{"source": "The bill, please.", "options": [{"text": "Рахунок, будь ласка.", "correct": true}, {"text": "Меню, будь ласка.", "correct": false}, {"text": "Чайові, будь ласка.", "correct": false}]}, {"source": "Can I pay by card?", "options": [{"text": "Можна карткою?", "correct": true}, {"text": "Можна готівкою?", "correct": false}, {"text": "Скільки коштує?", "correct": false}]}, {"source": "What do you recommend?", "options": [{"text": "Що ви рекомендуєте?", "correct": true}, {"text": "Скільки коштує?", "correct": false}, {"text": "Це гостре?", "correct": false}]}, {"source": "Is this seat free?", "options": [{"text": "Тут вільно?", "correct": true}, {"text": "Тут смачно?", "correct": false}, {"text": "Це з м'ясом?", "correct": false}]}, {"source": "Everything was very delicious!", "options": [{"text": "Все було дуже смачно!", "correct": true}, {"text": "Все було дуже гостре!", "correct": false}, {"text": "Дякуємо, приходьте ще!", "correct": false}]}, {"source": "One more coffee, please.", "options": [{"text": "Ще одну каву, будь ласка.", "correct": true}, {"text": "Мені каву, будь ласка.", "correct": false}, {"text": "Дайте, будь ласка, чай.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Мені вода, будь ласка.", "errorWord": "вода", "correctForm": "воду", "options": ["воду", "воді", "водою"], "explanation": "Use the Accusative case for the object you are ordering (вода -> воду)."}, {"sentence": "Я буду піца і чай.", "errorWord": "піца", "correctForm": "піцу", "options": ["піцу", "піці", "піцою"], "explanation": "Піца is a feminine noun and changes to піцу in the Accusative case."}, {"sentence": "Я хочу кава з молоком.", "errorWord": "кава", "correctForm": "каву", "options": ["каву", "каві", "кавою"], "explanation": "Use the Accusative case for the direct object you want (кава -> каву)."}, {"sentence": "Я заказую піцу.", "errorWord": "заказую", "correctForm": "замовляю", "options": ["замовляю", "рекомендую", "читаю"], "explanation": "Use the correct Ukrainian verb 'замовляти' instead of the Russian calque 'заказати'."}, {"sentence": "Ми в ресторан.", "errorWord": "ресторан", "correctForm": "ресторані", "options": ["ресторані", "ресторану", "рестораном"], "explanation": "Location requires the Locative case (в ресторані)."}, {"sentence": "Можна мені рахунку, будь ласка?", "errorWord": "рахунку", "correctForm": "рахунок", "options": ["рахунок", "рахунка", "рахунком"], "explanation": "Рахунок is an inanimate masculine noun, so its Accusative form is the same as the Nominative (рахунок)."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<Quiz client:only="react" questions={[{"question": "Which form is correct in 'Мені ___, будь ласка'?", "options": [{"text": "піцу", "correct": true}, {"text": "піца", "correct": false}, {"text": "піці", "correct": false}, {"text": "піцою", "correct": false}]}, {"question": "Which Ukrainian word means 'tip/gratuity'?", "options": [{"text": "чайові", "correct": true}, {"text": "рахунок", "correct": false}, {"text": "готівка", "correct": false}, {"text": "картка", "correct": false}]}, {"question": "Which phrase means 'Without sugar'?", "options": [{"text": "Без цукру.", "correct": true}, {"text": "З лимоном.", "correct": false}, {"text": "Залиште решту.", "correct": false}, {"text": "Готівкою.", "correct": false}]}, {"question": "Which type of place is most formal?", "options": [{"text": "ресторан", "correct": true}, {"text": "кафе", "correct": false}, {"text": "кав'ярня", "correct": false}]}, {"question": "Which phrase asks to keep the change?", "options": [{"text": "Залиште решту.", "correct": true}, {"text": "Без цукру.", "correct": false}, {"text": "Можна карткою?", "correct": false}]}, {"question": "Which word means 'waiter' in Ukrainian?", "options": [{"text": "офіціант", "correct": true}, {"text": "рахунок", "correct": false}, {"text": "замовляти", "correct": false}, {"text": "меню", "correct": false}]}, {"question": "Masculine inanimate nouns in the accusative case...", "options": [{"text": "keep the same form as nominative", "correct": true}, {"text": "add -а ending", "correct": false}, {"text": "add -у ending", "correct": false}, {"text": "add -ові ending", "correct": false}]}, {"question": "Which phrase means 'Is there a vegetarian menu?'", "options": [{"text": "Є вегетаріанське меню?", "correct": true}, {"text": "Це гостре?", "correct": false}, {"text": "Це з м'ясом?", "correct": false}, {"text": "Скільки коштує?", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+<Quiz client:only="react" questions={[{"question": "Я хочу **воду**.", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "**Вода** дуже смачна.", "options": [{"text": "Nominative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "Мені **піцу**, будь ласка.", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "**Піца** тут дуже смачна.", "options": [{"text": "Nominative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "Я замовляю **борщ**.", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "Я буду **каву**.", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}]} instruction={"Який це відмінок? (Which case is this?)"} />
 
+<Order client:only="react" items={["— Добрий день! Можна меню?", "— Добрий день. Ось, будь ласка.", "— Що ви рекомендуєте?", "— Борщ дуже смачний.", "— Добре, я буду борщ і хліб.", "— А що будете пити?", "— Каву з молоком, будь ласка."]} correct_order={[0, 1, 2, 3, 4, 5, 6]} instruction={"Розставте репліки діалогу в правильному порядку (Put the dialogue lines in the correct order)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -278,8 +198,14 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 
 - [ULP Season 1, Episodes 11-12](https://www.ukrainianlessons.com/episode11/)
   _Ordering at a cafe, restaurant vocabulary._
-- State Standard 2024, Topic 3 (ресторан)
-  _Communicative situation: ordering food and drinks._
+
+## Підручники (Textbooks)
+
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=87), стор. 87
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=99), стор. 99
+- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 171
+- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=248), стор. 248
+- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 20
 
 **Статті — Articles**
 
@@ -292,12 +218,6 @@ In the next module, you'll take your accusative skills from the **кафе** to 
 
 - [Menu in the coffee shop in the Ukrainian language](https://www.youtube.com/watch?v=wUH7sf5ccP8) (Speak Ukrainian)
 - [Ordering in a Ukrainian Cafe](https://www.youtube.com/watch?v=FjI1V3I-9_w) (Ukrainian Lessons)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
-- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
 
 </TabItem>
 </Tabs>

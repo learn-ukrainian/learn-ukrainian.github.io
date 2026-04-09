@@ -1,4 +1,40 @@
 vocabulary:
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вивча́ти
+  translation: to study/learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: малюва́ти
+  translation: to draw
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гра́ти
+  translation: to play
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: чита́ти
   translation: to read
   expression: false
@@ -35,41 +71,17 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: вече́ря
-  translation: dinner
+- word: навча́тися
+  translation: to study
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: му́зика
-  translation: music
+- word: о́фіс
+  translation: office
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: роби́ти
-  translation: to do
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вивча́ти
-  translation: to study, to learn
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: малюва́ти
-  translation: to draw
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: гра́ти
-  translation: to play
-  expression: false
-  pos: дієсл.
-  gender: ''
   verified: true
 - word: кни́га
   translation: book
@@ -83,8 +95,14 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: о́фіс
-  translation: office
+- word: пра́вда
+  translation: truth
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ра́зом
+  translation: together
   expression: false
   pos: ім.
   gender: ч.
@@ -95,50 +113,14 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: студе́нт
-  translation: student (male)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: навча́тися
-  translation: to study (be enrolled as a student)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: за́вжди́
-  translation: always
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: бага́то
-  translation: many, a lot
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: нови́й
-  translation: new
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: смачни́й
-  translation: tasty, delicious
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: уве́чері
-  translation: in the evening
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
 - word: Що ти робиш?
   translation: What are you doing?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ти працюєш?
+  translation: Where do you work?
   expression: true
   pos: ''
   gender: ''

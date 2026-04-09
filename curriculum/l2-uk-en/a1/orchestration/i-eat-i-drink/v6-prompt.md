@@ -1,33 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Підсумок — Summary'
-- FIX: Too short: 995 words (target: 1200, minimum: 1020)
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -60,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -294,405 +276,315 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (14/14):**
-- їсти → verb ✅
-- пити → verb ✅
-- їм → їсти (verb) ✅ *(note: also matches вони/noun — context disambiguates)*
-- п'ю → пити ✅
-- каву → кава (noun) ✅
-- воду → вода (noun) ✅
-- рибу → риба (noun) ✅
-- кашу → каша (noun) ✅
-- картоплю → картопля (noun) ✅
-- сметану → сметана (noun) ✅
-- їсть → їсти ✅
-- п'є → пити ✅
-- їдять → їсти ✅
-- п'ють → пити ✅
-
-**Not found:** none — all 14 forms are in VESUM.
-
----
-
-## Textbook Excerpts
-
-### Section: Їсти і пити — conjugation table
-> *"Форми теперішнього часу від дієслова їсти мають іншу систему закінчень: їм, їси, їсть, їмо, їсте, їдять."*
-> Source: **Заболотний, Grade 7** (Зверніть увагу! box)
-
-> Full paradigm table confirmed:
-> | Особа | Однина | Множина |
-> |-------|--------|---------|
-> | 1-ша | їм | їмо |
-> | 2-га | їси | їсте |
-> | 3-тя | їсть | їдять |
-> Source: **Litvinova, Grade 7, §10** (Tier 1); **Avramenko, Grade 7, §33** (Tier 1) — both confirm the same paradigm.
-
-> *"Дієслова дати, їсти та похідні від них… належать до окремого типу дієвідмінювання."*
-> Source: **Litvinova, Grade 7** — confirms їсти is NOT Group I or II.
-
-### Section: Діалоги — breakfast/lunch conversations
-> *"Привчіть себе їсти не раніше, ніж через пів години після пробудження… Потім займіться звичними справами: прийміть душ, одягніться… Ось тепер – снідайте."*
-> Source: **Заболотний, Grade 5, p.150** — natural breakfast context for dialogue framing.
-
-> *"Кони попили (воду, води). Діти поїли (кашу, каші)."*
-> Source: **Заболотний, Grade 6** — direct accusative vs. genitive contrast with їсти/пити and feminine nouns.
-
-### Section: Знахідний відмінок — іменник
-> *"Іменник у формі знахідного відмінка означає предмет, на який спрямована дія, і в реченні виступає додатком."*
-> Source: **Заболотний, Grade 6, §** (Tier 2)
-
-> *"Прямий додаток — знахідний відмінок без прийменника: Як прати й сушити джинси?"*
-> Source: **Avramenko, Grade 8, §34–35** (Tier 1) — confirms the що? question triggers accusative without preposition.
-
-> Grade 4 textbook models: *"Початкова форма (що? лава). … Відмінок (знахідний)."* — shows how Ukrainian schools introduce accusative from Grade 4.
-> Source: **Ponomarova, Grade 4** (Tier 2)
-
-### Section: Підсумок / self-check
-> *"Спишіть сполучення, ставлячи іменники в потрібному відмінку… Кони попили (воду, води). Діти поїли (кашу, каші)."*
-> Source: **Заболотний, Grade 6** — ideal summary/self-check template.
-
----
+- Confirmed: їсти, пити, їм, п'ю, каву, воду, рибу, кашу, картоплю, сметану, їсть, п'є, їдять, п'ють.
+- Not found: None.
 
 ## Grammar Rules
-
-- **їсти conjugation (special class):** Правопис §§ on orthography do not cover verb paradigms (morphology is in grammar books, not правопис). **Authoritative source is textbooks:** Avramenko Grade 7 §33 and Litvinova Grade 7 §10 both give the full paradigm: їм / їси / їсть / їмо / їсте / їдять.
-
-- **⚠️ CRITICAL — 2nd person singular:** The correct form is **їси** (not *їш*). Антоненко-Давидович warns explicitly: *"ти даси, їси, відповіси, розповіси — а не даш, їш, відповіш, як то часом, надто в західних областях України, кажуть."* The plan correctly lists **ти їси** ✅ — but the dialogue section does NOT include a ти їси example. Recommend including at least one ти-form to pre-empt the common western Ukrainian error.
-
-- **Accusative inanimate — feminine:** правопис does not govern this (it is morphology). Textbook rule (Заболотний Grade 6, Litvinova Grade 6): *feminine nouns ending in -а → -у; ending in -я → -ю* in accusative inanimate. **The plan's formulation matches exactly.** Masculine and neuter inanimate = no change (= nominative). ✅
-
-- **Accusative vs. Partitive Genitive — potential trap:** Avramenko Grade 8 notes: *"Може, ми вип'ємо кави?"* — the genitive here marks a partial amount ("some coffee"), while accusative marks the whole object. The plan keeps it simple by using only accusative (Я п'ю воду/каву) which is correct. **Do NOT introduce the partitive distinction at A1** — it is not in scope.
-
----
+- Conjugation of їсти (irregular): Правопис §101 (Дієслова на -сти, -стися) and textbook §33 — я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять.
+- Conjugation of пити (Group I): я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють.
+- Accusative Case (Знахідний відмінок — неживе): Правопис §92 (1-ша відміна) — Feminine -а → -у (кава → каву, вода → воду, риба → рибу), -я → -ю (картопля → картоплю). Masculine/Neuter inanimate remain unchanged (хліб → хліб, молоко → молоко).
 
 ## Calque Warnings
-
-- **замовляй!** (in Dialogue 2): ✅ **NATURAL** — Антоненко-Давидович §142 confirms: *замовити/замовляти* = "to order (food, goods)" is correct Ukrainian. The Russianism is *заказати* (= "to order" in the Russian sense) — which is WRONG and means "to forbid" in Ukrainian. The dialogue correctly uses **замовляй** ✅.
-
-- **їсти + accusative:** ✅ Natural. No calque. Textbooks confirm *їсти що? → знахідний* as standard Ukrainian.
-
-- **хліб з маслом** (Dialogue 1): ✅ **NATURAL** — Антоненко-Давидович uses *хліб* examples naturally throughout; no calque flag. The construction *X з Y* (bread with butter) is standard Ukrainian.
-
----
+- їсти/пити: OK — confirmed as standard Ukrainian verbs in СУМ-11 and textbooks (no Russianisms found for these contexts).
+- приймати їжу: Warning — better to use "їсти" or "споживати їжу" (though not found as a specific calque in style guide, "їсти" is the natural A1 choice).
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| їсти | **A1** | ✅ On target |
-| пити | **A1** | ✅ On target |
-| кава | **A1** | ✅ On target |
-| вода | **A1** | ✅ On target |
-| картопля | **A1** | ✅ On target |
-| риба | **A1** | ✅ On target |
-| молоко | **A1** | ✅ On target |
-| сметана | **A1** | ✅ On target |
-| каша | **A2** | ⚠️ One level above — see note below |
-
-**Note on каша (A2):** PULS classifies каша as A2, but it is a foundational Ukrainian food item and appears in Grade 4-5 textbooks naturally. It is contextually appropriate for A1.6 (food module) and serves the accusative pattern (каша → кашу) perfectly. **Recommend keeping it** — flag it in the словнік tab with a note that it's a culturally essential word introduced slightly early.
-
----
-
-## Summary for Writer
-
-✅ **All 14 vocabulary forms verified in VESUM** — safe to use  
-✅ **Conjugation paradigm confirmed** by two independent Tier 1 Grade 7 textbooks (Litvinova, Avramenko)  
-✅ **замовляй is natural Ukrainian** — not a calque  
-✅ **All vocabulary is A1 level** (except каша = A2 — acceptable exception for food module)  
-⚠️ **Include at least one ти їси example** in dialogues — preempts the common *їш* error flagged by Антоненко-Давидович  
-⚠️ **Do NOT introduce partitive genitive** (вип'ємо кави) — accusative only at A1
+- їсти: A1 — OK (found in Grade 1 Bukvar).
+- пити: A1 — OK (found in Grade 1 Bukvar).
+- кава: A1 — OK (found in Grade 5-9 textbooks, high frequency).
+- вода: A1 — OK (found in Grade 1 Bukvar).
+- риба: A1 — OK (found in Grade 1 Bukvar).
+- картопля: A1 — OK (found in Grade 4-5 textbooks).
+- каша: A1 — OK (found in Grade 1-4 textbooks).
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: I Eat, I Drink
-**Module:** i-eat-i-drink | **Phase:** A1.6 [Food and Shopping]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: I Eat, I Drink
+**Module:** i-eat-i-drink | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/i-eat-i-drink.md
+
+# Педагогіка A1: I Eat I Drink
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The core methodological principle for introducing "I eat, I drink" at the A1 level is to move from simple identification to active use through the introduction of the Accusative case. Ukrainian pedagogy emphasizes a structured, cyclical approach where vocabulary is introduced in thematic blocks and immediately put into grammatical practice.
+
+1.  **Thematic Vocabulary Blocks:** Native-speaker textbooks introduce food and drink vocabulary in clear, logical groups. The writer should follow this model. For example, a Grade 5 textbook for Hungarian speakers groups words by question (`Що?`, `Що робити?`) and then by category: `Страви` (Dishes), `Продукти` (Products), `Фрукти` (Fruits), `Овочі` (Vegetables), and `Смак` (Taste) (Source `5-klas-ukrmova-uhor-2022-1_s0022`). This method helps learners build a mental map of the vocabulary domain.
+
+2.  **Verb-Noun Pairing:** The curriculum should immediately link a new noun to its relevant verb. For instance, when teaching `сніданок` (breakfast), also teach the verb `снідати` (to have breakfast). Similarly, pair `обід` with `обідати` and `вечеря` with `вечеряти` (Source `5-klas-ukrmova-uhor-2022-1_s0022`, Source `ext-ulp_youtube-255`). This reinforces the connection and moves the learner from passive vocabulary to active use.
+
+3.  **Grammar in Context (The Accusative Case):** The concept of a direct object (`знахідний відмінок`) is central to this topic. It should not be taught as a dry grammar table. Instead, introduce it through high-frequency sentence patterns like "Я їм...", "Я п'ю...", "Я хочу...". The learner first hears and mimics the pattern, for example, `Я хочу воду` (Source `ext-ulp_youtube-119`). Only after they are comfortable with the pattern should the rule (feminine `-а` → `-у`) be explained. This "pattern before rule" approach is crucial for internalizing the case system naturally. Textbooks for native speakers demonstrate this by showing contrasting sentences like «Несе Галя воду» where `воду` is the object (Source `5-klas-ukrmova-litvinova-2022_s0219`).
+
+4.  **Interactive Practice through Q&A:** Learning is solidified through simple, repetitive questions. For example: `Що ти їси?` (What are you eating?), `Що ти п'єш?` (What are you drinking?), `Яку воду ти вживаєш?` (What water do you consume?) (Source `3-klas-ukrainska-mova-ponomarova-2020-1_s0008`). This encourages active recall and production from the very beginning.
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction must be carefully scaffolded to prevent cognitive overload. Follow this sequence strictly.
+
+1.  **Step 1: Core Verbs & Pronouns:** Introduce the two most critical verbs: `їсти` (to eat) and `пити` (to drink). Teach only the 1st person singular forms: **`Я їм`** (I eat) and **`Я п'ю`** (I drink). (Source `6-klas-ukrmova-betsa-2023_s0206`, Source `ext-ulp_youtube-255`).
+
+2.  **Step 2: Basic Nouns (Nominative Case):** Introduce 5-7 essential, high-frequency food and drink nouns in their dictionary (nominative) form. Focus on items that do not require complex explanations.
+    *   `вода` (water), `чай` (tea), `кава` (coffee), `сік` (juice)
+    *   `хліб` (bread), `сир` (cheese), `суп` (soup)
+
+3.  **Step 3: The `це` Construction:** Teach the first complete sentence structure using the verb "to be" (which is omitted in the present tense).
+    *   `Це вода.` (This is water.)
+    *   `Це чай.` (This is tea.)
+
+4.  **Step 4: Introducing the Accusative Case (Direct Object):** This is the most critical step. Use the high-frequency verb `хотіти` (to want) in the `Я хочу` form.
+    *   **Feminine nouns:** Explicitly show the change `а` → `у`. This is the first and most important case change for learners to master for this topic.
+        *   `вода` → `Я хочу **воду**.`
+        *   `кава` → `Я хочу **каву**.`
+        (Source `ext-ulp_youtube-119`)
+    *   **Masculine/Neuter nouns:** Explain that for inanimate objects, the form *does not change*. This is a point of relief for the learner.
+        *   `сік` → `Я хочу **сік**.`
+        *   `чай` → `Я хочу **чай**.`
+        *   `молоко` → `Я хочу **молоко**.`
+        (Source `ext-ulp_youtube-119`)
+
+5.  **Step 5: Active Use with `їм` and `п'ю`:** Now, circle back to the first verbs and apply the new Accusative case knowledge.
+    *   `Я п'ю **воду**.` `Я п'ю **каву**.` `Я п'ю **сік**.`
+    *   `Я їм **хліб**.` `Я їм **сир**.` `Я їм **суп**.`
+
+6.  **Step 6: Expanding Vocabulary:** Once the grammatical pattern is established, introduce more food and meal-related vocabulary, including meals of the day.
+    *   Nouns: `сніданок` (breakfast), `обід` (lunch), `вечеря` (dinner), `риба` (fish), `м'ясо` (meat), `салат` (salad), `борщ` (borscht).
+    *   Verbs: `снідати` (to have breakfast), `обідати` (to have lunch), `вечеряти` (to have dinner).
+    (Source `5-klas-ukrmova-uhor-2022-1_s0022`)
+
+## Типові помилки L2 (Common L2 Errors)
+
+Address these errors proactively in the lesson design.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я хочу вода.` | `Я хочу **воду**.` | **Grammar Transfer:** English has no grammatical case for direct objects, so learners default to using the nominative (dictionary) form. The module must provide extensive drills on changing feminine nouns ending in `-а` to `-у` after verbs like `хочу`, `їм`, `п'ю`. (Source `ext-ulp_youtube-119`) |
+| `Я їсть хліб.` | `Я **їм** хліб.` | **Verb Conjugation:** Learners often confuse the 1st person (`я їм`) and 3rd person (`він/вона їсть`) forms. These must be taught as distinct pairs. The verb `їсти` is irregular and needs special attention. (Source `6-klas-ukrmova-betsa-2023_s0206`) |
+| `Вона п'ю каву.` | `Вона **п'є** каву.` | **Verb Conjugation:** Similar to `їсти`, the verb `пити` (to drink) has a distinct conjugation that must be drilled. `Я п'ю` vs. `Він/Вона п'є`. (Source `ext-ulp_youtube-255`) |
+| `Я п'ю борщ.` | `Я **їм** борщ.` | **Semantic Difference:** In English, soup is "eaten". While `пити бульйон` (to drink broth) is possible, thick soups like `борщ` are almost always paired with the verb `їсти`. (Source `ext-ulp_youtube-80`: "...борщ в Україні їдять...") |
+| `Я люблю їсти...` (pronounced `істи`) | `Я люблю **їсти**...` (pronounced `йісти`) | **Phonetic Interference:** English speakers struggle with the letter `ї`, often reducing it to `і`. It must be explicitly taught that `ї` is *always* pronounced as two sounds: `[йі]`, as in "Yee-sty". (Source `1-klas-bukvar-bolshakova-2018-1_s0072`) |
+| `Мені, будь ласка, піца.` | `Мені, будь ласка, **піцу**.` | **Ordering Phrases:** When ordering, the item is the direct object, even if the verb is implied. This is a very common context for A1 learners. The structure `Мені, будь ласка, [noun in Accusative]` must be drilled. (Source `ext-ulp_youtube-119`, `ext-ulp_youtube-117`) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This section is non-negotiable. The curriculum must teach Ukrainian on its own terms, completely independent of Russian.
+
+-   **No Russian Phonetic Analogues:** Never teach Ukrainian sounds by comparing them to Russian. For example, do not describe Ukrainian `и` as "like Russian ы" or `і` as "like Russian и". Learners must build a new, distinct phonetic system for Ukrainian from zero.
+-   **Vocabulary Purity:** Strictly use Ukrainian vocabulary. The word for coffee is **`кава`**. The word `кофе` is a Russianism and must be actively corrected. The word for sugar is **`цукор`**. The word `сахар` is a Russianism. Use the word lists from Ukrainian textbooks as the source of truth (e.g., Source `5-klas-ukrmova-uhor-2022-1_s0022`).
+-   **`Горілка` vs. Vodka:** When introducing alcoholic beverages (if at all at A1), present `горілка` as a traditional Ukrainian national drink in its own right, not merely as the "Ukrainian word for vodka." (Source `ext-ulp_youtube-123`).
+-   **Cultural Context:** Food idioms and proverbs are deeply tied to culture. While A1 learners won't master them, they should be taught that phrases like `заварити кашу` (to start trouble) or `їсти чужий хліб` (to be dependent on someone) are uniquely Ukrainian cultural expressions and not loan translations. (Source `5-klas-ukrmova-golub-2022_s0059`). The goal is to build respect for Ukrainian as a complete and independent linguistic and cultural system from day one.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for an A1 learner. Stick to these words and avoid introducing more complex items.
+
+**Іменники (Nouns)**
+*   ★★★ (Essential): `вода`, `хліб`, `чай`, `кава`, `сік`, `молоко`, `суп`, `борщ`
+*   ★★ (Useful): `сніданок`, `обід`, `вечеря`, `сир`, `м'ясо`, `риба`, `салат`, `цукор`, `сіль`
+*   ★ (Can wait): `каша`, `картопля`, `яблуко`, `бутерброд`, `пиріг`
+
+**Дієслова (Verbs)**
+*   ★★★ (Essential): `їсти` (to eat), `пити` (to drink), `хотіти` (to want)
+*   ★★ (Useful): `снідати` (to have breakfast), `обідати` (to have lunch), `вечеряти` (to have dinner)
+*   ★ (Can wait): `готувати` (to cook), `замовляти` (to order)
+
+**Прикметники (Adjectives)**
+*   ★★★ (Essential): `смачний` (tasty)
+*   ★★ (Useful): `солодкий` (sweet), `гарячий` (hot), `холодний` (cold)
+*   ★ (Can wait): `солоний` (salty), `кислий` (sour)
+
+(Vocabulary sourced and cross-referenced from `5-klas-ukrmova-uhor-2022-1_s0022`, `ext-ulp_youtube-255`, `ext-ulp_youtube-123`)
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities directly on these proven pedagogical patterns from Ukrainian source materials.
+
+1.  **Q&A Practice (Source `3-klas-ukrainska-mova-ponomarova-2020-1_s0008`):**
+    *   **Prompt:** Ask and answer simple questions about what you drink.
+    *   **Example:**
+        *   `— Яку воду ти вживаєш?` (What water do you consume?)
+        *   `— Я п'ю мінеральну воду.` (I drink mineral water.)
+        *   `— Що ти п'єш на сніданок?` (What do you drink for breakfast?)
+        *   `— Я п'ю чай без цукру.` (I drink tea without sugar.) (Source `ext-ulp_youtube-255`)
+
+2.  **Dialogue for Ordering (Source `ext-ulp_youtube-117`):**
+    *   **Prompt:** Complete the dialogue to order food at a restaurant. Use the Accusative case.
+    *   **Example:**
+        *   `— Ви готові зробити замовлення?` (Are you ready to make an order?)
+        *   `— Так, мені, будь ласка, **пасту** з овочами і **негазовану воду**.` (Yes, pasta with vegetables and non-carbonated water for me, please.)
+
+3.  **Sentence Transformation (Implicit in Source `5-klas-ukrmova-litvinova-2022_s0219`):**
+    *   **Prompt:** Create a sentence using "Я їм" or "Я п'ю". Remember to change the noun if necessary.
+    *   **Example:**
+        *   Noun: `кава` (f.) → Sentence: `Я п'ю **каву**.`
+        *   Noun: `борщ` (m.) → Sentence: `Я їм **борщ**.`
+        *   Noun: `риба` (f.) → Sentence: `Я їм **рибу**.`
+
+4.  **Forming Questions (Source `2-klas-ukrmova-bolshakova-2019-2_s0076`):**
+    *   **Prompt:** Read the statement and write a question for it.
+    *   **Statement:** `Білий ведмідь їсть рибу.` (The polar bear eats fish.)
+    *   **Possible Questions:**
+        *   `**Хто** їсть рибу?` (Who eats fish?)
+        *   `**Що** їсть білий ведмідь?` (What does the polar bear eat?)
+
+## Пов'язані статті (Related Articles)
+-   [Pedagogy A1: Verbs of Being and Wanting](./pedagogy/a1/verbs-of-being-wanting)
+-   [Grammar: The Accusative Case (Direct Object)](./grammar/cases/accusative) (See also external sources `ext-article-0` through `ext-video-5`)
+-   [Phonetics: The Letter Ї](./phonetics/letter-yi)
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/food-and-drink.md
 
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 49
-> **Score:** 0.25
->
-> 49
->  § 19.  Омоніми
-> 1.	Прочитайте діалог і виконайте завдання. 
-> — Алло! Привіт, Олю! Що робиш?
-> — Обідаю. 
-> — А що ти їси? 
-> — Лисички.
-> — А хіба цих тварин їдять?! 
-> — Відколи гриби стали тваринами? 
-> — Нічого не розумію…
-> А. Через яке слово виникло непорозуміння між подругами? 
-> Б. Які значення має це слово?
-> Омоніми — це слова, однакові за звучанням і написанням, але різні за 
-> лексичним значенням: кран — трубка із затвором для виливання ріди-
-> ни і кран — механізм для піднімання й переміщення вантажів. 
-> Здебільшого омоніми утворюються внаслідок випадкового звукового 
-> збігу власне українського й іншомовного слів, наприклад: лава — різ-
-> новид меблів і лава (з іт.) — розплавлена вулканічна маса. 
-> 2.	Прочитайте речення та виконайте завдання. 
-> 1.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 236
-> **Score:** 0.33
->
-> 236
-> Відомості із синтаксису й пунктуації. Складне речення
-> 4. Яка інформація з  тексту була для вас новою?
-> 5. Пригадайте, які хімічні досліди на кухні (з перерахованих у тексті чи інші) 
-> проводили ви . Розкажіть про це друзям, використовуючи складні речення .
-> Вправа 380
-> 1. Прочитайте рекомендації щодо здорового сніданку .
-> СМУЗІ
-> z
-> z яблуко — 1 шт.,
-> z
-> z банан — 1 шт.,
-> z
-> z склянка води,
-> z
-> z кілька заморожених ягід 
-> (на ваш смак),
-> z
-> z ложка лляного насіння.
-> ОМЛЕТ З ОВОЧАМИ 
-> ТА ЗЕЛЕННЮ
-> z
-> z яйця — 1—2 шт.,
-> z
-> z молоко — 2 ст. л.,
-> z
-> z овочі на вибір — 50 г,
-> z
-> z сіль, перець за смаком, 
-> зелень.
-> СИРНИКИ
-> z
-> z кисломолочний сир 5—9 % 
-> жирності — 200 г,
-> z
-> z яйце — 1 шт.,
-> z
-> z манка або борошно — 
-> 2 ст. л.,
-> z
-> z ванільний цукор 
-> (за бажанням) — 1 ч. л.
-> 2.
-
-> **Source:** , Grade 4
-> **Section:** Сторінка 53
-> **Score:** 0.25
->
-> « а
-> Зміню вання ім енників за числами
-> 109. Прочитайте вірш Надії Красоткіної.
-> Думала Оленкатак: «Щоб здоров’я мати,
-> Треба їсти їй буряк, пити чай із м ’яти, 
-> їсти супчики й борщі, вареники з сиром,
-> І котлетки, й вергунці, але знати міру».
-> •  Випишіть іменники, які вжиті в множині.
-> І р  •  Поясніть правопис виділених іменників. Зробіть їх звуко-бук- 
-> вений аналіз.
-> 110. Прочитайте текст, розкриваючи дужки.
-> Україна завжди славилася сво­
-> єю кухнею. її (страва) знані дале­
-> ко за межами країни. Усім відомі 
-> українські (борщ), (галушка), (ва­
-> реник), (корж), (калач), (гречаник).
-> У багатьох стравах вдало сполу­
-> чаються овочі та м ’ясо. Смачні 
-> (голубець) з м’ясом, (перець), фаршировані рисом і 
-> м ’ясом.
-
-## Їсти і пити (To Eat and To Drink)
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 232
-> **Score:** 0.50
->
-> 232
-> Відомості із синтаксису й пунктуації. Складне речення
-> Складне речення
-> Вправа 374
-> 1. Прочитайте речення .
-> Іван добре їсть. Іван добре 
-> працює.
-> Хто добре їсть, той добре 
-> працює (Нар. тв.).
-> Наше здоров’я залежить 
-> від продуктів. Ми щодня спо-
-> живаємо продукти.
-> Наше здоров’я залежить 
-> від продуктів, які ми спожи-
-> ваємо щодня.
-> 2. Перепишіть і підкресліть у реченнях граматичні основи (підмети й при-
-> судки) .
-> 3. Зробіть висновки, чим відрізняються речення за  будовою і  за  змістом .
-> За будовою речення поділяємо на  прості та  складні .
-> Простими називаємо речення, що мають одну граматичну 
->  основу (дивіться приклади з  лівої колонки) .
-> Складними називаємо речення, що мають дві граматичні ос-
-> нови або більше (дивіться приклади з  правої колонки) .
-
-## Знахідний відмінок — неживе (Accusative Inanimate)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 185
-> **Score:** 0.25
->
-> 185
-> 185
-> § 94.  Відмінювання  займен­ників.  Приставний  н  у  формах  особових займенників
-> 4.	 Прочитайте речення. Визначте відмінок кожного займенника (усно). 
-> 1. Чистим зерном сійте поле, то вродить хліб, як море, а нечистим посієте — 
-> собі шкоди надієте. 2. Який порядок у себе заведеш, таке й життя проведеш 
-> (Нар. тв.).  
-> Відмінювання питальних і відносних займенників
-> Займенники який, чий, котрий змінюємо за родами, числами й від­
-> мінками; займенники хто, що, скільки — тільки за відмінками.
-> 5.	 «Лінгвістичне спостереження». Визначте закінчення у всіх формах за-
-> йменників чий, чия, чиє, чиї (усно).
-> Однина
-> Множина
-> Н. в.
-> хто
-> що
-> чий
-> чиє
-> чия
-> чиї
-> Р. в.
-> кого
-> чого
-> чийого
-> чийого
-> чиєї
-> чиїх
-> Д. в. 
-> кому
-> чому
-> чиєму
-> чиєму
-> чиїй
-> чиїм
-> Зн. в. кого
-> що
-> чий / чийого чиє
-> чию
-> чиї / чиїх
-> Ор. в.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 57
-> **Score:** 0.50
->
-> 57
-> 57
-> § 30.  Похідні  і  непохідні  слова.  Твірне  слово
-> 4.	 Виконайте завдання в тестовій формі.
-> 1.	 Непохідним є слово
-> А	 чайник
-> Б	 лампа
-> В	 несмак 
-> Г	 дубок
-> 2.	 Твірне й похідне від нього слово записано в рядку
-> А	 кит → Китай 
-> Б	 кава → кавалер 
-> В	 мис → миска 
-> Г	 сад → садок 
-> 3.	 Твірні й похідні від них слова записано в усіх рядках, ОКРІМ
-> А	 сир → сироп 
-> Б	 читач → читачка
-> В	 брат → братство 
-> Г	 жовтий → жовтенький 
-> 5.	 Прочитайте текст і виконайте завдання.
-> Не було ще такого літнього ранку, щоб дід Арсен усидів удома. Де там! 
-> Як тільки над обрієм зажевріє велика досвітня зоря, уже Арсен на ногах.
-
-## Підсумок — Summary
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 14
-> **Score:** 0.50
->
-> 14
-> ТЕКСТ. РЕЧЕННЯ. СЛОВО (ПОВТОРЕННЯ)
-> 2. Прочитайте речення та виконайте завдання. У віддаленій перспективі в таких пернатих можуть сформуватися так 
-> звані «крила ангела», що стирчать у горизонтальній площині, а не обтічно 
-> лежать на тілі. Більшість птахів із цією вадою не вміють літати. Хліб — шкідлива їжа для диких водоплавних птахів, що не має ніякої 
-> поживної цінності, окрім калорій. Постійне підгодовування хлібом зму-
-> шує їх покладатися на людину як на джерело корму, а не на свій природ-
-> ний раціон. Отже, хлібна дієта — це легкий доступ птахів до нездорового 
-> раціону, унаслідок якого вони недоотримують поживні речовини. Треба пам’ятати: якщо ми перестанемо під-
-> годовувати водоплавних птахів хлібом, вони 
-> не зникнуть.
-
-> **Source:** savchenko, Grade 4
-> **Section:** Сторінка 38
-> **Score:** 0.25
->
-> 38
-> БЕЗ ТРУДА НЕМА ПЛОДА
-> Народна притча
-> Якось один чоловік почастував вовка хлібом.
-> — Ну й смачний! — похвалив вовк. А далі питає:
-> — А де ти його взяв?
-> — Та де взяв! Землю виорав…
-> — І все?
-> — Ні, потім посіяв жито…
-> — І вже маєш хліб?
-> — Та ні, — каже чоловік. — Почекав, поки жито зі-
-> йшло, виросло, поспіло. Потім я його вижав, змоло-
-> тив, намолов борошна, замісив тісто й аж тоді напік 
-> буханців.
-> — Що смачний хліб, то смачний, — сказав вовк. —
-> Та скільки ж коло нього походити треба!
-> — Твоя правда, — сказав чоловік. — Клопоту багато.
-
-## Grammar Reference
+# Педагогіка A1: Food And Drink
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
+The pedagogical approach for teaching "Food and Drink" at the A1 level should be grounded in high-frequency, tangible vocabulary and immediate practical application, mirroring how Ukrainian children learn. The focus is on building a core lexicon and using it in simple, descriptive sentences.
 
-### Речення, його граматична основа
-> **Source:** МійКлас — [Речення, його граматична основа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372)
+Ukrainian elementary textbooks (Джерело: `2-klas-ukrmova-bolshakova-2019-1_s0090`, `3-klas-ukrainska-mova-kravtsova-2020-1_s0072`) introduce food by connecting nouns to their characteristics. A key activity is linking a food item (`пиріг`) to its ingredients (`з вишнями`) and the resulting adjective (`вишневий пиріг`) (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0041`). This immediately reinforces noun-adjective agreement, a cornerstone of Slavic grammar.
 
-### Теорія:
+The learning process should be scaffolded:
+1.  **Core Nouns:** Introduce staple products found in any kitchen (`хліб`, `вода`, `молоко`, `сіль`, `цукор`) (Джерело: `ext-ulp_youtube-67`).
+2.  **Meal Verbs:** Introduce the meals of the day (`сніданок`, `обід`, `вечеря`) along with their corresponding verbs (`снідати`, `обідати`, `вечеряти`) (Джерело: `ext-ulp_youtube-255`). This creates a natural context for using food vocabulary.
+3.  **Descriptive Adjectives:** Immediately introduce `смачний` and its gendered forms (`смачна`, `смачне`). This is a powerful tool for practicing gender agreement in a rewarding context. Learners can express simple opinions (`борщ смачний`) (Джерело: `ext-ulp_youtube-291`).
+4.  **Simple Recipes and Menus:** Use simplified recipes or menu-creation tasks to contextualize vocabulary and introduce basic imperative verbs (`візьми`, `додай`) or ordering phrases (`Дайте, будь ласка...`) (Джерело: `2-klas-ukrmova-bolshakova-2019-1_s0088`, `ext-ulp_youtube-292`).
 
-*www.ua.pistacja.tv*  
-Речення
-Реченням називаємо одне або кілька слів, що виражають закінчену думку.
-Саме за допомогою речень ми спілкуємось, висловлюємо прохання, наказ, виражаємо емоції, повідомляємо інформацію.
-Приклад:
-- Весна іде, красу несе \(Нар. творчість\). 
-- Ліс. Тиша. Благодать. 
-Слова в реченні зв'язані між собою **за змістом** і **граматично**. **Граматичний зв'язок** — це поєднання за допомогою **закінчень** і **службових слів**. На початок і кінець речення вказує **інтонація**. Між реченнями робимо **паузи**.
-Ознаки речення
-1. Речення відображає дійсність. Інформація **стверджується** або **заперечується**, сприймається як **р
+This approach moves from simple identification (Це хліб) to description (Це смачний хліб) to action (Я їм хліб на сніданок) to transaction (Дайте, будь ласка, хліб).
 
-... (truncated for context window)
+## Послідовність введення (Introduction Sequence)
+
+The vocabulary and grammar should be introduced in a logical, compounding order.
+
+1.  **Step 1: The Essentials (Core Nouns & Verbs).** Start with the absolute highest-frequency words that are culturally universal.
+    *   **Nouns:** `хліб`, `вода`, `сіль`, `цукор`, `молоко`, `чай`, `кава`. These are mostly masculine or feminine with clear endings, providing a good entry point for gender.
+    *   **Verbs:** Introduce `їсти` (to eat) and `пити` (to drink) and their present-tense conjugations. They are irregular but essential (Джерело: `ext-ulp_youtube-255`).
+
+2.  **Step 2: Meals of the Day.** Provide the daily structure for using food vocabulary.
+    *   **Nouns:** `сніданок` (breakfast), `обід` (lunch), `вечеря` (dinner).
+    *   **Verbs:** `снідати`, `обідати`, `вечеряти`. Teach the pattern: `Я снідаю о восьмій годині.` (Джерело: `ext-ulp_youtube-255`).
+
+3.  **Step 3: Basic Adjective Agreement.** Introduce the concept of grammatical gender through description.
+    *   **Adjective:** `смачний` (m), `смачна` (f), `смачне` (n).
+    *   **Practice:** Pair with known nouns: `смачний хліб`, `смачна кава`, `смачне молоко`. This should be drilled extensively. The expression `Смачного!` (Enjoy your meal!) can also be introduced here as a fixed phrase (Джерело: `ext-ulp_youtube-292`).
+
+4.  **Step 4: Common Ukrainian Dishes & Produce.** Expand the lexicon to include culturally relevant items.
+    *   **Dishes:** `борщ` (m), `суп` (m), `каша` (f), `салат` (m).
+    *   **Produce:** `картопля` (f), `капуста` (f), `м'ясо` (n), `риба` (f), `сир` (m), `яйце` (n). These provide more examples for gender agreement. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0022`).
+
+5.  **Step 5: Ordering Food (Accusative Case).** Introduce a practical, transactional context.
+    *   **Phrases:** `Дайте, будь ласка...`, `Я буду...`, `Можна...`.
+    *   **Grammar:** Explain that feminine nouns ending in `-а/-я` change to `-у/-ю`. `Дайте, будь ласка, каву` (from `кава`). Masculine inanimate and neuter nouns do not change. `Я буду борщ`. This is a gentle introduction to the case system. (Джерело: `ext-ulp_youtube-292`).
+
+## Типові помилки L2 (Common L2 Errors)
+English-speaking learners often encounter predictable hurdles. Proactively addressing them is key.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я люблю творог.` | `Я люблю сир.` | `Творог` is a Russianism. The Ukrainian word for farmer's cheese/quark is `сир`. This word also means "cheese" in general, and context distinguishes them. For A1, teach `сир` for both. (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0014`). |
+| `Борщ дуже смачно.` | `Борщ дуже смачний.` | This is a classic confusion between an adverb (`смачно` - tastily/it's tasty) and an adjective (`смачний` - tasty). The adjective must agree in gender with the noun it describes. Teach `Дуже смачно!` as a standalone exclamation and `[noun] + смачний/а/е` as the descriptive structure. (Джерело: `ext-ulp_youtube-291`). |
+| `смачний каша` | `смачна каша` | Learners often default to the masculine form of adjectives. Gender agreement must be drilled relentlessly with food items, as they provide a perfect, tangible set of masculine, feminine, and neuter nouns (`борщ`, `каша`, `пюре`). (Джерело: `ext-ulp_youtube-291`). |
+| `жарена картопля` | `смажена картопля` | `Жарений` is a common calque from Russian. The correct Ukrainian participle is `смажений`. This should be taught from the beginning to avoid reinforcing the Russianism. (Джерело: `7-klas-ukrmova-zabolotnyi-2024_s0017`). |
+| `кава без цукор` | `кава без цукру` | The preposition `без` (without) always requires the Genitive case. While the full case system is A2, `без цукру` and `без молока` are high-frequency chunks worth memorizing at A1. (Джерело: `ext-ulp_youtube-255`). |
+| `Я їм сніданок.` | `Я снідаю.` | While not strictly wrong, `Я снідаю` is the more natural and common way to say "I'm having breakfast." Learners often translate directly from English ("I eat breakfast"). Highlighting the dedicated verbs (`снідати`, `обідати`, `вечеряти`) is important. (Джерело: `ext-ulp_youtube-255`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian food is an opportunity to teach Ukrainian culture on its own terms. It is critical to avoid the colonial trap of explaining Ukrainian phenomena through a Russian lens.
+
+1.  **Borscht is Ukrainian:** This must be stated unequivocally. Explain its ancient origins in Ukraine, tied to the fermentation of beet (`буряковий квас`) long before potatoes or tomatoes were introduced (Джерело: `ext-ulp_youtube-84`). Mention its recognition by UNESCO as part of Ukraine's intangible cultural heritage. Frame it as a dish that unites all Ukrainians, with regional variations, not as a generic "Eastern European soup."
+2.  **Avoid Russian Vocabulary:** Do not use or introduce Russianisms. The most common error is `творог` for `сир`. Correct this immediately and explain that `сир` is the authentic Ukrainian word. Likewise, use `смажений` not `жарений`, `тушкований` not `тушений` (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0014`, `7-klas-ukrmova-zabolotnyi-2024_s0017`).
+3.  **Contextualize Soviet Cuisine:** Dishes like `салат Олів'є` or `Оселедець під шубою` are extremely popular in Ukraine, especially for holidays. However, it's pedagogically important to explain their origin in the Soviet era as part of a policy of culinary unification, which aimed to create a single "Soviet people" and often simplified or replaced regional cuisines (Джерело: `ext-ulp_youtube-81`). This contrasts them with deeper-rooted dishes like borscht or varenyky.
+4.  **Teach Phonetics Directly:** Do not explain Ukrainian sounds by comparing them to Russian (e.g., "Ukrainian `и` is like Russian `ы`"). Build the learner's phonetic map from scratch using Ukrainian examples only. For food, this means teaching the pronunciation of `гриби` or `риба` on its own terms.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is suitable for A1 learners.
+
+### Іменники (Nouns)
+*   ★★★ `вода`, `хліб`, `сіль`, `цукор`, `чай`, `кава`, `молоко` (staples)
+*   ★★★ `сніданок`, `обід`, `вечеря` (meals)
+*   ★★☆ `борщ`, `суп`, `каша`, `салат`, `пюре` (simple dishes)
+*   ★★☆ `м'ясо`, `риба`, `сир`, `яйце` (pl. `яйця`), `картопля`, `капуста` (core ingredients)
+*   ★★☆ `сік`, `узвар`, `компот` (common drinks)
+*   ★☆☆ `вареники`, `голубці`, `млинці`, `деруни` (more complex traditional dishes)
+*   ★☆☆ `фрукти` (pl.), `овочі` (pl.), `гриби` (pl.) (categories)
+*   ★☆☆ `яблуко`, `груша`, `банан`, `лимон` (specific fruits)
+
+### Дієслова (Verbs)
+*   ★★★ `їсти`, `пити` (to eat, to drink)
+*   ★★★ `снідати`, `обідати`, `вечеряти` (to have breakfast/lunch/dinner)
+*   ★★☆ `любити`, `хотіти` (to love, to want)
+*   ★★☆ `готувати` (to cook/prepare)
+*   ★☆☆ `варити`, `смажити` (to boil, to fry)
+
+### Прикметники / Прислівники (Adjectives / Adverbs)
+*   ★★★ `смачний` (-а, -е), `дуже смачно` (tasty, very tasty)
+*   ★★☆ `солодкий`, `солоний`, `кислий`, `гіркий` (tastes)
+*   ★★☆ `гарячий`, `холодний` (temperature)
+*   ★★☆ `червоний`, `зелений`, `жовтий`, `білий` (colors for produce)
+*   ★☆☆ `пісний` (lenten/meat-free, culturally important) (Джерело: `ext-ulp_youtube-154`)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises from Ukrainian textbooks are models for A1 activities.
+
+1.  **Adjective Formation from Nouns (Source: `2-klas-ukrmova-bolshakova-2019-2_s0041`)**
+    This exercise directly teaches how to describe a dish based on its main ingredient, reinforcing vocabulary and adjective agreement.
+    *   **Завдання:** Запиши слово — назву ознаки.
+    *   **Приклад:** `Пиріг з вишнями — вишневий пиріг.`
+    *   `Сік із абрикосів — ... сік.`
+    *   `Компот із груш — ... компот.`
+    *   `Морозиво з полуниці — ... морозиво.`
+
+2.  **Creating a Menu (Source: `2-klas-ukrmova-bolshakova-2019-2_s0041`)**
+    A practical, creative task that requires learners to categorize dishes and think about meal structure.
+    *   **Завдання:** `Створи меню для обіду та вечері. Запиши страви за послідовністю їх подачі та за абеткою.` (Create a menu for lunch and dinner. Write the dishes in the order they are served and in alphabetical order.)
+
+3.  **Simple Recipe Comprehension (Source: `3-klas-ukrainska-mova-kravtsova-2020-1_s0077`)**
+    This uses a recipe to practice numbers and food vocabulary in a command-based context.
+    *   **Завдання:** `Прочитай рецепт фруктового салату та приготуй на дозвіллі разом із дорослими.`
+    *   **Текст:** `Для його приготування тобі потрібно один стиглий банан, два яблука, три груші, п’ять столових ложок сметани, чотири чайні ложки цукру. Помий та поріж кубиками яблука, банани, груші. Змішай та виклади гіркою на тарілку. Збий сметану з цукром і полий салат.`
+
+4.  **Restaurant Dialogue (Source: `8-klas-ukrmova-zabolotnyi-2025_s0021`)**
+    This situational task prepares learners for a real-world interaction, using specific dish names.
+    *   **Завдання:** `Уявіть, що ви в закладі громадського харчування. Складіть і запишіть діалог між вами та офіціантом / офіціанткою (4–5 реплік), використавши кілька поданих словосполучень.`
+    *   **Опорні слова:** `борщ по-українськи`, `котлета по-київськи`, `кава по-львівськи`, `картопля по-італійськи`.
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/noun-genders`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/present-tense-conjugation`
+- `pedagogy/a2/genitive-case`
+- `culture/ukrainian-national-dishes`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -705,7 +597,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Їсти і пити (To Eat and To Drink)` (~300 words)
 - `## Знахідний відмінок — неживе (Accusative Inanimate)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -761,7 +652,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -863,43 +754,40 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Діалоги (~330 words total)
+- P1 (~50 words): Introduction to the social context of food in Ukraine—how discussing what you're eating for lunch ("Що ти їси?") is a primary way colleagues and friends bond. Mention the cultural distinction between the verbs "to eat" and "to drink" regarding soups.
+- D1 (~110 words): Breakfast conversation between two colleagues. One describes eating porridge (*каша*) and drinking coffee (*кава*), while the other mentions their children eating eggs (*яйця*) and drinking milk (*молоко*). Focus on singular and plural present tense forms of *їсти* and *пити*.
+- P2 (~60 words): Analysis of the first dialogue. Identify the high-frequency phrases used: *Що ти їси?* and *Я їм...*. Highlight the contrast between the irregular *їси* and the standard *п'єш*.
+- D2 (~110 words): Lunch break scenario. Two friends unpacking lunch boxes. One has a sandwich (*бутерброд*) and tea (*чай*), while the other has salad (*салат*) and juice (*сік*). They discuss wanting water (*вода*) later. Focus on the inanimate masculine and feminine objects in the accusative.
 
-- P1 (~20 words): Brief scene-setter — two colleagues at lunch break, unpacking food, establishing natural context for їсти/пити.
-- Dialogue 1 (~120 words): Breakfast conversation (3–4 turns). — Що ти їш на сніданок? — Я їм кашу і п'ю каву. — А Олена? — Вона їсть хліб з маслом і п'є чай. — А діти? — Вони їдять яйця і п'ють молоко. Introduces full paradigm of їсти and пити across я/вона/вони in natural flow.
-- P2 (~15 words): Short bridge note — same verbs, now with plural subjects at lunch.
-- Dialogue 2 (~120 words): Lunch scene (4–5 turns). — Що ви їсте на обід? — Ми їмо суп і салат. — А що п'єте? — Ми п'ємо воду або сік. — Я теж хочу суп. — Добре, замовляй! Reinforces ми/ви forms and introduces воду/сік as direct objects in accusative.
-- P3 (~55 words): Post-dialogue reading comprehension note — ask learners: "Що їсть Олена? Що п'ють діти? Що їмо ми на обід?" — three questions anchoring the dialogues to accusative use without yet naming the grammar rule.
+## Їсти і пити (~330 words total)
+- P1 (~80 words): Detailed breakdown of the verb *їсти* (to eat). Explain its unique, irregular status in Ukrainian grammar—it belongs neither to Group I nor Group II. Provide the full paradigm: *я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять*.
+- P2 (~60 words): Phonetic focus on the letter *ї*. Use the wiki brief's advice to explain that *їсти* must be pronounced as [йісти], not [істи]. Provide three example sentences using different subjects: *Я їм суп*, *Ми їмо яблуко*, *Діти їдять банан*.
+- P3 (~80 words): Detailed explanation of the verb *пити* (to drink). While it follows Group I patterns, highlight the elision/shift where the *и* disappears and the endings start with *’ю* or *’є*. Provide the paradigm: *я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють*.
+- P4 (~60 words): Practice sentences for *пити*. Focus on natural pairings: *Я п'ю воду*, *Ти п'єш каву*, *Вони п'ють сік*. Mention that unlike English "to have a drink," Ukrainians use the direct verb *пити* for almost all beverages.
+- <!-- INJECT_ACTIVITY: verb-conjugation-drill --> [fill-in, focus: conjugating їсти and пити in present tense, 8 items]
+- P5 (~50 words): The "Soup Rule." Explain that in Ukraine, you "eat" (*їсти*) soup and borscht, even if they are liquid. Contrast this with "drinking" (*пити*) tea or compote. Use the example: *Я їм борщ, але я п'ю чай*.
 
-## Їсти і пити (~320 words total)
+## Знахідний відмінок — неживе (~340 words total)
+- P1 (~80 words): Introduction to the Accusative Case (*Знахідний відмінок*). Explain the concept of the "direct object"—the thing being acted upon. Use the Ukrainian school prompt "Бачу що?" (I see what?) as the mental trigger for this case when dealing with inanimate objects.
+- P2 (~80 words): The Masculine and Neuter rule: No change. Explain that words like *хліб*, *сік*, *молоко*, and *м'ясо* look exactly the same in the accusative as they do in the dictionary. Provide examples: *Я їм хліб* (m), *Я п'ю молоко* (n).
+- P3 (~90 words): The Feminine rule: The -а → -у and -я → -ю shift. This is the primary grammatical change at the A1 level. Illustrate with clear transformations: *вода* → *воду*, *кава* → *каву*, *риба* → *рибу*, *каша* → *кашу*. Explain that this signals the noun is the object of the action.
+- <!-- INJECT_ACTIVITY: accusative-form-builder --> [fill-in, focus: forming feminine accusative (-у/-ю) vs masc/neut (no change), 8 items]
+- <!-- INJECT_ACTIVITY: noun-change-sorting --> [group-sort, focus: identifying which nouns change in the accusative, 8 items]
+- P4 (~90 words): Using the Accusative with the verb *хотіти* (to want) and ordering phrases. Explain the phrase *Мені, будь ласка, ...* from the wiki brief, where the object must be in the accusative. Example: *Мені, будь ласка, піцу і воду*.
+- <!-- INJECT_ACTIVITY: accusative-choice-quiz --> [quiz, focus: choosing the correct accusative ending for food/drink items, 6 items]
 
-- P1 (~80 words): Present-tense conjugation of їсти (irregular). Full table: я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять. Highlight irregularity — this verb does NOT follow Group I or II patterns. Three example sentences: Я їм хліб. Він їсть рибу. Вони їдять кашу.
-- P2 (~80 words): Present-tense conjugation of пити (Group I). Full table: я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють. Note the apostrophe before ю/є/є (п'ю, п'єш, п'є) — a Ukrainian spelling rule. Three example sentences: Я п'ю каву. Вона п'є воду. Вони п'ють сік.
-- P3 (~80 words): Side-by-side comparison of the two verbs — parallel columns showing я їм / я п'ю, ти їси / ти п'єш, etc. Emphasize: їсти is the exception to learn by heart; пити is a regular model. Both are extremely high-frequency daily verbs — you will use them every single day.
-- P4 (~80 words): Ukrainian school concept (Grade 4 approach) — the question що? as the trigger for accusative. Я їм (що?) хліб. Я п'ю (що?) каву. When you eat or drink something, ask "що?" — the answer is always in the accusative case. This is the bачу що? / їм що? / п'ю що? rule from Ukrainian textbooks. Frame it as a habit: always ask "що?" before choosing the noun ending.
-- Exercise: fill-in (8 items) — Conjugate the verbs їсти and пити. Blanks: Я {їм} суп. / Ми {п'ємо} чай. / Вона {їсть} хліб. / Вони {п'ють} воду. / Ти {їси} рибу? / Ви {п'єте} каву? / Він {п'є} сік. / Вони {їдять} кашу.
+## Підсумок (~320 words total)
+- P1 (~80 words): Summary of the core grammar. Recap that *їсти* is irregular and requires memorization, while *пити* has a specific spelling shift. Remind the learner of the critical feminine ending change -а → -у.
+- P2 (~60 words): "Watch Out" section: Address the common Russianism *кофе* (incorrect) vs the Ukrainian *кава* (correct), and the importance of using *сир* for both cheese and cottage cheese at this level.
+- P3 (~60 words): Final overview of the Accusative Inanimate: Masc/Neut = Nom; Fem = -у/-ю. Contrast *Я п'ю сік* (no change) with *Я п'ю каву* (change).
+- P4 (~120 words): Interactive Self-Check.
+    - Can you conjugate *їсти* for all pronouns? (Try: *Я ..., ти ..., вони ...*)
+    - Can you conjugate *пити*? (Try: *Я ..., він ..., ми ...*)
+    - Say three things you eat today using the accusative: *Я їм ...* (e.g., *суп, рибу, яблуко*)
+    - Say three things you drink today: *Я п'ю ...* (e.g., *чай, воду, сік*)
+    - What is the accusative form of *картопля*? (Answer: *картоплю*)
 
-## Знахідний відмінок — неживе (~330 words total)
-
-- P1 (~70 words): Introduce the accusative case for inanimate nouns — what changes and what doesn't. Masculine inanimate: NO change (= nominative). хліб → хліб (Я їм хліб), суп → суп (Я їм суп), сік → сік (Я п'ю сік), банан → банан (Я їм банан). Neuter: NO change. молоко → молоко (Я п'ю молоко), яйце → яйце (Я їм яйце). Rule: masculine and neuter inanimate nouns look exactly like nominative after їсти/пити.
-- P2 (~100 words): THE key change — feminine -а → -у, -я → -ю. Eight examples: кава → каву (Я п'ю каву), вода → воду (Я п'ю воду), риба → рибу (Я їм рибу), каша → кашу (Я їм кашу), картопля → картоплю (Я їм картоплю), сметана → сметану (Я їм сметану), каша → кашу, земля → землю. Pattern stated explicitly: -а becomes -у; -я becomes -ю. Emphasize: this is the ONLY accusative ending change learners need at A1. Everything else stays the same.
-- P3 (~60 words): Quick contrast drill in prose — three pairs side by side showing before/after: [Nominative: кава — Accusative: каву] / [Nominative: вода — Accusative: воду] / [Nominative: картопля — Accusative: картоплю] vs. [Nominative: хліб — Accusative: хліб] / [Nominative: сік — Accusative: сік] / [Nominative: молоко — Accusative: молоко]. Learner sees the pattern visually before the exercises.
-- P4 (~50 words): Natural sentences wrapping it all together — four sentences mixing genders: Я їм рибу і хліб. Вона п'є каву і воду. Ми їмо кашу і яйця. Вони п'ють сік і молоко. Learner reads and identifies which nouns changed and why.
-- P5 (~50 words): Laysense mnemonic — "If a noun ends in -а or -я (like кав**а**, вод**а**, картопл**я**), swap the ending for -у or -ю when you eat or drink it. Everything else stays the same. One rule. That's it."
-- Exercise 1: fill-in (8 items) — Form the accusative. Blanks: Я їм (риба) {рибу}. / Вона п'є (вода) {воду}. / Він їсть (хліб) {хліб}. / Ми п'ємо (молоко) {молоко}. / Вони їдять (каша) {кашу}. / Ти п'єш (кава) {каву}. / Я їм (суп) {суп}. / Вона їсть (картопля) {картоплю}.
-- Exercise 2: quiz (6 items) — Select the correct accusative form. Questions: Я п'ю… (каву / кава / кави) / Він їсть… (рибу / риба / рибі) / Ми п'ємо… (сік / соку / соком) / Вона їсть… (м'ясо / м'ясу / м'яса) / Вони п'ють… (воду / вода / воді) / Ти їш… (кашу / каша / каші).
-- Exercise 3: group-sort (8 items) — Sort nouns by accusative behavior. Group "Змінюється (-у/-ю)": кава, вода, риба, каша. Group "Не змінюється (як у називному)": хліб, сік, молоко, м'ясо.
-
-## Підсумок (~150 words total)
-
-- P1 (~150 words): Recap of the two verbs — їсти (irregular: їм, їси, їсть, їмо, їсте, їдять) and пити (regular: п'ю, п'єш, п'є, п'ємо, п'єте, п'ють). Recap of accusative rule — masculine/neuter inanimate: no change (хліб, суп, молоко, сік stay the same); feminine -а → -у, -я → -ю (кава → каву, вода → воду, картопля → картоплю). Self-check bulleted list:
-  - Я їм ___ (риба → ?)  → **рибу**
-  - Я п'ю ___ (вода → ?) → **воду**
-  - Вони їдять ___ (хліб → ?) → **хліб**
-  - Вона п'є ___ (кава → ?) → **каву**
-  
-  Final prompt: Say three things you eat today and three things you drink. Use the correct accusative form for each. (Наприклад: Я їм кашу, рибу і хліб. Я п'ю каву, воду і сік.)
-
-Grand total: ~1330 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format

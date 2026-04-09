@@ -1,23 +1,36 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 24,
+  "grounded_items": 20,
+  "ungrounded": [
+    {
+      "word": "вода",
+      "exercise_type": "group-sort",
+      "context": "вода",
+      "role": "answer"
+    },
+    {
+      "word": "хата",
+      "exercise_type": "group-sort",
+      "context": "хата",
+      "role": "answer"
+    },
+    {
+      "word": "банк'",
+      "exercise_type": "true-false",
+      "context": "The word 'банк' has two syllables.",
+      "role": "context"
+    },
+    {
+      "word": "університет'",
+      "exercise_type": "quiz",
+      "context": "How many vowel sounds are there in the word 'університет'?",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 11,
-    "tested_in_exercises": 0,
-    "not_tested": [
-      "бібліотека",
-      "вулиця",
-      "каша",
-      "людина",
-      "молоко",
-      "пісня",
-      "столиця",
-      "університет",
-      "фотографія",
-      "шоколад",
-      "яблуко"
-    ]
+    "tested_in_exercises": 11,
+    "not_tested": []
   },
-  "all_grounded": true
+  "all_grounded": false
 }

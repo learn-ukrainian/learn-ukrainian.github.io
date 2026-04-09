@@ -1,0 +1,493 @@
+{
+  "total_items": 279,
+  "grounded_items": 202,
+  "ungrounded": [
+    {
+      "word": "учора",
+      "exercise_type": "quiz",
+      "context": "Я _______ довгий лист учора, але так і не закінчив його.",
+      "role": "context"
+    },
+    {
+      "word": "закінчив",
+      "exercise_type": "quiz",
+      "context": "Я _______ довгий лист учора, але так і не закінчив його.",
+      "role": "context"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "quiz",
+      "context": "Олег нарешті _______ свій новий складний проєкт.",
+      "role": "context"
+    },
+    {
+      "word": "складний",
+      "exercise_type": "quiz",
+      "context": "Олег нарешті _______ свій новий складний проєкт.",
+      "role": "context"
+    },
+    {
+      "word": "проєкт",
+      "exercise_type": "quiz",
+      "context": "Олег нарешті _______ свій новий складний проєкт.",
+      "role": "context"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "quiz",
+      "context": "Завтра я _______ над цією статтею весь вечір без перерви.",
+      "role": "context"
+    },
+    {
+      "word": "статтею",
+      "exercise_type": "quiz",
+      "context": "Завтра я _______ над цією статтею весь вечір без перерви.",
+      "role": "context"
+    },
+    {
+      "word": "весь",
+      "exercise_type": "quiz",
+      "context": "Завтра я _______ над цією статтею весь вечір без перерви.",
+      "role": "context"
+    },
+    {
+      "word": "хвилюйся",
+      "exercise_type": "quiz",
+      "context": "Не хвилюйся, я швидко _______ це завдання до ранку.",
+      "role": "context"
+    },
+    {
+      "word": "неймовірні",
+      "exercise_type": "quiz",
+      "context": "Вона часто _______ йому про свої неймовірні успіхи в універс",
+      "role": "context"
+    },
+    {
+      "word": "університеті",
+      "exercise_type": "quiz",
+      "context": "Вона часто _______ йому про свої неймовірні успіхи в універс",
+      "role": "context"
+    },
+    {
+      "word": "вихідних",
+      "exercise_type": "quiz",
+      "context": "Ми обов'язково _______ на вихідних у нашому улюбленому кафе.",
+      "role": "context"
+    },
+    {
+      "word": "улюбленому",
+      "exercise_type": "quiz",
+      "context": "Ми обов'язково _______ на вихідних у нашому улюбленому кафе.",
+      "role": "context"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "fill-in",
+      "context": "Він завжди говорить правду, він дуже _______ друг.",
+      "role": "context"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "fill-in",
+      "context": "Він завжди говорить правду, він дуже _______ друг.",
+      "role": "context"
+    },
+    {
+      "word": "врівноваженою",
+      "exercise_type": "fill-in",
+      "context": "врівноваженою",
+      "role": "answer"
+    },
+    {
+      "word": "медитації",
+      "exercise_type": "fill-in",
+      "context": "Після медитації вона стала абсолютно _______.",
+      "role": "context"
+    },
+    {
+      "word": "стала",
+      "exercise_type": "fill-in",
+      "context": "Після медитації вона стала абсолютно _______.",
+      "role": "context"
+    },
+    {
+      "word": "імпульсивний",
+      "exercise_type": "fill-in",
+      "context": "імпульсивний",
+      "role": "answer"
+    },
+    {
+      "word": "її",
+      "exercise_type": "unjumble",
+      "context": "її",
+      "role": "answer"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "fill-in",
+      "context": "Її брат дуже _______ — він часто змінює свій настрій.",
+      "role": "context"
+    },
+    {
+      "word": "настрій",
+      "exercise_type": "fill-in",
+      "context": "Її брат дуже _______ — він часто змінює свій настрій.",
+      "role": "context"
+    },
+    {
+      "word": "прекрасну",
+      "exercise_type": "fill-in",
+      "context": "Вона має прекрасну _______ — завжди дуже гарно та стильно од",
+      "role": "context"
+    },
+    {
+      "word": "гарно",
+      "exercise_type": "fill-in",
+      "context": "Вона має прекрасну _______ — завжди дуже гарно та стильно од",
+      "role": "context"
+    },
+    {
+      "word": "стильно",
+      "exercise_type": "fill-in",
+      "context": "Вона має прекрасну _______ — завжди дуже гарно та стильно од",
+      "role": "context"
+    },
+    {
+      "word": "одягається",
+      "exercise_type": "fill-in",
+      "context": "Вона має прекрасну _______ — завжди дуже гарно та стильно од",
+      "role": "context"
+    },
+    {
+      "word": "дорогому",
+      "exercise_type": "fill-in",
+      "context": "Олег виглядає як справжній _______ у своєму новому дорогому ",
+      "role": "context"
+    },
+    {
+      "word": "костюмі",
+      "exercise_type": "fill-in",
+      "context": "Олег виглядає як справжній _______ у своєму новому дорогому ",
+      "role": "context"
+    },
+    {
+      "word": "розмовляв",
+      "exercise_type": "fill-in",
+      "context": "Учора я довго розмовляв із новим _______.",
+      "role": "context"
+    },
+    {
+      "word": "новим",
+      "exercise_type": "fill-in",
+      "context": "Учора я довго розмовляв із новим _______.",
+      "role": "context"
+    },
+    {
+      "word": "розрізали",
+      "exercise_type": "fill-in",
+      "context": "Ми обережно розрізали хліб великим _______.",
+      "role": "context"
+    },
+    {
+      "word": "великим",
+      "exercise_type": "fill-in",
+      "context": "Ми обережно розрізали хліб великим _______.",
+      "role": "context"
+    },
+    {
+      "word": "надійним",
+      "exercise_type": "fill-in",
+      "context": "Він завжди був мені надійним і вірним _______.",
+      "role": "context"
+    },
+    {
+      "word": "вірним",
+      "exercise_type": "fill-in",
+      "context": "Він завжди був мені надійним і вірним _______.",
+      "role": "context"
+    },
+    {
+      "word": "виконую",
+      "exercise_type": "fill-in",
+      "context": "Я виконую цю складну роботу з великою _______.",
+      "role": "context"
+    },
+    {
+      "word": "великою",
+      "exercise_type": "fill-in",
+      "context": "Я виконую цю складну роботу з великою _______.",
+      "role": "context"
+    },
+    {
+      "word": "привітала",
+      "exercise_type": "fill-in",
+      "context": "Вона привітала нас у своєму домі з _______.",
+      "role": "context"
+    },
+    {
+      "word": "домі",
+      "exercise_type": "fill-in",
+      "context": "Вона привітала нас у своєму домі з _______.",
+      "role": "context"
+    },
+    {
+      "word": "гарячу",
+      "exercise_type": "fill-in",
+      "context": "Цю гарячу страву обов'язково потрібно посипати _______.",
+      "role": "context"
+    },
+    {
+      "word": "страву",
+      "exercise_type": "fill-in",
+      "context": "Цю гарячу страву обов'язково потрібно посипати _______.",
+      "role": "context"
+    },
+    {
+      "word": "посипати",
+      "exercise_type": "fill-in",
+      "context": "Цю гарячу страву обов'язково потрібно посипати _______.",
+      "role": "context"
+    },
+    {
+      "word": "паперових",
+      "exercise_type": "fill-in",
+      "context": "У мене зараз зовсім немає паперових _______.",
+      "role": "context"
+    },
+    {
+      "word": "стою",
+      "exercise_type": "fill-in",
+      "context": "Я стою біля дуже старих дерев'яних _______.",
+      "role": "context"
+    },
+    {
+      "word": "старих",
+      "exercise_type": "unjumble",
+      "context": "старих",
+      "role": "answer"
+    },
+    {
+      "word": "виписав",
+      "exercise_type": "fill-in",
+      "context": "Лікар виписав рецепт для моїх нових _______.",
+      "role": "context"
+    },
+    {
+      "word": "моїх",
+      "exercise_type": "fill-in",
+      "context": "Лікар виписав рецепт для моїх нових _______.",
+      "role": "context"
+    },
+    {
+      "word": "милувалися",
+      "exercise_type": "fill-in",
+      "context": "Ми довго милувалися темною зоряною _______.",
+      "role": "context"
+    },
+    {
+      "word": "темною",
+      "exercise_type": "fill-in",
+      "context": "Ми довго милувалися темною зоряною _______.",
+      "role": "context"
+    },
+    {
+      "word": "зоряною",
+      "exercise_type": "fill-in",
+      "context": "Ми довго милувалися темною зоряною _______.",
+      "role": "context"
+    },
+    {
+      "word": "парком",
+      "exercise_type": "error-correction",
+      "context": "Ми гуляли парком з моїм найкращим товаришом.",
+      "role": "context"
+    },
+    {
+      "word": "моїм",
+      "exercise_type": "error-correction",
+      "context": "Ми гуляли парком з моїм найкращим товаришом.",
+      "role": "context"
+    },
+    {
+      "word": "робила",
+      "exercise_type": "error-correction",
+      "context": "Вона робила цю роботу з великою радіссттю.",
+      "role": "context"
+    },
+    {
+      "word": "радіссттю",
+      "exercise_type": "error-correction",
+      "context": "Вона робила цю роботу з великою радіссттю.",
+      "role": "context"
+    },
+    {
+      "word": "одні",
+      "exercise_type": "error-correction",
+      "context": "одні двері",
+      "role": "answer"
+    },
+    {
+      "word": "маленькій",
+      "exercise_type": "error-correction",
+      "context": "У цій маленькій кімнаті є лише один двері.",
+      "role": "context"
+    },
+    {
+      "word": "кімнаті",
+      "exercise_type": "error-correction",
+      "context": "У цій маленькій кімнаті є лише один двері.",
+      "role": "context"
+    },
+    {
+      "word": "порізали",
+      "exercise_type": "error-correction",
+      "context": "Ми обережно порізали цей святковий торт ножом.",
+      "role": "context"
+    },
+    {
+      "word": "святковий",
+      "exercise_type": "error-correction",
+      "context": "Ми обережно порізали цей святковий торт ножом.",
+      "role": "context"
+    },
+    {
+      "word": "торт",
+      "exercise_type": "error-correction",
+      "context": "Ми обережно порізали цей святковий торт ножом.",
+      "role": "context"
+    },
+    {
+      "word": "підписав",
+      "exercise_type": "error-correction",
+      "context": "Я підписав цей важливий документ кроввю.",
+      "role": "context"
+    },
+    {
+      "word": "документ",
+      "exercise_type": "error-correction",
+      "context": "Я підписав цей важливий документ кроввю.",
+      "role": "context"
+    },
+    {
+      "word": "кроввю",
+      "exercise_type": "error-correction",
+      "context": "Я підписав цей важливий документ кроввю.",
+      "role": "context"
+    },
+    {
+      "word": "загубив",
+      "exercise_type": "error-correction",
+      "context": "Я випадково загубив свої нових окулярів.",
+      "role": "context"
+    },
+    {
+      "word": "жіночий",
+      "exercise_type": "group-sort",
+      "context": "Третя відміна (жіночий рід)",
+      "role": "context"
+    },
+    {
+      "word": "рід",
+      "exercise_type": "group-sort",
+      "context": "Третя відміна (жіночий рід)",
+      "role": "context"
+    },
+    {
+      "word": "звертанні",
+      "exercise_type": "quiz",
+      "context": "У якому відмінку стоїть слово «друже» у звертанні ведучого?",
+      "role": "context"
+    },
+    {
+      "word": "ведучого",
+      "exercise_type": "quiz",
+      "context": "У якому відмінку стоїть слово «друже» у звертанні ведучого?",
+      "role": "context"
+    },
+    {
+      "word": "захворювання",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати про захворювання за правилами керування",
+      "role": "context"
+    },
+    {
+      "word": "вживається",
+      "exercise_type": "true-false",
+      "context": "Слово «окуляри» вживається як в однині, так і в множині.",
+      "role": "context"
+    },
+    {
+      "word": "робимо",
+      "exercise_type": "true-false",
+      "context": "Після губних приголосних (б, п, в, м, ф) ми ніколи не робимо",
+      "role": "context"
+    },
+    {
+      "word": "тінь",
+      "exercise_type": "true-false",
+      "context": "Слово «тінь» в орудному відмінку має форму «тінню».",
+      "role": "context"
+    },
+    {
+      "word": "тінню",
+      "exercise_type": "true-false",
+      "context": "Слово «тінь» в орудному відмінку має форму «тінню».",
+      "role": "context"
+    },
+    {
+      "word": "різати",
+      "exercise_type": "unjumble",
+      "context": "різати",
+      "role": "answer"
+    },
+    {
+      "word": "говорив",
+      "exercise_type": "unjumble",
+      "context": "говорив",
+      "role": "answer"
+    },
+    {
+      "word": "скаржився",
+      "exercise_type": "unjumble",
+      "context": "скаржився",
+      "role": "answer"
+    },
+    {
+      "word": "грипу",
+      "exercise_type": "unjumble",
+      "context": "грипу.",
+      "role": "answer"
+    },
+    {
+      "word": "одужала",
+      "exercise_type": "unjumble",
+      "context": "одужала",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 28,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "відкритий",
+      "відмінок",
+      "губний",
+      "діагноз",
+      "закритий",
+      "здоров'я",
+      "кличний",
+      "нульове",
+      "однина",
+      "орудний",
+      "родовий",
+      "скаржитися",
+      "склад",
+      "сонорний",
+      "спрощення",
+      "температура",
+      "чергування",
+      "шиплячий"
+    ]
+  },
+  "all_grounded": false
+}

@@ -148,11 +148,10 @@ Fast forward a few hours. The planning phase is over, and it is time to confirm 
 In this second part, they do not use «купував» (was buying) or «замовляв» (was ordering). Instead, they use «купив» (bought) and «замовили» (ordered) because the action is absolutely complete and the pizza is already on its way.
 
 :::tip Українська гостинність (Ukrainian Hospitality)
-When hosting guests, Ukrainians love to use diminutive suffixes to make the atmosphere warmer and more inviting. Instead of a standard **торт** (cake), a host might offer you **тортик** (a nice little cake). A regular **салат** (salad) becomes a delicious **салатик**. You might even hear slang like **винишко** (wine) instead of **вино**. These small changes show care, emotion, and true hospitality.
+When hosting guests, Ukrainians love to use diminutive suffixes to make the atmosphere warmer and more inviting. Instead of a standard **торт** (cake), a host might offer you **тортик** (a nice little cake). A regular **салат** (salad) becomes a delicious **салатик**. You might even hear diminutives like **винце** (wine) instead of **вино**. These small changes show care, emotion, and true hospitality.
 :::
 
 <!-- INJECT_ACTIVITY: quiz-planning-party -->
-
 
 ## Сценарій 2: На ринку (Scenario 2: At the Market)
 
@@ -175,6 +174,7 @@ When you buy items by the piece or by weight, you must combine numbers with the 
 Here are a few more examples:
 *   Дайте мені **один кавун**. *(Give me one watermelon.)*
 *   Я хочу купити **три кавуни**. *(I want to buy three watermelons.)*
+*   Дайте мені, будь ласка, **дві дині**. *(Give me, please, two melons.)*
 *   Мені треба **п'ять кавунів**. *(I need five watermelons.)*
 
 The Genitive case is also essential when something is missing or when you cannot see an item. This is called the Genitive of Negation. If a vendor runs out of a product, they will use the word **немає** (there is no) followed by the Genitive.
@@ -213,7 +213,6 @@ Here is a quick summary of the essential verbs and nouns you need for a successf
 Я дуже люблю цей старий ринок. *(I really love this old market.)*
 
 <!-- INJECT_ACTIVITY: fill-in-shopping-groceries -->
-
 
 ## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?)
 
@@ -281,7 +280,6 @@ Choosing the right aspect is what makes your storytelling sound like natural Ukr
 
 <!-- INJECT_ACTIVITY: match-up-story-completion -->
 <!-- INJECT_ACTIVITY: match-up-short-narrative -->
-
 
 ## Підсумок — Summary
 

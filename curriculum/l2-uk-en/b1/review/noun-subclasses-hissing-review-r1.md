@@ -1,47 +1,70 @@
 ## Linguistic Scan
-- `розслаблюючим` — **CRITICAL.** This is an active present participle, which is a grammatical calque from Russian (расслабляющий). In literary Ukrainian, these forms are avoided and replaced by adjectives ending in `-альний/-ильний`. VESUM verification confirms `розслаблювальний` exists, while `розслаблюючий` does not.
-- `неносія` — **MINOR.** While the formation is logical, it is unattested in the GRAC corpus and VESUM. A more natural phrasing is preferred.
-
-No other linguistic errors found. The use of "смакувати + Instrumental" is correctly verified by СУМ-11 and GRAC.
+Found a few minor linguistic issues:
+- Typo: "давної" (should be "давньої").
+- Typo: "прівищами" (should be "прізвищами").
+- Calque idiom: "грає злий жарт" (should be "підводить").
+- Awkward phrasing: "захищав під дощем" (should be "захищав від дощу").
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: group-sort, Sort nouns into тверда / м'яка / мішана groups -->` — Correctly placed after the introduction to the three groups.
-- `<!-- INJECT_ACTIVITY: fill-in, Insert the correct singular відмінок ending (primarily Instrumental and Vocative) -->` — Correctly follows the detailed singular declension rules.
-- `<!-- INJECT_ACTIVITY: match-up, Match nominative singular forms to their plural Instrumental and Vocative forms -->` — Appropriately placed after the plural section.
-- `<!-- INJECT_ACTIVITY: quiz, Identify whether a neuter noun belongs to the мішана група and provide its Instrumental form -->` — Follows the neuter nouns section.
-- `<!-- INJECT_ACTIVITY: quiz, Focus: Identify the alternation (if any) in the stem when changing cases, items: 8 -->` — Correctly tests the [о/е] -> [і] alternation rules just taught.
-- `<!-- INJECT_ACTIVITY: error-correction, Focus: Find and fix Russicisms or wrong endings in mixed group noun declension, items: 6 -->` — Placed in the common errors section.
-- `<!-- INJECT_ACTIVITY: group-sort, Focus: Final diagnostic sort of all noun types covered (hard, soft, mixed, masc, neuter), items: 10 -->` — Good final diagnostic.
+The writer placed 9 `<!-- INJECT_ACTIVITY: {id} -->` markers in the text. However, the plan's `activity_hints` explicitly lists only 5 expected activities. This mismatch will result in unresolved markers in the final output because the pipeline only generates activities specified in the plan. The redundant 4 markers must be removed to match the plan exactly.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 7 sections. Exceeds the 4000-word target (4618 words). Cites all requested textbook authors (Голуб, Литвінова, Захарійчук, Заболотний, Глазова). |
-| 2. Linguistic accuracy | 9/10 | Excellent command of grammar. Found one active participle calque: `розслаблюючим`. All case endings (Instrumental `-ем` vs `-ами`) are correctly explained and applied. |
-| 3. Pedagogical quality | 10/10 | Uses the PPP (Presentation, Practice, Production) model effectively. The "mixed group" concept is explained through phonetic history (memory of the language), making it intuitive rather than just a list of rules. |
-| 4. Vocabulary coverage | 10/10 | All required words (`сторож`, `слухач`, `товариш`, `ніж`, `плече`, etc.) are introduced in meaningful contexts. |
-| 5. Exercise quality | 10/10 | 7 activity markers are distributed logically. They match the plan's `activity_hints` in type and pedagogical focus. |
-| 6. Engagement & tone | 10/10 | The narrative about the museum and the story of the soldiers ("Товариші на фронті") provides deep context and emotional weight to the grammar. |
-| 7. Structural integrity | 10/10 | H2 headers exactly match the plan. Word count is high but well-paced. Clean Markdown. |
-| 8. Cultural accuracy | 10/10 | Decolonized perspective on the history of hissing sounds (ствердіння шиплячих). References to "борщ" and "козак" are authentic. |
-| 9. Dialogue quality | 10/10 | The museum guide dialogue is natural, multi-turn, and effectively embeds the target vocabulary in a realistic situation. |
+| 1. Plan adherence | 10/10 | The module perfectly follows the `content_outline`. For example, it correctly references Голуб ("Як зазначає мовознавець Ніна Голуб, іменники за кінцевим... класифікують на тверду, м'яку і мішану") and Глазова ("Підручник О. Глазової для 10 класу..."). All sections are present. |
+| 2. Linguistic accuracy | 8/10 | Generally excellent, but contains two typos ("давної" instead of "давньої", "прівищами" instead of "прізвищами") and a calque ("грає злий жарт"). |
+| 3. Pedagogical quality | 10/10 | Outstanding. The grammar rules are explained clearly with ample examples (e.g. contrasting "завод-ом", "вчител-ем", and "сторож-ем"). |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary is seamlessly integrated into the text. New words are introduced in context. |
+| 5. Exercise quality | 8/10 | Deducted points because the writer generated 9 activity markers instead of the 5 requested in the plan, creating redundant/unresolvable tags. |
+| 6. Engagement & tone | 10/10 | Very natural, encouraging teacher persona ("Ви коли-небудь замислювалися...", "Давайте подивимося..."). |
+| 7. Structural integrity | 10/10 | Word count is 4549 (well over the 4000 target). All H2 headings match the plan exactly. |
+| 8. Cultural accuracy | 10/10 | Excellent integration of a decolonized perspective, focusing on the internal logic of the Ukrainian language. |
+| 9. Dialogue & conversation quality | 10/10 | The museum dialogue is natural and provides a great contextual introduction to the hissing nouns. |
 
 ## Findings
-- **[LINGUISTIC] [CRITICAL]**
-  - **Location:** Section "Типові помилки та практика": "Втомлений спортсмен після важкого тренування насолоджується розслаблюючим лікувальним масажем."
-  - **Issue:** `розслаблюючим` is an active present participle (Russian calque).
-  - **Fix:** Replace with `розслаблювальним`.
-- **[LINGUISTIC] [MINOR]**
-  - **Location:** Section "Що таке мішана група?": "Це призведе до граматичних помилок, які відразу видаватимуть неносія мови."
-  - **Issue:** `неносія` is technically clear but unnaturally dry/academic for this context and unattested in general dictionaries.
-  - **Fix:** Replace with `людину, для якої українська мова не є рідною`.
+[2. Linguistic accuracy] [Major]
+Location: "Ця форма із закінченням «-има» є історичним залишком давної двоїни"
+Issue: Adjective "давній" belongs to the soft declension group, so the feminine genitive form must be "давньої", not "давної".
+Fix: Replace "давної" with "давньої".
+
+[2. Linguistic accuracy] [Minor]
+Location: "Орудний відмінок: милуватися мальовничими видовищами, пишатися своїми прівищами."
+Issue: Typo in the word "прізвищами" (missing the letter "з").
+Fix: Replace "прівищами" with "прізвищами".
+
+[2. Linguistic accuracy] [Minor]
+Location: "Це традиційний одяг, який ідеально захищав під дощем."
+Issue: Awkward phrasing. We usually say "захищати від дощу", not "під дощем".
+Fix: Replace "під дощем" with "від дощу".
+
+[2. Linguistic accuracy] [Minor]
+Location: "Проте ця впевненість часто грає злий жарт, коли справа доходить до слів..."
+Issue: "Грає злий жарт" is a calque from the Russian idiom "сыграть злую шутку". In Ukrainian, it's more natural to use "підводить" in this context.
+Fix: Replace "грає злий жарт" with "підводить".
+
+[5. Exercise quality] [Major]
+Location: Throughout the module (e.g. `<!-- INJECT_ACTIVITY: reading-comprehension-plural-mixed -->`)
+Issue: The plan only requests 5 activities, but the writer generated 9 marker tags. This causes a schema mismatch where extra markers will not be resolved during the build, leaving broken tags in the text.
+Fix: Remove the 4 redundant activity markers (replace them with `<!-- ACTIVITY_REMOVED: redundant -->`).
 
 ## Verdict: REVISE
-The module is outstanding in depth and narrative quality, significantly exceeding the word target with high-value content. However, the presence of an active present participle (`розслаблюючим`) is a linguistic error that must be corrected to maintain the "Zero Russianisms" standard. Applying the provided fixes will make this a perfect B1-level module.
+The module is incredibly well-written, rich in context, and pedagogically sound. However, it contains a few typos and a structural issue with redundant activity markers that must be resolved before publishing.
 
 <fixes>
-- find: "видаватимуть неносія мови"
-  replace: "видаватимуть людину, для якої українська мова не є рідною"
-- find: "насолоджується розслаблюючим лікувальним масажем"
-  replace: "насолоджується розслаблювальним лікувальним масажем"
+- find: "історичним залишком давної двоїни"
+  replace: "історичним залишком давньої двоїни"
+- find: "пишатися своїми прівищами."
+  replace: "пишатися своїми прізвищами."
+- find: "Це традиційний одяг, який ідеально захищав під дощем."
+  replace: "Це традиційний одяг, який ідеально захищав від дощу."
+- find: "Проте ця впевненість часто грає злий жарт, коли справа доходить"
+  replace: "Проте ця впевненість часто підводить, коли справа доходить"
+- find: "<!-- INJECT_ACTIVITY: fill-in-singular-endings -->"
+  replace: "<!-- ACTIVITY_REMOVED: redundant -->"
+- find: "<!-- INJECT_ACTIVITY: reading-comprehension-plural-mixed -->"
+  replace: "<!-- ACTIVITY_REMOVED: redundant -->"
+- find: "<!-- INJECT_ACTIVITY: quiz-identify-the-for-given-nouns -->"
+  replace: "<!-- ACTIVITY_REMOVED: redundant -->"
+- find: "<!-- INJECT_ACTIVITY: error-correction-find-and-fix-6-russicisms-or-case-errors-in-a-short-text -->"
+  replace: "<!-- ACTIVITY_REMOVED: redundant -->"
 </fixes>

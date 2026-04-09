@@ -1,27 +1,263 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 93,
+  "grounded_items": 52,
+  "ungrounded": [
+    {
+      "word": "гуляв",
+      "exercise_type": "fill-in",
+      "context": "гуляв",
+      "role": "answer"
+    },
+    {
+      "word": "працювала",
+      "exercise_type": "fill-in",
+      "context": "працювала",
+      "role": "answer"
+    },
+    {
+      "word": "минулого",
+      "exercise_type": "group-sort",
+      "context": "минулого тижня",
+      "role": "answer"
+    },
+    {
+      "word": "готую",
+      "exercise_type": "fill-in",
+      "context": "готую",
+      "role": "answer"
+    },
+    {
+      "word": "гуляли",
+      "exercise_type": "error-correction",
+      "context": "Ми будемо гуляли в парку.",
+      "role": "context"
+    },
+    {
+      "word": "снідаю",
+      "exercise_type": "error-correction",
+      "context": "Вранці я буду снідаю.",
+      "role": "context"
+    },
+    {
+      "word": "питає",
+      "exercise_type": "quiz",
+      "context": "Максим питає Олега: Що _____ робити завтра?",
+      "role": "context"
+    },
+    {
+      "word": "олега",
+      "exercise_type": "quiz",
+      "context": "Максим питає Олега: Що _____ робити завтра?",
+      "role": "context"
+    },
+    {
+      "word": "та",
+      "exercise_type": "quiz",
+      "context": "Максим питає Олега та Олену: А _____ гуляти?",
+      "role": "context"
+    },
+    {
+      "word": "олену",
+      "exercise_type": "quiz",
+      "context": "Максим питає Олега та Олену: А _____ гуляти?",
+      "role": "context"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "quiz",
+      "context": "Ігор говорить про себе: У неділю я _____ готувати.",
+      "role": "context"
+    },
+    {
+      "word": "про",
+      "exercise_type": "quiz",
+      "context": "Ігор говорить про себе: У неділю я _____ готувати.",
+      "role": "context"
+    },
+    {
+      "word": "себе",
+      "exercise_type": "quiz",
+      "context": "Ігор говорить про себе: У неділю я _____ готувати.",
+      "role": "context"
+    },
+    {
+      "word": "чоловіка",
+      "exercise_type": "quiz",
+      "context": "Ігор говорить про чоловіка: Чоловік _____ гуляти з дітьми.",
+      "role": "context"
+    },
+    {
+      "word": "каже",
+      "exercise_type": "quiz",
+      "context": "Анна каже про себе: Я _____ дивитися футбол.",
+      "role": "context"
+    },
+    {
+      "word": "клієнту",
+      "exercise_type": "quiz",
+      "context": "Ворожка каже клієнту: Ти _____ багато подорожувати.",
+      "role": "context"
+    },
+    {
+      "word": "майбутньому",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "читати'",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "гуляти'",
+      "exercise_type": "true-false",
+      "context": "У майбутньому часі дієслово не змінюється (наприклад: 'читат",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо: 'Я буде працювати'.",
+      "role": "context"
+    },
+    {
+      "word": "працювати'",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо: 'Я буде працювати'.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'завтра' часто використовується з майбутнім часом.",
+      "role": "context"
+    },
+    {
+      "word": "завтра'",
+      "exercise_type": "true-false",
+      "context": "Слово 'завтра' часто використовується з майбутнім часом.",
+      "role": "context"
+    },
+    {
+      "word": "часто",
+      "exercise_type": "true-false",
+      "context": "Слово 'завтра' часто використовується з майбутнім часом.",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Слово 'завтра' часто використовується з майбутнім часом.",
+      "role": "context"
+    },
+    {
+      "word": "майбутнім",
+      "exercise_type": "true-false",
+      "context": "Слово 'завтра' часто використовується з майбутнім часом.",
+      "role": "context"
+    },
+    {
+      "word": "часом",
+      "exercise_type": "true-false",
+      "context": "Слово 'завтра' часто використовується з майбутнім часом.",
+      "role": "context"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "true-false",
+      "context": "Форма 'будемо' використовується для займенника 'вони'.",
+      "role": "context"
+    },
+    {
+      "word": "будемо'",
+      "exercise_type": "true-false",
+      "context": "Форма 'будемо' використовується для займенника 'вони'.",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Форма 'будемо' використовується для займенника 'вони'.",
+      "role": "context"
+    },
+    {
+      "word": "займенника",
+      "exercise_type": "true-false",
+      "context": "Форма 'будемо' використовується для займенника 'вони'.",
+      "role": "context"
+    },
+    {
+      "word": "вони'",
+      "exercise_type": "true-false",
+      "context": "Форма 'будемо' використовується для займенника 'вони'.",
+      "role": "context"
+    },
+    {
+      "word": "запитання",
+      "exercise_type": "true-false",
+      "context": "'Що ти будеш робити?' — це запитання про майбутнє.",
+      "role": "context"
+    },
+    {
+      "word": "він'",
+      "exercise_type": "true-false",
+      "context": "Для 'він' і 'вона' форма 'бути' різна.",
+      "role": "context"
+    },
+    {
+      "word": "вона'",
+      "exercise_type": "true-false",
+      "context": "Для 'він' і 'вона' форма 'бути' різна.",
+      "role": "context"
+    },
+    {
+      "word": "бути'",
+      "exercise_type": "true-false",
+      "context": "Для 'він' і 'вона' форма 'бути' різна.",
+      "role": "context"
+    },
+    {
+      "word": "різна",
+      "exercise_type": "true-false",
+      "context": "Для 'він' і 'вона' форма 'бути' різна.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "буде",
-      "будемо",
-      "будете",
-      "будеш",
-      "буду",
-      "будуть",
-      "відпочивати",
-      "завтра",
-      "зараз",
       "звучати",
       "наступний",
       "план",
-      "робити",
-      "тиждень",
-      "футбол"
+      "тиждень"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

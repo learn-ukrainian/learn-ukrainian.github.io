@@ -1,7 +1,9 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
-# V6 Pre-Write Verification — Tool-Forced Fact Checking
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG — drop textbook search -->
+# V6 Pre-Write Verification — Linguistic Fact Checking
 
-You MUST verify facts using the tools below BEFORE writing begins. This is a verification-only step — do NOT write any module content.
+You MUST verify linguistic facts using the tools below BEFORE writing begins. This is a verification-only step — do NOT write any module content.
+
+The wiki article already contains curated textbook content — your job here is to verify VOCABULARY, GRAMMAR RULES, CALQUES, and CEFR LEVELS using linguistic tools.
 
 ## Module
 
@@ -39,25 +41,19 @@ Report:
 - ✅ Words confirmed in VESUM
 - ❌ Words NOT in VESUM (these must not be used in the module)
 
-### Task 2: Search textbooks for each section topic
-
-For each section title above, call `search_text` with the Ukrainian keywords.
-
-Report the most relevant textbook excerpt for each section (author, grade, key quote).
-
-### Task 3: Verify grammar rules
+### Task 2: Verify grammar rules
 
 For any grammar rules mentioned in the plan, call `query_pravopys` to confirm the official 2019 rule.
 
 Report the Правопис section number and key rule text.
 
-### Task 4: Check for calques
+### Task 3: Check for calques
 
 Call `search_style_guide` for any phrases in the plan that might be calques. Check at least 3 phrases.
 
 Report any calques found with the correct Ukrainian alternative.
 
-### Task 5: Verify CEFR appropriateness
+### Task 4: Verify CEFR appropriateness
 
 Call `query_cefr_level` on 5-10 key vocabulary words to confirm they match the target level (A1).
 
@@ -71,15 +67,6 @@ Output your findings in this exact format:
 ## VESUM Verification
 - Confirmed: [list of verified words]
 - Not found: [list of words to avoid]
-
-## Textbook Excerpts
-### Section: [title]
-> [relevant textbook quote]
-> Source: [author, grade]
-
-### Section: [title]
-> [relevant textbook quote]
-> Source: [author, grade]
 
 ## Grammar Rules
 - [rule]: Правопис §[number] — [key text]

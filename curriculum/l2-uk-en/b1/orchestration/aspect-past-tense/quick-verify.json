@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/20 required vocab: {'word': 'зателефонувати', 'pos': 'verb:pf', 'translation': 'to call (perfective — one completed call)'}"
+    }
+  ],
+  "timestamp": "2026-04-09T00:48:26.296594+00:00"
+}

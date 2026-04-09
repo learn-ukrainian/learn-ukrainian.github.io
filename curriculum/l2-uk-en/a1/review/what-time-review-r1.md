@@ -1,44 +1,51 @@
 ## Linguistic Scan
-- **Error (Critical):** "друга" incorrectly identified as meaning "female friend". ("Female friend" is "подруга"; "друга" is the genitive/accusative of the masculine "друг").
-- **Error (Minor):** "Пів на котру буде о 8:30?" is an awkward, unnatural meta-question.
+No linguistic errors found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: match-up-times -->` — correctly placed after the 1-12 hours table, matching the hint for testing 7:00 ↔ сьома.
-- `<!-- INJECT_ACTIVITY: quiz-clock-faces -->` — correctly placed after half and quarter hours, aligned with the clock face matching hint.
-- `<!-- INJECT_ACTIVITY: fill-in-o-kotrij -->` — correctly placed after the "о котрій" paradigm table.
-- `<!-- INJECT_ACTIVITY: quiz-time-of-day -->` — correctly placed directly after the "Time of Day" section.
-All 4 markers perfectly match the plan and are inserted at the exact right pedagogical moments.
+- `<!-- INJECT_ACTIVITY: quiz-clock-matching -->`: Placed after "Котра година?" section. Matches plan.
+- `<!-- INJECT_ACTIVITY: match-up-digits -->`: Placed after "Котра година?" section. Matches plan.
+- `<!-- INJECT_ACTIVITY: fill-in-o-kotrii -->`: Placed after "О котрій?" section. Matches plan.
+- `<!-- INJECT_ACTIVITY: quiz-time-of-day -->`: Placed after "О котрій?" section. Matches plan.
+All exercises are appropriately placed and match the plan's activity hints in type and count.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all dialogue situations, perfectly executes the PPP pedagogy, integrates textbook citations naturally, and covers all required/recommended vocabulary. |
-| 2. Linguistic accuracy | 8/10 | Contains a severe factual error claiming that "**друга** also means 'female friend'". The rest of the grammar and vocabulary usage is flawless. |
-| 3. Pedagogical quality | 9/10 | The PPP flow and the A1-friendly heuristic explaining the `-а` to `-ій` shift are brilliant. Minor deduction for an awkward self-check question ("Пів на котру буде о 8:30?"). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (ранок, день, вечір, ніч, опівдні, пів, чверть, and all ordinals) are included and taught contextually. |
-| 5. Exercise quality | 10/10 | Exercise markers are perfectly aligned with plan hints and strategically placed after the exact concepts are taught. |
-| 6. Engagement & tone | 10/10 | The tone is warm and encouraging. Includes helpful, practical tips like the syllable count for `одинадцята`. |
-| 7. Structural integrity | 10/10 | Clean markdown, beautifully formatted HTML dialogues, correct tables, and logical H2/H3 progression. |
-| 8. Cultural accuracy | 10/10 | Incorporates real textbook examples to prove natural usage to the learner. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly realistic, transactional, and effectively model how a learner would actually schedule a meeting. |
+| 1. Plan adherence | 10/10 | Covers all outline points, introduces ordinals for time, explains 'пів на' and quarters, explains 'о/об' locative chunks, and includes required time-of-day words. |
+| 2. Linguistic accuracy | 10/10 | Excellent accuracy. Correctly uses forms like 'за чверть третя', 'чверть на третю', 'пів на другу', and actively teaches against common Russianisms like 'без' or 'у/в'. |
+| 3. Pedagogical quality | 7/10 | DEDUCT: The writer leaked meta-notes from the plan directly into the student-facing text ("Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook", "You must warn against", "You must explicitly forbid"). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary is naturally integrated into the explanations and dialogues. |
+| 5. Exercise quality | 10/10 | Exercise markers are correctly placed after their respective teaching sections and correspond perfectly to the plan. |
+| 6. Engagement & tone | 8/10 | DEDUCT: The meta-language addressed to the instructor breaks the otherwise engaging teacher persona. REWARD: Clear, helpful explanations of the conceptual difference between English and Ukrainian time-telling. |
+| 7. Structural integrity | 10/10 | Clean markdown, sections match outline, word count is well above the 1200 target (1450). |
+| 8. Cultural accuracy | 10/10 | Directly addresses and corrects common Russianisms ('без', 'у/в' for time). |
+| 9. Dialogue & conversation quality | 9/10 | The first dialogue is natural and contextualizes the grammar perfectly. The second dialogue uses slightly generic "Студент А / Студент Б" designations but functions well. |
 
 ## Findings
-[Linguistic accuracy] [Critical]
-Location: `## Котра година? (What Time Is It?)` (second paragraph)
-Issue: The text claims that "**друга** also means 'female friend' in other contexts". This is factually incorrect. "Female friend" is "подруга". The word "друга" is the genitive or accusative case of the masculine "друг" (male friend). This teaches learners an incorrect vocabulary fact.
-Fix: Remove the incorrect sentence.
 
-[Pedagogical quality] [Minor]
-Location: `## Підсумок — Summary` (self-check bullet points)
-Issue: The self-check question "- **Пів на котру буде о 8:30?**" literally translates to "Half to which will it be at 8:30?". This is an awkward, unnatural meta-question. A simpler prompt like "- **Як сказати 8:30?**" is much more natural.
-Fix: Replace with "- **Як сказати 8:30?**".
+[Pedagogical quality] [Major]
+Location: "Котра година?" section ("Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook, because the word **година** (hour) is feminine, the numbers must agree with it.")
+Issue: The writer accidentally included the curriculum reference note from the plan directly into the student-facing text, breaking the fourth wall.
+Fix: Remove the meta-reference to the textbook.
+
+[Pedagogical quality] [Major]
+Location: "Котра година?" section ("You must warn against using the word "без" (without) for time, which is a common Russianism and incorrect in standard Ukrainian.")
+Issue: The writer is addressing the instructor ("You must warn against") instead of the learner.
+Fix: Rephrase to address the learner directly ("You must avoid using...").
+
+[Pedagogical quality] [Major]
+Location: "О котрій?" section ("You must explicitly forbid using the prepositions "в" or "у" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid.")
+Issue: The writer is again addressing the instructor ("explicitly forbid using") based on the plan's notes, rather than addressing the student.
+Fix: Rephrase to address the learner directly ("You must never use...").
 
 ## Verdict: REVISE
-The module is exceptional in its structure, tone, and A1-friendly grammar explanations. However, it contains a critical factual hallucination regarding the meaning of the word "друга" which must be surgically removed before shipping. 
+The module is linguistically excellent and covers the plan perfectly, but it contains several instances of meta-prompt leakage where notes intended for the author ("Zakhariichuk Grade 4", "You must warn against", "You must explicitly forbid") were written directly into the student-facing text. These break the fourth wall and must be fixed.
 
 <fixes>
-- find: "A quick pronunciation note: **одинадцята** has five syllables (о-ди-над-ця-та), so take your time with it. And **друга** also means \"female friend\" in other contexts — but when answering **Котра година?**, the meaning is always \"two o'clock.\""
-  replace: "A quick pronunciation note: **одинадцята** has five syllables (о-ди-над-ця-та), so take your time with it."
-- find: "- **Пів на котру буде о 8:30?** → *Пів на дев'яту.*"
-  replace: "- **Як сказати 8:30?** → *Пів на дев'яту.*"
+- find: "Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook, because the word **година** (hour) is feminine, the numbers must agree with it."
+  replace: "Because the word **година** (hour) is feminine, the numbers must agree with it."
+- find: "You must warn against using the word \"без\" (without) for time, which is a common Russianism and incorrect in standard Ukrainian."
+  replace: "You must avoid using the word \"без\" (without) for time, which is a common Russianism and incorrect in standard Ukrainian."
+- find: "You must explicitly forbid using the prepositions \"в\" or \"у\" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid."
+  replace: "You must never use the prepositions \"в\" or \"у\" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid."
 </fixes>

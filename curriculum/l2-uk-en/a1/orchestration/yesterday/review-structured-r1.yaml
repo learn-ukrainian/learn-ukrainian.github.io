@@ -2,56 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 content_outline sections present and in correct order. All 8 required
-    vocabulary items used naturally in prose (учора, зранку, вдень, ввечері, потім,
-    прокинутися, поснідати, обідати). All 8 reco
+  score: 10
+  evidence: The text adheres perfectly to the module plan, including all specific
+    narrative dialogs, sequencing words, and the "Anna's yesterday" narrative.
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All 44 key Ukrainian words batch-verified against VESUM — 44/44 found.
-    Irregular forms пішов (піти past:m) and ліг (лягти past:m) confirmed. Gender agreement
-    correct throughout all dialogues and narra
+  score: 9
+  evidence: 'There is one critical phonetic error in the time preposition: "О одинадцятій"
+    must be "Об одинадцятій" before a vowel. All other Ukrainian vocabulary, cases,
+    and gender agreements are correct.'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Strong PPP flow: Dialogues present past narration in context → "Розповідь
-    про день" extracts patterns (time markers, sequencing words, verb table) → "Мій
-    учорашній день" provides model narrative then '
+  score: 10
+  evidence: Excellent breakdown of gendered past-tense verbs (like `ліг` dropping
+    the `-в` suffix) and a fantastic, explicit caution note distinguishing between
+    `вдень` (afternoon) and `в день` (on the day).
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 8 required vocab items appear in natural prose contexts (not as bare
-    lists): учора in Anna''s narrative opener, зранку/вдень/ввечері as the "spine"
-    metaphor, потім in sequencing explanation, прокин'
+  evidence: Every single required and recommended word from the plan's `vocabulary_hints`
+    is naturally included in the text and dialogues.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 3 markers match plan's 3 activity_hints exactly in type and focus. Ordering
-    activity placed after verb teaching (tests sequencing skill). Fill-in activities
-    placed after model narrative (tests time ma
+  score: 10
+  evidence: The three activity markers are placed logically and align perfectly with
+    the target concepts (chronological ordering, narrative flow, gender consistency).
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'Zero motivational openers, zero meta-commentary, zero generic enthusiasm.
-    The prose is direct and instructive: "These three time markers are the spine of
-    every past-day story in Ukrainian" — concrete '
+  evidence: The writer adopts a clear, encouraging tone ("It is your turn to build
+    a narrative") that stays focused on teaching without resorting to corporate or
+    gamified filler.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 sections present in plan order: Dialogues → Розповідь про день
-    → Мій учорашній день → Summary. Clean markdown with proper dialogue div formatting.
-    No duplicate sections, no meta-commentary se'
+  evidence: The generated word count (1506) comfortably exceeds the 1200 target. The
+    markdown uses accurate headings and perfectly ordered sections.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented entirely on its own terms. No "like Russian" comparisons.
-    "файно" (Western Ukrainian regional form, VESUM-confirmed adv) adds authentic
-    flavor. The police dialogue uses real Ukrain
+  evidence: The settings and actions are culturally accurate and everyday-appropriate
+    (using common spaces like `кав'ярня` and `кафе`, eating `каша`).
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: 'Three dialogues, all with named speakers and natural flow. Dialogue 1:
-    friend asks about day, natural question chain (зранку? → вдень? → ввечері?). Dialogue
-    2: enthusiastic weekend retelling with "Роз'
+  evidence: The dialogues are incredibly natural and feature named characters. They
+    provide an excellent demonstration of sequencing (using "А потім?") in realistic
+    conversational patterns.
 findings: []

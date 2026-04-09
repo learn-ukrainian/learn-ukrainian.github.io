@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 4/14 required vocab: давальний відмінок (dative case), відміна (declension class — noun classification by ending pattern), м'яка група (soft group — nouns with soft stem-final consonant), мішана група (mixed group — nouns with шиплячий stem-final)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 4"
+    }
+  ],
+  "timestamp": "2026-04-09T04:24:45.848836+00:00"
+}

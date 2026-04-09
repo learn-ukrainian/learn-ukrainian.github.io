@@ -1,75 +1,47 @@
 ## Linguistic Scan
-Errors and minor stylistic issues found:
-- **Factual grammatical error:** Stating that there are "no exceptions" to the comma before *що/де/коли* is wrong (e.g., elliptical single-word clauses like "Я не знаю де." do not take a comma).
-- **Style/Calque:** "добрий час" is a slight calque for "good time" instead of the more idiomatic "гарний час" or "зручний час".
-- **Usage/Idiom:** "Де побачиш фонтан" is slightly awkward for temporal/spatial directions; "Коли побачиш" is more standard.
-- **Pedagogical clarity:** Grouping the perfective imperative "Скажи" directly under the imperfective lemma "казати" without noting the pair may cause morphological confusion later.
+No linguistic errors found. The vocabulary, case usage, and sentence structures are authentically Ukrainian.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-comma-placement -->` (Matches hint 4: Where is the comma?)
-- `<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->` (Matches hint 2: Question word or conjunction?)
-- `<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->` (Matches hint 1: Complete with що/де/коли)
-- `<!-- INJECT_ACTIVITY: fill-in-build-sentences -->` (Matches hint 3: Build complex sentences)
-All 4 requested activity markers are present, logically placed after their respective teaching sections, and appropriately test the material just taught.
+- `<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->` - Matches plan hint #1. Placed perfectly after the introduction of trigger verbs in "Складне речення".
+- `<!-- INJECT_ACTIVITY: quiz-comma-placement -->` - Matches plan hint #4. Placed correctly alongside the comma rule explanation.
+- `<!-- INJECT_ACTIVITY: quiz-function-id -->` - Matches plan hint #2. Placed immediately after the "Two Faces" section contrasting question words and conjunctions.
+- `<!-- INJECT_ACTIVITY: fill-in-sentence-builder -->` - Matches plan hint #3. Positioned logically at the end of the practice section.
+All markers are present, correctly named, and optimally placed. No issues.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covered all sections and dialog structures from the plan. Minor deduction for skipping some recommended vocabulary (`чути`, `розуміти`, `головне`). |
-| 2. Linguistic accuracy | 8/10 | Included a factually incorrect absolute rule (`Ukrainian ALWAYS places a comma before що, де, коли when they serve as conjunctions — no exceptions.`). Used a slightly unnatural calque (`добрий час`) and spatial phrasing (`Де побачиш фонтан`). |
-| 3. Pedagogical quality | 9/10 | Excellent breakdown of the difference between question words and conjunctions, with very clear examples. Minor deduction for grouping "Скажи" under "Казати" without noting it's a perfective pair, which could cause morphological confusion for learners trying to construct it. |
-| 4. Vocabulary coverage | 9/10 | All required vocabulary (`що, де, коли, знати, думати, казати`) used naturally and repeatedly in context. |
-| 5. Exercise quality | 10/10 | Markers perfectly match the plan's `activity_hints` and are placed correctly after the relevant explanations. |
-| 6. Engagement & tone | 10/10 | The dialogues are highly engaging, featuring named speakers in realistic, highly communicative situations. The tone is encouraging but focused. |
-| 7. Structural integrity | 9/10 | Clean structure, but leaked a generated AI artifact at the bottom of the file (`**Deterministic word count...`). |
-| 8. Cultural accuracy | 10/10 | Culturally neutral and accurate. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are expanded beyond the plan beautifully, creating very natural multi-turn conversations that seamlessly integrate the target grammar. |
+| 1. Plan adherence | 10/10 | Covered all 4 sections exactly as specified. Included the summary table and the self-check. All required vocabulary is present. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, or calques. Punctuation around subordinate clauses is flawless, adhering to Ukrainian orthography rules. |
+| 3. Pedagogical quality | 10/10 | Excellent breakdown of the "Two Faces" concept. The explicit warning about the English comma difference ("I think that...") is highly effective for English learners. |
+| 4. Vocabulary coverage | 9/10 | Included all required vocabulary. However, it missed incorporating the recommended Ukrainian term "головне речення" directly into the text, relying only on the English "main clause". |
+| 5. Exercise quality | 10/10 | 4 exercise markers perfectly match the plan's `activity_hints` in both type and focus. Placed logically after relevant theory. |
+| 6. Engagement & tone | 10/10 | Clear, professional, and encouraging teacher tone without any corporate filler or overly gamified language. |
+| 7. Structural integrity | 10/10 | Word count is 1753, well above the 1200 target. All H2 headings perfectly match the `content_outline`. Clean markdown. |
+| 8. Cultural accuracy | 10/10 | Natural interactions and culturally appropriate use of names in the dialogues. |
+| 9. Dialogue & conversation quality | 6/10 | Critical error in Dialogue 1: The guest uses the 2nd-person imperative "зупинись?" to ask about their own future action, which is a grammatical and logical impossibility. |
 
 ## Findings
-[2. Linguistic accuracy] [Major]
-Location: `Ukrainian ALWAYS places a comma before **що**, **де**, **коли** when they serve as conjunctions — no exceptions.`
-Issue: The "no exceptions" claim is factually incorrect. In Ukrainian, a comma is NOT placed if the subordinate clause consists of a single relative word/conjunction (e.g., "Я не знаю де."). While the comma is almost always used in A1 contexts, teaching an absolute "no exceptions" rule is dangerous and creates unlearning debt.
-Fix: Soften the rule to state it applies when connecting two parts of a sentence.
+[9. Dialogue & conversation quality] [critical]
+Location: `> **Гість:** Добре. Я йду. А **де** побачиш **парк** (park), зупинись? *(Okay. I am walking. And where you see the park, stop?)*`
+Issue: Logical perspective error. The guest is asking what they themselves should do, but the text uses the 2nd-person singular verb (`побачиш`) and the imperative mood (`зупинись`). A learner cannot use an imperative to ask a question about their own actions.
+Fix: Change the guest's line to use the 1st person (`побачу`) and an infinitive of obligation (`треба зупинитись?`). Update the host's reply to include `зупинись` so that the explanatory note below the dialogue still makes sense.
 
-[2. Linguistic accuracy] [Major]
-Location: `Write this rule in your notebook: comma + conjunction = always paired in Ukrainian.`
-Issue: Same as above. The absolutism "always paired" is grammatically incorrect.
-Fix: Change to "the standard pair".
-
-[2. Linguistic accuracy] [Minor]
-Location: `Я теж думаю, що о шостій — добрий час.`
-Issue: "Добрий час" is a slight calque of "good time". In Ukrainian, "зручний час", "вдалий час", or "гарний час" (as written in the original plan) is more natural in this context.
-Fix: Change "добрий час" to "гарний час".
-
-[2. Linguistic accuracy] [Minor]
-Location: `Де побачиш фонтан — поверни ліворуч.`
-Issue: While understandable, "Де побачиш" (Where you see) is slightly awkward for temporal/spatial directions compared to "Коли побачиш" (When you see). The original plan separated these more cleanly.
-Fix: Change "Де" to "Коли".
-
-[3. Pedagogical quality] [Minor]
-Location: `«Казати» works with all three conjunctions: «Він каже, що вона в Києві», «Вона казала, де магазин», «Скажи, коли прийдеш».`
-Issue: Grouping "Скажи" directly under the imperfective "казати" without mentioning it is a different verb ("сказати") can cause morphological confusion, as learners might assume "скажи" is formed directly from the "каз-" stem.
-Fix: Add a brief parenthetical mention of its perfective pair.
-
-[7. Structural integrity] [Minor]
-Location: `**Deterministic word count: 1946 words** (calculated by pipeline, do NOT estimate manually)`
-Issue: AI artifact/meta-commentary leaked into the final text.
-Fix: Remove the artifact.
+[4. Vocabulary coverage] [minor]
+Location: `the phrase **Я знаю** operates as the core statement—it is the main clause.`
+Issue: The recommended vocabulary word `головне` was omitted in Ukrainian; only the English translation "main clause" is present.
+Fix: Insert `**головне речення**` before `(main clause)`.
 
 ## Verdict: REVISE
-The module is extremely well-written with great dialogues and clear explanations, but it requires revision to fix the factual error regarding the "no exceptions" comma rule, a minor calque, and the AI artifact at the bottom of the file.
+The module is exceptionally strong in theory, pedagogy, and length, but a grammatical impossibility in the opening dialogue represents a critical error that teaches learners the wrong way to ask for directions. Applying the fixes below will correct this and bump the vocabulary coverage.
 
 <fixes>
-- find: "Ukrainian ALWAYS places a comma before **що**, **де**, **коли** when they serve as conjunctions — no exceptions."
-  replace: "Ukrainian ALWAYS places a comma before **що**, **де**, **коли** when they connect two parts of a sentence."
-- find: "Write this rule in your notebook: comma + conjunction = always paired in Ukrainian."
-  replace: "Write this rule in your notebook: comma + conjunction = the standard pair in Ukrainian."
-- find: "Я теж думаю, що о шостій — добрий час."
-  replace: "Я теж думаю, що о шостій — гарний час."
-- find: "Де побачиш фонтан — поверни ліворуч."
-  replace: "Коли побачиш фонтан — поверни ліворуч."
-- find: "«Казати» works with all three conjunctions: «Він каже, що вона в Києві», «Вона казала, де магазин», «Скажи, коли прийдеш»."
-  replace: "«Казати» (and its pair **сказати**) works with all three conjunctions: «Він каже, що вона в Києві», «Вона казала, де магазин», «Скажи, коли прийдеш»."
-- find: "**Deterministic word count: 1946 words** (calculated by pipeline, do NOT estimate manually)"
-  replace: " "
+- find: |
+    > **Гість:** Добре. Я йду. А **де** побачиш **парк** (park), зупинись? *(Okay. I am walking. And where you see the park, stop?)*
+    > **Господар:** Саме так. Великий **будинок** (building), **що** стоїть біля дерева — це кафе. Скажи, **коли** ти вільний. *(Exactly. The big building that stands near the tree is the cafe. Tell me when you are free.)*
+  replace: |
+    > **Гість:** Добре. Я йду. А **де** побачу **парк** (park), треба зупинитись? *(Okay. I am walking. And where I see the park, should I stop?)*
+    > **Господар:** Саме так, зупинись. Великий **будинок** (building), **що** стоїть біля дерева — це кафе. Скажи, **коли** ти вільний. *(Exactly, stop. The big building that stands near the tree is the cafe. Tell me when you are free.)*
+- find: "the phrase **Я знаю** operates as the core statement—it is the main clause."
+  replace: "the phrase **Я знаю** operates as the core statement—it is the **головне речення** (main clause)."
 </fixes>

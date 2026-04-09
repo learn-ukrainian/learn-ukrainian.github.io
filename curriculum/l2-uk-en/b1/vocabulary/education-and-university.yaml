@@ -1,0 +1,445 @@
+vocabulary:
+- word: осві́та
+  translation: education
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: університе́т
+  translation: university
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: факульте́т
+  translation: faculty, department
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: спеціа́льність
+  translation: major, specialization
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ле́кція
+  translation: lecture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: семіна́р
+  translation: seminar
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: і́спит
+  translation: exam
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: за́лік
+  translation: pass/fail assessment
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стипе́ндія
+  translation: scholarship, stipend
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: курсова робота
+  translation: term paper
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дипломна робота
+  translation: thesis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дослі́дження
+  translation: research
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: бакала́вр
+  translation: bachelor's degree
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магі́стр
+  translation: master's degree
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́федра
+  translation: department, chair
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гурто́житок
+  translation: dormitory
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: розклад занять
+  translation: class schedule
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: залікова книжка
+  translation: grade book
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: конфере́нція
+  translation: conference
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лабораторна робота
+  translation: lab work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підру́чник
+  translation: textbook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: конспе́кт
+  translation: lecture notes
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: моногра́фія
+  translation: monograph
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дисерта́ція
+  translation: dissertation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: науковий керівник
+  translation: academic advisor
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: початкова школа
+  translation: primary school
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: базова середня школа
+  translation: basic secondary school
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: свідоцтво про базову середню освіту
+  translation: certificate of basic secondary education
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: старша профільна школа
+  translation: senior specialized school
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бакалавра́т
+  translation: bachelor's program
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магістрату́ра
+  translation: master's program
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: аспіранту́ра
+  translation: postgraduate studies
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: доктор філософії
+  translation: Doctor of Philosophy (PhD)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: інститу́т
+  translation: institute
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: акаде́мія
+  translation: academy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́ледж
+  translation: college
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виш
+  translation: higher educational institution
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ЗНО
+  translation: External Independent Evaluation (ZNO)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: НМТ
+  translation: National Multisubject Test (NMT)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: державне замовлення
+  translation: state funding
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бюдже́т
+  translation: state-funded place (budget)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: контрактна форма
+  translation: self-funded study
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: матема́тика
+  translation: mathematics
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фі́зика
+  translation: physics
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хі́мія
+  translation: chemistry
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: біоло́гія
+  translation: biology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: філосо́фія
+  translation: philosophy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інформа́тика
+  translation: computer science
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: еконо́міка
+  translation: economics
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: юриспруде́нція
+  translation: jurisprudence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: філоло́гія
+  translation: philology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інжене́рія
+  translation: engineering
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: медици́на
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: істо́рія
+  translation: history
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: психоло́гія
+  translation: psychology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мисте́цтво
+  translation: art
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ви́вчення
+  translation: studying, learning
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: виклада́ння
+  translation: teaching
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: оці́нювання
+  translation: evaluation, assessment
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: філологі́чний
+  translation: philological
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: педагогі́чний
+  translation: pedagogical
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: меди́чний
+  translation: medical
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: юриди́чний
+  translation: law, juridical
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: навча́ння
+  translation: studying
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: се́сія
+  translation: exam period
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: декана́т
+  translation: dean's office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: читальний зал
+  translation: reading room
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рекомендована література
+  translation: recommended literature
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: опублікована стаття
+  translation: published article
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: науковий стиль
+  translation: scientific register
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кредитно-модульна система
+  translation: credit-module system
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дванадцятибальна шкала
+  translation: twelve-point scale
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стобальна шкала
+  translation: hundred-point scale
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: потрі́бен
+  translation: needed, necessary
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

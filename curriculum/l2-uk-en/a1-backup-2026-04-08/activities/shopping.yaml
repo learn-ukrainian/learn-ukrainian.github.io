@@ -1,0 +1,313 @@
+version: '1.0'
+module: shopping
+level: a1
+inline:
+- id: quiz-currency-forms
+  type: quiz
+  instruction: Оберіть правильну форму (Choose the correct form of гривня)
+  items:
+  - question: 21 ___
+    options:
+    - гривень
+    - гривні
+    - гривня
+    correct: 2
+  - question: 32 ___
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 1
+  - question: 45 ___
+    options:
+    - гривня
+    - гривень
+    - гривні
+    correct: 1
+  - question: 100 ___
+    options:
+    - гривні
+    - гривня
+    - гривень
+    correct: 2
+  - question: 1 ___
+    options:
+    - гривня
+    - гривень
+    - гривні
+    correct: 0
+  - question: 3 ___
+    options:
+    - гривень
+    - гривні
+    - гривня
+    correct: 1
+  - question: 10 ___
+    options:
+    - гривні
+    - гривень
+    - гривня
+    correct: 1
+  - question: 54 ___
+    options:
+    - гривня
+    - гривень
+    - гривні
+    correct: 2
+- id: fill-in-prices
+  type: fill-in
+  instruction: 'Вставте правильну форму дієслова (Fill in the correct verb form: коштує
+    or коштують)'
+  items:
+  - sentence: Скільки ___ хліб?
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+    - коштувати
+  - sentence: Скільки ___ яблука?
+    answer: коштують
+    options:
+    - коштують
+    - коштує
+    - коштувати
+  - sentence: Скільки ___ молоко?
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+    - коштувати
+  - sentence: Скільки ___ помідори?
+    answer: коштують
+    options:
+    - коштують
+    - коштує
+    - коштувати
+  - sentence: Скільки ___ сир?
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+    - коштувати
+  - sentence: Скільки ___ банани?
+    answer: коштують
+    options:
+    - коштують
+    - коштує
+    - коштувати
+- id: fill-in-quantities
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct quantity word)
+  items:
+  - sentence: Дайте, будь ласка, ___ яблук.
+    answer: кілограм
+    options:
+    - кілограм
+    - літр
+    - пляшку
+  - sentence: Дайте, будь ласка, ___ молока.
+    answer: літр
+    options:
+    - літр
+    - кілограм
+    - буханку
+  - sentence: Дайте, будь ласка, ___ води.
+    answer: пляшку
+    options:
+    - пляшку
+    - кілограм
+    - буханку
+  - sentence: Дайте, будь ласка, ___ масла.
+    answer: пачку
+    options:
+    - пачку
+    - літр
+    - буханку
+  - sentence: Дайте, будь ласка, ___ хліба.
+    answer: буханку
+    options:
+    - буханку
+    - літр
+    - кілограм
+  - sentence: Дайте, будь ласка, ___ помідорів.
+    answer: кілограм
+    options:
+    - кілограм
+    - літр
+    - пляшку
+- id: match-shop-types
+  type: match-up
+  instruction: З'єднайте товар із місцем покупки (Match each item with where you buy
+    it)
+  pairs:
+  - left: помідори
+    right: ринок
+  - left: м'ясо
+    right: м'ясний відділ
+  - left: сир
+    right: молочний відділ
+  - left: хліб
+    right: крамниця
+  - left: молоко
+    right: супермаркет
+  - left: вода
+    right: магазин
+  - left: кава
+    right: кафе
+  - left: борщ
+    right: ресторан
+workbook:
+- type: fill-in
+  instruction: 'Вставте правильну форму: коштує або коштують (Fill in коштує or коштують)'
+  items:
+  - sentence: Скільки ___ хліб? — Двадцять гривень.
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ вода? — Десять гривень.
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ сир? — Сто гривень.
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ яблука? — Сорок гривень.
+    answer: коштують
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ помідори? — Тридцять гривень.
+    answer: коштують
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ молоко? — П'ятдесят гривень.
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ сік? — Шістдесят гривень.
+    answer: коштує
+    options:
+    - коштує
+    - коштують
+  - sentence: Скільки ___ банани? — Сімдесят гривень.
+    answer: коштують
+    options:
+    - коштує
+    - коштують
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Після числа 5 треба говорити «гривня».
+    correct: false
+    explanation: 'After 5 and above, use гривень. Гривня is only for 1 (and 21, 31,
+      41...). Example: 5 гривень, 10 гривень, 100 гривень.'
+  - statement: «Скільки коштують яблука?» — правильна форма.
+    correct: true
+    explanation: 'Яблука is plural, so the verb is plural too: коштують. Singular:
+      Скільки коштує хліб?'
+  - statement: «Скільки коштує?» використовується з іменниками у множині.
+    correct: false
+    explanation: 'Скільки коштує? is for SINGULAR nouns. For plural nouns, use коштують:
+      Скільки коштують помідори?'
+  - statement: «Дайте, будь ласка» — стандартна фраза для замовлення.
+    correct: true
+    explanation: Yes! Дайте, будь ласка + quantity + item is the standard polite buying
+      request in Ukrainian markets and shops.
+  - statement: «Можна карткою?» означає «Can I pay by card?»
+    correct: true
+    explanation: Correct. Картка = card. Можна = is it possible / may I. This phrase
+      works at any cash register in Ukraine.
+  - statement: «Дорого!» — це прикметник.
+    correct: false
+    explanation: 'Дорого is an adverb — a standalone reaction to a price. The adjective
+      form is дорогий/дорога/дороге, used before a noun: дорогий сир (expensive cheese).'
+  - statement: Слово «крамниця» є синонімом слова «магазин».
+    correct: true
+    explanation: Yes! Крамниця is a distinctly Ukrainian word meaning store/shop —
+      a synonym for магазин. It is common in western Ukraine and literary Ukrainian.
+- type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  groups:
+  - label: Гроші та оплата (Money & payment)
+    items:
+    - гривня
+    - копійка
+    - гроші
+    - готівка
+    - ціна
+    - знижка
+  - label: Місця покупки (Places to shop)
+    items:
+    - магазин
+    - супермаркет
+    - ринок
+    - крамниця
+    - аптека
+    - відділ
+- type: match-up
+  instruction: З'єднайте фразу з перекладом (Match each phrase with its English meaning)
+  pairs:
+  - left: Дорого!
+    right: Expensive!
+  - left: Дешево!
+    right: Cheap!
+  - left: Добре, беру.
+    right: OK, I'll take it.
+  - left: Є знижка?
+    right: Is there a discount?
+  - left: Скільки за все?
+    right: How much is everything?
+  - left: Можна карткою?
+    right: Can I pay by card?
+  - left: Нормальна ціна.
+    right: Fair price.
+- type: error-correction
+  instruction: Виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Скільки стоїть кілограм яблук?
+    error: стоїть
+    correction: коштує
+    explanation: In Ukrainian, use коштувати (to cost). Стоїть (to stand) is a Russianism
+      when talking about prices — you hear it in Russian, but in Ukrainian we say
+      коштує.
+  - sentence: Скільки коштує помідори?
+    error: коштує
+    correction: коштують
+    explanation: 'Помідори is plural, so the verb must agree: коштують. Compare: хліб
+      коштує (singular) — помідори коштують (plural).'
+  - sentence: Три гривень, будь ласка.
+    error: гривень
+    correction: гривні
+    explanation: After 2, 3, 4 (and numbers ending in them) use гривні. After 5 and
+      above use гривень. Three = гривні.
+  - sentence: Сто гривень — це дорогий!
+    error: дорогий
+    correction: дорого
+    explanation: 'As a comment about a price, use the adverb дорого (Expensive!).
+      Дорогий is an adjective that describes a noun: дорогий сир (expensive cheese).'
+  - sentence: Я йду в ринок.
+    error: в
+    correction: на
+    explanation: 'Ринок takes the preposition на: на ринок (direction), на ринку (location).
+      Compare: в магазин, у супермаркет — different locations take different prepositions.'
+  - sentence: Скільки коштувати цей сир?
+    error: коштувати
+    correction: коштує
+    explanation: Use the conjugated verb form коштує, not the infinitive коштувати.
+      The infinitive means 'to cost' — here you need the present tense 'costs'.
+- type: observe
+  examples:
+  - 1 гривня — 2 гривні — 5 гривень
+  - 21 гривня — 22 гривні — 25 гривень
+  - 31 гривня — 32 гривні — 35 гривень
+  - 1 копійка — 2 копійки — 5 копійок
+  - 1 кілограм — 2 кілограми — 5 кілограмів
+  - 1 літр — 2 літри — 5 літрів
+  prompt: 'What pattern do you notice? When do you use each form? (Hint: look at the
+    last digit of the number.)'

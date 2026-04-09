@@ -1,130 +1,91 @@
-## Діало́ги (Dialogues)
+## Діало́ги — Dialogues
 
-Оле́на and Іва́н are setting up a classroom for a Ukrainian lesson. Desks are bare, supplies are in boxes, and everything needs to be counted and arranged before students arrive.
+When you step into a new environment, like setting up a classroom for a Ukrainian lesson, you rarely deal with just one isolated item. You need many chairs for the students, many tables to work on, and many books to read. This natural, everyday situation is the perfect place to learn how to express more than one thing. We call this grammatical concept the plural form, or **множина́** (plural). Observe how teachers and students count and arrange items.
 
-> — **Іван:** Що тут є? *(What's here?)*
-> — **Олена:** Столи́, стільці́ і ві́кна. *(Tables, chairs, and windows.)*
-> — **Іван:** Які́ столи? *(What kind of tables?)*
-> — **Олена:** Столи вели́кі й нові́. А стільці — старі́. *(The tables are big and new. But the chairs are old.)*
-> — **Іван:** А вікна? *(And the windows?)*
-> — **Олена:** Вікна чи́сті. *(The windows are clean.)*
+The following conversation shows a teacher asking the students to look around the room, based on the classic textbook by Vashulenko for Grade 3. Pay attention to how the students identify groups of objects.
 
+> **Вчи́тель:** До́брий день! **Що тут є?** *(Good afternoon! What is here?)*
+> **У́чні:** Добрий день! Тут є **столи́**, **стільці́** і **ві́кна**. *(Good afternoon! Here are tables, chairs, and windows.)*
+> **Вчитель:** До́бре. А **які́ столи**? *(Good. And what kind of tables?)*
+> **Учні:** **Столи вели́кі** й **нові́**. А **стільці** — **старі́**. *(The tables are big and new. And the chairs are old.)*
 
-Notice what just happened. Іван didn't ask about one table — he asked about **столи** (tables), plural. Олена answered with plural adjectives: **великі** (big), **нові** (new), **старі** (old), **чисті** (clean). Every adjective in the plural ended in **-і**. That pattern is not a coincidence — it's a rule you'll learn in this module.
+Listen to the final sounds of those objects. You already know the singular words **стіл** (table), **стіле́ць** (chair), and **вікно́** (window) from previous modules. Notice how their endings transform to indicate that there are several of them in the room.
 
-Now they need supplies. Олена checks the school supply cabinet.
+These plural forms are essential everywhere, not just inside a classroom. Whenever you are buying supplies, asking for directions, or looking for various **ре́чі** (things) in a local store, you must know how to ask for multiple items clearly and accurately.
 
-> — **Олена:** У вас є ручки? *(Do you have pens?)*
-> — **Іван:** Так! Які ручки — черво́ні чи си́ні? *(Yes! What kind of pens — red or blue?)*
-> — **Олена:** Сині. І ще зо́шити. *(Blue. And also notebooks.)*
-> — **Іван:** Скі́льки? *(How many?)*
-> — **Олена:** Три зошити. *(Three notebooks.)*
-> — **Іван:** А олівці́ є? *(Are there pencils?)*
-> — **Олена:** Є. Ось жо́вті олівці й чо́рні олівці. *(Yes. Here are yellow pencils and black pencils.)*
+Imagine you are a student shopping for office supplies. The plural forms appear naturally when buying more than one item.
 
+> **Студе́нт:** Добрий день! **У вас є ручки?** *(Good afternoon! Do you have pens?)*
+> **Продаве́ць:** **Так! Які ручки? Черво́ні чи си́ні?** *(Yes! What kind of pens? Red or blue?)*
+> **Студент:** **Сині**. І ще **зо́шити**. *(Blue. And also notebooks.)*
+> **Продавець:** **Скі́льки?** *(How many?)*
+> **Студент:** **Три зошити**, будь ла́ска. *(Three notebooks, please.)*
 
-Plurals appeared naturally throughout both dialogues. One **ручка** (pen) became **ручки** (pens). One **зошит** (notebook) became **зошити** (notebooks). One **олівець** (pencil) became **олівці** (pencils). Two patterns emerged: masculine and feminine nouns took **-и** or **-і** endings, while neuter nouns like **вікно** became **вікна** with **-а**. The next section explains why these patterns work the way they do.
+In this exchange, the student asks for pens and notebooks. The shopkeeper naturally responds with plural adjectives like red and blue to clarify the request. Notice how the endings changed from the basic singular forms you learned in previous modules. The secret to Ukrainian plurals lies entirely in the final letters of the words.
 
-## Оди́н → бага́то (Singular → Plural)
+## Оди́н → бага́то — Singular → Plural
 
-Ukrainian nouns have two numbers: **однина** (singular) and **множина** (plural). A noun naming one object is in однина; a noun naming two or more is in множина. As Большако́ва puts it in her Grade 2 textbook (p. 18): "один предме́т → багато предме́тів" — one object becomes many objects. There are three main plural patterns, organized by gender.
+A famous Ukrainian textbook for the second grade by Bolshakova introduces plurals with a simple phrase: **один предме́т → багато предме́тів** (one item → many items). In English, you typically add an "s" to the end of a word to make it plural. In Ukrainian, you change the "tail" or the ending of the word. There are three main plural patterns for the nominative case, depending on the noun's gender.
 
-**Masculine nouns** typically take **-и** or **-і** in the plural:
+The first pattern is for masculine nouns, which usually end in **-и** or **-і**. Most masculine words end in a hard consonant, and to make them plural, you simply add the letter **и**. For example, **стіл** (table) becomes **столи** (tables), **телефо́н** (phone) becomes **телефо́ни** (phones), and **зо́шит** (notebook) becomes **зошити** (notebooks). If the masculine noun ends in a soft consonant, like the soft sign, you replace it with an **і**. This is why **стілець** (chair) becomes **стільці** (chairs).
 
-| Singular | → | Plural |
-|----------|---|--------|
-| стіл (m) — table | → | столи — tables |
-| телефо́н (m) — phone | → | телефо́ни — phones |
-| зошит (m) — notebook | → | зошити — notebooks |
-| стіле́ць (m) — chair | → | стільці — chairs |
-| олівець (m) — pencil | → | олівці — pencils |
-| підру́чник (m) — textbook | → | підру́чники — textbooks |
+The second pattern belongs to feminine nouns, which also usually take **-и** or **-і**. These words typically end in **-а** or **-я**. To form the plural, you drop the final vowel and replace it with **и** or **і**. For instance, **кни́га** (book) becomes **кни́ги** (books), **ла́мпа** (lamp) becomes **ла́мпи** (lamps), and **су́мка** (bag) becomes **су́мки́** (bags).
 
-Most masculine nouns take **-и**. Nouns with a soft consonant at the end — like **стілець** and **олівець** — take **-і** instead. Notice how the **е** in the suffix disappears: стілець → стільці, олівець → олівці.
+:::tip
+There is a helpful guideline, though not a strict rule as exceptions exist: after the consonants **г**, **к**, and **х**, Ukrainian uses the **-и** ending. This is why **книга** (book) becomes **книги** (books) and **ру́чка** (pen) changes to **ручки** (pens). After most other consonants, nouns generally take **-и** or **-і** (**стіл** → **столи**, **стілець** → **стільці**).
+:::
 
-**Feminine nouns** also take **-и** or **-і** in the plural:
+The third pattern is for neuter nouns. The shift here is quite distinct: the ending changes to **-а** or **-я**. The neuter ending **-о** changes to **-а** (**вікно** → **вікна**). The neuter ending **-е** changes to **-я**, though words with this ending are not covered yet. Similarly, **лі́жко** (bed) becomes **лі́жка** (beds), **крі́сло** (armchair) shifts to **крі́сла** (armchairs), and **дзе́ркало** (mirror) changes to **дзерка́ла** (mirrors). This strong **-а** sound at the end is the signature of the neuter plural form.
 
-| Singular | → | Plural |
-|----------|---|--------|
-| кни́га (f) — book | → | кни́ги — books |
-| ручка (f) — pen | → | ручки — pens |
-| ла́мпа (f) — lamp | → | ла́мпи — lamps |
-| су́мка (f) — bag | → | су́мки — bags |
-| ка́рта (f) — map | → | ка́рти — maps |
-| до́шка (f) — board | → | до́шки — boards |
+<!-- INJECT_ACTIVITY: singular-plural-sort -->
 
-A useful guideline: after **г**, **к**, **х**, the plural vowel is **-и** (книга → книги, ручка → ручки, дошка → дошки). This isn't an absolute rule, but it covers most feminine nouns you'll encounter at this level.
+The table below summarizes these essential noun endings. Masculine and feminine nouns generally share the **-и** and **-і** endings, while neuter nouns stand apart with the **-а** and **-я** endings. Because there are exceptions and minor stem changes, the best strategy is to learn each plural form alongside its singular noun when you study new vocabulary.
 
-**Neuter nouns** take **-а** in the plural:
+| Змі́на (Change) | Однина́ (Singular) | Множина (Plural) |
+| :--- | :--- | :--- |
+| Чолові́чий рід (Masculine) | **стіл**, **стілець** | **столи**, **стільці** |
+| Жіно́чий рід (Feminine) | **книга**, **ручка** | **книги**, **ручки** |
+| Сере́дній рід (Neuter) | **вікно**, **ліжко** | **вікна**, **ліжка** |
 
-| Singular | → | Plural |
-|----------|---|--------|
-| вікно (n) — window | → | вікна — windows |
-| крі́сло (n) — armchair | → | крі́сла — armchairs |
-| лі́жко (n) — bed | → | лі́жка — beds |
-| дзе́ркало (n) — mirror | → | дзерка́ла — mirrors |
-| сло́во (n) — word | → | слова́ — words |
+<!-- INJECT_ACTIVITY: noun-plural-formation -->
 
-The pattern is clean: drop **-о**, add **-а**. Neuter plurals are the most predictable group — learn this one pattern and it covers most neuter nouns from modules 8 through 12.
+<!-- INJECT_ACTIVITY: plural-choice-quiz -->
 
-One honest caveat: Ukrainian plurals do have exceptions. The word **річ** (thing) becomes **речі** (things) — not a standard pattern. At this stage, learn each plural alongside its singular as one unit. Full declension rules come at B1.
+## Прикме́тники у множині́ — Adjectives in Plural
 
-<!-- INJECT_ACTIVITY: fill-in-plural -->
+The magic of plural adjectives lies in their simplicity. In the singular form, you had to memorize three different endings depending on the gender of the noun: **-ий** for masculine, **-а** for feminine, and **-е** for neuter. In the plural form, all adjectives converge to a single, universal ending: **-і**. Regardless of the noun's original gender, the adjective always takes **-і**. For example, the adjectives **яки́й** / **яка** / **яке́** (what kind) all become **які**, and **весе́лий** / **весе́ла** / **весе́ле** (cheerful) all become **весе́лі**. So, **вели́кий стіл** (big table) becomes **великі столи** (big tables), **нова́ книга** (new book) becomes **нові книги** (new books), and **чи́сте вікно** (clean window) becomes **чи́сті вікна** (clean windows).
 
-## Прикме́тники у множині́ (Adjectives in Plural)
+This universal rule applies perfectly to colors. When describing groups of objects, the color adjectives will all end in **-і**. You can have **червоні ручки** (red pens) on your desk, **сині зошити** (blue notebooks) in your bag, **бі́лі сті́ни** (white walls) in your room, and **чо́рні стільці** (black chairs) in your kitchen.
 
-Here is the single most useful fact about Ukrainian adjective plurals: in singular, adjectives change ending by gender — **великий** (m), **велика** (f), **велике** (n). In plural, all three genders collapse into one form: **великі**. Большакова's Grade 2 textbook (p. 42) shows this with a clear table: "яки́й/яка/яке́ → які, весе́лий/весе́ла/весе́ле → весе́лі." This is simpler than singular — one ending covers everything.
+:::note
+Demonstrative words also adapt to the plural form. When pointing out specific groups of objects, use **ці** (these) for items close by, and **ті** (those) for items located further away. Just like adjectives, they conveniently end in the **-і** sound. You can say **Ці столи великі** (These tables are big) when standing right next to them. If you are looking across the room, you would say **Ті вікна чисті** (Those windows are clean).
+:::
 
-Three adjectives you already know, applied across all genders:
+To talk about your personal belongings, you use the plural possessive word **мої́** (my - plural). If you are carrying a stack of literature, you simply state **Це мої книги** (These are my books).
 
-| Singular (m / f / n) | → | Plural |
-|---|---|---|
-| нови́й стіл / нова́ книга / нове́ вікно | → | нові столи / нові книги / нові вікна |
-| великий стілець / велика лампа / велике крісло | → | великі стільці / великі лампи / великі крісла |
-| стари́й олівець / стара́ сумка / старе́ ліжко | → | старі олівці / старі сумки / старі ліжка |
+<!-- INJECT_ACTIVITY: adjective-plural-agreement -->
 
-The ending is always **-і**. No exceptions, no gender checks, no surprises.
-
-<!-- INJECT_ACTIVITY: fill-in-adj-plural -->
-
-Colors work the same way. Apply the **-і** rule to the color adjectives from Module 10: **червоні ручки** (red pens), **сині зошити** (blue notebooks), **білі стіни** (white walls), **чорні стільці** (black chairs), **жовті олівці** (yellow pencils), **зелені дошки** (green boards). Color adjectives follow the exact same pattern — no special rules. Try it yourself: look around your room. Які стільці? Які стіни? Які речі на столі́?
-
-Demonstratives and possessives also have plural forms, and they follow the same simplification. Singular **цей/ця/це** (this) becomes **ці** (these). Singular **той/та/те** (that) becomes **ті** (those). Singular **мій/моя́/моє** (my) becomes **мої** (my, plural).
-
-- **Ці столи великі.** *(These tables are big.)*
-- **Ці книги нові.** *(These books are new.)*
-- **Ці вікна чисті.** *(These windows are clean.)*
-- **Ті стільці старі.** *(Those chairs are old.)*
-- **Ті крісла червоні.** *(Those armchairs are red.)*
-- **Мої ручки сині.** *(My pens are blue.)*
-- **Мої зошити нові.** *(My notebooks are new.)*
-
-<!-- INJECT_ACTIVITY: quiz-plural-nouns -->
+When you need to ask about the characteristics of plural objects, you use the question word **які** (what kind?). If you see an interesting stack of reading material, you ask your teacher **Які це книги?** (What kind of books are these?).
 
 ## Підсумок — Summary
 
-Three patterns covered today. For nouns: masculine and feminine take **-и** or **-і** in the plural (**столи**, **книги**, **стільці**); neuter takes **-а** (**вікна**, **крісла**, **дзеркала**). For adjectives: the plural ending is always **-і**, regardless of the noun's gender — **великі столи**, **великі книги**, **великі вікна**. For demonstratives: **ці** (these) and **ті** (those). For possessives: **мої** (my, plural). This is worth remembering: plural adjectives have one form. Ukrainian makes this easier than singular.
+The rules of plural noun formation rely on recognizing consistent patterns. Nouns change their endings based on their original gender. Masculine and feminine nouns typically take the **-и** or **-і** endings, while neuter nouns take the **-а** or **-я** endings. Always remember to learn each plural individually alongside its singular form. The core classroom triad provides perfect anchors for these patterns: **столи** (tables), **книги** (books), and **вікна** (windows).
 
-**Self-check — test yourself:**
+The rules of agreement for describing many items are incredibly straightforward. Adjectives, demonstrative words like **ці** (these) and **ті** (those), and possessive words like **мої** (my - plural) all simplify in the plural form to use the universal **-і** ending. You always use **-і** for adjectives, such as **великі**, **нові**, **червоні**, and **сині**. This convergence makes describing multiple items significantly easier than describing just one thing, as you no longer need to match the specific gender of the noun.
 
-- Як утвори́ти множину́ від **стіл**? → **столи**
-- Як утворити множину від **книга**? → **книги**
-- Як утворити множину від **вікно**? → **вікна**
-- Як утворити множину від **стілець**? → **стільці**
-- Яке закі́нчення ма́ють прикметники у множині? → завжди́ **-і**
-- Як сказа́ти "these chairs"? → **ці стільці**
-- Як сказати "my pens"? → **мої ручки**
-- Утвори́ множину: великий стіл → ? → **великі столи**
+:::caution
+Always pay close attention to the stress marks when learning new plural forms. The stress can sometimes shift when a word becomes plural. For instance, the emphasis moves to the end in **книжки́** (books), and to the beginning in **вікна** (windows). Check the vocabulary lists carefully!
+:::
 
-<!-- INJECT_ACTIVITY: group-sort-singular-plural -->
+Test your understanding with this quick self-check Q&A before moving to the exercises.
 
-Now put it all together. Describe your own space using today's patterns. Start with these questions as scaffolding: Які столи у ва́шому кла́сі? Які стільці? Які вікна? Які речі на вашому столі? Here is a model answer:
+*   **Q:** Як бу́де «стіл» у множині? *(How is "table" in plural?)*
+*   **A:** **Столи**.
+*   **Q:** Яке закі́нчення ма́ють прикметники у множині? *(What ending do adjectives have in plural?)*
+*   **A:** Закінчення **-і** (**великі**, **нові**).
+*   **Q:** Перекладі́ть: "These blue notebooks". *(Translate: "These blue notebooks".)*
+*   **A:** **Ці сині зошити**.
+*   **Q:** Яке сло́во означа́є "those"? *(Which word means "those"?)*
+*   **A:** **Ті**.
 
-- **У моє́му класі є великі столи і старі стільці.** *(In my classroom there are big tables and old chairs.)*
-- **Вікна чисті.** *(The windows are clean.)*
-- **На моєму столі є сині ручки і нові зошити.** *(On my desk there are blue pens and new notebooks.)*
-- **А ще мале́нький підручник.** *(And also a small textbook.)*
-
-Write 3–4 sentences about your own room or classroom using plural nouns and plural adjectives. Use **ці** or **ті** to point at specific groups of objects. Use **мої** to claim ownership.
-
-In Module 14 — the A1.2 Checkpoint — you'll combine everything from this phase: rooms, objects, colors, numbers, this and that, and now plurals. The **-і** adjective plural you learned today will appear in every description from here on. After the checkpoint, A1.3 introduces verbs — and plurals matter there too. When someone reads, it's not just one book: **вони чита́ють книги** (they read books). Plural nouns and adjectives are the backbone of real sentences.
+ Practice these endings consistently, and they will quickly become second nature.

@@ -1,51 +1,33 @@
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги — Dialogues (~300 words total)
+- P1 (~60 words): Introduction to the setting: Two roommates, Ліна and Настя, are in their kitchen on a Tuesday morning. Lina is already drinking coffee while Nastia is just starting her routine. 
+- P2 (~100 words): Dialogue 1: Lina asks Nastia about her timing. Nastia explains her sequence: "Я прокидаюся о сьомій, вмиваюся, одягаюся і снідаю." Lina asks about work, and Nastia replies she leaves at 8:00 ("О восьмій я йду на роботу").
+- P3 (~40 words): Linguistic breakdown of Dialogue 1: Highlighting the usage of reflexive verbs (прокидаюся, вмиваюся) to show actions Nastia does to herself, contrasted with "снідаю" (having breakfast).
+- P4 (~100 words): Dialogue 2: A contrast with the weekend. Nastia asks Lina if she also hurries on Saturdays. Lina replies: "У суботу я не поспішаю. Прокидаюся пізно, лежу в ліжку, дивлюся телефон." Nastia mentions she usually studies in the morning ("навчаюся вранці").
 
-- P1 (~40 words): Brief scene-setter — two roommates Ліна and Настя in the kitchen before work. One sentence of setting, then straight into dialogue. Establishes reflexive verbs appearing naturally in context.
+## Дієслова на -ся — Reflexive Verbs (~300 words total)
+- P1 (~70 words): Concept of "-ся": Explaining that these verbs mean the action is directed at the subject (reflexive). Examples from Karaman: "вмивати" (to wash something/someone) vs. "вмиватися" (to wash oneself). Emphasize that "-ся" is like the English "self."
+- P2 (~80 words): Conjugation mechanics: How to attach "-ся" to Group I verbs. Presenting the paradigm: я вмиваю-ся, ти вмиваєш-ся, він/вона вмиваєть-ся. Note that the ending remains the same as regular verbs, just with the suffix added.
+- P3 (~75 words): Crucial pronunciation rule from Kravtsova: The hidden sounds of Ukrainian. Explain that "-шся" is pronounced as a long soft [с'':а] (вмиваєшся → [вмиваєс'':а]) and "-ться" sounds like a long soft [ц'':а] (вмивається → [вмиваєц'':а]). 
+- P4 (~75 words): Usage distinction: When to use reflexive vs. non-reflexive. Contrast "одягати дитину" (dressing a child) with "одягатися" (getting dressed yourself). Mention that verbs with "-ся" are always intransitive.
+- <!-- INJECT_ACTIVITY: fill-in-reflexive-endings --> [fill-in, Add -ся: я вмиваю__ , ти одягаєш__ , він прокидаєть__, 10 items]
+- <!-- INJECT_ACTIVITY: quiz-reflexive-choice --> [quiz, Reflexive or not? Choose: Я (вмиваю/вмиваюся) руки, 8 items]
 
-- Dialogue 1 (~110 words): Multi-turn exchange on weekday mornings. Ліна asks Настя: — Коли ти прокидаєшся? — Я прокидаюся о сьомій. — Що ти робиш потім? — Спочатку вмиваюся, потім одягаюся і снідаю. — А коли йдеш на роботу? — О восьмій. Розбудила будильник. — Я теж. Я прокидаюся о шостій, бо довго збираюся! Full dialogue with stage directions (~3-4 turns per speaker). Reflexive verbs болded in the reader's mind by repetition: прокидатися, вмиватися, одягатися, збиратися.
+## Мій ранок — My Morning (~330 words total)
+- P1 (~80 words): The morning routine timeline. Defining "прокидатися" (the moment you open your eyes) vs. "вставати" (the moment you leave the bed). Introducing "чистити зуби" (to brush teeth) as a common non-reflexive routine phrase.
+- P2 (~80 words): The irregular verb "йти" (to go). Provide the full present tense forms: я йду, ти йдеш, він/вона йде, ми йдемо, ви йдете, вони йдуть. Explain its use for leaving the house for work or study.
+- P3 (~85 words): Narrative sequencing: Using adverbs to tell a story. Introduce "спочатку" (first), "потім" (then), "після цього" (after this), and "нарешті" (finally). Explain how these words turn a list of verbs into a coherent morning description.
+- P4 (~85 words): Model narrative: A 5-sentence paragraph combining everything. "Спочатку я прокидаюся. Потім я вмиваюся і чищу зуби. Після цього я снідаю і п'ю каву. Нарешті я одягаюся і йду на роботу."
+- <!-- INJECT_ACTIVITY: order-morning-sequence --> [fill-in, Put the morning routine in order: спочатку ___, потім ___, нарешті ___, 6 items]
+- <!-- INJECT_ACTIVITY: write-morning-routine --> [fill-in, Describe your morning in 3 sentences, 3 items]
 
-- Dialogue 2 (~110 words): Weekend contrast. Ліна: — У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон. — А я навчаюся вранці. Снідаю, потім гуляю з собакою. — Пощастило тобі! Я повертаюся додому о десятій вечора в будні. Mix of reflexive (навчатися, повертатися) and non-reflexive (снідати, гуляти) — contrast planted here, explained in next section.
+## Підсумок — Summary (~300 words total)
+- P1 (~100 words): Recap of the grammar "formula": Verb Ending + -ся. Reiterate that these describe actions on oneself. Quick table for Group I: -юся, -єшся, -ється.
+- P2 (~100 words): Phonetic checklist: Remind the learner of the [с'':а] and [ц'':а] sounds for the "ти" and "він/вона" forms to ensure they sound like a native speaker, not like they are reading transliteration.
+- P3 (~100 words): Self-check questions for the learner to answer mentally or aloud: 
+    * О котрій годині ти прокидаєшся?
+    * Що ти робиш спочатку?
+    * Ти п'єш каву чи чай вранці?
+    * Коли ти йдеш на роботу або навчання?
+    * Ти одягаєшся швидко чи повільно?
 
-- P2 (~70 words): One short paragraph of reader narration connecting dialogues to upcoming grammar: "Notice: прокидаюся, вмиваюся, одягаюся all end in -ся. These are reflexive verbs — дієслова на -ся. In the next section you'll see exactly how they work and why навчатися and повертатися belong to the same family."
-
----
-
-## Дієслова на -ся (Reflexive Verbs) (~330 words total)
-
-- P1 (~80 words): Core concept — Kravtsova Grade 4, p.113. Дієслова на -ся(-сь) виражають дію, спрямовану на самого виконавця (на самого себе). Concrete pair: вмивати (to wash someone else — мама вмиває дитину) vs. вмиватися (to wash oneself — я вмиваюся). Second pair: одягати (to dress someone) vs. одягатися (to dress oneself). The learner sees the transformation rule: base verb + ся = action turned on the doer.
-
-- P2 (~90 words): Full present-tense conjugation of вмиватися laid out as running prose (not a table): я вмиваюся, ти вмиваєшся, він/вона вмивається, ми вмиваємося, ви вмиваєтеся, вони вмиваються. Key observation: the endings are identical to Group I regular verbs — just add -ся after each ending. Compare: я читаю → я вмиваюся; ти читаєш → ти вмиваєшся. Show second reflexive verb прокидатися conjugated briefly: я прокидаюся, ти прокидаєшся, він прокидається.
-
-- P3 (~90 words): Pronunciation rule — Kravtsova Grade 4, p.113. The spelling and pronunciation diverge: -шся is written but sounds like [с':а] (long soft с). -ться is written but sounds like [ц':а] (long soft ц). Examples with phonetic transcription: вмиваєшся → [вмиваєс':а]; вмивається → [вмиваєц':а]; прокидаєшся → [прокидаєс':а]; збирається → [збираєц':а]. Practical tip: say the ending quickly like a soft hiss — your mouth naturally produces the right sound. Spell it correctly on paper; say the short form aloud.
-
-- Exercise 1 — fill-in (~10 items): Add -ся to complete the form: я вмиваю__, ти одягаєш__, він прокидаєть__, ми збираємо__, ви навчаєте__, вони повертаю__, я поспіша__, ти лягаєш__, він підніма__, ми одягаємо__.
-
-- Exercise 2 — quiz (~8 items): Reflexive or not? Choose the correct verb: Я (вмиваю / вмиваюся) руки. Мама (одягає / одягається) дитину. Я (одягаю / одягаюся) куртку. Він (прокидає / прокидається) о сьомій. Вона (навчає / навчається) у школі. Ти (збираєш / збираєшся) швидко. Я (повертаю / повертаюся) додому. Мама (вмиває / вмивається) посуд.
-
----
-
-## Мій ранок (My Morning) (~330 words total)
-
-- P1 (~80 words): Reflexive morning verbs listed with gloss and one model sentence each: прокидатися (to wake up) — Я прокидаюся о сьомій годині; вмиватися (to wash face/hands) — Вона вмивається в ванній кімнаті; одягатися (to get dressed) — Він одягається швидко; збиратися (to get ready) — Ти збираєшся довго!; навчатися (to study) — Ми навчаємося разом; повертатися (to return) — Я повертаюся додому о шостій. Six reflexive verbs, each with a complete sentence in a natural register.
-
-- P2 (~60 words): Non-reflexive morning verbs for contrast — these describe actions on external objects, not on oneself: снідати (to have breakfast) — Я снідаю о восьмій; пити каву (to drink coffee) — Він п'є каву; поспішати (to hurry) — Чому ти поспішаєш?; гуляти (to walk/stroll) — Вона гуляє з собакою. Pattern reinforcement: no -ся because the action goes outward, not back onto the doer.
-
-- P3 (~60 words): Irregular verb йти (to go) — must be learned as a set: я йду, ти йдеш, він/вона йде, ми йдемо, ви йдете, вони йдуть. Explicit warning: these endings do not follow Group I or Group II patterns — memorize them. Usage: Я йду на роботу о восьмій. Вона йде до школи. Ти йдеш зараз?
-
-- P4 (~80 words): Sequence words for telling a story in order: спочатку (first, at first), потім (then, next), після цього (after this), нарешті (finally). Model mini-narrative: Спочатку я прокидаюся о сьомій. Потім вмиваюся і одягаюся. Після цього снідаю і п'ю каву. Нарешті йду на роботу о восьмій. Point out: sequence words stand at the sentence start and are followed by a comma — but don't over-explain punctuation; note it lightly.
-
-- Exercise 3 — fill-in (~6 items): Put the morning steps in order using sequence words: ___ я прокидаюся (спочатку / нарешті). ___ вмиваюся і одягаюся (потім / спочатку). ___ снідаю (після цього / спочатку). ___ йду на роботу (нарешті / потім). ___ вона повертається додому (нарешті / спочатку). ___ він п'є каву (після цього / нарешті).
-
----
-
-## Підсумок — Summary (~330 words total)
-
-- P1 (~80 words): Grammar recap in plain language. Reflexive verbs = звичайне дієслово + суфікс -ся. The suffix never changes — it attaches after every personal ending: -юся, -єшся, -ється, -ємося, -єтеся, -ються (Group I). Reflexive = action turns back on the doer. Non-reflexive = action goes to something else. Two pronunciation rules to remember: -шся = [с':а]; -ться = [ц':а]. One irregular to know cold: я йду, ти йдеш, він іде.
-
-- P2 (~80 words): Vocabulary consolidation — the morning routine in sequence. Present all required + recommended vocabulary as a labelled chain. Reflexive chain: прокидатися → вмиватися → одягатися → збиратися → йти (на роботу / до школи). Return chain: повертатися додому. Supporting words: вранці (in the morning), пізно (late), поспішати (to hurry), навчатися (to study). Sequence glue: спочатку, потім, після цього, нарешті. Every word listed with its English gloss — learners now see all 14 vocabulary items in one place.
-
-- P3 (~60 words): Contrast reminder box. Вмивати когось ≠ вмиватися. Одягати дитину ≠ одягатися. The -ся signals the action loops back to the subject. Real test: could you do the action to another person? If yes — the non-reflexive form exists and means something different. This heuristic prevents the most common learner error.
-
-- Exercise 4 — fill-in / production (~3 items): Describe your morning in 3 sentences using sequence words and reflexive verbs. Prompts: (1) Спочатку я ___ (о котрій? що роблю?). (2) Потім я ___ і ___. (3) Нарешті я ___. Learners write in target language with the sequence scaffold; no English needed to prompt. This is the communicative payoff of the whole module.
-
-Grand total: ~1320 words
+Grand total: ~1230 words

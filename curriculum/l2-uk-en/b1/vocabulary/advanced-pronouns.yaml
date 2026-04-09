@@ -1,0 +1,247 @@
+vocabulary:
+- word: займе́нник
+  translation: pronoun
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пита́льно-відно́сний
+  translation: interrogative-relative
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: зворо́тний
+  translation: reflexive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: неозна́чений
+  translation: indefinite
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: запере́чний
+  translation: negative
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: означа́льний
+  translation: definitive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: себе́
+  translation: oneself
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: собо́ю
+  translation: with oneself
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: свій
+  translation: one's own
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: хтось
+  translation: someone (known to exist)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: де́хто
+  translation: some people
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: будь-хто
+  translation: anyone (any person at all)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хто-небудь
+  translation: anyone (hypothetical/question)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: що-не́будь
+  translation: anything
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: аби́який
+  translation: any old / mediocre
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: аби́як
+  translation: carelessly / any old way
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: казна́-хто
+  translation: who knows who
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хто́зна-що
+  translation: who knows what
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ніхто́
+  translation: nobody
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ніщо́
+  translation: nothing
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нія́кий
+  translation: no kind of / none
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нічи́й
+  translation: nobody's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ніскі́льки
+  translation: not at all
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: котри́й
+  translation: which / what time
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ко́жен
+  translation: every / everyone
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: весь
+  translation: all / entire
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сам
+  translation: self / alone
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: самий
+  translation: the very / the same
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: і́нший
+  translation: other / another
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: будь-яки́й
+  translation: any / any kind
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: почувати себе
+  translation: to feel (oneself)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сам по собі
+  translation: by itself / independent
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: так собі
+  translation: so-so / mediocre
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: від себе
+  translation: on one's own behalf
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: не по собі
+  translation: uncomfortable / eerie
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ні з ким
+  translation: with nobody
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ні про що
+  translation: about nothing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ні в якому разі
+  translation: in no case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дода́ток
+  translation: object (grammar)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дефі́с
+  translation: hyphen
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: милозву́чність
+  translation: euphony
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

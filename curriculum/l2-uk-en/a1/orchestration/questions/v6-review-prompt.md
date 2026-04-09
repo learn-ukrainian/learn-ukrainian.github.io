@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 19: Questions (A1, A1.3 [Actions])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -126,118 +126,161 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
-Ukrainian uses special question words — **пита́льні слова́** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
-### Dialogue 1 — Getting to know someone
-> — **Андрі́й:** Приві́т! Хто ти? *(Hi! Who are you?)*
-> — **Оле́г:** Я студе́нт. А ти? *(I'm a student. And you?)*
-> — **Андрій:** Я теж студент. Що ти вивча́єш? *(I'm also a student. What do you study?)*
-> — **Олег:** Я вивча́ю украї́нську мо́ву. *(I study the Ukrainian language.)*
-> — **Андрій:** Де ти живе́ш? *(Where do you live?)*
-> — **Олег:** Я живу́ у Льво́ві. *(I live in Lviv.)*
-> — **Андрій:** Ко́ли ти працю́єш? *(When do you work?)*
-> — **Олег:** Вра́нці. А ти? *(In the morning. And you?)*
-> — **Андрій:** Уве́чері. Як тебе́ зва́ти? *(In the evening. What's your name?)*
-> — **Олег:** Ме́не звати Олег. *(My name is Oleh.)*
+## Діалоги (Dialogues)
 
-Every question here starts with a different question word: **Хто** (who) asks about a person, **Що** (what) asks about a thing or activity, **Де** (where) asks about location, **Коли** (when) asks about time, and **Як** (how) asks about manner. Notice how the answer always matches what the question word asks about — **Хто ти?** gets a person (**студент**), **Де ти живеш?** gets a place (**у Львові**).
-### Dialogue 2 — At home
-> — **Оля:** Де моя́ кни́га? *(Where is my book?)*
-> — **Тара́с:** Я не зна́ю. *(I don't know.)*
-> — **Оля:** А хто зна́є? *(And who knows?)*
-> — **Тарас:** Ма́ма знає. *(Mom knows.)*
-> — **Оля:** Чо́му мама? *(Why mom?)*
-> — **Тарас:** Тому́ що вона́ все знає! *(Because she knows everything!)*
+Asking for information is the foundation of any conversation. When you travel, meet new people, or simply try to find a missing object, you need to know how to ask about locations, identities, and reasons. The dialogues below demonstrate how Ukrainians ask and answer questions in everyday situations.
 
-This dialogue combines question words with simple negation (**не**). Notice three things the dialogues just showed you:
-1. **Question words come at the start** of the sentence: **Де** моя книга? **Хто** знає? **Чому** мама?
-2. **Word order after the question word stays natural** — you don't need to rearrange anything. Just put the question word first and the sentence works.
-3. **Не** goes before the verb: **Я не знаю**. We will also study double negation (**ні́чого не...**) in detail below.
+> **Турист:** Вибачте, де центр? *(Excuse me, where is the center?)*
+> **Перехожий:** Центр там. *(The center is there.)*
+> **Турист:** Дякую! Куди іде цей автобус? *(Thanks! Where does this bus go?)*
+> **Перехожий:** Цей автобус іде в парк. *(This bus goes to the park.)*
+> **Турист:** Добре. Як пройти до парку? *(Good. How to get to the park?)*
+> **Перехожий:** Прямо і направо. *(Straight and to the right.)*
+
+When arriving in a new city, finding your way relies heavily on your ability to use question words. The tourist uses **де** (where) to locate a static place, **куди** (where to) to ask about the direction of the bus, and **як** (how) to request instructions for reaching a destination.
+
+> **Марко:** Хто ти? *(Who are you?)*
+> **Анна:** Я студент. *(I am a student.)*
+> **Марко:** Що ти вивчаєш? *(What do you study?)*
+> **Анна:** Я вивчаю українську. *(I study Ukrainian.)*
+> **Марко:** Де ти живеш? *(Where do you live?)*
+> **Анна:** Я живу в Києві. *(I live in Kyiv.)*
+> **Марко:** Коли ти працюєш? *(When do you work?)*
+> **Анна:** Вранці. *(In the morning.)*
+
+When you meet someone new, you naturally want to expand the conversation beyond basic greetings. Notice how each question targets a specific detail. The word **хто** (who) asks about a person's identity, **що** (what) targets an action or object, and **коли** (when) establishes a timeframe.
+
+> **Олег:** Де моя книга? *(Where is my book?)*
+> **Ірина:** Я не знаю. *(I don't know.)*
+> **Олег:** А хто знає? *(And who knows?)*
+> **Ірина:** Мама знає. *(Mom knows.)*
+> **Олег:** Чому мама? *(Why mom?)*
+> **Ірина:** Тому що вона все знає! *(Because she knows everything!)*
+> **Олег:** Чому ти не бачиш її? *(Why don't you see it?)*
+> **Ірина:** Тому що я нічого не бачу без окулярів. *(Because I see nothing without glasses.)*
+
+A typical domestic scene often involves missing items and a lack of information. This conversation introduces the word **чому** (why) alongside its natural response **тому що** (because). It also demonstrates how to express negation using **не** (not) and how to indicate the total absence of something using **нічого** (nothing).
+
 ## Питальні слова (Question Words)
-Seven question words cover almost everything you need to ask at A1. Here they are as a set, each with the anchor example you already saw in the dialogues:
-- **Хто?** (who) — Хто ти?
-- **Що?** (what) — Що ти вивчаєш?
-- **Де?** (where) — Де ти живеш?
-- **Куди́?** (where to) — Куди ти йдеш?
-- **Коли?** (when) — Коли ти працюєш?
-- **Чому?** (why) — Чому ти не відповіда́єш?
-- **Як?** (how) — Як тебе звати?
-Ukrainian textbooks introduce **Хто?** and **Що?** from the very first grade to distinguish living things (**хто** — people, animals) from non-living things (**що** — objects, concepts). The remaining five — **Де? Куди? Коли? Чому? Як?** — appear as question words for adverbs (Кравцо́ва, Grade 2). They also serve as the foundation for the Ukrainian case system (Варзацька, Grade 4).
-### Де vs. Куди — the pair learners confuse
-**Де** asks about a static location — where something already is. **Куди** asks about direction — where something is moving toward. Compare:
-- **Де** ти живеш? — Where do you live? (you are there)
-- **Куди** ти йдеш? — Where are you going? (you are moving there)
-- **Де** книга? — Where is the book? (it is somewhere)
-- **Куди** вони́ ї́дуть? — Where are they driving? (they are heading somewhere)
-The rule: use **де** with verbs of being or staying (**жи́ти**, **бу́ти**, **стоя́ти**). Use **куди** with verbs of movement (**іти́**, **ї́хати**, **ходи́ти**).
-<!-- INJECT_ACTIVITY: quiz-question-words -->
-### Word order in questions
-As noted in Ukrainian Lessons Podcast (Episode 35), the typical pattern is question word + verb + subject, but Ukrainian is flexible. All of these are acceptable:
-- **Де ти живеш?** (standard)
-- **Ти де живеш?** (conversational)
-- **Живеш де?** (very informal)
-The question word carries the emphasis regardless of its position. In everyday speech, the first two options are most natural. Written Ukrainian prefers the question word at the start.
-### Yes/no questions
-To ask a yes/no question, you do not need a special word — just raise your intonation at the end of the sentence:
-- Ти гово́риш украї́нською? ↑ *(Do you speak Ukrainian?)*
-- Він живе́ тут? ↑ *(Does he live here?)*
-- Вона знає? ↑ *(Does she know?)*
-English needs "do" or "does" to form these questions. Ukrainian does not — the sentence stays exactly the same, and only the rising intonation ↑ tells the listener it is a question. In formal or written Ukrainian, you may also see **чи** (whether) at the beginning: **Чи ти розумі́єш?** (Do you understand?) Recognise **чи** when you see it, but for everyday A1 speech, intonation alone is enough.
-<!-- INJECT_ACTIVITY: match-question-answer -->
-## Запере́чення (Negation)
-The particle **не** (not) goes directly before the verb — never separated from it. Here are five examples using verbs you already know from Modules 16–18:
-- Я **не** знаю. — I don't know.
-- Він **не** працю́є. — He doesn't work.
-- Ми **не** розумі́ємо. — We don't understand.
-- Вона **не** хо́че. — She doesn't want to.
-- Ме́ні **не** подо́бається. — I don't like it.
-- Вони **не** гово́рять. — They don't speak.
-In English, "do not" is two words; in Ukrainian, **не** is a single particle that sits right before the verb. It is almost always unstressed — the stress stays on the verb. No matter how long the sentence is, **не** stays glued to its verb: Я **не** хо́чу, Вони **не** розумі́ють.
-### Ні — standalone "no" and the ні- pronouns
-As a standalone word, **ні** (no) answers a question directly:
-- Ти зна́єш? — **Ні**, не знаю. *(Do you know? — No, I don't know.)*
-But **ні** also forms a family of negative words by attaching to question-word pronouns and adverbs:
-| Ukrainian | English | Example |
-|-----------|---------|---------|
-| **ніхто́** | nobody | Ніхто не знає. |
-| **нічого** | nothing | Я нічого не ба́чу. |
-| **ніколи** | never | Він ніколи не працює. |
-| **ніде** | nowhere | Я ніде не працю́ю. |
-| **нікуди** | to nowhere | Він нікуди не йде. |
-Notice the pattern: the prefix **ні-** attaches directly to the question word — **хто** → **ніхто**, **коли** → **ніколи**, **де** → **ніде**, **куди** → **нікуди**. Ukrainian textbooks (Заболо́тний, Grade 6) teach these as negative pronouns and adverbs formed from their question-word counterparts with the prefix **ні-**.
-### Double negation — the most important rule
-Ukrainian requires both the **ні-** word AND **не** before the verb. This is mandatory — dropping either one makes the sentence ungrammatical.
-Wrong (English pattern): ~~Ніхто знає.~~
-Correct: **Ніхто не знає.** *(Nobody knows.)*
-Four more examples:
-- **Я нічого не знаю.** — I don't know anything. (literally: I nothing don't know.)
-- **Ніхто не гово́рить.** — Nobody speaks.
-- **Він ніколи не працює.** — He never works.
-- **Він нікуди не йде.** — He isn't going anywhere.
-This is not a logic error and does not create a "double positive" like it would in English. It is standard Ukrainian grammar — both parts are required (Литви́нова, Grade 6: «Ніхто не мо́же зму́сити вас...»).
-<!-- INJECT_ACTIVITY: fill-in-negation -->
-### Не vs. ні- at a glance
-**Не** alone negates one verb: **Я не знаю** (I don't know — but someone else might). A **ні-** word negates the entire idea and still needs **не** with the verb: **Ніхто не знає** (nobody at all knows). Here is the contrast in question-and-answer pairs:
-- **Хто це?** — **Ніхто.** *(Who is this? — Nobody.)*
-- **Що ти ба́чиш?** — **Нічого не бачу.** *(What do you see? — I see nothing.)*
-When answering with a single word, you can say **Ніхто** or **Нічого** alone. But as soon as the answer becomes a full sentence with a verb, double negation kicks in: **Нічого не бачу**.
-<!-- INJECT_ACTIVITY: quiz-double-negation -->
-## Підсумок — Summary
-Here is everything from this module in one place:
-- **Питальні слова:** **Хто? Що? Де? Куди? Коли? Чому? Як?** — seven question words. Place the question word first; word order after it is flexible.
-- **Де vs. Куди:** **Де** = location (Де книга?); **Куди** = direction (Куди ти йдеш?).
-- **Так/ні пита́ння:** rising intonation only — Ти знаєш? ↑ No special word needed. In formal writing, **чи** may appear at the start.
-- **Не:** directly before the verb, never separated — Я **не** знаю. Він **не** прихо́дить.
-- **Подві́йне заперечення:** **ніхто/нічого/ніколи/ніде** + **не** + verb — both parts required. **Ніхто не знає.** **Я нічого не бачу.**
-:::tip Self-check — try this now
-1. Ask three questions about a friend: **Де вона живе? Що він вивча́є? Коли вони прихо́дять?**
-2. Make two negative sentences: **Я нічого не знаю. Ніхто не розумі́є.**
-3. Turn a statement into a yes/no question: Він говорить українською. → Він говорить українською? ↑
+
+To gather information effectively, you need a core set of linguistic tools. Ukrainian relies on seven essential question words: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). In a typical sentence, these question words take the very first position.
+
+*   **Хто це?** (Who is this?)
+*   **Хто говорить?** (Who speaks?)
+*   **Що це?** (What is this?)
+*   **Що ти робиш?** (What are you doing?)
+
+The distinction between **хто** (who) and **що** (what) is strictly tied to animacy. You must use **хто** when asking about people or animals, and **що** when asking about inanimate objects or abstract concepts. English speakers frequently use "what" to ask for a description or specification, such as "What color is it?" or "What kind of car is it?". You cannot do this in Ukrainian. The word **що** only asks for identification. If you point to a vehicle and ask **Що це?** (What is this?), the answer is simply "A car." To ask for a description, you must use the word **який** (what kind / which). This clear separation prevents confusion and guarantees that you receive the specific information you want.
+
+Understanding location and movement requires mastering a spatial and temporal triplet: **де** (where), **куди** (where to), and **коли** (when). English often uses "where" for both a static location and a destination. Ukrainian separates these two concepts entirely. You use **де** when a person or object is resting in one place. You use **куди** strictly when there is physical motion directed toward a destination.
+
+*   **Де ти живеш?** (Where do you live?)
+*   **Де ти?** (Where are you?)
+*   **Куди ти йдеш?** (Where are you going?)
+*   **Коли ти працюєш?** (When do you work?)
+
+Manner and reason use the question words **як** (how) and **чому** (why). You already know **як** from basic greetings, but it also asks for instructions or methods. The word **чому** almost always prompts an answer that starts with the conjunction **тому що** (because).
+
+*   **Як справи?** (How are things?)
+*   **Чому ти не працюєш?** (Why don't you work?)
+*   **Тому що я хочу спати.** (Because I want to sleep.)
+
+:::tip
+The phrase **тому що** consists of two separate words. When answering a **чому** question, always use both words together to provide a natural, complete reason.
 :::
 
-**Deterministic word count: 1444 words** (calculated by pipeline, do NOT estimate manually)
+Not every inquiry requires a specific question word. Many questions simply ask for a "yes" or "no" confirmation. In spoken Ukrainian, you create a yes/no question without changing the word order or adding any helper verbs. You simply raise your intonation at the end of the sentence.
 
+*   **Ти знаєш.** (You know. — flat statement intonation)
+*   **Ти знаєш? ↑** (Do you know? — rising pitch on the last word)
+*   **Ти говориш українською? ↑** (Do you speak Ukrainian?)
+
+You can also use the particle **чи** (whether / if) at the beginning of the sentence to act as a formal marker for a yes/no question. Even with this addition, the word order remains exactly the same as a regular statement.
+
+*   **Чи ти знаєш?** (Do you know?)
+*   **Чи ти говориш?** (Do you speak?)
+
+Using **чи** is optional in casual everyday conversation, but it makes your question instantly recognizable in writing or more formal speech. Because Ukrainian grammar defines the roles of words clearly, the overall word order in questions remains quite flexible.
+
+*   **Де ти живеш?** (Where do you live?)
+*   **Ти де живеш?** (You where live?)
+
+Both variations mean exactly the same thing. The first option, with the question word at the front, is the most neutral and common pattern.
+
+<!-- INJECT_ACTIVITY: quiz-question-word-choice -->
+
+<!-- INJECT_ACTIVITY: match-question-answer -->
+
+## Заперечення (Negation)
+
+Stating what is not happening or what you do not know is just as crucial as asking questions. The primary tool for negation in Ukrainian is the particle **не** (not). In English, you often need helper verbs like "do" or "does" to make a sentence negative. Ukrainian makes this process much simpler. You just place **не** directly before the main verb.
+
+*   **Я не знаю.** (I do not know.)
+*   **Ми не розуміємо.** (We do not understand.)
+*   **Він не хоче.** (He does not want.)
+*   **Він не працює.** (He does not work.)
+
+The particle **не** forms a very tight unit with the verb that immediately follows it. You must never separate them with other words. 
+
+When you need to answer a question negatively without providing a full sentence, you use the standalone word **ні** (no).
+
+*   **Ти студент? — Ні.** (Are you a student? — No.)
+*   **Ні, дякую.** (No, thank you.)
+*   **Ні, я не знаю.** (No, I don't know.)
+
+The word **ні** also serves as a prefix for creating negative pronouns and adverbs. By attaching **ні-** to question words, you generate vocabulary that represents the absolute absence of something.
+
+*   **ніхто** (nobody)
+*   **нічого** (nothing)
+*   **ніколи** (never)
+*   **ніде** (nowhere)
+
+When you use these absolute negative words in a sentence, Ukrainian grammar requires a structure known as double negation. In English, grammar rules dictate that you can only have one negative element per clause — you say "I know nothing" or "I do not know anything." Ukrainian operates on a different, but highly consistent, logic. If a sentence contains a negative pronoun or adverb, the verb must also be negated with **не**. Both parts are strictly required to form a grammatically correct sentence.
+
+*   **Я нічого не знаю.** (I know nothing. / Literally: I nothing do not know.)
+*   **Ніхто не говорить.** (Nobody speaks. / Literally: Nobody does not speak.)
+*   **Ніхто не прийшов.** (Nobody came.)
+*   **Ми ніколи не відпочиваємо.** (We never rest.)
+
+:::caution
+Applying English logic to Ukrainian negation leads directly to grammatical errors. A sentence like "Я бачу нічого" (I see nothing) sounds broken to a native speaker. The presence of **нічого** absolutely demands the presence of **не** before the verb. You must say: **Я нічого не бачу**.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-negation-transform -->
+
+<!-- INJECT_ACTIVITY: quiz-double-negation -->
+
+## Підсумок — Summary
+
+This module provided the essential tools for extracting information and expressing negative statements. You now possess a complete set of question words to navigate daily situations, gather facts, and build relationships.
+
+*   **Хто?** (Who?)
+*   **Що?** (What?)
+*   **Де?** (Where?)
+*   **Куди?** (Where to?)
+*   **Коли?** (When?)
+*   **Чому?** (Why?)
+*   **Як?** (How?)
+
+You learned that yes/no questions rely almost entirely on raising your intonation at the end of the sentence, such as **Ти знаєш?** (Do you know?). You also saw how the particle **чи** can optionally mark these questions in a more formal register, without ever altering the fundamental word order.
+
+Negation in Ukrainian follows strict but simple patterns. The particle **не** always stands directly before the verb. When expressing absolute absence, Ukrainian demands double negation. 
+
+| Структура (Structure) | Приклад (Example) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| **Не + Verb** | **Я не знаю.** | I do not know. |
+| **Ні- word + Не + Verb** | **Я нічого не знаю.** | I know nothing. |
+| **Ні- word + Не + Verb** | **Ніхто не знає.** | Nobody knows. |
+
+To verify your progress, respond to the following prompts. These practical tasks test your ability to apply the patterns you just read to real situations.
+
+1.  Ask three questions about a friend's life using **де** (where), **що** (what), and **коли** (when). For example: **Де живе твій друг?** (Where does your friend live?)
+2.  Change the positive statement "Я бачу все" (I see everything) into a negative statement meaning "I see nothing" using the double negation rule.
+3.  Form a question from the statement **Ти говориш українською** (You speak Ukrainian) using only your intonation.
+4.  Explain the grammatical difference between asking **Де ти?** (Where are you?) and **Куди ти йдеш?** (Where are you going?).
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1630 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -325,8 +368,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -413,53 +456,14 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 68 words | Not found: 42 words
+Verified: 82 words | Not found: 3 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Андрі — NOT IN VESUM
-  ✗ Андрій — NOT IN VESUM
-  ✗ Варзацька — NOT IN VESUM
-  ✗ Вра — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Заболо — NOT IN VESUM
-  ✗ Кравцо — NOT IN VESUM
-  ✗ Льво — NOT IN VESUM
-  ✗ Львові — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
+  ✗ Ірина — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
   ✗ Олег — NOT IN VESUM
-  ✗ Оля — NOT IN VESUM
-  ✗ Подві — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Уве — NOT IN VESUM
-  ✗ бається — NOT IN VESUM
-  ✗ гово — NOT IN VESUM
-  ✗ дить — NOT IN VESUM
-  ✗ дять — NOT IN VESUM
-  ✗ зва — NOT IN VESUM
-  ✗ зму — NOT IN VESUM
-  ✗ йне — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ льні — NOT IN VESUM
-  ✗ ння — NOT IN VESUM
-  ✗ нською — NOT IN VESUM
-  ✗ нську — NOT IN VESUM
-  ✗ нці — NOT IN VESUM
-  ✗ подо — NOT IN VESUM
-  ✗ прихо — NOT IN VESUM
-  ✗ риш — NOT IN VESUM
-  ✗ рять — NOT IN VESUM
-  ✗ сити — NOT IN VESUM
-  ✗ стоя — NOT IN VESUM
-  ✗ студе — NOT IN VESUM
-  ✗ тний — NOT IN VESUM
-  ✗ украї — NOT IN VESUM
-  ✗ чення — NOT IN VESUM
-  ✗ чиш — NOT IN VESUM
-  ✗ ють — NOT IN VESUM
-  ✗ ємо — NOT IN VESUM
 
-All 68 other words are confirmed to exist in VESUM.
+All 82 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

@@ -1,0 +1,256 @@
+{
+  "total_items": 205,
+  "grounded_items": 165,
+  "ungrounded": [
+    {
+      "word": "високший",
+      "exercise_type": "error-correction",
+      "context": "Він високший за свого брата.",
+      "role": "context"
+    },
+    {
+      "word": "брата",
+      "exercise_type": "error-correction",
+      "context": "Він високший за свого брата.",
+      "role": "context"
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "error-correction",
+      "context": "Цей телефон більш дорожчий.",
+      "role": "context"
+    },
+    {
+      "word": "вужча",
+      "exercise_type": "error-correction",
+      "context": "вужча",
+      "role": "answer"
+    },
+    {
+      "word": "вузькіша",
+      "exercise_type": "error-correction",
+      "context": "Ця кімната вузькіша.",
+      "role": "context"
+    },
+    {
+      "word": "рюкзак",
+      "exercise_type": "error-correction",
+      "context": "Цей рюкзак важкіший.",
+      "role": "context"
+    },
+    {
+      "word": "важкіший",
+      "exercise_type": "error-correction",
+      "context": "Цей рюкзак важкіший.",
+      "role": "context"
+    },
+    {
+      "word": "нашому",
+      "exercise_type": "error-correction",
+      "context": "Він самий розумний у нашому класі.",
+      "role": "context"
+    },
+    {
+      "word": "класі",
+      "exercise_type": "error-correction",
+      "context": "Він самий розумний у нашому класі.",
+      "role": "context"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "error-correction",
+      "context": "Твій шлях близькіший.",
+      "role": "context"
+    },
+    {
+      "word": "близькіший",
+      "exercise_type": "error-correction",
+      "context": "Твій шлях близькіший.",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "quiz",
+      "context": "Яка форма є граматично правильною складеною формою від слова",
+      "role": "context"
+    },
+    {
+      "word": "складеною",
+      "exercise_type": "quiz",
+      "context": "Яка форма є граматично правильною складеною формою від слова",
+      "role": "context"
+    },
+    {
+      "word": "цікавий'",
+      "exercise_type": "quiz",
+      "context": "Яка форма є граматично правильною складеною формою від слова",
+      "role": "context"
+    },
+    {
+      "word": "дорогий'",
+      "exercise_type": "quiz",
+      "context": "Як правильно утворити просту форму вищого ступеня від слова ",
+      "role": "context"
+    },
+    {
+      "word": "утворенні",
+      "exercise_type": "quiz",
+      "context": "Яке фонетичне явище відбувається при утворенні слова 'вужчий",
+      "role": "context"
+    },
+    {
+      "word": "вужчий'",
+      "exercise_type": "quiz",
+      "context": "Яке фонетичне явище відбувається при утворенні слова 'вужчий",
+      "role": "context"
+    },
+    {
+      "word": "вузький'",
+      "exercise_type": "quiz",
+      "context": "Яке фонетичне явище відбувається при утворенні слова 'вужчий",
+      "role": "context"
+    },
+    {
+      "word": "складеної",
+      "exercise_type": "quiz",
+      "context": "Яке допоміжне слово використовується для утворення складеної",
+      "role": "context"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть повністю правильне українське речення:",
+      "role": "context"
+    },
+    {
+      "word": "українське",
+      "exercise_type": "quiz",
+      "context": "Оберіть повністю правильне українське речення:",
+      "role": "context"
+    },
+    {
+      "word": "зміна",
+      "exercise_type": "match-up",
+      "context": "фонетична зміна звуків при додаванні суфікса (наприклад, [з]",
+      "role": "context"
+    },
+    {
+      "word": "додаванні",
+      "exercise_type": "match-up",
+      "context": "фонетична зміна звуків при додаванні суфікса (наприклад, [з]",
+      "role": "context"
+    },
+    {
+      "word": "базова",
+      "exercise_type": "match-up",
+      "context": "базова словникова форма прикметника",
+      "role": "context"
+    },
+    {
+      "word": "словникова",
+      "exercise_type": "match-up",
+      "context": "базова словникова форма прикметника",
+      "role": "context"
+    },
+    {
+      "word": "холодніше",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні холодніше ____ учорашнього.",
+      "role": "context"
+    },
+    {
+      "word": "сліпий'",
+      "exercise_type": "true-false",
+      "context": "Слова 'сліпий', 'глухий' та 'порожній' не утворюють ступенів",
+      "role": "context"
+    },
+    {
+      "word": "глухий'",
+      "exercise_type": "true-false",
+      "context": "Слова 'сліпий', 'глухий' та 'порожній' не утворюють ступенів",
+      "role": "context"
+    },
+    {
+      "word": "порожній'",
+      "exercise_type": "true-false",
+      "context": "Слова 'сліпий', 'глухий' та 'порожній' не утворюють ступенів",
+      "role": "context"
+    },
+    {
+      "word": "нормально",
+      "exercise_type": "true-false",
+      "context": "В українській мові цілком нормально казати конструкцію 'біль",
+      "role": "context"
+    },
+    {
+      "word": "сильніший'",
+      "exercise_type": "true-false",
+      "context": "В українській мові цілком нормально казати конструкцію 'біль",
+      "role": "context"
+    },
+    {
+      "word": "простій",
+      "exercise_type": "true-false",
+      "context": "Прикметник у простій формі вищого ступеня відмінюється за ро",
+      "role": "context"
+    },
+    {
+      "word": "кращий'",
+      "exercise_type": "true-false",
+      "context": "Фраза 'самий кращий' є правильною українською літературною н",
+      "role": "context"
+    },
+    {
+      "word": "літературною",
+      "exercise_type": "true-false",
+      "context": "Фраза 'самий кращий' є правильною українською літературною н",
+      "role": "context"
+    },
+    {
+      "word": "слові",
+      "exercise_type": "true-false",
+      "context": "У слові 'вищий' літера 'щ' з'явилася через фонетичне злиття ",
+      "role": "context"
+    },
+    {
+      "word": "вищий'",
+      "exercise_type": "true-false",
+      "context": "У слові 'вищий' літера 'щ' з'явилася через фонетичне злиття ",
+      "role": "context"
+    },
+    {
+      "word": "щ'",
+      "exercise_type": "true-false",
+      "context": "У слові 'вищий' літера 'щ' з'явилася через фонетичне злиття ",
+      "role": "context"
+    },
+    {
+      "word": "з'явилася",
+      "exercise_type": "true-false",
+      "context": "У слові 'вищий' літера 'щ' з'явилася через фонетичне злиття ",
+      "role": "context"
+    },
+    {
+      "word": "злиття",
+      "exercise_type": "true-false",
+      "context": "У слові 'вищий' літера 'щ' з'явилася через фонетичне злиття ",
+      "role": "context"
+    },
+    {
+      "word": "мати",
+      "exercise_type": "group-sort",
+      "context": "Можуть мати ступені порівняння (якісні)",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 16,
+    "not_tested": [
+      "відносний",
+      "значно",
+      "ступінь"
+    ]
+  },
+  "all_grounded": false
+}

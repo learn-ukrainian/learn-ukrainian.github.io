@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "what-is-it-like",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T11:42:06.718546+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-30T11:42:57.731736+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-30T11:44:11.054620+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T11:46:27.052152+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T11:48:48.702793+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T11:48:48.703064+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T11:51:43.699127+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T11:51:43.705861+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T11:51:43.709976+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T11:52:04.193811+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T11:52:05.479208+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T11:52:05.553288+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-03T13:32:34.106023+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T15:05:55.501620+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T15:05:57.530719+00:00"
+    }
+  }
+}

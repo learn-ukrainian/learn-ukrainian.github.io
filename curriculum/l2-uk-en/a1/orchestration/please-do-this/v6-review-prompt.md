@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 43: Please Do This (A1, A1.7 [Communication])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -131,134 +131,130 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги (Dialogues)
 
-A morning Ukrainian lesson. The teacher walks in, opens her book, and class begins.
+Every day, we ask people to do things. We ask friends for favors, teachers give instructions to students, and parents guide their children. In Ukrainian, the way you ask someone to do something depends entirely on your relationship with that person. The words you choose signal whether you are talking to a close friend or addressing a group in a formal setting.
 
-> — **Вчителька:** Відкри́йте підру́чники, будь ла́ска. *(Open your textbooks, please.)*
-> — **Вчителька:** Чита́йте текст на сторі́нці два́дцять три. *(Read the text on page twenty-three.)*
-> — **Учень:** Ви́бачте, яку сторі́нку? *(Sorry, which page?)*
-> — **Вчителька:** Сторінку двадцять три. Читайте ти́хо. *(Page twenty-three. Read quietly.)*
-> — **Вчителька:** До́бре. Тепе́р пиші́ть. Напиші́ть три речення. *(Good. Now write. Write three sentences.)*
-> — **Учениця:** Мо́жна запита́ти? *(May I ask a question?)*
-> — **Вчителька:** Так, запи́туйте! *(Yes, go ahead and ask!)*
-> — **Учениця:** Що означа́є це сло́во? *(What does this word mean?)*
-> — **Вчителька:** Подиві́ться у словни́к. Відкрийте йо́го. *(Look in the dictionary. Open it.)*
+Imagine a typical morning in a language class. The teacher is standing at the front, addressing the entire group of students and guiding them through the lesson. Notice the specific endings on the action words the teacher uses to give instructions to the class.
 
-The teacher used **ви**-forms throughout: **відкрийте** (open), **читайте** (read), **пишіть** (write), **напишіть** (write — completed action), **запитуйте** (ask), **подивіться** (look). She is speaking to the whole class — a group — so the **ви**-form is natural.
+> **Вчитель:** Доброго ранку! **Відкрийте підручники, будь ласка. Читайте текст.** *(Good morning! Open the textbooks, please. Read the text.)*
+> **Студент:** Вибачте, яку сторінку? *(Excuse me, which page?)*
+> **Вчитель:** Сторінку двадцять три. Тепер **пишіть**. **Напишіть три речення.** *(Page twenty-three. Now write. Write three sentences.)*
+> **Студент:** Можна запитати? *(May I ask?)*
+> **Вчитель:** Так, **запитуйте**, якщо є питання! *(Yes, ask, if there are questions!)*
 
-After school, two friends walk outside together.
+In this classroom setting, the teacher uses forms like **відкрийте** (open), **читайте** (read), and **пишіть** (write). Because the teacher is speaking to a group of students, they must use the plural form. These forms end in **-те** or **-іть**, which always signals that you are addressing more than one person, or addressing someone formally using the respectful "you" pronoun.
 
-> — **Олесь:** Слу́хай, ході́мо в кафе́! *(Listen, let's go to a café!)*
-> — **Олесь:** Подиви́сь, яка га́рна пого́да! *(Look, what nice weather!)*
-> — **Дарина:** Добре! І́ди, я за́раз. *(OK! Go ahead, I'm coming.)*
-> — **Олесь:** Сіда́й тут, це га́рне мі́сце. *(Sit here, it's a nice spot.)*
-> — **Дарина:** Дай мені́ меню́, будь ласка. *(Give me the menu, please.)*
-> — **Олесь:** Ось, диви́сь. Скажи́, що ти хо́чеш? *(Here, look. Tell me, what do you want?)*
-> — **Дарина:** Я хо́чу ка́ву і ті́стечко. *(I want coffee and a pastry.)*
-> — **Олесь:** Добре. Офіціа́нте, принесі́ть каву і тістечко, будь ласка! *(OK. Waiter, bring a coffee and a pastry, please!)*
-> — **Дарина:** Дякую, Олесю! *(Thanks, Oles!)*
+Consider a completely different situation. Two close friends are walking outside on a beautiful day, trying to decide what to do next. The tone is much more relaxed and direct because they know each other well.
 
-Between friends, Oles used **ти**-forms: **слухай** (listen), **подивись** (look), **іди** (go), **сідай** (sit), **дай** (give), **дивись** (look), **скажи** (say). But when he spoke to the waiter — a stranger — he switched to the **ви**-form: **принесіть** (bring). Notice **будь ласка** appearing in both dialogues: Дарина used it with her friend, and Oles used it with the waiter. Which words were direct commands and which were polite requests? Any imperative + **будь ласка** becomes a request.
+> **Олег:** **Слухай**, ходімо в кафе! *(Listen, let's go to a café!)*
+> **Максим:** Добре, **йди**, я зараз. *(Okay, go, I'll be right there.)*
+> **Олег:** **Подивись**, яка гарна погода! *(Look, what beautiful weather!)*
+> **Максим:** Так! **Сідай** тут. *(Yes! Sit down here.)*
+> **Олег:** **Дай** мені меню, будь ласка. *(Give me the menu, please.)*
+> **Максим:** Ось, **дивись**. **Скажи**, що ти хочеш? *(Here, look. Tell me, what do you want?)*
+> **Олег:** Я хочу каву. *(I want coffee.)*
 
-## Наказо́вий спо́сіб (The Imperative Mood)
+Between friends, the language is quick and informal. Oleg and Maksym use words like **слухай** (listen), **подивись** (look), **дай** (give), and **скажи** (tell). There are no **-те** endings here because they are speaking to each other one-on-one using the informal "you". The grammatical goal is exactly the same as in the classroom — asking someone to act — but the register changes the shape of the verb completely.
 
-In Ukrainian Grade 5, this grammar topic has a name: **наказовий спосіб** (imperative mood). You use it for commands (**Чита́й!** — Read!), requests (**Дай, будь ласка.** — Give me, please.), instructions (**Напишіть три речення.** — Write three sentences.), and invitations (**Ходімо в кафе!** — Let's go to a café!). At A1, you need two forms: the **ти**-form for one person you know well — a friend, a sibling, a classmate — and the **ви**-form for formal situations — a teacher, a stranger, a doctor — or when speaking to more than one person. A quick comparison: **Дай!** (to your friend) vs. **Да́йте!** (to your teacher or a group).
+## Наказовий спосіб (The Imperative Mood)
 
-The word **будь ласка** (please) transforms any imperative into a polite request. Watch the same verb escalate in formality:
+In Ukrainian grammar, this way of speaking is called the **наказовий спосіб** (imperative mood). It is the essential tool for everyday commands, requests, invitations, and warnings. For example, consider a volleyball practice where the coach gives rapid warm-up instructions to the players.
 
-- **Дай!** — Give! *(direct, to a friend)*
-- **Дай, будь ласка.** — Please give. *(polite, to a friend)*
-- **Дайте, будь ласка.** — Please give. *(polite, to a teacher or group)*
-- **Пане Іва́не, дайте, будь ласка.** — Mr. Ivan, please give. *(very polite, with name)*
+> **Тренер:** **Принеси м'яч! Розстав конуси!** *(Bring the ball! Set up the cones!)*
+> **Гравці:** Добре! *(Okay!)*
+> **Тренер:** **Натягни сітку! Поклади рушники на лавку! Відчини двері!** *(Tighten the net! Put the towels on the bench! Open the doors!)*
 
-Ukrainian imperatives without **будь ласка** are NOT rude. Teachers, coaches, and parents use bare imperatives all the time. That is normal, professional speech. Tone and using someone's name add warmth: **Оленко, прочита́й, будь ласка.** *(Olenka, please read.)*
+Whether you are instructing athletes, inviting a guest to sit, or asking a barista for a napkin, you are using this exact grammatical structure.
 
-English speakers sometimes feel Ukrainian commands sound blunt. In Ukrainian classrooms, **Читайте!** and **Пишіть!** are standard instructions — not harsh at all. If you open any Ukrainian textbook by Заболо́тний, every page says **Робіть впра́ву!** (Do the exercise!) or **Спишіть речення!** (Copy the sentences!). Adding **будь ласка** is for extra politeness, not basic courtesy. Three natural classroom examples from Dialogue 1 worked perfectly without it: **Читайте текст.** **Напишіть три речення.** **Запитуйте!**
-
-When MUST you use the **ви**-form? Two situations. First, when speaking to one adult you address formally — your teacher, a stranger, a doctor: **Скажіть, будь ласка, де зупи́нка?** *(Tell me, please, where is the bus stop?)* Second, when speaking to more than one person, regardless of age: **Ді́ти, сіда́йте!** *(Children, sit down!)* Real-life examples:
-
-- Telling your whole family: **Сідайте!** *(Sit down!)*
-- Asking a shop assistant: **Покажіть, будь ласка.** *(Please show me.)*
-- Inviting friends: **Ходімо!** *(Let's go!)*
+The most important rule about the **наказовий спосіб** is register awareness. Because Ukrainian distinguishes between the informal singular **ти** (you) and the formal or plural **ви** (you), your commands must match the pronoun you would naturally use for that person. If you are talking to someone you call **ти**, you use the short informal command. If you are addressing a group of people, or someone you address respectfully as **ви**, you must use the formal command form. Mixing these up can sound confusing or inappropriately overly familiar.
 
 :::tip
-**Ходімо!** is a uniquely Ukrainian form — the 1st person plural imperative ("let's go!"). Russian does not have this form and uses a workaround with *давайте*. In standard Ukrainian, do NOT say *давай підемо* — just say **ходімо** or **підемо**.
+When you are unsure which form to use, think about the pronoun. If you would call the person **ви**, always use the **-те** or **-іть** ending on the verb. If you would call them **ти**, use the shorter form.
 :::
 
-## Як утвори́ти? (How to Form It)
+Many English speakers worry that giving a direct command sounds abrupt. In Ukrainian, direct imperatives are completely normal and natural in daily speech. Saying **Читай!** (Read!) is not inherently aggressive; it is simply how teachers, parents, and friends communicate. However, if you want to ensure your request is perfectly polite, simply add the magic phrase **будь ласка** (please). Adding **будь ласка** instantly transforms any direct command into a standard, polite request.
 
-Formation takes two steps. First, find the stem from the present tense (the **вони** form): **вони читають** → the stem is **читай-**. Second, add the imperative ending. Two patterns: **-й** after a vowel stem (**читай, слухай**) and **-и/-і** after a consonant stem (**пиши, говори**). A simple summary: vowel at the end of the stem → **-й**; consonant → **-и**.
+*   **Дай!** (Give!) becomes **Дай, будь ласка.** (Please give.)
+*   **Скажіть!** (Say/Tell! — formal) becomes **Скажіть, будь ласка.** (Please tell.)
 
-Here are eight high-frequency **ти**-forms. Notice two groups:
+Another excellent way to soften a request and make it sound friendly or respectful is by using the person's name or title. When you call out to someone, you use the vocative case for their name. Combining this with the imperative mood creates a warm, natural sentence.
 
-**Vowel-stem group** (ending in **-й**):
-- **читати** (читають → **читай**) — read
-- **слухати** (слу́хають → **слухай**) — listen
+*   **Олено, читай, будь ласка.** (Olena, please read.)
+*   **Пане Іване, читайте, будь ласка.** (Mr. Ivan, please read.)
 
-**Consonant-stem group** (ending in **-и/-і/-ь**):
-- **писати** (пи́шуть → **пиши**) — write
-- **говорити** (гово́рять → **говори**) — speak
-- **дивитися** (ди́вляться → **дивись**) — look/watch
-- **ходити** (хо́дять → **ходи**) — walk/go
-- **іти** (іду́ть → **іди**) — go
-- **сісти** (ся́дуть → **сядь**) — sit down
+<!-- INJECT_ACTIVITY: group-sort-imperative-register -->
 
-The verbs **іди** and **сядь** are irregular but essential — learn them as vocabulary. Note the soft sign in **сядь**: Ukrainian writes **ь** after **д** in imperative forms (confirmed by Авра́менко, Grade 7).
+## Як утворити? (How to Form It)
 
-For **ви**-forms, add **-те** or **-іть** to the **ти**-form. The rule: if the **ти**-form ends in **-й**, add **-те**; if it ends in **-и**, change to **-іть**:
+To create the informal **ти** form, we look at the verb's infinitive. For many common verbs belonging to Group I that end in **-ати**, the pattern is wonderfully simple. You remove the **-ти** ending and add the letter **-й**. For verbs that change their stem in the present tense, you usually add **-и**.
 
-- читай → **читайте**, слухай → **слухайте**
-- пиши → **пишіть**, говори → **говоріть**, ходи → **ходіть**
-- іди → **ідіть**
+*   **читати** (to read) → **читай** (read!)
+*   **слухати** (to listen) → **слухай** (listen!)
+*   **співати** (to sing) → **співай** (sing!)
+*   **писати** (to write) → **пиши** (write!)
 
-Two special cases: reflexive **дивись** adds **-ся** → **дивіться**, and soft-sign **сядь** simply adds **-те** → **сядьте**.
+For verbs in Group II, which often end in **-ити**, the process is slightly different. You usually replace the final infinitive ending with **-и**. For reflexive verbs, the ending becomes **-ись**. The stress often plays a key role here, landing clearly on that final vowel to give the command its punchy rhythm.
 
-<!-- INJECT_ACTIVITY: fill-in-imperative-forms -->
+*   **говорити** (to speak) → **говори** (speak!)
+*   **ходити** (to go/walk) → **ходи** (go!)
+*   **сидіти** (to sit) → **сиди** (sit!)
+*   **дивитися** (to look) → **дивись** (look!)
 
-Four irregular verbs appear constantly in daily speech. They do not follow the stem pattern — memorize them:
+Because the imperative is used so frequently in real life, some of the most essential verbs have irregular or slightly shortened forms that every A1 learner needs. These are words you will hear constantly, so it is best to simply memorize them as core vocabulary items. Notice how short and direct they are.
 
-- **дати** → **дай** / **дайте** (give)
-- **сказати** → **скажи** / **скажіть** (say/tell)
-- **їсти** → **їж** / **їжте** (eat)
-- **взяти** → **візьми** / **візьміть** (take)
+*   **дати** (to give) → **дай** (give!)
+*   **сказати** (to say/tell) → **скажи** (tell!)
+*   **їсти** (to eat) → **їж** (eat!)
+*   **іти** (to go) → **іди** (go!)
+*   **відкрити** (to open) → **відкрий** (open!)
 
-All four have short **ти**-forms: **дай, скажи, їж, візьми**. You will hear these dozens of times every day.
+:::caution
+Be careful with the word **сказати** (to say). The informal command is **скажи**, not "сказай". Many high-frequency verbs have these slight irregularities, so it is best to memorize them early.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-correct-imperative -->
+Once you know the informal **ти** form, creating the formal or plural **ви** form for all verbs is incredibly easy. There is a universal rule: you simply take the **ти** form and add the suffix **-те**. If the informal form ends in the vowel **-и**, the spelling sometimes shifts slightly to **-іть** to accommodate the stress, but the concept remains exactly the same.
+
+*   **читай** + **те** = **читайте** (read! — formal/plural)
+*   **говори** + **те** = **говоріть** (speak! — formal/plural)
+*   **дай** + **те** = **дайте** (give! — formal/plural)
+*   **пиши** + **те** = **пишіть** (write! — formal/plural)
+
+<!-- INJECT_ACTIVITY: fill-in-imperative-formation -->
+<!-- INJECT_ACTIVITY: quiz-polite-choice -->
 
 ## Підсумок — Summary
 
-Here are the essential imperatives you now know. You can give instructions in the classroom, order at a café, and make polite requests to strangers. Two forms: **ти** for friends and family, **ви** for teachers, strangers, and groups.
+Mastering the **наказовий спосіб** unlocks your ability to actively participate in Ukrainian life. You can now ask for help, offer things to friends, and follow directions in a classroom. To help you memorize the most critical patterns, here is a comprehensive table of the essential imperatives for daily life. Review these forms until they become a natural reflex.
 
-| Інфініти́в | Ти | Ви | Meaning |
-|---|---|---|---|
-| читати | читай | читайте | read |
-| писати | пиши | пишіть | write |
-| слухати | слухай | слухайте | listen |
-| дивитися | дивись | дивіться | look/watch |
-| говорити | говори | говоріть | speak |
-| іти | іди | ідіть | go |
-| дати | дай | дайте | give |
-| сказати | скажи | скажіть | say/tell |
-| сісти | сядь | сядьте | sit down |
-| відкри́ти | відкри́й | відкрийте | open |
+| Infinitive | Ти | Ви | Meaning |
+| :--- | :--- | :--- | :--- |
+| **читати** | **читай** | **читайте** | read |
+| **писати** | **пиши** | **пишіть** | write |
+| **слухати** | **слухай** | **слухайте** | listen |
+| **дивитися** | **дивись** | **дивіться** | look |
+| **говорити** | **говори** | **говоріть** | speak |
+| **іти** | **іди** | **ідіть** | go |
+| **дати** | **дай** | **дайте** | give |
+| **сказати** | **скажи** | **скажіть** | say/tell |
+| **сісти** | **сядь** | **сядьте** | sit down |
+| **відкрити** | **відкрий** | **відкрийте** | open |
 
-Three ready-made polite phrases to memorize as chunks — they work in shops, at school, and at the doctor's:
+This table covers the most frequent actions you will need to request or instruct others to perform. Practice reading both the singular and plural forms out loud to build your confidence.
 
-- **Скажіть, будь ласка...** — Excuse me, could you tell me...
-- **Дайте, будь ласка...** — Could you give me...
-- **Покажіть, будь ласка...** — Could you show me...
+Before you move on to the next module, take a moment for a practical self-check. Imagine yourself in the following real-world situations and test your ability to apply the rules.
 
-Learn the whole phrase, not just the verb. When you need something from a stranger, start with **Скажіть, будь ласка** — it is the universal polite opener.
+*   How do you ask a close friend to "look" at something interesting? You use the short informal form: **Дивись!**
+*   How do you instruct a group of people to "listen" to your announcement? You need the plural form: **Слухайте!**
+*   What is the single most important word that makes any direct command perfectly polite? The magic phrase is: **Будь ласка.**
+*   How do you say "Please say" or "Please tell" to your boss or a stranger? You combine the formal verb with the polite marker: **Скажіть, будь ласка.**
 
-<!-- INJECT_ACTIVITY: group-sort-ty-vy -->
+Remember, the goal is not to memorize grammar rules in isolation, but to communicate effectively. Keep practicing these core verbs, always consider who you are speaking to, and never hesitate to add a polite "please" to your requests. The imperative mood is a powerful tool that will make your Ukrainian sound much more natural and engaging.
 
-<!-- INJECT_ACTIVITY: fill-in-context-ty-vy -->
-
-**Deterministic word count: 1269 words** (calculated by pipeline, do NOT estimate manually)
-
+<!-- INJECT_ACTIVITY: fill-in-contextual-names -->
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1518 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -346,8 +342,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -434,60 +430,19 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 112 words | Not found: 49 words
+Verified: 109 words | Not found: 8 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іва — NOT IN VESUM
-  ✗ Інфініти — NOT IN VESUM
-  ✗ Відкри — NOT IN VESUM
-  ✗ Дарина — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Заболо — NOT IN VESUM
-  ✗ Наказо — NOT IN VESUM
-  ✗ Напиші — NOT IN VESUM
-  ✗ Олесь — NOT IN VESUM
-  ✗ Олесю — NOT IN VESUM
-  ✗ Офіціа — NOT IN VESUM
-  ✗ Слу — NOT IN VESUM
-  ✗ Тепе — NOT IN VESUM
-  ✗ вляться — NOT IN VESUM
-  ✗ впра — NOT IN VESUM
-  ✗ відкри — NOT IN VESUM
-  ✗ гово — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ дять — NOT IN VESUM
-  ✗ жна — NOT IN VESUM
-  ✗ запи — NOT IN VESUM
-  ✗ йте — NOT IN VESUM
-  ✗ менко — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нте — NOT IN VESUM
-  ✗ нці — NOT IN VESUM
-  ✗ пиші — NOT IN VESUM
-  ✗ пого — NOT IN VESUM
-  ✗ принесі — NOT IN VESUM
-  ✗ підру — NOT IN VESUM
-  ✗ рна — NOT IN VESUM
-  ✗ рне — NOT IN VESUM
-  ✗ рять — NOT IN VESUM
-  ✗ сло — NOT IN VESUM
-  ✗ словни — NOT IN VESUM
-  ✗ слу — NOT IN VESUM
-  ✗ спо — NOT IN VESUM
-  ✗ стечко — NOT IN VESUM
-  ✗ сце — NOT IN VESUM
-  ✗ сіб — NOT IN VESUM
-  ✗ тний — NOT IN VESUM
-  ✗ туйте — NOT IN VESUM
-  ✗ ться — NOT IN VESUM
-  ✗ хають — NOT IN VESUM
-  ✗ чеш — NOT IN VESUM
-  ✗ чники — NOT IN VESUM
-  ✗ шуть — NOT IN VESUM
+  ✗ Іване — NOT IN VESUM
+  ✗ Олег — NOT IN VESUM
+  ✗ Олено — NOT IN VESUM
+  ✗ ати — NOT IN VESUM
+  ✗ ись — NOT IN VESUM
+  ✗ ити — NOT IN VESUM
+  ✗ сказай — NOT IN VESUM
   ✗ іть — NOT IN VESUM
 
-All 112 other words are confirmed to exist in VESUM.
+All 109 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

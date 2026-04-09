@@ -1,0 +1,48 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Failed to provide minimal contrast sentences for all 30 pairs as required
+    ("Each pair shown in a minimal contrast sentence"), defaulting to bare lists for
+    24 of them. Omitted the required textbook ref
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless. Correct use of aspect, natural verb pairs, accurate explanation
+    of "Кафе Птах", and correct identification of true suppletive verbs.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The PPP structure is excellent, but presenting 30 core vocabulary items
+    primarily as three dense bulleted lists of 10 without immediate contextual sentences
+    violates the mandate against "bare vocabula
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary pairs (`брати / взяти`, `говорити / сказати`,
+    etc.) are naturally integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan's `activity_hints` IDs and are placed
+    effectively after the relevant teaching blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Encouraging, teacher-like tone. ("Вибір виду дієслова — це питання вашого
+    мислення").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 3058 words is well above the target. All H2 headings match the plan exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate and respectful presentation of Ukrainian linguistic patterns.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly realistic, clearly contrasting the intent/process
+    (often from the child or planner) vs result/completion (from the parent or executioner).
+findings: []

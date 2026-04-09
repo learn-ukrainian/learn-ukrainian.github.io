@@ -1,48 +1,42 @@
 ## Linguistic Scan
-Linguistic scan revealed a phonetic terminology error: the text refers to the [ж] and [ч] consonants as "softened" when they are actually hard (тверді) in modern Ukrainian. No Russianisms, Surzhyk, or calques were found.
+The text is largely free of Russianisms, Surzhyk, calques, or paronym errors. The phrasing is highly natural (e.g., "ти маєш рацію", "будьте обережні", "ходи сюди"). However, there is a critical grammatical error regarding the vocative formation of the word "син", detailed in the findings.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-vocative -->` placed correctly after general vocative intro.
-- `<!-- INJECT_ACTIVITY: fill-in-vocative -->` placed correctly after explaining the rules.
-- `<!-- INJECT_ACTIVITY: group-sort-vocative -->` placed correctly.
-- `<!-- INJECT_ACTIVITY: quiz-choose-vocative -->` placed correctly at the end.
-All markers match the plan's `activity_hints` count and pedagogical flow perfectly.
+All `<!-- INJECT_ACTIVITY: {id} -->` markers are present and correspond to the four activities outlined in the plan.
+- `dialogue-flow-practice` is placed correctly after the "Діалоги" section, matching the "Complete dialogue" plan item.
+- `vocative-form-practice`, `vocative-choice-quiz`, and `ending-sorting-activity` are placed appropriately at the end of the "Закінчення кличного" section, perfectly testing the rules just taught.
+The sequence and logic of these exercises are pedagogically sound.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Failed to cite "State Standard 2024" and "Zabolotnyi Grade 4" as required by the plan references, and instead hallucinated "Avramenko's Grade 6" and "Litvinova Grade 6". |
-| 2. Linguistic accuracy | 9/10 | Incorrectly stated "the back consonant softens before -е" for г→ж and к→ч. Phonetically, [ж] and [ч] are hard (тверді) consonants in Ukrainian. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical distinction: "Олена прийшла (talking ABOUT her) vs Олено, ходи сюди! (talking TO her)". |
-| 4. Vocabulary coverage | 10/10 | Successfully integrated all required (друг, подруга, брат, сестра, пан, пані) and recommended words into the prose naturally. |
-| 5. Exercise quality | 10/10 | 4 injected activity markers matching the plan precisely in sequence. |
-| 6. Engagement & tone | 10/10 | Grounded tone: "It is roughly like saying 'Hey, him!' instead of 'Hey, you!' in English. Ukrainians immediately notice if you skip the vocative". |
-| 7. Structural integrity | 10/10 | Section headers match plan, word count is 1265 (within the 10% tolerance for the 1200 target). |
-| 8. Cultural accuracy | 10/10 | Authentic cultural context, correct use of patronymics and terms of address (пан/пані). |
-| 9. Dialogue & conversation quality | 10/10 | Excellent, highly contextual multi-turn dialogue showing busy environments (birthday party, leaving house). |
+| 1. Plan adherence | 10/10 | Covers all grammar points and sections outlined in the plan perfectly. The 2069-word narrative comfortably exceeds the 1200-word target. |
+| 2. Linguistic accuracy | 8/10 | Excellent explanation of vowel shifts, but contains a critical factual error regarding the vocative of "син" (incorrectly claiming the `-у` ending creates "синку" directly from "син"). |
+| 3. Pedagogical quality | 10/10 | Exceptional use of the Grade 4 helper word "Кл. (!)". The PPP sequence from dialogues to explicit pattern breakdown is flawless. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended words (друг, подруга, брат, сестра, пан, пані, синку, дочко, козак, вчитель, бабуся, дідусь) are used in natural contexts. |
+| 5. Exercise quality | 10/10 | All 4 activities from the plan are injected via markers exactly after the concepts they test. |
+| 6. Engagement & tone | 10/10 | Warm, encouraging teacher tone without being overly gamified. Examples like "feels as awkward as saying 'Hey, him!'" are brilliant. |
+| 7. Structural integrity | 10/10 | Clean markdown, precise headings, no meta-commentary. Word count (2069) is well above the minimum. |
+| 8. Cultural accuracy | 10/10 | Strongly frames the vocative case as a decolonized feature unique to Ukrainian identity compared to standard Russian. |
+| 9. Dialogue & conversation quality | 10/10 | Very natural exchanges ("Мамо, де мій телефон? / На столі, синку.") grounded in a relatable party scenario with named speakers. |
 
 ## Findings
+[2. Linguistic accuracy] [Critical]
+Location: `The word for son also takes an **-у** ending: **син** → **синку** (son).`
+Issue: Factual grammar error. The vocative of `син` by adding `-у` is `сину`. The form `синку` is the vocative of the diminutive form `синок`. The text incorrectly claims `син` adds `-у` to become `синку`.
+Fix: Change the text to explicitly state `син` becomes `сину`, and mention the affectionate diminutive form `синок` becomes `синку`.
 
-[1. Plan adherence] [MAJOR]
-Location: Section "Кличний відмінок" and Section "Закінчення кличного"
-Issue: The plan explicitly required citing "State Standard 2024, §4.2.3.4" and "Grade 4 textbook: Кличний відмінок (Заболотний)". The generated text omitted these references and instead hallucinated textbook citations not in the plan ("Avramenko's Grade 6", "Litvinova Grade 6").
-Fix: Replace the hallucinated references with the ones specified in the plan.
-
-[2. Linguistic accuracy] [CRITICAL]
-Location: Section "Закінчення кличного", under "Masculine: soft consonant / -й → -ю" ("These follow standard Ukrainian phonetic patterns — the back consonant softens before -е.")
-Issue: Phonetically, [ж] and [ч] are hard (тверді) consonants in modern Ukrainian. Calling this alternation "softening" is factually incorrect and teaches a wrong phonetic rule. This is a consonant mutation/alternation (the first palatalization).
-Fix: Change "softens" to "mutates".
+[2. Linguistic accuracy] [Critical]
+Location: `| Special (**-у**) | irregular | **тато** → **тату**, **син** → **синку** |`
+Issue: The summary table repeats the factual grammar error regarding the vocative of `син`.
+Fix: Change `син → синку` to `син → сину` in the summary table.
 
 ## Verdict: REVISE
-The module is incredibly well-written, engaging, and pedagogically sound. However, the critical phonetic terminology error ("softening" into hard consonants) and the hallucinated textbook citations (failing to use the plan's required references) trigger the REVISE gate. Applying the provided fixes will correct these issues.
+The module is exceptional in tone, structure, and pedagogy. However, the factual grammatical error regarding the declension of "син" is a critical flaw that teaches incorrect morphology. With the two targeted fixes provided below, the module will easily meet all standards and be ready for learners.
 
 <fixes>
-- find: "Ukrainian Grade 4 grammar uses a helpful shorthand:"
-  replace: "The Grade 4 textbook by Zabolotnyi uses a helpful shorthand:"
-- find: "As Avramenko's Grade 6 textbook notes, forms like"
-  replace: "As the State Standard 2024 notes, forms like"
-- find: "From Litvinova Grade 6: **пан Євге́н**"
-  replace: "Following the standard pattern: **пан Євге́н**"
-- find: "the back consonant softens before **-е**."
-  replace: "the back consonant mutates before **-е**."
+- find: "The word for son also takes an **-у** ending: **син** → **синку** (son)."
+  replace: "The word for son also takes an **-у** ending: **син** → **сину** (son). The affectionate form is **синок** → **синку**."
+- find: "| Special (**-у**) | irregular | **тато** → **тату**, **син** → **синку** |"
+  replace: "| Special (**-у**) | irregular | **тато** → **тату**, **син** → **сину** |"
 </fixes>

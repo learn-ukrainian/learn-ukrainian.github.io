@@ -1,6 +1,6 @@
 # Build Summary: which-case-when (A2)
 
-Generated: 2026-04-08 03:27
+Generated: 2026-04-09 01:47
 
 ## Pipeline Phases
 
@@ -20,6 +20,7 @@ Generated: 2026-04-08 03:27
 | review | complete | 2026-04-08 01:27:33 |
 | stress | complete | 2026-04-08 01:27:34 |
 | publish | complete | 2026-04-08 01:27:35 |
+| pre-verify | complete | 2026-04-08 23:47:59 |
 
 ## Reviews
 
@@ -32,6 +33,7 @@ Generated: 2026-04-08 03:27
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (auto) | 600s | ❌ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 532s | ✅ |
 | skeleton | gemini (auto) | 104s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
 | vocab | gemini (auto) | 371s | ✅ |
@@ -46,6 +48,7 @@ Generated: 2026-04-08 03:27
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
@@ -53,6 +56,7 @@ Generated: 2026-04-08 03:27
 - `chunk-05.md`
 - `chunk-06.md`
 - `exercise-verification.json`
+- `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `skeleton.md`

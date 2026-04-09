@@ -1,7 +1,128 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 76,
+  "grounded_items": 56,
+  "ungrounded": [
+    {
+      "word": "неістоти",
+      "exercise_type": "group-sort",
+      "context": "Неістоти — Inanimate (що?)",
+      "role": "context"
+    },
+    {
+      "word": "істоти",
+      "exercise_type": "group-sort",
+      "context": "Істоти — Animate (кого?)",
+      "role": "context"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "group-sort",
+      "context": "Істоти — Animate (кого?)",
+      "role": "context"
+    },
+    {
+      "word": "лікаря",
+      "exercise_type": "group-sort",
+      "context": "лікаря",
+      "role": "answer"
+    },
+    {
+      "word": "сусіда",
+      "exercise_type": "group-sort",
+      "context": "сусіда",
+      "role": "answer"
+    },
+    {
+      "word": "вчителя",
+      "exercise_type": "group-sort",
+      "context": "вчителя",
+      "role": "answer"
+    },
+    {
+      "word": "люблю",
+      "exercise_type": "quiz",
+      "context": "Я люблю ___.",
+      "role": "context"
+    },
+    {
+      "word": "чекаю",
+      "exercise_type": "quiz",
+      "context": "Я чекаю ___.",
+      "role": "context"
+    },
+    {
+      "word": "купую",
+      "exercise_type": "quiz",
+      "context": "Я купую ___.",
+      "role": "context"
+    },
+    {
+      "word": "тут",
+      "exercise_type": "match-up",
+      "context": "Тут вільно?",
+      "role": "answer"
+    },
+    {
+      "word": "вільно",
+      "exercise_type": "match-up",
+      "context": "Тут вільно?",
+      "role": "answer"
+    },
+    {
+      "word": "каша",
+      "exercise_type": "error-correction",
+      "context": "Я їм каша на сніданок.",
+      "role": "context"
+    },
+    {
+      "word": "тарас",
+      "exercise_type": "error-correction",
+      "context": "Я бачу Тарас.",
+      "role": "context"
+    },
+    {
+      "word": "купує",
+      "exercise_type": "true-false",
+      "context": "Анна купує помідори та огірки на ринку.",
+      "role": "context"
+    },
+    {
+      "word": "та",
+      "exercise_type": "true-false",
+      "context": "Анна купує помідори та огірки на ринку.",
+      "role": "context"
+    },
+    {
+      "word": "ринку",
+      "exercise_type": "true-false",
+      "context": "Анна купує помідори та огірки на ринку.",
+      "role": "context"
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "true-false",
+      "context": "Анна п'є каву з молоком у кафе.",
+      "role": "context"
+    },
+    {
+      "word": "знає",
+      "exercise_type": "true-false",
+      "context": "Олена знає Тараса.",
+      "role": "context"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "true-false",
+      "context": "Тарас — це брат Анни.",
+      "role": "context"
+    },
+    {
+      "word": "анни",
+      "exercise_type": "true-false",
+      "context": "Тарас — це брат Анни.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {},
-  "all_grounded": true
+  "all_grounded": false
 }

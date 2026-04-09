@@ -1,0 +1,433 @@
+version: '1.0'
+module: a1-finale
+level: a1
+inline:
+- id: order-day-events
+  type: quiz
+  instruction: Що сталося першим? (What happened first?)
+  items:
+  - question: What did the narrator do immediately after waking up?
+    options:
+    - Went to the cinema
+    - Had breakfast at the café on the first floor
+    - Bought a souvenir on Khreshchatyk
+    correct: 1
+  - question: What did the narrator do after breakfast?
+    options:
+    - Had lunch with Olena
+    - Rode the metro to the city centre
+    - Watched a film
+    correct: 1
+  - question: When did the narrator meet Olena?
+    options:
+    - Зранку (in the morning)
+    - Вночі (at night)
+    - Вдень (during the day)
+    correct: 2
+  - question: Where did the narrator and Olena go first in the evening?
+    options:
+    - В ресторан (to a restaurant)
+    - В кіно (to the cinema)
+    - В готель (to the hotel)
+    correct: 1
+  - question: What happened after the cinema?
+    options:
+    - The narrator went back to the hotel
+    - They rode the metro
+    - They had dinner at a restaurant
+    correct: 2
+  - question: What does the narrator plan to see tomorrow?
+    options:
+    - Хрещатик (Khreshchatyk)
+    - Метро (the metro)
+    - Лавру (the Lavra)
+    correct: 2
+- id: fill-in-tenses
+  type: fill-in
+  instruction: Оберіть правильне слово (Choose the correct word)
+  items:
+  - sentence: '{___} я снідав у кафе.'
+    answer: Зранку
+    options:
+    - Зранку
+    - Завтра
+    - Ввечері
+  - sentence: Зараз я {___} по Хрещатику, тут дуже гарно!
+    answer: гуляю
+    options:
+    - гуляю
+    - гуляв
+    - буду гуляти
+  - sentence: Учора я {___} квиток на поїзд.
+    answer: купив
+    options:
+    - купив
+    - купую
+    - буду купувати
+  - sentence: Завтра я {___} по Україні.
+    answer: буду подорожувати
+    options:
+    - буду подорожувати
+    - подорожував
+    - подорожую
+  - sentence: Ввечері ми {___} в кіно.
+    answer: ходили
+    options:
+    - ходили
+    - ходимо
+    - будемо ходити
+  - sentence: Зараз Олена {___} борщ і салат.
+    answer: замовляє
+    options:
+    - замовляє
+    - замовляла
+    - замовить
+  - sentence: Учора була гарна погода, і ми {___} в парку.
+    answer: гуляли
+    options:
+    - гуляли
+    - гуляємо
+    - будемо гуляти
+  - sentence: Я вже {___} до рівня А2! Вітаю!
+    answer: готовий
+    options:
+    - готовий
+    - початок
+    - сувенір
+- id: match-situation-phrase
+  type: match-up
+  instruction: З'єднайте ситуацію з правильною фразою (Match the situation to the
+    correct phrase)
+  pairs:
+  - left: Ordering coffee
+    right: Будь ласка, каву з молоком.
+  - left: Asking for directions
+    right: Вибачте, як дістатися до метро?
+  - left: Buying a souvenir
+    right: Скільки коштує ця вишиванка?
+  - left: Meeting someone new
+    right: Привіт! Звідки ти?
+  - left: Emergency
+    right: Допоможіть! Викличте швидку!
+  - left: At the pharmacy
+    right: Дайте, будь ласка, таблетки від головного болю.
+  - left: Saying goodbye
+    right: Дякую! До побачення!
+- id: quiz-a1-review
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: How do you ask about the price of a ticket?
+    options:
+    - Скільки коштує квиток?
+    - Де тут квиток?
+    - Дайте один квиток.
+    correct: 0
+  - question: You are inviting a friend to a cafe. What do you say?
+    options:
+    - Ходімо в кафе!
+    - Я був у кафе.
+    - Де кафе?
+    correct: 0
+  - question: How do you say 'My head hurts'?
+    options:
+    - У мене болить голова.
+    - У мене температура.
+    - Я хворий.
+    correct: 0
+  - question: Someone asks 'Де ви?'. How do you answer?
+    options:
+    - Я на вулиці Хрещатик.
+    - Мене звати Адам.
+    - Я з Канади.
+    correct: 0
+  - question: What tense is 'Завтра я буду читати книгу'?
+    options:
+    - Future
+    - Past
+    - Present
+    correct: 0
+  - question: What does 'Смачного!' mean?
+    options:
+    - Enjoy your meal!
+    - Good morning!
+    - Thank you!
+    correct: 0
+workbook:
+- type: fill-in
+  instruction: Вставте правильне слово (Fill in the missing word)
+  items:
+  - sentence: Зранку я {___} у готелі в Києві.
+    answer: прокинувся
+    options:
+    - прокинувся
+    - снідав
+    - гуляв
+  - sentence: Я купив {___} на метро.
+    answer: квиток
+    options:
+    - квиток
+    - сувенір
+    - фільм
+  - sentence: Ця вишиванка — гарний {___} з України.
+    answer: сувенір
+    options:
+    - сувенір
+    - квиток
+    - готель
+  - sentence: Ввечері ми дивилися {___} в кінотеатрі.
+    answer: фільм
+    options:
+    - фільм
+    - карту
+    - лінію
+  - sentence: Я зупинився в {___} біля метро.
+    answer: готелі
+    options:
+    - готелі
+    - кафе
+    - ресторані
+  - sentence: Ти вже {___} до рівня А2. Вітаю!
+    answer: готовий
+    options:
+    - готовий
+    - початок
+    - сувенір
+  - sentence: Ми вирішили {___} по Україні потягом.
+    answer: подорожувати
+    options:
+    - подорожувати
+    - познайомитися
+    - зустріти
+  - sentence: Мій друг хотів {___} мене біля метро о шостій.
+    answer: зустріти
+    options:
+    - зустріти
+    - познайомитися
+    - подорожувати
+- type: match-up
+  instruction: З'єднайте слово з його значенням (Match the word to its English meaning)
+  pairs:
+  - left: квиток
+    right: ticket
+  - left: сувенір
+    right: souvenir
+  - left: готель
+    right: hotel
+  - left: фільм
+    right: film
+  - left: початок
+    right: beginning
+  - left: вітаю
+    right: congratulations
+  - left: готовий
+    right: ready
+  - left: лінія
+    right: line
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: 'У минулому часі українські дієслова мають форми чоловічого і жіночого
+      роду: снідав (чол.) / снідала (жін.).'
+    correct: true
+    explanation: 'Так, у минулому часі дієслово змінюється за родом. Чоловічий рід:
+      -в (снідав, гуляв). Жіночий рід: -ла (снідала, гуляла).'
+  - statement: 'Аналітичний майбутній час утворюється за схемою: буду + інфінітив
+      (наприклад: буду подорожувати).'
+    correct: true
+    explanation: 'Так, це аналітична форма майбутнього часу. Приклад: буду їздити,
+      буду читати, буду подорожувати.'
+  - statement: Слово 'заказати' є нейтральним стилістичним варіантом слова 'замовити'
+      для замовлення їжі.
+    correct: false
+    explanation: 'Ні. ''Заказати'' є русизмом і не рекомендується в літературній українській
+      мові. Правильно: замовити / замовляти.'
+  - statement: Лавра — це знаменитий монастирський комплекс у Києві.
+    correct: true
+    explanation: Так, Києво-Печерська Лавра — один з найстаріших монастирів України,
+      заснований у XI столітті.
+  - statement: '''Смачного'' походить від прикметника ''смачний'' (tasty) і є стандартним
+      українським побажанням перед їжею.'
+    correct: true
+    explanation: Так, 'смачного' — це форма родового відмінку від 'смачний'. Відповідає
+      французькому 'bon appétit'.
+  - statement: Станція метро Хрещатик знаходиться на зеленій лінії київського метро.
+    correct: true
+    explanation: Так, станція Хрещатик — на Святошинсько-Броварській (зеленій) лінії
+      київського метро.
+- type: group-sort
+  instruction: Розподіліть дієслова за часом (Sort the verb forms by tense)
+  groups:
+  - label: Минулий час (Past)
+    items:
+    - снідав
+    - гуляв
+    - купив
+    - ходили
+    - прокинувся
+    - познайомився
+  - label: Теперішній час (Present)
+    items:
+    - гуляю
+    - замовляє
+    - думаю
+    - бачиш
+    - виходиш
+    - купуєш
+  - label: Майбутній час (Future)
+    items:
+    - буду їздити
+    - буду подорожувати
+    - будемо робити
+    - зустрінемося
+    - буду читати
+    - буду вдома
+- type: quiz
+  instruction: Оберіть правильну форму дієслова (Choose the correct verb form)
+  items:
+  - question: Учора я ___ борщ у ресторані.
+    options:
+    - їв
+    - їм
+    - буду їсти
+    correct: 0
+  - question: Зараз Олена ___ каву в кафе.
+    options:
+    - п'є
+    - пила
+    - буде пити
+    correct: 0
+  - question: Завтра ми ___ до Лаври.
+    options:
+    - поїдемо
+    - їхали
+    - їдемо
+    correct: 0
+  - question: Вчора ми ___ в кіно разом.
+    options:
+    - ходили
+    - ходимо
+    - будемо ходити
+    correct: 0
+  - question: Зранку я ___ у готелі.
+    options:
+    - прокинувся
+    - прокидаюся
+    - прокинуся
+    correct: 0
+  - question: Зараз я ___ на метро в центр.
+    options:
+    - їду
+    - їхав
+    - буду їхати
+    correct: 0
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  items:
+  - sentence: Я хочу заказати борщ, будь ласка.
+    error: заказати
+    correction: замовити
+    error_type: word
+    options:
+    - замовити
+    - забронювати
+    - придбати
+    explanation: '''Заказати'' — русизм, не рекомендований у літературній мові. Правильно:
+      замовити (to order).'
+  - sentence: Учора ми ходимо в кіно разом.
+    error: ходимо
+    correction: ходили
+    error_type: word
+    options:
+    - ходили
+    - підемо
+    - ідемо
+    explanation: '''Учора'' вимагає минулого часу. Правильно: ходили.'
+  - sentence: Завтра я подорожував по Україні.
+    error: подорожував
+    correction: буду подорожувати
+    error_type: word
+    options:
+    - буду подорожувати
+    - подорожую
+    - подорожую вже
+    explanation: '''Завтра'' вимагає майбутнього часу. Правильно: буду подорожувати.'
+  - sentence: Зранку я снідаю в кафе вчора.
+    error: снідаю
+    correction: снідав
+    error_type: word
+    options:
+    - снідав
+    - буду снідати
+    - поснідаю
+    explanation: '''Вчора'' вимагає минулого часу. Правильно: снідав.'
+  - sentence: Скільки коштую ця вишиванка?
+    error: коштую
+    correction: коштує
+    error_type: word
+    options:
+    - коштує
+    - коштуєш
+    - коштуємо
+    explanation: 'Вишиванка — 3-тя особа однини. Правильне закінчення: коштує.'
+  - sentence: Привіт! Я хочу познайомити з тобою.
+    error: познайомити
+    correction: познайомитися
+    error_type: word
+    options:
+    - познайомитися
+    - познайомлю
+    - познайомив
+    explanation: 'Правильна рефлексивна форма: познайомитися (to get acquainted with
+      someone).'
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: How much does this vyshyvanka cost?
+    options:
+    - text: Скільки коштує ця вишиванка?
+      correct: true
+    - text: Де ця вишиванка?
+      correct: false
+    - text: Дайте цю вишиванку.
+      correct: false
+  - source: Let's go to a restaurant!
+    options:
+    - text: Ходімо в ресторан!
+      correct: true
+    - text: Я в ресторані.
+      correct: false
+    - text: Де ресторан?
+      correct: false
+  - source: I got acquainted with Olena today.
+    options:
+    - text: Сьогодні я познайомився з Оленою.
+      correct: true
+    - text: Я знаю Олену сьогодні.
+      correct: false
+    - text: Олена моя подруга.
+      correct: false
+  - source: Tomorrow I will travel around Ukraine.
+    options:
+    - text: Завтра я буду подорожувати по Україні.
+      correct: true
+    - text: Вчора я подорожував по Україні.
+      correct: false
+    - text: Зараз я подорожую по Україні.
+      correct: false
+  - source: Congratulations! You are ready for A2!
+    options:
+    - text: Вітаю! Ти готовий до А2!
+      correct: true
+    - text: Дякую! Ти вже на початку.
+      correct: false
+    - text: Привіт! Ти знаєш А2.
+      correct: false
+  - source: This is just the beginning!
+    options:
+    - text: Це тільки початок!
+      correct: true
+    - text: Це вже кінець.
+      correct: false
+    - text: Це дуже добре!
+      correct: false

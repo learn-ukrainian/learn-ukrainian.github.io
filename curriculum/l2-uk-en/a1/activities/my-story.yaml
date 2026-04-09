@@ -2,9 +2,27 @@ version: '1.0'
 module: my-story
 level: a1
 inline:
+- id: matching-tense-category
+  type: match-up
+  instruction: З'єднайте дієслово з правильним часом (Match the verb with the correct
+    tense)
+  pairs:
+  - left: народився
+    right: Минулий час (Past)
+  - left: переїхала
+    right: Минулий час (Past)
+  - left: живу
+    right: Теперішній час (Present)
+  - left: працюю
+    right: Теперішній час (Present)
+  - left: буду подорожувати
+    right: Майбутній час (Future)
+  - left: будемо вчитися
+    right: Майбутній час (Future)
 - id: fill-in-signal-words
   type: fill-in
-  instruction: Оберіть правильну форму дієслова (Choose the correct verb form)
+  instruction: Оберіть правильне дієслово за контекстом (Choose the correct verb based
+    on the context)
   items:
   - sentence: Раніше я ____ в Канаді.
     answer: жив
@@ -15,15 +33,15 @@ inline:
   - sentence: Зараз я ____ в університеті.
     answer: працюю
     options:
-    - працював
     - працюю
+    - працював
     - буду працювати
   - sentence: Далі я ____ українську мову.
     answer: буду вивчати
     options:
+    - буду вивчати
     - вивчав
     - вивчаю
-    - буду вивчати
   - sentence: У дитинстві вона ____ читати.
     answer: любила
     options:
@@ -33,65 +51,35 @@ inline:
   - sentence: Сьогодні ми ____ в Україні.
     answer: живемо
     options:
-    - жили
     - живемо
+    - жили
     - будемо жити
-  - sentence: Потім він ____ у Київ.
-    answer: переїхав
+  - sentence: Потім він ____ програмістом.
+    answer: буде працювати
     options:
-    - переїхав
-    - переїжджає
-    - буде переїжджати
+    - буде працювати
+    - працює
+    - працював
 - id: ordering-life-events
-  type: quiz
-  instruction: Оберіть правильний варіант (Choose the correct answer)
+  type: order
+  instruction: Розставте події в правильному порядку (Put the events in the correct
+    order)
   items:
-  - question: Що сталося ПЕРШИМ у житті Максима? (What happened FIRST in Maksym's
-      life?)
-    options:
-    - Він переїхав у Київ.
-    - Він народився в Канаді.
-    - Він буде працювати тут.
-    - Він вчився в університеті.
-    correct: 1
-  - question: Що Максим зробив ПІСЛЯ народження? (What did Maksym do AFTER being born?)
-    options:
-    - Він одразу переїхав у Київ.
-    - Він жив із батьками.
-    - Він буде подорожувати.
-    - Він закінчив університет.
-    correct: 1
-  - question: Що Максим робить ЗАРАЗ? (What is Maksym doing NOW?)
-    options:
-    - Він народився в Торонто.
-    - Він жив у Канаді.
-    - Він живе в Києві.
-    - Він буде подорожувати.
-    correct: 2
-  - question: Що Максим буде робити ДАЛІ? (What will Maksym do NEXT?)
-    options:
-    - Він переїхав у Київ.
-    - Він жив у Канаді.
-    - Він народився.
-    - Він буде працювати тут.
-    correct: 3
-  - question: Що Анна зробила ПІСЛЯ школи? (What did Anna do AFTER school?)
-    options:
-    - Вона одразу поїхала подорожувати.
-    - Вона переїхала в Київ і закінчила університет.
-    - Вона зараз живе в Одесі.
-    - Вона народилася у Львові.
-    correct: 1
-  - question: Що Анна планує ДАЛІ? (What does Anna plan NEXT?)
-    options:
-    - Вона вчитиметься в школі.
-    - Вона живе у Львові.
-    - Вона буде подорожувати.
-    - Вона народилася в Одесі.
-    correct: 2
-- id: fill-in-biography
+  - Я народився в Торонто.
+  - У дитинстві я жив з батьками.
+  - Потім я вчився в університеті.
+  - Зараз я живу в Києві і працюю програмістом.
+  - Далі я буду подорожувати.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+- id: fill-in-biography-combined
   type: fill-in
-  instruction: Вставте правильну форму дієслова (Fill in the correct verb form)
+  instruction: Вставте правильні дієслова, щоб завершити біографію (Insert the correct
+    verbs to complete the biography)
   items:
   - sentence: Я ____ у Львові.
     answer: народилася
@@ -105,238 +93,264 @@ inline:
     - вчилася
     - вчився
     - вчилися
-  - sentence: Потім я ____ в Київ.
-    answer: переїхала
-    options:
-    - переїхала
-    - переїхав
-    - переїжджаю
-  - sentence: Я ____ університет.
-    answer: закінчила
-    options:
-    - закінчила
-    - закінчив
-    - закінчили
   - sentence: Зараз я ____ вчителькою.
     answer: працюю
     options:
-    - працювала
     - працюю
+    - працювала
     - буду працювати
   - sentence: Наступного року я ____.
     answer: буду подорожувати
     options:
+    - буду подорожувати
     - подорожувала
     - подорожую
-    - буду подорожувати
-- id: matching-verb-tense
-  type: match-up
-  instruction: З'єднайте дієслово з часом (Match the verb to its tense)
-  pairs:
-  - left: народився
-    right: Минулий час (Past)
-  - left: переїхала
-    right: Минулий час (Past)
-  - left: вчився
-    right: Минулий час (Past)
-  - left: живу
-    right: Теперішній час (Present)
-  - left: працюю
-    right: Теперішній час (Present)
-  - left: буду подорожувати
-    right: Майбутній час (Future)
-  - left: будемо вчитися
-    right: Майбутній час (Future)
+  - sentence: Я ____ побачити Японію.
+    answer: хочу
+    options:
+    - хочу
+    - хотіла
+    - буду хотіти
+  - sentence: Моя ____ — це Японія.
+    answer: мрія
+    options:
+    - мрія
+    - успіх
+    - дитинство
 workbook:
 - type: group-sort
-  instruction: Розподіліть дієслова за часом (Sort the verbs by tense)
+  instruction: Розподіліть слова за часом (Sort the words by tense)
   groups:
   - label: Минулий час (Past)
     items:
     - народився
     - жила
-    - вчився
-    - переїхала
-    - закінчила
-    - подорожував
+    - вчилися
+    - переїхав
+    - працювала
   - label: Теперішній час (Present)
     items:
     - живу
-    - працюю
-    - вивчаю
+    - працює
+    - вчимося
     - розповідаю
-    - подорожую
-    - живемо
+    - хочу
   - label: Майбутній час (Future)
     items:
-    - буду подорожувати
-    - буду вивчати
     - буду жити
     - будеш працювати
-    - буде вчитися
-    - будемо розповідати
-- type: fill-in
-  instruction: 'Вставте правильну форму: -в (чоловічий) чи -ла (жіночий)? (Fill in
-    the correct past-tense ending: -в for masculine, -ла for feminine)'
-  items:
-  - sentence: Тарас ____ в Одесі з батьками і сестрою.
-    answer: жив
-    options:
-    - жив
-    - жила
-    - жили
-  - sentence: Оксана ____ у Харкові з батьками.
-    answer: жила
-    options:
-    - жив
-    - жила
-    - жили
-  - sentence: Максим ____ в університеті в Торонто.
-    answer: вчився
-    options:
-    - вчився
-    - вчилася
-    - вчилися
-  - sentence: Анна ____ в університеті в Києві.
-    answer: вчилася
-    options:
-    - вчився
-    - вчилася
-    - вчилися
-  - sentence: Він ____ у Київ три роки тому.
-    answer: переїхав
-    options:
-    - переїхав
-    - переїхала
-    - переїхали
-  - sentence: Вона ____ у Київ два роки тому.
-    answer: переїхала
-    options:
-    - переїхав
-    - переїхала
-    - переїхали
+    - буде подорожувати
+    - будемо вчитися
 - type: true-false
-  instruction: Правда чи ні? (True or false?)
+  instruction: Правда чи ні? (Прочитайте історію Тараса) (True or false? Read Taras's
+    story)
   items:
-  - statement: Максим народився в Канаді, у Торонто.
-    correct: true
-    explanation: 'Так, Максим каже: «Я народився в Канаді, у Торонто.»'
-  - statement: Зараз Максим живе в Канаді.
+  - statement: Тарас народився в Києві.
     correct: false
-    explanation: Ні, зараз Максим живе в Києві.
-  - statement: Анна народилася у Львові.
+    explanation: Тарас народився в Одесі.
+  - statement: У дитинстві Тарас любив математику.
     correct: true
-    explanation: 'Так, Анна каже: «Я народилася у Львові.»'
-  - statement: Анна зараз працює програмістом.
-    correct: false
-    explanation: Ні, Анна працює вчителькою.
-  - statement: Тарас жив в Одесі з батьками і сестрою.
+    explanation: Він ходив у школу і любив математику.
+  - statement: Зараз Тарас працює програмістом.
     correct: true
-    explanation: 'Так, Тарас розповідає: «Я жив там з батьками і сестрою.»'
-  - statement: Далі Анна хоче побачити Францію.
+    explanation: Він живе в Києві і працює програмістом.
+  - statement: Тарас не любить свою роботу.
     correct: false
-    explanation: Ні, Анна хоче побачити Японію.
+    explanation: 'Він каже: ''Я люблю свою роботу''.'
+  - statement: У вільний час він грає у баскетбол.
+    correct: false
+    explanation: У вільний час він грає у футбол.
+  - statement: Далі Тарас хоче жити в Одесі.
+    correct: false
+    explanation: 'Він каже: ''Я буду жити в Києві — це моє місто!''.'
 - type: error-correction
-  instruction: Виправте помилку у дієслові (Correct the verb error)
+  instruction: Знайдіть і виправте помилку (Find and fix the error)
   items:
-  - sentence: Раніше я живу в Одесі.
+  - sentence: Раніше я живу в Канаді.
     error: живу
     correction: жив
     error_type: word
     options:
     - жив
-    - живу
     - буду жити
-    explanation: 'Сигнальне слово «раніше» вимагає минулого часу: жив (чоловічий)
-      або жила (жіночий).'
-  - sentence: Зараз я вчився в університеті.
-    error: вчився
-    correction: вчуся
+    - живемо
+    explanation: Раніше (before) requires the past tense (жив).
+  - sentence: Зараз я працював в школі.
+    error: працював
+    correction: працюю
     error_type: word
     options:
-    - вчився
-    - вчуся
-    - буду вчитися
-    explanation: 'Сигнальне слово «зараз» вимагає теперішнього часу: вчуся.'
-  - sentence: Далі я живу в Парижі.
-    error: живу
-    correction: буду жити
+    - працюю
+    - працювати
+    - буду працювати
+    explanation: Зараз (now) requires the present tense (працюю).
+  - sentence: Далі я подорожував.
+    error: подорожував
+    correction: буду подорожувати
     error_type: word
     options:
-    - жив
-    - живу
-    - буду жити
-    explanation: 'Сигнальне слово «далі» вимагає майбутнього часу: буду жити.'
-  - sentence: У дитинстві я буду подорожувати.
-    error: буду подорожувати
-    correction: подорожував
-    error_type: word
-    options:
-    - подорожував
     - подорожую
     - буду подорожувати
-    explanation: '«У дитинстві» — це минулий час. Правильно: подорожував (чоловічий)
-      або подорожувала (жіночий).'
-  - sentence: Я народилася в Одесі і раніше я живу там.
-    error: живу
-    correction: жила
+    - подорожувала
+    explanation: Далі (next) requires the future tense (буду подорожувати).
+  - sentence: Анна народився у Львові.
+    error: народився
+    correction: народилася
     error_type: word
     options:
-    - жила
-    - живу
-    - буду жити
-    explanation: '«Раніше» вимагає минулого часу. Жіночий рід: жила.'
-  - sentence: Наступного року я працюю в Лондоні.
-    error: працюю
-    correction: буду працювати
+    - народилася
+    - народилися
+    - народжуюся
+    explanation: Anna is a woman, so she needs the feminine past tense ending (-ла).
+  - sentence: У дитинстві ми живемо в селі.
+    error: живемо
+    correction: жили
     error_type: word
     options:
-    - працювала
-    - працюю
-    - буду працювати
-    explanation: '«Наступного року» вказує на майбутній час: буду працювати.'
-- type: quiz
-  instruction: Оберіть правильне слово-сигнал (Choose the correct signal word)
+    - жили
+    - будемо жити
+    - живуть
+    explanation: У дитинстві (in childhood) requires the past tense (жили).
+  - sentence: Потім я переїхала в Київ і закінчив університет.
+    error: закінчив
+    correction: закінчила
+    error_type: word
+    options:
+    - закінчила
+    - закінчую
+    - закінчили
+    explanation: The speaker is female (переїхала), so the second verb must also be
+      feminine (закінчила).
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
   items:
-  - question: Я ____ живу в Києві. (The speaker is talking about RIGHT NOW.)
+  - source: I was born in Toronto.
     options:
-    - раніше
-    - зараз
-    - далі
-    - потім
-    correct: 1
-  - question: ____ я жив у Канаді. (Talking about THE PAST.)
+    - text: Я народився в Торонто.
+      correct: true
+    - text: Я живу в Торонто.
+      correct: false
+    - text: Я буду жити в Торонто.
+      correct: false
+    - text: Я працюю в Торонто.
+      correct: false
+  - source: Now I live in Kyiv.
     options:
-    - зараз
-    - скоро
-    - раніше
-    - наступного року
-    correct: 2
-  - question: ____ я буду вивчати японську. (Talking about THE FUTURE.)
+    - text: Зараз я живу в Києві.
+      correct: true
+    - text: Раніше я жив у Києві.
+      correct: false
+    - text: Далі я буду жити в Києві.
+      correct: false
+    - text: Я переїхав у Київ.
+      correct: false
+  - source: Next I will travel.
     options:
-    - у дитинстві
-    - зараз
-    - тоді
-    - далі
-    correct: 3
-  - question: Я народився в Одесі. ____ я переїхав у Київ. (Narrating a past sequence.)
+    - text: Далі я буду подорожувати.
+      correct: true
+    - text: Я подорожував.
+      correct: false
+    - text: Я люблю подорожувати.
+      correct: false
+    - text: Зараз я подорожую.
+      correct: false
+  - source: I studied at the university.
     options:
-    - зараз
-    - скоро
-    - потім
-    - далі
-    correct: 2
-  - question: ____ я буду подорожувати по Україні. (A future plan for next year.)
+    - text: Я вчився в університеті.
+      correct: true
+    - text: Я вчуся в університеті.
+      correct: false
+    - text: Я буду вчитися в університеті.
+      correct: false
+    - text: Я закінчив університет.
+      correct: false
+  - source: She wants to move to Ukraine.
     options:
-    - тоді
-    - у дитинстві
-    - раніше
-    - наступного року
-    correct: 3
-  - question: ____ я ходив у школу в Одесі. (A habit from childhood.)
+    - text: Вона хоче переїхати в Україну.
+      correct: true
+    - text: Вона переїхала в Україну.
+      correct: false
+    - text: Вона буде жити в Україні.
+      correct: false
+    - text: Вона живе в Україні.
+      correct: false
+  - source: I love to tell stories.
     options:
-    - зараз
-    - у дитинстві
-    - далі
-    - скоро
-    correct: 1
+    - text: Я люблю розповідати історії.
+      correct: true
+    - text: Я розповідав історії.
+      correct: false
+    - text: Я буду розповідати історії.
+      correct: false
+    - text: Вона розповідає історії.
+      correct: false
+- type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order
+    to make a sentence)
+  items:
+  - words:
+    - Я
+    - в
+    - Одесі.
+    - народився
+    correct_order:
+    - Я
+    - народився
+    - в
+    - Одесі.
+  - words:
+    - школі.
+    - вчилася
+    - Там
+    - я
+    - в
+    correct_order:
+    - Там
+    - я
+    - вчилася
+    - в
+    - школі.
+  - words:
+    - живу
+    - Києві.
+    - я
+    - Зараз
+    - в
+    correct_order:
+    - Зараз
+    - я
+    - живу
+    - в
+    - Києві.
+  - words:
+    - програмістом.
+    - Зараз
+    - я
+    - працюю
+    correct_order:
+    - Зараз
+    - я
+    - працюю
+    - програмістом.
+  - words:
+    - буду
+    - Далі
+    - я
+    - подорожувати.
+    correct_order:
+    - Далі
+    - я
+    - буду
+    - подорожувати.
+  - words:
+    - вивчати
+    - мову.
+    - українську
+    - Я
+    - буду
+    correct_order:
+    - Я
+    - буду
+    - вивчати
+    - українську
+    - мову.

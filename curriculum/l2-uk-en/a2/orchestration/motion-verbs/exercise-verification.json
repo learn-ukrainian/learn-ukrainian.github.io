@@ -1,0 +1,112 @@
+{
+  "total_items": 104,
+  "grounded_items": 89,
+  "ungrounded": [
+    {
+      "word": "регулярно",
+      "exercise_type": "group-sort",
+      "context": "Багатоспрямований (регулярно)",
+      "role": "context"
+    },
+    {
+      "word": "автобусом",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ на роботу автобусом щодня.",
+      "role": "context"
+    },
+    {
+      "word": "подивись",
+      "exercise_type": "fill-in",
+      "context": "Подивись! Ми вже ____ додому.",
+      "role": "context"
+    },
+    {
+      "word": "зелений",
+      "exercise_type": "quiz",
+      "context": "Вона часто (пити) зелений чай.",
+      "role": "context"
+    },
+    {
+      "word": "чай",
+      "exercise_type": "quiz",
+      "context": "Вона часто (пити) зелений чай.",
+      "role": "context"
+    },
+    {
+      "word": "неправду",
+      "exercise_type": "quiz",
+      "context": "Ви (казати) неправду!",
+      "role": "context"
+    },
+    {
+      "word": "гуляю",
+      "exercise_type": "match-up",
+      "context": "гуляю по",
+      "role": "answer"
+    },
+    {
+      "word": "їзджу",
+      "exercise_type": "error-correction",
+      "context": "Я їзджу на роботу автобусом.",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "error-correction",
+      "context": "Мій брат їде на Україну.",
+      "role": "context"
+    },
+    {
+      "word": "боряться",
+      "exercise_type": "error-correction",
+      "context": "Вони боряться за свої права.",
+      "role": "context"
+    },
+    {
+      "word": "тобі",
+      "exercise_type": "error-correction",
+      "context": "Завтра я кажу тобі всю правду.",
+      "role": "context"
+    },
+    {
+      "word": "містом",
+      "exercise_type": "error-correction",
+      "context": "Ми гуляємо по містом.",
+      "role": "context"
+    },
+    {
+      "word": "школа",
+      "exercise_type": "error-correction",
+      "context": "Діти йдуть з школа.",
+      "role": "context"
+    },
+    {
+      "word": "літиш",
+      "exercise_type": "error-correction",
+      "context": "Ти часто літиш літаком?",
+      "role": "context"
+    },
+    {
+      "word": "літаком",
+      "exercise_type": "error-correction",
+      "context": "Ти часто літиш літаком?",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 20,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "борюся",
+      "звідки",
+      "напрямок",
+      "п'ю",
+      "поїхати",
+      "піти",
+      "рух",
+      "різноспрямований",
+      "чергування"
+    ]
+  },
+  "all_grounded": false
+}

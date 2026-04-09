@@ -1,72 +1,35 @@
-## Що ми знаємо? (~220 words total)
+## Що ми знаємо? (What Do We Know?) (~220 words total)
+- P1 (~50 words): [Welcome to the A1.4 Checkpoint. This section reviews everything from Modules 22 to 26: telling time, using the calendar, describing weather, and narrating your daily routine.]
+- P2 (~120 words): [Self-check questions. Ask the learner to reflect on their skills: "Can you ask 'What time is it?' (Котра година?)? Can you say 'at 5 o'clock' (о п'ятій годині)? Do you remember all seven days of the week starting from 'понеділок'? Can you describe the current weather using words like 'сонячно' or 'іде дощ'?"]
+- P3 (~50 words): [Motivation and context. Remind the learner that these tools are essential for social life—making plans with friends, understanding schedules, and simply talking about the world around them.]
 
-- P1 (~30 words): Framing paragraph: "Це підсумковий модуль A1.4. Ти вивчив(ла) час, календар, погоду, розпорядок дня і хобі. Перевіримо, що ти вже вмієш!"
-- P2 (~190 words): Self-check list — 5 skill checkpoints, each with a prompt question + model answer:
-  1. M22 — "Котра зараз година?" → "Зараз третя година дня."
-  2. M23 — "Коли у тебе зустріч?" → "У середу, о пів на другу."
-  3. M24 — "Яка сьогодні погода?" → "Хмарно й іде дощ."
-  4. M25 — "Що ти робиш зранку?" → "Спочатку снідаю, потім іду на роботу."
-  5. M26 — "Як часто ти займаєшся спортом?" → "Іноді — у вівторок і четвер."
+## Читання (Reading Practice) (~280 words total)
+- P1 (~30 words): [Introduction to the reading passage. A short narrative about a typical week in Ukraine.]
+- P2 (~150 words): [Reading Text: "Мій робочий тиждень". A 10-sentence story. Example sentences: "Сьогодні понеділок. Вранці я прокидаюся о сьомій годині. Потім я снідаю і йду на роботу. У середу ввечері я часто гуляю в парку. Зараз весна, тому на вулиці тепло і сонячно. У суботу я не працюю. Взимку я люблю дивитися кіно, а влітку ходжу на річку."]
+- P3 (~100 words): [Linguistic breakdown of the text. Explain the choice of prepositions for days (у понеділок - Accusative) versus the lack of preposition for seasons (влітку - Adverb). Point out the sequence words "спочатку" and "потім" used to order the day's events.]
 
----
+## Граматика (Grammar Summary) (~220 words total)
+- P1 (~80 words): [Summary of Time. Differentiate between "Котра година?" (What time is it?) and "О котрій годині?" (At what time?). Reiterate the use of feminine ordinal numbers: перша, друга, п'ята.]
+- P2 (~70 words): [Summary of Calendar and Seasons. Remind the learner about the case endings: Accusative for days (у п'ятницю) and Locative for months (у січні). Contrast the four season adverbs: взимку, навесні, влітку, восени.]
+- P3 (~70 words): [Summary of Weather and Frequency. Review impersonal weather constructions like "холодно" or "іде сніг". Recap frequency adverbs: від "завжди" (always) до "ніколи" (never).]
+- <!-- INJECT_ACTIVITY: fill-in-mixed-review --> [fill-in, focus on mixed review of time/days/weather chunks, 6 items]
 
-## Читання (~280 words total)
+## Діалог (Connected Dialogue) (~350 words total)
+- P1 (~50 words): [Scenario setup. Two friends, Олена and Марко, are planning a weekend trip to a nearby city. They need to check the weather and agree on a meeting time.]
+- P2 (~150 words): [The Dialogue: "Плани на вихідні". A multi-turn exchange. Marko: "Яка погода завтра?" Olena: "У суботу буде тепло і сонячно." Marko: "Чудово! О котрій поїдемо?" Olena: "О дев'ятій ранку. Потім підемо в музей." Marko: "Добре. А в неділю?" Olena: "В неділю іноді йде дощ, тому будемо вдома."]
+- P3 (~150 words): [Deep dive into dialogue chunks. Explain the usage of "Ходімо" (Let's go) as an invitation. Highlight the use of "ранку" (of the morning) after the time. Reinforce the decolonization point: "неділя" is Sunday, while a week is "тиждень".]
+- <!-- INJECT_ACTIVITY: match-up-logical-logic --> [match-up, focus on logical Q&A pairs for time/weather/plans, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-routine-sequence --> [fill-in, focus on paragraph completion for daily routine and sequence, 7 items]
 
-- P1 (~30 words): Reading instruction: "Прочитай текст. Знайди в тексті: час, дні тижня, пори року, погоду, хобі."
-- Reading block (~180 words): Continuous Ukrainian text, 10 sentences, first person, covering one full week. Specific vocabulary targets:
-  - Time chunks: "з дев'ятої до п'ятої", "о сьомій ранку", "о пів на восьму"
-  - Days: "у понеділок", "у середу", "в суботу"
-  - Seasons: "взимку", "навесні"
-  - Weather: "тепло і сонячно", "іде сніг"
-  - Frequency: "завжди", "іноді", "рідко"
-  - Sequence: "спочатку", "потім", "нарешті"
-  - Example opening: "Мій тиждень починається рано. У понеділок я прокидаюся о сьомій ранку..."
-- P2 (~30 words): Two short comprehension nudges (not quiz format): "Яку пору року згадує автор? Коли він/вона займається хобі?"
-- Exercise: fill-in activity 3 — "Заповни розповідь про свій день" (7 items: {Спочатку|Потім|Нарешті}, {Після обіду|Вранці|Вночі}, з дев'ятої {до|і|по} п'ятої, etc.) — placed here to reinforce sequence words just seen in text.
+## Підсумок — Summary (~250 words total)
+- P1 (~250 words): [Follow the plan exactly. "You have reached the end of the Time and Nature phase! Here is what you can now do in Ukrainian:
+  - Tell time using hours (Котра година? Перша, друга...).
+  - Use time expressions for appointments (О котрій? О п'ятій...).
+  - Navigate the calendar: name all 7 days and 12 months with correct prepositions (у вівторок, у березні).
+  - Use seasonal adverbs (взимку, навесні...).
+  - Describe the weather and state of the environment (тепло, сонячно, іде дощ).
+  - Sequence your actions using 'спочатку', 'потім', and 'нарешті'.
+  - Describe your lifestyle with frequency words (завжди, часто, іноді).
+  Next, we move to A1.5, where you will learn to navigate the city, give directions, and use transport."]
 
----
-
-## Граматика (~220 words total)
-
-- P1 (~20 words): Brief framing: "Ось сім мовних шаблонів з A1.4. Вивчи їх — і ти можеш говорити про будь-який день."
-- P2 (~30 words): Pattern 1 — Time: "Котра година? → Третя година. / О котрій? → О третій." Two-question contrast, 2 examples: "Зустріч о першій. Фільм о дев'ятій вечора."
-- P3 (~30 words): Pattern 2 — Days of week (accusative chunk): "у + accusative → у понеділок, в суботу, у неділю." Note the в/у alternation rule reminder (from M28 preview: "це фонетичне правило — будь ласка, запам'ятай форми зараз").
-- P4 (~30 words): Pattern 3 — Months (locative chunk): "у + locative → у січні, в лютому, у березні, в серпні, у жовтні." Pattern: у/в + month ending -і.
-- P5 (~30 words): Pattern 4 — Seasons (adverbial forms): "взимку, навесні, влітку, восени." Contrast: these four don't use "у" — they are adverbs. Example: "Влітку тепло. Взимку холодно."
-- P6 (~30 words): Pattern 5 — Weather impersonals: "Тепло. / Холодно. / Сонячно. / Хмарно. / Іде дощ. / Іде сніг." Note "іде" (не "йде дощ" — правильно: іде).
-- P7 (~30 words): Patterns 6 & 7 combined — Sequence + Frequency: "спочатку → потім → нарешті" (time order); "завжди / часто / іноді / рідко / ніколи" (frequency scale low→high).
-- Exercise: fill-in activity 1 — "Оберіть правильний варіант" (6 items covering time chunks, day/month prepositions, weather: Зустріч {о п'ятій|в п'ятій|у п'ята} годині; Ми йдемо в кіно {у суботу|в суботі|на суботу}, etc.)
-
----
-
-## Діалог (~330 words total)
-
-- P1 (~40 words): Context setup: Оля телефонує другові Дмитру. Вони планують поїздку на вихідних — парк, кіно, зустріч. Зверни увагу: в одному діалозі — час, день, погода, хобі, запрошення.
-- Dialogue block (~230 words): 14–16 turns, two speakers (Оля / Дмитро). Specific structure:
-  - Turn 1–2: Weather check — "Яка завтра погода?" / "Тепло і сонячно, без дощу!"
-  - Turn 3–4: Day proposal — "Чудово! Ходімо в парк у суботу?" / "Добре! Я завжди гуляю в суботу."
-  - Turn 5–6: Time arrangement — "О котрій зустрінемося?" / "О десятій ранку біля метро."
-  - Turn 7–8: Season remark — "Люблю весну. Навесні так гарно!" / "Я теж! Взимку сидиш вдома..."
-  - Turn 9–10: Evening plan — "А потім підемо в кіно?" / "О котрій починається фільм?"
-  - Turn 11–12: Time response — "О п'ятій тридцять." / "Добре, я часто ходжу в кіно ввечері."
-  - Turn 13–14: Frequency exchange — "Як часто ти дивишся фільми?" / "Іноді — раз на тиждень."
-  - Turn 15–16: Closing — "Чудово! До суботи!" / "До зустрічі!"
-- P2 (~60 words): Post-dialogue language note box — 4 bullets identifying structures used: (1) погодний запит: "Яка погода?"; (2) запрошення: "Ходімо + куди"; (3) час зустрічі: "О котрій? → О десятій."; (4) частотні слова: завжди, іноді, часто — підкреслені в тексті вище.
-- Exercise: match-up activity — "З'єднай запитання з відповідями" (8 pairs: Котра година? ↔ Десята тридцять; Яка погода? ↔ Тепло і сонячно; Коли твій день народження? ↔ У жовтні; Що ти робиш у суботу? ↔ Граю у футбол; О котрій зустріч? ↔ О першій; Як часто ти читаєш? ↔ Кожен день ввечері; Ходімо в парк! ↔ Добре, о котрій?; Що ти будеш робити завтра? ↔ Буду працювати.)
-
----
-
-## Підсумок (~275 words total)
-
-- P1 (~50 words): Achievement header: "Ти завершив(ла) фазу A1.4 — Час і природа. Це значний крок! Подивися, що ти тепер вмієш." (Motivational but grounded — references the actual skills below, not generic praise.)
-- P2 (~130 words): Six-item achievement checklist in full sentences (not bullets — prose list with connectors):
-  1. Ти вмієш сказати час — "Котра година?" і "О котрій?" — і правильно вжити ordinal chunks: "о третій", "о пів на дев'яту".
-  2. Ти знаєш усі дні тижня і вживаєш їх з прийменником: "у понеділок", "в суботу".
-  3. Ти називаєш місяці і пори року: "у листопаді", "взимку", "навесні".
-  4. Ти описуєш погоду: "Тепло і сонячно", "Іде дощ", "Хмарно".
-  5. Ти розповідаєш про свій день зі словами "спочатку", "потім", "нарешті".
-  6. Ти говориш про хобі і частоту: "Я часто читаю", "Іноді ходжу в кіно", "Рідко дивлюся телевізор".
-- P3 (~50 words): Natural transition bridge to M28: "Наступний модуль — A1.5: Місто і транспорт. Ти навчишся запитувати дорогу, називати місця в місті, купувати квиток. Але спочатку — маленький урок про красу української мови: евфонія (M28). Чому ми кажемо 'у парку', але 'в кіно'? Дізнаєшся незабаром."
-- P4 (~45 words): Encouragement close grounded in cultural context: "Мова — це не тільки граматика. Коли ти кажеш 'навесні', 'взимку', 'іде дощ' — ти думаєш по-українськи. Саме так говорять в Україні щодня. Продовжуй — у тебе виходить!"
-
-Grand total: ~1325 words
+Grand total: ~1320 words

@@ -7,11 +7,12 @@ pipeline: v6
 build_status: draft
 ---
 
+import DivideWords from '@site/src/components/DivideWords';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Observe from '@site/src/components/Observe';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -22,136 +23,112 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## На́голос (Stress)
 
-Say the word **наголос** (stress) out loud. One of its three syllables — на, го, лос — comes out louder and longer than the others. That louder syllable is the **наголо́шений склад** (stressed syllable). As noted in the textbook *Заболо́тний Grade 5* (p. 73), Ukrainian has 38 sounds, and stress determines which syllable is pronounced louder and longer. Every Ukrainian word with more than one syllable has one — and only one — stressed syllable. Here is the crucial fact: Ukrainian **наголос** is free. It can land on the first syllable, the middle, or the last, and it can even move between forms of the same word. **Ма́ма** (mother) — stress on the first syllable. **Молоко́** (milk) — stress on the last. **Фотогра́фія** (photograph) — stress on the third syllable, on the а. French locks stress to the final syllable. Czech locks it to the first. Ukrainian gives no such shortcut. You must learn each word's stress individually.
+**Заболо́тний Grade 5 p.73** teaches that the Ukrainian language has 38 distinct sounds. When you combine these sounds into words, one syllable always stands out. This emphasis is called **наголос** (stress). The **наголо́шений склад** (stressed syllable) is pronounced louder and held slightly longer than the rest of the word. A helpful technique to find the stress in a new word is to imagine you are "calling" the object from far away. If you call a turtle — **черепа́ха** (turtle) — you naturally stretch the third syllable: *черепаааха*. That stretched syllable is where the stress falls. Unlike English, where unstressed vowels often collapse into a weak "uh" sound, Ukrainian vowels keep their core phonetic shape. An unstressed **О** still sounds like **О**, just shorter and quieter.
 
-Stress does more than shape how a word sounds — it changes what the word means. Consider three real pairs you will encounter as a learner. **За́мок** with stress on the first syllable means "castle." **Замок** with stress on the second syllable means "lock." Same five letters, entirely different objects. **Мука** with stress on the first syllable means "torment" or "suffering." **Мука** with stress on the last syllable means "flour." **Атлас** with stress on the first syllable is a collection of maps — an atlas. **Атлас** with stress on the second syllable is satin fabric. There is a classic Ukrainian riddle that captures this perfectly: "This word is an ancient building with sharp masonry towers. Change the stress — and you lock the building shut." Wrong stress does not just sound foreign — it says the wrong word entirely. This is why stress marks matter.
+Ukrainian stress is **ві́льний** (free). It is not locked to a specific position in the word. In French, the stress always falls on the last syllable. In Polish, it consistently falls on the penultimate syllable. In Ukrainian, it can appear anywhere. You must learn the stress pattern of each individual word. Many common words for beginners have stress on the first syllable: **ма́ма** (mother), **та́то** (father), **ра́нок** (morning), **ка́ва** (coffee), and **кни́га** (book). Others have stress firmly on the second or last syllable: **вода́** (water), **зима́** (winter), **рука́** (hand/arm), **метро́** (metro), and **кафе́** (cafe). Some have middle stress, like **столи́ця** (capital) in the phrase **Ки́їв — столиця Украї́ни** (Kyiv is the capital of Ukraine).
 
-In textbooks, dictionaries, and learning materials, stress is marked with an accent sign (´) over the vowel: **ка́ва** has its mark over the first а. But in everyday Ukrainian text — newspapers, messages, novels for adults — you will not see stress marks at all. Ukrainians simply know where the stress falls. As a learner, make a habit: every time you write a new word in your notes, mark its stress. When you are unsure, check goroh.pp.ua — it shows the stressed syllable for over 500,000 Ukrainian words.
+Furthermore, Ukrainian stress is **рухо́мий** (mobile). When a word changes its form, the stress can jump to a different syllable. When you talk about one hand, you say **рука** (hand). When you talk about two hands, the stress shifts to the first syllable: **ру́ки** (hands).
 
-Here are common stress positions for A1 words. First-syllable stress: **ма́ма** (mother), **та́то** (father), **ра́нок** (morning), **ка́ва** (coffee), **кни́га** (book). Last-syllable stress: **вода́** (water), **зима́** (winter), **рука́** (hand/arm), **метро́** (metro), **кафе́** (café). These are clusters, not rules — Ukrainian has exceptions in every pattern. One more powerful pair: **ні́коли** (no time, as in "I have no time") vs **ніко́ли** (never) — the same letters, a different word entirely.
+Stress is critical because it dictates meaning. In English, placing stress on the wrong syllable usually just gives you a strange accent. In Ukrainian, getting the stress wrong often means you are saying a completely different word. These pairs of words that look identical but sound different are called **омо́графи** (homographs). Consider the word for a castle. A castle is a **замок** (castle), with the stress on the first syllable. A lock for a door is a **замок** (lock), with the stress on the second syllable. If you say the wrong one, the sentence changes entirely. Another stark pair is **мука** (torment), stressed on the first syllable, versus **мука** (flour), stressed on the second syllable. This distinction also applies to adjectives. The noun **доро́га** (road) has stress on the second syllable. The adjective **дорога** (expensive) has stress on the final syllable.
 
-Build the habit now: when you learn a new word, write it with its stress mark immediately. A notebook entry looks like this: **вода́** — water — stress on the last syllable. Do not trust your memory on stress. Write it down.
+:::tip
+In textbooks and dictionaries, stress marks (') appear above the stressed vowel to guide learners. You will see them in your study materials. However, they do not appear in everyday Ukrainian writing. When reading a newspaper or a menu, you must know the word's stress pattern from memory. As a learner, always check *goroh.pp.ua* when you are unsure about pronunciation.
+:::
 
-Stress is also part of Ukrainian identity. The word **Ки́їв** (Kyiv) is stressed on the first syllable, with the uniquely Ukrainian letter **ї** — the Russian form uses a different vowel entirely. Always say and write the Ukrainian **Київ**. The word **украї́нська** (Ukrainian) is stressed on **ї** — the third syllable. Hear it: у-кра-ЇН-ська. Getting pronunciation right is not just grammar — it is an act of respect for the language and the people who speak it.
+<Quiz client:only="react" questions={[{"question": "ранок", "options": [{"text": "1st syllable", "correct": true}, {"text": "2nd syllable", "correct": false}, {"text": "3rd syllable", "correct": false}]}, {"question": "метро", "options": [{"text": "1st syllable", "correct": false}, {"text": "2nd syllable", "correct": true}, {"text": "3rd syllable", "correct": false}]}, {"question": "кава", "options": [{"text": "1st syllable", "correct": true}, {"text": "2nd syllable", "correct": false}, {"text": "3rd syllable", "correct": false}]}, {"question": "вода", "options": [{"text": "1st syllable", "correct": false}, {"text": "2nd syllable", "correct": true}, {"text": "3rd syllable", "correct": false}]}, {"question": "мама", "options": [{"text": "1st syllable", "correct": true}, {"text": "2nd syllable", "correct": false}, {"text": "3rd syllable", "correct": false}]}, {"question": "зима", "options": [{"text": "1st syllable", "correct": false}, {"text": "2nd syllable", "correct": true}, {"text": "3rd syllable", "correct": false}]}, {"question": "тато", "options": [{"text": "1st syllable", "correct": true}, {"text": "2nd syllable", "correct": false}, {"text": "3rd syllable", "correct": false}]}, {"question": "кафе", "options": [{"text": "1st syllable", "correct": false}, {"text": "2nd syllable", "correct": true}, {"text": "3rd syllable", "correct": false}]}]} instruction={"Where is the stress? Choose the correct stressed syllable."} />
 
-<Quiz client:only="react" questions={[{"question": "Where is the stress in 'кава' (coffee)?", "options": [{"text": "КА-ва (first syllable)", "correct": true}, {"text": "ка-ВА (second syllable)", "correct": false}]}, {"question": "Where is the stress in 'вода' (water)?", "options": [{"text": "ВО-да (first syllable)", "correct": false}, {"text": "во-ДА (second syllable)", "correct": true}]}, {"question": "Where is the stress in 'ранок' (morning)?", "options": [{"text": "РА-нок (first syllable)", "correct": true}, {"text": "ра-НОК (second syllable)", "correct": false}]}, {"question": "Where is the stress in 'метро' (metro)?", "options": [{"text": "МЕТ-ро (first syllable)", "correct": false}, {"text": "мет-РО (second syllable)", "correct": true}]}, {"question": "Where is the stress in 'молоко' (milk)?", "options": [{"text": "МО-ло-ко (first syllable)", "correct": false}, {"text": "мо-ЛО-ко (second syllable)", "correct": false}, {"text": "мо-ло-КО (third syllable)", "correct": true}]}, {"question": "Where is the stress in 'наголос' (stress/accent)?", "options": [{"text": "НА-го-лос (first syllable)", "correct": true}, {"text": "на-ГО-лос (second syllable)", "correct": false}, {"text": "на-го-ЛОС (third syllable)", "correct": false}]}, {"question": "Where is the stress in 'фотографія' (photograph)?", "options": [{"text": "фо-ТО-гра-фі-я (second syllable)", "correct": false}, {"text": "фо-то-ГРА-фі-я (third syllable)", "correct": true}, {"text": "фо-то-гра-ФІ-я (fourth syllable)", "correct": false}]}, {"question": "Where is the stress in 'зима' (winter)?", "options": [{"text": "ЗИ-ма (first syllable)", "correct": false}, {"text": "зи-МА (second syllable)", "correct": true}]}]} instruction={"Which syllable is stressed? Choose the correct option."} />
-
-<MatchUp client:only="react" pairs={[{"left": "ЗАмок", "right": "castle"}, {"left": "замОк", "right": "lock"}, {"left": "МУка", "right": "torment / suffering"}, {"left": "мукА", "right": "flour"}, {"left": "АТлас", "right": "atlas (collection of maps)"}, {"left": "атлАС", "right": "satin fabric"}, {"left": "КАва", "right": "coffee (first-syllable stress)"}, {"left": "воДА", "right": "water (second-syllable stress)"}]} instruction={"Match each word to its correct English meaning. The CAPITALIZED syllable shows where the stress falls — stress changes the meaning entirely."} />
+<MatchUp client:only="react" pairs={[{"left": "за́мок (1st syllable)", "right": "castle"}, {"left": "замо́к (2nd syllable)", "right": "lock"}, {"left": "му́ка (1st syllable)", "right": "torment"}, {"left": "мука́ (2nd syllable)", "right": "flour"}, {"left": "доро́га (2nd syllable)", "right": "road"}, {"left": "дорога́ (3rd syllable)", "right": "expensive"}]} instruction={"Match the words with their English meanings based on their stress pattern."} />
 
 ## Інтона́ція (Intonation)
 
-Ukrainian speech has melody. The rise and fall of your voice — **інтонація** (intonation) — tells the listener whether you are making a statement, asking a question, or expressing emotion. Same words, different melody, entirely different meaning. Three core patterns:
+The melody of your voice is called **інтонація** (intonation). Ukrainian uses sentence melody to communicate the fundamental purpose of the sentence. The language classifies sentences by their goal. Declarative sentences, which state facts, are **розповідні́** (declarative). Interrogative sentences, which ask questions, are **пита́льні** (interrogative). Imperative sentences, which give commands, are **спонука́льні** (imperative). Any of these three types can also be exclamatory — **окли́чні** (exclamatory) — if spoken with strong emotion. For A1 learners, focus on the three basic punctuation patterns: the period (.) for statements, the question mark (?) for questions, and the exclamation point (!) for exclamations and commands. These marks are the visual map for your spoken melody.
 
-**Це кава.** ↘ — your voice falls on the stressed syllable of **кава**. You are telling someone: this is coffee. A statement.
+The contrast between a statement and a yes/no question relies entirely on the pitch of your voice. A statement uses falling intonation. You start at a normal pitch and drop lower at the end. Look at this sentence:
 
-**Це кава?** ↗ — your voice rises on that same stressed syllable. You are asking for confirmation: is this coffee? A yes/no question.
-
-**Як га́рно!** ↘↘ — your voice drops sharply with extra force. You are expressing emotion: how beautiful! An exclamation.
-
-Try it yourself. Say **Це кава** three times — once as a calm statement with a falling voice, once as a surprised question with a rising voice, once as a delighted exclamation with a strong drop. Same two words, three entirely different communicative acts.
-
-Question words change the rule. Words like **хто** (who), **що** (what), **де** (where), **як** (how), **коли́** (when) carry the interrogative meaning themselves — they signal "this is a question" without any rise in your voice. **Що це?** ↘ — falling intonation. The word **що** already tells the listener you are asking about identity. **Де метро?** ↘ — falling. The word **де** signals a question about location. **Як спра́ви?** ↘ — falling. The word **як** signals a question about manner. **Коли авто́бус?** ↘ — falling again. But yes/no questions that lack a question word must rise: **Це метро?** ↗ / **Автобус тут?** ↗. The rule: question word present = voice falls; no question word = voice rises.
-
-Ukrainian grammar classifies sentences by purpose into three types: **розповідні́** (declarative — they tell), **пита́льні** (interrogative — they ask), and **спонука́льні** (imperative — they command or request). Any of these three can also be **окли́чні** (exclamatory) — carrying high emotional charge, shown by an exclamation mark. **Окли́чне** is a separate dimension, not a fourth type. A command can be calm — **І́ди сюди́.** — or exclamatory — **Іди сюди!** For A1, focus on the practical link between punctuation and melody: period (.) = voice falls ↘, question mark (?) = check for a question word, exclamation mark (!) = extra force ↘↘.
-
-Here is a short dialogue that models all three patterns. Two friends, **Кирилко** and **Соломійка**, are near a Kyiv metro station:
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Кирилко:</span> Приві́т, Соломійко! ↘ *(Hi, Solomiyka!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Соломійка:</span> Привіт! Це метро? ↗ *(Hi! Is this the metro?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Кирилко:</span> Так, це метро! ↘↘ *(Yes, this is the metro!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Соломійка:</span> А де ви́хід? ↘ *(And where is the exit?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Кирилко:</span> Ось він. ↘ *(Here it is.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Соломійка:</span> Дякую! ↘↘ *(Thanks!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Окса́на:</span> Це кава. *(This is coffee.)*</div>
 
 </div>
 
-Notice: **Це метро?** rises — yes/no question without a question word. **Де вихід?** falls — the question word **де** does the work. Exclamations like **Так, це метро!** and **Дякую!** drop sharply with force.
+Your voice falls (↘) on the word **кава**. It sounds final and decisive. Same words, different melody, different meaning. Use the exact same words, but a different melody, to ask a question:
 
-<Quiz client:only="react" questions={[{"question": "Це кава.", "options": [{"text": "Statement — voice falls ↘", "correct": true}, {"text": "Yes/no question — voice rises ↗", "correct": false}, {"text": "Exclamation — strong fall ↘↘", "correct": false}]}, {"question": "Це кава?", "options": [{"text": "Statement — voice falls ↘", "correct": false}, {"text": "Yes/no question — voice rises ↗", "correct": true}, {"text": "Exclamation — strong fall ↘↘", "correct": false}]}, {"question": "Як гарно!", "options": [{"text": "Statement — voice falls ↘", "correct": false}, {"text": "Yes/no question — voice rises ↗", "correct": false}, {"text": "Exclamation — strong fall ↘↘", "correct": true}]}, {"question": "Де метро?", "options": [{"text": "Statement — voice falls ↘", "correct": false}, {"text": "Question WITH a question word — voice falls ↘", "correct": true}, {"text": "Yes/no question — voice rises ↗", "correct": false}]}, {"question": "Так, це метро!", "options": [{"text": "Statement — voice falls ↘", "correct": false}, {"text": "Yes/no question — voice rises ↗", "correct": false}, {"text": "Exclamation — strong fall ↘↘", "correct": true}]}, {"question": "Автобус тут?", "options": [{"text": "Statement — voice falls ↘", "correct": false}, {"text": "Yes/no question — voice rises ↗ (no question word)", "correct": true}, {"text": "Question with question word — voice falls ↘", "correct": false}]}, {"question": "Дякую!", "options": [{"text": "Statement — voice falls ↘", "correct": false}, {"text": "Yes/no question — voice rises ↗", "correct": false}, {"text": "Exclamation — strong fall ↘↘", "correct": true}]}]} instruction={"Look at the punctuation mark at the end. What type of sentence is it?"} />
+<div class="dialogue">
 
-<FillIn client:only="react" items={[{"sentence": "Це кава ___ (someone calmly telling you what is in the cup)", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Де метро ___ (asking for directions — the word 'де' is a question word)", "answer": "?", "options": [".", "?", "!"]}, {"sentence": "Як гарно ___ (expressing delight at something beautiful)", "answer": "!", "options": [".", "?", "!"]}, {"sentence": "Це метро ___ (asking for confirmation — no question word present)", "answer": "?", "options": [".", "?", "!"]}, {"sentence": "Так, це метро ___ (excited confirmation)", "answer": "!", "options": [".", "?", "!"]}, {"sentence": "Ось він ___ (calm statement — pointing something out)", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Дякую ___ (heartfelt, emotional thanks)", "answer": "!", "options": [".", "?", "!"]}, {"sentence": "Де вихід ___ (asking where the exit is — question word present)", "answer": "?", "options": [".", "?", "!"]}]} instruction={"Choose the correct punctuation mark: period (.), question mark (?), or exclamation mark (!). Read the context clue in parentheses."} />
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Це кава? *(Is this coffee?)*</div>
+
+</div>
+
+For a yes/no question, you must use rising intonation (↗). You raise the pitch of your voice sharply on the stressed syllable of the key word you are asking about. In this case, your voice spikes upward on the first syllable of **кава**. The rise must be distinct and obvious. If your voice stays flat or falls, a Ukrainian speaker will hear a statement, not a question.
+
+There is a major exception: questions that begin with specific question words. Words like **хто** (who), **що** (what), **де** (where), and **коли́** (when) do the grammatical work of asking the question. Because the question word already signals the intent, the sentence melody does not need to rise at the end. Instead, questions with question words usually end with a falling intonation (↘).
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Степа́н:</span> Що це? *(What is this?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Степан:</span> Де метро? *(Where is the metro?)*</div>
+
+</div>
+
+Your voice falls at the end of both sentences because the question word does the work. This creates a direct contrast with yes/no questions, which lack question words and therefore always rise: **Це метро?** (↗).
+
+Exclamations and emotional statements use a strong falling intonation (↘↘). You place intense vocal weight on the stressed syllable of the core word, and then drop your pitch significantly. This pattern applies to enthusiastic greetings and expressions of strong feeling.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Макси́м:</span> Як га́рно! *(How beautiful!)*</div>
+
+<div class="dialogue-line"><span class="speaker">Максим:</span> Приві́т! *(Hi!)*</div>
+
+</div>
+
+You can also use **логі́чний наголос** (logical stress) to shift the focus of a sentence. By emphasizing one specific word, you change the exact meaning of the statement without altering the grammar or the words themselves.
+
+<Quiz client:only="react" questions={[{"question": "Це кава.", "options": [{"text": "Falling (↘)", "correct": true}, {"text": "Rising (↗)", "correct": false}, {"text": "Strong falling (↘↘)", "correct": false}]}, {"question": "Це кава?", "options": [{"text": "Falling (↘)", "correct": false}, {"text": "Rising (↗)", "correct": true}, {"text": "Strong falling (↘↘)", "correct": false}]}, {"question": "Що це?", "options": [{"text": "Falling (↘)", "correct": true}, {"text": "Rising (↗)", "correct": false}, {"text": "Strong falling (↘↘)", "correct": false}]}, {"question": "Як гарно!", "options": [{"text": "Falling (↘)", "correct": false}, {"text": "Rising (↗)", "correct": false}, {"text": "Strong falling (↘↘)", "correct": true}]}, {"question": "Де метро?", "options": [{"text": "Falling (↘)", "correct": true}, {"text": "Rising (↗)", "correct": false}, {"text": "Strong falling (↘↘)", "correct": false}]}, {"question": "Це твоя кава?", "options": [{"text": "Falling (↘)", "correct": false}, {"text": "Rising (↗)", "correct": true}, {"text": "Strong falling (↘↘)", "correct": false}]}]} instruction={"What is the correct intonation for this sentence?"} />
+
+<FillIn client:only="react" items={[{"sentence": "Statement: Це кава _____", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Question word: Де метро _____", "answer": "?", "options": [".", "?", "!"]}, {"sentence": "Emotion: Як гарно _____", "answer": "!", "options": [".", "?", "!"]}, {"sentence": "Statement: Київ — столиця України _____", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Yes/no question: Це вода _____", "answer": "?", "options": [".", "?", "!"]}, {"sentence": "Greeting: Привіт _____", "answer": "!", "options": [".", "?", "!"]}]} instruction={"Add the correct punctuation mark based on the sentence type."} />
 
 ## Чита́ємо вго́лос (Reading Aloud)
 
-Reading Ukrainian aloud — **вголос** (aloud) — is where stress and intonation come together. Here is the method for reading multisyllable words correctly:
+Reading multisyllable Ukrainian words correctly requires a systematic approach. Follow a simple three-step method to build muscle memory and rhythm. First, break the word into distinct syllables. Take the word for photograph: **фо-то-гра-фі-я** (photograph). Second, locate the stressed syllable. In this word, the stress falls on the third **а**: **фотогра́фія**. Third, read the word slowly, ensuring the stressed syllable is the loudest and longest. Once you have the pattern, read at natural speed. Apply this same method to the word for Ukrainian: **у-кра-їн-ська** (Ukrainian). The stress falls on the **ї**. For the word rest, the breakdown is **від-по-чи-нок** (rest), with the stress on the **и**.
 
-**Крок 1: Поді́л на скла́ди** (Divide into syllables) — say each syllable slowly, separately.
-**Крок 2: Знайди́ на́голос** (Find the stress) — say the stressed syllable louder and slightly longer.
-**Крок 3: Чита́й ці́ле сло́во** (Read the whole word) — blend at natural speed, letting the stress land naturally.
+Word list practice helps you internalize different stress patterns. Read the following words aloud with correct **наголос**. First, find the stressed syllable, then read the whole word at natural speed. Read these words: **Ки-їв** (Kyiv), **мо-ло-ко** (milk), **ра-нок** (morning), **ка-ва** (coffee), **во-да** (water), **зи-ма** (winter), and **у-кра-їн-ська** (Ukrainian). Break them down mentally and push your voice heavily on the stressed vowel.
 
-Apply this to three longer words:
+Dialogue practice bridges the gap between single words and connected speech. Apply your knowledge of stress and intonation to a real conversation. In this interaction, two people exchange greetings and ask basic questions. Watch how the melody changes based on the punctuation and the sentence type.
 
-- **у-кра-їн-ська** (Ukrainian) — stress on **ї**. Slow: у... кра... їн... ська. Now together: **украї́нська**.
-- **фо-то-гра-фі-я** (photograph) — stress on the **а** (third syllable). Slow: фо... то... гра... фі... я. Now together: **фотогра́фія**.
-- **ві-дпо-чи-нок** (rest/vacation) — stress on **чи**. Slow: ві... дпо... чи... нок. Now together: **відпочи́нок**.
-
-Break first, find the stress, then read smoothly. This is how Ukrainian Grade 1 textbooks teach reading, and it works just as well for adult learners.
-
-Now practice with eight words. Read each one aloud — first broken into syllables, then as a whole word:
-
-- **Ки-їв** (Kyiv) — stress on **и**: Ки́їв (Київ — **столи́ця** Украї́ни / capital of Ukraine)
-- **мо-ло-ко** (milk) — stress on last **о**: молоко
-- **ра-нок** (morning) — stress on **ра**: ранок
-- **ка-ва** (coffee) — stress on first **ка**: кава
-- **во-да** (water) — stress on **да**: вода
-- **зи-ма** (winter) — stress on **ма**: зима
-- **у-кра-їн-ська** (Ukrainian) — stress on **ї**: українська
-- **бі-блі-о-те-ка** (library) — stress on **те**: бібліоте́ка
-
-:::tip
-Tap the table once for each syllable as you read. The tap on the stressed syllable will land harder naturally — your hand knows the rhythm before your mouth does.
-:::
-
-Now put both skills together in a dialogue. These are greetings from Module 1, but this time read them with full stress and intonation awareness:
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оле́нка:</span> Привіт! ↘ *(Hi!)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Привіт! *(Hi!)*</div>
 
+<div class="dialogue-line"><span class="speaker">Максим:</span> Привіт! Як спра́ви? *(Hi! How are you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> Привіт! Як спра́ви? ↘ *(Hi! How are you?)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> До́бре! А у тебе́? *(Good! And you?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Максим:</span> Добре! Це твоя́ кава? *(Good! Is this your coffee?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оле́нка:</span> До́бре! А у те́бе? ↗ *(Good! And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Теж добре, дякую! ↘ *(Also good, thanks!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, це моя́ кава. Дякую! *(Yes, this is my coffee. Thank you!)*</div>
 
 </div>
 
-Read this dialogue aloud twice. First time: slowly, tapping each syllable, exaggerating the stress. Second time: at natural speed, letting the melody flow. This is your first full integrated performance of Ukrainian sound, stress, and melody together.
-
-Stress — **наголос** — tells you which syllable to emphasize. Intonation — **інтонація** — tells you what the sentence means. Together they are the music of Ukrainian. Reading aloud — **вголос** — is the practice method that trains both at once. Do it every time you see new Ukrainian text.
+The first **Привіт!** has a strong falling exclamation (↘↘). The question **Як справи?** contains a question word (**як**), so it has a falling intonation (↘). The question **А у тебе?** lacks a direct question word, so it relies on a sharp rising intonation (↗) to signal the inquiry. The same rising pitch (↗) applies to **Це твоя кава?**. Finally, the response **Так, це моя кава.** is a simple declarative statement, ending with a standard falling intonation (↘), and **Дякую!** finishes the interaction with a strong falling exclamation (↘↘). Apply these intonation patterns to the greetings you have already learned.
 
 ## Підсумок — Summary
 
-Two core skills from this module: **наголос** — stress is free in Ukrainian, it can fall on any syllable, it moves between forms of the same word, and it changes meaning. **Інтонація** — the melody of your voice signals sentence type: falling for statements, rising for yes/no questions, and a strong fall for exclamations. Together, these two elements are what makes Ukrainian sound like Ukrainian.
+Stress and melody are the physical heartbeat of the spoken language. A single word's identity is anchored by its **наголос**. Because Ukrainian stress is free and mobile, it can fall on any syllable and can shift when a word changes form. You must memorize the stress pattern along with the word itself, because shifting the stress can completely change a word's meaning, turning a castle into a lock, or flour into torment. In written Ukrainian, punctuation marks serve as the sheet music for your voice. They tell you exactly how to manipulate your sentence melody.
 
-### Self-check
+Intonation distinguishes a statement of fact from a question of inquiry. A declarative statement always uses a falling pitch (↘). A yes/no question requires a sharp, noticeable rise (↗) on the specific word you are asking about. However, sentences that start with question words like **що** or **де** do the asking for you, and therefore use a falling pitch (↘). Always listen carefully to native speakers, whether in person, in podcasts, or in videos. Their natural sentence rhythm and melody are exactly what you are aiming to reproduce.
 
-- **Що таке́ наголос?** — The syllable you say louder and longer. In Ukrainian, stress is free — it can fall on any syllable, and there is no fixed rule for its position.
+Self-check your understanding of these core principles. Answer these questions out loud:
 
-- **Чи мо́же наголос зміни́ти зна́чення сло́ва? Наведи́ приклад.** — Yes. **Замок** with stress on the first syllable means "castle." **Замок** with stress on the second syllable means "lock." Same letters, different word.
-
-- **Яку інтона́цію ти використо́вуєш для пита́ння «так/ні»?** — Rising intonation ↗ — your voice goes up on the last stressed syllable. Example: **Це кава?** ↗
-
-- **Яку інтонацію ти використовуєш для розповідно́го речення?** — Falling intonation ↘ — your voice drops at the end. Example: **Це кава.** ↘
-
-- **Прочита́й вголос:** **Це апте́ка?** — rising ↗ (yes/no question). **Так, це аптека.** — falling ↘ (statement). **Як гарно!** — strong falling ↘↘ (exclamation). Read all three aloud, exaggerating the melody to feel the difference.
-
-Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Everything from this module applies immediately: **Ме́не зва́ти Оленка.** ↘ — a statement with falling intonation. **Як тебе звати?** ↘ — a question with falling intonation (the question word **як** signals the question). **Ду́же приє́мно!** ↘↘ — an exclamation with strong falling force. Every new Ukrainian word you learn from now on: write it with its stress mark. Check goroh.pp.ua when unsure. This small habit — marking stress from the very first word — is the foundation of natural-sounding Ukrainian.
+- What is **наголос**? It is the louder, longer syllable that carries the weight of a word.
+- Can stress change a word's meaning? Yes, moving the stress can create entirely different words, such as **замок** (castle) and **замок** (lock).
+- What intonation do you use for a yes/no question? You use a rising intonation (↗) on the key word.
+- Do questions starting with **Що** or **Де** always rise? No, they usually have a falling intonation (↘).
+- Read this aloud with correct stress and melody:
+  **Це апте́ка?** *(Is this a pharmacy?)*
+  **Так, це аптека.** *(Yes, this is a pharmacy.)*
+  **Як гарно!** *(How beautiful!)*
 
 </TabItem>
 <TabItem label="Словник">
@@ -160,95 +137,82 @@ Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Ever
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **на́голос** | stress (linguistic accent) | присл. |  |
-| **замок** | castle (stress on first syllable) | ім. | ч. |
-| **замок** | lock (stress on second syllable) | ім. | ч. |
-| **мука** | torment, suffering (stress on first syllable) | ім. | ж. |
-| **мука** | flour (stress on last syllable) | ім. | ж. |
-| **атлас** | atlas, map collection (stress on first syllable) | ім. | ч. |
-| **атлас** | satin fabric (stress on second syllable) | ім. | ч. |
+| **на́голос** | stress | присл. |  |
+| **мука** | flour | ім. | ж. |
+| **мука** | torment | ім. | ж. |
+| **ра́нок** | morning | ім. |  |
+| **метро́** | metro | ім. | с. |
+| **фотогра́фія** | photograph | ім. | ж. |
+| **замок** | castle | ім. | ч. |
+| **замок** | lock | ім. | ч. |
+| **ка́ва** | coffee | ім. | ж. |
+| **вода́** | water | ім. | ж. |
+| **столи́ця** | capital | ім. | ж. |
+| **черепа́ха** | turtle | ім. | ж. |
 | **ма́ма** | mother | ім. | ж. |
 | **та́то** | father | ім. | ч. |
-| **ра́нок** | morning | ім. |  |
-| **ка́ва** | coffee | ім. | ж. |
 | **кни́га** | book | ім. | ж. |
-| **вода́** | water | ім. | ж. |
 | **зима́** | winter | ім. | ж. |
-| **метро́** | metro, subway | ім. | с. |
-| **кафе́** | café | ім. | с. |
-| **молоко́** | milk | ім. | с. |
-| **фотогра́фія** | photograph | ім. | ж. |
+| **рука́** | hand | ім. | ж. |
+| **ру́ки** | hands | ім. | ж. |
+| **кафе́** | cafe | ім. | с. |
+| **доро́га** | road | ім. | ж. |
+| **доро́га** | expensive | ім. | ж. |
 | **інтона́ція** | intonation | ім. | ж. |
 | **хто** | who | ім. | ч. |
 | **де** | where | присл. |  |
 | **коли́** | when | ім. |  |
-| **ви́хід** | exit | ім. | ч. |
-| **вго́лос** | aloud, out loud | присл. |  |
-| **украї́нська** | Ukrainian (adjective) | ім. | ж. |
-| **відпочи́нок** | rest, vacation | ім. | ч. |
-| **Ки́їв** | Kyiv | ім. |  |
-| **бібліоте́ка** | library | ім. | ж. |
-| **столи́ця** | capital city | ім. | ж. |
-| **апте́ка** | pharmacy | ім. | ж. |
+| **До́бре** | Good! | присл. |  |
 | **Так** | Yes | присл. |  |
+| **Приві́т** | Hi! | ім. | ч. |
+| **украї́нська** | Ukrainian | ім. | ж. |
+| **відпочи́нок** | rest | ім. | ч. |
+| **молоко́** | milk | ім. | с. |
+| **апте́ка** | pharmacy | ім. | ж. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **наголошений склад** | stressed syllable |
-| **розповідне речення** | declarative sentence |
-| **питальне речення** | interrogative sentence |
-| **спонукальне речення** | imperative sentence |
-| **окличне речення** | exclamatory sentence |
-| **Це кава.** | This is coffee. (statement, falling intonation) |
-| **Це кава?** | Is this coffee? (yes/no question, rising intonation) |
-| **Як гарно!** | How beautiful! (exclamation) |
-| **читати вголос** | to read aloud |
-| **Добре!** | Good! / Fine! |
-| **Теж добре, дякую!** | Also good, thanks! |
-| **Привіт!** | Hi! / Hello! (informal) |
-| **Дякую!** | Thank you! |
-| **Ось він.** | Here it is. (masculine) |
-| **Мене звати...** | My name is... (literally: I am called...) |
-| **Як тебе звати?** | What is your name? (informal) |
-| **Дуже приємно!** | Very nice to meet you! |
+| **Як справи?** | How are you? |
+| **Це твоя кава?** | Is this your coffee? |
+| **Це моя кава** | This is my coffee |
+| **Як гарно!** | How beautiful! |
+| **Що це?** | What is this? |
+| **Де метро?** | Where is the metro? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "на́голос", back: "stress (linguistic accent)", subtitle: "присл." }, { front: "замок", back: "castle (stress on first syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замок", back: "lock (stress on second syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мука", back: "torment, suffering (stress on first syllable)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мука", back: "flour (stress on last syllable)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "атлас", back: "atlas, map collection (stress on first syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "атлас", back: "satin fabric (stress on second syllable)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́нок", back: "morning", subtitle: "ім." }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зима́", back: "winter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "фотогра́фія", back: "photograph", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "інтона́ція", back: "intonation", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "хто", back: "who", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "де", back: "where", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "ви́хід", back: "exit", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вго́лос", back: "aloud, out loud", subtitle: "присл." }, { front: "украї́нська", back: "Ukrainian (adjective)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпочи́нок", back: "rest, vacation", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "столи́ця", back: "capital city", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Так", back: "Yes", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "на́голос", back: "stress", subtitle: "присл." }, { front: "мука", back: "flour", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мука", back: "torment", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́нок", back: "morning", subtitle: "ім." }, { front: "метро́", back: "metro", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "фотогра́фія", back: "photograph", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "замок", back: "castle", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замок", back: "lock", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "столи́ця", back: "capital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "черепа́ха", back: "turtle", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зима́", back: "winter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рука́", back: "hand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ру́ки", back: "hands", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "доро́га", back: "road", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "доро́га", back: "expensive", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "інтона́ція", back: "intonation", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "хто", back: "who", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "де", back: "where", subtitle: "присл." }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "До́бре", back: "Good!", subtitle: "присл." }, { front: "Так", back: "Yes", subtitle: "присл." }, { front: "Приві́т", back: "Hi!", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "украї́нська", back: "Ukrainian", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпочи́нок", back: "rest", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"First-syllable stress (МА-ма pattern)": ["ранок", "кава", "мама", "тато", "книга"], "Last-syllable stress (во-ДА pattern)": ["вода", "зима", "метро", "кафе", "молоко"]}} instruction={"Sort these words into two groups based on where the stress falls. Listen for which syllable sounds louder and longer."} />
+<OddOneOut client:only="react" items={[{"words": ["мама", "тато", "кафе"], "correct": 2, "explanation": "кафе (2nd syllable stress), others are 1st syllable"}, {"words": ["вода", "зима", "ранок"], "correct": 2, "explanation": "ранок (1st syllable stress), others are 2nd syllable"}, {"words": ["книга", "кава", "метро"], "correct": 2, "explanation": "метро (2nd syllable stress), others are 1st syllable"}, {"words": ["рука", "зима", "тато"], "correct": 2, "explanation": "тато (1st syllable stress), others are 2nd syllable"}, {"words": ["ранок", "кава", "вода"], "correct": 2, "explanation": "вода (2nd syllable stress), others are 1st syllable"}, {"words": ["метро", "кафе", "мама"], "correct": 2, "explanation": "мама (1st syllable stress), others are 2nd syllable"}]} instruction={"Which word has a different stress pattern? (Hint: find the stressed syllable)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "In Ukrainian, stress always falls on the last syllable — just like in French.", "isTrue": false, "explanation": "Ukrainian stress is FREE — it can fall on ANY syllable. Compare: МА-ма (first syllable) vs во-ДА (last syllable). There is no shortcut rule."}, {"statement": "The word 'замок' can mean two completely different things depending on where the stress falls.", "isTrue": true, "explanation": "ЗАмок = castle (stress on the first syllable). замОк = lock (stress on the second syllable). Same five letters, entirely different objects."}, {"statement": "For a yes/no question with no question word (like 'Це кава?'), your voice should rise ↗.", "isTrue": true, "explanation": "Without a question word, rising intonation signals that you are asking. Example: Це ка-ВА? ↗ — your voice goes up on the stressed syllable of кава."}, {"statement": "When a sentence has a question word like 'де' or 'хто', your voice should rise at the end.", "isTrue": false, "explanation": "Question words carry the interrogative meaning themselves — your voice FALLS ↘. Example: Де метро? ↘ — 'де' already tells the listener you are asking about location."}, {"statement": "An exclamation mark (!) always means your voice rises sharply.", "isTrue": false, "explanation": "Exclamations use a strong FALLING voice ↘↘ — dropping with extra force and emotion. Example: Як гарно! ↘↘"}, {"statement": "The word 'мука' with stress on the first syllable (МУка) means flour.", "isTrue": false, "explanation": "МУка (first syllable) = torment or suffering. мукА (last syllable) = flour. Wrong stress gives the completely wrong word."}, {"statement": "In everyday Ukrainian text — newspapers, messages, novels — stress marks are usually written over every word.", "isTrue": false, "explanation": "Stress marks appear only in textbooks and learning materials. Native speakers do not write them in everyday text — they already know where stress falls. As a learner, YOU write stress marks in your notes."}, {"statement": "The word 'фотографія' has its stress on the third syllable.", "isTrue": true, "explanation": "фо-то-ГРА-фі-я — stress falls on ГРА, the third syllable. Slow reading helps: фо... то... ГРА... фі... я. Then together: фотоГРАфія."}]} instruction={"True or false? Read each statement about Ukrainian stress and intonation."} />
+<TrueFalse client:only="react" items={[{"statement": "Ukrainian stress always falls on the last syllable.", "isTrue": false, "explanation": "Ukrainian stress is free and can fall on any syllable."}, {"statement": "Changing the stress can completely change the meaning of a word.", "isTrue": true, "explanation": "For example, за́мок (castle) and замо́к (lock)."}, {"statement": "Yes/no questions use a rising intonation (↗).", "isTrue": true, "explanation": "Your voice must rise sharply on the key word."}, {"statement": "Questions starting with 'що' or 'де' always use a rising intonation.", "isTrue": false, "explanation": "They use a falling intonation (↘) because the question word does the grammatical work."}, {"statement": "Exclamatory sentences use a strong falling intonation (↘↘).", "isTrue": true, "explanation": "This pattern applies to enthusiastic greetings and expressions of strong feeling."}, {"statement": "In Ukrainian, an unstressed 'О' is still pronounced clearly as 'О'.", "isTrue": true, "explanation": "Ukrainian vowels keep their core phonetic shape even when unstressed."}]} instruction={"Are these statements about Ukrainian stress and melody true or false?"} />
 
-<Quiz client:only="react" questions={[{"question": "Three of these words have first-syllable stress. Which one is different?", "options": [{"text": "мама", "correct": false}, {"text": "кава", "correct": false}, {"text": "ранок", "correct": false}, {"text": "вода", "correct": true}]}, {"question": "Three of these words have last-syllable stress. Which one is different?", "options": [{"text": "молоко", "correct": false}, {"text": "зима", "correct": false}, {"text": "метро", "correct": false}, {"text": "книга", "correct": true}]}, {"question": "Which word has stress on the LAST syllable?", "options": [{"text": "ранок", "correct": false}, {"text": "кава", "correct": false}, {"text": "тато", "correct": false}, {"text": "вода", "correct": true}]}, {"question": "Which word has stress on the FIRST syllable?", "options": [{"text": "молоко", "correct": false}, {"text": "вода", "correct": false}, {"text": "зима", "correct": false}, {"text": "мама", "correct": true}]}, {"question": "Which of these is a stress PAIR — same spelling but different meaning depending on stress?", "options": [{"text": "кава", "correct": false}, {"text": "замок", "correct": true}, {"text": "метро", "correct": false}, {"text": "ранок", "correct": false}]}, {"question": "What does 'АТлас' (stress on the first syllable) mean?", "options": [{"text": "satin fabric", "correct": false}, {"text": "atlas — a collection of maps", "correct": true}, {"text": "castle", "correct": false}, {"text": "suffering", "correct": false}]}]} instruction={"Odd one out — which word has a DIFFERENT stress pattern from the other three?"} />
+<Quiz client:only="react" questions={[{"question": "What is 'наголос' in Ukrainian?", "options": [{"text": "Stress", "correct": true}, {"text": "Intonation", "correct": false}, {"text": "Syllable", "correct": false}, {"text": "Punctuation", "correct": false}]}, {"question": "Which word means 'castle'?", "options": [{"text": "за́мок", "correct": true}, {"text": "замо́к", "correct": false}, {"text": "му́ка", "correct": false}, {"text": "мука́", "correct": false}]}, {"question": "What intonation do you use for 'Що це?'", "options": [{"text": "Falling (↘)", "correct": true}, {"text": "Rising (↗)", "correct": false}, {"text": "Flat (→)", "correct": false}, {"text": "Strong rising (↗↗)", "correct": false}]}, {"question": "How do you correctly divide 'фотографія' into syllables?", "options": [{"text": "фо-то-гра-фі-я", "correct": true}, {"text": "ф-от-ог-ра-фія", "correct": false}, {"text": "фо-тог-раф-ія", "correct": false}, {"text": "фот-ог-раф-ія", "correct": false}]}, {"question": "What happens to the stress when 'рука' (hand) becomes 'руки' (hands)?", "options": [{"text": "It shifts to the first syllable", "correct": true}, {"text": "It stays on the second syllable", "correct": false}, {"text": "It disappears", "correct": false}, {"text": "It moves to the middle", "correct": false}]}, {"question": "Which intonation is used for declarative statements?", "options": [{"text": "Falling (↘)", "correct": true}, {"text": "Rising (↗)", "correct": false}, {"text": "Flat (→)", "correct": false}, {"text": "Strong falling (↘↘)", "correct": false}]}]} instruction={"Answer the questions based on the lesson text."} />
 
-<MatchUp client:only="react" pairs={[{"left": "Voice falls ↘ at the end (period)", "right": "Statement — you are telling someone something"}, {"left": "Voice rises ↗ at the end (question mark, no question word)", "right": "Yes/no question — asking for confirmation"}, {"left": "Voice falls ↘ at the end (question mark, WITH a question word)", "right": "Information question — де/хто/що does the work"}, {"left": "Strong falling voice ↘↘ (exclamation mark)", "right": "Exclamation — high emotion, surprise, or delight"}, {"left": "Це кава. ↘", "right": "Calm statement — this is coffee"}, {"left": "Це кава? ↗", "right": "Confirmation question — is this coffee?"}, {"left": "Як гарно! ↘↘", "right": "Emotional exclamation — how beautiful!"}, {"left": "Де метро? ↘", "right": "Direction question — 'де' signals asking about location"}]} instruction={"Match each intonation pattern to what it signals in Ukrainian speech."} />
+<DivideWords client:only="react" items={[{"word": "кава", "answer": "ка-ва"}, {"word": "вода", "answer": "во-да"}, {"word": "зима", "answer": "зи-ма"}, {"word": "молоко", "answer": "мо-ло-ко"}, {"word": "ранок", "answer": "ран-ок"}, {"word": "Київ", "answer": "Ки-їв"}]} instruction={"Divide these words into syllables. Use a hyphen (-) between syllables."} />
 
-<Observe client:only="react" examples={["ЗАмок (castle) ↔ замОк (lock)", "МУка (torment) ↔ мукА (flour)", "АТлас (atlas/maps) ↔ атлАС (satin fabric)", "МАма — stress stays on the first syllable", "воДА — stress stays on the last syllable", "фотоГРАфія — stress stays on the third syllable"]} prompt={"Look at the first three pairs. What happens to the MEANING of a Ukrainian word when you move the stress to a different syllable? Now look at the last three examples — what does this tell you about learning new Ukrainian words?"} />
-
+<GroupSort client:only="react" groups={{"Stress on the 1st syllable": ["кава", "мама", "тато", "ранок", "книга"], "Stress on the 2nd syllable": ["вода", "зима", "метро", "кафе", "рука"]}} instruction={"Sort the words into groups based on where the stress falls."} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
 **Джерела — References**
 
-- [Заболотний Grade 5, p.73](https://pidruchnyk.com.ua/uploads/book/5-ukrmova-zabolotny-2023.pdf#page=73)
-  _38 звуків, наголос. Stress as free and mobile._
-- [Авраменко Grade 5, p.19](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=19)
-  _Інтонація речень — розповідні, питальні, окличні._
 - [ULP Season 1, Episode 5 — Pronunciation Trainer](https://www.ukrainianlessons.com/episode5/)
   _Stress practice with numbers._
 
-**Граматика — Grammar (МійКлас)**
+## Підручники (Textbooks)
 
-- [МійКлас: Наголос](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/nagolos-41958) (miyklas.com.ua)
-- [МійКлас: Голосні й приголосні звуки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
-- [МійКлас: Наголос. Основні правила наголошування слів](https://miyklas.com.ua/p/ukrainska-mova/10-klas/orfoepichna-norma-329328/nagolos-osnovni-pravila-nagoloshuvannia-sliv-normativnii-nagolos-344850) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=82), стор. 82
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=81), стор. 81
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=80), стор. 80
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=68), стор. 68
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=81), стор. 81
 
 **Статті — Articles**
 
@@ -257,12 +221,6 @@ Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Ever
 - [How to talk to an Uber / taxi driver in Ukrainian?](https://www.ukrainianlessons.com/fmu3/) (ukrainianlessons.com)
 - [Vocabulary booster! Transport in Ukrainian](https://www.ukrainianlessons.com/fmu4/) (ukrainianlessons.com)
 - [How to talk about transport in Ukrainian](https://www.ukrainianlessons.com/fmu5/) (ukrainianlessons.com)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
-- [Ukrainian Punctuation](https://www.ukrainianlessons.com/ukrainian-punctuation/)
 
 </TabItem>
 </Tabs>

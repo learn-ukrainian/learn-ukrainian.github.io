@@ -1,25 +1,100 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 58,
+  "grounded_items": 44,
+  "ungrounded": [
+    {
+      "word": "ми",
+      "exercise_type": "unjumble",
+      "context": "Ми",
+      "role": "answer"
+    },
+    {
+      "word": "ви",
+      "exercise_type": "fill-in",
+      "context": "Ми ____, а ви?",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "Мій друг ____.",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "fill-in",
+      "context": "Вони ____.",
+      "role": "context"
+    },
+    {
+      "word": "роботі",
+      "exercise_type": "group-sort",
+      "context": "на роботі",
+      "role": "answer"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "group-sort",
+      "context": "на роботу",
+      "role": "answer"
+    },
+    {
+      "word": "школу",
+      "exercise_type": "quiz",
+      "context": "Вона йде _____ школу.",
+      "role": "context"
+    },
+    {
+      "word": "їду",
+      "exercise_type": "quiz",
+      "context": "Я їду _____ Канаду.",
+      "role": "context"
+    },
+    {
+      "word": "канаду",
+      "exercise_type": "quiz",
+      "context": "Я їду _____ Канаду.",
+      "role": "context"
+    },
+    {
+      "word": "канаді",
+      "exercise_type": "fill-in",
+      "context": "Вона живе в Канаді, але вона ____.",
+      "role": "context"
+    },
+    {
+      "word": "одесі",
+      "exercise_type": "fill-in",
+      "context": "Він живе в Одесі, але він ____.",
+      "role": "context"
+    },
+    {
+      "word": "іде",
+      "exercise_type": "true-false",
+      "context": "Він іде в магазину.",
+      "role": "context"
+    },
+    {
+      "word": "школа",
+      "exercise_type": "error-correction",
+      "context": "Він йде з школа.",
+      "role": "context"
+    },
+    {
+      "word": "магазин",
+      "exercise_type": "error-correction",
+      "context": "Я йду з магазин.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 13,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 10,
     "not_tested": [
-      "англія",
-      "додому",
-      "звідки",
-      "зі",
-      "канада",
-      "київ",
-      "львів",
-      "німеччина",
       "одеса",
       "польща",
-      "україна",
-      "харків",
-      "із"
+      "харків"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

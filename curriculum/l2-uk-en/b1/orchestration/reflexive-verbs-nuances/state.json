@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "reflexive-verbs-nuances",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T22:38:29.915831+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T22:38:29.929226+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T22:38:56.917768+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T22:39:53.483181+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T22:46:38.012655+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T22:46:38.012917+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-09T22:48:53.363675+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T22:48:53.418373+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-09T22:48:53.434947+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-09T22:49:31.253147+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-09T22:49:31.253494+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-09T22:49:31.721780+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-09T22:53:37.679856+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-09T22:53:38.109880+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-09T22:53:41.292919+00:00"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: залишитися (to stay, to remain)"
+    }
+  ],
+  "timestamp": "2026-04-08T22:30:37.650447+00:00"
+}

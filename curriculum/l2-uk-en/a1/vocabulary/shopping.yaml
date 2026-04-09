@@ -1,88 +1,4 @@
 vocabulary:
-- word: ри́нок
-  translation: market (open-air)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: суперма́ркет
-  translation: supermarket
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: магази́н
-  translation: shop, store
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: крамни́ця
-  translation: store (distinctly Ukrainian word, common in western Ukraine)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: апте́ка
-  translation: pharmacy
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: продаве́ць
-  translation: vendor, seller
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: каси́р
-  translation: cashier
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ціна́
-  translation: price
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зни́жка
-  translation: discount
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гри́вня
-  translation: hryvnia (Ukrainian currency)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: копі́йка
-  translation: kopeck (1/100 of a hryvnia)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: готі́вка
-  translation: cash
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ка́ртка
-  translation: card (payment card)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гроші
-  translation: money
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: кілогра́м
   translation: kilogram
   expression: false
@@ -95,47 +11,77 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: па́чка
-  translation: pack, packet
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: пля́шка
   translation: bottle
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: буха́нка
-  translation: loaf (used only for bread)
+- word: па́чка
+  translation: pack
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: відділ
-  translation: section, department (in a store)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ряд
-  translation: aisle, row
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ви́бір
-  translation: selection, choice
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: поку́пка
-  translation: purchase
+- word: зни́жка
+  translation: discount
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: гроші
+  translation: money
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: готі́вка
+  translation: cash
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́штува́ти
+  translation: to cost
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ціна́
+  translation: price
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: купува́ти
+  translation: to buy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: до́рого
+  translation: expensive
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: де́шево
+  translation: cheap
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: база́р
+  translation: bazaar
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: молоко́
   translation: milk
@@ -155,17 +101,17 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: я́блука
-  translation: apples
+- word: я́блуко
+  translation: apple
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: помідо́ри
-  translation: tomatoes
+- word: помідо́р
+  translation: tomato
   expression: false
   pos: ім.
-  gender: ''
+  gender: ч.
   verified: true
 - word: вода́
   translation: water
@@ -173,35 +119,41 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ка́ва
-  translation: coffee
+- word: яйце́
+  translation: egg
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: крамни́ця
+  translation: store
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: лі́ки
-  translation: medicine, medication
+- word: буха́нка
+  translation: loaf
   expression: false
   pos: ім.
-  gender: ''
+  gender: ж.
   verified: true
-- word: холоди́льник
-  translation: refrigerator, fridge
+- word: ка́ртка
+  translation: card
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ре́шта
+  translation: change
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чек
+  translation: receipt
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: молочний відділ
-  translation: dairy section
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: хлібний відділ
-  translation: bread section
-  expression: true
-  pos: ''
-  gender: ''
   verified: true
 - word: м'ясний відділ
   translation: meat section
@@ -209,116 +161,38 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: овочевий відділ
-  translation: vegetable/produce section
+- word: молочний відділ
+  translation: dairy section
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: ко́штува́ти
-  translation: to cost
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: купува́ти
-  translation: to buy
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: бра́ти
-  translation: 'to take (in shopping context: to buy)'
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: до́рого
-  translation: expensive (adverb)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: де́шево
-  translation: cheap (adverb)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: деше́вший
-  translation: cheaper (comparative adjective)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: скі́льки
-  translation: how much, how many
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: право́руч
-  translation: to the right
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ліво́руч
-  translation: to the left
-  expression: false
-  pos: присл.
   gender: ''
   verified: true
 - word: Скільки коштують?
-  translation: How much do they cost? (plural item)
+  translation: How much do they cost?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Дайте, будь ласка,
-  translation: Please give me… (standard buying request)
+- word: Дайте, будь ласка
+  translation: Give me, please
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: за кілограм
-  translation: per kilogram
+- word: Скільки з мене?
+  translation: How much do I owe?
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: Скільки за все?
-  translation: How much is everything? / What is the total?
+  translation: How much for everything?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Можна готівкою?
-  translation: Can I pay cash?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Можна пляшку води?
-  translation: Can I have a bottle of water?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дорого!
-  translation: Expensive!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дешево!
-  translation: Cheap!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Нормальна ціна.
-  translation: Fair price.
+- word: Можна карткою?
+  translation: Is it possible by card?
   expression: true
   pos: ''
   gender: ''
@@ -329,20 +203,8 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Є дешевший?
-  translation: Is there a cheaper one?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Добре, беру.
-  translation: OK, I'll take it.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дякуємо за покупку!
-  translation: Thanks for the purchase!
+- word: нормальна ціна
+  translation: fair price
   expression: true
   pos: ''
   gender: ''

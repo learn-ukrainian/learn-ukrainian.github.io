@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,9 +27,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-question-words -->`
+- `<!-- INJECT_ACTIVITY: quiz-question-word-choice -->`
 - `<!-- INJECT_ACTIVITY: match-question-answer -->`
-- `<!-- INJECT_ACTIVITY: fill-in-negation -->`
+- `<!-- INJECT_ACTIVITY: fill-in-negation-transform -->`
 - `<!-- INJECT_ACTIVITY: quiz-double-negation -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -90,163 +90,156 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Ukrainian uses special question words — **питальні слова** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
+Asking for information is the foundation of any conversation. When you travel, meet new people, or simply try to find a missing object, you need to know how to ask about locations, identities, and reasons. The dialogues below demonstrate how Ukrainians ask and answer questions in everyday situations.
 
-### Dialogue 1 — Getting to know someone
+> **Турист:** Вибачте, де центр? *(Excuse me, where is the center?)*
+> **Перехожий:** Центр там. *(The center is there.)*
+> **Турист:** Дякую! Куди іде цей автобус? *(Thanks! Where does this bus go?)*
+> **Перехожий:** Цей автобус іде в парк. *(This bus goes to the park.)*
+> **Турист:** Добре. Як пройти до парку? *(Good. How to get to the park?)*
+> **Перехожий:** Прямо і направо. *(Straight and to the right.)*
 
-> **Андрій:** Привіт! Хто ти? *(Hi! Who are you?)*
-> **Олег:** Я студент. А ти? *(I'm a student. And you?)*
-> **Андрій:** Я теж студент. Що ти вивчаєш? *(I'm also a student. What do you study?)*
-> **Олег:** Я вивчаю українську мову. *(I study the Ukrainian language.)*
-> **Андрій:** Де ти живеш? *(Where do you live?)*
-> **Олег:** Я живу у Львові. *(I live in Lviv.)*
-> **Андрій:** Коли ти працюєш? *(When do you work?)*
-> **Олег:** Вранці. А ти? *(In the morning. And you?)*
-> **Андрій:** Увечері. Як тебе звати? *(In the evening. What's your name?)*
-> **Олег:** Мене звати Олег. *(My name is Oleh.)*
+When arriving in a new city, finding your way relies heavily on your ability to use question words. The tourist uses **де** (where) to locate a static place, **куди** (where to) to ask about the direction of the bus, and **як** (how) to request instructions for reaching a destination.
 
-Every question here starts with a different question word: **Хто** (who) asks about a person, **Що** (what) asks about a thing or activity, **Де** (where) asks about location, **Коли** (when) asks about time, and **Як** (how) asks about manner. Notice how the answer always matches what the question word asks about — **Хто ти?** gets a person (**студент**), **Де ти живеш?** gets a place (**у Львові**).
+> **Марко:** Хто ти? *(Who are you?)*
+> **Анна:** Я студент. *(I am a student.)*
+> **Марко:** Що ти вивчаєш? *(What do you study?)*
+> **Анна:** Я вивчаю українську. *(I study Ukrainian.)*
+> **Марко:** Де ти живеш? *(Where do you live?)*
+> **Анна:** Я живу в Києві. *(I live in Kyiv.)*
+> **Марко:** Коли ти працюєш? *(When do you work?)*
+> **Анна:** Вранці. *(In the morning.)*
 
-### Dialogue 2 — At home
+When you meet someone new, you naturally want to expand the conversation beyond basic greetings. Notice how each question targets a specific detail. The word **хто** (who) asks about a person's identity, **що** (what) targets an action or object, and **коли** (when) establishes a timeframe.
 
-> **Оля:** Де моя книга? *(Where is my book?)*
-> **Тарас:** Я не знаю. *(I don't know.)*
-> **Оля:** А хто знає? *(And who knows?)*
-> **Тарас:** Ніхто не знає. *(Nobody knows.)*
-> **Оля:** Що це на столі? *(What is this on the table?)*
-> **Тарас:** Нічого цікавого. *(Nothing interesting.)*
-> **Оля:** Чому ти не відповідаєш? *(Why don't you answer?)*
-> **Тарас:** Тому що я не чув! *(Because I didn't hear!)*
+> **Олег:** Де моя книга? *(Where is my book?)*
+> **Ірина:** Я не знаю. *(I don't know.)*
+> **Олег:** А хто знає? *(And who knows?)*
+> **Ірина:** Мама знає. *(Mom knows.)*
+> **Олег:** Чому мама? *(Why mom?)*
+> **Ірина:** Тому що вона все знає! *(Because she knows everything!)*
+> **Олег:** Чому ти не бачиш її? *(Why don't you see it?)*
+> **Ірина:** Тому що я нічого не бачу без окулярів. *(Because I see nothing without glasses.)*
 
-This dialogue combines question words with negation. Notice three things the dialogues just showed you:
-
-1. **Question words come at the start** of the sentence: **Де** моя книга? **Хто** знає? **Чому** ти не відповідаєш?
-2. **Word order after the question word stays natural** — you don't need to rearrange anything. Just put the question word first and the sentence works.
-3. **Не** and **ніхто/нічого** often appear together: **Ніхто не знає** uses both. This is called double negation, and it is required in Ukrainian — we will study it in detail below.
+A typical domestic scene often involves missing items and a lack of information. This conversation introduces the word **чому** (why) alongside its natural response **тому що** (because). It also demonstrates how to express negation using **не** (not) and how to indicate the total absence of something using **нічого** (nothing).
 
 ## Питальні слова (Question Words)
 
-Seven question words cover almost everything you need to ask at A1. Here they are as a set, each with the anchor example you already saw in the dialogues:
+To gather information effectively, you need a core set of linguistic tools. Ukrainian relies on seven essential question words: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). In a typical sentence, these question words take the very first position.
 
-- **Хто?** (who) — Хто ти?
-- **Що?** (what) — Що ти вивчаєш?
-- **Де?** (where) — Де ти живеш?
-- **Куди?** (where to) — Куди ти йдеш?
-- **Коли?** (when) — Коли ти працюєш?
-- **Чому?** (why) — Чому ти не відповідаєш?
-- **Як?** (how) — Як тебе звати?
+*   **Хто це?** (Who is this?)
+*   **Хто говорить?** (Who speaks?)
+*   **Що це?** (What is this?)
+*   **Що ти робиш?** (What are you doing?)
 
-Ukrainian textbooks introduce **Хто?** and **Що?** from the very first grade to distinguish living things (**хто** — people, animals) from non-living things (**що** — objects, concepts). The remaining five — **Де? Куди? Коли? Чому? Як?** — appear as question words for adverbs (Кравцова, Grade 2).
+The distinction between **хто** (who) and **що** (what) is strictly tied to animacy. You must use **хто** when asking about people or animals, and **що** when asking about inanimate objects or abstract concepts. English speakers frequently use "what" to ask for a description or specification, such as "What color is it?" or "What kind of car is it?". You cannot do this in Ukrainian. The word **що** only asks for identification. If you point to a vehicle and ask **Що це?** (What is this?), the answer is simply "A car." To ask for a description, you must use the word **який** (what kind / which). This clear separation prevents confusion and guarantees that you receive the specific information you want.
 
-### Де vs. Куди — the pair learners confuse
+Understanding location and movement requires mastering a spatial and temporal triplet: **де** (where), **куди** (where to), and **коли** (when). English often uses "where" for both a static location and a destination. Ukrainian separates these two concepts entirely. You use **де** when a person or object is resting in one place. You use **куди** strictly when there is physical motion directed toward a destination.
 
-**Де** asks about a static location — where something already is. **Куди** asks about direction — where something is moving toward. Compare:
+*   **Де ти живеш?** (Where do you live?)
+*   **Де ти?** (Where are you?)
+*   **Куди ти йдеш?** (Where are you going?)
+*   **Коли ти працюєш?** (When do you work?)
 
-- **Де** ти живеш? — Where do you live? (you are there)
-- **Куди** ти йдеш? — Where are you going? (you are moving there)
-- **Де** книга? — Where is the book? (it is somewhere)
-- **Куди** вони їдуть? — Where are they driving? (they are heading somewhere)
+Manner and reason use the question words **як** (how) and **чому** (why). You already know **як** from basic greetings, but it also asks for instructions or methods. The word **чому** almost always prompts an answer that starts with the conjunction **тому що** (because).
 
-The rule: use **де** with verbs of being or staying (**жити**, **бути**, **стояти**). Use **куди** with verbs of movement (**іти**, **їхати**, **ходити**).
+*   **Як справи?** (How are things?)
+*   **Чому ти не працюєш?** (Why don't you work?)
+*   **Тому що я хочу спати.** (Because I want to sleep.)
 
-<!-- INJECT_ACTIVITY: quiz-question-words -->
+:::tip
+The phrase **тому що** consists of two separate words. When answering a **чому** question, always use both words together to provide a natural, complete reason.
+:::
 
-### Word order in questions
+Not every inquiry requires a specific question word. Many questions simply ask for a "yes" or "no" confirmation. In spoken Ukrainian, you create a yes/no question without changing the word order or adding any helper verbs. You simply raise your intonation at the end of the sentence.
 
-The typical pattern is question word + verb + subject, but Ukrainian is flexible. All of these are acceptable:
+*   **Ти знаєш.** (You know. — flat statement intonation)
+*   **Ти знаєш? ↑** (Do you know? — rising pitch on the last word)
+*   **Ти говориш українською? ↑** (Do you speak Ukrainian?)
 
-- **Де ти живеш?** (standard)
-- **Ти де живеш?** (conversational)
-- **Живеш де?** (very informal)
+You can also use the particle **чи** (whether / if) at the beginning of the sentence to act as a formal marker for a yes/no question. Even with this addition, the word order remains exactly the same as a regular statement.
 
-The question word carries the emphasis regardless of its position. In everyday speech, the first two options are most natural. Written Ukrainian prefers the question word at the start.
+*   **Чи ти знаєш?** (Do you know?)
+*   **Чи ти говориш?** (Do you speak?)
 
-### Yes/no questions
+Using **чи** is optional in casual everyday conversation, but it makes your question instantly recognizable in writing or more formal speech. Because Ukrainian grammar defines the roles of words clearly, the overall word order in questions remains quite flexible.
 
-To ask a yes/no question, you do not need a special word — just raise your intonation at the end of the sentence:
+*   **Де ти живеш?** (Where do you live?)
+*   **Ти де живеш?** (You where live?)
 
-- Ти говориш українською? ↑ *(Do you speak Ukrainian?)*
-- Він живе тут? ↑ *(Does he live here?)*
-- Вона знає? ↑ *(Does she know?)*
+Both variations mean exactly the same thing. The first option, with the question word at the front, is the most neutral and common pattern.
 
-English needs "do" or "does" to form these questions. Ukrainian does not — the sentence stays exactly the same, and only the rising intonation ↑ tells the listener it is a question. In formal or written Ukrainian, you may also see **чи** (whether) at the beginning: **Чи ти розумієш?** (Do you understand?) Recognise **чи** when you see it, but for everyday A1 speech, intonation alone is enough.
+<!-- INJECT_ACTIVITY: quiz-question-word-choice -->
 
 <!-- INJECT_ACTIVITY: match-question-answer -->
 
 ## Заперечення (Negation)
 
-The particle **не** (not) goes directly before the verb — never separated from it. Here are five examples using verbs you already know from Modules 16–18:
+Stating what is not happening or what you do not know is just as crucial as asking questions. The primary tool for negation in Ukrainian is the particle **не** (not). In English, you often need helper verbs like "do" or "does" to make a sentence negative. Ukrainian makes this process much simpler. You just place **не** directly before the main verb.
 
-- Я **не** знаю. — I don't know.
-- Він **не** працює. — He doesn't work.
-- Ми **не** розуміємо. — We don't understand.
-- Вона **не** хоче. — She doesn't want to.
-- Вони **не** говорять. — They don't speak.
+*   **Я не знаю.** (I do not know.)
+*   **Ми не розуміємо.** (We do not understand.)
+*   **Він не хоче.** (He does not want.)
+*   **Він не працює.** (He does not work.)
 
-In English, "do not" is two words; in Ukrainian, **не** is a single particle that sits right before the verb. It is almost always unstressed — the stress stays on the verb. No matter how long the sentence is, **не** stays glued to its verb: Я **не** хочу, Вони **не** розуміють.
+The particle **не** forms a very tight unit with the verb that immediately follows it. You must never separate them with other words. 
 
-### Ні — standalone "no" and the ні- pronouns
+When you need to answer a question negatively without providing a full sentence, you use the standalone word **ні** (no).
 
-As a standalone word, **ні** (no) answers a question directly:
+*   **Ти студент? — Ні.** (Are you a student? — No.)
+*   **Ні, дякую.** (No, thank you.)
+*   **Ні, я не знаю.** (No, I don't know.)
 
-- Ти знаєш? — **Ні**, не знаю. *(Do you know? — No, I don't know.)*
+The word **ні** also serves as a prefix for creating negative pronouns and adverbs. By attaching **ні-** to question words, you generate vocabulary that represents the absolute absence of something.
 
-But **ні** also forms a family of negative words by attaching to question-word pronouns and adverbs:
+*   **ніхто** (nobody)
+*   **нічого** (nothing)
+*   **ніколи** (never)
+*   **ніде** (nowhere)
 
-| Ukrainian | English | Example |
-|-----------|---------|---------|
-| **ніхто** | nobody | Ніхто не знає. |
-| **нічого** | nothing | Я нічого не бачу. |
-| **ніколи** | never | Вона ніколи не запізнюється. |
-| **ніде** | nowhere | Ніде не було. |
-| **нікуди** | to nowhere | Він нікуди не йде. |
+When you use these absolute negative words in a sentence, Ukrainian grammar requires a structure known as double negation. In English, grammar rules dictate that you can only have one negative element per clause — you say "I know nothing" or "I do not know anything." Ukrainian operates on a different, but highly consistent, logic. If a sentence contains a negative pronoun or adverb, the verb must also be negated with **не**. Both parts are strictly required to form a grammatically correct sentence.
 
-Notice the pattern: the prefix **ні-** attaches directly to the question word — **хто** → **ніхто**, **коли** → **ніколи**, **де** → **ніде**, **куди** → **нікуди**. Ukrainian textbooks (Заболотний, Grade 6) teach these as negative pronouns and adverbs formed from their question-word counterparts with the prefix **ні-**.
+*   **Я нічого не знаю.** (I know nothing. / Literally: I nothing do not know.)
+*   **Ніхто не говорить.** (Nobody speaks. / Literally: Nobody does not speak.)
+*   **Ніхто не прийшов.** (Nobody came.)
+*   **Ми ніколи не відпочиваємо.** (We never rest.)
 
-### Double negation — the most important rule
+:::caution
+Applying English logic to Ukrainian negation leads directly to grammatical errors. A sentence like "Я бачу нічого" (I see nothing) sounds broken to a native speaker. The presence of **нічого** absolutely demands the presence of **не** before the verb. You must say: **Я нічого не бачу**.
+:::
 
-Ukrainian requires both the **ні-** word AND **не** before the verb. This is mandatory — dropping either one makes the sentence ungrammatical.
-
-Wrong (English pattern): ~~Ніхто знає.~~
-Correct: **Ніхто не знає.** *(Nobody knows.)*
-
-Four more examples:
-
-- **Я нічого не знаю.** — I don't know anything. (literally: I nothing don't know.)
-- **Ніхто не говорить.** — Nobody speaks.
-- **Вона ніколи не запізнюється.** — She is never late.
-- **Він нікуди не йде.** — He isn't going anywhere.
-
-This is not a logic error and does not create a "double positive" like it would in English. It is standard Ukrainian grammar — both parts are required (Літвінова, Grade 6: «Ніхто не може змусити вас...»).
-
-<!-- INJECT_ACTIVITY: fill-in-negation -->
-
-### Не vs. ні- at a glance
-
-**Не** alone negates one verb: **Я не знаю** (I don't know — but someone else might). A **ні-** word negates the entire idea and still needs **не** with the verb: **Ніхто не знає** (nobody at all knows). Here is the contrast in question-and-answer pairs:
-
-- **Хто це?** — **Ніхто.** *(Who is this? — Nobody.)*
-- **Що ти бачиш?** — **Нічого не бачу.** *(What do you see? — I see nothing.)*
-
-When answering with a single word, you can say **Ніхто** or **Нічого** alone. But as soon as the answer becomes a full sentence with a verb, double negation kicks in: **Нічого не бачу**.
+<!-- INJECT_ACTIVITY: fill-in-negation-transform -->
 
 <!-- INJECT_ACTIVITY: quiz-double-negation -->
 
 ## Підсумок — Summary
 
-Here is everything from this module in one place:
+This module provided the essential tools for extracting information and expressing negative statements. You now possess a complete set of question words to navigate daily situations, gather facts, and build relationships.
 
-- **Питальні слова:** **Хто? Що? Де? Куди? Коли? Чому? Як?** — seven question words. Place the question word first; word order after it is flexible.
-- **Де vs. Куди:** **Де** = location (Де книга?); **Куди** = direction (Куди ти йдеш?).
-- **Так/ні питання:** rising intonation only — Ти знаєш? ↑ No special word needed. In formal writing, **чи** may appear at the start.
-- **Не:** directly before the verb, never separated — Я **не** знаю. Він **не** приходить.
-- **Подвійне заперечення:** **ніхто/нічого/ніколи/ніде** + **не** + verb — both parts required. **Ніхто не знає.** **Я нічого не бачу.**
+*   **Хто?** (Who?)
+*   **Що?** (What?)
+*   **Де?** (Where?)
+*   **Куди?** (Where to?)
+*   **Коли?** (When?)
+*   **Чому?** (Why?)
+*   **Як?** (How?)
 
-:::tip Self-check — try this now
-1. Ask three questions about a friend: **Де вона живе? Що він вивчає? Коли вони приходять?**
-2. Make two negative sentences: **Я нічого не знаю. Ніхто не розуміє.**
-3. Turn a statement into a yes/no question: Він говорить українською. → Він говорить українською? ↑
-:::
+You learned that yes/no questions rely almost entirely on raising your intonation at the end of the sentence, such as **Ти знаєш?** (Do you know?). You also saw how the particle **чи** can optionally mark these questions in a more formal register, without ever altering the fundamental word order.
+
+Negation in Ukrainian follows strict but simple patterns. The particle **не** always stands directly before the verb. When expressing absolute absence, Ukrainian demands double negation. 
+
+| Структура (Structure) | Приклад (Example) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| **Не + Verb** | **Я не знаю.** | I do not know. |
+| **Ні- word + Не + Verb** | **Я нічого не знаю.** | I know nothing. |
+| **Ні- word + Не + Verb** | **Ніхто не знає.** | Nobody knows. |
+
+To verify your progress, respond to the following prompts. These practical tasks test your ability to apply the patterns you just read to real situations.
+
+1.  Ask three questions about a friend's life using **де** (where), **що** (what), and **коли** (when). For example: **Де живе твій друг?** (Where does your friend live?)
+2.  Change the positive statement "Я бачу все" (I see everything) into a negative statement meaning "I see nothing" using the double negation rule.
+3.  Form a question from the statement **Ти говориш українською** (You speak Ukrainian) using only your intonation.
+4.  Explain the grammatical difference between asking **Де ти?** (Where are you?) and **Куди ти йдеш?** (Where are you going?).
 
 </module_content>
 
@@ -336,30 +329,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -375,43 +408,65 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-vocabulary
-- **match-up** — Слово → переклад: Match Ukrainian words to English translations
-- **fill-in** — Вставте слово: Fill in the missing word from context
-- **anagram** — Склади слово: Rearrange letters to form the target word
-- **odd-one-out** — Четверте зайве: Pick the word that doesn't belong to the semantic group
-- **translate** — Оберіть переклад: Choose correct translation from options
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -443,68 +498,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

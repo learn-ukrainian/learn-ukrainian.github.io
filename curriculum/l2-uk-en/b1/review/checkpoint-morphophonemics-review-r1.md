@@ -1,71 +1,95 @@
 ## Linguistic Scan
-No major Russianisms or Surzhyk found. The module demonstrates high-quality Ukrainian with a natural, professional tone. However, one hallucinated linguistic term and a grammatical case error were identified.
-
-- **Hallucination:** "перед ятіфакованим [я]" (Section 3). The word "ятіфакований" does not exist in Ukrainian. The correct term for an iotated vowel like [я] is **йотований**.
-- **Grammar Error:** "Коли змінюється однина на множина" (Section 1). After the preposition "на" used to indicate a change into something else, the Accusative case is required: **множину**.
-- **Euphony:** "я сиджу у цій студії" (Section 6). Following the vowel "я" and before the consonant "ц", the preposition **в** is required for euphony (Pravopys § 23).
-- **Style:** "допустили кілька... помилок" (Section 6). While used occasionally (even by some classical authors), the preferred literary form is **припустилися кількох помилок**.
+- `приголоном` — typo (should be `приголосним`).
+- `втікаючі голосні` — unnatural active participle/calque (should be `випадні голосні`).
+- `втікає` — continuation of the calque (should be `випадає`).
+- `бере аналіз` — colloquialism/calque (should be `бере кров на аналіз`).
+- `приймати таблетки` — calque from Russian (should be `пити таблетки` або `вживати таблетки`).
 
 ## Exercise Check
-All activity markers are correctly placed following the instructional prose and correspond to the plan's requirements:
-1. `reading-comprehension` (Section 3) - Tests medical vocabulary and case identification. Correct.
-2. `quiz` (Section 4) - Tests identification of alternation types. Correct.
-3. `match-up` (Section 4) - Tests production of alternated forms. Correct.
-4. `group-sort` (Section 5) - Tests classification of noun subclasses. Correct.
-5. `fill-in` (Section 5) - Tests declension in sentence context. Correct.
-6. `error-correction` (Section 6) - Tests identification of morphophonemic errors. Logic matches the quiz show context. Correct.
+- `<!-- INJECT_ACTIVITY: quiz-choosing-between-based-on-completion-vs-ongoing-action -->` — **Issue:** Hallucinated marker. Does not match the 6 hints in `activity_hints`.
+- `<!-- INJECT_ACTIVITY: fill-in-completing-descriptions-of-people-and-their-relationships -->` — **Issue:** Hallucinated marker. Does not match `activity_hints`.
+- `<!-- INJECT_ACTIVITY: quiz-alternation-type -->` — Matches `quiz`.
+- `<!-- INJECT_ACTIVITY: match-alternated-forms -->` — Matches `match-up`.
+- `<!-- INJECT_ACTIVITY: fill-in-declension-context -->` — Matches `fill-in`.
+- `<!-- INJECT_ACTIVITY: error-correction-morphophonemics -->` — Matches `error-correction`.
+- `<!-- INJECT_ACTIVITY: sort-noun-subclasses -->` — Matches `group-sort`.
+- `<!-- INJECT_ACTIVITY: comprehension-medical-grammar -->` — Matches `reading-comprehension`.
+
+**Summary:** The plan calls for 6 activities. The generated text includes 8 markers. The first two are hallucinated based on the outline text rather than the `activity_hints` block and must be removed.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 7 sections. Word count (4686) exceeds the 4000-word target. All grammar points from M08-M16 are synthesized. |
-| 2. Linguistic accuracy | 8/10 | Generally excellent, but penalized for the hallucination "ятіфакованим" and the case error "на множина". |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow. Uses effective mnemonics like "Рука-нога-вухо". Clearly explains the "closed/open syllable" logic for vowel alternations. |
-| 4. Vocabulary coverage | 10/10 | Naturally integrates all required terms: чергування, спрощення, мішана група, pluralia tantum, and medical vocabulary. |
-| 5. Exercise quality | 10/10 | Variety of types (quiz, match-up, group-sort). Error correction items are clever and test exactly the traps taught in the prose. |
-| 6. Engagement & tone | 10/10 | Professional and authoritative but encouraging. Avoids "motivational filler". The quiz show setting for the dialogue is engaging. |
-| 7. Structural integrity | 10/10 | Clean Markdown. H2 headers match the plan's content outline perfectly. Word counts per section are well-balanced. |
-| 8. Cultural accuracy | 10/10 | Uses authentic Ukrainian names (Олена, Максим, Ольга) and historical/cultural references (Козак) naturally. |
-| 9. Dialogue quality | 10/10 | The quiz show dialogue is a brilliant way to handle a checkpoint. Speakers have distinct roles and the logic of the "game" is maintained. |
+| 1. Plan adherence | 10/10 | All required grammatical topics (alternations, noun declensions, pluralia tantum, tenses) are well-covered. The dialogue explicitly follows the quiz show prompt: "Уявіть собі велику телевізійну студію... фінал популярного інтелектуального шоу". |
+| 2. Linguistic accuracy | 7/10 | Several critical and major errors. Typo: "класичним губним (labial) приголоном". Unnatural linguistic terms: "втікаючі голосні", "звук [о] так само втікає". Calques: "бере аналіз", "приймати таблетки". |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical breakdown. "Коли ви бачите нове українське слово, спершу запитайте себе: чи змінюється тут форма складу?" is a great diagnostic rule. The contrast between "стіл" and "стілець" is pedagogically very strong. |
+| 4. Vocabulary coverage | 8/10 | Required vocabulary is fully present. However, recommended words `сонорний` and `діагноз` are entirely missing from the text (verified via search). |
+| 5. Exercise quality | 8/10 | Hallucinated extra markers injected at the beginning of the text (`quiz-choosing-between-based-on-completion-vs-ongoing-action` and `fill-in-completing-descriptions-of-people-and-their-relationships`) that do not match the YAML plan hints. |
+| 6. Engagement & tone | 9/10 | The text starts with a forbidden self-congratulatory opener: "Вітаємо на першій великій контрольній роботі рівня B1! Ми з вами пройшли важливий шлях від повторення базової граматики до розуміння складної української морфонеміки." Otherwise, the teacher's tone is excellent. |
+| 7. Structural integrity | 10/10 | Word count is solid (4924 words). Markdown headings perfectly map to the plan. No dangling sentences or meta-commentary. |
+| 8. Cultural accuracy | 10/10 | Excellent use of authentic, historically deep Ukrainian forms like the instrumental plural "грішми" and "ворітьми". No colonial framing. |
+| 9. Dialogue & conversation quality | 10/10 | The dialogue is engaging and successfully forces the use of grammar rules within a naturalistic quiz show format. The host's follow-up questions ("Яке саме чергування голосних відбувається у базовому слові...") are well-executed. |
 
 ## Findings
-[LINGUISTIC] [CRITICAL]
-Location: Section 3, paragraph 1. "перед ятіфакованим [я]."
-Issue: Hallucinated term. "Ятіфакований" is not a Ukrainian linguistic term.
-Fix: Change to "перед йотованою [я]".
 
-[LINGUISTIC] [CRITICAL]
-Location: Section 1, paragraph 1. "Коли змінюється однина на множина"
-Issue: Grammatical case error. Preposition "на" (indicating change) requires Accusative case.
-Fix: Change "множина" to "множину".
+[2. Linguistic accuracy] [critical]
+Location: section "Медична лексика та морфонеміка", paragraph 3: "звук [в] є класичним **губним** (*labial*) приголоном."
+Issue: Typo/non-existent word "приголоном" instead of "приголосним".
+Fix: Replace "приголоном" with "приголосним".
 
-[LINGUISTIC] [MAJOR]
-Location: Section 6, dialogue speaker Олена. "чергування задньоязикового приголосного [к] на м'який свистячий звук [ц']."
-Issue: Non-standard prepositional usage. Alternations are described as "чергування [звука] з [звуком]".
-Fix: Change "на" to "із" and use the Instrumental case: "із м'яким свистячим звуком [ц']".
+[2. Linguistic accuracy] [critical]
+Location: section "Огляд чергувань", paragraph 2: "так звані «втікаючі голосні» або **нульове закінчення**"
+Issue: The term "втікаючі голосні" uses an unnatural active participle ("-учий/-ючий"), which is a calque and non-normative in Ukrainian linguistics. The correct term is "випадні голосні".
+Fix: Replace "втікаючі голосні" with "випадні голосні".
 
-[LINGUISTIC] [MINOR]
-Location: Section 6, dialogue speaker Ведучий. "я сиджу у цій студії"
-Issue: Euphony violation. Between a vowel ("я") and a single consonant ("ц"), the form "в" is required.
-Fix: Change "у" to "в".
+[2. Linguistic accuracy] [major]
+Location: section "Огляд чергувань", paragraph 2: "звук [о] так само втікає перед закінченням родового відмінка"
+Issue: "втікає" is a stylistic extension of the "втікаючі" calque. It should use the standard linguistic term "випадає".
+Fix: Replace "втікає" with "випадає".
 
-[LINGUISTIC] [MINOR]
-Location: Section 6, instructions before final activity. "допустили кілька серйозних морфологічних помилок."
-Issue: Stylistic preference. "Припустилися кількох... помилок" is the standard literary expression.
-Fix: Change to "припустилися кількох серйозних морфологічних помилок."
+[2. Linguistic accuracy] [major]
+Location: section "Медична лексика та морфонеміка", paragraph 3: "Коли медсестра бере аналіз, вона може випадково"
+Issue: "бере аналіз" is a colloquialism/calque; standard phrasing is "робить аналіз" or "бере кров на аналіз".
+Fix: Replace "бере аналіз" with "бере кров на аналіз".
+
+[2. Linguistic accuracy] [major]
+Location: section "Медична лексика та морфонеміка", paragraph 5: "маззю та приймати таблетки після їжі"
+Issue: "приймати таблетки" is a common calque from Russian "принимать таблетки"; standard Ukrainian prefers "пити таблетки" or "вживати ліки".
+Fix: Replace "приймати таблетки" with "пити таблетки".
+
+[5. Exercise quality] [major]
+Location: section "Огляд базових часів та лексики (M01-M03)", paragraphs 3 and 5.
+Issue: Two hallucinated exercise injection markers (`<!-- INJECT_ACTIVITY: quiz-choosing-... -->` and `<!-- INJECT_ACTIVITY: fill-in-completing-... -->`) do not match the `activity_hints` provided in the plan (which specifies exactly 6 activities).
+Fix: Remove the two extra injection markers.
+
+[6. Engagement & tone] [minor]
+Location: section "Огляд базових часів та лексики (M01-M03)", paragraph 1: "Вітаємо на першій великій контрольній роботі рівня B1! Ми з вами пройшли важливий шлях від повторення базової граматики до розуміння складної української морфонеміки. Уявіть, що ви — учасник..."
+Issue: Violates the rule against self-congratulatory openers. 
+Fix: Remove the first two sentences to start directly with the quiz show scenario.
+
+[4. Vocabulary coverage] [minor]
+Location: Entire text.
+Issue: Recommended vocabulary words `сонорний` and `діагноз` are completely missing from the prose.
+Fix: No find/replace fix is strictly required for recommended vocabulary, but points were deducted.
 
 ## Verdict: REVISE
-The module is exceptionally high quality in terms of depth, pedagogy, and structure, but it contains a hallucinated linguistic term and a visible case error that must be corrected before shipping.
+The module is incredibly detailed and achieves a high word count with solid pedagogical explanations, but it contains critical linguistic inaccuracies (a typo, unnatural terminology like "втікаючі голосні", and several calques) as well as hallucinated activity markers that will break the pipeline. A revision is required to apply the necessary fixes.
 
 <fixes>
-- find: "Коли змінюється однина на множина"
-  replace: "Коли змінюється однина на множину"
-- find: "перед ятіфакованим [я]."
-  replace: "перед йотованою [я]."
-- find: "чергування задньоязикового приголосного [к] на м'який свистячий звук [ц']."
-  replace: "чергування задньоязикового приголосного [к] із м'яким свистячим звуком [ц']."
-- find: "Зараз я сиджу у цій студії"
-  replace: "Зараз я сиджу в цій студії"
-- find: "допустили кілька серйозних морфологічних помилок."
-  replace: "припустилися кількох серйозних морфологічних помилок."
+- find: "звук [в] є класичним **губним** (*labial*) приголоном."
+  replace: "звук [в] є класичним **губним** (*labial*) приголосним."
+- find: "так звані «втікаючі голосні» або **нульове закінчення**"
+  replace: "так звані «випадні голосні» або **нульове закінчення**"
+- find: "звук [о] так само втікає перед закінченням родового"
+  replace: "звук [о] так само випадає перед закінченням родового"
+- find: "Коли медсестра бере аналіз, вона може випадково"
+  replace: "Коли медсестра бере кров на аналіз, вона може випадково"
+- find: "маззю та приймати таблетки після їжі"
+  replace: "маззю та пити таблетки після їжі"
+- find: "Вітаємо на першій великій контрольній роботі рівня B1! Ми з вами пройшли важливий шлях від повторення базової граматики до розуміння складної української морфонеміки. Уявіть, що ви — учасник"
+  replace: "Уявіть, що ви — учасник"
+- find: "<!-- INJECT_ACTIVITY: quiz-choosing-between-based-on-completion-vs-ongoing-action -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: fill-in-completing-descriptions-of-people-and-their-relationships -->\n"
+  replace: ""
 </fixes>

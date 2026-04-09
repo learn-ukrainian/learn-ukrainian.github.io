@@ -1,0 +1,385 @@
+version: '1.0'
+module: purpose-clauses
+level: a2
+inline:
+- id: fill-in-purpose-clauses-with-correct-form-after
+  type: fill-in
+  instruction: Вставте правильну форму дієслова
+  items:
+  - sentence: Я йду в магазин, щоб ____ хліб.
+    answer: купити
+    options:
+    - купити
+    - купив
+    - купила
+  - sentence: Я хочу, щоб ти ____ хліб.
+    answer: купив
+    options:
+    - купити
+    - купив
+    - купило
+  - sentence: Ми відкрили вікно, щоб кіт ____.
+    answer: вийшов
+    options:
+    - вийти
+    - вийшов
+    - вийшла
+  - sentence: Вона зателефонувала, щоб ____ про новини.
+    answer: запитати
+    options:
+    - запитати
+    - запитала
+    - запитав
+  - sentence: Директор хоче, щоб ми ____ проєкт.
+    answer: зробили
+    options:
+    - зробити
+    - зробили
+    - зробив
+  - sentence: Вони приїхали в Київ, щоб ____ місто.
+    answer: побачити
+    options:
+    - побачити
+    - побачили
+    - побачив
+  - sentence: Вчитель пояснив правило, щоб учні його ____.
+    answer: зрозуміли
+    options:
+    - зрозуміти
+    - зрозуміли
+    - зрозуміла
+  - sentence: Мама дала синові гроші, щоб він ____ воду.
+    answer: купив
+    options:
+    - купити
+    - купив
+    - купила
+- id: quiz-distinguish-cause-from-purpose-using-or
+  type: quiz
+  instruction: Оберіть правильне слово
+  items:
+  - question: Він п'є воду, _____ він хоче пити.
+    options:
+    - тому що
+    - щоб
+    - що
+    - чи
+    correct: 0
+  - question: Він взяв воду, _____ пити в дорозі.
+    options:
+    - щоб
+    - тому що
+    - що
+    - чи
+    correct: 0
+  - question: Я вчу українську, _____ мені цікаво.
+    options:
+    - тому що
+    - щоб
+    - що
+    - чи
+    correct: 0
+  - question: Я вчу українську, _____ працювати в Києві.
+    options:
+    - щоб
+    - тому що
+    - що
+    - чи
+    correct: 0
+  - question: Вона не пішла гуляти, _____ йде дощ.
+    options:
+    - бо
+    - щоб
+    - що
+    - чи
+    correct: 0
+  - question: Вона взяла парасольку, _____ не бути мокрою.
+    options:
+    - щоб
+    - бо
+    - що
+    - чи
+    correct: 0
+  - question: Ми приїхали рано, _____ була велика проблема.
+    options:
+    - тому що
+    - щоб
+    - що
+    - чи
+    correct: 0
+  - question: Ми приїхали рано, _____ допомогти вам.
+    options:
+    - щоб
+    - тому що
+    - що
+    - чи
+    correct: 0
+- id: match-up-transform-direct-speech-into-reported-speech-match-the-original-quote-to-its-indirect-version
+  type: match-up
+  instruction: З'єднайте пряму мову з непрямою
+  pairs:
+  - left: Я прийду завтра на роботу.
+    right: Він сказав, що прийде завтра на роботу.
+  - left: Ми тут у ресторані.
+    right: Вони сказали, що вони тут у ресторані.
+  - left: Я дуже хочу їсти.
+    right: Вона сказала, що дуже хоче їсти.
+  - left: Ти будеш пити каву?
+    right: Він запитав, чи я буду пити каву.
+  - left: Ви знаєте це гарне місто?
+    right: Вона запитала, чи ми знаємо це гарне місто.
+  - left: Прийди сьогодні.
+    right: Він сказав, щоб я прийшов сьогодні.
+  - left: Купи молоко.
+    right: Вона сказала, щоб я купив молоко.
+  - left: Я маю вільний час.
+    right: Вона сказала, що має вільний час.
+- id: unjumble-purpose-clauses
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - купив
+    - Я
+    - словник,
+    - вивчати
+    - щоб
+    - швидше
+    - нові
+    - слова.
+    correct_order:
+    - Я
+    - купив
+    - словник,
+    - щоб
+    - швидше
+    - вивчати
+    - нові
+    - слова.
+  - words:
+    - брат
+    - прийшов,
+    - Мій
+    - допомогти
+    - щоб
+    - мені
+    - з
+    - ремонтом.
+    correct_order:
+    - Мій
+    - брат
+    - прийшов,
+    - щоб
+    - допомогти
+    - мені
+    - з
+    - ремонтом.
+  - words:
+    - хоче,
+    - щоб
+    - Антон
+    - кіно.
+    - Ірина
+    - пішла
+    - з
+    - ним
+    - у
+    correct_order:
+    - Антон
+    - хоче,
+    - щоб
+    - Ірина
+    - пішла
+    - з
+    - ним
+    - у
+    - кіно.
+  - words:
+    - щоб
+    - ти
+    - Мама
+    - хоче,
+    - зробив
+    - домашнє
+    - завдання.
+    correct_order:
+    - Мама
+    - хоче,
+    - щоб
+    - ти
+    - зробив
+    - домашнє
+    - завдання.
+  - words:
+    - Ми
+    - відкрили
+    - кіт
+    - вікно,
+    - щоб
+    - вийшов
+    - на
+    - вулицю.
+    correct_order:
+    - Ми
+    - відкрили
+    - вікно,
+    - щоб
+    - кіт
+    - вийшов
+    - на
+    - вулицю.
+  - words:
+    - читаю
+    - Я
+    - ситуацію
+    - новини,
+    - щоб
+    - у
+    - знати
+    - світі.
+    correct_order:
+    - Я
+    - читаю
+    - новини,
+    - щоб
+    - знати
+    - ситуацію
+    - у
+    - світі.
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Я хочу, щоб ти читаєш книгу.
+    error: читаєш
+    correction: читав
+    error_type: word
+    options:
+    - читав
+    - читати
+    - читає
+    explanation: Після «щоб» ми використовуємо дієслово у формі минулого часу.
+  - sentence: Він сказав, щоб я прийду додому.
+    error: прийду
+    correction: прийшов
+    error_type: word
+    options:
+    - прийшов
+    - прийти
+    - прийдеш
+    explanation: Для наказів і прохань після «щоб» використовується минулий час.
+  - sentence: Вона хоче, щоб ми приходимо в гості.
+    error: приходимо
+    correction: прийшли
+    error_type: word
+    options:
+    - прийшли
+    - прийти
+    - приходять
+    explanation: Конструкція «хочу, щоб» вимагає дієслова в минулому часі.
+  - sentence: Я зателефонував, щоб ти знаєш про зустріч.
+    error: знаєш
+    correction: знала
+    error_type: word
+    options:
+    - знала
+    - знати
+    - знає
+    explanation: Суб'єкти різні, тому після «щоб» потрібен минулий час.
+  - sentence: Вчитель пояснив правило, щоб учні розуміють його.
+    error: розуміють
+    correction: зрозуміли
+    error_type: word
+    options:
+    - зрозуміли
+    - зрозуміти
+    - розуміє
+    explanation: Мета для когось іншого передається через «щоб» + минулий час.
+  - sentence: Директор хоче, щоб ви робите цей проєкт.
+    error: робите
+    correction: зробили
+    error_type: word
+    options:
+    - зробили
+    - зробити
+    - роблять
+    explanation: Після конструкції «хочу, щоб» ніколи не буває теперішнього або майбутнього
+      часу.
+- type: group-sort
+  instruction: Факт чи прохання/наказ? Розподіліть речення
+  groups:
+  - label: Факт (що)
+    items:
+    - Мама сказала, що вона купила хліб.
+    - Колега написав, що ми маємо зустріч.
+    - Лікар сказав, що я п'ю мало води.
+    - Він пояснив, що це нове правило.
+  - label: Прохання або наказ (щоб)
+    items:
+    - Мама сказала, щоб я купив хліб.
+    - Колега написав, щоб я підготував документи.
+    - Лікар сказав, щоб я пив більше води.
+    - Він попросив, щоб я передав повідомлення.
+- type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: He asked if I have free time.
+    options:
+    - text: Він запитав, чи я маю вільний час.
+      correct: true
+    - text: Він запитав, що я маю вільний час.
+      correct: false
+    - text: Він запитав, щоб я мав вільний час.
+      correct: false
+    - text: Він запитав, тому що я маю вільний час.
+      correct: false
+  - source: She explained that she could not come.
+    options:
+    - text: Вона пояснила, що не може прийти.
+      correct: true
+    - text: Вона пояснила, щоб не може прийти.
+      correct: false
+    - text: Вона пояснила, чи не може прийти.
+      correct: false
+    - text: Вона пояснила, бо не може прийти.
+      correct: false
+  - source: They said to buy milk.
+    options:
+    - text: Вони сказали, щоб я купив молоко.
+      correct: true
+    - text: Вони сказали, що я купив молоко.
+      correct: false
+    - text: Вони сказали, чи я купив молоко.
+      correct: false
+    - text: Вони сказали, купити молоко.
+      correct: false
+  - source: I want you to do your homework.
+    options:
+    - text: Я хочу, щоб ти зробив домашнє завдання.
+      correct: true
+    - text: Я хочу тебе зробити домашнє завдання.
+      correct: false
+    - text: Я хочу, що ти зробиш домашнє завдання.
+      correct: false
+    - text: Я хочу, чи ти зробив домашнє завдання.
+      correct: false
+  - source: We went to Kyiv to see the city.
+    options:
+    - text: Ми поїхали в Київ, щоб побачити місто.
+      correct: true
+    - text: Ми поїхали в Київ, що побачити місто.
+      correct: false
+    - text: Ми поїхали в Київ, бо побачили місто.
+      correct: false
+    - text: Ми поїхали в Київ, щоб побачили місто.
+      correct: false
+  - source: I read the news in order to know the situation.
+    options:
+    - text: Я читаю новини, щоб знати ситуацію.
+      correct: true
+    - text: Я читаю новини, щоб знав ситуацію.
+      correct: false
+    - text: Я читаю новини, що знати ситуацію.
+      correct: false
+    - text: Я читаю новини, чи знати ситуацію.
+      correct: false

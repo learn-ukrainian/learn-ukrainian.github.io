@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'DEDUCTION: Missed "Preview: checkpoint-aspect (M12)" at the end of the
+    module. DEDUCTION: The 5-sentence practice template didn''t match the required
+    `Після [чого?] я [pf]. [X] років я [impf]...` patte'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'DEDUCTION: Typo "проє প্রকল্পটি" instead of "проєктом". DEDUCTION: Used
+    the Russicism "безкінечно" instead of "без кінця". DEDUCTION: Used the calque
+    "граматичний прийом" instead of "засіб".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'DEDUCTION: Incorrectly taught "-ець" and "-чиня" as "закінчення" (endings).
+    In Ukrainian grammar, these are derivational "суфікси" (suffixes). Calling a suffix
+    an ending is a fundamental morphological'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (професія, посада, фах, обов'язки,
+    звільнення, etc.) are embedded naturally throughout the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 activity markers exactly match the IDs from the plan and are placed
+    logically after the corresponding instructional chunks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional, encouraging, and uses excellent narrative frames
+    (e.g., comparing the perfective sequence to "сходинки"). No filler text.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Word count is robust (5448 words). All plan headings are present as H2s.
+    DEDUCTION: One corrupted typo token in the text.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of the 2019 Orthography update regarding feminitives
+    (фемінітиви). Accurately frames the historical suppression of female job titles
+    during the Soviet era.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues (both the formal interview with "Керівник відділу" and the
+    casual lunch between "Олександр" and "Тетяна") are extremely natural and successfully
+    demonstrate register switching.
+findings: []

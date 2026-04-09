@@ -1,45 +1,63 @@
 vocabulary:
-- word: готе́ль
-  translation: hotel
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: проки́нувся / проки́нулася
-  translation: woke up (masc. / fem.)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: надво́рі
-  translation: outside
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: сні́дати
-  translation: to have breakfast
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: офіціа́нт
-  translation: waiter
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: круаса́н
   translation: croissant
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: лі́нія
-  translation: line (e.g. metro line)
+- word: ка́рта
+  translation: map
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: лі́нія
+  translation: line
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: познайо́митися
+  translation: to get acquainted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подорожува́ти
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Ла́вра
+  translation: Lavra (Kyiv monastery)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гото́вий
+  translation: ready
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: віта́ю
+  translation: congratulations
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поча́ток
+  translation: beginning
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сувені́р
+  translation: souvenir
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: квито́к
   translation: ticket
@@ -47,26 +65,44 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: ліво́руч
-  translation: to the left
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зра́нку
-  translation: in the morning
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: гуля́ти
-  translation: to stroll / to walk around
+- word: зустрі́ти
+  translation: to meet
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
+- word: Доброго ранку!
+  translation: Good morning!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тепло́
+  translation: warm
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: со́нячно
+  translation: sunny
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: До побачення!
+  translation: Goodbye!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як дістатися до...
+  translation: how to get to...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: виши́ва́нка
-  translation: Ukrainian embroidered shirt
+  translation: vyshyvanka (embroidered shirt)
   expression: false
   pos: ім.
   gender: ж.
@@ -77,135 +113,39 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: сувені́р
-  translation: souvenir
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Чудовий вибір!
-  translation: Wonderful choice!
+- word: я беру
+  translation: I'll take [it]
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: розмо́вний
-  translation: colloquial / conversational
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: обі́дати
-  translation: to have lunch
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: познайо́митися
-  translation: to get acquainted / to meet someone
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Із задоволенням!
-  translation: With pleasure!
+- word: О котрій?
+  translation: At what time?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: замовля́ти
-  translation: to order (food or services)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зустрі́ти
-  translation: to meet / to encounter
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: кінотеа́тр
-  translation: cinema / movie theater
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вве́чері
-  translation: in the evening
+- word: споча́тку
+  translation: first
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: відкрива́ти
-  translation: to discover / to open up
+- word: по́тім
+  translation: then
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: прові́в / провела́
-  translation: spent (time) (masc. / fem.)
+- word: пі́сля
+  translation: after
   expression: false
-  pos: ''
+  pos: присл.
   gender: ''
-  verified: false
-- word: Ла́вра
-  translation: Lavra — the famous Kyiv Monastery of the Caves
+  verified: true
+- word: задово́лений
+  translation: satisfied
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: поча́ток
-  translation: beginning
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гото́вий / гото́ва
-  translation: ready (masc. / fem.)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: віта́ю
-  translation: congratulations / I greet you
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Зверни увагу
-  translation: Pay attention / Note
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Перевір себе
-  translation: Check yourself / Test yourself
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Святкуй!
-  translation: Celebrate!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Вперед!
-  translation: Forward! / Onwards!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: До зустрічі на А2!
-  translation: See you at A2!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Гарного дня!
-  translation: Have a good day!
-  expression: true
-  pos: ''
+  pos: прикм.
   gender: ''
   verified: true

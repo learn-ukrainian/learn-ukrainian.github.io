@@ -2,153 +2,10 @@ version: '1.0'
 module: at-the-cafe
 level: a1
 inline:
-- id: fill-in-order
-  type: fill-in
-  instruction: Вставте правильну форму (Insert the correct form)
-  items:
-  - sentence: Мені ___, будь ласка.
-    answer: каву
-    options:
-    - каву
-    - кава
-    - каві
-  - sentence: Мені ___, будь ласка.
-    answer: воду
-    options:
-    - воду
-    - вода
-    - водою
-  - sentence: Мені ___, будь ласка.
-    answer: борщ
-    options:
-    - борщ
-    - борщу
-    - борщем
-  - sentence: Мені ___, будь ласка.
-    answer: салат
-    options:
-    - салат
-    - салату
-    - салатом
-  - sentence: Мені ___, будь ласка.
-    answer: суп
-    options:
-    - суп
-    - супу
-    - супом
-  - sentence: Дайте, будь ласка, ___.
-    answer: чай
-    options:
-    - чай
-    - чаю
-    - чаєм
-  - sentence: Я буду ___.
-    answer: піцу
-    options:
-    - піцу
-    - піца
-    - піці
-  - sentence: Можна ___?
-    answer: хліб
-    options:
-    - хліб
-    - хліба
-    - хлібом
-- id: quiz-cafe-phrases
-  type: quiz
-  instruction: Що ви скажете? (What do you say?)
-  items:
-  - question: You want to order coffee. What do you say?
-    options:
-    - Мені каву, будь ласка.
-    - Рахунок, будь ласка.
-    - Що ви рекомендуєте?
-    correct: 0
-  - question: You want to pay. What do you say?
-    options:
-    - Рахунок, будь ласка.
-    - Можна меню?
-    - Це гостре?
-    correct: 0
-  - question: You want to know the price. What do you say?
-    options:
-    - Скільки коштує?
-    - Це з м'ясом?
-    - Тут вільно?
-    correct: 0
-  - question: You want to ask for a recommendation. What do you say?
-    options:
-    - Що ви рекомендуєте?
-    - Є вегетаріанське меню?
-    - Все було дуже смачно!
-    correct: 0
-  - question: You want to praise the food. What do you say?
-    options:
-    - Все було дуже смачно!
-    - Можна карткою?
-    - Без цукру.
-    correct: 0
-  - question: You want to know if a seat is free. What do you say?
-    options:
-    - Тут вільно?
-    - Ще одну каву, будь ласка.
-    - Рахунок, будь ласка.
-    correct: 0
-  - question: You want to ask if the dish is spicy. What do you say?
-    options:
-    - Це гостре?
-    - Це з м'ясом?
-    - Скільки коштує?
-    correct: 0
-  - question: You want to pay by card. What do you say?
-    options:
-    - Можна карткою?
-    - Є вегетаріанське меню?
-    - Що ви рекомендуєте?
-    correct: 0
-- id: fill-in-dialogue
-  type: fill-in
-  instruction: Вставте правильне слово (Insert the correct word)
-  items:
-  - sentence: — Добрий день! Ось ___.
-    answer: меню
-    options:
-    - меню
-    - рахунок
-    - картка
-  - sentence: — Дякую. Що ви ___?
-    answer: рекомендуєте
-    options:
-    - рекомендуєте
-    - коштуєте
-    - платите
-  - sentence: — Борщ дуже ___.
-    answer: смачний
-    options:
-    - смачний
-    - гострий
-    - вільний
-  - sentence: — Добре, ___ борщ і хліб, будь ласка.
-    answer: мені
-    options:
-    - мені
-    - я
-    - мене
-  - sentence: — А що будете ___?
-    answer: пити
-    options:
-    - пити
-    - їсти
-    - читати
-  - sentence: — Каву з молоком. — Добре, одну ___.
-    answer: хвилинку
-    options:
-    - хвилинку
-    - годину
-    - каву
-- id: match-cafe-phrases
+- id: match-up-functions
   type: match-up
-  instruction: З'єднайте фрази з функціями (Match phrases with their functions)
+  instruction: З'єднайте українські фрази з їхнім значенням (Match the Ukrainian phrases
+    with their functions)
   pairs:
   - left: Рахунок, будь ласка.
     right: Asking for the bill
@@ -165,82 +22,262 @@ inline:
   - left: Тут вільно?
     right: Asking for a seat
   - left: Можна меню?
-    right: Asking to see the menu
-workbook:
-- id: group-sort-cafe-phrases
-  type: group-sort
-  instruction: Розподіліть фрази за категоріями (Sort the phrases by category)
-  groups:
-  - label: Ordering food and drinks
-    items:
-    - Мені каву, будь ласка.
-    - Я буду суп.
-    - Дайте, будь ласка, салат.
-    - Можна воду?
-    - Мені борщ і хліб, будь ласка.
-    - Ще одну каву, будь ласка.
-  - label: Paying and leaving
-    items:
-    - Рахунок, будь ласка.
-    - Можна карткою?
-    - Готівкою.
-    - Залиште решту.
-    - Все було дуже смачно!
-    - Дякуємо!
-- id: true-false-cafe-culture
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
+    right: Asking to see the options
+- id: fill-in-ordering-accusative
+  type: fill-in
+  instruction: Оберіть правильну форму для замовлення (Choose the correct accusative
+    form to order)
   items:
-  - statement: In Ukraine, the bill comes to your table automatically.
-    correct: false
-    explanation: You always ask for the bill by saying 'Рахунок, будь ласка.' It does
-      not come automatically.
-  - statement: '''Мені каву, будь ласка'' uses the accusative form of кава.'
-    correct: true
-    explanation: Кава is a feminine noun ending in -а. In the accusative it changes
-      to каву.
-  - statement: A кав'ярня is the same kind of place as a ресторан.
-    correct: false
-    explanation: A кав'ярня is a coffee shop focused on drinks and pastries. A ресторан
-      is a formal restaurant.
-  - statement: '''Можна карткою?'' means ''Can I pay by card?'''
-    correct: true
-    explanation: This is the standard phrase for asking whether card payment is accepted.
-  - statement: Чайові (tips) are mandatory in Ukrainian cafes.
-    correct: false
-    explanation: About 10% is common, but tips are never obligatory in Ukraine.
-  - statement: Борщ keeps the same form in 'Мені борщ, будь ласка' because it is a
-      masculine inanimate noun.
-    correct: true
-    explanation: Masculine inanimate nouns do not change form in the accusative —
-      they stay the same as the nominative.
-  - statement: '''Що ви рекомендуєте?'' means ''How much does it cost?'''
-    correct: false
-    explanation: '''Що ви рекомендуєте?'' means ''What do you recommend?'' ''Скільки
-      коштує?'' means ''How much does it cost?'''
-- id: error-correction-cafe-order
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
-  items:
-  - sentence: Мені кава, будь ласка.
-    error: кава
-    correction: каву
-    error_type: word
+  - sentence: Мені _____, будь ласка.
+    answer: каву
     options:
     - каву
-    - кави
-    - кавою
-    explanation: 'Feminine nouns ending in -а take -у in the accusative: кава → каву.'
+    - кава
+    - каві
+  - sentence: Мені _____, будь ласка.
+    answer: воду
+    options:
+    - воду
+    - вода
+    - водою
+  - sentence: Мені _____, будь ласка.
+    answer: борщ
+    options:
+    - борщ
+    - борщу
+    - борщем
+  - sentence: Мені _____, будь ласка.
+    answer: салат
+    options:
+    - салат
+    - салату
+    - салатом
+  - sentence: Мені _____, будь ласка.
+    answer: суп
+    options:
+    - суп
+    - супу
+    - супом
+  - sentence: Дайте, будь ласка, _____.
+    answer: чай
+    options:
+    - чай
+    - чаю
+    - чаєм
+  - sentence: Я буду _____.
+    answer: піцу
+    options:
+    - піцу
+    - піца
+    - піці
+  - sentence: Можна _____?
+    answer: хліб
+    options:
+    - хліб
+    - хліба
+    - хлібом
+- id: quiz-situation-choice
+  type: quiz
+  instruction: Що ви скажете? (What do you say? Match the situation to the phrase)
+  items:
+  - question: You want to order coffee. What do you say?
+    options:
+    - Мені каву, будь ласка.
+    - Рахунок, будь ласка.
+    - Що ви рекомендуєте?
+    - Тут вільно?
+    correct: 0
+  - question: You want to pay. What do you say?
+    options:
+    - Рахунок, будь ласка.
+    - Можна меню?
+    - Це гостре?
+    - Мені воду, будь ласка.
+    correct: 0
+  - question: You want to know the price. What do you say?
+    options:
+    - Скільки коштує?
+    - Це з м'ясом?
+    - Тут вільно?
+    - Можна карткою?
+    correct: 0
+  - question: You want to ask for a recommendation. What do you say?
+    options:
+    - Що ви рекомендуєте?
+    - Є вегетаріанське меню?
+    - Все було дуже смачно!
+    - Скільки коштує?
+    correct: 0
+  - question: You want to praise the food. What do you say?
+    options:
+    - Все було дуже смачно!
+    - Можна карткою?
+    - Без цукру.
+    - Ще одну каву, будь ласка.
+    correct: 0
+  - question: You want to know if a seat is free. What do you say?
+    options:
+    - Тут вільно?
+    - Ще одну каву, будь ласка.
+    - Рахунок, будь ласка.
+    - Що ви рекомендуєте?
+    correct: 0
+  - question: You want to ask if the dish is spicy. What do you say?
+    options:
+    - Це гостре?
+    - Це з м'ясом?
+    - Скільки коштує?
+    - Можна меню?
+    correct: 0
+  - question: You want to pay by card. What do you say?
+    options:
+    - Можна карткою?
+    - Є вегетаріанське меню?
+    - Що ви рекомендуєте?
+    - Це гостре?
+    correct: 0
+- id: dialogue-completion-cafe
+  type: fill-in
+  instruction: Доповніть діалог у кафе (Complete the cafe dialogue with correct phrases)
+  items:
+  - sentence: — Добрий день! Ось _____.
+    answer: меню
+    options:
+    - меню
+    - рахунок
+    - картка
+  - sentence: — Дякую. Що ви _____?
+    answer: рекомендуєте
+    options:
+    - рекомендуєте
+    - коштуєте
+    - платите
+  - sentence: — Борщ дуже _____.
+    answer: смачний
+    options:
+    - смачний
+    - гострий
+    - вільний
+  - sentence: — Добре, _____ борщ і хліб, будь ласка.
+    answer: мені
+    options:
+    - мені
+    - я
+    - мене
+  - sentence: — А що будете _____?
+    answer: пити
+    options:
+    - пити
+    - їсти
+    - читати
+  - sentence: — Каву з молоком. — Добре, одну _____.
+    answer: хвилинку
+    options:
+    - хвилинку
+    - годину
+    - каву
+workbook:
+- type: true-false
+  instruction: Правда чи ні? (True or False?)
+  items:
+  - statement: У кафе завжди автоматично приносять рахунок.
+    correct: false
+    explanation: In a formal cafe, the waiter rarely brings the bill automatically
+      so you do not feel rushed.
+  - statement: «Заказати» — це правильне українське слово.
+    correct: false
+    explanation: Always use the verb 'замовляти' to order. 'Заказати' is a Russian
+      calque and is incorrect in modern standard Ukrainian.
+  - statement: Слово «кафе» не змінює своє закінчення.
+    correct: true
+    explanation: It is an indeclinable foreign word, so the ending never changes.
+  - statement: В Україні рідко можна платити карткою.
+    correct: false
+    explanation: Ukraine has one of the highest rates of contactless payment in Europe.
+  - statement: Щоб попросити меню, можна сказати «Можна меню?».
+    correct: true
+    explanation: This is the polite and standard way to ask for the menu.
+  - statement: Чайові часто складають 10%.
+    correct: true
+    explanation: Leaving a 10% tip is standard for good service.
+- type: quiz
+  instruction: Оберіть правильну відповідь за текстом (Choose the correct answer based
+    on the text)
+  items:
+  - question: Що замовляє Ростик?
+    options:
+    - Борщ і хліб
+    - Каву з молоком
+    - Піцу і чай
+    - Салат і суп
+    correct: 0
+  - question: Що замовляє Іванка?
+    options:
+    - Каву з молоком і тістечко
+    - Борщ і хліб
+    - Воду з лимоном
+    - Суп і салат
+    correct: 0
+  - question: Як правильно сказати українською «to order»?
+    options:
+    - Замовляти
+    - Заказати
+    - Замовлять
+    - Заказувати
+    correct: 0
+  - question: Що означає питання «Тут вільно?»?
+    options:
+    - Is this seat free?
+    - Is the food free?
+    - Is the cafe open?
+    - Can I pay cash?
+    correct: 0
+  - question: Що каже офіціант, коли приносить їжу?
+    options:
+    - Смачного!
+    - Будь ласка!
+    - Дякую!
+    - Дуже смачно!
+    correct: 0
+  - question: Що найчастіше запитують при оплаті?
+    options:
+    - Карткою чи готівкою?
+    - Де гроші?
+    - Ви маєте термінал?
+    - З вас сто гривень.
+    correct: 0
+- type: group-sort
+  instruction: Як змінюються ці слова у знахідному відмінку? (How do these words change
+    in the Accusative case?)
+  groups:
+  - label: Змінюють закінчення на -у (Change ending to -у)
+    items:
+    - кава
+    - вода
+    - піца
+    - картка
+  - label: Не змінюються (Do not change)
+    items:
+    - чай
+    - борщ
+    - кафе
+    - меню
+    - тістечко
+    - рахунок
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  items:
   - sentence: Мені вода, будь ласка.
     error: вода
     correction: воду
     error_type: word
     options:
     - воду
-    - води
+    - воді
     - водою
-    explanation: 'Feminine nouns ending in -а take -у in the accusative: вода → воду.'
-  - sentence: Я буду піца.
+    explanation: Use the Accusative case for the object you are ordering (вода ->
+      воду).
+  - sentence: Я буду піца і чай.
     error: піца
     correction: піцу
     error_type: word
@@ -248,142 +285,106 @@ workbook:
     - піцу
     - піці
     - піцою
-    explanation: 'Feminine nouns ending in -а take -у in the accusative: піца → піцу.'
-  - sentence: Можна карточкою?
-    error: карточкою
-    correction: карткою
+    explanation: Піца is a feminine noun and changes to піцу in the Accusative case.
+  - sentence: Я хочу кава з молоком.
+    error: кава
+    correction: каву
     error_type: word
     options:
-    - карткою
-    - картою
-    - карточкою
-    explanation: The correct Ukrainian word is картка. 'Карточка' is a Russianism.
-  - sentence: Це гострий?
-    error: гострий
-    correction: гостре
+    - каву
+    - каві
+    - кавою
+    explanation: Use the Accusative case for the direct object you want (кава -> каву).
+  - sentence: Я заказую піцу.
+    error: заказую
+    correction: замовляю
     error_type: word
     options:
-    - гостре
-    - гострий
-    - гостра
-    explanation: '''Це гостре?'' asks about a dish in a neutral/neuter context. Use
-      the neuter adjective form гостре.'
-  - sentence: Рахунок, будьте ласка.
-    error: будьте
-    correction: будь
+    - замовляю
+    - рекомендую
+    - читаю
+    explanation: Use the correct Ukrainian verb 'замовляти' instead of the Russian
+      calque 'заказати'.
+  - sentence: Ми в ресторан.
+    error: ресторан
+    correction: ресторані
     error_type: word
     options:
-    - будь
-    - будьте
-    - будемо
-    explanation: The fixed polite phrase is 'будь ласка', not 'будьте ласка'.
-- id: translate-cafe-phrases
-  type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: The bill, please.
+    - ресторані
+    - ресторану
+    - рестораном
+    explanation: Location requires the Locative case (в ресторані).
+  - sentence: Можна мені рахунку, будь ласка?
+    error: рахунку
+    correction: рахунок
+    error_type: word
     options:
-    - text: Рахунок, будь ласка.
-      correct: true
-    - text: Меню, будь ласка.
-      correct: false
-    - text: Чайові, будь ласка.
-      correct: false
-  - source: Can I pay by card?
-    options:
-    - text: Можна карткою?
-      correct: true
-    - text: Можна готівкою?
-      correct: false
-    - text: Скільки коштує?
-      correct: false
-  - source: What do you recommend?
-    options:
-    - text: Що ви рекомендуєте?
-      correct: true
-    - text: Скільки коштує?
-      correct: false
-    - text: Це гостре?
-      correct: false
-  - source: Is this seat free?
-    options:
-    - text: Тут вільно?
-      correct: true
-    - text: Тут смачно?
-      correct: false
-    - text: Це з м'ясом?
-      correct: false
-  - source: Everything was very delicious!
-    options:
-    - text: Все було дуже смачно!
-      correct: true
-    - text: Все було дуже гостре!
-      correct: false
-    - text: Дякуємо, приходьте ще!
-      correct: false
-  - source: One more coffee, please.
-    options:
-    - text: Ще одну каву, будь ласка.
-      correct: true
-    - text: Мені каву, будь ласка.
-      correct: false
-    - text: Дайте, будь ласка, чай.
-      correct: false
-- id: quiz-accusative-review
-  type: quiz
-  instruction: Оберіть правильний варіант (Choose the correct option)
-  items:
-  - question: Which form is correct in 'Мені ___, будь ласка'?
-    options:
-    - піцу
-    - піца
-    - піці
-    - піцою
-    correct: 0
-  - question: Which Ukrainian word means 'tip/gratuity'?
-    options:
-    - чайові
     - рахунок
-    - готівка
-    - картка
-    correct: 0
-  - question: Which phrase means 'Without sugar'?
+    - рахунка
+    - рахунком
+    explanation: Рахунок is an inanimate masculine noun, so its Accusative form is
+      the same as the Nominative (рахунок).
+- type: quiz
+  instruction: Який це відмінок? (Which case is this?)
+  items:
+  - question: Я хочу **воду**.
     options:
-    - Без цукру.
-    - З лимоном.
-    - Залиште решту.
-    - Готівкою.
+    - Accusative
+    - Nominative
+    - Locative
+    - Dative
     correct: 0
-  - question: Which type of place is most formal?
+  - question: '**Вода** дуже смачна.'
     options:
-    - ресторан
-    - кафе
-    - кав'ярня
+    - Nominative
+    - Accusative
+    - Locative
+    - Dative
     correct: 0
-  - question: Which phrase asks to keep the change?
+  - question: Мені **піцу**, будь ласка.
     options:
-    - Залиште решту.
-    - Без цукру.
-    - Можна карткою?
+    - Accusative
+    - Nominative
+    - Locative
+    - Dative
     correct: 0
-  - question: Which word means 'waiter' in Ukrainian?
+  - question: '**Піца** тут дуже смачна.'
     options:
-    - офіціант
-    - рахунок
-    - замовляти
-    - меню
+    - Nominative
+    - Accusative
+    - Locative
+    - Dative
     correct: 0
-  - question: Masculine inanimate nouns in the accusative case...
+  - question: Я замовляю **борщ**.
     options:
-    - keep the same form as nominative
-    - add -а ending
-    - add -у ending
-    - add -ові ending
+    - Accusative
+    - Nominative
+    - Locative
+    - Dative
     correct: 0
-  - question: Which phrase means 'Is there a vegetarian menu?'
+  - question: Я буду **каву**.
     options:
-    - Є вегетаріанське меню?
-    - Це гостре?
-    - Це з м'ясом?
-    - Скільки коштує?
+    - Accusative
+    - Nominative
+    - Locative
+    - Dative
     correct: 0
+- type: order
+  instruction: Розставте репліки діалогу в правильному порядку (Put the dialogue lines
+    in the correct order)
+  items:
+  - — Добрий день! Можна меню?
+  - — Добрий день. Ось, будь ласка.
+  - — Що ви рекомендуєте?
+  - — Борщ дуже смачний.
+  - — Добре, я буду борщ і хліб.
+  - — А що будете пити?
+  - — Каву з молоком, будь ласка.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6

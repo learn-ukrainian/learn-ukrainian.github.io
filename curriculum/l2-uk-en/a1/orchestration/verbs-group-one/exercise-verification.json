@@ -1,24 +1,151 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 66,
+  "grounded_items": 44,
+  "ungrounded": [
+    {
+      "word": "готуємо",
+      "exercise_type": "match-up",
+      "context": "готуємо",
+      "role": "context"
+    },
+    {
+      "word": "слухаєте",
+      "exercise_type": "error-correction",
+      "context": "слухаєте",
+      "role": "answer"
+    },
+    {
+      "word": "гуляють",
+      "exercise_type": "match-up",
+      "context": "гуляють",
+      "role": "context"
+    },
+    {
+      "word": "працює",
+      "exercise_type": "fill-in",
+      "context": "працює",
+      "role": "answer"
+    },
+    {
+      "word": "гуляємо",
+      "exercise_type": "fill-in",
+      "context": "гуляємо",
+      "role": "answer"
+    },
+    {
+      "word": "готуєте",
+      "exercise_type": "fill-in",
+      "context": "готуєте",
+      "role": "answer"
+    },
+    {
+      "word": "гуляєш",
+      "exercise_type": "fill-in",
+      "context": "гуляєш",
+      "role": "answer"
+    },
+    {
+      "word": "знає",
+      "exercise_type": "fill-in",
+      "context": "знає",
+      "role": "answer"
+    },
+    {
+      "word": "слухаю",
+      "exercise_type": "fill-in",
+      "context": "слухаю",
+      "role": "answer"
+    },
+    {
+      "word": "робите",
+      "exercise_type": "fill-in",
+      "context": "Що ви робите? — Ми ____ книгу.",
+      "role": "context"
+    },
+    {
+      "word": "працюють",
+      "exercise_type": "fill-in",
+      "context": "працюють",
+      "role": "answer"
+    },
+    {
+      "word": "роблять",
+      "exercise_type": "fill-in",
+      "context": "Що вони роблять? — Вони ____ в офісі.",
+      "role": "context"
+    },
+    {
+      "word": "гуляє",
+      "exercise_type": "fill-in",
+      "context": "гуляє",
+      "role": "answer"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)",
+      "role": "context"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)",
+      "role": "context"
+    },
+    {
+      "word": "анно",
+      "exercise_type": "quiz",
+      "context": "Анно, ____ працюєш в офісі?",
+      "role": "context"
+    },
+    {
+      "word": "максиме",
+      "exercise_type": "quiz",
+      "context": "Максиме, що ____ робиш?",
+      "role": "context"
+    },
+    {
+      "word": "олено",
+      "exercise_type": "quiz",
+      "context": "Олено, ____ готуєш вечерю?",
+      "role": "context"
+    },
+    {
+      "word": "готуєш",
+      "exercise_type": "quiz",
+      "context": "Олено, ____ готуєш вечерю?",
+      "role": "context"
+    },
+    {
+      "word": "юлю",
+      "exercise_type": "quiz",
+      "context": "Юлю, ____ читаєш книгу?",
+      "role": "context"
+    },
+    {
+      "word": "слухаєш",
+      "exercise_type": "error-correction",
+      "context": "Ви слухаєш музику.",
+      "role": "context"
+    },
+    {
+      "word": "вивчає",
+      "exercise_type": "true-false",
+      "context": "Максим вивчає українську.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 6,
     "not_tested": [
       "вечеря",
       "вивчати",
-      "готувати",
       "грати",
-      "гуляти",
-      "знати",
       "малювати",
       "музика",
-      "працювати",
-      "робити",
-      "слухати",
-      "читати"
+      "робити"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,0 +1,181 @@
+vocabulary:
+- word: бу́ду
+  translation: I will (future auxiliary verb)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прибира́ти
+  translation: to clean
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кварти́ра
+  translation: apartment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кафе́
+  translation: cafe
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: план
+  translation: plan
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ти́ждень
+  translation: week
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ві́льний
+  translation: free (available)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зу́стріч
+  translation: meeting
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вечі́рка
+  translation: party
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: допі́зна
+  translation: until late
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: звича́йно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кіно́
+  translation: cinema
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вчи́ти
+  translation: to study/learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зустрі́немося
+  translation: let's meet
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: з задоволенням
+  translation: with pleasure
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на жаль
+  translation: unfortunately
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: понеді́лок
+  translation: Monday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вівто́рок
+  translation: Tuesday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: середа́
+  translation: Wednesday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: четве́р
+  translation: Thursday
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: п'я́тниця
+  translation: Friday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мо́же
+  translation: maybe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: задово́лення
+  translation: pleasure, satisfaction
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: спа́ти
+  translation: to sleep
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вдо́ма
+  translation: at home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: сам / сама
+  translation: alone (m/f)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Може, підемо?
+  translation: Maybe we'll go?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Давай зустрінемося!
+  translation: Let's meet!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: На жаль, не можу.
+  translation: Unfortunately, I cannot.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

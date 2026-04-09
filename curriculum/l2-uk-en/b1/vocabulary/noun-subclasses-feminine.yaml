@@ -1,42 +1,60 @@
 vocabulary:
-- word: відмі́на
-  translation: declension type
+- word: мідь
+  translation: copper
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: тре́тя відмі́на
-  translation: third declension
+- word: мо́лодь
+  translation: youth (collective)
   expression: false
-  pos: ''
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́міш
+  translation: mixture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ро́зкіш
+  translation: luxury
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ві́дповідь
+  translation: answer
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лють
+  translation: fury
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мить
+  translation: instant
+  expression: false
+  pos: дієсл.
   gender: ''
-  verified: false
-- word: жіно́чий рід
-  translation: feminine gender
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: подво́єння
-  translation: doubling
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
-- word: ніч
-  translation: night
+- word: гі́дність
+  translation: dignity
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: піч
-  translation: oven
+- word: ні́жність
+  translation: tenderness
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: сіль
-  translation: salt
+- word: ще́дрість
+  translation: generosity
   expression: false
   pos: ім.
   gender: ж.
@@ -65,20 +83,56 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: мо́лодь
-  translation: youth
+- word: ніч
+  translation: night
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: мідь
-  translation: copper
+- word: піч
+  translation: oven
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: кров
-  translation: blood
+- word: сіль
+  translation: salt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́ти
+  translation: mother (III declension form)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: подво́єння
+  translation: doubling (consonant doubling)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нульове́ закі́нчення
+  translation: zero ending
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: відмі́на
+  translation: declension type
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: го́рдість
+  translation: pride
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: му́дрість
+  translation: wisdom
   expression: false
   pos: ім.
   gender: ж.
@@ -95,110 +149,128 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ма́ти
-  translation: mother
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: го́рдість
-  translation: pride
+- word: наді́йність
+  translation: reliability
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: му́дрість
-  translation: wisdom
+- word: незале́жність
+  translation: independence
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ні́жність
-  translation: tenderness
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гі́дність
-  translation: dignity
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ще́дрість
-  translation: generosity
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ві́дповідь
-  translation: answer
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лють
-  translation: fury
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мить
-  translation: instant
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ро́зкіш
-  translation: luxury
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: су́міш
-  translation: mixture
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: честь
-  translation: honor
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: щи́рість
-  translation: sincerity
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ві́чність
-  translation: eternity
+- word: міць
+  translation: might, power
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: путь
-  translation: way/path
+  translation: way, path
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: біль
-  translation: pain
+- word: жовч
+  translation: bile, bitterness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: не́хворощ
+  translation: mugwort
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: жіночий рід
+  translation: feminine gender
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: однина́
+  translation: singular
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: множина́
+  translation: plural
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: при́голосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: голосни́й
+  translation: vowel
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: су́фікс
+  translation: suffix
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: шлях
-  translation: way/path
+- word: осно́ва
+  translation: stem (of a word)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чергува́ння
+  translation: alternation (of sounds)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: апо́стро́ф
+  translation: apostrophe
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: нічна зміна
-  translation: night shift
+- word: істо́та
+  translation: animate being
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: неісто́та
+  translation: inanimate object
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: з великою любов'ю
+  translation: with great love
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з великою радістю
+  translation: with great joy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: золота осінь
+  translation: golden autumn
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пишаюся матір'ю
+  translation: I am proud of [my] mother
   expression: true
   pos: ''
   gender: ''

@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Missed two recommended vocabulary words (`похідне слово`, `мотивувальне
+    слово`), which will be injected. Note: The writer brilliantly ignored the plan''s
+    incorrect claim that `г->ж` is a "second palata'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Multiple critical factual errors: teaching the Russian `бес-` spelling
+    rule, hallucinating words like `піддашний` and `здоровенюча`, and assigning the
+    wrong base verb (`думати`) to `кмітливий`. `існую'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent pedagogical flow. The progression from explaining the concept
+    to providing concrete examples before showing the rule is highly effective.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required words used naturally. Two recommended words missing (fixed
+    in revision).
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Markers are placed perfectly, but the IDs deviate from the plan's required
+    focus topics.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and avoids generic or gamified filler.
+    "Уявіть, що ви знаєте лише одне базове слово..." is a great hook.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 5202 words. All sections present, well-formatted, clean markdown.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explicitly calls out the Russian calque `-ов` for male names (like `Миколов`
+    instead of `Миколин`), which is excellent decolonized pedagogy.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural and contextually appropriate art gallery dialogue successfully
+    incorporating the target suffixal adjectives.
+findings: []

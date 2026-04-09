@@ -2,43 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Missed the requirement to include Захарійчук's vowel notation `[•]`. Expanded
-    the Большакова quote beyond the plan's boundaries. Missed recommended vocabulary
-    "тато" and "сон".
+  score: 10
+  evidence: Covers all required points including quotes from Большакова, Захарійчук,
+    and Літвінова, successfully integrating the core phonetic theory.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'CRITICAL: "Привіт, Оля!" uses nominative instead of vocative. CRITICAL:
-    Included the non-standard word "точуть" in the poem quote.'
+  score: 10
+  evidence: No Russianisms or calques. Accurate descriptions of Ukrainian phonetics,
+    including hard/soft distinctions and sound-to-letter counts.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent breakdown of the difference between sounds and letters.
+  score: 9
+  evidence: Excellent textbook-style instruction. Uses poems and rules from real Ukrainian
+    grade schools. Deducting 1 point because some exercises testing consonants were
+    placed before the consonant section.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Used all required vocabulary naturally, but missed 2 recommended words.
+  score: 10
+  evidence: Seamlessly integrates required vocabulary (звук, літера, привіт, як справи,
+    добре, чудово) and contextualizes examples (мама, молоко, око).
 - dimension: 5
   name: Exercise quality
-  score: 6
-  evidence: Missing marker (`match-up`), hallucinated marker (`match-false-friends`),
-    duplicated marker (`group-sort`), and poor placement (`quiz` at the very end).
+  score: 8
+  evidence: The activities themselves follow the plan, but `group-sort-sounds` and
+    `match-up-letters` are placed prematurely at the end of the "Vowels" section.
+    They test consonants, which are not introduced unti
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: Very natural, warm, and clear tone. Does not rely on generic hype.
+  evidence: Professional yet encouraging teacher tone. Uses clear, concrete explanations
+    (e.g., comparing letters to sheet music and sounds to physical notes).
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean formatting, headings match the plan, word count is excellent.
+  evidence: Follows the exact H2 heading structure. Clean formatting. Word count of
+    1716 comfortably exceeds the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: References Ukrainian textbooks perfectly, capturing the authentic way
-    the language is taught to native speakers.
+  evidence: Accurate cultural notes, particularly regarding the letter Ґ and its historical
+    suppression, framing it as a symbol of linguistic identity.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: Natural phrasing, but compromised by the vocative case error.
+  score: 10
+  evidence: The dialogue is brief but natural, appropriately demonstrating gendered
+    responses ("Рада/Радий тебе бачити") alongside standard greetings.
 findings: []

@@ -1,0 +1,331 @@
+vocabulary:
+- word: ру́брика
+  translation: rubric
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прога́лина
+  translation: gap (in knowledge)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: повто́рення
+  translation: review
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: самооці́нка
+  translation: self-assessment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́мплексний
+  translation: comprehensive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: діагно́стика
+  translation: diagnostics
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: семантичні ролі
+  translation: semantic roles
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: частко́вість
+  translation: partitive function
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: склянка води
+  translation: a glass of water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: трохи цукру
+  translation: a little sugar
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бажати успіху
+  translation: to wish success
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шукати правди
+  translation: to seek truth
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: боятися іспиту
+  translation: to fear an exam
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене немає часу
+  translation: I have no time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ятнадцятого березня
+  translation: on the fifteenth of March
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: цього тижня
+  translation: this week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: безособові конструкції
+  translation: impersonal constructions
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йому вдалося знайти
+  translation: he managed to find
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нам довелося чекати
+  translation: we had to wait
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: працювати архітектором
+  translation: to work as an architect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стати переможцем
+  translation: to become a winner
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шлях руху
+  translation: path of movement
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їхати дорогою
+  translation: to drive along the road
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іти парком
+  translation: to walk through the park
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на
+  translation: for (planned duration)
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: него́да
+  translation: bad weather
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зато́ри
+  translation: traffic jams
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: із-за хмар
+  translation: from behind the clouds
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зошит для записів
+  translation: notebook for notes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сходити за кавою
+  translation: to go fetch coffee
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: через те що
+  translation: due to the fact that
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: завдяки тому що
+  translation: thanks to the fact that
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: імені та по батькові
+  translation: name and patronymic
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пане професоре
+  translation: Mr. Professor
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: двоє людей
+  translation: two people
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: троє дітей
+  translation: three children
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перший поверх
+  translation: first floor
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: трети́на
+  translation: a third
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: півтора́
+  translation: one and a half
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: яки́йсь
+  translation: some kind of
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ніхто́
+  translation: nobody
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: себе́
+  translation: oneself
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: собі́
+  translation: for oneself / by oneself
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: житловий ринок
+  translation: housing market
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вла́сник
+  translation: owner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: за розумні гроші
+  translation: for reasonable money
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: заради спокою
+  translation: for the sake of peace
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: інве́стор
+  translation: investor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лінгвістичні привиди
+  translation: linguistic ghosts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сміятися з когось
+  translation: to laugh at someone
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: навча́тися
+  translation: to study / learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: згідно з
+  translation: according to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відповідно до
+  translation: in accordance with
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дієприкме́тник
+  translation: participle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієприслі́вник
+  translation: gerund
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

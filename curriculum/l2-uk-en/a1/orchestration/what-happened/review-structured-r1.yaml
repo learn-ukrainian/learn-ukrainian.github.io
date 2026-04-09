@@ -3,55 +3,48 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: All 4 content_outline sections present. Dialogue 1 covers all plan points
-    (робив/робила contrast, gender note). Dialogue 2 adapts the plan — correctly uses
-    провів/провела but drops "з подругою. Ми їли
+  evidence: 'The generated text closely follows the plan, but misses two specific
+    elements: the reference to "Grade 3-4 textbooks" in the *Минулий час* section,
+    and the exclamation "— Як смачно!" at the end of Dia'
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: All verb forms VESUM-verified (33/33 correct). No Russianisms, Surzhyk,
-    or calques found. However, the statement "the ending tells you the speaker's gender"
-    after Dialogue 1 is imprecise — it tells yo
+  evidence: The text incorrectly claims that the shortened reflexive suffix **-сь**
+    (as in "дивилася" -> "дивилась") is dialectal. In standard literary Ukrainian,
+    both forms are correct, and **-сь** is frequently
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'Excellent PPP flow: situation (dialogues) → pattern (formation table,
-    comparison with present tense) → practice (core verb table, time-word sentences,
-    model exchanges). The present/past comparison tab'
+  evidence: Excellent PPP flow. Introduces past tense through realistic dialogues
+    first, then extracts the gender-based mechanical rule, contrasting it clearly
+    with present tense person-based endings.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'All 8 required vocab present in prose: учора ✓, робити ✓, читати ✓, працювати
-    ✓, гуляти ✓, готувати ✓, дивитися ✓, говорити ✓. Recommended vocab: минулий (in
-    "минулого тижня") ✓, вихідні ✓, субота ✓, '
+  score: 10
+  evidence: All required words (учора, робити, читати, працювати, гуляти, готувати,
+    дивитися, говорити) and recommended words are included naturally in context.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 activity markers for 3 plan hints — adequate coverage. All placed after
-    relevant teaching. Marker IDs logically map to plan activity_hints: fill-in (gender
-    endings), matching (pronoun→ending), fill-'
+  score: 10
+  evidence: The three activity markers are present, correctly match the plan's hints,
+    and are placed logically after the relevant instruction.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: No motivational openers, no meta-commentary, no "let us explore." Dialogues
-    are natural workplace/weekend conversations. The tip box ("Four endings — that's
-    all") is genuinely helpful, not filler. Spe
+  evidence: The tone is warm and encouraging. Differences between English ("I was
+    doing") and Ukrainian are addressed clearly.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 sections from plan present in correct order: Dialogues → Минулий
-    час → Практика → Summary. Clean markdown, no stray tags. Word count 1513 in range
-    (target 1200). No duplicate summaries.'
+  evidence: Word count is 1468 (target 1200). All sections are present and ordered
+    correctly.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. No "like Russian but..." comparisons.
-    English comparison is appropriate ("English has no equivalent — 'I read' and 'she
-    read' look the same regardless of gender")
+  evidence: Respectful and accurate representation.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Both dialogues are natural multi-turn conversations with named speakers
-    and distinct voices. Real situations: Monday coffee-machine catch-up, weekend
-    comparison. Culturally appropriate responses ("Як '
+  score: 10
+  evidence: Dialogues are natural, correctly formatted with named speakers, and demonstrate
+    the target grammar smoothly.
 findings: []

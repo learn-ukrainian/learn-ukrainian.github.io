@@ -1,64 +1,4 @@
 vocabulary:
-- word: прокидатися
-  translation: to wake up
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вмива́тися
-  translation: to wash one's face
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зачі́суватися
-  translation: to comb one's hair
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: проща́тися
-  translation: to say goodbye
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: соро́митися
-  translation: to be ashamed
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: се́рдитися
-  translation: to be angry
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: листува́тися
-  translation: to correspond with each other
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: поверта́тися
-  translation: to return
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вчи́тися
-  translation: to study / to learn
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: здава́тися
-  translation: to seem
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
 - word: зворотне дієслово
   translation: reflexive verb
   expression: true
@@ -71,26 +11,62 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: власне зворотні
-  translation: truly reflexive (verbs)
+- word: власне зворотні дієслова
+  translation: truly reflexive verbs
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: взаємні
-  translation: reciprocal (verbs)
+- word: взаємні зворотні дієслова
+  translation: reciprocal verbs
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: безособо́вий
-  translation: impersonal
+- word: безособові зворотні дієслова
+  translation: impersonal reflexive verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пасивноподібні дієслова
+  translation: passive-like verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зворотний займенник
+  translation: reflexive pronoun
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перехі́дність
+  translation: transitivity
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інфініти́в
+  translation: infinitive
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: милозву́чність
+  translation: euphony
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: ми́тися
   translation: to wash oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash one's face
   expression: false
   pos: дієсл.
   gender: ''
@@ -101,8 +77,38 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: зачі́суватися
+  translation: to comb one's hair
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: голи́тися
+  translation: to shave oneself
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: збира́тися
   translation: to get ready / to intend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́тися
+  translation: to study / to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: навча́тися
+  translation: to study
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́читися
+  translation: to see each other
   expression: false
   pos: дієсл.
   gender: ''
@@ -113,14 +119,50 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: хвилюва́тися
-  translation: to worry
+- word: листува́тися
+  translation: to correspond
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: дивува́тися
-  translation: to be surprised / amazed
+- word: обніма́тися
+  translation: to hug each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: цілува́тися
+  translation: to kiss each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: віта́тися
+  translation: to greet each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знайо́митися
+  translation: to get acquainted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спілкува́тися
+  translation: to communicate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: домовля́тися
+  translation: to agree / to arrange
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проща́тися
+  translation: to say goodbye
   expression: false
   pos: дієсл.
   gender: ''
@@ -137,36 +179,6 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: знайо́митися
-  translation: to get acquainted
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ми́ти
-  translation: to wash (something)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вчи́ти
-  translation: to teach
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ба́чити
-  translation: to see
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ба́читися
-  translation: to see each other / to appear
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
 - word: смія́тися
   translation: to laugh
   expression: false
@@ -179,70 +191,64 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: насоло́джуватися
-  translation: to enjoy
+- word: се́рдитися
+  translation: to be angry
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: взува́тися
-  translation: to put on shoes
+- word: дивува́тися
+  translation: to be surprised / amazed
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: голи́тися
-  translation: to shave
+- word: хвилюва́тися
+  translation: to worry
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: цілува́тися
-  translation: to kiss each other
+- word: соро́митися
+  translation: to be ashamed
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: спереча́тися
-  translation: to argue
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: віта́тися
-  translation: to greet each other
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ті́шитися
+- word: раді́ти
   translation: to rejoice
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: засму́чуватися
-  translation: to become sad
+- word: ті́шитися
+  translation: to rejoice / to be glad
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: Йому не сидиться
-  translation: He is restless
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Нам хочеться
-  translation: We feel like / We want
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: чита́тися
-  translation: to be read
+- word: закоха́тися
+  translation: to fall in love
   expression: false
   pos: дієсл.
+  gender: ''
+  verified: true
+- word: здава́тися
+  translation: to seem
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: йому хочеться
+  translation: he feels like
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нам здається
+  translation: it seems to us
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: будува́тися
@@ -251,20 +257,8 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: милува́тися
-  translation: to admire
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пройти́ся
-  translation: to have a walk
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: запі́знюватися
-  translation: to be late
+- word: чита́тися
+  translation: to be read / to read easily
   expression: false
   pos: дієсл.
   gender: ''
@@ -275,52 +269,40 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: підво́дитися
-  translation: to get up
+- word: усміха́тися
+  translation: to smile
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: чистити зуби
-  translation: to brush teeth
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: сні́дати
-  translation: to have breakfast
+- word: милува́тися
+  translation: to admire
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: спілкува́тися
-  translation: to communicate / to chat
+- word: поверта́тися
+  translation: to return
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: домовля́тися
-  translation: to agree / to arrange
+- word: поверта́ти
+  translation: to turn
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: вибачте
-  translation: excuse me / I'm sorry
-  expression: true
-  pos: ''
+- word: ви́бачте
+  translation: excuse me
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: пробачте
-  translation: forgive me / I'm sorry
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: перепрошую
-  translation: I beg your pardon / excuse me
-  expression: true
-  pos: ''
+- word: перепро́шую
+  translation: I apologize
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
 - word: дякувати
@@ -329,32 +311,20 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: потребува́ти
-  translation: to need / to require
+- word: вибача́тися
+  translation: to excuse oneself
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: зра́джувати
-  translation: to betray
+- word: кермо́
+  translation: steering wheel
   expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: смі́ти
-  translation: to dare
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: збира́ти
-  translation: to collect / to gather
-  expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
 - word: пасивний стан
-  translation: Passive Voice
+  translation: passive voice
   expression: true
   pos: ''
   gender: ''

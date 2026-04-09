@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Deducting points because the plan specifically requested `збережене(n)`
+    in the dialogue to demonstrate singular neuter gender agreement (`motivation:
+    ''Passive participles: відреставрований(m), написан'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: Deducting heavily for two critical factual errors. First, `зупинити` is
+    listed under the `[в] → [вл]` alternation rule, which is phonetically impossible
+    since its stem ends in `[н]`. Second, `пораджен
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent overall PPP flow and explanations, but a major deductive point
+    goes to the categorization of `одягнути`. It was presented as an example of a
+    stem ending in `-у-` or `-ю-`, despite containing
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Almost perfect. All required vocabulary items (`пасивний дієприкметник`,
+    `зроблений`, `чергування`, etc.) were integrated smoothly without resorting to
+    bare lists. The only minor omission was the word
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are strategically placed immediately after the relevant
+    grammar concepts. The distribution and focus of the markers are excellent.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, professional, and authentically "teacher-like" without
+    relying on gamified corporate fluff. It encourages the learner naturally.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count of 4068 correctly hits the 4000-word target. All sections
+    outline in the plan are present, properly formatted with H2 headings, and logical.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The use of culturally resonant examples (Mariinskyi Palace, specific architectural
+    references, vyshyvanka descriptions) grounds the grammar perfectly in Ukrainian
+    reality.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue represents a highly realistic, naturally flowing tour-guide
+    interaction. It embeds multiple passive participles seamlessly, though it missed
+    the specific neuter agreement required.
+findings: []

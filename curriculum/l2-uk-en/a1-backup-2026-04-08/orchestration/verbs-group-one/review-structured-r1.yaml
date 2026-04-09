@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all dialogue points, includes conjugation tables for Group I verbs,
+    uses the 6 essential verbs, and matches the summary section.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains a critical vocative error ("Юле" instead of "Юлю") and incorrectly
+    claims the letter "є" is present in the ending "-ють". All other Ukrainian forms
+    are correct.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of stems ("готу-") and endings. PPP pedagogy is very
+    well applied. The only issue is the slight inaccuracy in generalizing the "є"
+    vowel to the "вони" form.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required verbs (читати, знати, працювати, слухати, гуляти, готувати)
+    are introduced naturally in dialogues and drills.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed correctly immediately following the corresponding explanations.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Tone is warm and encouraging. "A helpful anchor to remember: ти завжди
+    -єш" is great teacher-like framing without being gamified.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is within limits (1295 words), all H2 headings match the plan
+    perfectly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses natural names (Юля, Сашко, Марина, Андрій) and plausible situations.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel natural, conversational, and successfully model the target
+    grammar.
+findings: []

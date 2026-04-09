@@ -12,8 +12,8 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Observe from '@site/src/components/Observe';
 import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
@@ -22,113 +22,182 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <TabItem label="Урок">
 
 ## Діало́ги (Dialogues)
-It's Taras's birthday — **Тара́су вісімна́дцять ро́кі́в** (Taras is eighteen) — and everyone is at the party. He spots friends across the room and calls them over. Listen to how every name changes when someone is called directly.
+
+Imagine you are at a lively birthday party in Ukraine. The traditional music is playing loudly, people are talking in groups, and you need to get your friend's attention across the crowded room. In English, you would simply shout their name exactly as it is written. In Ukrainian, calling out to someone or addressing them directly requires a specific grammatical shift. You cannot just use their regular, dictionary-form name; you must change its ending to show that you are talking to them, rather than about them. 
+
+Let us look at a typical interaction as guests arrive at the party. The birthday person is greeting friends as they walk through the door. Notice how the names change when they speak directly to each other. Pay special attention to how **Оле́на** (Olena), **Тара́с** (Taras), and **Андрі́й** (Andriy) are addressed.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> Оле́но, приві́т! Як спра́ви? *(Olena, hi! How are you?)*</div>
+<div class="dialogue-line"><span class="speaker">Імени́нник:</span> **Оле́но, приві́т! Як спра́ви?** *(Olena, hi! How are you?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> **До́бре, дякую, Тара́се! А в тебе́?** *(Good, thanks, Taras! And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оле́на:</span> До́бре, дякую, Тара́се! А в тебе́? *(Good, thanks, Taras! And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Теж добре. Олено, ти зна́єш мого бра́та?** *(Also good. Olena, do you know my brother?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Олена:</span> **Ні.** *(No.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Теж добре! Олено, ти зна́єш мого бра́та? *(Also good! Olena, do you know my brother?)*</div>
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Андрію, хо́ди сюди́! Це Олена.** *(Andriy, come here! This is Olena.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Ні. *(No.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Андрію, ходи́ сюди́! Це Олена. *(Andrii, come here! This is Olena.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Олено, це Андрі́й. *(Olena, this is Andrii.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Привіт, Андрію! *(Hi, Andrii!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Привіт! Ра́дий ба́чити! *(Hi! Glad to see you!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Олено, це Андрій.** *(Olena, this is Andriy.)*</div>
 
 </div>
 
-Notice the names: **Олена** became **Олено**, **Тарас** became **Тарасе**, **Андрій** became **Андрію**. Every single time someone was addressed directly, the name changed its ending.
-Now the scene shifts. A family is getting ready to leave the house — everyone is busy, everyone is calling everyone else.
+Later at the same party, the birthday person interacts with different family members in the kitchen. Family words also change their endings when you address them directly. Pay attention to how the words for mom, dad, son, daughter, and grandma transform in conversation when someone is asking a question or giving an instruction.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Марко́:</span> Ма́мо, де мій телефо́н? *(Mom, where's my phone?)*</div>
+<div class="dialogue-line"><span class="speaker">Син:</span> **Ма́мо, де мій телефо́н?** *(Mom, where is my phone?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Ма́ма:</span> **На столі́, синку́.** *(On the table, son.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ма́ма:</span> На столі́, синку́. *(On the table, son.)*</div>
+<div class="dialogue-line"><span class="speaker">Дочка́:</span> **Тату́, а де ключі́?** *(Dad, and where are the keys?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Та́то:</span> **У кише́ні, до́чко.** *(In the pocket, daughter.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оля:</span> Тату́, а де ключі́? *(Dad, where are the keys?)*</div>
+<div class="dialogue-line"><span class="speaker">Син:</span> **Бабу́сю, ми йдемо́!** *(Grandma, we are going!)*</div>
 
+<div class="dialogue-line"><span class="speaker">Бабу́ся:</span> **Добре, бу́дьте обере́жні!** *(Good, be careful!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Та́то:</span> У кише́ні, до́чко. *(In the pocket, daughter.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Бабу́сю, ми йдемо́! *(Grandma, we're going!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Бабу́ся:</span> Добре, бу́дьте обере́жні! *(Okay, be careful!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Діду́сю, до поба́чення! *(Grandpa, goodbye!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Бабуся:</span> **До поба́чення, Андрію!** *(Goodbye, Andriy!)*</div>
 
 </div>
 
-Family vocatives here: **мама** → **мамо**, **тато** → **тату**, **сино́к** → **синку**, **дочка́** → **дочко**, **бабуся** → **бабусю**, **діду́сь** → **дідусю**. Every name and family word changed when someone was spoken to directly.
-Notice how every name CHANGED. **Олена** became **Олено**. **Тарас** became **Тарасе**. **Мама** became **мамо**. This is **кли́чний відмі́нок** (the vocative case) — the "calling case." The next two sections explain exactly how the pattern works.
-## Кличний відмінок (The Vocative Case)
-Ukrainian has seven grammatical cases, and one of them — **кличний відмінок** (the vocative case) — exists specifically for calling someone or addressing them directly. In English, you just say the name as-is: "Olena, come here!" In Ukrainian, the name's ending changes: **Олена** → **Олено, ходи сюди!** This is not a formal or old-fashioned feature. It is everyday, mandatory speech. Every Ukrainian speaker uses it constantly — in texts, at home, with friends, with strangers. The Grade 4 textbook by Zabolotnyi uses a helpful shorthand: **Кл. (!)** — the exclamation mark is your memory hook. You're calling someone, so the ending changes.
-Here is the core distinction. Compare these two sentences:
-- **Олена прийшла́.** *(Olena arrived.)* — nominative case, talking ABOUT her
-- **Олено, ходи сюди!** *(Olena, come here!)* — vocative case, talking TO her
-In the first sentence, **Олена** is the subject — you are describing what she did. In the second, **Олено** is being addressed — you are speaking directly to her. Using the nominative form to address someone in Ukrainian sounds wrong. It is roughly like saying "Hey, him!" instead of "Hey, you!" in English. Ukrainians immediately notice if you skip the vocative — it marks you as a non-native speaker.
-The vocative is alive and vibrant in modern Ukrainian. You hear it everywhere: **Слу́хай, Тарасе!** (Listen, Taras!), **Ви́бачте, па́не!** (Excuse me, sir!), **Дякую, мамо!** (Thanks, Mom!). In songs, in text messages, in street conversations — the vocative is one of the ways Ukrainian encodes human connection directly into grammar. Every time you address someone, the language itself changes shape to acknowledge that relationship.
-Go back to the dialogues above and look at every vocative pair: **Олена** → **Олено**, **Тарас** → **Тарасе**, **Андрій** → **Андрію**, **мама** → **мамо**, **тато** → **тату**, **бабуся** → **бабусю**, **синок** → **синку**, **дочка** → **дочко**. Each speaker used the correct form automatically — that natural, effortless use is the goal. The patterns below will show you exactly how to form it.
-<Quiz client:only="react" questions={[{"question": "Як правильно звернутися до Олени? (How do you address Olena directly?)", "options": [{"text": "Олено", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Оленці", "correct": false}]}, {"question": "Як Тарас кличе Андрія у діалозі? (How does Taras call Andrii?)", "options": [{"text": "Андрію", "correct": true}, {"text": "Андрій", "correct": false}, {"text": "Андріє", "correct": false}]}, {"question": "Мама каже: 'На столі, ___.'", "options": [{"text": "синку", "correct": true}, {"text": "синок", "correct": false}, {"text": "синові", "correct": false}]}, {"question": "Яке речення НЕ використовує кличний відмінок? (Which sentence does NOT use the vocative?)", "options": [{"text": "Олена прийшла.", "correct": true}, {"text": "Андрію, привіт!", "correct": false}, {"text": "Мамо, де ключі?", "correct": false}]}, {"question": "Як змінюється 'мама' у кличному відмінку?", "options": [{"text": "мамо", "correct": true}, {"text": "мами", "correct": false}, {"text": "мамі", "correct": false}]}, {"question": "Як звернутися до Тараса? (How do you address Taras?)", "options": [{"text": "Тарасе", "correct": true}, {"text": "Тарас", "correct": false}, {"text": "Тарасу", "correct": false}]}, {"question": "Оля каже бабусі: '_____, ми йдемо!'", "options": [{"text": "Бабусю", "correct": true}, {"text": "Бабуся", "correct": false}, {"text": "Бабусі", "correct": false}]}, {"question": "Коли ми використовуємо кличний відмінок? (When do we use the vocative?)", "options": [{"text": "Коли говоримо ДО людини", "correct": true}, {"text": "Коли говоримо ПРО людину", "correct": false}, {"text": "Коли питаємо про людину", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+Did you notice the consistent pattern of direct address in those two dialogues? When the speaker talked about someone, they used the regular name, like saying **Це Олена** (This is Olena) or **Це Андрій** (This is Andriy). But when they spoke directly to them, **Олена** (Olena) became **Олено** (Olena), **Тарас** (Taras) became **Тарасе** (Taras), and **мама** (mom) became **мамо** (mom). This shift is not an optional stylistic choice; it is a fundamental rule of natural Ukrainian communication.
+
+*   **До́брий ра́нок, па́не Іва́не!** *(Good morning, Mr. Ivan!)*
+*   **Добрий ве́чір, па́ні Окса́но!** *(Good evening, Ms. Oksana!)*
+*   **До побачення, вчи́телю!** *(Goodbye, teacher!)*
+*   **На добра́ніч, синку!** *(Good night, son!)*
+*   **Смачно́го, дру́зі!** *(Bon appetit, friends!)*
+
+<FillIn client:only="react" items={[{"sentence": "— _____, привіт! Як справи?", "answer": "Олено", "options": ["Олено", "Олена"]}, {"sentence": "— Добре, дякую, _____!", "answer": "Тарасе", "options": ["Тарасе", "Тарас"]}, {"sentence": "— _____, де мій телефон?", "answer": "Мамо", "options": ["Мамо", "Мама"]}, {"sentence": "— На столі, _____.", "answer": "синку", "options": ["синку", "синок"]}, {"sentence": "— _____, ми йдемо!", "answer": "Бабусю", "options": ["Бабусю", "Бабуся"]}, {"sentence": "— Добре, до побачення, _____!", "answer": "Андрію", "options": ["Андрію", "Андрій"]}]} instruction={"Доповніть діалог правильними словами (Complete the dialogue with the correct words)"} />
+
+## Кли́чний відмі́нок (The Vocative Case)
+
+Ukrainian grammar features seven cases, and one of them is used exclusively for calling, addressing, or getting someone's attention. This is called the **кличний відмінок** (Vocative Case). As you already know, Ukrainian relies on changing word endings to show grammatical relationships within a sentence. While the other six cases indicate who is doing an action or where an object is located, the vocative case serves a purely communicative function. In English you just say the name: "Olena, come here!". In Ukrainian the name CHANGES: **Олено, ходи сюди!** (Olena, come here!). When you address a person, you must alter their name or title to match this specific grammatical role. This is not optional — Ukrainians always use the vocative when addressing someone.
+
+In Ukrainian elementary schools, fourth-grade students learn a simple but effective trick to remember when to use this form. Teachers introduce the vocative case with a Grade 4 helper word and punctuation mark: **Кл. (!)** (Voc. (!)). The exclamation mark acts as a visual reminder that you are "shouting," calling out, or directly addressing someone. This punctuation mark triggers the ending change. Whenever you use a person's name with an exclamation mark or a comma in direct speech, you must apply the vocative ending. This mental trigger ensures that the name correctly reflects the social interaction taking place.
+
+:::note
+The vocative case is entirely independent of the other cases. It does not answer any questions (like "who?" or "what?"), because its only job is to get someone's attention.
+:::
+
+Understanding the difference between talking about someone and talking to someone is critical for your fluency. The nominative case is the dictionary form, used when someone is the subject of a sentence. Why the vocative matters: **Олена прийшла́.** (Olena came.) is in the nominative, because you are talking ABOUT her. However, if you want to address her, you must use the vocative: **Олено, ходи сюди!** (Olena, come here!), because you are talking TO her. Using the nominative to address a person sounds incredibly unnatural to native speakers. It feels as awkward as saying "Hey, him!" instead of "Hey, you!" in English. Let us compare these two states:
+
+**Називни́й відмінок** (Nominative):
+*   **Це мій тато.** *(This is my dad.)*
+*   **Тут працю́є вчи́тель.** *(A teacher works here.)*
+*   **Там стої́ть Олена.** *(Olena is standing there.)*
+*   **Мій брат чита́є.** *(My brother is reading.)*
+
+**Кличний відмінок** (Vocative):
+*   **Тату, я тебе ба́чу!** *(Dad, I see you!)*
+*   **Вчителю, добрий ранок!** *(Teacher, good morning!)*
+*   **Олено, йди туди́!** *(Olena, go there!)*
+*   **Бра́те, що ти чита́єш?** *(Brother, what are you reading?)*
+
+The vocative case is much more than just a grammatical rule; it is a living marker of Ukrainian linguistic identity. While this grammatical feature has mostly disappeared from standard Russian, surviving only in a few archaic religious terms, it remains vibrant and absolutely necessary in everyday Ukrainian conversation. By using the vocative case correctly, you are not just following a textbook rule. You are actively speaking authentic, decolonized Ukrainian and showing deep respect for the natural structure and historical continuity of the language. When you use the vocative case, native speakers instantly recognize that you are making a genuine effort to understand the rhythm of their language, rather than just translating English words directly into Ukrainian.
+
 ## Закі́нчення кли́чного (Vocative Endings)
-### Feminine: -а → -о
-The most common pattern. Feminine names and nouns ending in **-а** change to **-о** in the vocative (hard group):
-- **Олена** → **Олено**
-- **мама** → **мамо**
-- **сестра́** → **се́стро** *(sister)*
-- **Окса́на** → **Окса́но**
-- **по́друга** → **по́друго** *(female friend)*
-Names ending in **-ка** follow the same rule: **Ната́лка** → **Ната́лко**, **Ірка** → **Ірко**. Long names ending in **-ина/-іна** also take **-о**: **Катери́на** → **Катери́но**, **Тетя́на** → **Тетя́но**. The rule is simple: if the name ends in **-а** and the stem is hard, replace **-а** with **-о**.
-### Feminine exceptions: soft and mixed groups
-Names ending in **-і́я** do NOT become **-іо**. They become **-і́є**: **Марі́я** → **Марі́є**, **Софія** → **Софіє**. Diminutive names with **-уся́/-юся** take **-ю**: **бабуся** → **бабусю** *(grandma)*, **Настуся** → **Настусю**. As the State Standard 2024 notes, forms like **На́сте** and **Катре** also exist, but **бабусю** and **Настусю** are the standard affectionate forms you will use most. Female patronymics ending in **-івна** follow **-о**: **Іва́нівна** → **Іва́нівно**.
-### Masculine: hard consonant → -е
-Masculine names and nouns with a hard consonant at the end add **-е**:
-- **Тарас** → **Тарасе**
-- **Іва́н** → **Іва́не**
-- **брат** → **бра́те** *(brother)*
-- **пан** → **пане** *(Mr./sir)*
-Full name address follows the same pattern. Following the standard pattern: **пан Євге́н** → **пане Євге́не**, **Іван Ві́кторович** → **Іване Ві́кторовичу**. Masculine patronymics in **-ович** take **-у**: **Іва́нович** → **Іва́новичу**. Note: **па́ні** (Mrs./Ms.) is невідмі́нюване — it does not change in any case, including vocative. You simply say **пані Оксано!** where **пані** stays the same and only the name takes the vocative ending.
-### Masculine: soft consonant / -й → -ю
-Masculine names ending in a soft consonant or **-й** add **-ю**:
-- **Андрій** → **Андрію**
-- **дідусь** → **дідусю** *(grandpa)*
-- **вчи́тель** → **вчи́телю** *(teacher)*
-Two consonant alternations happen before **-е**: **друг** → **дру́же** *(friend)* (г → ж) and **коза́к** → **коза́че** *(Cossack)* (к → ч). These follow standard Ukrainian phonetic patterns — the back consonant mutates before **-е**.
-One more form to memorize: **тато** → **тату**. This is an exception — тато doesn't fit neatly into either the -е or -ю pattern. The vocative ending is **-у**, and it simply needs to be learned as a special case alongside **син** → **си́ну** and **дід** → **ді́ду**.
-<FillIn client:only="react" items={[{"sentence": "_____ (Олена), привіт!", "answer": "Олено", "options": ["Олено", "Олена", "Оленці"]}, {"sentence": "Як справи, _____ (Тарас)?", "answer": "Тарасе", "options": ["Тарасе", "Тарас", "Тарасу"]}, {"sentence": "Дякую, _____ (мама)!", "answer": "мамо", "options": ["мамо", "мама", "мамі"]}, {"sentence": "Ходи сюди, _____ (Іван)!", "answer": "Іване", "options": ["Іване", "Іван", "Івану"]}, {"sentence": "До побачення, _____ (сестра)!", "answer": "сестро", "options": ["сестро", "сестра", "сестрі"]}, {"sentence": "Привіт, _____ (Андрій)!", "answer": "Андрію", "options": ["Андрію", "Андрій", "Андріє"]}, {"sentence": "Ходи сюди, _____ (подруга)!", "answer": "подруго", "options": ["подруго", "подруга", "подрузі"]}, {"sentence": "Слухай, _____ (брат)!", "answer": "брате", "options": ["брате", "брат", "братові"]}, {"sentence": "_____ (Марія), як справи?", "answer": "Маріє", "options": ["Маріє", "Марія", "Марії"]}, {"sentence": "До побачення, _____ (бабуся)!", "answer": "бабусю", "options": ["бабусю", "бабуся", "бабусі"]}]} instruction={"Вставте кличний відмінок (Write the vocative form)"} />
-<GroupSort client:only="react" groups={{"-о (жіночий рід / feminine)": ["Олено", "мамо", "сестро", "подруго", "дочко", "Оксано"], "-е (чоловічий твердий / masculine hard)": ["Тарасе", "Іване", "брате", "пане", "друже", "козаче"], "-ю / -у (м'який та особливі / soft and exceptional)": ["Андрію", "дідусю", "вчителю", "тату", "синку", "бабусю"]}} instruction={"Розподіліть слова за закінченням кличного відмінка (Sort by vocative ending)"} />
+
+Let us break down the specific rules for forming the vocative case, starting with feminine names and nouns that end in the letter **-а**. This is the most common feminine pattern you will encounter. To create the vocative form, you simply replace the final **-а** with the letter **-о**. 
+
+*   **Олена** → **Олено** (Olena)
+*   **мама** → **мамо** (mom)
+*   **сестра́** → **се́стро** (sister)
+*   **Окса́на** → **Оксано** (Oksana)
+*   **по́друга** → **по́друго** (friend, f)
+
+This rule also applies to informal or diminutive names ending in **-ка**, such as **Ната́лка** → **Ната́лко** (Natalka) and **Ірка** → **Ірко** (Irka). Furthermore, longer names ending in **-а** follow this exactly: **Катери́на** → **Катери́но** (Kateryna), **Тетя́на** → **Тетя́но** (Tetiana). Note that the polite title **пані** (Mrs. / Ms.) is an exception and does not change its form when used to address someone.
+
+*   **Олено, де мій зо́шит?** *(Olena, where is my notebook?)*
+*   **Мамо, я хо́чу ї́сти.** *(Mom, I want to eat.)*
+*   **Сестро, ти йдеш у кіно́?** *(Sister, are you going to the cinema?)*
+*   **Подруго, це твоя́ кни́га?** *(Friend, is this your book?)*
+*   **Катерино, добрий день!** *(Kateryna, good day!)*
+
+Feminine names that end in **-і́я** or the soft letter **-я** follow a slightly different but closely related pattern. If a name ends in **-ія**, the ending shifts to **-і́є**. For example, **Марі́я** (Mariia) becomes **Марі́є** (Mariia — vocative, never "Маріо!"). If a feminine word or name ends in a soft **-ся** or is a diminutive form ending in **-я**, the ending changes to **-ю**. 
+
+*   **Марія** → **Маріє** (Mariia)
+*   **Ю́лія** → **Ю́ліє** (Yuliia)
+*   **бабуся** → **бабусю** (grandma)
+*   **Га́ля** → **Галю** (Halia)
+*   **Ната́ля** → **Ната́лю** (Natalia)
+
+Notice how the soft quality of the final consonant is preserved by using the soft vowel **-ю** or **-є**. 
+
+*   **Маріє, як справи?** *(Mariia, how are things?)*
+*   **Юліє, ходи сюди!** *(Yuliia, come here!)*
+*   **Бабусю, ти ду́же до́бра.** *(Grandma, you are very kind.)*
+*   **Наталю, де ти живе́ш?** *(Natalia, where do you live?)*
+
+:::caution
+Do not confuse the feminine ending **-ю** (like in **бабусю**) with the masculine soft ending **-ю** (like in **Андрію**). While they look identical, they come from different spelling patterns.
+:::
+
+Now let us look at masculine names and nouns. Most standard masculine words end in a hard consonant. To form the vocative for these words, you do not replace anything; you simply add the letter **-е** directly to the end of the hard consonant. This makes the word slightly longer and easier to call out across a room.
+
+*   **Тарас** → **Тарасе** (Taras)
+*   **Іва́н** → **Іване** (Ivan)
+*   **брат** → **брате** (brother)
+*   **пан** → **пане** (Mr. / sir)
+*   **Богдан** → **Богдане** (Bohdan)
+
+Whenever you use the formal title **пан**, it must also take this ending, as in **Добрий день, пане!** (Good day, sir!).
+
+*   **Тарасе, що ти ро́биш?** *(Taras, what are you doing?)*
+*   **Іване, це твій телефон?** *(Ivan, is this your phone?)*
+*   **Брате, йди сюди!** *(Brother, come here!)*
+*   **Пане, де тут апте́ка?** *(Sir, where is the pharmacy here?)*
+*   **Богдане, ти студе́нт?** *(Bohdan, are you a student?)*
+
+If a masculine word ends in a soft consonant or the letter **-й**, the added vowel changes to match the softness. Instead of adding **-е**, you must add the letter **-ю** to the end of the word. This maintains the softness of the final sound and creates a smooth, natural flow when speaking.
+
+*   **Андрій** → **Андрію** (Andriy)
+*   **Сергі́й** → **Сергі́ю** (Serhiy)
+*   **діду́сь** → **діду́сю** (grandpa)
+*   **вчитель** → **вчителю** (teacher, m)
+
+Replacing the **-й** with **-ю** is one of the most frequent transformations you will make when addressing Ukrainian men.
+
+*   **Андрію, ти ма́єш брата?** *(Andriy, do you have a brother?)*
+*   **Сергію, це твоя маши́на?** *(Serhiy, is this your car?)*
+*   **Дідусю, чита́й ка́зку!** *(Grandpa, read a fairy tale!)*
+*   **Вчителю, я маю пита́ння.** *(Teacher, I have a question.)*
+
+There are a few special cases and consonant alternations that you should memorize because they occur in very common words. The word for dad takes an exceptional **-у** ending: **тато** → **тату** (dad). You must memorize this. The word for son also takes an **-у** ending: **син** → **си́ну** (son). The affectionate form is **сино́к** → **синку**. Additionally, some masculine consonants change their sound entirely to make pronunciation easier. For example, the consonant **г** changes to **ж** in **друг** → **дру́же** (friend, m), and the consonant **к** changes to **ч** in **коза́к** → **коза́че** (Cossack).
+
+*   **Тату, я йду додо́му.** *(Dad, I am going home.)*
+*   **Синку, будь обере́жний!** *(Son, be careful!)*
+*   **Друже, ти маєш ра́цію.** *(Friend, you are right.)*
+*   **Козаче, куди́ ти йдеш?** *(Cossack, where are you going?)*
+
+<FillIn client:only="react" items={[{"sentence": "Олена → _____", "answer": "Олено", "options": ["Олено", "Олені", "Олена"]}, {"sentence": "Тарас → _____", "answer": "Тарасе", "options": ["Тарасе", "Тарасу", "Тарас"]}, {"sentence": "мама → _____", "answer": "мамо", "options": ["мамо", "мамі", "мама"]}, {"sentence": "Іван → _____", "answer": "Іване", "options": ["Іване", "Івану", "Іван"]}, {"sentence": "сестра → _____", "answer": "сестро", "options": ["сестро", "сестрі", "сестра"]}, {"sentence": "Андрій → _____", "answer": "Андрію", "options": ["Андрію", "Андрія", "Андрій"]}, {"sentence": "Марія → _____", "answer": "Маріє", "options": ["Маріє", "Марії", "Марія"]}, {"sentence": "бабуся → _____", "answer": "бабусю", "options": ["бабусю", "бабусі", "бабуся"]}]} instruction={"Утворіть кличний відмінок (Form the vocative case)"} />
+<Quiz client:only="react" questions={[{"question": "_____, привіт!", "options": [{"text": "Олено", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олені", "correct": false}]}, {"question": "Як справи, _____?", "options": [{"text": "Тарасе", "correct": true}, {"text": "Тарас", "correct": false}, {"text": "Тарасу", "correct": false}]}, {"question": "Дякую, _____!", "options": [{"text": "мамо", "correct": true}, {"text": "мама", "correct": false}, {"text": "мамі", "correct": false}]}, {"question": "Ходи сюди, _____!", "options": [{"text": "Іване", "correct": true}, {"text": "Іван", "correct": false}, {"text": "Івану", "correct": false}]}, {"question": "Будь обережний, _____!", "options": [{"text": "синку", "correct": true}, {"text": "синок", "correct": false}, {"text": "сине", "correct": false}]}, {"question": "Що ти робиш, _____?", "options": [{"text": "брате", "correct": true}, {"text": "брат", "correct": false}, {"text": "брату", "correct": false}]}, {"question": "Добрий день, _____!", "options": [{"text": "пане", "correct": true}, {"text": "пан", "correct": false}, {"text": "пану", "correct": false}]}, {"question": "Привіт, _____!", "options": [{"text": "Андрію", "correct": true}, {"text": "Андрій", "correct": false}, {"text": "Андрія", "correct": false}]}]} instruction={"Оберіть правильну форму кличного відмінка (Choose the correct vocative form)"} />
+<GroupSort client:only="react" groups={{"-о": ["Олено", "мамо", "сестро", "подруго", "дочко"], "-е": ["Тарасе", "Іване", "брате", "пане", "Богдане"], "-ю": ["Андрію", "дідусю", "вчителю", "бабусю", "Сергію"]}} instruction={"Розподіліть слова за їхнім закінченням (Sort the words by their ending)"} />
+
 ## Підсумок — Summary
-**Кличний відмінок** is the Ukrainian case of direct address. Every time you speak TO someone — not about them — the name or noun changes its ending. There are four main patterns at A1 level, and most names fall neatly into one of them.
-| Pattern | Називни́й → Кличний | Приклади |
-|---|---|---|
-| Feminine **-а** (hard) | -а → -о | **Олена** → **Олено**, **мама** → **мамо**, **сестра** → **сестро** |
-| Feminine **-ія** | -ія → -іє | **Марія** → **Маріє**, **Софія** → **Софіє** |
-| Feminine **-уся** | -уся → -усю́ | **бабуся** → **бабусю** |
-| Masculine hard | + **-е** | **Тарас** → **Тарасе**, **брат** → **брате**, **пан** → **пане** |
-| Masculine **-й**/soft | + **-ю** | **Андрій** → **Андрію**, **вчитель** → **вчителю** |
-| Exceptions | memorize | **тато** → **тату**, **син** → **сину**, **дід** → **діду** |
-| Special **г/к** | г→ж, к→ч + **-е** | **друг** → **друже**, **козак** → **козаче** |
-Can you call your own family? Try these: **мама** → ___, **тато** → ___, **брат** → ___, **сестра** → ___, **бабуся** → ___, **дідусь** → ___. And your own name or a friend's name — what does it become in vocative? (Answers: **мамо**, **тату**, **брате**, **сестро**, **бабусю**, **дідусю**.)
-<Quiz client:only="react" questions={[{"question": "___, привіт!", "options": [{"text": "Олено", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Оленю", "correct": false}]}, {"question": "Як справи, ___?", "options": [{"text": "Тарасе", "correct": true}, {"text": "Тарас", "correct": false}, {"text": "Тарасу", "correct": false}]}, {"question": "Дякую, ___!", "options": [{"text": "мамо", "correct": true}, {"text": "мама", "correct": false}, {"text": "маме", "correct": false}]}, {"question": "Ходи сюди, ___!", "options": [{"text": "Іване", "correct": true}, {"text": "Іван", "correct": false}, {"text": "Івану", "correct": false}]}, {"question": "Будь обережний, ___!", "options": [{"text": "синку", "correct": true}, {"text": "синок", "correct": false}, {"text": "синке", "correct": false}]}, {"question": "Що ти робиш, ___?", "options": [{"text": "брате", "correct": true}, {"text": "брат", "correct": false}, {"text": "брату", "correct": false}]}, {"question": "Добрий день, ___!", "options": [{"text": "пане", "correct": true}, {"text": "пан", "correct": false}, {"text": "пану", "correct": false}]}, {"question": "Привіт, ___!", "options": [{"text": "Андрію", "correct": true}, {"text": "Андрій", "correct": false}, {"text": "Андріє", "correct": false}]}]} instruction={"Оберіть правильну форму кличного відмінка (Choose the correct vocative form)"} />
+
+Mastering the vocative case is a crucial step in sounding like a natural, fluent Ukrainian speaker. Remember that you must always change the ending of a name or title when you are addressing someone directly. The core patterns are very consistent across the language: feminine words ending in **-а** shift to **-о**, masculine words ending in hard consonants add **-е**, and masculine words ending in soft consonants or **-й** add **-ю**. By applying these simple vowel shifts, you ensure that your greetings, questions, and daily interactions flow smoothly and respect the traditional rules of Ukrainian communication. You will quickly find that these vowel shifts become automatic as your brain learns to associate the act of calling someone with adding these specific soft or hard sounds.
+
+Keep this vocative quick reference guide handy as you practice forming the vocative case. It covers the most frequent patterns you will encounter in everyday conversation.
+
+| Pattern | Nominative → Vocative | Example |
+| :--- | :--- | :--- |
+| Feminine **-а** | **-а** → **-о** | **Олена** → **Олено**, **мама** → **мамо** |
+| Feminine **-ія** | **-ія** → **-іє** | **Марія** → **Маріє** |
+| Feminine **-ся** | **-ся** → **-сю** | **бабуся** → **бабусю** |
+| Masculine hard | + **-е** | **Тарас** → **Тарасе**, **брат** → **брате** |
+| Masculine **-й** / soft | + **-ю** | **Андрій** → **Андрію**, **вчитель** → **вчителю** |
+| Special (**г**, **к**) | **г**→**ж**, **к**→**ч** + **-е** | **друг** → **друже** |
+| Special (**-у**) | irregular | **тато** → **тату**, **син** → **сину** |
+
+:::tip
+Whenever you say **Привіт!** (Hi!), **Добрий день!** (Good day!), or ask **Як справи?** (How are you?), immediately follow it with the vocative form of the person's name or title!
+:::
+
+Before moving on to the next module, take a moment to self-check your understanding of these rules. How do you call your family? **мама** (mom) → ? **тато** (dad) → ? **брат** (brother) → ? How do you correctly greet your friend Taras? Most importantly, do you clearly feel the functional difference between the sentence **Марія прийшла** (Mariia came) and the direct command **Маріє, ходи сюди!** (Mariia, come here!)? If you can confidently answer these questions and apply the correct endings,
 
 </TabItem>
 <TabItem label="Словник">
@@ -137,80 +206,73 @@ Can you call your own family? Try these: **мама** → ___, **тато** → 
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **ма́ма** | mother, mom | ім. | ж. |
-| **та́то** | father, dad | ім. | ч. |
-| **сестра́** | sister | ім. | ж. |
-| **сино́к** | son (diminutive) | ім. | ч. |
-| **дочка́** | daughter | ім. | ж. |
-| **бабу́ся** | grandmother, grandma | ім. | ж. |
-| **діду́сь** | grandfather, grandpa | ім. | ч. |
-| **по́друга** | friend (female) | ім. | ж. |
-| **пан** | Mr., sir | ім. | ч. |
-| **па́ні** | Mrs., Ms., ma'am | ім. | ч. |
-| **вчи́тель** | teacher (male) | ім. | ч. |
+| **синку́** | son (vocative) | ім. | ч. |
+| **до́чко** | daughter (vocative) | ім. | ж. |
 | **коза́к** | Cossack | ім. | ч. |
-| **відмі́нок** | grammatical case | ім. | ч. |
+| **вчи́тель** | teacher | ім. | ч. |
+| **бабу́ся** | grandmother | ім. | ж. |
+| **діду́сь** | grandfather | ім. | ч. |
+| **по́друга** | friend (female) | ім. | ж. |
+| **сестра́** | sister | ім. | ж. |
+| **пан** | Mr. / sir | ім. | ч. |
+| **па́ні** | Mrs. / Ms. | ім. | ч. |
+| **ма́ма** | mother | ім. | ж. |
+| **та́то** | father / dad | ім. | ч. |
+| **приві́т** | hi | ім. | ч. |
 | **телефо́н** | phone | ім. | ч. |
 | **ключі́** | keys | ім. | ч. |
-| **кише́ня** | pocket | ім. | ж. |
+| **зо́шит** | notebook | ім. | ч. |
+| **маши́на** | car | ім. | ж. |
+| **ка́зка** | fairy tale | ім. | ж. |
+| **пита́ння** | question | ім. | с. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **кличний відмінок** | vocative case (the case of direct address) |
-| **називний відмінок** | nominative case (the subject case) |
-| **Ходи сюди!** | Come here! |
-| **Радий бачити!** | Glad to see you! (said by male) |
-| **Рада бачити!** | Glad to see you! (said by female) |
-| **Будьте обережні!** | Be careful! (plural/formal) |
-| **Вибачте!** | Excuse me! Sorry! (formal/plural) |
+| **на столі** | on the table |
+| **у кишені** | in the pocket |
+| **будьте обережні** | be careful |
+| **до побачення** | goodbye |
+| **Добрий ранок** | Good morning |
+| **Добрий вечір** | Good evening |
+| **На добраніч** | Good night |
+| **Смачного** | Bon appetit / enjoy your meal |
+| **хочу їсти** | I want to eat |
+| **маю рацію** | to be right / to have a point |
+| **ходи сюди** | come here |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ма́ма", back: "mother, mom", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father, dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сино́к", back: "son (diminutive)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дочка́", back: "daughter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бабу́ся", back: "grandmother, grandma", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "діду́сь", back: "grandfather, grandpa", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́друга", back: "friend (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пан", back: "Mr., sir", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "па́ні", back: "Mrs., Ms., ma&#39;am", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "коза́к", back: "Cossack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "відмі́нок", back: "grammatical case", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ключі́", back: "keys", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кише́ня", back: "pocket", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "синку́", back: "son (vocative)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "до́чко", back: "daughter (vocative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коза́к", back: "Cossack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бабу́ся", back: "grandmother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "діду́сь", back: "grandfather", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́друга", back: "friend (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пан", back: "Mr. / sir", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "па́ні", back: "Mrs. / Ms.", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father / dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "приві́т", back: "hi", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ключі́", back: "keys", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зо́шит", back: "notebook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "маши́на", back: "car", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́зка", back: "fairy tale", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пита́ння", back: "question", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "— _____ (Олена), привіт! Як справи?", "answer": "Олено"}, {"sentence": "— Добре, дякую, _____ (Тарас)!", "answer": "Тарасе"}, {"sentence": "— _____ (Мама), де мій телефон?", "answer": "Мамо"}, {"sentence": "— На столі, _____ (синок).", "answer": "синку"}, {"sentence": "— _____ (Бабуся), ми йдемо!", "answer": "Бабусю"}, {"sentence": "— Добре, до побачення, _____ (Андрій)!", "answer": "Андрію"}, {"sentence": "— _____ (Дідусь), як справи?", "answer": "Дідусю"}, {"sentence": "— Вибачте, _____ (пан)!", "answer": "пане"}]} instruction={"Завершіть діалог — вставте кличний відмінок (Complete the dialogue — write the vocative form)"} />
+<TrueFalse client:only="react" items={[{"statement": "На дні народження Олена знайомиться з Тарасом. (At the birthday party, Olena meets Taras.)", "isTrue": false, "explanation": "Олена вже знає Тараса. Вона знайомиться з братом іменинника — Андрієм."}, {"statement": "Телефон сина лежить на столі. (The son's phone is on the table.)", "isTrue": true, "explanation": "Мама каже: 'На столі, синку.'"}, {"statement": "Ключі дочки в кишені у тата. (The daughter's keys are in dad's pocket.)", "isTrue": true, "explanation": "Тато каже: 'У кишені, дочко.'"}, {"statement": "Бабуся йде додому. (Grandma is going home.)", "isTrue": false, "explanation": "Син каже: 'Бабусю, ми йдемо!' (The son is leaving, not grandma)."}, {"statement": "В українській мові для звертання ми використовуємо називний відмінок. (In Ukrainian we use the nominative case for addressing.)", "isTrue": false, "explanation": "Для звертання завжди використовується кличний відмінок (Vocative case)."}, {"statement": "Тарас — це брат іменинника. (Taras is the birthday person's brother.)", "isTrue": false, "explanation": "Брат іменинника — Андрій."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "Олена", "right": "Олено"}, {"left": "Тарас", "right": "Тарасе"}, {"left": "Андрій", "right": "Андрію"}, {"left": "мама", "right": "мамо"}, {"left": "бабуся", "right": "бабусю"}, {"left": "брат", "right": "брате"}, {"left": "дідусь", "right": "дідусю"}, {"left": "Марія", "right": "Маріє"}]} instruction={"З'єднайте: називний → кличний відмінок (Match: nominative → vocative)"} />
+<MatchUp client:only="react" pairs={[{"left": "друг", "right": "друже"}, {"left": "козак", "right": "козаче"}, {"left": "тато", "right": "тату"}, {"left": "дочка", "right": "дочко"}, {"left": "пані", "right": "пані"}, {"left": "дідусь", "right": "дідусю"}, {"left": "вчитель", "right": "вчителю"}]} instruction={"З'єднайте називний і кличний відмінки (Match nominative and vocative cases)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "'Олено, привіт!' — правильний кличний відмінок.", "isTrue": true, "explanation": "Так! Олена → Олено (жіночий рід -а → -о)."}, {"statement": "'Тарас, ходи сюди!' — правильний кличний відмінок.", "isTrue": false, "explanation": "Ні. Тарас → Тарасе (чоловічий твердий + -е). Правильно: 'Тарасе, ходи сюди!'"}, {"statement": "'Андрію, привіт!' — правильний кличний відмінок.", "isTrue": true, "explanation": "Так! Андрій → Андрію (чоловічий -й → -ю)."}, {"statement": "Кличний відмінок використовується, коли ми говоримо ПРО людину.", "isTrue": false, "explanation": "Ні. Кличний відмінок використовується, коли ми говоримо ДО людини."}, {"statement": "'Маріє, як справи?' — правильний кличний відмінок.", "isTrue": true, "explanation": "Так! Марія → Маріє (жіночий -ія → -іє)."}, {"statement": "'Бабусю, ми йдемо!' — правильний кличний відмінок.", "isTrue": true, "explanation": "Так! Бабуся → Бабусю (жіночий -уся → -усю)."}, {"statement": "'Друг, привіт!' — правильний кличний відмінок.", "isTrue": false, "explanation": "Ні. Друг → Друже (г → ж + -е). Правильно: 'Друже, привіт!'"}, {"statement": "Кличний відмінок — це старомодна форма, яку рідко використовують сьогодні.", "isTrue": false, "explanation": "Ні! Кличний відмінок — живий і повсякденний. Кожен українець використовує його постійно: у текстах, вдома, з друзями."}]} instruction={"Правда чи ні? (True or false?)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Привіт, мій друг!", "errorWord": "друг", "correctForm": "друже", "options": ["друже", "друга", "другу"], "explanation": "В українській мові використовується кличний відмінок: друже."}, {"sentence": "Мама, де мій телефон?", "errorWord": "Мама", "correctForm": "Мамо", "options": ["Мамо", "Мамі", "Маму"], "explanation": "Жіночі імена на -а змінюються на -о: Мамо."}, {"sentence": "Дякую, сестра!", "errorWord": "сестра", "correctForm": "сестро", "options": ["сестро", "сестрі", "сестру"], "explanation": "Жіночі імена на -а змінюються на -о: сестро."}, {"sentence": "Як справи, Андрій?", "errorWord": "Андрій", "correctForm": "Андрію", "options": ["Андрію", "Андрія", "Андрієві"], "explanation": "Чоловічі імена на -й змінюються на -ю: Андрію."}, {"sentence": "До побачення, вчитель!", "errorWord": "вчитель", "correctForm": "вчителю", "options": ["вчителю", "вчителя", "вчителем"], "explanation": "Слово 'вчитель' у кличному відмінку: вчителю."}, {"sentence": "Добрий день, пан Тарас!", "errorWord": "пан", "correctForm": "пане", "options": ["пане", "пана", "пану"], "explanation": "Слово 'пан' у кличному відмінку: пане."}]} instruction={"Виправте помилку у звертанні (Correct the mistake in the address)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Тарас, ходи сюди!", "errorWord": "Тарас", "correctForm": "Тарасе", "options": ["Тарасе", "Тарасу", "Тарасові"], "explanation": "Тарас (чоловічий твердий) → Тарасе (+ -е)."}, {"sentence": "Мама, де мій рюкзак?", "errorWord": "Мама", "correctForm": "Мамо", "options": ["Мамо", "Мами", "Мамі"], "explanation": "Мама (жіночий -а) → Мамо (-а → -о)."}, {"sentence": "Андрій, привіт!", "errorWord": "Андрій", "correctForm": "Андрію", "options": ["Андрію", "Андрієві", "Андрієм"], "explanation": "Андрій (чоловічий -й) → Андрію (-й → -ю)."}, {"sentence": "Бабуся, ми йдемо!", "errorWord": "Бабуся", "correctForm": "Бабусю", "options": ["Бабусю", "Бабусі", "Бабусе"], "explanation": "Бабуся (жіночий -уся) → Бабусю (-уся → -усю)."}, {"sentence": "Слухай, друг!", "errorWord": "друг", "correctForm": "друже", "options": ["друже", "другу", "другові"], "explanation": "Друг → Друже (г → ж + -е)."}, {"sentence": "Дякую, сестра!", "errorWord": "сестра", "correctForm": "сестро", "options": ["сестро", "сестрі", "сестру"], "explanation": "Сестра (жіночий -а) → Сестро (-а → -о)."}]} instruction={"Виправте помилку — знайдіть неправильну форму (Find and correct the error)"} />
+<TrueFalse client:only="react" items={[{"statement": "The vocative case is used to answer the question 'who?'.", "isTrue": false, "explanation": "The vocative case does not answer questions; its only job is to get someone's attention."}, {"statement": "When addressing someone directly, their name or title must change.", "isTrue": true, "explanation": "Yes, you must use the vocative form instead of the regular dictionary form."}, {"statement": "Feminine names ending in -а change to -о (e.g., Олена → Олено).", "isTrue": true, "explanation": "This is the rule for feminine names ending in -a."}, {"statement": "The word 'тато' changes to 'тате' in the vocative case.", "isTrue": false, "explanation": "The word 'тато' is an exception and changes to 'тату'."}, {"statement": "The title 'пані' does not change its form when addressing someone.", "isTrue": true, "explanation": "The formal title 'пані' stays the same in the vocative case."}, {"statement": "Masculine words ending in a soft consonant or -й add -ю in the vocative.", "isTrue": true, "explanation": "For example, Андрій → Андрію, вчитель → вчителю."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Observe client:only="react" examples={["Олена → Олено", "мама → мамо", "сестра → сестро", "подруга → подруго", "дочка → дочко", "Оксана → Оксано"]} prompt={"Яке закінчення змінюється в кличному відмінку для іменників жіночого роду на -а? Запишіть правило одним реченням. (What ending changes in the vocative for feminine nouns ending in -а? Write the rule in one sentence.)"} />
-
-<Quiz client:only="react" questions={[{"question": "друг → ___", "options": [{"text": "друже", "correct": true}, {"text": "другу", "correct": false}, {"text": "друге", "correct": false}]}, {"question": "козак → ___", "options": [{"text": "козаче", "correct": true}, {"text": "козаку", "correct": false}, {"text": "козаке", "correct": false}]}, {"question": "Яке чергування відбувається у слові 'друг → друже'? (What alternation occurs?)", "options": [{"text": "г → ж", "correct": true}, {"text": "г → к", "correct": false}, {"text": "г → х", "correct": false}]}, {"question": "Яке чергування відбувається у слові 'козак → козаче'? (What alternation occurs?)", "options": [{"text": "к → ч", "correct": true}, {"text": "к → г", "correct": false}, {"text": "к → х", "correct": false}]}, {"question": "вчитель → ___", "options": [{"text": "вчителю", "correct": true}, {"text": "вчителе", "correct": false}, {"text": "вчителі", "correct": false}]}, {"question": "дідусь → ___", "options": [{"text": "дідусю", "correct": true}, {"text": "дідусе", "correct": false}, {"text": "дідусі", "correct": false}]}, {"question": "пан → ___", "options": [{"text": "пане", "correct": true}, {"text": "пану", "correct": false}, {"text": "панові", "correct": false}]}, {"question": "Марія → ___", "options": [{"text": "Маріє", "correct": true}, {"text": "Марію", "correct": false}, {"text": "Маріє", "correct": false}]}]} instruction={"Приголосний чергування — оберіть правильну форму (Consonant alternations — choose the correct form)"} />
-
+<Translate client:only="react" questions={[{"source": "Hi, mom!", "options": [{"text": "Привіт, мамо!", "correct": true}, {"text": "Привіт, мама!", "correct": false}, {"text": "Привіт, мамі!", "correct": false}]}, {"source": "Good morning, sir!", "options": [{"text": "Добрий ранок, пане!", "correct": true}, {"text": "Добрий ранок, пан!", "correct": false}, {"text": "Добрий ранок, пана!", "correct": false}]}, {"source": "Goodbye, friend!", "options": [{"text": "До побачення, друже!", "correct": true}, {"text": "До побачення, друг!", "correct": false}, {"text": "До побачення, другу!", "correct": false}]}, {"source": "Thank you, sister!", "options": [{"text": "Дякую, сестро!", "correct": true}, {"text": "Дякую, сестра!", "correct": false}, {"text": "Дякую, сестрі!", "correct": false}]}, {"source": "How are you, brother?", "options": [{"text": "Як справи, брате?", "correct": true}, {"text": "Як справи, брат?", "correct": false}, {"text": "Як справи, брату?", "correct": false}]}, {"source": "Come here, son!", "options": [{"text": "Ходи сюди, синку!", "correct": true}, {"text": "Ходи сюди, синок!", "correct": false}, {"text": "Ходи сюди, сине!", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- State Standard 2024, §4.2.3.4
-  _Vocative case — address forms. A1 scope: common patterns only._
-- Grade 4 textbook: Кличний відмінок (Заболотний)
-  _Helper word Кл. (!). Feminine -а→-о, masculine hard→-е, soft→-ю._
-
-**Граматика — Grammar (МійКлас)**
-
-- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
-- [МійКлас: Приголосні м'які й тверді, дзвінкі й глухі](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
-- [МійКлас: Звертання](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/zvertannia-neposhireni-i-poshireni-zvertannia-rozdilovi-znaki-pri-zvertan_-38855) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=175), стор. 175
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=163), стор. 163
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=208), стор. 208
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=163), стор. 163
+- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=214), стор. 214
 
 **Статті — Articles**
 
 - [Ukrainian Children’s Poem + Vocative case in Ukrainian](https://www.ukrainianlessons.com/episode69/) (ukrainianlessons.com)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
-- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
 
 </TabItem>
 </Tabs>

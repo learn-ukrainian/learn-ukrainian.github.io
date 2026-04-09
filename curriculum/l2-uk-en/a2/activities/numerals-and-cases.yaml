@@ -1,0 +1,387 @@
+version: '1.0'
+module: numerals-and-cases
+level: a2
+inline:
+- id: fill-in-ordinals
+  type: fill-in
+  instruction: Вставте правильну форму порядкового числівника.
+  items:
+  - sentence: Це _____ поверх.
+    answer: п'ятий
+    options:
+    - п'ятий
+    - п'ята
+    - п'яте
+  - sentence: Ми живемо на _____ поверсі.
+    answer: десятому
+    options:
+    - десятому
+    - десятий
+    - десятого
+  - sentence: Він зайняв _____ місце.
+    answer: друге
+    options:
+    - друге
+    - другий
+    - другому
+  - sentence: Я читаю _____ книгу.
+    answer: третю
+    options:
+    - третю
+    - третя
+    - третє
+  - sentence: Це наша _____ зупинка.
+    answer: перша
+    options:
+    - перша
+    - перший
+    - першу
+  - sentence: Сьогодні мій _____ день на роботі.
+    answer: перший
+    options:
+    - перший
+    - перша
+    - перше
+- id: match-up-numeral-meanings
+  type: match-up
+  instruction: З'єднайте фразу з її правильним значенням англійською.
+  pairs:
+  - left: один чоловік сказав
+    right: a certain man said
+  - left: ми з одного міста
+    right: we are from the same city
+  - left: сьогодні я тут один
+    right: today I am here alone
+  - left: один великий будинок
+    right: one big house
+  - left: з однієї сторони
+    right: from one side (on one hand)
+  - left: я живу в одній кімнаті
+    right: I live in one room
+- id: group-sort-agreement
+  type: group-sort
+  instruction: Розподіліть числівники за відмінком іменника, який вони вимагають.
+  groups:
+  - label: Називний однини (Nom. Sg.)
+    items:
+    - один
+    - двадцять один
+    - сорок один
+  - label: Називний множини (Nom. Pl.)
+    items:
+    - два
+    - три
+    - тридцять чотири
+  - label: Родовий множини (Gen. Pl.)
+    items:
+    - п'ять
+    - десять
+    - шістдесят
+  - label: Родовий однини (Gen. Sg.)
+    items:
+    - півтора
+    - півтори
+    - пів
+- id: quiz-noun-selection
+  type: quiz
+  instruction: Оберіть правильну форму іменника після числівника.
+  items:
+  - question: У мене є два _____.
+    options:
+    - брати
+    - братів
+    - брата
+    - брат
+    correct: 0
+  - question: Це коштує п'ятсот _____.
+    options:
+    - гривні
+    - гривню
+    - гривень
+    - гривня
+    correct: 2
+  - question: Там стоять три _____.
+    options:
+    - машин
+    - машина
+    - машину
+    - машини
+    correct: 3
+  - question: У класі сорок один _____.
+    options:
+    - студенти
+    - студента
+    - студент
+    - студентів
+    correct: 2
+  - question: Мені потрібно кілька _____.
+    options:
+    - день
+    - днів
+    - дні
+    - дню
+    correct: 1
+  - question: На вулиці шість _____.
+    options:
+    - людина
+    - люди
+    - людину
+    - людей
+    correct: 3
+- id: fill-in-decline-ordinal-numerals-in-context-of-dates-and-addresses
+  type: fill-in
+  instruction: Вставте правильну форму порядкового числівника для дати або адреси.
+  items:
+  - sentence: Мій день народження двадцять _____ серпня.
+    answer: четвертого
+    options:
+    - четвертого
+    - четвертий
+    - четвертому
+  - sentence: Ми зустрінемося _____ квітня.
+    answer: десятого
+    options:
+    - десятого
+    - десятий
+    - десятому
+  - sentence: Я живу на _____ вулиці.
+    answer: Першій
+    options:
+    - Першій
+    - Перша
+    - Першу
+  - sentence: Свято буде _____ травня.
+    answer: третього
+    options:
+    - третього
+    - третій
+    - третя
+  - sentence: Це будинок на _____ лінії.
+    answer: Другій
+    options:
+    - Другій
+    - Друга
+    - Другу
+  - sentence: Новий рік _____ січня.
+    answer: першого
+    options:
+    - першого
+    - перший
+    - першому
+- id: match-up-match-numeral-expressions-to-their-correct-form
+  type: match-up
+  instruction: З'єднайте фразу з її правильним перекладом.
+  pairs:
+  - left: twenty-one years old
+    right: двадцять один рік
+  - left: twenty-two years old
+    right: двадцять два роки
+  - left: twenty-five years old
+    right: двадцять п'ять років
+  - left: one and a half hours
+    right: півтори години
+  - left: one and a half kilograms
+    right: півтора кілограма
+  - left: at three o'clock
+    right: о третій годині
+workbook:
+- id: error-correction-cases
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в узгодженні числівника та іменника.
+  items:
+  - sentence: Я маю два брата.
+    error: брата
+    correction: брати
+    error_type: word
+    options:
+    - брати
+    - братів
+    - брат
+    explanation: 'Після слова «два» ми використовуємо Називний відмінок множини: два
+      брати.'
+  - sentence: Свято буде перше січня.
+    error: перше
+    correction: першого
+    error_type: word
+    options:
+    - першого
+    - перший
+    - першому
+    explanation: 'Коли ми називаємо дату, порядковий числівник завжди стоїть у Родовому
+      відмінку (Genitive): першого січня.'
+  - sentence: Вона купила п'ять квитки.
+    error: квитки
+    correction: квитків
+    error_type: word
+    options:
+    - квитків
+    - квитка
+    - квитку
+    explanation: 'Після числа «п''ять» ми використовуємо Родовий відмінок множини:
+      п''ять квитків.'
+  - sentence: Ми живемо на п'ятий поверсі.
+    error: п'ятий
+    correction: п'ятому
+    error_type: word
+    options:
+    - п'ятому
+    - п'ятого
+    - п'ятим
+    explanation: 'Прийменник «на» тут вимагає Місцевого відмінка (Locative): на п''ятому
+      поверсі.'
+  - sentence: Це коштує двісті гривні.
+    error: гривні
+    correction: гривень
+    error_type: word
+    options:
+    - гривень
+    - гривню
+    - гривня
+    explanation: 'Сотні (200, 300, 500) вимагають Родового відмінка множини: двісті
+      гривень.'
+  - sentence: Мені двадцять один роки.
+    error: роки
+    correction: рік
+    error_type: word
+    options:
+    - рік
+    - років
+    - року
+    explanation: 'Якщо число закінчується на «один», ми використовуємо форму однини:
+      двадцять один рік.'
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів.
+  items:
+  - words:
+    - нуль
+    - Мій
+    - дев'яносто
+    - номер
+    - телефону
+    - шість.
+    - —
+    correct_order:
+    - Мій
+    - номер
+    - телефону
+    - —
+    - нуль
+    - дев'яносто
+    - шість.
+  - words:
+    - коштують
+    - ці
+    - Скільки
+    - три
+    - м'ячі?
+    correct_order:
+    - Скільки
+    - коштують
+    - ці
+    - три
+    - м'ячі?
+  - words:
+    - один
+    - Мені
+    - до
+    - потрібен
+    - Києва.
+    - квиток
+    correct_order:
+    - Мені
+    - потрібен
+    - один
+    - квиток
+    - до
+    - Києва.
+  - words:
+    - одного
+    - Ми
+    - міста.
+    - з
+    correct_order:
+    - Ми
+    - з
+    - одного
+    - міста.
+  - words:
+    - поверсі.
+    - Вона
+    - живе
+    - третьому
+    - на
+    correct_order:
+    - Вона
+    - живе
+    - на
+    - третьому
+    - поверсі.
+  - words:
+    - буде
+    - двадцять
+    - Свято
+    - серпня.
+    - четвертого
+    correct_order:
+    - Свято
+    - буде
+    - двадцять
+    - четвертого
+    - серпня.
+- id: fill-in-mixed
+  type: fill-in
+  instruction: Вставте правильну форму слова.
+  items:
+  - sentence: Мені потрібно _____ кілограма.
+    answer: півтора
+    options:
+    - півтора
+    - півтори
+    - пів
+  - sentence: Урок триває _____ години.
+    answer: півтори
+    options:
+    - півтори
+    - півтора
+    - пів
+  - sentence: Моїй мамі п'ятдесят _____.
+    answer: п'ять років
+    options:
+    - п'ять років
+    - п'ять роки
+    - п'ять рік
+  - sentence: Моєму другові двадцять _____.
+    answer: один рік
+    options:
+    - один рік
+    - один роки
+    - один років
+  - sentence: Цьому місту триста _____.
+    answer: років
+    options:
+    - років
+    - роки
+    - рік
+  - sentence: Моєму брату двадцять _____.
+    answer: два роки
+    options:
+    - два роки
+    - два років
+    - два рік
+- id: match-up-vocab-workbook
+  type: match-up
+  instruction: З'єднайте слова з їхнім перекладом.
+  pairs:
+  - left: обидва
+    right: both (masculine/neuter)
+  - left: обидві
+    right: both (feminine)
+  - left: пів
+    right: half
+  - left: півтора
+    right: one and a half (masculine/neuter)
+  - left: півтори
+    right: one and a half (feminine)
+  - left: десяток
+    right: a ten / a dozen

@@ -6,7 +6,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: ти
-  translation: you (informal, singular)
+  translation: you (informal)
   expression: false
   pos: ім.
   gender: ''
@@ -23,6 +23,12 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: воно́
+  translation: it
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: ми
   translation: we
   expression: false
@@ -30,7 +36,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: ви
-  translation: you (formal singular or plural)
+  translation: you (plural/formal)
   expression: false
   pos: ім.
   gender: ''
@@ -41,124 +47,76 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: мене́
-  translation: me (object form of я)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: тебе́
-  translation: you (object form of ти, informal)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: вас
-  translation: you (object form of ви, formal)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: йо́го
-  translation: his (doesn't change form)
+- word: приві́т
+  translation: hi
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: її
-  translation: her (doesn't change form)
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: добрий день
+  translation: good afternoon
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: мені́
-  translation: to me (dative of я)
-  expression: false
-  pos: ім.
+- word: мене звати
+  translation: my name is
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як тебе звати?
+  translation: what's your name? (informal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як вас звати?
+  translation: what's your name? (formal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як його звати?
+  translation: what's his name?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як її звати?
+  translation: what's her name?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дуже приємно
+  translation: nice to meet you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: приємно познайомитись
+  translation: nice to meet you / nice to get acquainted
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені також
+  translation: me too
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: це
-  translation: this is / it is / these are (unchanging pointer word)
+  translation: this is / it is
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: зва́ти
-  translation: to call (used in name constructions)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: мене звати
-  translation: 'my name is (literally: me they-call)'
+- word: хто це?
+  translation: who is this?
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: Як вас звати?
-  translation: What's your name? (formal)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Як його звати?
-  translation: What is his name?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Як її звати?
-  translation: What is her name?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мені також!
-  translation: Me too! / Likewise! (response to Дуже приємно)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Приємно познайомитись!
-  translation: Pleased to meet you / Pleased to get acquainted (formal variant)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дуже приємно познайомитись!
-  translation: Very pleased to meet you (formal)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: та́ко́ж
-  translation: too, also, likewise
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: але́
-  translation: but
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: не
-  translation: not (negation, placed before the noun)
-  expression: false
-  pos: част.
-  gender: ''
-  verified: true
-- word: з
-  translation: from (used with country/city names)
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: зі
-  translation: from (variant of з used before consonant clusters)
-  expression: false
-  pos: прийм.
   gender: ''
   verified: true
 - word: зві́дки
@@ -167,54 +125,48 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: Звідки ти?
-  translation: Where are you from? (informal)
+- word: звідки ти?
+  translation: where are you from? (informal)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Звідки ви?
-  translation: Where are you from? (formal)
+- word: звідки ви?
+  translation: where are you from? (formal)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Я з...
-  translation: I'm from... (followed by country/city in genitive)
-  expression: true
-  pos: ''
+- word: з
+  translation: from
+  expression: false
+  pos: прийм.
   gender: ''
   verified: true
-- word: Що це?
-  translation: What is this? (for things, places, concepts)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Хто це?
-  translation: Who is this? (for people and animals)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: приві́т
-  translation: hi (informal greeting)
+- word: Украї́на
+  translation: Ukraine
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: добрий день
-  translation: good day (formal greeting)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пізнайомитись
-  translation: to get acquainted, to meet
+- word: Кана́да
+  translation: Canada
   expression: false
   pos: ''
   gender: ''
   verified: false
+- word: Німе́ччина
+  translation: Germany
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Шта́ти
+  translation: the States
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
 - word: студе́нт
   translation: student (male)
   expression: false
@@ -275,18 +227,6 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: журналі́ст
-  translation: journalist (male)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: журналі́стка
-  translation: journalist (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: украї́нець
   translation: Ukrainian (male)
   expression: false
@@ -323,95 +263,29 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: брита́нець
-  translation: British (male)
+- word: друг
+  translation: friend
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: брита́нка
-  translation: British (female)
+- word: мій
+  translation: my
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ні́мець
-  translation: German (male)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: німке́ня
-  translation: German (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Украї́на
-  translation: Ukraine
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Кана́да
-  translation: Canada
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Німе́ччина
-  translation: Germany
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Велика Британія
-  translation: Great Britain
-  expression: true
-  pos: ''
+  pos: прикм.
   gender: ''
   verified: true
-- word: Шта́ти
-  translation: the States (USA, informal)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: Австра́лія
-  translation: Australia
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Ки́їв
-  translation: Kyiv
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: Львів
-  translation: Lviv
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Оде́са
-  translation: Odesa
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Харків
-  translation: Kharkiv
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: університе́т
-  translation: university
+- word: йо́го
+  translation: his
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: її
+  translation: her
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: ка́ва
   translation: coffee
@@ -425,9 +299,9 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: украї́нська
-  translation: Ukrainian (language)
+- word: суп
+  translation: soup
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true

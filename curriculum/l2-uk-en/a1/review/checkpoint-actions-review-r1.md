@@ -1,36 +1,41 @@
 ## Linguistic Scan
-- "Як ти себе почуваєш?" is a classic Russian calque. The correct natural Ukrainian is "Як ти почуваєшся?".
+No linguistic errors found.
 
 ## Exercise Check
-- `group-sort-verb-groups`: Present. Placed after the reading section to consolidate pattern recognition.
-- `quiz-mixed-conjugation`: Present. Placed correctly after the grammar rules.
-- `fill-in-dialogue-completion`: Present. Placed correctly after the connected dialogue.
-- `fill-in-describe-your-day`: Present. Placed correctly at the end of the summary.
-All markers match the plan's `activity_hints`, are correctly formatted, and are well distributed throughout the module.
+All activity markers (`fill-in-describe-day`, `group-sort-verbs`, `quiz-mixed-conjugation`, `fill-in-dialogue-completion`) are correctly placed after the relevant sections and exactly match the type and focus requested in the plan's `activity_hints`. There are enough exercise markers total and they test the concepts introduced immediately before them.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all required outline sections. Word counts meet the minimums. Seamlessly integrates the specific A1.3 review requirements. |
-| 2. Linguistic accuracy | 8/10 | Contains a well-known textbook calque ("Як ти себе почуваєш?" instead of "Як ти почуваєшся?"). Otherwise, conjugation forms, idioms, and vocabulary usage are accurate. |
-| 3. Pedagogical quality | 10/10 | Excellent breakdown of Group I and Group II rules, using the 3rd person plural to practically identify groups. The flow logically progresses from recognition to explicit rules to connected speech. |
-| 4. Vocabulary coverage | 10/10 | Seamlessly integrates A1.3 vocabulary (actions, morning routine, time expressions) without introducing unauthorized new words. |
-| 5. Exercise quality | 10/10 | All required exercise markers are present, mapped to the correct plan items, and strategically placed immediately after the relevant instructional sections. |
-| 6. Engagement & tone | 8/10 | Contains minor meta-commentary ("This is not a test. It is a mirror", "This is a major milestone"), which borders on telling instead of showing, but the overall tone remains supportive and clear. |
-| 7. Structural integrity | 10/10 | Perfect markdown structure, dialogue tags are correctly applied, and all headers match the plan. |
-| 8. Cultural accuracy | 10/10 | Natural framing of routines and professions without any culturally discordant elements. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogue is highly natural, multi-turn, and effectively synthesizes all grammar points (both verb groups, modals, questions, reflexives) into a realistic Saturday morning conversation. |
+| 1. Plan adherence | 10/10 | Covers all grammar points and sections specified in the `content_outline`. Fits the 1200 word target comfortably (1785 words) and explicitly recaps M15-M20 as requested. |
+| 2. Linguistic accuracy | 10/10 | All Ukrainian text is correct. No Russianisms, Surzhyk, or calques. Correctly highlights the naturalness rule of using "ставити питання" instead of the literal translation "задавати". |
+| 3. Pedagogical quality | 9/10 | Provides clear explanations with examples. Deducting slightly for a minor translation issue where "гуляти" is translated literally as "walk" instead of "go for a walk" in the dialogue context, which sounds like inquiring about physical ability. |
+| 4. Vocabulary coverage | 10/10 | The module effectively uses the review vocabulary across all sections without introducing unneeded new words. |
+| 5. Exercise quality | 10/10 | All 4 exercise markers from the plan are present and placed logically after their corresponding pedagogical sections. |
+| 6. Engagement & tone | 10/10 | The text maintains a supportive and encouraging teacher persona without any corporate or gamified filler. |
+| 7. Structural integrity | 8/10 | Deducting due to an incomplete/dangling sentence right before the "Читання" header: "If these patterns feel familiar, ". Otherwise well structured. |
+| 8. Cultural accuracy | 10/10 | Culturally appropriate contexts and names are utilized seamlessly. |
+| 9. Dialogue & conversation quality | 10/10 | Natural conversational exchange between Viktor and Olena, demonstrating appropriate refusal strategies like "Не можу" instead of just "Ні". |
 
 ## Findings
-[Linguistic accuracy] [critical]
-Location: "Підсумок — Summary" section, under the "Питальні слова" bullet point
-Issue: The phrase "Як ти себе почуваєш?" is a well-known Russian calque ("Как ты себя чувствуешь?"). In natural Ukrainian, reflexive verbs are preferred for this meaning.
-Fix: Replace "**Як ти себе почуваєш?**" with "**Як ти почуваєшся?**"
+[Structural integrity] [major]
+Location: "Що ми знаємо? (What Do We Know?)" — "If these patterns feel familiar, \n\n## Читання (Reading Practice)"
+Issue: The sentence is incomplete and dangling directly above the next heading.
+Fix: Complete the sentence with "you are ready to see them in action."
+
+[Pedagogical quality] [minor]
+Location: "Діалог (Connected Dialogue)" — "> **Віктор:** Ти можеш гуляти зараз? *(Can you walk right now?)*" and "When Viktor asks if she can walk, she doesn't just say"
+Issue: Translating "гуляти" as "walk" in the context of meeting a friend sounds slightly awkward, like inquiring about physical ability. "Go for a walk" or "hang out" is much more natural contextually.
+Fix: Change "walk" to "go for a walk" in the translation and explanation.
 
 ## Verdict: REVISE
-The module is excellently structured and pedagogically highly effective, but contains a critical linguistic calque that teaches incorrect phrasing and must be resolved before shipping.
+The module is overall excellent and meets all plan requirements, but requires revision due to an incomplete/dangling sentence affecting structural integrity and a minor translation clarification. Both issues are fixed via deterministic replacement.
 
 <fixes>
-- find: "**Як ти себе почуваєш?** (How do you feel?)"
-  replace: "**Як ти почуваєшся?** (How do you feel?)"
+- find: "If these patterns feel familiar, \n\n## Читання (Reading Practice)"
+  replace: "If these patterns feel familiar, you are ready to see them in action.\n\n## Читання (Reading Practice)"
+- find: "Ти можеш гуляти зараз? *(Can you walk right now?)*"
+  replace: "Ти можеш гуляти зараз? *(Can you go for a walk right now?)*"
+- find: "When Viktor asks if she can walk, she doesn't just say"
+  replace: "When Viktor asks if she can go for a walk, she doesn't just say"
 </fixes>

@@ -1,114 +1,38 @@
-## Dialogues (~330 words total)
+## Dialogues (~320 words total)
+- P1 (~30 words): Introduction to the importance of narrative in language learning — transitioning from simple facts to a life story that spans across time.
+- P2 (~100 words): Dialogue 1 — An interview between two friends. Speaker A asks about Speaker B's origins and plans. Content: "Я народився в Канаді... зараз я живу в Києві... я буду працювати тут і вчити мову." Focus on natural tense shifts.
+- P3 (~50 words): Analysis of Dialogue 1. Highlight how the speaker moves from the past ("народився") to the present ("живу") and then to the future ("буду працювати") in just three sentences.
+- P4 (~100 words): Dialogue 2 — Anna's story. She talks about her education and career path. Content: "Я народилася у Львові... закінчила університет... зараз я працюю вчителькою... я буду подорожувати в Японію." Focus on feminine gender agreement in the past tense.
+- P5 (~40 words): Analysis of Dialogue 2. Explain the sequence of life events: Birth → School → University → Job → Future Dream. Show how each stage requires a specific grammatical form.
 
-- P1 (~30 words): Scene-setter — introduce two people meeting for the first time and wanting to understand each other's full story: past, present, future.
+## Три часи разом (Three Tenses Together) (~350 words total)
+- P1 (~60 words): Theoretical overview of combining tenses. Explain the "Time Line" of a biography. Contrast the three main structures: Past (-в/-ла), Present (person endings), and Compound Future (буду + infinitive).
+- P2 (~80 words): Focus on the Past Tense (Минулий час). Teach the verbs "народитися" (to be born), "жити" (to live), and "вчитися" (to study). Provide examples with gender agreement: "Він жив у селі" vs. "Вона жила у місті."
+- P3 (~70 words): Focus on the Present Tense (Теперішній час). Using the adverb "зараз" (now) to ground the story in the present. Examples: "Я зараз працюю програмістом," "Я вивчаю українську мову."
+- P4 (~70 words): Focus on the Future Tense (Майбутній час). Using "буду" + infinitive for plans. Teach "потім" (then) and "далі" (further). Examples: "Потім я буду жити в Одесі," "Далі ми будемо подорожувати."
+- P5 (~70 words): Signal words table. List and explain: раніше (before), у дитинстві (in childhood), зараз (now), сьогодні (today), потім (then), наступного року (next year). Explain how these words trigger specific tense choices.
+- <!-- INJECT_ACTIVITY: matching-tense-category --> [matching, focus: Match the life event verb to the correct tense category, 6 pairs: народився, переїхала, живу, працюю, буду подорожувати, будемо вчитися]
+- <!-- INJECT_ACTIVITY: fill-in-signal-words --> [fill-in, focus: Use signal words to determine the correct tense, 5 items: раніше я {жив}, зараз я {працюю}, далі я {буду вивчати}, у дитинстві вона {любила}, сьогодні ми {живемо}]
 
-- Dialogue 1 (~130 words): Multi-turn exchange between Maksym (Canadian-Ukrainian diaspora) and Oksana (Kyiv local). Covers all three tenses in one conversation:
-  — Розкажи про себе! — Я народився в Канаді, у Торонто.
-  — А зараз ти живеш тут? — Так, зараз я живу в Києві.
-  — Чому ти переїхав? — Я хотів вивчати українську. Мої бабуся і дідусь з України.
-  — А що ти будеш робити далі? — Я буду працювати тут і вчити мову.
-  — Чудово! Успіхів тобі!
-  Label each verb with its tense in a margin note: народився (past) / живу (present) / буду працювати (future).
+## Моя історія (My Story) (~350 words total)
+- P1 (~120 words): Model Reading — "Taras's Story." A cohesive 10-sentence text. Content: Born in Odessa (1995), lived with parents, loved math, moved to Kyiv, works as a programmer, plans to travel and keep living in Kyiv.
+- P2 (~60 words): Deconstruction of Taras's story using the Ukrainian school structure: Зачин (Introduction - birth), Основна частина (Main Part - current life/job), and Кінцівка (Conclusion - future plans and feelings).
+- P3 (~70 words): Vocabulary focus: "переїхати" (to move), "закінчити" (to finish/graduate), "мрія" (dream). Explain how "переїхати" is a key narrative verb to change the setting from past to present.
+- P4 (~100 words): Writing Guide for the Student. Step-by-step instructions on how to build their own 8-10 sentence story. Provide sentence starters: "Я народився/народилася в...", "Я вчився/вчилася в...", "Зараз я...", "Я хочу...".
+- <!-- INJECT_ACTIVITY: ordering-life-events --> [ordering, focus: Put the life events in logical chronological order, 5 items: birth in Toronto -> childhood -> university -> work in Kyiv -> future travel]
+- <!-- INJECT_ACTIVITY: fill-in-biography-combined --> [fill-in, focus: Complete a biography combining all three tenses, 4 items: народилася (past), вчилася (past), працюю (present), буду подорожувати (future)]
 
-- P2 (~20 words): Transition — now hear Anna tell HER story in three tenses, from birth to future dreams.
-
-- Dialogue 2 (~130 words): Anna narrates her life to a new colleague:
-  — Я народилася у Львові. Там я вчилася в школі.
-  — Потім я переїхала в Київ і закінчила університет.
-  — Зараз я працюю вчителькою і живу в центрі міста.
-  — А що далі? — Я буду подорожувати! Я хочу побачити Японію.
-  — І ти будеш вчити японську? — Може! Але спочатку — українська для тебе!
-  Flow annotation: past (народилася, вчилася, переїхала, закінчила) → present (працюю, живу) → future (буду подорожувати, буду вчити).
-
-- P3 (~20 words): Observation — notice how the story moves: past events first, then now, then dreams. That is the shape of every life story in Ukrainian.
-
----
-
-## Три часи разом (Three Tenses Together) (~330 words total)
-
-- P1 (~100 words): Present the three-part life story scaffold with a structured list (not a table — lists build reading skill):
-  МИНУЛИЙ ЧАС — things that already happened: Я народився / народилася в... Я жив / жила в... Я вчився / вчилася... Я працював / працювала...
-  ТЕПЕРІШНІЙ ЧАС — what is true right now: Зараз я живу в... Я працюю... Я вивчаю... Я люблю...
-  МАЙБУТНІЙ ЧАС — what will come: Я буду працювати... Я буду вивчати... Я буду жити...
-  Emphasise the gender split in past forms: -в (Я народивСЯ — masculine) vs. -ла (Я народиЛАся — feminine). Three examples each: народився/народилася, жив/жила, вчився/вчилася.
-
-- P2 (~100 words): Signal words are the listener's roadmap. Each tense has its own set of signal words that tell the listener which tense is coming BEFORE they hear the verb:
-  Past signals: раніше (before/earlier), у дитинстві (in childhood), коли я був/була маленьким/маленькою (when I was little), тоді (back then).
-  Present signals: зараз (now), сьогодні (today), цього року (this year).
-  Future signals: потім (then/later), далі (further/next), наступного року (next year), скоро (soon).
-  Contrast pair to notice: Раніше я жив у Канаді. (past) vs. Зараз я живу в Україні. (present) — same verb root, opposite tense, different signal word.
-
-- P3 (~60 words): Natural transition tip — Ukrainian speakers often use "А потім..." to move from past to present and "А далі..." to move from present to future. These two phrases are the hinges of a life story. Practice: Я народився в Одесі. А потім я переїхав у Київ. А далі — я буду подорожувати!
-
-- Exercise (~70 words of framing + items): fill-in — use the signal word to choose the correct tense form (5 items):
-  Раніше я ___ (жив / живу / буду жити) в Канаді.
-  Зараз я ___ (працюю / працював / буду працювати) в університеті.
-  Далі я ___ (буду вивчати / вивчав / вивчаю) українську мову.
-  У дитинстві вона ___ (любила / любить / буде любити) читати.
-  Сьогодні ми ___ (живемо / жили / будемо жити) в Україні.
-
----
-
-## Моя історія (My Story) (~330 words total)
-
-- P1 (~30 words): Introduction — now we read a full model story. Taras is a programmer from Odesa who moved to Kyiv. Read his story and notice how all three tenses flow together.
-
-- P2 (~150 words): Taras's model story in continuous prose (no labels — the reader sees natural flow):
-  Я народився в Одесі у тисяча дев'ятсот дев'яносто п'ятому році. Я жив там з батьками і сестрою. У дитинстві я ходив у школу і любив математику. Потім я переїхав у Київ і вчився в університеті.
-  Зараз я живу в Києві. Я працюю програмістом. Я люблю свою роботу. У вільний час я граю у футбол і читаю книжки.
-  Далі я буду подорожувати. Я буду вивчати англійську. І я буду жити в Києві — це моє місто!
-  After the story: highlight the tense shifts in a short annotation: past verbs — народився, жив, ходив, любив, переїхав, вчився; present verbs — живу, працюю, люблю, граю, читаю; future constructions — буду подорожувати, буду вивчати, буду жити.
-
-- Exercise 1 (~50 words of framing + items): ordering — put Taras's life events in chronological order (5 events provided scrambled):
-  Я народився в Торонто.
-  У дитинстві я жив з батьками.
-  Потім я вчився в університеті.
-  Зараз я живу в Києві і працюю програмістом.
-  Далі я буду подорожувати.
-
-- P3 (~70 words): Your turn — structured prompt guiding the learner to tell THEIR own story using the same scaffold:
-  Start: Я народився / народилася в [місто/країна].
-  Past: Я жив/жила... Я вчився/вчилася... (use at least 3 past verbs)
-  Present: Зараз я живу... Я працюю... Я вивчаю українську, тому що...
-  Future: Я буду... Я хочу... (use at least 3 future constructions)
-  Target: 8–10 sentences. Use раніше / зараз / далі to signal each tense shift.
-
-- Exercise 2 (~30 words of framing + items): fill-in — complete Anna's biography (4 items), choosing the correct tense form:
-  Я ___ (народилася / народився / народилися) у Львові.
-  Зараз я ___ (працюю / працювала / буду працювати) вчителькою.
-  Наступного року я ___ (буду подорожувати / подорожувала / подорожую).
-  Там я ___ (вчилася / вчилися / буду вчитися) в школі.
-
----
-
-## Підсумок (~330 words total)
-
-- P1 (~120 words): Grammar recap — three tenses side by side with the key patterns:
-  Минулий час — past: add -в (masc), -ла (fem), -ло (neut), -ли (pl) to the verb stem: народи-В, народи-ЛА, жи-В, жи-ЛА, вчи-В-ся, вчи-ЛА-ся.
-  Теперішній час — present: person endings: я живу, ти живеш, він/вона живе, ми живемо, ви живете, вони живуть.
-  Майбутній час — future: буду + infinitive: я буду подорожувати, ти будеш працювати, він/вона буде вивчати.
-  Key reminder: future тense at A1 always uses буду + infinitive — never a single conjugated form.
-
-- P2 (~80 words): Signal words quick reference — three columns, one for each tense:
-  МИНУЛИЙ: раніше, у дитинстві, тоді, колись, коли я був/була маленьким/маленькою, потім (when narrating past sequence).
-  ТЕПЕРІШНІЙ: зараз, сьогодні, цього року, щодня.
-  МАЙБУТНІЙ: далі, потім (when pointing forward), наступного року, скоро, я хочу + infinitive.
-  Tip: the same word потім can signal past sequence OR future — context tells you which.
-
-- P3 (~80 words): Life story core vocabulary — words every story needs:
-  народитися (to be born) — я народився / народилася
-  жити (to live) — я жив / жила / живу / буду жити
-  вчитися (to study) — я вчився / вчилася / вчуся / буду вчитися
-  переїхати (to move/relocate) — я переїхав / переїхала (past only at A1 — perfective)
-  подорожувати (to travel) — я буду подорожувати
-  закінчити (to finish/graduate) — я закінчив / закінчила
-  розповідати (to tell/narrate) — я розповідаю / розповідав / буду розповідати
-
-- Self-check (~50 words): Bulleted questions for self-assessment:
-  • Can you say where you were born in Ukrainian? (Я народився/народилася в...)
-  • Can you describe where you live NOW? (Зараз я живу в...)
-  • Can you say THREE things you did in the past? (-в/-ла forms)
-  • Can you say TWO things you plan to do in the future? (буду + infinitive)
-  • Can you tell your whole story in 8 sentences, using signal words?
+## Підсумок (~300 words total)
+- P1 (~100 words): Final summary of the three-tense system. A table recap:
+    - Past: -в (m), -ла (f), -ли (pl).
+    - Present: -ю, -еш, -є (person endings).
+    - Future: буду, будеш, буде + infinitive.
+- P2 (~100 words): Vocabulary check. List the 8 required words from the plan with definitions and a sample sentence for each: народитися, жити, вчитися, переїхати, зараз, раніше, далі, розповідати.
+- P3 (~100 words): Self-check checklist for the learner:
+    - Can you state where you were born (using gender agreement)?
+    - Can you use "зараз" to describe your current job or study?
+    - Can you list two things you will do next year using "буду"?
+    - Do you know the difference between "раніше" and "потім"?
+    - Have you written a 10-sentence narrative using all three tenses?
 
 Grand total: ~1320 words

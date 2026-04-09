@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and ordered correctly. Both textbook
+    references cited (Ponomarova p.86, Vashulenko p.112 — RAG-confirmed). All recommended
+    vocab present. **Deduction:** Plan `vo
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'Zero Russianisms, zero surzhyk, zero calques. All 17 adjective/noun forms
+    batch-verified in VESUM. Gender assignments correct for all 17 nouns. Case endings
+    verified: "дерев''яний" (m.nom), "зручне" (n'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues (Presentation) → explicit rules with він/вона/воно
+    test (Presentation) → vocabulary organized by gender with sentences (Practice)
+    → self-check (Production). 15+ Ukrainian'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 9/10 required vocabulary items present in prose context. All 8 recommended
+    items present. **Deduction:** "книга" from required list replaced by "книжка"
+    throughout. Words introduced naturally in dialo
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers match all 4 plan activity_hints in type and focus. Well-placed
+    after teaching sections. Types vary (quiz, group-sort, fill-in). Content generated
+    by separate YAML tool so can't verify items/
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Zero motivational openers, zero meta-commentary, zero "You have unlocked..."
+    language. Direct teacher voice: "Did you notice? Стіл gets мій, кімната gets моя."
+    Cultural detail: "Вона українська!" in d'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections present matching plan. Clean markdown, correct HTML
+    dialogue formatting. Word count 1289/1200 target ✅. No stray tags, no duplicate
+    summaries, no meta sections.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    anywhere. No "Slavic language" hedging. Grammatical gender taught through Ukrainian
+    textbook methodology (він/мій test), not thr
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Named speakers (Марія, Оленка) with distinct voices. Natural situations:
+    showing your room on video call, comparing what''s in your bag. Multi-turn with
+    follow-ups ("А що ще є?", "Яка книжка?"). Not in'
+findings: []

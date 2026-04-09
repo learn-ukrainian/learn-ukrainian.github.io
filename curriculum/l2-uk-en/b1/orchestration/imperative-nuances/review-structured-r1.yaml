@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the explicit plan point and vocabulary hint for "Не забувай (impf)
+    вимикати світло" in the dialogue section, incorrectly replacing it with "акуратно
+    повісити".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: High quality with detailed morphological explanations. However, contains
+    one Russianism ("робочій обстановці").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. Concepts like aspect, negation, and polite
+    softening are contextualized brilliantly through realistic scenarios.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Required vocabulary is seamlessly incorporated, but the recommended word
+    "вимикати" is missing from the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: 'DEDUCTION: Injected 8 markers instead of the planned 6, creating duplicates
+    (`group-sort` and `match-up`). Placed `match-up` after section 2 despite it testing
+    content from sections 3 and 5. Also util'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging and natural ("Вітаю вас!", "чудово демонструє").
+    Avoids corporate or purely mechanical language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is above the target of 4000 (4422 words). Markdown formatting
+    is clean, and section progression is strictly adhered to.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Outstanding decolonization focus (explicitly correcting the calque "пішли"
+    vs "ходімо"). Integrates Franko and folk sayings authentically.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are lifelike and illustrative. Minor deduction due to the first
+    dialogue missing the planned grammar contrast with "вимикати".
+findings: []

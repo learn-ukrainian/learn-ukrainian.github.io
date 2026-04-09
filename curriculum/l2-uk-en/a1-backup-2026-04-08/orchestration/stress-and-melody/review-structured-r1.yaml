@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The text misses the plan point regarding the *Заболотний Grade 5* reference
+    to 38 sounds, as well as the explicit detail that stress "moves between forms
+    of the same word" in the intro section. Additi
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'Flawless. Phonetic properties are described accurately, syllable divisions
+    (like `ра-нок`) follow Ukrainian phonetic rules instead of blindly splitting roots,
+    and the intonation contours (falling for '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional. The "break into syllables -> find stress -> read smoothly"
+    method and the practical tip of tapping the table for each syllable mirror actual
+    Grade 1 teaching methods in Ukraine.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covered almost all terms perfectly in context, but missed the required
+    word **столиця** (capital) from the plan.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Appropriate marker placements directly following the relevant concepts.
+    They flow nicely with the lessons rather than being clustered at the end.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, grounded tone. It avoids generic language hype, offering
+    actionable, specific instructions ("write it down with the stress mark immediately").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is perfectly clean, with exact matching headings from the `content_outline`.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply decolonized and authentic. Uses references to real Ukrainian textbooks
+    (Білоус) and natural names (Кирилко, Соломійка).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues demonstrate the concepts (intonation) in a very authentic, non-robotic
+    way.
+findings: []

@@ -2,352 +2,350 @@ version: '1.0'
 module: checkpoint-actions
 level: a1
 inline:
-- id: group-sort-verb-groups
-  type: group-sort
-  instruction: 'Sort each verb into the correct group. Tip: check the **вони** form
-    — Group I ends in **-ють**, Group II ends in **-ять**, Reflexive ends in **-ся**.'
-  groups:
-  - label: І дієвідміна (Group I)
-    items:
-    - читати
-    - слухати
+- id: fill-in-describe-day
+  type: fill-in
+  instruction: Describe your day. Choose the correct **дієслово** (verb).
+  items:
+  - sentence: Я _____ о сьомій ранку.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - вмиваюся
+    - снідаю
+  - sentence: Спочатку я _____, а потім снідаю.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - сплю
+    - працюю
+  - sentence: Я дуже _____ каву.
+    answer: люблю
+    options:
+    - люблю
+    - працюю
+    - гуляю
+  - sentence: О дев'ятій я вже _____.
+    answer: працюю
+    options:
+    - сплю
+    - працюю
+    - прокидаюся
+  - sentence: Удень я можу _____ в парку.
+    answer: гуляти
+    options:
     - гуляти
+    - гуляю
+    - гуляєш
+  - sentence: Увечері я _____ спати.
+    answer: хочу
+    options:
+    - хочу
+    - люблю
+    - сплю
+- id: group-sort-verbs
+  type: group-sort
+  instruction: 'Sort the verbs by their conjugation group: **Група I**, **Група II**,
+    or **Зворотні** (reflexive).'
+  groups:
+  - label: Група I (-ати/-яти)
+    items:
+    - знати
+    - думати
     - працювати
-    - відпочивати
-    - снідати
-  - label: ІІ дієвідміна (Group II)
+    - малювати
+  - label: Група II (-ити/-іти)
     items:
     - говорити
+    - бачити
+    - робити
     - любити
-    - вчити
-    - мусити
-  - label: Зворотні (Reflexive)
+  - label: Зворотні (-ся/-сь)
     items:
     - прокидатися
     - вмиватися
     - одягатися
-    - дивитися
+    - зустрічатися
 - id: quiz-mixed-conjugation
   type: quiz
-  instruction: Choose the correct verb form to complete each sentence.
+  instruction: Choose the correct form of the **дієслово** (verb).
   items:
-  - question: Я _____ книгу щодня.
+  - question: Я _____ українську мову.
     options:
-    - читаю
-    - читаєш
+    - знаю
+    - знає
+    - знаєш
+    correct: 0
+  - question: Ти _____ англійською?
+    options:
+    - говориш
+    - говорю
+    - говорять
+    correct: 0
+  - question: Він багато _____.
+    options:
+    - працює
+    - працюють
+    - працюєш
+    correct: 0
+  - question: Ми _____ каву.
+    options:
+    - любимо
+    - люблять
+    - любить
+    correct: 0
+  - question: Ви _____ новий фільм?
+    options:
+    - бачите
+    - бачимо
+    - бачать
+    correct: 0
+  - question: Вони _____ в офісі.
+    options:
+    - думають
+    - думає
+    - думаєте
+    correct: 0
+  - question: Я _____ це завдання.
+    options:
+    - роблю
+    - робиш
+    - робить
+    correct: 0
+  - question: Ти _____ в парку.
+    options:
+    - гуляєш
+    - гуляю
+    - гуляють
+    correct: 0
+  - question: Вона _____ книгу.
+    options:
     - читає
     - читають
+    - читаємо
     correct: 0
-  - question: Ти _____ дуже добре.
+  - question: Вони _____ нову інформацію.
     options:
-    - говорю
-    - говориш
-    - говорить
-    - говоримо
-    correct: 1
-  - question: Вона _____ музику увечері.
-    options:
-    - слухаю
-    - слухаєш
-    - слухає
-    - слухають
-    correct: 2
-  - question: Ми _____ у парку вранці.
-    options:
-    - гуляємо
-    - гуляєте
-    - гуляють
-    - гуляю
+    - знають
+    - знає
+    - знаєте
     correct: 0
-  - question: Він _____ математику в школі.
+- id: fill-in-dialogue-completion
+  type: fill-in
+  instruction: Complete the dialogue with the correct words.
+  items:
+  - sentence: — Привіт! _____ ти робиш?
+    answer: Що
     options:
-    - вчу
-    - вчиш
-    - вчить
-    - вчать
-    correct: 2
-  - question: Вони _____ по-українськи.
+    - Що
+    - Хто
+    - Де
+  - sentence: — Я зараз _____, але хочу каву.
+    answer: працюю
     options:
-    - говорить
-    - говорите
-    - говоримо
-    - говорять
-    correct: 3
-  - question: Я _____ відпочивати увечері.
+    - працюю
+    - працювати
+    - працює
+  - sentence: — Ти _____ гуляти зараз?
+    answer: можеш
     options:
-    - хочеш
+    - можеш
+    - можу
+    - можуть
+  - sentence: — Не _____, мушу працювати.
+    answer: можу
+    options:
+    - можу
+    - можеш
+    - може
+  - sentence: — _____ ти вільний?
+    answer: Коли
+    options:
+    - Коли
+    - Куди
+    - Як
+  - sentence: — Я вільний о шостій. _____ ми зустрічаємося?
+    answer: Де
+    options:
+    - Де
+    - Чому
+    - Хто
+  - sentence: — У центрі. Я вже _____ зустрітися!
+    answer: хочу
+    options:
     - хочу
+    - хотіти
+    - хочеш
+  - sentence: — Добре! До _____!
+    answer: зустрічі
+    options:
+    - зустрічі
+    - працюю
+    - каву
+workbook:
+- type: true-false
+  instruction: Read the statements about Ukrainian grammar. Are they **правда** (true)
+    or **неправда** (false)?
+  items:
+  - statement: The suffix -ся indicates a reflexive verb (like прокидатися).
+    correct: true
+    explanation: Reflexive verbs describe actions you perform on yourself, adding
+      the suffix -ся.
+  - statement: The verb 'говорити' belongs to Group I.
+    correct: false
+    explanation: Verbs ending in -ити or -іти usually belong to Group II.
+  - statement: You should say 'я мусити йти'.
+    correct: false
+    explanation: 'You must conjugate the modal verb: ''я мушу йти''.'
+  - statement: The word 'куди' asks about direction (where to).
+    correct: true
+    explanation: Use 'куди' for direction and 'де' for a static location.
+  - statement: After a vowel, the suffix '-ся' can change to '-сь' (e.g., вмиваюсь).
+    correct: true
+    explanation: This is a common phonetic rule in Ukrainian.
+  - statement: In the sentence 'Я нічого не знаю', you only need one negative word.
+    correct: false
+    explanation: 'Ukrainian uses double negation: ''нічого'' and ''не'' must both
+      be used.'
+- type: match-up
+  instruction: Match the question to the logical answer.
+  pairs:
+  - left: Що ти робиш?
+    right: Я читаю книгу.
+  - left: Де ми зустрічаємося?
+    right: У центрі.
+  - left: Коли ти працюєш?
+    right: О дев'ятій.
+  - left: Чому ти спиш?
+    right: Бо я хочу спати.
+  - left: Ти можеш допомогти?
+    right: Не можу.
+  - left: Хто він?
+    right: Він дизайнер.
+- type: order
+  instruction: Put the dialogue lines in the correct order.
+  items:
+  - — Привіт! Що ти робиш?
+  - — Я працюю, але дуже хочу каву.
+  - — Ти можеш гуляти зараз?
+  - — Не можу, мушу працювати. Коли ти вільний?
+  - — Я вільний о шостій. Де ми зустрічаємося?
+  - — У центрі. До зустрічі!
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+- type: error-correction
+  instruction: Find the mistake in the sentence and choose the correct word.
+  items:
+  - sentence: Вона хочу каву.
+    error: хочу
+    correction: хоче
+    error_type: word
+    options:
     - хоче
-    - хочемо
-    correct: 1
-  - question: Ти _____ в лікарні?
+    - хочеш
+    - хочуть
+    explanation: The pronoun 'вона' (she) requires the third-person singular ending
+      '-е'.
+  - sentence: Я багато працюють.
+    error: працюють
+    correction: працюю
+    error_type: word
     options:
     - працюю
     - працюєш
     - працює
+    explanation: The pronoun 'я' (I) requires the first-person singular ending '-ю'.
+  - sentence: Ти бачу новий парк?
+    error: бачу
+    correction: бачиш
+    error_type: word
+    options:
+    - бачиш
+    - бачить
+    - бачать
+    explanation: The pronoun 'ти' (you) requires the second-person singular ending
+      '-иш'.
+  - sentence: Ми мусимо працює.
+    error: працює
+    correction: працювати
+    error_type: word
+    options:
+    - працювати
+    - працюю
     - працюємо
-    correct: 1
-  - question: Ви _____ математику?
+    explanation: After a modal verb like 'мусити', the next verb must be in the infinitive.
+  - sentence: Я нічого знаю.
+    error: знаю
+    correction: не знаю
+    error_type: phrase
     options:
-    - викладаємо
-    - викладаєте
-    - викладають
-    - викладаю
-    correct: 1
-  - question: Вони _____ рано щодня.
-    options:
-    - встаємо
-    - встаєте
-    - встають
-    - встаю
-    correct: 2
-- id: fill-in-dialogue-completion
-  type: fill-in
-  instruction: Complete the dialogue. Fill in the missing **verb form or question
-    word**.
-  items:
-  - sentence: Що ти тут _____? (What are you doing here?)
-    answer: робиш
-    options:
-    - робиш
-    - роблю
-    - робить
-    - робимо
-  - sentence: Я теж _____ гуляти. (I also want to walk.)
-    answer: хочу
-    options:
-    - хочу
-    - хочеш
-    - хоче
-    - хочемо
-  - sentence: Ти часто тут _____? (Do you walk here often?)
-    answer: гуляєш
-    options:
-    - гуляю
-    - гуляєш
-    - гуляє
-    - гуляємо
-  - sentence: Я _____ вставати рано через роботу. (I have to get up early because
-      of work.)
-    answer: мушу
-    options:
-    - можу
-    - хочу
-    - мушу
-    - люблю
-  - sentence: _____ ти працюєш? (Where do you work?)
-    answer: Де
+    - не знаю
+    - знати не
+    - знає не
+    explanation: 'Ukrainian requires double negation: ''нічого'' must be used with
+      ''не''.'
+  - sentence: Куди офіс?
+    error: Куди
+    correction: Де
+    error_type: word
     options:
     - Де
-    - Коли
     - Що
     - Хто
-  - sentence: Тобі _____ робота? (Do you like your job?)
-    answer: подобається
-    options:
-    - подобається
-    - любиш
-    - хочеш
-    - починається
-  - sentence: Я _____ о шостій і вмиваюся. (I wake up at six and wash up.)
-    answer: прокидаюся
-    options:
-    - прокидаюся
-    - одягаюся
-    - снідаю
-    - лягаю
-  - sentence: Увечері я _____ відпочивати. (In the evening I want to rest.)
-    answer: хочу
-    options:
-    - мушу
-    - можу
-    - хочу
-    - люблю
-- id: fill-in-describe-your-day
-  type: fill-in
-  instruction: Fill in the correct verb form to describe Taras's day from the reading
-    text.
+    explanation: '''Куди'' means ''where to'' (direction). ''Де'' means ''where''
+      (location).'
+- type: translate
+  instruction: Choose the correct Ukrainian translation.
   items:
-  - sentence: Я _____ о сьомій годині. (I wake up at seven.)
-    answer: прокидаюся
+  - source: I want to sleep.
     options:
-    - прокидаюся
-    - лягаю
-    - снідаю
-    - вмиваюся
-  - sentence: Спочатку я _____ і чищу зуби. (First I wash up and brush my teeth.)
-    answer: вмиваюся
+    - text: Я хочу спати.
+      correct: true
+    - text: Я мушу спати.
+      correct: false
+    - text: Я можу спати.
+      correct: false
+  - source: Where are we meeting?
     options:
-    - одягаюся
-    - вмиваюся
-    - прокидаюся
-    - снідаю
-  - sentence: Потім я _____. Я люблю каву. (Then I eat breakfast. I love coffee.)
-    answer: снідаю
+    - text: Де ми зустрічаємося?
+      correct: true
+    - text: Куди ми зустрічаємося?
+      correct: false
+    - text: Коли ми зустрічаємося?
+      correct: false
+  - source: First I wash my face, then I eat breakfast.
     options:
-    - снідаю
-    - обідаю
-    - вечеряю
-    - працюю
-  - sentence: Моя робота _____ о дев'ятій. (My work starts at nine.)
-    answer: починається
+    - text: Спочатку я вмиваюся, а потім снідаю.
+      correct: true
+    - text: Зараз я вмиваюся, а тоді снідаю.
+      correct: false
+    - text: Спочатку я снідаю, а потім вмиваюся.
+      correct: false
+  - source: They work in the office.
     options:
-    - починається
-    - закінчується
-    - прокидається
-    - вмивається
-  - sentence: Я _____ читати документи на роботі. (I can read documents at work.)
-    answer: можу
+    - text: Вони працюють в офісі.
+      correct: true
+    - text: Він працює в офісі.
+      correct: false
+    - text: Ми працюємо в офісі.
+      correct: false
+  - source: I really love coffee.
     options:
-    - хочу
-    - можу
-    - мушу
-    - люблю
-  - sentence: Я _____ лягати спати о десятій. (I must go to sleep at ten.)
-    answer: мушу
+    - text: Я дуже люблю каву.
+      correct: true
+    - text: Я хочу каву.
+      correct: false
+    - text: Я мушу каву.
+      correct: false
+  - source: He can help.
     options:
-    - хочу
-    - можу
-    - мушу
-    - починаю
-workbook:
-- type: match-up
-  instruction: Match each **infinitive** to its correct **я** (I) form. This shows
-    you the pattern for both verb groups.
-  pairs:
-  - left: читати
-    right: читаю
-  - left: говорити
-    right: говорю
-  - left: слухати
-    right: слухаю
-  - left: гуляти
-    right: гуляю
-  - left: мусити
-    right: мушу
-  - left: прокидатися
-    right: прокидаюся
-- type: true-false
-  instruction: Read the text about Taras again. Is each statement **правда (true)**
-    or **неправда (false)**?
-  items:
-  - statement: Тарас прокидається о восьмій годині.
-    correct: false
-    explanation: He wakes up at seven — о сьомій годині, not восьмій.
-  - statement: Він любить каву і бутерброди.
-    correct: true
-    explanation: 'The text says: я люблю каву і бутерброди.'
-  - statement: Його робота починається о дев'ятій.
-    correct: true
-    explanation: 'The text says: Моя робота починається о дев''ятій.'
-  - statement: Тарас може читати документи і відповідати на листи.
-    correct: true
-    explanation: 'The text says: Я можу читати документи і відповідати на листи.'
-  - statement: Він мусить лягати спати о одинадцятій.
-    correct: false
-    explanation: He must sleep at ten — о десятій, not одинадцятій.
-  - statement: Увечері він слухає музику або дивиться фільм.
-    correct: true
-    explanation: 'The text says: Я слухаю музику або дивлюся фільм.'
-- type: error-correction
-  instruction: Each sentence has a **wrong verb form**. Find the error and choose
-    the correct form.
-  items:
-  - sentence: Ти говорю добре по-українськи.
-    error: говорю
-    correction: говориш
-    error_type: word
-    options:
-    - говориш
-    - говорить
-    - говоримо
-    explanation: 'For **ти**, Group II verb говорити takes ending **-иш**: говориш.
-      The form говорю belongs to **я**.'
-  - sentence: Вона читаєш книгу.
-    error: читаєш
-    correction: читає
-    error_type: word
-    options:
-    - читає
-    - читаю
-    - читаємо
-    explanation: 'For **він/вона**, Group I verb читати takes ending **-є**: читає.
-      The form читаєш belongs to **ти**.'
-  - sentence: Ми гуляють у парку.
-    error: гуляють
-    correction: гуляємо
-    error_type: word
-    options:
-    - гуляємо
-    - гуляєте
-    - гуляю
-    explanation: 'For **ми**, Group I verb гуляти takes ending **-ємо**: гуляємо.
-      The form гуляють belongs to **вони**.'
-  - sentence: Вони говорите по-українськи.
-    error: говорите
-    correction: говорять
-    error_type: word
-    options:
-    - говорять
-    - говоримо
-    - говориш
-    explanation: 'For **вони**, Group II verb говорити takes ending **-ять**: говорять.
-      The form говорите belongs to **ви**.'
-  - sentence: Я хочеш спати.
-    error: хочеш
-    correction: хочу
-    error_type: word
-    options:
-    - хочу
-    - хоче
-    - хочемо
-    explanation: For **я**, хотіти uses **хочу**. The form хочеш belongs to **ти**.
-  - sentence: Він мушу працювати.
-    error: мушу
-    correction: мусить
-    error_type: word
-    options:
-    - мусить
-    - мусиш
-    - мусимо
-    explanation: For **він**, мусити uses **мусить**. The form мушу belongs to **я**.
-- type: fill-in
-  instruction: Complete each sentence with the correct form of **хотіти** (to want),
-    **могти** (can), or **мусити** (must).
-  items:
-  - sentence: Я _____ читати цю книгу. (I want to read this book.)
-    answer: хочу
-    options:
-    - хочу
-    - можу
-    - мушу
-  - sentence: Ти _____ говорити по-українськи! (You can speak Ukrainian!)
-    answer: можеш
-    options:
-    - хочеш
-    - можеш
-    - мусиш
-  - sentence: Він _____ працювати завтра. (He must work tomorrow.)
-    answer: мусить
-    options:
-    - хоче
-    - може
-    - мусить
-  - sentence: Ми _____ відпочивати увечері. (We want to rest in the evening.)
-    answer: хочемо
-    options:
-    - хочемо
-    - можемо
-    - мусимо
-  - sentence: Вона _____ лягати спати рано. (She must go to sleep early.)
-    answer: мусить
-    options:
-    - хоче
-    - може
-    - мусить
-  - sentence: Вони _____ гуляти в парку сьогодні. (They can walk in the park today.)
-    answer: можуть
-    options:
-    - хочуть
-    - можуть
-    - мусять
+    - text: Він може допомогти.
+      correct: true
+    - text: Вона може допомогти.
+      correct: false
+    - text: Він мусить допомогти.
+      correct: false

@@ -1,0 +1,151 @@
+{
+  "total_items": 148,
+  "grounded_items": 126,
+  "ungrounded": [
+    {
+      "word": "виїхали",
+      "exercise_type": "quiz",
+      "context": "Ми виїхали раніше, щоб не запізнитися.",
+      "role": "context"
+    },
+    {
+      "word": "проектом",
+      "exercise_type": "quiz",
+      "context": "Якщо ти маєш час, допоможи мені з проектом.",
+      "role": "context"
+    },
+    {
+      "word": "гуляли",
+      "exercise_type": "quiz",
+      "context": "Хоча вчора було холодно, ми довго гуляли в парку.",
+      "role": "context"
+    },
+    {
+      "word": "зустрінемося",
+      "exercise_type": "quiz",
+      "context": "Якщо я здам проект, ми зустрінемося в кафе.",
+      "role": "context"
+    },
+    {
+      "word": "гарячу",
+      "exercise_type": "group-sort",
+      "context": "Я п'ю гарячу каву, бо хочу прокинутися.",
+      "role": "answer"
+    },
+    {
+      "word": "гарна",
+      "exercise_type": "group-sort",
+      "context": "Ми підемо гуляти, якщо буде гарна погода.",
+      "role": "answer"
+    },
+    {
+      "word": "погода",
+      "exercise_type": "group-sort",
+      "context": "Ми підемо гуляти, якщо буде гарна погода.",
+      "role": "answer"
+    },
+    {
+      "word": "купила",
+      "exercise_type": "group-sort",
+      "context": "Вона купила квиток, хоча він був дорогий.",
+      "role": "answer"
+    },
+    {
+      "word": "дорогий",
+      "exercise_type": "group-sort",
+      "context": "Вона купила квиток, хоча він був дорогий.",
+      "role": "answer"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "group-sort",
+      "context": "Це стара компанія, де я працюю.",
+      "role": "answer"
+    },
+    {
+      "word": "поїхати",
+      "exercise_type": "match-up",
+      "context": "щоб поїхати на концерт.",
+      "role": "context"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "match-up",
+      "context": "бо на вулиці йшов дощ.",
+      "role": "context"
+    },
+    {
+      "word": "йшов",
+      "exercise_type": "match-up",
+      "context": "бо на вулиці йшов дощ.",
+      "role": "context"
+    },
+    {
+      "word": "дощ",
+      "exercise_type": "unjumble",
+      "context": "дощ.",
+      "role": "answer"
+    },
+    {
+      "word": "добре",
+      "exercise_type": "match-up",
+      "context": "Він добре говорить українською,",
+      "role": "answer"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "match-up",
+      "context": "Він добре говорить українською,",
+      "role": "answer"
+    },
+    {
+      "word": "українською",
+      "exercise_type": "match-up",
+      "context": "Він добре говорить українською,",
+      "role": "answer"
+    },
+    {
+      "word": "живе",
+      "exercise_type": "match-up",
+      "context": "хоча живе тут недавно.",
+      "role": "context"
+    },
+    {
+      "word": "недавно",
+      "exercise_type": "match-up",
+      "context": "хоча живе тут недавно.",
+      "role": "context"
+    },
+    {
+      "word": "залишилася",
+      "exercise_type": "error-correction",
+      "context": "Вона залишилася вдома, щоб вона дуже втомилася.",
+      "role": "context"
+    },
+    {
+      "word": "втомилася",
+      "exercise_type": "error-correction",
+      "context": "Вона залишилася вдома, щоб вона дуже втомилася.",
+      "role": "context"
+    },
+    {
+      "word": "допоможу",
+      "exercise_type": "unjumble",
+      "context": "допоможу",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 13,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "головний",
+      "кома",
+      "підрядний",
+      "речення",
+      "складне",
+      "сполучник"
+    ]
+  },
+  "all_grounded": false
+}

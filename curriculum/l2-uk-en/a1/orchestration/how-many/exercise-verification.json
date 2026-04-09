@@ -1,44 +1,75 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 56,
+  "grounded_items": 47,
+  "ungrounded": [
+    {
+      "word": "йому",
+      "exercise_type": "quiz",
+      "context": "Йому 33 _____.",
+      "role": "context"
+    },
+    {
+      "word": "брату",
+      "exercise_type": "quiz",
+      "context": "Брату 4 _____.",
+      "role": "context"
+    },
+    {
+      "word": "сестрі",
+      "exercise_type": "match-up",
+      "context": "Скільки років сестрі?",
+      "role": "answer"
+    },
+    {
+      "word": "потрібен",
+      "exercise_type": "error-correction",
+      "context": "Мені потрібен один книга.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "error-correction",
+      "context": "У мене є двадцять один гривні.",
+      "role": "context"
+    },
+    {
+      "word": "двісто",
+      "exercise_type": "error-correction",
+      "context": "Це коштує двісто гривень.",
+      "role": "context"
+    },
+    {
+      "word": "який",
+      "exercise_type": "match-up",
+      "context": "Який твій номер?",
+      "role": "answer"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "match-up",
+      "context": "Який твій номер?",
+      "role": "answer"
+    },
+    {
+      "word": "моїй",
+      "exercise_type": "unjumble",
+      "context": "Моїй",
+      "role": "answer"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 32,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 24,
     "not_tested": [
       "вісім",
-      "вісімдесят",
-      "гривня",
-      "два",
-      "двадцять",
-      "двісті",
-      "дев'яносто",
       "дев'ять",
-      "десять",
       "копійка",
-      "коштує",
-      "номер",
-      "нуль",
-      "один",
-      "п'ятдесят",
       "п'ятсот",
-      "п'ять",
-      "роки",
-      "років",
       "рік",
-      "скільки",
-      "сорок",
-      "сто",
-      "сім",
       "сімдесят",
       "тисяча",
-      "три",
-      "тридцять",
-      "триста",
-      "чотири",
-      "шістдесят",
       "шість"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

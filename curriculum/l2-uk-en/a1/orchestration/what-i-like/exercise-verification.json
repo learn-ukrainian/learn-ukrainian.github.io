@@ -1,26 +1,20 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 31,
+  "grounded_items": 30,
+  "ungrounded": [
+    {
+      "word": "книгу",
+      "exercise_type": "fill-in",
+      "context": "Я люблю ____ книгу.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 13,
     "not_tested": [
-      "готувати",
-      "грати",
-      "гуляти",
-      "дивитися",
-      "книга",
-      "любити",
-      "малювати",
-      "музика",
-      "подобатися",
-      "подорожувати",
-      "слухати",
-      "співати",
-      "фільм",
-      "читати"
+      "подобатися"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -2,71 +2,151 @@ version: '1.0'
 module: checkpoint-food-shopping
 level: a1
 inline:
-- id: quiz-accusative-check
+- id: group-sort-accusative-type
+  type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  groups:
+  - label: Неістоти — Inanimate (що?)
+    items:
+    - борщ
+    - хліб
+    - сік
+    - чай
+    - сир
+    - кава
+  - label: Істоти — Animate (кого?)
+    items:
+    - брата
+    - лікаря
+    - сусіда
+    - друга
+    - вчителя
+    - маму
+- id: quiz-shopping-situations
   type: quiz
-  instruction: Оберіть правильну форму (Choose the correct accusative form)
+  instruction: Оберіть правильну фразу (Choose the correct phrase)
+  items:
+  - question: 'You want to order coffee:'
+    options:
+    - Мені каву, будь ласка.
+    - Скільки коштує?
+    - Тут вільно?
+    - Рахунок, будь ласка.
+    correct: 0
+  - question: 'You ask for the price:'
+    options:
+    - Скільки коштує?
+    - Можна карткою?
+    - Що ви рекомендуєте?
+    - Дорого!
+    correct: 0
+  - question: 'You want to pay with a card:'
+    options:
+    - Рахунок, будь ласка.
+    - Можна карткою?
+    - Дорого!
+    - Дешево!
+    correct: 1
+  - question: 'You ask for the bill:'
+    options:
+    - Все було дуже смачно!
+    - Мені борщ.
+    - Рахунок, будь ласка.
+    - Можна меню?
+    correct: 2
+  - question: 'You ask for 1 kg of apples:'
+    options:
+    - Дайте кілограм яблук.
+    - Скільки коштує?
+    - Можна меню?
+    - Все було дуже смачно!
+    correct: 0
+  - question: 'You think the price is high:'
+    options:
+    - Дешево!
+    - Дорого!
+    - Нормальна ціна.
+    - Скільки коштує?
+    correct: 1
+  - question: 'You ask if a seat is free:'
+    options:
+    - Рахунок, будь ласка.
+    - Можна меню?
+    - Тут вільно?
+    - Що ви рекомендуєте?
+    correct: 2
+  - question: 'You compliment the food:'
+    options:
+    - Все було дуже смачно!
+    - Можна карткою?
+    - Це гостре?
+    - Дешево!
+    correct: 0
+- id: quiz-accusative-forms
+  type: quiz
+  instruction: Оберіть правильну форму (Choose the correct form)
   items:
   - question: Я їм ___.
     options:
-    - салату
-    - салата
     - салат
-    correct: 2
+    - салата
+    - салату
+    correct: 0
   - question: Я бачу ___.
     options:
     - брат
-    - брату
     - брата
-    correct: 2
+    - брату
+    correct: 1
   - question: Я п'ю ___.
     options:
-    - вода
     - воду
+    - вода
     - води
-    correct: 1
+    correct: 0
   - question: Я знаю ___.
     options:
-    - Олени
     - Олену
     - Олена
-    correct: 1
+    - Олени
+    correct: 0
   - question: Я люблю ___.
     options:
+    - борщ
     - борща
     - борщу
-    - борщ
-    correct: 2
+    correct: 0
   - question: Я чекаю ___.
     options:
+    - друга
     - друг
     - другу
-    - друга
-    correct: 2
+    correct: 0
   - question: Я купую ___.
     options:
-    - хліба
     - хліб
+    - хліба
     - хлібу
-    correct: 1
+    correct: 0
   - question: Я бачу ___.
     options:
-    - лікар
     - лікаря
+    - лікар
     - лікарю
-    correct: 1
+    correct: 0
   - question: Я їм ___.
     options:
-    - піца
     - піцу
+    - піца
     - піци
-    correct: 1
+    correct: 0
   - question: Я люблю ___.
     options:
-    - мами
-    - мама
     - маму
-    correct: 2
-- id: fill-in-cafe-market
+    - мама
+    - мами
+    correct: 0
+- id: fill-in-dialogue-completion
   type: fill-in
   instruction: Вставте правильне слово (Fill in the correct word)
   items:
@@ -94,12 +174,12 @@ inline:
     - кілограм
     - літр
     - пляшку
-  - sentence: — ___ борщ і воду, будь ласка.
+  - sentence: '— Потім у кафе: ___ борщ і воду, будь ласка.'
     answer: Мені
     options:
     - Мені
     - Я
-    - Меня
+    - Мене
   - sentence: — Рахунок, будь ласка. Можна ___?
     answer: карткою
     options:
@@ -118,325 +198,184 @@ inline:
     - брата
     - брат
     - братом
-- id: group-sort-accusative
-  type: group-sort
-  instruction: Розподіліть слова за категоріями (Sort by category)
-  groups:
-  - label: Inanimate (що?)
-    items:
-    - борщ
-    - хліб
-    - сік
-    - чай
-    - сир
-    - суп
-  - label: Animate (кого?)
-    items:
-    - брата
-    - лікаря
-    - сусіда
-    - друга
-    - вчителя
-    - маму
-- id: quiz-shopping-cafe
-  type: quiz
-  instruction: Що сказати? Оберіть правильну фразу (What do you say? Choose the correct
-    phrase)
-  items:
-  - question: 'You want to order coffee:'
-    options:
-    - Скільки коштує?
-    - Мені каву, будь ласка.
-    - Тут вільно?
-    correct: 1
-  - question: 'You ask for the price:'
-    options:
-    - Що ви рекомендуєте?
-    - Можна карткою?
-    - Скільки коштує?
-    correct: 2
-  - question: 'You want to pay with a card:'
-    options:
-    - Рахунок, будь ласка.
-    - Можна карткою?
-    - Дорого!
-    correct: 1
-  - question: 'You ask for the bill:'
-    options:
-    - Мені борщ.
-    - Рахунок, будь ласка.
-    - Все було дуже смачно!
-    correct: 1
-  - question: 'You ask for 1 kg of apples:'
-    options:
-    - Скільки коштує?
-    - Можна меню?
-    - Дайте кілограм яблук.
-    correct: 2
-  - question: 'You think the price is high:'
-    options:
-    - Дорого!
-    - Дешево!
-    - Добре!
-    correct: 0
-  - question: 'You ask if a seat is free:'
-    options:
-    - Можна меню?
-    - Тут вільно?
-    - Рахунок, будь ласка.
-    correct: 1
-  - question: 'You compliment the food:'
-    options:
-    - Можна карткою?
-    - Дуже приємно!
-    - Все було дуже смачно!
-    correct: 2
 workbook:
-- type: true-false
-  instruction: Правда чи ні? Про день Анни. (True or false? About Anna's day.)
-  items:
-  - statement: Анна їсть кашу на сніданок.
-    correct: true
-    explanation: 'У тексті: «Вона їсть кашу і п''є каву з молоком на сніданок.»'
-  - statement: Анна п'є чай вранці.
-    correct: false
-    explanation: 'У тексті: «п''є каву з молоком» — не чай.'
-  - statement: Помідори коштують тридцять гривень кілограм.
-    correct: true
-    explanation: 'У тексті: «Тридцять гривень кілограм.»'
-  - statement: Анна купує хліб, сир, яблука і салат на ринку.
-    correct: true
-    explanation: 'У тексті: «Анна купує хліб, сир, яблука, і салат.»'
-  - statement: Анна замовляє борщ і каву в кафе.
-    correct: false
-    explanation: 'У тексті: «Мені борщ і воду» — не каву.'
-  - statement: Анна бачить Олену в кафе.
-    correct: true
-    explanation: 'У тексті: «О, я бачу Олену!»'
-  - statement: Анна платить карткою.
-    correct: true
-    explanation: 'У тексті: «Можна карткою? — Звичайно.»'
-  - statement: Анна обідає сама.
-    correct: false
-    explanation: 'У тексті: «Вони обідають разом.»'
-- type: match-up
-  instruction: З'єднайте називний відмінок із знахідним (Match nominative to accusative)
+- id: match-up-phrases
+  type: match-up
+  instruction: З'єднайте українські та англійські фрази (Match the Ukrainian and English
+    phrases)
   pairs:
-  - left: вода
-    right: воду
-  - left: кава
-    right: каву
-  - left: піца
-    right: піцу
-  - left: каша
-    right: кашу
-  - left: яєчня
-    right: яєчню
-  - left: брат
-    right: брата
-  - left: лікар
-    right: лікаря
-  - left: друг
-    right: друга
-- type: error-correction
-  instruction: Знайдіть і виправте помилку у відмінку (Find and correct the case error)
+  - left: Скільки коштує?
+    right: How much does it cost?
+  - left: Мені каву, будь ласка.
+    right: Coffee for me, please.
+  - left: Рахунок, будь ласка.
+    right: The bill, please.
+  - left: Можна карткою?
+    right: Can I pay by card?
+  - left: Дайте кілограм.
+    right: Give me a kilogram.
+  - left: Тут вільно?
+    right: Is it free here?
+- id: error-correction-cases
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and fix the error)
   items:
-  - sentence: Я п'ю кава на сніданок.
-    error: кава
-    correction: каву
+  - sentence: Я їм каша на сніданок.
+    error: каша
+    correction: кашу
     error_type: word
     options:
-    - каву
-    - кавою
-    - каві
-    explanation: 'Feminine nouns ending in -а/-я change to -у/-ю in the accusative:
-      кава → каву.'
-  - sentence: Я їм піца з сиром.
-    error: піца
-    correction: піцу
+    - кашу
+    - каші
+    - кашею
+    explanation: The object of the action requires the accusative case (каша -> кашу).
+  - sentence: Я бачу Тарас.
+    error: Тарас
+    correction: Тараса
     error_type: word
     options:
-    - піцу
-    - піцою
-    - піці
-    explanation: 'Feminine noun: піца → піцу in the accusative.'
-  - sentence: Я бачу Олена у кафе.
-    error: Олена
-    correction: Олену
+    - Тараса
+    - Тарасу
+    - Тарасом
+    explanation: Animate masculine nouns take the genitive ending (-а/-я) in the accusative
+      case.
+  - sentence: Помідори коштують тридцять гривні.
+    error: гривні
+    correction: гривень
     error_type: word
     options:
-    - Олену
-    - Оленою
-    - Олені
-    explanation: 'Animate feminine noun: Олена → Олену in the accusative.'
-  - sentence: Я знаю мого брат.
-    error: брат
-    correction: брата
-    error_type: word
-    options:
-    - брата
-    - братом
-    - брату
-    explanation: 'Animate masculine noun: брат → брата in the accusative.'
-  - sentence: Я люблю мій вчитель.
-    error: вчитель
-    correction: вчителя
-    error_type: word
-    options:
-    - вчителя
-    - вчителем
-    - вчителю
-    explanation: 'Animate masculine noun ending in -ь: вчитель → вчителя in the accusative.'
-  - sentence: Я замовляю вода в кафе.
+    - гривень
+    - гривня
+    - гривнях
+    explanation: Numbers 5 and above take the genitive plural (гривень).
+  - sentence: Я п'ю вода з лимоном.
     error: вода
     correction: воду
     error_type: word
     options:
     - воду
+    - води
     - водою
-    - воді
-    explanation: 'Feminine noun: вода → воду in the accusative.'
-- type: unjumble
-  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
-  items:
-  - words:
-    - їм
-    - Я
-    - кашу
-    - на
-    - сніданок
-    correct_order:
-    - Я
-    - їм
-    - кашу
-    - на
-    - сніданок
-  - words:
-    - каву
-    - п'ю
-    - Я
-    - молоком
-    - з
-    correct_order:
-    - Я
-    - п'ю
-    - каву
-    - з
-    - молоком
-  - words:
+    explanation: Feminine inanimate nouns ending in -а change to -у in the accusative
+      case.
+  - sentence: Я знаю Олена.
+    error: Олена
+    correction: Олену
+    error_type: word
+    options:
     - Олену
-    - бачу
-    - Я
-    - кафе
-    - в
-    correct_order:
-    - Я
-    - бачу
-    - Олену
-    - в
-    - кафе
-  - words:
-    - яблук
-    - кілограм
-    - будь
-    - Дайте
-    - ласка
-    correct_order:
-    - Дайте
-    - кілограм
-    - яблук
-    - будь
-    - ласка
-  - words:
-    - помідори
-    - Скільки
-    - коштують
-    correct_order:
-    - Скільки
-    - коштують
-    - помідори
-  - words:
-    - мого
-    - брата
-    - знаєш
-    - Ти
-    correct_order:
-    - Ти
-    - знаєш
-    - мого
-    - брата
-  - words:
-    - борщ
-    - замовляю
-    - Я
-    - кафе
-    - у
-    correct_order:
-    - Я
-    - замовляю
-    - борщ
-    - у
-    - кафе
-  - words:
-    - хліб
-    - купую
-    - Я
-    - ринку
-    - на
-    correct_order:
-    - Я
-    - купую
-    - хліб
-    - на
-    - ринку
-- type: translate
-  instruction: Оберіть правильний переклад (Choose the correct Ukrainian translation)
+    - Олени
+    - Оленою
+    explanation: Animate feminine nouns change -а to -у in the accusative case.
+  - sentence: Кава коштує три гривень.
+    error: гривень
+    correction: гривні
+    error_type: word
+    options:
+    - гривні
+    - гривня
+    - гривнях
+    explanation: Numbers 2, 3, and 4 take the nominative plural (гривні).
+- id: true-false-reading
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
   items:
-  - source: I'm drinking water.
-    options:
-    - text: Я п'ю вода.
-      correct: false
-    - text: Я п'ю воду.
-      correct: true
-    - text: Я їм воду.
-      correct: false
-  - source: The bill, please.
-    options:
-    - text: Меню, будь ласка.
-      correct: false
-    - text: Рахунок, дякую.
-      correct: false
-    - text: Рахунок, будь ласка.
-      correct: true
-  - source: Can I pay by card?
-    options:
-    - text: Можна карткою?
-      correct: true
-    - text: Рахунок карткою?
-      correct: false
-    - text: Можна готівкою?
-      correct: false
-  - source: I see Olena.
-    options:
-    - text: Я знаю Олену.
-      correct: false
-    - text: Я бачу Олену.
-      correct: true
-    - text: Я бачу Олена.
-      correct: false
-  - source: Give me a kilo of apples, please.
-    options:
-    - text: Дайте кілограм яблук, будь ласка.
-      correct: true
-    - text: Дайте яблука, будь ласка.
-      correct: false
-    - text: Скільки коштують яблука?
-      correct: false
-  - source: Is this seat free?
-    options:
-    - text: Де вільно?
-      correct: false
-    - text: Вільно тут?
-      correct: false
-    - text: Тут вільно?
-      correct: true
+  - statement: Анна купує помідори та огірки на ринку.
+    correct: true
+    explanation: She asks about the price of tomatoes and cucumbers at the market.
+  - statement: Помідори коштують сорок гривень.
+    correct: false
+    explanation: Tomatoes cost 30 hryvnias. Cucumbers cost 40 hryvnias.
+  - statement: Анна п'є каву з молоком у кафе.
+    correct: false
+    explanation: She orders borsch and water with lemon.
+  - statement: Анна купує борщ і воду.
+    correct: true
+    explanation: 'She says: ''Мені борщ і воду з лимоном, будь ласка.'''
+  - statement: Олена знає Тараса.
+    correct: false
+    explanation: 'Olena says: ''Ні, я не знаю Тараса''.'
+  - statement: Тарас — це брат Анни.
+    correct: true
+    explanation: 'Anna asks: ''Ти знаєш мого брата Тараса?'''
+- id: order-dialogue
+  type: order
+  instruction: Розставте речення в правильному порядку (Put the sentences in the correct
+    order)
+  items:
+  - — Що ви хочете?
+  - — Мені борщ і воду з лимоном, будь ласка.
+  - — Це все?
+  - — Так, дякую. Рахунок, будь ласка.
+  - — Можна карткою?
+  - — Так, звичайно.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+- id: anagram-vocab
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - м
+    - о
+    - л
+    - о
+    - к
+    - о
+    answer: молоко
+    hint: milk
+  - letters:
+    - я
+    - б
+    - л
+    - у
+    - к
+    - о
+    answer: яблуко
+    hint: apple
+  - letters:
+    - к
+    - а
+    - р
+    - т
+    - о
+    - п
+    - л
+    - я
+    answer: картопля
+    hint: potato
+  - letters:
+    - с
+    - н
+    - і
+    - д
+    - а
+    - н
+    - о
+    - к
+    answer: сніданок
+    hint: breakfast
+  - letters:
+    - г
+    - р
+    - и
+    - в
+    - н
+    - я
+    answer: гривня
+    hint: hryvnia
+  - letters:
+    - р
+    - а
+    - х
+    - у
+    - н
+    - о
+    - к
+    answer: рахунок
+    hint: bill / check

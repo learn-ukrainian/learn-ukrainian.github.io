@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: видова пара (aspectual pair — impf/pf: писати/написати), основа інфінітива (infinitive stem — base for suffix attachment)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 4"
+    }
+  ],
+  "timestamp": "2026-04-09T19:46:18.171690+00:00"
+}

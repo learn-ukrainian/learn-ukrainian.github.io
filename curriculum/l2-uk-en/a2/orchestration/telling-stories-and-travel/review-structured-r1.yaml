@@ -1,0 +1,95 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed some time connectors ("після цього", "тим часом", "у цей момент")
+    and the preposition "з + Gen" in Section 2 (though it appears in the summary).
+    Missed the recommended word "сувенір".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 5
+  evidence: 'Critical error in phonetic/grammatical explanation: Claims verbs like
+    "міг, ніс, біг" have a "-в" suffix. In reality, they drop this suffix in the masculine
+    past tense form. Also, awkward use of posse'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'Critical error: Teaches that for "Мені сподобалося [Noun]" the verb always
+    stays neuter, giving the misleading rule "Після цієї фрази ви можете легко додати
+    інфінітив або звичайний іменник: «Мені дуже'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Good coverage overall, but missed the recommended word "сувенір" in the
+    narrative sections.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed well and match the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Warm, encouraging, and natural teacher persona without excessive fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Missing word in the model answer block ("Це було справді !"). Word count
+    is solid (2745 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent points about "двірець" vs "вокзал" and the importance of using
+    Ukrainian city names like Київ instead of Russian variants.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and incorporate the targeted grammar structures
+    well.
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed some time connectors required by the plan ("після цього", "тим
+    часом", "у цей момент") and the preposition "з + Gen" in Section 2. Missed the
+    recommended word "сувенір".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 5
+  evidence: 'Critical error in phonetic/grammatical explanation: Claims verbs like
+    "міг, ніс, біг" have a "-в" suffix ("Even for verbs with challenging consonant
+    stems like міг (could), ніс (carried), or біг (ran)'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'Critical error: Teaches that for "Мені сподобалося [Noun]" the verb always
+    stays neuter, giving the misleading rule "Після цієї фрази ви можете легко додати
+    інфінітив або звичайний іменник: «Мені дуже'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Good coverage overall, but missed the recommended word "сувенір" in the
+    narrative sections.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed well and match the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Warm, encouraging, and natural teacher persona without excessive fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Missing word in the model answer block ("Це було справді !"). Word count
+    is solid (2745 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent points about "двірець" vs "вокзал" and the importance of using
+    Ukrainian city names like Київ instead of Russian variants.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and incorporate the targeted grammar structures
+    well.
+findings: []

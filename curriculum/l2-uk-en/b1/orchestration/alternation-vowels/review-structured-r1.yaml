@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module thoroughly covers all outlined points and exceeds the word
+    target (4812 words). However, it missed the required vocabulary term `орфограма`
+    ("Чергування голосних у дієслівних коренях — це н
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Several critical linguistic errors were found, including the use of a
+    Russianism ("А тепер візьмемо гучний стон... кажемо стону"), the use of a Russian
+    linguistic calque ("біглий голосний"), and the u
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding pedagogical execution. The opening dialogue brilliantly sets
+    the stage, and the transition from rule to application is logical. The contrast
+    between "сон - сну" and the stable vowel counte
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Almost all required vocabulary is naturally integrated into the text.
+    Deducting slightly because the specific term `орфограма` was substituted with
+    "орфографічне правило".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 requested activity hints are successfully implemented via markers,
+    placed logically after their respective instructional sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and academic without being dry. The teacher
+    persona is highly effective ("Сьогодні ми поговоримо про справжню магію українських
+    слів").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Flawless structure. Word count is well above target (4812 words), all
+    required H2 headings are present, and the formatting is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strongly decolonized perspective. Correctly emphasizes that vowel alternation
+    is a defining, unique feature of Ukrainian phonology that sets it apart from Russian
+    and Polish.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening dialogue between the teacher and student feels natural and
+    directly illustrates the grammar concept in an engaging, contextualized way.
+findings: []

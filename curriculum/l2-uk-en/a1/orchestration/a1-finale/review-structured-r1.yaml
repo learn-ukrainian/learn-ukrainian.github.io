@@ -2,56 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 4 content_outline sections present with correct topics. Morning:
-    wake up, weather ("Надворі тепло і сонячно"), café dialogue with price (120 грн),
-    metro/directions. Day: Khreschatyk shopping, vysh'
+  score: 10
+  evidence: Covers all 4 sections with required points, word count is 1390 (exceeds
+    1200 target), and uses all required and recommended vocabulary.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Two grammatical errors: (1) "Сьомий ранку" uses masculine instead of
-    feminine (should be "Сьома ранку" — implied *година* is feminine); (2) "близько
-    двадцять градусів" uses nominative after *близько* '
+  score: 9
+  evidence: Grammatically accurate for the most part, but contains the unnatural construction
+    "Цей майдан — Незалежності" (translated literally as "This square is of Independence").
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'Excellent PPP flow: each section opens with a situation (waking up, shopping,
-    making plans), presents patterns in context (past tense gender pairs, demonstrative
-    ця, future будемо робити), then leads '
+  evidence: Excellent pedagogical tone. Uses the "Day in the life" simulation perfectly
+    to review tenses naturally.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 6 required plan words used naturally: **готовий** ("ти готовий/готова
-    до А2"), **вітаю** ("Вітаю!"), **початок** ("Це тільки початок!"), **сувенір**
-    ("Гарний сувенір!"), **квиток** ("Ти купуєш кви'
+  evidence: All required (`готовий`, `вітаю`, `початок`, `сувенір`, `квиток`, `зустріти`)
+    and recommended vocabulary used naturally in context.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: '4 markers matching all 4 plan activity_hints. Each placed after relevant
-    teaching content. Plan''s activity logic is sound: order exercise tests temporal
-    sequencing with time markers (зранку/потім/вден'
+  score: 8
+  evidence: The `order-day-events` activity is placed at the end of Section 1, which
+    requires learners to sort events from the entire day before they have read about
+    the afternoon or evening.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'No motivational openers, no "Let us explore," no gamified language. Opening
-    drops you straight into the scene: "Сьомий ранку. Ти прокинувся..." Specific cultural
-    details: вишиванка as both tradition a'
+  evidence: Very encouraging and natural teacher persona. Great motivational conclusion
+    for reaching the A1 milestone.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 sections from plan present in order: Ранок, День, Вечір, Підсумок.
-    Clean markdown. No duplicate summaries. No meta-commentary sections. Word count
-    1612 vs 1200 target — well within range. No '
+  evidence: Clean markdown, 1390 words (exceeds target), uses expected formatting
+    like blockquotes for dialogue and callout boxes.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Fully decolonized — Ukrainian presented on its own terms. Вишиванка described
-    as both traditional and modern (accurate). Kyiv landmarks (Хрещатик, Лавра) used
-    naturally. No "like Russian but..." frami
+  evidence: Authentic cultural context (Khreshchatyk, borscht, varenyky, Lavra, TSUM).
+    The note on 'сувенір' being a standalone concept without 'пам'ятний' is a great
+    cultural/linguistic insight.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: '5 multi-turn dialogues with named speakers (Ти, Офіціант, Перехожий,
-    Продавець, Олена). Natural situations: café ordering, asking directions, haggling
-    over vyshyvanka price, meeting a stranger at lunc'
+  score: 9
+  evidence: Dialogues are natural and fit the scenarios well. "Що ти робиш тут?" is
+    a bit literal; "Що ти тут робиш?" is more natural.
 findings: []

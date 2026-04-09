@@ -1,0 +1,265 @@
+{
+  "total_items": 169,
+  "grounded_items": 129,
+  "ungrounded": [
+    {
+      "word": "правду",
+      "exercise_type": "fill-in",
+      "context": "Нехай вона _____ правду.",
+      "role": "context"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "fill-in",
+      "context": "Хай вони _____ завтра.",
+      "role": "context"
+    },
+    {
+      "word": "наріже",
+      "exercise_type": "fill-in",
+      "context": "наріже",
+      "role": "answer"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "unjumble",
+      "context": "новий",
+      "role": "answer"
+    },
+    {
+      "word": "важливе",
+      "exercise_type": "unjumble",
+      "context": "важливе",
+      "role": "answer"
+    },
+    {
+      "word": "воду",
+      "exercise_type": "unjumble",
+      "context": "воду",
+      "role": "answer"
+    },
+    {
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке речення означає загальну пораду (регулярна дія)?",
+      "role": "context"
+    },
+    {
+      "word": "пораду",
+      "exercise_type": "quiz",
+      "context": "Яке речення означає загальну пораду (регулярна дія)?",
+      "role": "context"
+    },
+    {
+      "word": "дати",
+      "exercise_type": "quiz",
+      "context": "Як правильно дати конкретний наказ (разова дія)?",
+      "role": "context"
+    },
+    {
+      "word": "термінову",
+      "exercise_type": "quiz",
+      "context": "Яке речення означає термінову вимогу (доконаний вид)?",
+      "role": "context"
+    },
+    {
+      "word": "вимогу",
+      "exercise_type": "quiz",
+      "context": "Яке речення означає термінову вимогу (доконаний вид)?",
+      "role": "context"
+    },
+    {
+      "word": "ввічливо",
+      "exercise_type": "quiz",
+      "context": "Як ввічливо запросити гостей у кімнату?",
+      "role": "context"
+    },
+    {
+      "word": "запросити",
+      "exercise_type": "quiz",
+      "context": "Як ввічливо запросити гостей у кімнату?",
+      "role": "context"
+    },
+    {
+      "word": "гостей",
+      "exercise_type": "quiz",
+      "context": "Як ввічливо запросити гостей у кімнату?",
+      "role": "context"
+    },
+    {
+      "word": "кімнату",
+      "exercise_type": "quiz",
+      "context": "Як ввічливо запросити гостей у кімнату?",
+      "role": "context"
+    },
+    {
+      "word": "містить",
+      "exercise_type": "quiz",
+      "context": "Яке побажання містить дієслово доконаного виду?",
+      "role": "context"
+    },
+    {
+      "word": "підходить",
+      "exercise_type": "quiz",
+      "context": "Яка форма підходить для дії, що триває постійно?",
+      "role": "context"
+    },
+    {
+      "word": "дії",
+      "exercise_type": "quiz",
+      "context": "Яка форма підходить для дії, що триває постійно?",
+      "role": "context"
+    },
+    {
+      "word": "триває",
+      "exercise_type": "quiz",
+      "context": "Яка форма підходить для дії, що триває постійно?",
+      "role": "context"
+    },
+    {
+      "word": "постійно",
+      "exercise_type": "quiz",
+      "context": "Яка форма підходить для дії, що триває постійно?",
+      "role": "context"
+    },
+    {
+      "word": "напишіть",
+      "exercise_type": "group-sort",
+      "context": "Напишіть!",
+      "role": "answer"
+    },
+    {
+      "word": "сядьте",
+      "exercise_type": "group-sort",
+      "context": "Сядьте!",
+      "role": "answer"
+    },
+    {
+      "word": "зроби",
+      "exercise_type": "match-up",
+      "context": "зроби",
+      "role": "context"
+    },
+    {
+      "word": "відкрий",
+      "exercise_type": "match-up",
+      "context": "відкрий",
+      "role": "context"
+    },
+    {
+      "word": "сідай",
+      "exercise_type": "match-up",
+      "context": "сідай",
+      "role": "answer"
+    },
+    {
+      "word": "сядь",
+      "exercise_type": "match-up",
+      "context": "сядь",
+      "role": "context"
+    },
+    {
+      "word": "купуй",
+      "exercise_type": "match-up",
+      "context": "купуй",
+      "role": "answer"
+    },
+    {
+      "word": "купи",
+      "exercise_type": "match-up",
+      "context": "купи",
+      "role": "context"
+    },
+    {
+      "word": "писати",
+      "exercise_type": "fill-in",
+      "context": "Загальна порада: _____ (писати/написати) коментарі щодня.",
+      "role": "context"
+    },
+    {
+      "word": "написати",
+      "exercise_type": "fill-in",
+      "context": "Загальна порада: _____ (писати/написати) коментарі щодня.",
+      "role": "context"
+    },
+    {
+      "word": "обережно",
+      "exercise_type": "fill-in",
+      "context": "Обережно, не _____ (падати/впасти)!",
+      "role": "context"
+    },
+    {
+      "word": "падати",
+      "exercise_type": "fill-in",
+      "context": "Обережно, не _____ (падати/впасти)!",
+      "role": "context"
+    },
+    {
+      "word": "впасти",
+      "exercise_type": "fill-in",
+      "context": "Обережно, не _____ (падати/впасти)!",
+      "role": "context"
+    },
+    {
+      "word": "закривай",
+      "exercise_type": "fill-in",
+      "context": "закривай",
+      "role": "answer"
+    },
+    {
+      "word": "закривати",
+      "exercise_type": "fill-in",
+      "context": "Завжди _____ (закривати/закрити) вікно.",
+      "role": "context"
+    },
+    {
+      "word": "закрити",
+      "exercise_type": "fill-in",
+      "context": "Завжди _____ (закривати/закрити) вікно.",
+      "role": "context"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "fill-in",
+      "context": "_____ (купувати/купити) ці квитки зараз!",
+      "role": "context"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "fill-in",
+      "context": "_____ (купувати/купити) ці квитки зараз!",
+      "role": "context"
+    },
+    {
+      "word": "успішним",
+      "exercise_type": "error-correction",
+      "context": "успішним",
+      "role": "answer"
+    },
+    {
+      "word": "успішний",
+      "exercise_type": "error-correction",
+      "context": "Друже, будь успішний!",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 20,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "відмінок",
+      "живи",
+      "здоровий",
+      "здоровими",
+      "здійснитися",
+      "кличний",
+      "мрія",
+      "наказовий",
+      "спокійний",
+      "спосіб",
+      "уважний",
+      "щасливий"
+    ]
+  },
+  "all_grounded": false
+}

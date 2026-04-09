@@ -12,9 +12,10 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -23,174 +24,208 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-**Алі́на** has just moved to a new part of Kyiv. She stops a stranger on the street.
+Imagine you are sitting with a Ukrainian friend. Alina is drawing a map of her neighborhood in the Ukrainian capital, Kyiv. She calls this local space **мій райо́н у Ки́єві** (my neighborhood in Kyiv). Being able to define your physical space and understand where things are located is a vital survival skill in any city. 
+
+Read how Ukrainians talk about places and ask for simple directions.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Аліна:</span> Ви́бачте, де тут апте́ка? *(Excuse me, where is the pharmacy here?)*</div>
+<div class="dialogue-line"><span class="speaker">І́гор:</span> Ви́бачте, будь ла́ска. Де тут апте́ка? *(Excuse me, please. Where is the pharmacy here?)*</div>
 
+<div class="dialogue-line"><span class="speaker">А́ліна:</span> Аптека на ву́лиці Шевче́нка. *(The pharmacy is on Shevchenko street.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Перехо́жий:</span> Аптека на ву́лиці Шевче́нка, бі́ля парку. *(The pharmacy is on Shevchenko Street, near the park.)*</div>
+<div class="dialogue-line"><span class="speaker">Ігор:</span> Дякую. А де бібліоте́ка? *(Thank you. And where is the library?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Аліна:</span> Бібліотека у це́нтрі. *(The library is in the center.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Аліна:</span> А бібліоте́ка? *(And the library?)*</div>
+<div class="dialogue-line"><span class="speaker">Ігор:</span> Це дале́ко? *(Is this far?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Аліна:</span> Ні, вона́ бі́ля парку. *(No, it is near the park.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Бібліотека в це́нтрі мі́ста. *(The library is in the city center.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Аліна:</span> Це дале́ко? *(Is it far?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Ні, бли́зько. *(No, it's close.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Аліна:</span> Дякую! *(Thank you!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Перехожий:</span> Будь ла́ска! *(You're welcome!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Ігор:</span> Ду́же дякую! *(Thank you very much!)*</div>
 
 </div>
 
-Notice the polite register here. **Вибачте** (excuse me) is how you address a stranger on the street. The stranger answers with specific locations: **на вулиці Шевченка** (on Shevchenko Street) uses **на** + locative for streets, and **біля парку** (near the park) pins the pharmacy to a landmark. The reply **в центрі міста** (in the city center) uses **в** + locative. Two location adverbs close the exchange: **далеко** (far) and **близько** (near/close).
+Notice the polite phrase **Вибачте, будь ласка** (Excuse me, please). This is exactly how you get a stranger's attention on the street politely. The question **Де тут...** (Where here is...) is the most efficient way to ask for directions without needing complex grammar.
 
-Now Аліна is drawing a map of her Kyiv neighborhood for her pen pal, and chatting with her friend **І́гор** about what to mark.
+Alina describes her immediate neighborhood to Igor using the existence word **є** (there is/are) and the preposition **біля** (near/next to).
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ігор:</span> Що є біля твого́ до́му? *(What's near your house?)*</div>
+<div class="dialogue-line"><span class="speaker">Ігор:</span> Що є біля твого́ до́му? *(What is near your house?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Аліна:</span> Біля дому є магази́н і кафе́. *(Near the house there is a shop and a cafe.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Аліна:</span> Біля дому є магази́н і кафе́. А по́руч з кафе — о́зеро. *(Near the house there's a shop and a café. And next to the café is a lake.)*</div>
+<div class="dialogue-line"><span class="speaker">Ігор:</span> А шко́ла? Школа бли́зько? *(And the school? Is the school near?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Ігор:</span> А ліка́рня у це́нтрі? *(And is the hospital in the center?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Аліна:</span> Ні, лікарня там, далеко від це́нтру. *(No, the hospital is over there, far from the center.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Ігор:</span> Біля тебе́ є стадіо́н? *(Is there a stadium near you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Аліна:</span> Так, стадіон на пло́щі, а по́шта на вокза́лі. *(Yes, the stadium is on the square, and the post office is at the train station.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Аліна:</span> Ні, школа далеко, у центрі мі́ста. *(No, the school is far, in the city center.)*</div>
 
 </div>
 
-This dialogue recycles **є** (there is/are) from earlier modules — now it works with city places. **Біля дому** (near the house) is a fixed chunk with **біля** + genitive. Notice **магазин** (shop) and **кафе** (café) — two essential neighborhood words. The phrase **далеко від центру** (far from the center) pairs the adverb **далеко** with a genitive chunk. We also introduced **по́руч з** (next to), which takes the instrumental case, though **кафе** doesn't change.
-
-Every Ukrainian **мі́сто** (city) has its landmarks: a **ри́нок** (market), a **пло́ща** (square), a **вокза́л** (train station), a **по́шта** (post office). Kyiv's most famous street is **Хреща́тик** — the main **ву́лиця** (street) that runs through the heart of the capital. Close by sits **Майда́н Незале́жності** (Independence Square), the central square that every Ukrainian knows — **центра́льна площа**. Lviv has its own iconic **площа Ринок** (Market Square). When Ukrainians give directions, they orient by these landmarks — not by abstract addresses.
+The word **є** acts like the English "there is" or "there are". Ukrainians use it to state that a place exists in a certain location. You will use this small word frequently when describing your own city.
 
 ## Місця́ в мі́сті (City Places)
 
-Here are 17 essential city places. Gender matters because locative endings differ — feminine, masculine, and neuter nouns each have their own pattern from M29.
+To navigate a Ukrainian city, you need foundational vocabulary. We group these city places by grammatical gender to help you remember their forms. Grouping vocabulary by gender makes it easier to predict case endings later.
 
-**Feminine (f):**
-- **аптека** (pharmacy) · **бібліотека** (library) · **лікарня** (hospital) · **пошта** (post office) · **це́рква** (church) · **зупи́нка** (bus stop)
+Masculine places end in a consonant:
+*   **магазин** (shop)
+*   **суперма́ркет** (supermarket)
+*   **банк** (bank)
+*   **готе́ль** (hotel)
+*   **вокза́л** (train station)
+*   **музе́й** (museum)
+*   **теа́тр** (theater)
+*   **кінотеа́тр** (cinema)
 
-**Masculine (m):**
-- **магазин** (shop) · **суперма́ркет** (supermarket) · **рестора́н** (restaurant) · **банк** (bank) · **вокзал** (train station) · **готе́ль** (hotel) · **музе́й** (museum) · **теа́тр** (theatre) · **кінотеа́тр** (cinema) · **стадіон** (stadium) · **університе́т** (university)
+Feminine places end in -а or -я:
+*   **аптека** (pharmacy)
+*   **бібліотека** (library)
+*   **ліка́рня** (hospital)
+*   **по́шта** (post office)
+*   **це́рква** (church)
+*   **школа** (school)
 
-**Neuter (n):**
-- **кафе** (café) · **о́зеро** (lake)
+Neuter places end in -о, -е, or -я:
+*   **кафе** (cafe)
+*   **кіно́** (cinema)
+*   **о́зеро** (lake)
 
-Two prepositions control where you are. Most places take **в/у** + locative. A small group — transit and service infrastructure — takes **на** + locative. Here are the locative forms:
+When you answer the question **Де?** (Where?), you use the Locative case. For city buildings, you must choose between the prepositions **в/у** (in) and **на** (on). Use **в/у** for standard enclosed spaces. 
 
-**В/у + locative:**
-- аптека → **в апте́ці** · бібліотека → **у бібліоте́ці** · магазин → **в магази́ні** · банк → **у ба́нку** · готель → **у готе́лі** · ресторан → **у рестора́ні** · музей → **в музе́ї** · університет → **в університе́ті** · лікарня → **у ліка́рні** · кінотеатр → **у кінотеа́трі** · театр → **у теа́трі** · церква → **у це́ркві**
+*   **Я в апте́ці.** (I am in the pharmacy.)
+*   **Ми у ба́нку.** (We are in the bank.)
+*   **Брат в готе́лі.** (Brother is in the hotel.)
+*   **Сестра́ у музе́ї.** (Sister is in the museum.)
+*   **Студе́нти у бібліоте́ці.** (Students are in the library.)
 
-**На + locative:**
-- пошта → **на по́шті** · вокзал → **на вокза́лі** · стадіон → **на стадіо́ні** · зупинка → **на зупи́нці** · площа → **на пло́щі**
+Use the preposition **на** for open concepts, public platforms, or wide spaces. 
 
-The pattern for these places: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, **площа**. The rest take **в/у**.
+*   **Я на по́шті.** (I am at the post office.)
+*   **Він на вокза́лі.** (He is at the train station.)
+*   **Ми на стадіо́ні.** (We are at the stadium.)
+*   **Лю́ди на пло́щі.** (People are on the square.)
 
-<Quiz client:only="react" questions={[{"question": "___ аптеці (at the pharmacy)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}, {"text": "біля", "correct": false}]}, {"question": "___ пошті (at the post office)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}, {"text": "біля", "correct": false}]}, {"question": "___ вокзалі (at the train station)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}, {"text": "біля", "correct": false}]}, {"question": "___ ресторані (at the restaurant)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}, {"text": "біля", "correct": false}]}, {"question": "___ стадіоні (at the stadium)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}, {"text": "біля", "correct": false}]}, {"question": "___ бібліотеці (at the library)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}, {"text": "біля", "correct": false}]}, {"question": "___ музеї (at the museum)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}, {"text": "біля", "correct": false}]}, {"question": "___ зупинці (at the bus stop)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}, {"text": "біля", "correct": false}]}]} instruction={"Оберіть правильний прийменник (Choose the correct preposition)"} />
+:::note
+**Чергува́ння** (Alternation)
+Notice how words ending in **-ка** change in the Locative case: **аптека** becomes **в аптеці**, and **бібліотека** becomes **у бібліотеці**. The consonant **к** changes to **ц** before the **-і** ending. This makes the word easier to pronounce.
+:::
 
-Now combine these places with verbs you already know from A1.3. What do you do at each place?
+Combine these places with action verbs to describe what people do there. This provides practical context for your new vocabulary.
 
-- **Я купу́ю лі́ки в аптеці.** — I buy medicine at the pharmacy.
-- **Я чита́ю кни́ги у бібліотеці.** — I read books at the library.
-- **Я їм пі́цу в ресторані.** — I eat pizza at the restaurant.
-- **Я п'ю ка́ву в кафе.** — I drink coffee at the café.
-- **Я надсила́ю листи́ на пошті.** — I send letters at the post office.
-- **Я дивлю́ся фільм у кінотеатрі.** — I watch a film at the cinema.
-- **Я відпочива́ю в парку.** — I relax in the park.
-- **Я чека́ю на по́тяг на вокзалі.** — I wait for a train at the station.
+*   **Я купу́ю лі́ки в аптеці.** (I buy medicine in the pharmacy.)
+*   **Ми чита́ємо кни́ги у бібліотеці.** (We read books in the library.)
+*   **Вони́ ди́вляться фільм у кінотеа́трі.** (They watch a film in the cinema.)
+*   **Ма́ма купу́є проду́кти у магази́ні.** (Mom buys groceries in the shop.)
+*   **Та́то обі́дає у рестора́ні.** (Dad has lunch in the restaurant.)
+*   **Брат працю́є в о́фісі.** (Brother works in the office.)
+*   **Сестра відпочива́є у парку.** (Sister rests in the park.)
 
-Notice how familiar verbs — **купую**, **читаю**, **їм**, **п'ю** — now appear in locative context. The place tells you *where* the action happens. And **кафе** never changes form: **в кафе**, **біля кафе** — it stays the same in every case, because it is an indeclinable noun.
+<MatchUp client:only="react" pairs={[{"left": "аптека", "right": "купувати ліки"}, {"left": "бібліотека", "right": "читати книги"}, {"left": "кінотеатр", "right": "дивитися фільм"}, {"left": "магазин", "right": "купувати продукти"}, {"left": "ресторан", "right": "обідати"}, {"left": "офіс", "right": "працювати"}, {"left": "парк", "right": "відпочивати"}, {"left": "дім", "right": "жити"}]} instruction={"З'єднайте місце з дією (Match the place with the activity)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "аптека", "right": "купувати ліки"}, {"left": "бібліотека", "right": "читати книги"}, {"left": "ресторан", "right": "їсти піцу"}, {"left": "кафе", "right": "пити каву"}, {"left": "пошта", "right": "надсилати листи"}, {"left": "кінотеатр", "right": "дивитися фільм"}, {"left": "вокзал", "right": "чекати на потяг"}, {"left": "парк", "right": "відпочивати"}]} instruction={"З'єднайте місце з дією (Match the place to the activity)"} />
+<Quiz client:only="react" questions={[{"question": "Я зараз ___ аптеці.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Він працює ___ пошті.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "Ми ___ банку.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "Люди чекають ___ зупинці.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "Сім'я обідає ___ ресторані.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "Поїзд ___ вокзалі.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "Студенти ___ бібліотеці.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "Брат ___ готелі.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "на", "correct": false}]}]} instruction={"Оберіть правильний прийменник: в/у чи на? (Choose the correct preposition: в/у or на?)"} />
+
+Transportation hubs are critical city infrastructure. You need specific vocabulary for different types of travel. 
+
+*   **вокзал** (train station)
+*   **автовокза́л** (bus station)
+*   **аеропо́рт** (airport)
+*   **зупи́нка** (bus stop)
+
+In Ukraine, the word **вокзал** by default implies the main railway station. If you need a bus, you must specifically ask for the **автовокзал**. You wait for local city transport at a **зупинка**.
+
+*   **Авто́бус на зупи́нці.** (The bus is at the stop.)
+*   **По́їзд на вокзалі.** (The train is at the station.)
 
 ## Де це? (Where Is It?)
 
-Four core adverbs let you describe where anything is. They come in natural pairs:
+To explain where something is, you need relative distance adverbs. The most basic are **тут** (here) and **там** (there). For distance, use **близько** (near/close) and **далеко** (far). 
 
-**Тут** (here) vs **там** (there):
-- **Аптека тут.** — The pharmacy is here.
-- **Вокзал там.** — The train station is there.
+Notice how Ukrainians use these words in contrastive examples.
 
-**Далеко** (far) vs **близько** (near):
-- **Університет далеко від дому.** — The university is far from home.
-- **Магазин близько.** — The shop is nearby.
-- **Стадіон далеко.** — The stadium is far.
-- **Бібліотека близько від парку.** — The library is near the park.
+*   **Магазин тут, а школа далеко.** (The shop is here, but the school is far.)
+*   **Центр близько, а вокзал далеко.** (The center is near, but the station is far.)
+*   **Аптека там.** (The pharmacy is there.)
+*   **Готель тут.** (The hotel is here.)
 
-A useful synonym: **недале́ко** means the same as **близько**.
+When you want to say that something is *near something else*, use the preposition **біля** (near/next to). This preposition requires the Genitive case. For now, learn these common locations as functional chunks.
 
-The preposition **біля** always takes the genitive case — but at A1, learn these as memorized chunks, not grammar rules. Just remember: **біля** + a fixed word form.
+*   **біля дому** (near the house)
+*   **біля парку** (near the park)
+*   **біля університе́ту** (near the university)
+*   **біля метро́** (near the metro)
 
-- **біля парку** — near the park
-- **біля дому** — near the house
-- **біля університе́ту** — near the university
-- **біля вокза́лу** — near the station
-- **біля кафе** — near the café (кафе never changes!)
+You use **біля** to describe physical proximity between two objects. It acts as a bridge between the object and its location.
 
-Six example sentences:
-- **Аптека біля парку.** — The pharmacy is near the park.
-- **Музей біля університету.** — The museum is near the university.
-- **Зупинка біля вокзалу.** — The bus stop is near the station.
-- **Магазин біля мого дому.** — The shop is near my house.
-- **Церква біля площі.** — The church is near the square.
-- **Готель біля кафе.** — The hotel is near the café.
+*   **Кафе біля парку.** (The cafe is near the park.)
+*   **Лікарня біля метро.** (The hospital is near the metro.)
+*   **Аптека біля банку.** (The pharmacy is near the bank.)
+
+To describe an entire neighborhood or city, combine the existence word **є** (there is/are) with your vocabulary and numbers. 
+
+*   **У моє́му місті є вели́кий парк і два музеї.** (In my city there is a big park and two museums.)
+*   **Тут є оди́н стадіо́н.** (There is one stadium here.)
+*   **Бібліотека біля університету.** (The library is near the university.)
+*   **Магазин тут, біля дому.** (The shop is here, near the house.)
+
+This structure allows you to build complex descriptions using simple grammar. You state the location, use **є**, and then name the place.
+
+<FillIn client:only="react" items={[{"sentence": "У моєму місті є великий ____.", "answer": "парк", "options": ["парк", "парку", "парком"]}, {"sentence": "Тут є нова ____.", "answer": "лікарня", "options": ["лікарня", "лікарні", "лікарню"]}, {"sentence": "У центрі міста є ____.", "answer": "готель", "options": ["готель", "готелю", "готелем"]}, {"sentence": "Біля дому є ____.", "answer": "магазин", "options": ["магазин", "магазину", "магазином"]}, {"sentence": "Там є стара ____.", "answer": "церква", "options": ["церква", "церкви", "церкву"]}, {"sentence": "У місті є новий ____.", "answer": "кінотеатр", "options": ["кінотеатр", "кінотеатру", "кінотеатром"]}]} instruction={"Що є у місті? Оберіть правильне слово (What is in the city? Choose the correct word)"} />
+
+<Quiz client:only="react" questions={[{"question": "Мені потрібні ліки. Де я?", "options": [{"text": "в аптеці", "correct": true}, {"text": "у бібліотеці", "correct": false}, {"text": "на вокзалі", "correct": false}, {"text": "у парку", "correct": false}]}, {"question": "Я хочу дивитися фільм. Де я?", "options": [{"text": "на пошті", "correct": false}, {"text": "в лікарні", "correct": false}, {"text": "у кінотеатрі", "correct": true}, {"text": "у магазині", "correct": false}]}, {"question": "Мама купує продукти. Де вона?", "options": [{"text": "в готелі", "correct": false}, {"text": "у магазині", "correct": true}, {"text": "на зупинці", "correct": false}, {"text": "у музеї", "correct": false}]}, {"question": "Ми хочемо обідати. Де ми?", "options": [{"text": "у ресторані", "correct": true}, {"text": "на площі", "correct": false}, {"text": "у банку", "correct": false}, {"text": "на пошті", "correct": false}]}, {"question": "Я чекаю автобус. Де я?", "options": [{"text": "в офісі", "correct": false}, {"text": "на вокзалі", "correct": false}, {"text": "на зупинці", "correct": true}, {"text": "в університеті", "correct": false}]}, {"question": "Мені потрібен поїзд. Де я?", "options": [{"text": "на вокзалі", "correct": true}, {"text": "у парку", "correct": false}, {"text": "на зупинці", "correct": false}, {"text": "в аптеці", "correct": false}]}]} instruction={"Куди ви йдете? Оберіть правильне місце (Where are you going? Choose the correct place)"} />
+
+Finally, here are some specific location markers for precise navigation. 
+
+*   **на ро́зі** (on the corner)
+*   **у центрі** (in the center)
+*   **по́руч** (nearby)
+
+The word **поруч** acts similarly to **близько**, but it often emphasizes immediate side-by-side proximity. You can pair it with the preposition **з** to say "next to something".
+
+*   **Аптека на розі вулиці.** (The pharmacy is on the corner of the street.)
+*   **Рестора́н у центрі міста.** (The restaurant is in the center of the city.)
+*   **Музей поруч з готе́лем.** (The museum is next to the hotel.)
 
 :::tip
-**Кафе** never changes — **біля кафе**, **у кафе**, **це кафе**. It looks the same in every case. This is true for many borrowed words ending in **-е** or **-о**: **метро́**, **кіно́**, **кафе**.
+**Далеко чи близько?**
+When asking a yes/no question in Ukrainian, you do not need auxiliary words like "is it" or "do you". Just raise your intonation at the end of the sentence: **Це далеко?** (Is this far?).
 :::
-
-Three more location phrases for describing your neighborhood:
-
-- **у центрі міста** (in the city center) — **Театр у центрі міста.** The theatre is in the city center.
-- **на ро́зі вулиці** (on the corner of the street) — **Аптека на розі вулиці Шевченка.** The pharmacy is on the corner of Shevchenko Street.
-- **у на́шому райо́ні** (in our neighborhood) — **Бібліотека у нашому районі.** The library is in our neighborhood.
-
-Now describe your whole city using **є** (there is/are). The construction is simple: **У** + place + **є** + what's there.
-
-- **У Ки́єві є метро.** — Kyiv has a metro.
-- **У нашому місті є вели́кий парк.** — Our city has a big park.
-- **У цьому́ районі є стадіон і кінотеатр.** — This neighborhood has a stadium and a cinema.
-
-For the negative, use **нема́є** + genitive: **Біля мого дому немає вокзалу.** (There is no train station near my house.)
-
-<Quiz client:only="react" questions={[{"question": "Ти хочеш купити ліки. (You want to buy medicine.)", "options": [{"text": "у ресторані", "correct": false}, {"text": "в аптеці", "correct": true}, {"text": "у готелі", "correct": false}]}, {"question": "Ти хочеш читати книги. (You want to read books.)", "options": [{"text": "на пошті", "correct": false}, {"text": "в музеї", "correct": false}, {"text": "у бібліотеці", "correct": true}]}, {"question": "Ти хочеш їсти піцу. (You want to eat pizza.)", "options": [{"text": "у ресторані", "correct": true}, {"text": "на вокзалі", "correct": false}, {"text": "у банку", "correct": false}]}, {"question": "Ти хочеш надіслати лист. (You want to send a letter.)", "options": [{"text": "у магазині", "correct": false}, {"text": "на пошті", "correct": true}, {"text": "у кінотеатрі", "correct": false}]}, {"question": "Ти хочеш дивитися фільм. (You want to watch a film.)", "options": [{"text": "у бібліотеці", "correct": false}, {"text": "у кінотеатрі", "correct": true}, {"text": "в університеті", "correct": false}]}, {"question": "Ти хочеш чекати на потяг. (You want to wait for a train.)", "options": [{"text": "у готелі", "correct": false}, {"text": "у лікарні", "correct": false}, {"text": "на вокзалі", "correct": true}]}]} instruction={"Де ти це робиш? (Where do you do this?)"} />
 
 ## Підсумок — Summary
 
-Here is your city vocabulary organized by preposition — the most important pattern from this module:
+Review the city vocabulary with their required Locative prepositions. Mastery of these patterns is essential for urban navigation.
 
-Remember the core pattern: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, and **площа**. Most other places take **в/у**.
+Use **В/У** for these enclosed spaces:
+*   **в аптеці** (in the pharmacy)
+*   **у бібліотеці** (in the library)
+*   **у банку** (in the bank)
+*   **в готелі** (in the hotel)
+*   **у магазині** (in the shop)
+*   **у музеї** (in the museum)
+*   **у ресторані** (in the restaurant)
+*   **у ліка́рні** (in the hospital)
+*   **у шко́лі** (in the school)
+*   **в університе́ті** (in the university)
+*   **у кафе** (in the cafe)
 
-Self-check — answer these questions about your own city:
+Use **НА** for these open areas and transport hubs:
+*   **на пошті** (at the post office)
+*   **на вокзалі** (at the train station)
+*   **на стадіоні** (at the stadium)
+*   **на зупинці** (at the bus stop)
+*   **на площі** (on the square)
 
-- **Де ти купу́єш ліки?** → В аптеці.
-- **Де ти їси́?** → У ресторані / у кафе.
-- **Де ти чита́єш книги?** → У бібліотеці.
-- **Де ти чека́єш на потяг?** → На вокзалі.
-- **Що є біля твого дому?** → Біля мого дому є … (your answer).
-- **Твій університет далеко чи близько?** → (open answer).
+To orient yourself, use the distance words **тут** (here), **там** (there), **далеко** (far), and **близько** (near). 
 
-<FillIn client:only="react" items={[{"sentence": "У моєму місті ____ великий парк.", "answer": "є", "options": ["є", "немає", "тут"]}, {"sentence": "Біля мого дому ____ магазин і кафе.", "answer": "є", "options": ["є", "там", "немає"]}, {"sentence": "Університет ____ від дому.", "answer": "далеко", "options": ["близько", "далеко", "тут"]}, {"sentence": "Аптека ____ парку.", "answer": "біля", "options": ["біля", "у", "від"]}, {"sentence": "Лікарня ____. Вона не близько.", "answer": "далеко", "options": ["тут", "близько", "далеко"]}, {"sentence": "Біля вокзалу ____ готель.", "answer": "є", "options": ["немає", "є", "там"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+Remember the critical difference between **близько** and **біля**. You use the adverb **близько** to state a general fact: **Магазин близько.** (The shop is near). You use the preposition **біля** to connect two nouns and show physical proximity: **Магазин біля парку.** (The shop is near the park). Always pair **біля** with a noun in the Genitive case.
 
-The next module (M31 — Where To?) introduces **куди́** — movement *toward* places using the accusative case: **Я іду́ до бібліоте́ки. Я ї́ду на вокзал.** The same places, a new question: not **де** (where — location) but **куди** (where to — destination).
+Practice your new skills by answering these self-check questions aloud.
+
+*   **Де ви живете́?** (Where do you live?)
+*   **Що є біля ва́шого дому?** (What is near your house?)
+*   **Де ви купу́єте ліки?** (Where do you buy medicine?)
+*   **Центр міста далеко чи близько?** (Is the city center far or near?)
+*   **Які́ музеї є у ва́шому місті?** (What museums are in your city?)
 
 </TabItem>
 <TabItem label="Словник">
@@ -199,93 +234,81 @@ The next module (M31 — Where To?) introduces **куди́** — movement *towa
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **апте́ка** | pharmacy | ім. | ж. |
-| **бібліоте́ка** | library | ім. | ж. |
-| **магази́н** | shop | ім. | ч. |
-| **рестора́н** | restaurant | ім. | ч. |
-| **готе́ль** | hotel | ім. | ч. |
-| **вокза́л** | train station | ім. | ч. |
 | **ліка́рня** | hospital | ім. | ж. |
 | **суперма́ркет** | supermarket | ім. | ч. |
 | **по́шта** | post office | ім. | ж. |
 | **музе́й** | museum | ім. | ч. |
 | **це́рква** | church | ім. | ж. |
 | **дале́ко** | far | присл. |  |
-| **бли́зько** | near, close | присл. |  |
-| **бі́ля** | near, next to (+ genitive) | прийм. |  |
-| **зупи́нка** | bus stop | ім. | ж. |
-| **теа́тр** | theatre | ім. | ч. |
-| **кінотеа́тр** | cinema | ім. | ч. |
-| **стадіо́н** | stadium | ім. | ч. |
-| **університе́т** | university | ім. | ч. |
-| **кафе́** | café | ім. | с. |
-| **ри́нок** | market | ім. |  |
-| **пло́ща** | square | ім. | ж. |
-| **метро́** | metro, subway | ім. | с. |
-| **райо́н** | neighborhood, district | ім. | ч. |
-| **мі́сто** | city | ім. | с. |
+| **бли́зько** | near | присл. |  |
+| **бі́ля** | near / next to | прийм. |  |
+| **апте́ка** | pharmacy | ім. | ж. |
+| **бібліоте́ка** | library | ім. | ж. |
+| **магази́н** | shop | ім. | ч. |
+| **рестора́н** | restaurant | ім. | ч. |
+| **готе́ль** | hotel | ім. | ч. |
+| **вокза́л** | train station | ім. | ч. |
 | **ву́лиця** | street | ім. | ж. |
-| **центр** | center | ім. | ч. |
-| **недале́ко** | not far, nearby | присл. |  |
-| **перехо́жий** | passerby, stranger (on the street) | ім. | ч. |
-| **лі́ки** | medicine (plural) | ім. |  |
-| **по́тяг** | train | ім. | ч. |
-| **є** | there is, there are | дієсл. |  |
-| **нема́є** | there is no, there are no (+ genitive) |  |  |
-| **надсила́ю** | I send | дієсл. |  |
-| **дивлю́ся** | I watch | дієсл. |  |
-| **відпочива́ю** | I relax, I rest | дієсл. |  |
-| **чека́ю** | I wait | дієсл. |  |
-| **ви́бачте** | excuse me (polite, to a stranger) | дієсл. |  |
+| **кафе́** | cafe | ім. | с. |
+| **шко́ла** | school | ім. | ж. |
+| **мі́сто** | city | ім. | с. |
+| **є** | there is / there are | дієсл. |  |
+| **теа́тр** | theater | ім. | ч. |
+| **кінотеа́тр** | cinema | ім. | ч. |
+| **о́зеро** | lake | ім. | с. |
+| **стадіо́н** | stadium | ім. | ч. |
+| **пло́ща** | square | ім. | ж. |
+| **лі́ки** | medicine | ім. |  |
+| **проду́кти** | groceries | ім. |  |
+| **о́фіс** | office | ім. | ч. |
+| **автовокза́л** | bus station | ім. | ч. |
+| **аеропо́рт** | airport | ім. | ч. |
+| **зупи́нка** | bus stop | ім. | ж. |
+| **авто́бус** | bus | ім. | ч. |
+| **по́їзд** | train | ім. | ч. |
+| **університе́т** | university | ім. | ч. |
+| **метро́** | metro | ім. | с. |
+| **по́руч** | nearby | присл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Будь ласка!** | You're welcome! |
-| **Де тут…?** | Where is… here? / Where can I find…? |
-| **біля парку** | near the park |
-| **біля дому** | near the house |
-| **у центрі міста** | in the city center |
-| **на розі вулиці** | on the corner of the street |
-| **у нашому районі** | in our neighborhood |
-| **далеко від центру** | far from the center |
-| **чекаю на потяг** | I wait for a train |
-| **Що є біля твого дому?** | What is near your house? |
+| **Вибачте, будь ласка** | Excuse me, please |
+| **Де тут...?** | Where is ... here? |
+| **Дуже дякую!** | Thank you very much! |
+| **на розі** | on the corner |
+| **Де ви живете?** | Where do you live? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "суперма́ркет", back: "supermarket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "це́рква", back: "church", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "бли́зько", back: "near, close", subtitle: "присл." }, { front: "бі́ля", back: "near, next to (+ genitive)", subtitle: "прийм." }, { front: "зупи́нка", back: "bus stop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "теа́тр", back: "theatre", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кінотеа́тр", back: "cinema", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стадіо́н", back: "stadium", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "райо́н", back: "neighborhood, district", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "центр", back: "center", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "недале́ко", back: "not far, nearby", subtitle: "присл." }, { front: "перехо́жий", back: "passerby, stranger (on the street)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́ки", back: "medicine (plural)", subtitle: "ім." }, { front: "по́тяг", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "є", back: "there is, there are", subtitle: "дієсл." }, { front: "нема́є", back: "there is no, there are no (+ genitive)" }, { front: "надсила́ю", back: "I send", subtitle: "дієсл." }, { front: "дивлю́ся", back: "I watch", subtitle: "дієсл." }, { front: "відпочива́ю", back: "I relax, I rest", subtitle: "дієсл." }, { front: "чека́ю", back: "I wait", subtitle: "дієсл." }, { front: "ви́бачте", back: "excuse me (polite, to a stranger)", subtitle: "дієсл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "суперма́ркет", back: "supermarket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "це́рква", back: "church", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "бли́зько", back: "near", subtitle: "присл." }, { front: "бі́ля", back: "near / next to", subtitle: "прийм." }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "є", back: "there is / there are", subtitle: "дієсл." }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кінотеа́тр", back: "cinema", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "о́зеро", back: "lake", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стадіо́н", back: "stadium", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́ки", back: "medicine", subtitle: "ім." }, { front: "проду́кти", back: "groceries", subtitle: "ім." }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "автовокза́л", back: "bus station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "аеропо́рт", back: "airport", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "bus stop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "авто́бус", back: "bus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́їзд", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "метро́", back: "metro", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "по́руч", back: "nearby", subtitle: "присл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "Що є біля дому Аліни? (What is near Alina's house?)", "options": [{"text": "аптека і вокзал", "correct": false}, {"text": "магазин і кафе", "correct": true}, {"text": "ресторан і музей", "correct": false}]}, {"question": "Яке слово означає «far»? (Which word means «far»?)", "options": [{"text": "близько", "correct": false}, {"text": "тут", "correct": false}, {"text": "далеко", "correct": true}]}, {"question": "Де Аліна питає про аптеку? (Where does Alina ask about the pharmacy?)", "options": [{"text": "у бібліотеці", "correct": false}, {"text": "на вулиці", "correct": true}, {"text": "у кафе", "correct": false}]}, {"question": "Бібліотека ___ центрі міста.", "options": [{"text": "на", "correct": false}, {"text": "від", "correct": false}, {"text": "у", "correct": true}]}, {"question": "Що означає «вокзал»? (What does «вокзал» mean?)", "options": [{"text": "pharmacy", "correct": false}, {"text": "library", "correct": false}, {"text": "train station", "correct": true}]}, {"question": "Як сказати «the hospital is far»? (How to say it?)", "options": [{"text": "Лікарня близько.", "correct": false}, {"text": "Лікарня там.", "correct": false}, {"text": "Лікарня далеко.", "correct": true}]}, {"question": "«Біля» вживається з … (Which case does «біля» take?)", "options": [{"text": "locative", "correct": false}, {"text": "genitive", "correct": true}, {"text": "nominative", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+<GroupSort client:only="react" groups={{"В / У": ["аптека", "бібліотека", "банк", "готель", "музей", "магазин", "ресторан", "лікарня"], "НА": ["пошта", "вокзал", "стадіон", "зупинка", "площа", "автовокзал"]}} instruction={"Розподіліть слова за прийменниками: В/У чи НА? (Sort the words by their preposition: В/У or НА?)"} />
 
-<GroupSort client:only="react" groups={{"в/у": ["аптека", "бібліотека", "магазин", "ресторан", "банк", "готель", "музей", "лікарня", "кінотеатр", "університет"], "на": ["пошта", "вокзал", "стадіон", "зупинка", "ринок", "площа"]}} instruction={"Розподіліть місця за прийменником (Sort places by preposition — в/у or на)"} />
+<TrueFalse client:only="react" items={[{"statement": "Люди купують ліки в аптеці.", "isTrue": true, "explanation": "Так, аптека — це місце, де продають ліки."}, {"statement": "Поїзд завжди на зупинці.", "isTrue": false, "explanation": "Ні, автобус на зупинці, а поїзд на вокзалі."}, {"statement": "Ми дивляться фільм у кінотеатрі.", "isTrue": true, "explanation": "Так, у кінотеатрі дивляться фільми."}, {"statement": "Вокзал — це місце, де є автобуси.", "isTrue": false, "explanation": "Ні, вокзал для поїздів. Для автобусів — автовокзал або зупинка."}, {"statement": "Студенти читають книги у бібліотеці.", "isTrue": true, "explanation": "Так, бібліотека — це місце для книг."}, {"statement": "Магазин тут, а школа близько. Школа далеко?", "isTrue": false, "explanation": "Ні, близько означає 'near', тому школа не далеко."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Аліна зупиняє перехожого і питає, де аптека. (Alina stops a stranger and asks where the pharmacy is.)", "isTrue": true, "explanation": "Так — Аліна каже перехожому: «Вибачте, де тут аптека?»"}, {"statement": "Аптека знаходиться в центрі міста. (The pharmacy is in the city center.)", "isTrue": false, "explanation": "Ні — аптека на вулиці Шевченка, біля парку. Бібліотека в центрі міста."}, {"statement": "«Далеко» означає «near». («Далеко» means «near».)", "isTrue": false, "explanation": "Ні — «далеко» означає «far». «Near» — це «близько» або «недалеко»."}, {"statement": "«На пошті» — правильна форма. («На пошті» is the correct form.)", "isTrue": true, "explanation": "Так — пошта бере прийменник «на»: на пошті, як і вокзал, стадіон, зупинка."}, {"statement": "Слово «кафе» змінюється у всіх відмінках. (The word «кафе» changes in all cases.)", "isTrue": false, "explanation": "Ні — «кафе» не змінюється: в кафе, біля кафе, це кафе — завжди однакова форма."}, {"statement": "Лікарня далеко від центру. (The hospital is far from the center.)", "isTrue": true, "explanation": "Так — Аліна каже: «Лікарня там, далеко від центру.»"}, {"statement": "«Біля» вживається з місцевим відмінком. («Біля» is used with the locative case.)", "isTrue": false, "explanation": "Ні — «біля» вживається з родовим відмінком (genitive): біля парку, біля дому, біля вокзалу."}]} instruction={"Правда чи ні? (True or false?)"} />
+<Unjumble client:only="react" items={[{"words": "є / великий / У / парк. / місті", "answer": "У місті є великий парк."}, {"words": "далеко? / Це / близько / чи", "answer": "Це близько чи далеко?"}, {"words": "аптека / вулиці / Аптека / Шевченка. / на", "answer": "Аптека на вулиці Шевченка."}, {"words": "є / дому / Біля / магазин.", "answer": "Біля дому є магазин."}, {"words": "У / стадіон. / є / моєму / один / місті", "answer": "У моєму місті є один стадіон."}, {"words": "центрі / Ресторан / міста. / у", "answer": "Ресторан у центрі міста."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я чекаю на потяг в вокзалі.", "errorWord": "в", "correctForm": "на", "options": ["на", "у", "біля"], "explanation": "Вокзал бере «на»: на вокзалі — транспортні вузли завжди з «на»."}, {"sentence": "Я надсилаю листи у пошті.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "біля"], "explanation": "Пошта бере «на»: на пошті. Сервісні установи типу пошта, вокзал, стадіон — «на»."}, {"sentence": "Ми граємо у стадіоні.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "біля"], "explanation": "Стадіон бере «на»: на стадіоні."}, {"sentence": "Автобус тут у зупинці.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "біля"], "explanation": "Зупинка бере «на»: на зупинці."}, {"sentence": "Я купую ліки в ресторані.", "errorWord": "ресторані", "correctForm": "аптеці", "options": ["аптеці", "бібліотеці", "музеї"], "explanation": "Ліки купують в аптеці, а не в ресторані. Ресторан — це місце для їжі."}, {"sentence": "Я читаю книги у бібліотека.", "errorWord": "бібліотека", "correctForm": "бібліотеці", "options": ["бібліотеці", "бібліотека", "бібліотеку"], "explanation": "Після «у» потрібен місцевий відмінок (locative): у бібліотеці, не бібліотека."}]} instruction={"Виправте помилку (Correct the mistake)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я купую ліки на аптеці.", "errorWord": "на", "correctForm": "в", "options": ["в", "у", "біля"], "explanation": "Аптека — це закрите приміщення, тому 'в аптеці'."}, {"sentence": "Ми чекаємо автобус в зупинці.", "errorWord": "в", "correctForm": "на", "options": ["на", "у", "біля"], "explanation": "Зупинка — це відкрите місце, тому 'на зупинці'."}, {"sentence": "Брат працює у пошті.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "біля"], "explanation": "Пошта — це відкрита концепція, тому 'на пошті'."}, {"sentence": "Мама купує продукти у вокзалі.", "errorWord": "у", "correctForm": "на", "options": ["на", "в", "біля"], "explanation": "Вокзал — це платформа або відкрите місце, тому 'на вокзалі'."}, {"sentence": "Сестра відпочиває на парку.", "errorWord": "на", "correctForm": "у", "options": ["у", "в", "на"], "explanation": "Парк — це обмежена територія, тому 'у парку'."}, {"sentence": "Вони дивляться фільм на кінотеатрі.", "errorWord": "на", "correctForm": "у", "options": ["у", "в", "на"], "explanation": "Кінотеатр — це закрите приміщення, тому 'у кінотеатрі'."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Театр ____ центрі міста.", "answer": "у", "options": ["у", "на", "від"]}, {"sentence": "Зупинка ____ вокзалу.", "answer": "біля", "options": ["біля", "у", "на"]}, {"sentence": "Університет ____, не близько.", "answer": "далеко", "options": ["далеко", "тут", "близько"]}, {"sentence": "Магазин ____ від мого дому.", "answer": "близько", "options": ["далеко", "близько", "там"]}, {"sentence": "У нашому районі ____ бібліотека і парк.", "answer": "є", "options": ["є", "немає", "тут"]}, {"sentence": "Біля мого дому ____ вокзалу.", "answer": "немає", "options": ["є", "немає", "там"]}]} instruction={"Опишіть місто. Вставте правильне слово (Describe the city — fill in the correct word)"} />
+<FillIn client:only="react" items={[{"sentence": "Аптека біля ____.", "answer": "парку", "options": ["парк", "парку", "парком"]}, {"sentence": "Магазин біля ____.", "answer": "дому", "options": ["дім", "дому", "домом"]}, {"sentence": "Лікарня біля ____.", "answer": "банку", "options": ["банк", "банку", "банком"]}, {"sentence": "Кафе біля ____.", "answer": "готелю", "options": ["готель", "готелю", "готелем"]}, {"sentence": "Ресторан біля ____.", "answer": "вокзалу", "options": ["вокзал", "вокзалу", "вокзалом"]}, {"sentence": "Бібліотека біля ____.", "answer": "музею", "options": ["музей", "музею", "музеєм"]}]} instruction={"Вставте правильну форму слова після 'біля' (Insert the correct form of the word after 'біля')"} />
 
-<Translate client:only="react" questions={[{"source": "at the pharmacy", "options": [{"text": "в аптеці", "correct": true}, {"text": "на аптеці", "correct": false}, {"text": "біля аптеки", "correct": false}]}, {"source": "at the post office", "options": [{"text": "в пошті", "correct": false}, {"text": "на пошті", "correct": true}, {"text": "біля пошти", "correct": false}]}, {"source": "near the park", "options": [{"text": "в парку", "correct": false}, {"text": "на парку", "correct": false}, {"text": "біля парку", "correct": true}]}, {"source": "at the train station", "options": [{"text": "у вокзалі", "correct": false}, {"text": "на вокзалі", "correct": true}, {"text": "біля вокзалу", "correct": false}]}, {"source": "in the city center", "options": [{"text": "у центрі міста", "correct": true}, {"text": "на центрі міста", "correct": false}, {"text": "від центру міста", "correct": false}]}, {"source": "the library is nearby", "options": [{"text": "Бібліотека далеко.", "correct": false}, {"text": "Бібліотека там.", "correct": false}, {"text": "Бібліотека близько.", "correct": true}]}]} instruction={"Оберіть правильний переклад (Choose the correct Ukrainian translation)"} />
-
+<Order client:only="react" items={["— Дякую. А де бібліотека?", "— Аптека на вулиці Шевченка.", "— Бібліотека у центрі.", "— Вибачте, будь ласка. Де тут аптека?"]} correct_order={[3, 1, 0, 2]} instruction={"Розставте репліки діалогу в правильному порядку (Put the dialogue lines in the correct order)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- Anna-led module — city vocabulary through practical situations
-  _No single textbook source — vocabulary compiled from multiple textbook city themes._
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/)
-- [Prepositions У/В vs НА](https://www.ukrainianlessons.com/prepositions-u-na/)
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=33), стор. 33
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=63), стор. 63
+- [Ворон А. А. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-voron-2019.pdf#page=260), стор. 260
+- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 67
+- [Кравцова Н. М. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-kravcova-2019-2.pdf#page=72), стор. 72
 
 </TabItem>
 </Tabs>

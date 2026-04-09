@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The writer successfully covered all outline sections, including preposition
+    vs. adverb nuances and all groups of prefixed verbs ("Коли ви хочете описати близькість...
+    є кілька чудових варіантів на виб
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Found a colloquial borrowing/Russianism: "на безпечній парковці". VESUM
+    confirms this word form does not exist in standard Ukrainian. The standard word
+    is "автостоянці".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent breakdown and scaffolding. The distinction between prepositions
+    and adverbs is explained with perfect clarity: ("Він стояв навпроти школи... Але
+    у реченні «Я живу навпроти» — це самостійний '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary terms from the plan are introduced
+    naturally within the text (e.g., "односпрямований рух", "маршрут", "переносне
+    значення").
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The writer over-generated 13 `INJECT_ACTIVITY` markers instead of the
+    6 comprehensive ones requested in the `activity_hints` plan. This fragments the
+    exercises and risks failing the YAML generator map
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly supportive, warm, and natural for a teacher conducting
+    a final review ("Не поспішайте, аналізуйте кожну свою помилку і радійте правильним
+    відповідям!").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module is exceptionally well-structured. The word count is 4354 words
+    (comfortably over the 4000-word target), and all markdown tags and headers correctly
+    follow the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses perfectly authentic Ukrainian geographical settings (Київ, Рівне,
+    Львів, Карпати, Яремче, Бориспіль) and features a highly plausible, decolonized
+    domestic travel narrative.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The student's response in the "Oral exam" dialogue is entirely robotic
+    because the writer simply copy-pasted the exact prompt instruction from the plan
+    rather than expanding it into a natural spoken s
+findings: []

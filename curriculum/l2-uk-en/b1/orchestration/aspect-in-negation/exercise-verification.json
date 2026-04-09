@@ -1,0 +1,543 @@
+{
+  "total_items": 233,
+  "grounded_items": 147,
+  "ungrounded": [
+    {
+      "word": "здати",
+      "exercise_type": "quiz",
+      "context": "Керівник запитує про звіт, який ви мали здати вчора. Ви ще п",
+      "role": "context"
+    },
+    {
+      "word": "вчора",
+      "exercise_type": "quiz",
+      "context": "Керівник запитує про звіт, який ви мали здати вчора. Ви ще п",
+      "role": "context"
+    },
+    {
+      "word": "працюєте",
+      "exercise_type": "quiz",
+      "context": "Керівник запитує про звіт, який ви мали здати вчора. Ви ще п",
+      "role": "context"
+    },
+    {
+      "word": "питає",
+      "exercise_type": "match-up",
+      "context": "Друг питає, чи читали ви нову статтю (ви не планували)",
+      "role": "answer"
+    },
+    {
+      "word": "дивилися",
+      "exercise_type": "quiz",
+      "context": "Друг питає, чи дивилися ви старий французький фільм. Ви взаг",
+      "role": "context"
+    },
+    {
+      "word": "французький",
+      "exercise_type": "quiz",
+      "context": "Друг питає, чи дивилися ви старий французький фільм. Ви взаг",
+      "role": "context"
+    },
+    {
+      "word": "любите",
+      "exercise_type": "quiz",
+      "context": "Друг питає, чи дивилися ви старий французький фільм. Ви взаг",
+      "role": "context"
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "quiz",
+      "context": "Друг питає, чи дивилися ви старий французький фільм. Ви взаг",
+      "role": "context"
+    },
+    {
+      "word": "пообідали",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви вже пообідали, бо хоче запросити вас у к",
+      "role": "context"
+    },
+    {
+      "word": "бо",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви вже пообідали, бо хоче запросити вас у к",
+      "role": "context"
+    },
+    {
+      "word": "хоче",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви вже пообідали, бо хоче запросити вас у к",
+      "role": "context"
+    },
+    {
+      "word": "запросити",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви вже пообідали, бо хоче запросити вас у к",
+      "role": "context"
+    },
+    {
+      "word": "збиралися",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви вже пообідали, бо хоче запросити вас у к",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви вже пообідали, бо хоче запросити вас у к",
+      "role": "context"
+    },
+    {
+      "word": "знайомого",
+      "exercise_type": "quiz",
+      "context": "Ви питаєте знайомого, чи він був у Києві. Він там ніколи не ",
+      "role": "context"
+    },
+    {
+      "word": "прочитали",
+      "exercise_type": "quiz",
+      "context": "Викладач питає, чи ви прочитали статтю на сьогодні. Ви плану",
+      "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "quiz",
+      "context": "Викладач питає, чи ви прочитали статтю на сьогодні. Ви плану",
+      "role": "context"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "quiz",
+      "context": "Мама питає, чи ти прибрав у ванній кімнаті. Ти якраз збиравс",
+      "role": "context"
+    },
+    {
+      "word": "якраз",
+      "exercise_type": "quiz",
+      "context": "Мама питає, чи ти прибрав у ванній кімнаті. Ти якраз збиравс",
+      "role": "context"
+    },
+    {
+      "word": "збирався",
+      "exercise_type": "quiz",
+      "context": "Мама питає, чи ти прибрав у ванній кімнаті. Ти якраз збиравс",
+      "role": "context"
+    },
+    {
+      "word": "співбесіді",
+      "exercise_type": "quiz",
+      "context": "На співбесіді вас питають, чи ви працювали над цим досліджен",
+      "role": "context"
+    },
+    {
+      "word": "питають",
+      "exercise_type": "quiz",
+      "context": "На співбесіді вас питають, чи ви працювали над цим досліджен",
+      "role": "context"
+    },
+    {
+      "word": "працювали",
+      "exercise_type": "quiz",
+      "context": "На співбесіді вас питають, чи ви працювали над цим досліджен",
+      "role": "context"
+    },
+    {
+      "word": "цим",
+      "exercise_type": "group-sort",
+      "context": "Я не працював над цим дослідженням.",
+      "role": "answer"
+    },
+    {
+      "word": "дослідженням",
+      "exercise_type": "group-sort",
+      "context": "Я не працював над цим дослідженням.",
+      "role": "answer"
+    },
+    {
+      "word": "обов'язках",
+      "exercise_type": "quiz",
+      "context": "На співбесіді вас питають, чи ви працювали над цим досліджен",
+      "role": "context"
+    },
+    {
+      "word": "відповіли",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви відповіли на важливий лист. Ви збираєтес",
+      "role": "context"
+    },
+    {
+      "word": "збираєтеся",
+      "exercise_type": "quiz",
+      "context": "Колега питає, чи ви відповіли на важливий лист. Ви збираєтес",
+      "role": "context"
+    },
+    {
+      "word": "любили",
+      "exercise_type": "quiz",
+      "context": "Ви розповідаєте, що зовсім не любили читати в дитинстві.",
+      "role": "context"
+    },
+    {
+      "word": "миєте",
+      "exercise_type": "quiz",
+      "context": "Ви миєте посуд. Залишилася одна тарілка. Хтось питає, чи ви ",
+      "role": "context"
+    },
+    {
+      "word": "залишилася",
+      "exercise_type": "quiz",
+      "context": "Ви миєте посуд. Залишилася одна тарілка. Хтось питає, чи ви ",
+      "role": "context"
+    },
+    {
+      "word": "тарілка",
+      "exercise_type": "quiz",
+      "context": "Ви миєте посуд. Залишилася одна тарілка. Хтось питає, чи ви ",
+      "role": "context"
+    },
+    {
+      "word": "хтось",
+      "exercise_type": "quiz",
+      "context": "Ви миєте посуд. Залишилася одна тарілка. Хтось питає, чи ви ",
+      "role": "context"
+    },
+    {
+      "word": "закінчили",
+      "exercise_type": "quiz",
+      "context": "Ви миєте посуд. Залишилася одна тарілка. Хтось питає, чи ви ",
+      "role": "context"
+    },
+    {
+      "word": "вибачте",
+      "exercise_type": "fill-in",
+      "context": "Вибачте, я _____ ваш лист, але обов'язково зроблю це сьогодн",
+      "role": "context"
+    },
+    {
+      "word": "вегетаріанець",
+      "exercise_type": "fill-in",
+      "context": "Він ніколи _____ м'ясо, він вегетаріанець.",
+      "role": "context"
+    },
+    {
+      "word": "минулих",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ це питання на минулих зборах, це не була наша тема.",
+      "role": "context"
+    },
+    {
+      "word": "зборах",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ це питання на минулих зборах, це не була наша тема.",
+      "role": "context"
+    },
+    {
+      "word": "наша",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ це питання на минулих зборах, це не була наша тема.",
+      "role": "context"
+    },
+    {
+      "word": "тема",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ це питання на минулих зборах, це не була наша тема.",
+      "role": "context"
+    },
+    {
+      "word": "вирішили",
+      "exercise_type": "fill-in",
+      "context": "ще не вирішили",
+      "role": "answer"
+    },
+    {
+      "word": "шукаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ цю ситуацію, але ми активно шукаємо рішення.",
+      "role": "context"
+    },
+    {
+      "word": "рішення",
+      "exercise_type": "fill-in",
+      "context": "Ми _____ цю ситуацію, але ми активно шукаємо рішення.",
+      "role": "context"
+    },
+    {
+      "word": "доробив",
+      "exercise_type": "fill-in",
+      "context": "ще не доробив",
+      "role": "answer"
+    },
+    {
+      "word": "курсову",
+      "exercise_type": "fill-in",
+      "context": "Я _____ цю курсову роботу, мені потрібна ще година.",
+      "role": "context"
+    },
+    {
+      "word": "потрібна",
+      "exercise_type": "fill-in",
+      "context": "Я _____ цю курсову роботу, мені потрібна ще година.",
+      "role": "context"
+    },
+    {
+      "word": "година",
+      "exercise_type": "fill-in",
+      "context": "Я _____ цю курсову роботу, мені потрібна ще година.",
+      "role": "context"
+    },
+    {
+      "word": "складну",
+      "exercise_type": "fill-in",
+      "context": "Ми часто _____ минулого року через складну ситуацію.",
+      "role": "context"
+    },
+    {
+      "word": "відповіла",
+      "exercise_type": "fill-in",
+      "context": "ще не відповіла",
+      "role": "answer"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "Вона _____ на мій лист, я все ще чекаю.",
+      "role": "context"
+    },
+    {
+      "word": "чекаю",
+      "exercise_type": "fill-in",
+      "context": "Вона _____ на мій лист, я все ще чекаю.",
+      "role": "context"
+    },
+    {
+      "word": "дивився",
+      "exercise_type": "group-sort",
+      "context": "Я не дивився цей фільм.",
+      "role": "answer"
+    },
+    {
+      "word": "снідає",
+      "exercise_type": "group-sort",
+      "context": "Він взагалі не снідає.",
+      "role": "answer"
+    },
+    {
+      "word": "читала",
+      "exercise_type": "group-sort",
+      "context": "Вона не читала цю статтю.",
+      "role": "answer"
+    },
+    {
+      "word": "працював",
+      "exercise_type": "group-sort",
+      "context": "Я не працював над цим дослідженням.",
+      "role": "answer"
+    },
+    {
+      "word": "обговорили",
+      "exercise_type": "group-sort",
+      "context": "Ми ще не обговорили це питання.",
+      "role": "answer"
+    },
+    {
+      "word": "дочитала",
+      "exercise_type": "group-sort",
+      "context": "Вона ще не дочитала цю статтю.",
+      "role": "answer"
+    },
+    {
+      "word": "столі",
+      "exercise_type": "error-correction",
+      "context": "Я ще не читав цю книжку, але вона лежить на столі.",
+      "role": "context"
+    },
+    {
+      "word": "обговорила",
+      "exercise_type": "error-correction",
+      "context": "обговорила",
+      "role": "answer"
+    },
+    {
+      "word": "обговорювала",
+      "exercise_type": "error-correction",
+      "context": "Вона ще не обговорювала це зі мною, але ми домовилися про зу",
+      "role": "context"
+    },
+    {
+      "word": "мною",
+      "exercise_type": "error-correction",
+      "context": "Вона ще не обговорювала це зі мною, але ми домовилися про зу",
+      "role": "context"
+    },
+    {
+      "word": "домовилися",
+      "exercise_type": "error-correction",
+      "context": "Вона ще не обговорювала це зі мною, але ми домовилися про зу",
+      "role": "context"
+    },
+    {
+      "word": "відповів",
+      "exercise_type": "error-correction",
+      "context": "ще не відповів",
+      "role": "answer"
+    },
+    {
+      "word": "хоча",
+      "exercise_type": "error-correction",
+      "context": "Він не відповів на мій лист, хоча я відправив його лише п'ят",
+      "role": "context"
+    },
+    {
+      "word": "відправив",
+      "exercise_type": "error-correction",
+      "context": "Він не відповів на мій лист, хоча я відправив його лише п'ят",
+      "role": "context"
+    },
+    {
+      "word": "робив",
+      "exercise_type": "error-correction",
+      "context": "Я ще не робив цей звіт, мені залишилося написати трохи.",
+      "role": "context"
+    },
+    {
+      "word": "написати",
+      "exercise_type": "error-correction",
+      "context": "Я ще не робив цей звіт, мені залишилося написати трохи.",
+      "role": "context"
+    },
+    {
+      "word": "вирішували",
+      "exercise_type": "error-correction",
+      "context": "Ми ще не вирішували це питання, але обов'язково це зробимо н",
+      "role": "context"
+    },
+    {
+      "word": "зробимо",
+      "exercise_type": "error-correction",
+      "context": "Ми ще не вирішували це питання, але обов'язково це зробимо н",
+      "role": "context"
+    },
+    {
+      "word": "процесі",
+      "exercise_type": "match-up",
+      "context": "Викладач питає, чи ви написали розділ (ви в процесі)",
+      "role": "answer"
+    },
+    {
+      "word": "обідали",
+      "exercise_type": "match-up",
+      "context": "Колега питає, чи ви обідали (ви взагалі не обідаєте на робот",
+      "role": "answer"
+    },
+    {
+      "word": "обідаєте",
+      "exercise_type": "match-up",
+      "context": "Колега питає, чи ви обідали (ви взагалі не обідаєте на робот",
+      "role": "answer"
+    },
+    {
+      "word": "обідаю",
+      "exercise_type": "match-up",
+      "context": "Я не обідаю.",
+      "role": "context"
+    },
+    {
+      "word": "бачила",
+      "exercise_type": "match-up",
+      "context": "Ви питаєте колегу, чи вона бачила ваші ключі (дуже ввічливо)",
+      "role": "answer"
+    },
+    {
+      "word": "ввічливо",
+      "exercise_type": "match-up",
+      "context": "Ви питаєте колегу, чи вона бачила ваші ключі (дуже ввічливо)",
+      "role": "answer"
+    },
+    {
+      "word": "їли",
+      "exercise_type": "match-up",
+      "context": "Ви повідомляєте, що ніколи в житті не їли м'ясо",
+      "role": "answer"
+    },
+    {
+      "word": "скаржитеся",
+      "exercise_type": "match-up",
+      "context": "Ви скаржитеся, що колега так і не виконав завдання",
+      "role": "answer"
+    },
+    {
+      "word": "виконав",
+      "exercise_type": "match-up",
+      "context": "Ви скаржитеся, що колега так і не виконав завдання",
+      "role": "answer"
+    },
+    {
+      "word": "пояснюєте",
+      "exercise_type": "match-up",
+      "context": "Ви пояснюєте, що процес миття посуду ще триває",
+      "role": "answer"
+    },
+    {
+      "word": "посуду",
+      "exercise_type": "match-up",
+      "context": "Ви пояснюєте, що процес миття посуду ще триває",
+      "role": "answer"
+    },
+    {
+      "word": "констатації",
+      "exercise_type": "true-false",
+      "context": "Форма «не + недоконаний вид» часто використовується для конс",
+      "role": "context"
+    },
+    {
+      "word": "нейтрального",
+      "exercise_type": "true-false",
+      "context": "Форма «не + недоконаний вид» часто використовується для конс",
+      "role": "context"
+    },
+    {
+      "word": "ніж",
+      "exercise_type": "true-false",
+      "context": "Запитання «Ви не бачили мої ключі?» звучить більш ввічливо, ",
+      "role": "context"
+    },
+    {
+      "word": "знайшли",
+      "exercise_type": "true-false",
+      "context": "Запитання «Ви не бачили мої ключі?» звучить більш ввічливо, ",
+      "role": "context"
+    },
+    {
+      "word": "мити",
+      "exercise_type": "true-false",
+      "context": "Фраза «Я ще не домив посуд» означає, що ви взагалі не збирає",
+      "role": "context"
+    },
+    {
+      "word": "найчастіше",
+      "exercise_type": "true-false",
+      "context": "Слова «ніколи» та «взагалі» найчастіше притягують до себе до",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 20,
+    "tested_in_exercises": 6,
+    "not_tested": [
+      "вирішити",
+      "вирішувати",
+      "відповідати",
+      "відповісти",
+      "домити",
+      "доробити",
+      "дочитати",
+      "завершення",
+      "незавершений",
+      "нейтральний",
+      "обговорити",
+      "обговорювати",
+      "очікуване",
+      "прагматика"
+    ]
+  },
+  "all_grounded": false
+}

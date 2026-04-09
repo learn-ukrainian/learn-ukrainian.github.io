@@ -1,32 +1,31 @@
-## Діалоги (Dialogues) (~330 words total)
-- P1 (~40 words): Brief framing paragraph — introduces the two scenarios: a friend asking about your day (past-tense chunks) and planning tomorrow (future chunks). States that past and future forms are taught as frozen phrases here, not grammar.
-- Dialogue 1 (~120 words): Як пройшов твій день? — Multi-turn exchange: «Добре! Вранці я працював у офісі.» — «А потім?» — «Потім обідав о першій. Після обіду гуляв у парку.» — «А ввечері що робив?» — «Ввечері дивився фільм і читав книгу. Нарешті ліг спати о дванадцятій.» Full turn-by-turn formatting. Sequence words (спочатку / потім / після обіду / нарешті) bolded inline. Past forms (працював, обідав, гуляв, дивився, читав, ліг) glossed as *[past-tense chunk — full grammar in M48]*.
-- P2 (~30 words): One-sentence callout box: "Notice the pattern — sequence word + verb + time: *Потім обідав о першій.*" Focuses the learner's eye on word order.
-- Dialogue 2 (~120 words): Що ти будеш робити завтра? — «Вранці буду працювати. — А після обіду? — Після обіду буду вивчати українську. А ввечері — буду гуляти з друзями. — А вночі? — Нарешті буду спати!» Future chunks буду + infinitive bolded. Infinitives: працювати, вивчати, гуляти, спати. Glossed: *[буду + infinitive = "I will…" — full grammar in M46]*.
-- P3 (~20 words): One-line bridge: "Same structure, two timelines — yesterday I *worked*, tomorrow I *will work*. The sequence words stay the same."
+## Діалоги (~330 words total)
+- P1 (~40 words): [Introduction to the narrative setting: a blogger recording a daily vlog or writing a diary entry, setting up the context for using time markers and sequence words in a natural, conversational flow.]
+- P2 (~100 words): [Dialogue 1: "Як пройшов твій день?" (How was your day?). The narrator describes their day to a friend using past tense chunks like "працював" (worked), "обідав" (had lunch), and "читав" (read). The friend asks "А потім?" (And then?) to prompt sequence.]
+- P3 (~60 words): [Linguistic analysis of Dialogue 1: Focusing on "вранці" (in the morning) vs "після обіду" (in the afternoon) as fixed adverbs and explaining that the past tense forms (-в) are introduced here as ready-made vocabulary chunks for storytelling.]
+- P4 (~90 words): [Dialogue 2: "Що ти будеш робити завтра?" (What will you do tomorrow?). Planning a future schedule using the chunk "буду + infinitive" (буду працювати, буду вивчати). The dialogue emphasizes the contrast between "вдень" and "ввечері".]
+- P5 (~40 words): [Linguistic analysis of Dialogue 2: Explaining the future intention chunk "буду + infinitive" as a simple way to talk about upcoming plans without full conjugation rules yet.]
 
-## Мій типовий день (My Typical Day) (~330 words total)
-- P1 (~40 words): Section intro — explains this section presents a full model-day narrative using the present tense (A1.3) + time expressions (M22) + parts-of-day adverbs. Learner should treat it as a reading + vocabulary model.
-- P2 (~110 words): Model day narrative — full paragraph of connected sentences: «Я прокидаюся о сьомій. Спочатку вмиваюся і одягаюся. Потім снідаю о восьмій. О дев'ятій починаю працювати. Вдень я працюю до першої. О першій обідаю. Після обіду ще працюю до п'ятої. Ввечері готую вечерю і відпочиваю. О дев'ятій дивлюся фільм або читаю книгу. Нарешті о дванадцятій лягаю спати.» All verbs are present-tense Group I/II forms already known from M16-M21. Sequence words bolded.
-- P3 (~100 words): Parts-of-day adverbs explanation — table-style prose: вранці (in the morning, before ~noon), вдень (during the day, ~9–17), після обіду (in the afternoon, literally "after lunch"), ввечері (in the evening, ~18–22), вночі (at night, ~22–6). Pattern note: these are adverbs — place them at the start of a sentence: *Ввечері я читаю.* No case change, no conjugation. Contrast: «о сьомій» (at 7 o'clock — accusative with о) vs. «вранці» (in the morning — adverb, no preposition).
-- Exercise — Fill-in 2 (~50 words): Choose the correct part of the day (від activity_hints fill-in 2): «Я п'ю каву ___ (вранці / вночі / ввечері)», «Ми вечеряємо ___ (ввечері / вранці / вдень)», «Вона працює з дев'ятої до п'ятої ___ (вдень / вночі / вранці)», «Вони гуляють у парку ___ (після обіду / вночі / вранці)». 4 items, single-choice.
-- P4 (~30 words): Short note — «після обіду» is two words functioning as a time adverb. Can be used alone («Після обіду я відпочиваю.») or with a clock time: «Після обіду, о третій, я вчу українську.»
+## Мій типовий день (~340 words total)
+- P1 (~80 words): [The Temporal Skeleton: Explaining the four parts of the day as adverbs: вранці, вдень, ввечері, вночі. Contrast with English: emphasize that NO preposition "в" is needed because the adverb already contains the "in the" meaning.]
+- P2 (~90 words): [The Reflexive Routine: Introducing the concept of reflexive verbs (-ся) for self-directed actions. Teach "прокидатися" (to wake up), "вмиватися" (to wash), and "одягатися" (to get dressed) as a logical morning sequence.]
+- P3 (~100 words): [Model Narrative: "Мій типовий понеділок." A 10-sentence paragraph combining time (о сьомій), reflexive verbs, and parts of the day. Examples: "Я прокидаюся о сьомій. Вранці я працюю. Вдень я обідаю."]
+- P4 (~70 words): [Vocabulary deep-dive: "лягати спати" (to go to bed) vs "спати" (to sleep). Explain that "лягати спати" is the action of ending the day, while "вночі я сплю" describes the state.]
+- <!-- INJECT_ACTIVITY: match-activity-time --> [match-up, focus: matching the activity to the logical time of day (прокидаюся-вранці, сплю-вночі), 8 items]
 
-## Від ранку до вечора (From Morning to Evening) (~330 words total)
-- P1 (~120 words): Extended sequence words — introduces the full connector set with example sentences for each: **спочатку** (first, to start — *Спочатку я снідаю.*), **потім** (then, next — *Потім я йду на роботу.*), **після того / після цього** (after that — *Після того я відпочиваю.*), **нарешті** (finally — *Нарешті я лягаю спати.*), **також** (also — *Я також читаю вранці.*), **а потім** (and then, with light contrast — *Я снідаю, а потім іду до офісу.*). Notes: спочатку ≠ на початку (спочатку = sequence marker in narration; на початку = at the beginning of something). після того / після цього are interchangeable at A1.
-- P2 (~100 words): Daily activity verbs — presents the meal verbs as a triad: снідати (to have breakfast — review from M20), обідати (to have lunch), вечеряти (to have dinner). All Group I (-ати): conjugation pattern identical to читати (я снідаю, ти снідаєш, він снідає). Two new verbs: відпочивати (to rest — Group I: я відпочиваю, ти відпочиваєш) and the chunk лягати спати (to go to bed — treat as one unit at A1, full reflexive verbs in M38). Four example sentences combining verb + time: «О першій я обідаю.» «Після роботи я відпочиваю.» «Ввечері я вечеряю о сьомій.» «О дванадцятій я лягаю спати.»
-- Exercise — Match-up (~60 words): Match activity to logical time of day (from activity_hints): прокидаюся ↔ вранці, снідаю ↔ вранці, працюю ↔ вдень, обідаю ↔ вдень, вечеряю ↔ ввечері, дивлюся фільм ↔ ввечері, лягаю спати ↔ вночі, сплю ↔ вночі. 8 pairs.
-- P3 (~50 words): Synthesis note — shows how sequence words + time adverbs + activity verbs stack: «Вранці я прокидаюся о сьомій. Спочатку снідаю. Потім іду на роботу. Після того обідаю о першій. Ввечері відпочиваю. Нарешті лягаю спати.» Callout: any two sentences about your day can be connected with потім or після того.
+## Від ранку до вечора (~340 words total)
+- P1 (~80 words): [The Connective Tissue: Introducing sequence words "спочатку" (first), "потім" (then/later), and "нарешті" (finally). Show how they turn a list of facts into a story: "Спочатку я снідаю. Потім я працюю."]
+- P2 (~80 words): [Expanding the flow: Teaching "після того" (after that) and "також" (also) to avoid repetitive use of "потім". Example: "Я обідаю. Після того я також гуляю в парку."]
+- P3 (~90 words): [The Meal Verbs: Emphasizing the noun-verb pairs сніданок/снідати, обід/обідати, вечеря/вечеряти. Explicitly warn against the English calque "мати сніданок" (I have breakfast); in Ukrainian, you just "breakfast".]
+- P4 (~90 words): [Daily Activity Verbs: Reviewing Group I verbs (-ати) in the context of a day: "відпочивати" (to rest), "читати" (to read), "гуляти" (to walk). Show conjugation for "Я" and "Ти" to facilitate the dialogue situations.]
+- <!-- INJECT_ACTIVITY: fill-in-sequence --> [fill-in, focus: choosing the correct sequence word (Спочатку... Потім... Нарешті) to complete a logical day, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-parts-of-day --> [fill-in, focus: choosing between вранці, вдень, ввечері, вночі based on activities like "п'ю каву" or "сплю", 5 items]
 
-## Підсумок — Summary (~330 words total)
-- P1 (~80 words): Full-formula recap — explains the three-part building block for narrating a day: **[Time expression] + [Sequence word] + [Verb + object/complement]**. Example breakdowns: «О сьомій [time] / — / прокидаюся [verb]» → «Спочатку [seq] / снідаю [verb]» → «Потім [seq] / о дев'ятій [time] / іду на роботу [verb + complement]». Shows that time and sequence words are interchangeable at the start — both are correct.
-- P2 (~100 words): Extended model day narrative — longer coherent story (8–10 sentences) weaving all four sections together: «Мій типовий понеділок починається о шостій тридцять. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю каву і їм бутерброд. О дев'ятій починаю працювати. Вдень я дуже зайнятий. О першій обідаю в кафе. Після обіду ще працюю до шостої. Ввечері відпочиваю — готую вечерю і дивлюся серіал. Також читаю перед сном. Нарешті о дванадцятій лягаю спати. Завтра — те саме!» Functions as a second model for learner imitation.
-- Exercise — Fill-in 1 (~60 words): Complete the logical sequence (from activity_hints fill-in 1, 6 items): «___ (Спочатку/Потім/Нарешті) я прокидаюся і вмиваюся.» «Після того я ___ (снідаю/вечеряю/лягаю спати).» «Вдень я ___ (працюю/прокидаюся/снідаю) в офісі.» «О першій годині я ___ (обідаю/вечеряю/прокидаюся).» «___ (Потім/Спочатку/Вранці) я читаю книгу або дивлюся фільм.» «___ (Нарешті/Спочатку/Вдень) я лягаю спати о дванадцятій.»
-- P3 — Self-check (~90 words): Bulleted prompt list for learner's own production:
-  - Describe your typical Monday from morning to evening (5–8 sentences).
-  - Use at least 3 time expressions (e.g., о восьмій, після обіду, ввечері).
-  - Use at least 3 sequence words (спочатку, потім, нарешті).
-  - Include at least 4 daily activity verbs (прокидатися, снідати, обідати, відпочивати, лягати спати).
-  - Starter: «Мій типовий понеділок починається о ___. Спочатку я ___…»
+## Підсумок (~310 words total)
+- P1 (~120 words): [The Story Formula: Recap of how to build a coherent narrative by combining Time (о якій годині?) + Sequence (спочатку/потім) + Activity (verb). Model a "Super-Sentence": "Вранці о восьмій я спочатку снідаю, а потім працюю."]
+- P2 (~190 words): [Self-check and Final Task. Provide a bulleted checklist for the learner:
+    - Can I name 4 parts of the day as adverbs? (вранці, вдень, ввечері, вночі)
+    - Can I use 3 words to order my actions? (спочатку, потім, нарешті)
+    - Do I remember to use -ся for "прокидатися" and "вмиватися"?
+    - Final Narrative Task: Write 6 sentences about your typical Monday using at least 3 sequence words and 3 specific times.]
 
 Grand total: ~1320 words

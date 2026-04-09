@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,11 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->`
-- `<!-- INJECT_ACTIVITY: match-infinitives-meanings -->`
-- `<!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->`
-- `<!-- INJECT_ACTIVITY: quiz-structure-choice -->`
-- `<!-- INJECT_ACTIVITY: fill-in-negative -->`
+- `<!-- INJECT_ACTIVITY: match-up-infinitives -->`
+- `<!-- INJECT_ACTIVITY: fill-in-hobbies -->`
+- `<!-- INJECT_ACTIVITY: quiz-like-choice -->`
+- `<!-- INJECT_ACTIVITY: fill-in-negatives -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -90,129 +89,134 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Анна walks into a cozy language café in Kyiv for her very first tandem session. Her partner Віктор is already waiting at the table, two cups of tea steaming between them.
+When you meet someone new, one of the first topics of conversation is usually hobbies and interests. Finding common ground is a great way to build a connection. In Ukrainian, expressing what you enjoy doing is quite straightforward, but it requires learning a specific sentence pattern. 
 
-> **Віктор:** Привіт, Анно! Що ти любиш робити? *(Hi, Anna! What do you like to do?)*
-> **Анна:** Я люблю читати і слухати музику. *(I like to read and listen to music.)*
-> **Віктор:** Цікаво! А ще? *(Interesting! And what else?)*
-> **Анна:** Люблю гуляти в парку. А ти? *(I like to walk in the park. And you?)*
-> **Віктор:** Я люблю готувати. *(I like to cook.)*
-> **Анна:** Правда? Що ти готуєш? *(Really? What do you cook?)*
-> **Віктор:** Борщ і вареники. *(Borshch and varenyky.)*
-> **Анна:** Смачно! *(Delicious!)*
+Let us look at a typical conversation. Anna is an English speaker attending her first language exchange meetup in Kyiv. She is paired with Viktor, a local tandem partner. They are having tea and getting to know each other. Pay attention to how they ask about and describe their favorite activities.
 
-Did you spot the pattern? Every time Анна and Віктор talk about what they enjoy, the verb after **люблю** (I like) ends in **-ти**: **читати** (to read), **слухати** (to listen), **гуляти** (to walk), **готувати** (to cook). That **-ти** ending is your clue — it marks the infinitive, the base form of any Ukrainian verb.
+> **Віктор:** Привіт! **Що ти любиш робити?** *(Hi! What do you like to do?)*
+> **Анна:** Привіт! **Я люблю читати і слухати музику.** *(Hi! I like to read and listen to music.)*
+> **Віктор:** Цікаво! А **я люблю готувати.** *(Interesting! And I like to cook.)*
+> **Анна:** Правда? **Що ти готуєш?** *(Really? What do you cook?)*
+> **Віктор:** Я готую борщ. *(I cook borscht.)*
 
-Now Віктор changes the subject:
+In this first exchange, Viktor uses the phrase **Що ти любиш робити?** (What do you like to do?) to ask about Anna's general interests. Anna responds by pairing the verb **люблю** (I like/love) with the action words **читати** (to read) and **слухати** (to listen). 
 
-> **Віктор:** Тобі подобається ця книга? *(Do you like this book?)*
-> **Анна:** Так, мені подобається. Дуже цікава. *(Yes, I like it. Very interesting.)*
+Later in their conversation, Viktor pulls out a novel and a DVD from his bag to ask Anna about her specific tastes regarding objects. Notice how the sentence structure completely changes when they switch from talking about *actions* to talking about *things*.
+
+> **Віктор:** Дивись. **Тобі подобається ця книга?** *(Look. Do you like this book?)*
+> **Анна:** Так, **мені подобається.** *(Yes, I like it.)*
 > **Віктор:** А цей фільм? *(And this film?)*
-> **Анна:** Ні, мені не подобається. *(No, I don't like it.)*
-> **Віктор:** А музика? *(And music?)*
-> **Анна:** О, так! Мені подобається джаз. *(Oh, yes! I like jazz.)*
-> **Віктор:** Мені теж подобається музика! *(I also like music!)*
-> **Анна:** Чудово! *(Wonderful!)*
+> **Анна:** Ні, **мені не подобається цей фільм. Мені подобається музика.** *(No, I don't like this film. I like music.)*
 
-You just met two different phrases for "I like" — **люблю** followed by a verb, and **мені подобається** (I like) followed by a thing. The next two sections show you exactly how each one works.
+If you look closely at the two dialogues, you will see a clear division in how preferences are expressed. When Anna and Viktor talked about *doing* things—the actions of reading or cooking—they used the word **люблю**. However, when they shifted the topic to *things*—the physical book, the film, and the music—they used the phrase **подобається**. 
 
-<!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->
+This transition from verbs to nouns requires two different grammatical approaches in Ukrainian. We will break down both of these essential patterns so you can start sharing your own interests confidently.
 
 ## Я люблю... (I Like...)
 
-When you want to say you enjoy *doing* something, Ukrainian uses a simple formula: **Я люблю** (I like/love) plus a verb in the infinitive. The infinitive is the dictionary form — the one that always ends in **-ти**. Here it is in action:
+When you want to talk about your active hobbies, passions, and the things you physically enjoy doing, the most direct way is to use the verb **любити** (to love/to like). The formula for building these sentences is very similar to English. 
 
-- **Я люблю читати.** — I like to read.
-- **Я люблю гуляти.** — I like to walk.
-- **Я люблю готувати.** — I like to cook.
-- **Я люблю слухати музику.** — I like to listen to music.
+You start with the subject **Я** (I), follow it with the conjugated verb **люблю** (like/love), and finish with the action you enjoy. The action word must be in its basic, unaltered dictionary form, which we call the infinitive.
 
-The structure never changes: subject + **люблю** + infinitive. The infinitive is the raw building block — you will use it with other verbs too (like **хотіти** — to want), but **люблю** is your first chance to put it to work.
+*   **Я люблю читати.** (I like to read.)
+*   **Я люблю малювати.** (I like to draw.)
+*   **Я люблю співати.** (I like to sing.)
 
-Every Ukrainian infinitive ends in **-ти**. This is one of the most reliable patterns in the language — when you see **-ти** at the end of a word, you are looking at a verb in its base form. Here are the core hobby verbs for this module:
+To use this structure, you need to be able to recognize a Ukrainian infinitive. The infinitive is the base form of a verb before it is changed to match a person or a tense. In English, we indicate the infinitive by putting the word "to" in front of the verb (to read, to walk). In Ukrainian, the infinitive is indicated by a specific suffix at the very end of the word. 
 
-| Ukrainian | English |
-|-----------|---------|
-| **читати** | to read |
-| **гуляти** | to walk, to hang out |
-| **готувати** | to cook |
-| **слухати** | to listen |
-| **дивитися** | to watch |
-| **грати** | to play (a game, an instrument) |
+The dictionary form of a Ukrainian verb always ends in the suffix **-ти**. When you look up a new action word, this is the form you will find. 
 
-One thing to be aware of: stress varies from verb to verb. There is no single rule — you learn each one as a whole unit. You will hear the natural stress in the pronunciation videos.
+*   **читати** (to read)
+*   **гуляти** (to walk)
+*   **слухати** (to listen)
 
-<!-- INJECT_ACTIVITY: match-infinitives-meanings -->
+The most important rule to remember for this pattern is that the ending **-ти** never changes when it follows **Я люблю**. It functions as a single, locked unit. 
 
-Now let's add more hobby verbs to your toolkit, each one inside the **Я люблю...** frame so you can use them right away:
+Let us expand your vocabulary with some high-frequency verbs for free time. You can plug any of these directly into the formula. 
 
-- **Я люблю малювати.** — I like to draw.
-- **Я люблю подорожувати.** — I like to travel.
-- **Я люблю співати.** — I like to sing.
-- **Я люблю грати в ігри.** — I like to play games.
-- **Я люблю дивитися фільми.** — I like to watch films.
+*   **дивитися** (to watch)
+*   **грати** (to play)
+*   **подорожувати** (to travel)
+*   **готувати** (to cook)
 
-Notice that **грати** (to play) needs context: **грати в шахи** (to play chess), **грати на гітарі** (to play guitar), **грати в ігри** (to play games). It is not a one-size-fits-all "play" — Ukrainian is more specific about *what* you play. At this stage, just learn the chunks: **грати в** + a game, **грати на** + an instrument.
+:::tip
+When you talk about playing games or instruments, Ukrainian uses specific prepositions that you must memorize as fixed phrases. If you are playing a sport or a game, use the preposition **у** (in). If you are playing a musical instrument, use the preposition **на** (on).
+*   **Я люблю грати у футбол.** (I like to play football.)
+*   **Я люблю грати на гітарі.** (I like to play the guitar.)
+:::
 
-You can also talk about other people. The verb **любити** changes its ending depending on who is doing the liking. For now, just two forms: **Я люблю** (I like) and **моя подруга любить** (my friend likes) or **мій брат любить** (my brother likes). Try building your own sentence: **Я люблю** + one infinitive from the list above.
+<!-- INJECT_ACTIVITY: match-up-infinitives -->
 
-<!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->
+<!-- INJECT_ACTIVITY: fill-in-hobbies -->
+
+Of course, you will not enjoy every activity. To express a negative preference, the rule is incredibly simple. To say "I don't like", we simply place the negative particle **не** (not) directly before the verb. 
+
+In Ukrainian, **не** is always written as a completely separate word. It does not attach to the verb, and it does not change the spelling of the words around it. 
+
+*   **Я люблю гуляти.** (I like to walk.)
+*   **Я не люблю гуляти.** (I do not like to walk.)
+*   **Я не люблю готувати.** (I do not like to cook.)
 
 ## Мені подобається... (I Like...)
 
-Ukrainian has two ways to say "I like," and each one works with different things. Here is the key distinction:
+Now that you know how to talk about actions, we need to look at the second structure. When you want to say that you like a specific *thing*—a noun, an object, a place, or a piece of art—you will use the construction **Мені подобається** (I like). 
 
-- **Я люблю + infinitive** = I like *doing* something (an activity).
-- **Мені подобається + noun** = I like *something* (a thing, a place, a work).
+This phrase literally translates to "To me it is pleasing." At this stage in your learning, you should treat **Мені подобається** as a fixed, memorized chunk of language. Do not worry about analyzing why the word for "I" changes to **Мені**. Just memorize the phrase as a single unit and place the object you like directly after it.
 
-Compare these pairs to feel the difference:
+*   **Мені подобається книга.** (I like the book.)
+*   **Мені подобається музика.** (I like the music.)
+*   **Мені подобається Київ.** (I like Kyiv.)
 
-- **Я люблю читати.** (I like to read.) → activity
-- **Мені подобається ця книга.** (I like this book.) → thing
-- **Я люблю слухати музику.** (I like to listen to music.) → activity
-- **Мені подобається джаз.** (I like jazz.) → thing
+You might be wondering how to choose between the two structures. The distinction is pedagogical and helps you sound much more natural. The verb **любити** is reserved for active hobbies, deep passions, and things you truly "love." It carries a strong emotional weight. 
 
-The phrase **мені подобається** (I like / it pleases me) works as a fixed chunk. You don't need to analyze why it uses **мені** — that grammar comes much later. For now, simply plug in a noun after it:
+*   **Я люблю читати.** (I love to read. This is my passion.)
 
-- **Мені подобається Київ.** — I like Kyiv. *(place)*
-- **Мені подобається цей парк.** — I like this park. *(place)*
-- **Мені подобається ця книга.** — I like this book. *(thing)*
-- **Мені подобається кава.** — I like coffee. *(thing)*
-- **Мені подобається цей фільм.** — I like this film. *(entertainment)*
-- **Мені подобається класична музика.** — I like classical music. *(entertainment)*
+The phrase **подобатися**, on the other hand, is used for general liking, everyday objects, and first impressions. It is a lighter, more objective evaluation. 
 
-<!-- INJECT_ACTIVITY: quiz-structure-choice -->
+*   **Мені подобається цей фільм.** (I like this film. It is a good movie.)
 
-To say you *don't* like something, place **не** directly before the verb in both structures:
+To invite someone else to share their preferences, you need to know how to ask questions. Both structures can be easily turned into questions by changing your intonation and using the correct pronoun for "you."
 
-- **Я не люблю готувати.** — I don't like to cook.
-- **Мені не подобається цей фільм.** — I don't like this film.
+*   **Ти любиш читати?** (Do you like to read?)
+*   **Тобі подобається цей фільм?** (Do you like this film?)
 
-Here is a real exchange from a Ukrainian textbook (Авраменко, Grade 5):
+If the answer is no, you apply the negative particle just as we did before. Place **не** directly before the verb **подобається**. Note that the word order in the question, such as **Тобі подобається** or **Подобається тобі**, can vary freely in conversational Ukrainian, but the core chunk remains intact.
 
-> **Інна:** Я не люблю мити посуд. *(I don't like to wash dishes.)*
-> **Зоя:** А мені не подобається гладити. *(And I don't like to iron.)*
+*   **Мені не подобається.** (I do not like it.)
+*   **Мені не подобається ця музика.** (I do not like this music.)
 
-See how natural that sounds? Two friends sharing what they *don't* enjoy — **не люблю** + infinitive and **мені не подобається** + infinitive, side by side. The word **не** always goes right before the verb.
+<!-- INJECT_ACTIVITY: quiz-like-choice -->
 
-To ask questions, simply use a rising intonation — no word-order change needed. **Ти любиш читати?** (Do you like to read?) **Тобі подобається?** (Do you like it?) You may have noticed that **люблю** changes to **любиш** for **ти** (you). Full conjugation of this verb group comes in M17 — for now, memorize just two forms: **я люблю**, **ти любиш**.
+<!-- INJECT_ACTIVITY: fill-in-negatives -->
 
-<!-- INJECT_ACTIVITY: fill-in-negative -->
+:::caution
+English speakers frequently make a critical mistake by trying to translate "I like" directly word-for-word when talking about objects. They will say **Я подобаюся футбол**. This is incorrect because it literally means "I am pleasing to football." 
+
+Always remember that in Ukrainian, the object (the football) is the thing doing the pleasing. You must use the fixed chunk: **Мені подобається футбол** (Football is pleasing to me).
+:::
 
 ## Підсумок — Summary
 
-You now have two structures for "I like" in Ukrainian. **Я люблю + infinitive (-ти)** is for activities you enjoy doing: reading, cooking, walking, singing. **Мені подобається + noun** is for things, places, or works you like: a book, a city, a film, jazz. Both are negated the same way — place **не** directly before the verb: **Я не люблю**, **мені не подобається**. One more thing to remember: **люблю** changes form by person (**я люблю** / **ти любиш**), but **мені подобається** stays the same — when you switch to "you," only the first word changes: **тобі подобається**.
+You now have the tools to discuss your hobbies and interests confidently. We have covered two distinct ways to say "I like," each serving a specific grammatical purpose. First, when you are talking about activities and actions, use the formula **Я люблю** followed by a verb in the infinitive. Remember that the infinitive is the dictionary form of the verb and always ends in the suffix **-ти**. 
 
-Test yourself with these questions:
+*   **Я люблю співати.** (I like to sing.)
 
-- **Що ти любиш робити?** *(What do you like to do?)* → **Я люблю ___.** Pick three infinitives from the module: **читати**, **гуляти**, **готувати**, **слухати**, **малювати**, **подорожувати**, **співати**...
-- **Що тобі подобається?** *(What do you like?)* → **Мені подобається ___.** Pick a place and a thing: **Київ**, **ця книга**, **кава**, **джаз**...
-- **Що ти не любиш?** *(What don't you like?)* → **Я не люблю ___.** Name one activity.
-- **Чи тобі подобається цей фільм?** *(Do you like this film?)* → **Так, мені подобається.** / **Ні, мені не подобається.**
-- **Як сказати "I like jazz"?** → **Мені подобається джаз.** (It's a thing, not an activity — so **подобається**, not **люблю**.)
-- **Як сказати "I like to sing"?** → **Я люблю співати.** (It's an activity — so **люблю** + infinitive.)
+Second, when you are talking about things, objects, or places, use the fixed phrase **Мені подобається** followed by a noun. Treat this phrase as a single memorized chunk.
 
-In M16, you will learn Group I verb conjugation — verbs like **читати** and **слухати** will gain personal endings so you can say **Я читаю** (I read) and **Ти слухаєш** (you listen), not just **Я люблю читати**. The infinitives you learned today are the raw material for everything that comes next. As a Ukrainian textbook puts it: «Люблю гортати старі книги, бо від них віє спокоєм» — *I like to leaf through old books because they breathe calmness* (Голуб, Grade 5). That sentence uses the exact same pattern you just learned. You are ready.
+*   **Мені подобається музика.** (I like the music.)
+
+To express that you do not like something, the negative particle **не** always comes as a separate word directly before the verb. This works for both structures.
+
+*   **Я не люблю готувати.** (I do not like to cook.)
+*   **Мені не подобається фільм.** (I do not like the film.)
+
+Before moving on to the next module, take a moment to test your understanding with this self-check checklist. Can you answer these prompts confidently?
+
+*   Can you name three hobbies using the correct verb structure? (**Я люблю читати, малювати, гуляти.**)
+*   Can you name two things or objects that you like? (**Мені подобається музика, книга.**)
+*   Do you know the defining suffix of a Ukrainian infinitive verb? (**-ти**).
+*   Can you tell a friend that you don't like a specific object? (**Мені не подобається...**).
+*   Do you know which preposition to use when talking about playing the guitar (**на**) versus playing football (**у**)?
 
 </module_content>
 
@@ -302,30 +306,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -341,28 +385,46 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -394,68 +456,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

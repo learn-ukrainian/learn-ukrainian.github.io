@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 37: I Eat, I Drink (A1, A1.6 [Food and Shopping])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -164,152 +164,129 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги
 
-What do people eat and drink during the day? In the first dialogue, Марі́я and Оле́г chat about breakfast — what they eat, what their family eats. In the second, two colleagues unpack their lunch at work. Listen for the verbs **ї́сти** and **пи́ти** — they change with every speaker.
+In Ukraine, food is not just fuel; it is the center of social life and hospitality. Asking someone **Що ти їси?** (What are you eating?) or sharing a lunch break is a primary way colleagues and friends bond during the workday. Food vocabulary is universally essential, but in Ukrainian, it also acts as the perfect introduction to how verbs and nouns interact. As you will see, Ukrainians make a strict distinction between what you "eat" and what you "drink" — even when it comes to liquid dishes like soup. This topic introduces the absolute foundation of your survival vocabulary and the crucial accusative case, which you will use every single day.
 
-> — **Марія:** Що ти їси́ на сніда́нок? *(What do you eat for breakfast?)*
-> — **Олег:** Я їм ка́шу і п'ю ка́ву. *(I eat porridge and drink coffee.)*
-> — **Марія:** А Оле́на? *(And Olena?)*
-> — **Олег:** Вона́ їсть хліб з ма́слом і п'є чай. *(She eats bread with butter and drinks tea.)*
-> — **Марія:** А ді́ти? *(And the kids?)*
-> — **Олег:** Вони́ їдя́ть я́йця і п'ють молоко́. *(They eat eggs and drink milk.)*
+> **Тарас:** Привіт! Що ти їш на сніданок? *(Hi! What are you eating for breakfast?)*
+> **Ірина:** Я їм кашу і п'ю каву. *(I eat porridge and drink coffee.)*
+> **Тарас:** А Олена? *(And Olena?)*
+> **Ірина:** Вона їсть хліб з маслом і п'є чай. *(She eats bread with butter and drinks tea.)*
+> **Тарас:** А діти? *(And the children?)*
+> **Ірина:** Вони їдять яйця і п'ють молоко. *(They eat eggs and drink milk.)*
 
-Notice how the verb **їсти** (to eat) changes with every person: **я їм**, **вона їсть**, **вони їдять**. The verb **пити** (to drink) does the same: **п'ю**, **п'є**, **п'ють**. These two verbs will look different for every subject — but by the end of this module, you will know all six forms of each.
+The dialogue above uses the high-frequency question **Що ти їш?** (What are you eating?) and the response **Я їм...** (I am eating...). Notice the contrast between the verbs: **їш** is highly irregular and does not look like the infinitive **їсти** (to eat), while **п'єш** follows a more recognizable pattern from its dictionary form **пити** (to drink). The distinction between singular and plural present tense forms is fundamental because you will often speak on behalf of your family or group (**ми їмо**, **вони п'ють**).
 
-Now the same verbs appear at lunch, with plural subjects.
+> **Колега 1:** Що ви їсте на обід? *(What are you eating for lunch?)*
+> **Колега 2:** Ми їмо суп і салат. А що п'єте? *(We eat soup and salad. And what are you drinking?)*
+> **Колега 1:** Ми п'ємо воду або сік. Я сьогодні їм бутерброд і п'ю чай. А ти? *(We drink water or juice. Today I eat a sandwich and drink tea. And you?)*
+> **Колега 2:** Я їм салат і п'ю каву. Я теж хочу суп. *(I eat a salad and drink coffee. I also want soup.)*
+> **Колега 1:** Добре, замовляй! Я ще хочу воду потім. *(Okay, order! I still want water later.)*
 
-> — **Коле́га 1:** Що ви їсте́ на обід? *(What are you eating for lunch?)*
-> — **Колега 2:** Ми їмо́ суп і сала́т. *(We're eating soup and salad.)*
-> — **Колега 1:** А що п'єте́? *(And what are you drinking?)*
-> — **Колега 2:** Ми п'ємо́ воду́ або́ сік. *(We're drinking water or juice.)*
-> — **Колега 1:** Я теж хо́чу суп. *(I want soup too.)*
-> — **Колега 2:** До́бре, замовля́й! *(Okay, go ahead and order!)*
+## Їсти і пити
 
-Look back at both dialogues and answer these questions aloud: **Що їсть Олена?** (What does Olena eat?) **Що п'ють діти?** (What do the children drink?) **Що ми їмо на обід?** (What do we eat for lunch?) Each answer uses a noun right after the verb — **хліб**, **молоко**, **суп**. Some nouns change their ending, some do not. That pattern is the core of this module.
+The verb **їсти** (to eat) is a unique, highly irregular verb in Ukrainian grammar. It belongs to neither Group I nor Group II verb conjugations, making it a true exception. Because it is an essential daily action that you will use in almost every conversation about food, you simply need to memorize its forms. Pay close attention to the endings, as they shift noticeably between the singular and plural forms. Here is the full paradigm:
 
-## Їсти і пити (To Eat and To Drink)
-
-The verb **їсти** (to eat) is irregular. It does not follow Group I or Group II conjugation — it has its own pattern. Ukrainian textbooks (Заболо́тний, Grade 7) treat it as a special class alongside **да́ти** (to give). Memorize these six forms:
-
-| Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | я **їм** | ми **їмо** |
-| 2nd | ти **їси** | ви **їсте** |
-| 3rd | він/вона **їсть** | вони **їдять** |
-
-Three sentences to anchor the pattern:
-
-- **Я їм хліб.** — I eat bread.
-- **Він їсть ри́бу.** — He eats fish.
-- **Вони їдять кашу.** — They eat porridge.
-
-The verb **пити** (to drink) follows regular Group I conjugation. Notice the apostrophe before **ю**, **є** — this is a standard Ukrainian spelling rule when **п** meets a soft vowel.
-
-| Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | я **п'ю** | ми **п'ємо** |
-| 2nd | ти **п'єш** | ви **п'єте** |
-| 3rd | він/вона **п'є** | вони **п'ють** |
-
-Three sentences:
-
-- **Я п'ю каву.** — I drink coffee.
-- **Вона п'є воду.** — She drinks water.
-- **Вони п'ють сік.** — They drink juice.
-
-Compare the two verbs side by side:
-
-| | **їсти** | **пити** |
-|---|---|---|
-| я | їм | п'ю |
-| ти | їси | п'єш |
-| він/вона | їсть | п'є |
-| ми | їмо | п'ємо |
-| ви | їсте | п'єте |
-| вони | їдять | п'ють |
-
-The key difference: **їсти** is the exception you must learn by heart — every form looks different from the infinitive. **Пити** is a regular model — once you see the **п'** pattern, the endings are predictable. Both verbs are extremely high-frequency. You will use them every single day.
-
-Ukrainian schools (Grade 4, Заболотний) teach the accusative case through the question **що?** (what?). When you eat or drink something, ask yourself: **що?** The answer is always in the accusative case.
-
-- **Я їм (що?) хліб.** — I eat (what?) bread.
-- **Я п'ю (що?) каву.** — I drink (what?) coffee.
-
-This is the **ба́чу що? / їм що? / п'ю що?** rule from Ukrainian textbooks. Build a habit: every time you use **їсти** or **пити**, ask **що?** — and the noun that follows takes the accusative form.
-
-<!-- INJECT_ACTIVITY: fill-in-conjugation -->
-
-## Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)
-
-Masculine inanimate nouns do not change in the accusative — they look exactly like the nominative. The same is true for neuter nouns. Here are the examples:
-
-- **хліб → хліб** — Я їм хліб. *(I eat bread.)*
-- **суп → суп** — Я їм суп. *(I eat soup.)*
-- **сік → сік** — Я п'ю сік. *(I drink juice.)*
-- **бана́н → банан** — Я їм банан. *(I eat a banana.)*
-- **молоко → молоко** — Я п'ю молоко. *(I drink milk.)*
-- **яйце́ → яйце** — Я їм яйце. *(I eat an egg.)*
-
-Rule: masculine and neuter inanimate nouns stay the same after **їсти** and **пити**. No ending changes at all.
-
-Feminine nouns are different — and this is the key change to learn. Feminine nouns ending in **-а** change to **-у**. Feminine nouns ending in **-я** change to **-ю**. Eight examples:
-
-- **ка́ва → каву** — Я п'ю каву. *(I drink coffee.)*
-- **вода́ → воду** — Я п'ю воду. *(I drink water.)*
-- **ри́ба → рибу** — Я їм рибу. *(I eat fish.)*
-- **ка́ша → кашу** — Я їм кашу. *(I eat porridge.)*
-- **карто́пля → карто́плю** — Я їм картоплю. *(I eat potatoes.)*
-- **смета́на → смета́ну** — Я їм сметану. *(I eat sour cream.)*
-
-The pattern is simple: **-а** becomes **-у**; **-я** becomes **-ю**. This is the only accusative ending change you need at A1. Everything else stays the same.
-
-Compare these pairs side by side — nouns that change on the left, nouns that stay the same on the right:
-
-| Changes (-у / -ю) | Stays the same |
-|---|---|
-| кава → **каву** | хліб → **хліб** |
-| вода → **воду** | сік → **сік** |
-| картопля → **картоплю** | молоко → **молоко** |
-
-Now read these mixed sentences and notice which nouns changed and which did not:
-
-- **Я їм рибу і хліб.** — I eat fish and bread.
-- **Вона п'є каву і воду.** — She drinks coffee and water.
-- **Ми їмо кашу і яйця.** — We eat porridge and eggs.
-- **Вони п'ють сік і молоко.** — They drink juice and milk.
+| English | Ukrainian |
+|---------|-----------|
+| I eat | я **їм** |
+| You (singular) eat | ти **їси** |
+| He/she eats | він/вона **їсть** |
+| We eat | ми **їмо** |
+| You (plural/formal) eat | ви **їсте** |
+| They eat | вони **їдять** |
 
 :::tip
-If a noun ends in **-а** or **-я** (like **кава**, **вода**, **картопля**), swap the ending for **-у** or **-ю** when you eat or drink it. Everything else stays the same. One rule — that is all you need.
+**Pronouncing the letter Ї**
+The letter **ї** always represents two distinct sounds: the consonant **й** and the vowel **і**. You must pronounce it fully, sounding similar to the English word "yee". It is never reduced to just a single **і** sound.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in-accusative -->
+Here are three examples using different subjects to practice this sound:
+- **Я їм суп.** (I eat soup.)
+- **Ми їмо яблуко.** (We eat an apple.)
+- **Діти їдять банан.** (The children eat a banana.)
+- **Він їсть сир.** (He eats cheese.)
 
-<!-- INJECT_ACTIVITY: quiz-accusative -->
+The verb **пити** (to drink) is a bit friendlier for learners. It officially follows the Group I conjugation pattern, but it features a unique spelling shift in the present tense. Notice how the vowel **и** completely disappears from the stem, and the endings start with an apostrophe, resulting in the distinct sounds **'ю** or **'є**. This apostrophe indicates a brief pause before the soft vowel. Here is the complete paradigm:
 
-<!-- INJECT_ACTIVITY: group-sort-accusative -->
+| English | Ukrainian |
+|---------|-----------|
+| I drink | я **п'ю** |
+| You (singular) drink | ти **п'єш** |
+| He/she drinks | він/вона **п'є** |
+| We drink | ми **п'ємо** |
+| You (plural/formal) drink | ви **п'єте** |
+| They drink | вони **п'ють** |
+
+Ukrainians use the direct verb **пити** for almost all beverages. Unlike English, where you might casually say "I am having a drink" or "I will take a coffee," in Ukrainian you must always explicitly state "I drink." It is a highly frequent verb that pairs directly with almost any liquid you can consume. Notice how the direct object immediately follows the verb:
+- **Я п'ю воду.** (I drink water.)
+- **Ти п'єш каву.** (You drink coffee.)
+- **Вони п'ють сік.** (They drink juice.)
+- **Ми п'ємо чай.** (We drink tea.)
+
+<!-- INJECT_ACTIVITY: verb-conjugation-drill -->
+
+A uniquely Ukrainian cultural quirk is the strict "Soup Rule." In Ukraine, you always "eat" (**їсти**) thick liquid dishes like soup and borscht with a spoon. You never "drink" them from a bowl, even if they are primarily liquid. Contrast this with true beverages like tea, juice, or fruit compote, which you always "drink" (**пити**). Using the wrong verb sounds immediately unnatural to a native speaker. For example: **Я їм борщ. Я п'ю чай.** (I eat borscht. I drink tea.)
+
+## Знахідний відмінок — неживе
+
+When you eat or drink something, that food item becomes the direct object of your action. In Ukrainian grammar, the direct object requires a specific form called the Accusative Case (**Знахідний відмінок**). This case is the workhorse of everyday communication because you constantly interact with objects around you.
+
+:::note
+**The "Що?" Trigger**
+The Ukrainian school system effectively teaches students to identify the accusative case by asking the mental trigger question: «Бачу що? Бачу кого?» (I see what? I see whom?). When dealing with inanimate food items, asking yourself **що?** (what?) signals that you must use the accusative form for the noun that follows: **Я їм (що?) хліб. Я п'ю (що?) каву.**
+:::
+
+There is excellent news for masculine and neuter inanimate nouns: they undergo absolutely no change in this situation. The accusative form looks exactly the same as the standard dictionary (nominative) form. Therefore, masculine words like **хліб** (bread), **суп** (soup), **бутерброд** (sandwich), and **сік** (juice), as well as neuter words like **молоко** (milk) and **яйце** (egg), remain completely identical when they become the object of your action. This makes learning the accusative case much easier for beginners, as you only need to focus on the sentence structure rather than changing the word.
+- **хліб** → **хліб**: **Я їм хліб.** (I eat bread.)
+- **суп** → **суп**: **Я їм суп.** (I eat soup.)
+- **сік** → **сік**: **Я п'ю сік.** (I drink juice.)
+- **молоко** → **молоко**: **Я п'ю молоко.** (I drink milk.)
+- **яйце** → **яйце**: **Я їм яйце.** (I eat an egg.)
+
+The primary grammatical change at the A1 level happens with feminine nouns. When a feminine noun ends in **-а**, it strictly shifts to **-у** in the accusative case. If it ends in **-я**, it shifts to **-ю**. This simple but crucial vowel change immediately signals to the listener that the noun is the direct object receiving the action. You must actively practice this transformation until it becomes a natural reflex. Notice how the endings transform in these highly common daily examples:
+- **вода** → **воду**: **Я п'ю воду.** (I drink water.)
+- **кава** → **каву**: **Я п'ю каву.** (I drink coffee.)
+- **риба** → **рибу**: **Я їм рибу.** (I eat fish.)
+- **каша** → **кашу**: **Я їм кашу.** (I eat porridge.)
+- **сметана** → **сметану**: **Я хочу сметану.** (I want sour cream.)
+- **картопля** → **картоплю**: **Я їм картоплю.** (I eat potato.)
+
+<!-- INJECT_ACTIVITY: accusative-form-builder -->
+
+<!-- INJECT_ACTIVITY: noun-change-sorting -->
+
+This foundational accusative rule applies to many other essential verbs too, particularly the verb **хотіти** (to want). When you order food at a cafe or restaurant, you will often use the polite, fixed chunk **Мені, будь ласка...** (To me, please...) followed immediately by the accusative object. Even though the main verb is implied rather than spoken out loud, the food item is still acting as the direct object receiving the action, so the accusative rules remain exactly the same.
+- **Мені, будь ласка, піцу і воду.** (To me, please, pizza and water.)
+- **Я хочу каву.** (I want coffee.)
+- **Він хоче рибу і сік.** (He wants fish and juice.)
+- **Вона хоче чай.** (She wants tea.)
+
+<!-- INJECT_ACTIVITY: accusative-choice-quiz -->
 
 ## Підсумок — Summary
 
-Two verbs to remember — **їсти** (irregular: **їм, їси, їсть, їмо, їсте, їдять**) and **пити** (regular: **п'ю, п'єш, п'є, п'ємо, п'єте, п'ють**).
+The core grammar of eating and drinking relies heavily on two essential verbs and one critical case change. The verb **їсти** (to eat) is completely irregular and its unique forms (**я їм, ти їси, він їсть**) must be memorized through repetition. The verb **пити** (to drink) is a Group I verb with a specific spelling shift that adds an apostrophe (**я п'ю, ти п'єш**). Most importantly, you must remember that when you eat or drink a feminine item ending in **-а**, you must actively change that ending to **-у** (**вода** → **воду**).
 
-One accusative rule for inanimate nouns:
+:::caution
+**Watch out for Russianisms!**
+A very common mistake for beginners is using the Russian word *кофе* instead of the authentic Ukrainian noun **кава**. Always remember to order **каву**! Additionally, ensure you use the Ukrainian word **сир** for both hard cheese and cottage cheese at this level; actively avoid the Russianism *творог*.
+:::
 
-- **Masculine and neuter** — no change. **Хліб**, **суп**, **молоко**, **сік** stay the same.
-- **Feminine -а → -у, -я → -ю.** **Кава → каву**, **вода → воду**, **картопля → картоплю**.
+To quickly recap the Accusative Inanimate rules: masculine and neuter nouns equal their dictionary nominative forms exactly, while feminine nouns take **-у** or **-ю**. You can clearly see this when you compare the masculine object **Я п'ю сік** (no change) with the feminine object **Я п'ю каву** (changed to **-у**).
 
-Test yourself — fill in the correct form:
+Test your memory of these critical concepts before you finish the module:
+- Can you conjugate the irregular verb **їсти** for all pronouns from memory? (Try recalling: **Я їм**, **ти їси**, **вони їдять**)
+- Can you conjugate the verb **пити** without looking at the table? (Try recalling: **Я п'ю**, **він п'є**, **ми п'ємо**)
+- Test yourself: **Я їм ___** (**риба** → **рибу**). **Я п'ю ___** (**вода** → **воду**).
+- Say three things you eat today, ensuring you use the correct accusative form: **Я їм...** (e.g., **суп, яблуко**)
+- Say three things you drink today, using the correct accusative form: **Я п'ю...** (e.g., **чай, сік**)
+- What is the correct accusative form of the feminine noun **картопля**? (Answer: **картоплю**)
 
-- Я їм ___ (риба → ?) → **рибу**
-- Я п'ю ___ (вода → ?) → **воду**
-- Вони їдять ___ (хліб → ?) → **хліб**
-- Вона п'є ___ (кава → ?) → **каву**
-
-Now try this on your own: say three things you eat today and three things you drink. Use the correct accusative form for each noun. For example: **Я їм кашу, рибу і хліб. Я п'ю каву, воду і сік.** Check each feminine noun — did you change **-а** to **-у**? Did masculine and neuter nouns stay the same? If yes, you have the pattern.
-
-**Deterministic word count: 1288 words** (calculated by pipeline, do NOT estimate manually)
-
+If you can confidently answer these questions, you are ready to order your favorite meals in a Ukrainian cafe!
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1592 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -397,8 +374,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -485,31 +462,16 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 55 words | Not found: 20 words
+Verified: 72 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Діало — NOT IN VESUM
-  ✗ Заболо — NOT IN VESUM
-  ✗ Знахі — NOT IN VESUM
-  ✗ Марія — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Олег — NOT IN VESUM
+  ✗ Ірина — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
-  ✗ бана — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ дний — NOT IN VESUM
-  ✗ замовля — NOT IN VESUM
-  ✗ йця — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ плю — NOT IN VESUM
-  ✗ пля — NOT IN VESUM
-  ✗ слом — NOT IN VESUM
-  ✗ смета — NOT IN VESUM
-  ✗ сти — NOT IN VESUM
-  ✗ тний — NOT IN VESUM
-  ✗ їдя — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
+  ✗ кофе — NOT IN VESUM
+  ✗ творог — NOT IN VESUM
 
-All 55 other words are confirmed to exist in VESUM.
+All 72 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

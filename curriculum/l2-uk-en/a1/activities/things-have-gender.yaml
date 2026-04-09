@@ -1,363 +1,365 @@
+version: '1.0'
+module: things-have-gender
+level: a1
 inline:
-- id: quiz-vin-vona-vono
-  instruction: Is this noun **він** (masculine), **вона** (feminine), or **воно** (neuter)?
-  items:
-  - correct: 0
-    options:
-    - він
-    - вона
-    - воно
-    question: стіл (table)
-  - correct: 1
-    options:
-    - він
-    - вона
-    - воно
-    question: книжка (book)
-  - correct: 2
-    options:
-    - він
-    - вона
-    - воно
-    question: вікно (window)
-  - correct: 0
-    options:
-    - він
-    - вона
-    - воно
-    question: телефон (phone)
-  - correct: 1
-    options:
-    - він
-    - вона
-    - воно
-    question: лампа (lamp)
-  - correct: 2
-    options:
-    - він
-    - вона
-    - воно
-    question: ліжко (bed)
-  - correct: 0
-    options:
-    - він
-    - вона
-    - воно
-    question: ключ (key)
-  - correct: 1
-    options:
-    - він
-    - вона
-    - воно
-    question: сумка (bag)
+- id: quiz-pronoun-choice
   type: quiz
-- groups:
-  - items:
+  instruction: 'Choose the correct pronoun: **він**, **вона**, or **воно**.'
+  items:
+  - question: стіл
+    options:
+    - він
+    - вона
+    - воно
+    correct: 0
+  - question: книга
+    options:
+    - він
+    - вона
+    - воно
+    correct: 1
+  - question: вікно
+    options:
+    - він
+    - вона
+    - воно
+    correct: 2
+  - question: телефон
+    options:
+    - він
+    - вона
+    - воно
+    correct: 0
+  - question: сумка
+    options:
+    - він
+    - вона
+    - воно
+    correct: 1
+  - question: ліжко
+    options:
+    - він
+    - вона
+    - воно
+    correct: 2
+  - question: ключ
+    options:
+    - він
+    - вона
+    - воно
+    correct: 0
+  - question: кімната
+    options:
+    - він
+    - вона
+    - воно
+    correct: 1
+- id: quiz-gender-endings
+  type: quiz
+  instruction: What is the **рід** (gender)? Look at the ending.
+  items:
+  - question: зошит
+    options:
+    - чоловічий (masculine)
+    - жіночий (feminine)
+    - середній (neuter)
+    correct: 0
+  - question: лампа
+    options:
+    - чоловічий (masculine)
+    - жіночий (feminine)
+    - середній (neuter)
+    correct: 1
+  - question: дзеркало
+    options:
+    - чоловічий (masculine)
+    - жіночий (feminine)
+    - середній (neuter)
+    correct: 2
+  - question: комп'ютер
+    options:
+    - чоловічий (masculine)
+    - жіночий (feminine)
+    - середній (neuter)
+    correct: 0
+  - question: фото
+    options:
+    - чоловічий (masculine)
+    - жіночий (feminine)
+    - середній (neuter)
+    correct: 2
+  - question: ручка
+    options:
+    - чоловічий (masculine)
+    - жіночий (feminine)
+    - середній (neuter)
+    correct: 1
+- id: group-sort-gender
+  type: group-sort
+  instruction: Sort the words by **рід** (gender).
+  groups:
+  - label: Він (Masculine)
+    items:
     - стіл
     - стілець
     - телефон
     - комп'ютер
-    - зошит
-    - ключ
-    label: він (чоловічий рід)
-  - items:
-    - книжка
-    - лампа
-    - сумка
-    - ручка
-    - кімната
+  - label: Вона (Feminine)
+    items:
     - стіна
-    label: вона (жіночий рід)
-  - items:
+    - книга
+    - кімната
+    - сумка
+  - label: Воно (Neuter)
+    items:
     - вікно
     - ліжко
     - крісло
     - дзеркало
-    - фото
-    label: воно (середній рід)
-  id: group-sort-gender
-  instruction: Sort all the nouns into the three gender groups — **він**, **вона**, or **воно**.
-  type: group-sort
-- id: fill-in-possessive
-  instruction: Fill in **мій**, **моя**, or **моє** to match the noun's gender.
-  items:
-  - answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це ___ стіл.
-  - answer: моя
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це ___ книжка.
-  - answer: моє
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це ___ вікно.
-  - answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Де ___ телефон?
-  - answer: моя
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це ___ кімната.
-  - answer: моє
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Де ___ ліжко?
-  - answer: моя
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це ___ ручка.
-  - answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Де ___ ключ?
+- id: fill-in-possessives
   type: fill-in
-- id: quiz-gender-by-ending
-  instruction: Look at the ending of each noun. What gender is it — **чоловічий**, **жіночий**, or **середній**?
+  instruction: Choose the correct form of **мій/моя/моє**.
   items:
-  - correct: 0
+  - sentence: Це ____ кімната.
+    answer: моя
     options:
-    - чоловічий
-    - жіночий
-    - середній
-    question: телефон (ends in -н)
-  - correct: 1
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ стіл.
+    answer: мій
     options:
-    - чоловічий
-    - жіночий
-    - середній
-    question: сумка (ends in -а)
-  - correct: 2
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ ліжко.
+    answer: моє
     options:
-    - чоловічий
-    - жіночий
-    - середній
-    question: крісло (ends in -о)
-  - correct: 0
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ телефон.
+    answer: мій
     options:
-    - чоловічий
-    - жіночий
-    - середній
-    question: зошит (ends in -т)
-  - correct: 1
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ книга.
+    answer: моя
     options:
-    - чоловічий
-    - жіночий
-    - середній
-    question: стіна (ends in -а)
-  - correct: 2
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ вікно.
+    answer: моє
     options:
-    - чоловічий
-    - жіночий
-    - середній
-    question: дзеркало (ends in -о)
-  type: quiz
-level: a1
-module: things-have-gender
-version: '1.0'
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ зошит.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Це ____ ручка.
+    answer: моя
+    options:
+    - мій
+    - моя
+    - моє
 workbook:
-- id: matchup-gender-pronouns
-  instruction: Match each noun to the correct pronoun — **він**, **вона**, or **воно**.
+- id: match-up-pronouns
+  type: match-up
+  instruction: Match each noun to its correct pronoun.
   pairs:
-  - left: стіл
+  - left: зошит
     right: він
-  - left: кімната
-    right: вона
-  - left: вікно
-    right: воно
-  - left: ключ
-    right: він
-  - left: ручка
+  - left: черепаха
     right: вона
   - left: фото
     right: воно
-  - left: стілець
+  - left: ключ
     right: він
-  - left: стіна
+  - left: лампа
     right: вона
-  - left: крісло
+  - left: місто
     right: воно
-  type: match-up
-- id: tf-gender-check
-  instruction: True or false? Is the gender pronoun correct for the noun?
-  items:
-  - correct: true
-    explanation: Стіл ends in a consonant (-л) → чоловічий рід → він. ✓
-    statement: Стіл — це він.
-  - correct: false
-    explanation: Книжка ends in -а → жіночий рід → вона, not він.
-    statement: Книжка — це він.
-  - correct: true
-    explanation: Вікно ends in -о → середній рід → воно. ✓
-    statement: Вікно — це воно.
-  - correct: true
-    explanation: Лампа ends in -а → жіночий рід → вона. ✓
-    statement: Лампа — це вона.
-  - correct: false
-    explanation: Крісло ends in -о → середній рід → воно, not він.
-    statement: Крісло — це він.
-  - correct: false
-    explanation: Телефон ends in a consonant (-н) → чоловічий рід → він, not вона.
-    statement: Телефон — це вона.
-  - correct: true
-    explanation: Ключ ends in a consonant (-ч) → чоловічий рід → він. ✓
-    statement: Ключ — це він.
-  - correct: true
-    explanation: Дзеркало ends in -о → середній рід → воно. ✓
-    statement: Дзеркало — це воно.
+- id: true-false-gender
   type: true-false
-- id: error-possessives
-  instruction: Each sentence uses the wrong possessive. Find the error and choose the correct word.
+  instruction: '**Правда чи ні?** (True or False?)'
   items:
-  - correction: моя
-    error: мій
-    error_type: word
-    explanation: Книжка is feminine (ends in -а) → моя книжка.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це мій книжка.
-  - correction: мій
-    error: моя
-    error_type: word
-    explanation: Стіл is masculine (ends in consonant) → мій стіл.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це моя стіл.
-  - correction: моє
-    error: мій
-    error_type: word
-    explanation: Вікно is neuter (ends in -о) → моє вікно.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Де мій вікно?
-  - correction: моя
-    error: моє
-    error_type: word
-    explanation: Лампа is feminine (ends in -а) → моя лампа.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це моє лампа.
-  - correction: мій
-    error: моя
-    error_type: word
-    explanation: Телефон is masculine (ends in consonant) → мій телефон.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це моя телефон.
-  - correction: моє
-    error: мій
-    error_type: word
-    explanation: Крісло is neuter (ends in -о) → моє крісло.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Де мій крісло?
-  - correction: мій
-    error: моя
-    error_type: word
-    explanation: Зошит is masculine (ends in consonant) → мій зошит.
-    options:
-    - мій
-    - моя
-    - моє
-    sentence: Це моя зошит.
+  - statement: The word **стіл** is masculine (**він**).
+    correct: true
+    explanation: '**Стіл** ends in a consonant.'
+  - statement: The word **книга** is neuter (**воно**).
+    correct: false
+    explanation: '**Книга** ends in **-а**, making it feminine (**вона**).'
+  - statement: The word **вікно** is neuter (**воно**).
+    correct: true
+    explanation: '**Вікно** ends in **-о**.'
+  - statement: If a word ends in **-а**, it is masculine.
+    correct: false
+    explanation: Words ending in **-а** or **-я** are typically feminine.
+  - statement: If a word ends in **-о**, it is neuter.
+    correct: true
+    explanation: For example, **вікно** and **ліжко**.
+  - statement: The word **телефон** is feminine (**вона**).
+    correct: false
+    explanation: '**Телефон** ends in a consonant, making it masculine.'
+- id: error-correction-possessives
   type: error-correction
-- id: translate-possessives
-  instruction: Choose the correct Ukrainian translation.
+  instruction: Find and fix the wrong word.
   items:
-  - options:
-    - correct: true
-      text: Це мій стіл.
-    - correct: false
-      text: Це моя стіл.
-    - correct: false
-      text: Це моє стіл.
-    source: This is my table.
-  - options:
-    - correct: false
-      text: Це мій книжка.
-    - correct: true
-      text: Це моя книжка.
-    - correct: false
-      text: Це моє книжка.
-    source: This is my book.
-  - options:
-    - correct: false
-      text: Це мій вікно.
-    - correct: false
-      text: Це моя вікно.
-    - correct: true
-      text: Це моє вікно.
-    source: This is my window.
-  - options:
-    - correct: true
-      text: Де мій телефон?
-    - correct: false
-      text: Де моя телефон?
-    - correct: false
-      text: Де моє телефон?
-    source: Where is my phone?
-  - options:
-    - correct: false
-      text: Це мій сумка.
-    - correct: true
-      text: Це моя сумка.
-    - correct: false
-      text: Це моє сумка.
-    source: This is my bag.
-  - options:
-    - correct: false
-      text: Де мій дзеркало?
-    - correct: false
-      text: Де моя дзеркало?
-    - correct: true
-      text: Де моє дзеркало?
-    source: Where is my mirror?
-  type: translate
-- examples:
-  - стіл → він → мій стіл
-  - стілець → він → мій стілець
-  - зошит → він → мій зошит
-  - ключ → він → мій ключ
-  - книжка → вона → моя книжка
-  - лампа → вона → моя лампа
-  - ручка → вона → моя ручка
-  - сумка → вона → моя сумка
-  - вікно → воно → моє вікно
-  - ліжко → воно → моє ліжко
-  - крісло → воно → моє крісло
-  - дзеркало → воно → моє дзеркало
-  id: observe-gender-patterns
-  prompt: Every masculine noun ends in a consonant (стіл ends in -л, ключ in -ч, зошит in -т). Every feminine noun ends in
-    -а (книжка, лампа, ручка). Every neuter noun ends in -о (вікно, ліжко, крісло). The ending tells you the gender — and
-    the gender tells you whether to use мій, моя, or моє.
-  type: observe
+  - sentence: Це мій кімната.
+    error: мій
+    correction: моя
+    error_type: word
+    options:
+    - моя
+    - моє
+    - мою
+    explanation: '**Кімната** is feminine, so use **моя**.'
+  - sentence: У мене є моє телефон.
+    error: моє
+    correction: мій
+    error_type: word
+    options:
+    - мій
+    - моя
+    - мої
+    explanation: '**Телефон** is masculine, so use **мій**.'
+  - sentence: Там моя ліжко.
+    error: моя
+    correction: моє
+    error_type: word
+    options:
+    - мій
+    - моє
+    - мої
+    explanation: '**Ліжко** is neuter, so use **моє**.'
+  - sentence: Це моє книга.
+    error: моє
+    correction: моя
+    error_type: word
+    options:
+    - мій
+    - моя
+    - мої
+    explanation: '**Книга** is feminine, so use **моя**.'
+  - sentence: Тут моя стіл.
+    error: моя
+    correction: мій
+    error_type: word
+    options:
+    - мій
+    - моє
+    - мої
+    explanation: '**Стіл** is masculine, so use **мій**.'
+  - sentence: У мене є мій дзеркало.
+    error: мій
+    correction: моє
+    error_type: word
+    options:
+    - моя
+    - моє
+    - мої
+    explanation: '**Дзеркало** is neuter, so use **моє**.'
+- id: odd-one-out-gender
+  type: odd-one-out
+  instruction: Find the odd one out based on its **рід** (gender).
+  items:
+  - words:
+    - стіл
+    - телефон
+    - лампа
+    correct: 2
+    explanation: Лампа is feminine (вона), the others are masculine (він).
+  - words:
+    - книга
+    - кімната
+    - зошит
+    correct: 2
+    explanation: Зошит is masculine (він), the others are feminine (вона).
+  - words:
+    - вікно
+    - стілець
+    - ліжко
+    correct: 1
+    explanation: Стілець is masculine (він), the others are neuter (воно).
+  - words:
+    - ручка
+    - комп'ютер
+    - сумка
+    correct: 1
+    explanation: Комп'ютер is masculine (він), the others are feminine (вона).
+  - words:
+    - кошеня
+    - дзеркало
+    - ключ
+    correct: 2
+    explanation: Ключ is masculine (він), the others are neuter (воно).
+  - words:
+    - кіт
+    - черепаха
+    - кошик
+    correct: 1
+    explanation: Черепаха is feminine (вона), the others are masculine (він).
+- id: unjumble-possession
+  type: unjumble
+  instruction: Put the words in the correct order.
+  items:
+  - words:
+    - є
+    - мене
+    - У
+    - книга.
+    correct_order:
+    - У
+    - мене
+    - є
+    - книга.
+  - words:
+    - моя
+    - Це
+    - кімната.
+    correct_order:
+    - Це
+    - моя
+    - кімната.
+  - words:
+    - ліжко.
+    - Там
+    - моє
+    correct_order:
+    - Там
+    - моє
+    - ліжко.
+  - words:
+    - у
+    - Що
+    - є?
+    - тебе
+    correct_order:
+    - Що
+    - у
+    - тебе
+    - є?
+  - words:
+    - є
+    - мене
+    - У
+    - стіл.
+    correct_order:
+    - У
+    - мене
+    - є
+    - стіл.
+  - words:
+    - ручка.
+    - моя
+    - Це
+    correct_order:
+    - Це
+    - моя
+    - ручка.

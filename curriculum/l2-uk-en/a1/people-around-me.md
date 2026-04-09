@@ -1,108 +1,140 @@
 ## Діало́ги (Dialogues)
 
-A bride is showing wedding photos to a friend, pointing out family members and guests in the pictures.
+We have spent recent modules learning how to buy food, order drinks, and talk about objects in our daily environment. The Ukrainian language treats objects in a specific way. However, our world is mostly filled with people. We interact with family members, meet friends, and speak to professionals. When we talk about people rather than objects, Ukrainian grammar shifts its focus. The rules change because the language makes a sharp distinction between a living person and an inanimate object. We must now learn how to name the people around us when they are the target of our actions.
 
-> — **Нарече́на:** Диви́сь, це на́ше весі́лля! Ба́чиш ма́му? *(Look, this is our wedding! Do you see Mom?)*
-> — **Друг:** Так, ба́чу маму. А хто це по́руч? *(Yes, I see Mom. And who is this next to her?)*
-> — **Наречена:** Це та́то. Бачиш та́та? *(That's Dad. Do you see Dad?)*
-> — **Друг:** Так, бачу тата! А хто це? *(Yes, I see Dad! And who is this?)*
-> — **Наречена:** Це мій брат. Ти зна́єш мого бра́та? *(This is my brother. Do you know my brother?)*
-> — **Друг:** Ні, я не зна́ю твого́ брата. *(No, I don't know your brother.)*
-> — **Наречена:** Ході́мо, я тебе́ познайо́млю! *(Come on, I'll introduce you!)*
+Read this conversation between a bride and her friend at a wedding reception. They are showing wedding photos and identifying people. Pay close attention to the word endings for people.
 
+> **Друг:** Кого ти ба́чиш? *(Who do you see?)*
+> **Нарече́на:** Я ба́чу ма́му і та́та. *(I see mom and dad.)*
+> **Друг:** А хто це? *(And who is this?)*
+> **Наречена:** Це мій дя́дько. А це ті́тка. *(This is my uncle. And this is the aunt.)*
+> **Друг:** Зна́єш Оле́ну? *(Do you know Olena?)*
+> **Наречена:** Так. А це мій брат. Ти знаєш мого бра́та? *(Yes. And this is my brother. Do you know my brother?)*
+> **Друг:** Ні, я не зна́ю твого́ брата. *(No, I do not know your brother.)*
+> **Наречена:** Ході́мо! Я тебе́ познайо́млю! *(Let's go! I will introduce you!)*
+> **Друг:** Ось наречена і нарече́ний. *(Here is the bride and the groom.)*
 
-Notice the forms: **маму** (not ма́ма), **тата** (not тато), **брата** (not брат). Every time the bride says "do you see" or "do you know" someone, the person's name changes its ending.
+Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **ма́ма** (mom) and **та́то** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
 
-Here is a second conversation — two colleagues at work:
+This rule applies to all people around you, including professionals and colleagues. Read this short exchange between two colleagues at a school.
 
-> — **Марі́я:** Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*
-> — **Андрі́й:** Так, я знаю Оле́ну Петрі́вну. *(Yes, I know Olena Petrivna.)*
-> — **Марія:** А ново́го лі́каря? *(And the new doctor?)*
-> — **Андрій:** Ні, я ще не знаю лікаря. *(No, I don't know the doctor yet.)*
-> — **Марія:** Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He's very kind. I'm waiting for him now.)*
-> — **Андрій:** До́бре, я теж чекаю Олену. *(OK, I'm also waiting for Olena.)*
+> **Коле́га 1:** Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*
+> **Колега 2:** Так, я знаю Олену Петрі́вну. *(Yes, I know Olena Petrivna.)*
+> **Колега 1:** А ново́го лі́каря? *(And the new doctor?)*
+> **Колега 2:** Ні, я ще не знаю лікаря. *(No, I do not know the doctor yet.)*
+> **Колега 1:** Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He is very kind. I am waiting for him right now.)*
 
-
-Again: **вчительку** (not вчи́телька), **Олену** (not Оле́на), **лікаря** (not лі́кар). What do you notice? Every time someone talks about a person using **ба́чити** (to see), **зна́ти** (to know), or **чека́ти** (to wait for), the person's name or title changes form.
-
-The pattern comes down to two question words: **що?** (what?) for things and **кого?** (whom?) for people. When you see or know a *person*, Ukrainian asks **кого?** — and that question triggers a special ending. This is the **знахі́дний відмі́нок** (accusative case) with animate nouns — **кого?**
-
-<!-- INJECT_ACTIVITY: fill-in-family-friends -->
+The word for a female teacher is **вчи́телька**. It changes to **вчительку**. The female name **Оле́на Петрі́вна** becomes **Олену Петрівну**. The masculine word for a doctor is **лі́кар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
 
 ## Кого? (Whom?)
 
-When a verb takes a direct object, Ukrainian asks one of two questions. For things, you ask **що?** (what?). For people and animals, you ask **кого?** (whom?). The answer to each question follows a different pattern.
+The Ukrainian language categorizes nouns into two groups based on whether they are living or not. We call these groups animate and inanimate. The Accusative case is the grammatical form we use for the direct object of an action. An object receives the action. Animate nouns represent people or animals. Inanimate nouns represent objects, concepts, or places. We learned the Accusative case for inanimate objects in Module 37.
 
-With **що?** (inanimate things), masculine nouns stay in their base form — no ending changes at all:
+You already know how to talk about food. You say **Я їм хліб** (I eat what? bread). For inanimate nouns, there is no change for the masculine. The masculine objects like **хліб** (bread) kept their dictionary form. Contrast those food items with a person. When you see your brother, you say **Я бачу брата** (I see whom? the brother). For animate nouns, the masculine changes! The masculine person changes, while the masculine object stays exactly the same.
 
-- Я їм **хліб** (що?) — I eat bread (хліб stays хліб)
-- Я бачу **стіл** (що?) — I see the table (стіл stays стіл)
-- Я п'ю **чай** (що?) — I drink tea (чай stays чай)
+To know which rule to follow, we rely on question words. The question word is the key. The word **що?** (what?) indicates inanimate things, and the masculine stays the same. When you hold an apple, you ask **Що це?** (What is this?). The word **кого?** (whom?) indicates animate people or animals, and the masculine changes. When you see your colleague, the correct question is **Кого ти бачиш?** (Whom do you see?). Your choice of question word dictates the ending of the masculine noun.
 
-You already know this from Module 37 — inanimate masculine accusative equals nominative.
+:::note
+**The Grammar Question Test**
+Ukrainian grammar is deeply connected to question words. When you learn a new grammatical case, memorize its question word. Asking **кого?** (whom?) instantly reminds your brain to apply the animate rule.
+:::
 
-Now switch to **кого?** (animate — people). Watch what happens to the masculine nouns:
+Ukrainian children learn this logic early in Grade 4. Their teachers use a specific mnemonic device based on the school approach. The children memorize the phrase: **Бачу кого? що?** (I see whom? what?). They ask both questions together. By asking these two questions simultaneously, students learn to identify the two patterns. If the noun is an object, the answer to **що?** (what?) confirms there is no change. The question **кого?** triggers the animate rule. The masculine animate in the Accusative case equals the Genitive form.
 
-- Я бачу **брата** (кого?) — I see my brother (not брат!)
-- Я знаю **дру́га** (кого?) — I know my friend (not друг!)
-- Я чекаю **лікаря** (кого?) — I'm waiting for the doctor (not лікар!)
+We have a reliable pattern for these masculine people. For a masculine person, we use the exact same ending we will later use to show possession. This is the key distinction for L2 learners. The object receives the action, and the ending marks the object as a living person. Observe how the words change:
 
-The contrast is stark. Compare side by side: **Я бачу хліб** — but **Я бачу брата**. **Я бачу стіл** — but **Я бачу тата**. Inanimate masculine = no change. Animate masculine = the ending changes.
+*   **брат** → **брата** (brother)
+*   **друг** → **дру́га** (friend)
+*   **тато** → **тата** (dad)
+*   **лікар** → **лікаря** (doctor)
 
-This is exactly how Ukrainian schoolchildren learn it in Grade 4 (Заболо́тний): the verb **бачити** takes two questions — **кого?** for people and **що?** for things. **Кого?** triggers the animate rule: the masculine noun changes ending. **Що?** does not — masculine stays the same. The mnemonic is simple: **кого?** → the noun changes; **що?** → masculine stays.
+This is why animate accusative matters — it changes masculine nouns.
 
-Why does Ukrainian make this distinction? Ukrainian grammar separates all nouns into two categories: **живі́** (animate — living beings) and **неживі́** (inanimate — things). Animate nouns answer **кого?**; inanimate nouns answer **що?**. This is a deep grammatical logic — Ukrainian treats *seeing a person* differently from *seeing a thing*, not just in meaning, but in form. And the animate masculine accusative isn't random: it uses the same ending as the **родо́ви́й відмінок** (genitive case) you already learned. The accusative of **брат** is **брата** — exactly like **нема́ брата** (there is no brother). The next section shows this pattern in full.
+<!-- INJECT_ACTIVITY: sort-animate-inanimate -->
 
-## Знахідний відмінок — живе́ (Accusative Animate)
+## Знахі́дний відмі́нок — живе́ (Accusative Animate)
 
-Feminine animate nouns hold no surprises. They follow the exact same ending as inanimate feminine nouns: **-а → -у**, **-я → -ю**. You already know this from Module 37 (ка́ва → ка́ву). The same pattern applies to people:
+Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **ка́ва** changes to **ка́ву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
 
-- **мама** → **маму** (Я бачу маму) — I see Mom
-- **сестра́** → **сестру́** (Я знаю сестру) — I know my sister
-- **Олена** → **Олену** (Я чекаю Олену) — I'm waiting for Olena
-- **по́друга** → **по́другу** (Я люблю́ подругу) — I love my friend
-- **ті́тка** → **ті́тку** (Я бачу тітку) — I see my aunt
-- **наречена** → **нарече́ну** (Я знаю наречену) — I know the bride
+*   **мама** → **маму** (mom)
+*   **сестра́** → **сестру́** (sister)
+*   **Олена** → **Олену** (Olena)
+*   **по́друга** → **по́другу** (female friend)
+*   **Я бачу маму.** (I see mom.)
+*   **Я знаю сестру.** (I know the sister.)
+*   **Я чекаю Олену.** (I wait for Olena.)
+*   **Я люблю́ подругу.** (I love the female friend.)
 
-Compare: **кава → каву**, **мама → маму** — identical ending. Feminine animate accusative requires no new rule at all.
+Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусі́д** (male neighbor) becomes **сусі́да**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
 
-Now the rule that matters most in this module. Masculine animate accusative equals genitive. The textbook (Карама́н, Grade 10) states it directly: *«Фо́рма знахі́дного відмі́нка однини́ чолові́чого ро́ду назв істо́т збігається з родо́ви́м однини.»* In plain terms: to form the accusative of a masculine animate noun, use its genitive form.
+*   **брат** → **брата** (brother)
+*   **друг** → **друга** (male friend)
+*   **тато** → **тата** (dad)
+*   **сусід** → **сусіда** (male neighbor)
+*   **Я бачу брата.** (I see the brother.)
+*   **Я знаю друга.** (I know the friend.)
+*   **Я люблю тата.** (I love dad.)
+*   **Я бачу сусіда.** (I see the neighbor.)
 
-Here are six masculine animate nouns with their accusative (= genitive) forms:
+:::caution
+**Don't Forget the Men!**
+English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефо́н** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
+:::
 
-- **брат** → **брата** (Я бачу брата) — I see my brother
-- **друг** → **друга** (Я знаю друга) — I know my friend
-- **тато** → **тата** (Я люблю тата) — I love Dad
-- **лікар** → **лікаря** (Я чекаю лікаря) — I'm waiting for the doctor
-- **вчи́тель** → **вчи́теля** (Я знаю вчителя) — I know the teacher
-- **сусі́д** → **сусі́да** (Я бачу сусіда) — I see the neighbor
+Some masculine nouns end in a soft consonant or the suffix **-ар**. These words require a soft vowel ending. They take the **-я** ending instead of the hard **-а**. Many professions fall into this category.
 
-The connection to prior learning: **бачу брата** uses the same form as **нема брата** — the genitive ending you already know.
+*   **лікар** → **лікаря** (doctor)
+*   **вчи́тель** → **вчи́теля** (male teacher)
+*   **продаве́ць** → **продавця́** (male seller)
+*   **колега** → **коле́гу** (colleague)
+*   **Я чекаю лікаря.** (I wait for the doctor.)
+*   **Я знаю вчителя.** (I know the teacher.)
+*   **Я бачу продавця.** (I see the seller.)
+*   **Я знаю колегу.** (I know the colleague.)
 
-Now the critical contrast — animate versus inanimate masculine, side by side. **Що?** (inanimate) — no change: Я бачу **хліб**, Я бачу **стіл**, Я бачу **борщ**. **Кого?** (animate) — genitive form: Я бачу **брата**, Я бачу **тата**, Я бачу **друга**. The test you should apply every time: before writing the form, ask the question. **Кого?** → take the genitive form. **Що?** → leave masculine as is.
-
-<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->
-
-<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->
+<!-- INJECT_ACTIVITY: fill-in-animate-transform -->
 
 ## Підсумок — Summary
 
-The **знахідний відмінок** (accusative case) has two sub-patterns, determined by one question: **кого?** or **що?**
+The complete picture of the Accusative case organizes these rules into a clear visual breakdown.  This Accusative summary provides the full picture.
 
-**Inanimate (що?):** Masculine stays the same — **хліб → хліб**, **стіл → стіл**. Feminine changes **-а → -у** — **кава → каву**, **вода́ → воду́**. Neuter stays the same — **молоко́ → молоко**.
+| | Inanimate (що?) | Animate (кого?) |
+| :--- | :--- | :--- |
+| **Masculine** | = nominative (**хліб**) | = genitive (**брата**) |
+| **Feminine** | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
+| **Neuter** | = nominative (**молоко́**) | (rare at A1) |
 
-**Animate (кого?):** Feminine still changes **-а → -у** — **мама → маму**, **Олена → Олену**. Masculine equals genitive — **брат → брата**, **лікар → лікаря**.
+The feminine nouns always change the final vowel. They change **-а** to **-у** and **-я** to **-ю**. The masculine nouns remain unchanged for inanimate objects. They adopt the genitive ending for living people. The neuter nouns do not change.
 
-The single most important rule from this module: *Знахідний відмінок чоловічого роду живи́х істот = родовий відмінок.*
+Certain verbs appear constantly in social interactions. These key verbs with animate accusative require the change to identify the target of the action. You must memorize these words.
 
-Five key verbs that take animate accusative at A1, each with a full example:
+*   **ба́чити** (to see)
+*   **зна́ти** (to know)
+*   **люби́ти** (to love)
+*   **чека́ти** (to wait for)
+*   **шука́ти** (to look for)
 
-- **бачити** (to see) — Я бачу маму і тата.
-- **знати** (to know) — Ти знаєш мого друга Тара́са?
-- **люби́ти** (to love) — Я дуже люблю бабу́сю.
-- **чекати** (to wait for) — Вона́ чека́є лікаря.
-- **шука́ти** (to look for) — Ми шука́ємо на́шого сусіда.
+These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шука́ю сусіда** (I look for the neighbor).
 
-Memorize these five verbs — they are the most common contexts where animate accusative appears in daily speech.
+You can practice these patterns with simple questions and answers. Read the questions and notice the noun endings in the responses.
 
-<!-- INJECT_ACTIVITY: quiz-accusative-animate -->
+*   **Кого ти лю́биш?** (Whom do you love?)
+    **Я люблю маму і тата.** (I love mom and dad.)
+*   **Кого ти чека́єш?** (Whom are you waiting for?)
+    **Я чекаю друга.** (I am waiting for a friend.)
+*   **Кого ти знаєш у шко́лі?** (Whom do you know at school?)
+    **Я знаю вчителя.** (I know the teacher.)
+*   **Кого ти бачиш?** (Whom do you see?)
+    **Я бачу покупця́.** (I see the buyer.)
+*   **Кого ти шука́єш?** (Whom are you looking for?)
+    **Я шукаю викладача́.** (I am looking for the lecturer.)
+
+:::tip
+**Colleagues and Professions**
+The word **колега** (colleague) looks feminine but can describe a man or a woman. Because it ends in **-а**, you always change it to **колегу**, regardless of the person's gender.
+:::
+
+Check your understanding of the pattern. Let us complete this Self-check: **Я бачу ___**. For the word **мама**, the correct form is **маму**. For the word **брат**, the correct form is **брата**. Remember the core rule. If the noun is a person and it is masculine, you must add the ending. The action transfers directly to the living person.
+
+<!-- INJECT_ACTIVITY: quiz-ending-choice -->
+<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->

@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-25% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-25% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -251,328 +252,349 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- **Confirmed (16/16):** погода (noun), холодно (adv), тепло (adv + noun), дощ (noun), сніг (noun), сонце (noun), сьогодні (adv), завтра (adv), спекотно (adv), прохолодно (adv), вітер (noun), хмарно (adv), ясно (adv), сонячно (adv), градус (noun), вчора (adv)
-- **Not found:** — (all 16 words confirmed)
-
-**Notes:** `тепло` has both adverb and noun readings (VESUM returns 4 matches) — the plan correctly uses it as both predicate adverb (*На вулиці тепло*) and noun (*тепло як іменник*). `дощ` and `сніг` each have 2 entries (singular + plural lemmas). All POS tags match the plan's stated parts of speech.
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги (Dialogues) — weather + future plans
-> «Складіть діалог (5–7 реплік) на тему «Погода», використавши щонайменше дві пари антонімів. Ви можете скористатися наведеними нижче прикладами: сьогодні – завтра / тепло – холодно / спекотний – холоднуватий»
-> **Source:** Заболотний, Grade 5, p. 29 (tier 1)
-
-This directly validates the plan's Dialogue 1 structure (Яка сьогодні погода? + завтра + тепло/холодно contrast). The textbook uses exact same time-word pair *сьогодні – завтра* in a weather dialogue context.
-
-### Section: Яка погода? — impersonal weather expressions
-> «Безособові речення найчастіше передають явища природи, фізичний і психічний стан людини... НАПРИКЛАД: 1. А ввечері на вулиці дощить. 2. Мені вдень було холодно.»
-> **Source:** Заболотний, Grade 8, p. 126 (tier 1)
-
-Confirms the plan's core pedagogical frame: weather = impersonal sentences, no subject needed. Note: the textbook uses `дощить` (impersonal verb) in one example alongside `іде дощ` — both are attested. The plan's note that `іде дощ` is "the natural conversational form" is accurate.
-
-> ДОВІДКА weather vocabulary for impersonal sentences: «Вечоріє, темніє, похолодало, завітрило, замело, захмарило, сніжить, морозить, дихається, хочеться»
-> **Source:** Заболотний, Grade 7, p. 78 (tier 1)
-
-Confirms `захмарило` / `сніжить` as textbook-attested impersonal weather forms.
-
-### Section: Погода і пори року — seasons + weather linking
-> «Узимку яблуневий сад відпочивав. Яблуневий сад засипало снігом.» (ЗРАЗОК sentence) + vocabulary list: «тепло – холодно / спекотний – студений»
-> **Source:** Заболотний, Grade 5, p. 32 (tier 1)
-
-> «Чудова, тепла, сонячна — це [погода]. Холодний, північний, пронизливий — це [вітер]. Узимку і влітку, у пору осінню й весняну...»
-> **Source:** Вашуленко, Grade 2, p. 71 (tier 2)
-
-Both confirm the seasons → weather adjective/adverb linking pattern used in the plan (*Взимку холодно. Іде сніг.*).
-
-### Section: Підсумок — Summary (self-check format)
-> «ПРО КОРИСТЬ ХОЛОДУ. Холод – це не завжди погано... Однак від холоду треба й захищатися: одягати шарф і шапку, коли виходите на мороз» + follow-up: «Висловте свої міркування: «Що краще: спекотне літо чи студена зима?»»
-> **Source:** Заболотний, Grade 5, p. 29 (tier 1)
-
-Validates the self-check question format in the plan's Summary: "Describe today's weather / What's winter like where you live?"
-
----
+- Confirmed: погода, холодно, тепло, дощ, сніг, сонце, сьогодні, завтра, спекотно, прохолодно, вітер, хмарно, ясно, сонячно, градус, вчора.
+- Not found: [none]
 
 ## Grammar Rules
-
-- **Безособові речення for weather**: Правопис 2019 covers orthography, not syntax — no §number applies. The rule is confirmed instead by **Заболотний Grade 8 §47** (Авраменко) and **Grade 8 p.126** (Заболотний): *"Безособові речення найчастіше передають явища природи."* Examples: `Мені холодно.` / `На вулиці дощить.` / `Замело снігом.` — these are the canonical textbook formulations.
-- **Predicate adverbs (присудкові прислівники)**: `холодно`, `тепло`, `спекотно`, `прохолодно`, `хмарно`, `ясно`, `сонячно` function as predicates in impersonal sentences. Textbook confirms (Grade 8 Авраменко): *"Утворіть і запишіть безособові речення, у яких слова стихло, тепло, світло, темніє будуть головними членами."* — `тепло` as sentence predicate is explicitly taught.
-- **Іде дощ / іде сніг construction**: `іде` as motion verb for precipitation is textbook-attested. Grade 3 (Савченко) uses `дощ` in literary contexts; Grade 8 Зaболотний uses `дощить` as an impersonal verb variant. Both forms are correct; `іде дощ` is the higher-frequency conversational form (plan's claim is accurate).
-
----
+- Impersonal weather expressions (adverbs): Правопис §[syntax] — Standard Ukrainian syntax uses adverbs (холодно, тепло) in impersonal sentences without a subject to describe the state of the environment (e.g., "Сьогодні холодно").
+- Precipitation patterns: Textbook Grade 5 (Avramenko) and Grade 7 confirm the naturalness of "Іде дощ" (literally 'rain goes') and "Іде сніг". While "дощить" is also valid, "іде дощ" is the preferred conversational form for A1.
+- Future tense chunk: Use of "буде" + weather adverb (e.g., "завтра буде сонячно") is the standard construction for future state.
 
 ## Calque Warnings
-
-- **іде дощ**: ✅ OK — natural Ukrainian. Антоненко-Давидович does not flag this. Textbook attests both `дощить` and `іде дощ`. No calque issue.
-- **дме вітер**: ✅ OK — natural Ukrainian. No flag in style guide. `дме` is the standard verb for wind.
-- **світить сонце**: ✅ OK — natural Ukrainian. Style guide discussion of "сонце" contexts (e.g., `призахідне сонце`) does not affect this basic predication.
-- **на вулиці тепло**: ✅ OK — Антоненко-Давидович uses `на вулиці` naturally in examples without flagging it. `надворі` is a stylistic alternative but `на вулиці` is fully standard.
-- **BONUS — одягати шапку**: ⚠️ **Calque warning** — Антоненко-Давидович explicitly flags this: *"одягати можна одежу... а шапку й окуляри надівають."* If the module includes the sentence *одягай шапку* (from the Summary section's implied cultural note), it must be **надягай шапку**, not **одягай шапку**.
-
----
+- іде дощ: OK — standard Ukrainian expression (confirmed via Grade 5/7 textbooks).
+- на вулиці: OK — used in Grade 2 textbooks for "outside," though "надворі" is a more formal/literary alternative. Both are natural.
+- яка сьогодні погода: OK — standard question for weather.
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| погода | A1 | ✅ on target |
-| холодно | A1 | ✅ on target |
-| тепло | A1 (adv) | ✅ on target |
-| дощ | A1 | ✅ on target |
-| сніг | A1 | ✅ on target |
-| сонце | A1 | ✅ on target |
-| сьогодні | A1 | ✅ on target |
-| завтра | A1 | ✅ on target |
-| вчора | A1 | ✅ on target |
-| градус | A1 | ✅ on target |
-| вітер | A1 | ✅ on target |
-| прохолодно | **A2** | ⚠️ one level above — present with scaffolding |
-| хмарно | **A2** | ⚠️ one level above — present with scaffolding |
-| сонячно | **A2** | ⚠️ one level above — present with scaffolding |
-| спекотно | **B1** | ❌ two levels above target — flag for writer |
-| ясно | **B1** | ❌ two levels above target — flag for writer |
-
-**Recommendation for спекотно / ясно (B1):** These words are pedagogically appropriate for a weather module even at A1 — real weather conversations require them. However, the writer must **explicitly scaffold** them: introduce as "new word you'll hear in weather forecasts," gloss clearly, and not assume passive recognition. Do not treat them as known A1 vocabulary; treat them as pre-taught B1 items within an A1 context. This is consistent with the plan's existing approach for `буде` (future chunk) — productive scaffolding of slightly-above-level items is valid if intentional and labeled.
+- погода: A1 — Fundamental vocabulary (appears in Grade 2 textbooks).
+- дощ: A1 — Fundamental vocabulary.
+- холодно: A1 — Fundamental adverb.
+- сонце: A1 — Fundamental noun.
+- вітер: A1 — Fundamental noun.
+- [Note]: All plan vocabulary items are present in primary school textbooks (Grade 2), confirming A1 appropriateness.
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Weather
-**Module:** weather | **Phase:** A1.4 [Time and Nature]
-**Textbook grades searched:** 3, 4, 5
+# Knowledge Packet: Weather
+**Module:** weather | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/weather.md
+
+# Педагогіка A1: Weather
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The native approach to teaching weather in early grades is conversational and built around simple, observable states. It starts with impersonal constructions, which are foundational for describing weather and feelings in Ukrainian. The core question `Яка погода?` (What's the weather like?) is introduced early and serves as the primary conversational trigger (Source 2, 9).
+
+The methodology progresses from general states to specific phenomena:
+1.  **Core States using Adverbs:** Instruction begins with basic adverbs like `тепло` (warm) and `холодно` (cold) (Source 2, 42). This establishes the impersonal sentence structure that is central to weather descriptions (e.g., `Сьогодні холодно` - Today it is cold).
+2.  **Contrasting Examples:** Teachers often use contrasting locations to reinforce vocabulary, for instance, comparing the weather in Kyiv (`холодно`, `іде дощ`) with Los Angeles (`тепло`, `сонячно`) (Source 2). This makes the lesson more dynamic and memorable.
+3.  **Personification of Precipitation:** A key pedagogical technique is to describe rain and snow using the verb `іти` (to go/walk). Phrases like `іде дощ` (the rain is "going") and `іде сніг` (the snow is "going") are taught as fixed expressions (Source 2). This animistic view is memorable for learners and reflects a natural feature of the language.
+4.  **Connecting to Feelings:** The impersonal structure is extended to personal feelings related to weather, such as `Мені холодно` (I am cold / To me it is cold) or `Я змерзла` (I got cold/froze) (Source 1, 12). This links external conditions to internal states, a common pattern in Ukrainian.
+5.  **Integration with Seasons:** Weather is not taught in isolation but is immediately tied to the four seasons (`пори року`). Textbooks for young Ukrainians consistently link weather conditions (`сніжно`, `спекотно`) to the relevant season (`зима`, `літо`) (Source 3, 29, 36).
+
+## Послідовність введення (Introduction Sequence)
+
+**Step 1: Core States (Impersonal Adverbs)**
+- Introduce the fundamental question: `Яка сьогодні погода?` (What is the weather like today?).
+- Teach the four core adverbs: `тепло` (warm), `холодно` (cold), `сонячно` (sunny), `хмарно` (cloudy).
+- Practice forming simple, one-word answers: `- Яка погода? - Тепло.`
+- Add qualifiers like `дуже` (very): `дуже тепло`, `дуже холодно` (Source 2).
+
+**Step 2: Precipitation as an Action**
+- Introduce the nouns `дощ` (rain) and `сніг` (snow).
+- Teach the fixed expressions `іде дощ` and `іде сніг`. Emphasize that this is the natural way to say "it is raining/snowing" (Source 2).
+- Contrast this with the static states from Step 1.
+
+**Step 3: Temperature**
+- Introduce the question: `Яка температура?`
+- Teach the structure: `плюс/мінус + [number] + градусів/градуси`.
+- Example: `Сьогодні плюс двадцять (+20)` (Source 2), `Температура плюс три (+3)` (Source 2).
+
+**Step 4: Adjectives for General Description**
+- Introduce adjectives to describe the weather in general terms: `погода` (weather) is feminine, so adjectives take feminine endings.
+- Key pairs: `хороша погода` (good weather) vs. `погана погода` (bad weather) (Source 2, 18).
+- More descriptive adjectives: `чудова погода` (wonderful weather), `мінлива погода` (changeable weather) (Source 2, 4, 13).
+
+**Step 5: Connecting Weather to Personal Experience**
+- Teach how to express being affected by the weather using the dative case or past tense verbs.
+- `Мені холодно.` (I am cold.) (Source 1)
+- `Мені жарко.` (I am hot.) <!-- VERIFY -->
+- `Я змерз / Я змерзла.` (I'm freezing / I've gotten cold.) (Source 12)
+
+**Step 6: Seasons and Months**
+- Introduce the four seasons (`весна`, `літо`, `осінь`, `зима`) and link typical weather to each. For example: `Взимку холодно і сніжно, а влітку досить спекотно.` (In winter it's cold and snowy, and in summer it's quite hot.) (Source 3).
+- Introduce key month names tied to weather phenomena, like `лютий` (February), named for its "fierce" (`лютий`) cold (Source 5, 7).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Це є тепло.` | `Тепло.` / `Сьогодні тепло.` | English speakers often try to replicate "It is..." using a subject (`це`) and verb (`є`). Ukrainian weather descriptions are typically impersonal sentences where the adverb (`тепло`) functions as the predicate. The verb `є` is almost never used in this context (Source 2, 33). |
+| `Воно дощить.` | `Іде дощ.` | This is a direct translation of the English "It is raining." Ukrainian personifies precipitation with the verb `іти` (to go/walk). The structure `іде дощ` is a fixed, idiomatic expression that must be memorized (Source 2). |
+| `Сьогодні є сонячний.` | `Сьогодні сонячно.` | Learners confuse the adjective `сонячний` (sunny, as in "a sunny day" - `сонячний день`) with the adverb `сонячно` (it is sunny). For describing the state of the weather, the adverb form ending in `-о` is required (Source 2). |
+| `Я є холодний.` | `Мені холодно.` | This error comes from translating "I am cold." In Ukrainian, to express feeling cold, one uses the dative construction `мені` (to me) + the adverb `холодно`. The adjective `холодний` describes an object (e.g., `холодний чай` - cold tea), not a person's feeling. |
+| `Дуже тепла погода.` | `Дуже тепло.` or `Погода дуже тепла.` | While `дуже тепла погода` is grammatically possible as "very warm weather", the common way to state the condition is with the simple adverbial `Дуже тепло` (It is very warm). The former describes the noun `погода`, while the latter describes the state of the environment (Source 2). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**This section is mandatory for the writer.** Teaching Ukrainian weather provides a key opportunity to build a Ukraine-centric linguistic foundation, free from Russian influence.
+
+1.  **No Russian Phonetic Analogies:** The writer must **never** explain Ukrainian sounds by comparing them to Russian. For example, do not describe the sound in `дощ` or `холодно` as "like the Russian 'o' under stress." Ukrainian phonetics must be taught on their own terms, using native audio examples and articulatory descriptions.
+2.  **Emphasize Slavic Month Names:** Ukrainian, like Polish and Belarusian, preserves many Slavic month names that reflect natural phenomena. The writer should highlight this. For example, `лютий` is the "fierce" month, not simply *fevral'* (Source 5, 7). `Квітень` is the "blossoming" month (Source 21). This contrasts with the Russian system based on Latin names and reinforces a distinct Ukrainian worldview tied to nature.
+3.  **`Іде дощ` is not "Quirky":** Present the `іде дощ / іде сніг` construction not as a strange idiom, but as a core, natural feature of the Ukrainian language's metaphorical system (Source 2). It's a window into how the language conceives of the world. Avoid framing it as "weird" or "funny" compared to an English or Russian norm.
+4.  **Folk Proverbs (Прикмети) are Cultural Data:** When introducing weather-related folk sayings, present them as part of a unique Ukrainian tradition of observing nature, not as generic "Slavic" proverbs. For example, `Яка погода на Покрову, такою буде і зима` links weather prediction to a specific Ukrainian religious and cultural holiday (Source 10). These are data points about a specific culture's relationship with its environment.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+- `погода` ★★★ (weather)
+- `дощ` ★★★ (rain)
+- `сніг` ★★★ (snow)
+- `сонце` ★★★ (sun)
+- `вітер` ★★ (wind)
+- `температура` ★★ (temperature)
+- `небо` ★★ (sky)
+- `хмара` ★ (cloud)
+- `зима`, `весна`, `літо`, `осінь` ★★★ (winter, spring, summer, autumn)
+
+### Прислівники (Adverbs)
+- `холодно` ★★★ (cold)
+- `тепло` ★★★ (warm)
+- `сонячно` ★★★ (sunny)
+- `хмарно` ★★ (cloudy)
+- `спекотно` / `жарко` ★★ (hot) (Source 3, 6)
+- `морозно` ★★ (frosty) (Source 7)
+- `вітряно` ★★ (windy) (Source 7)
+- `сьогодні`, `завтра`, `вчора` ★★★ (today, tomorrow, yesterday) (Source 18, 42)
+
+### Дієслова (Verbs)
+- `іде (дощ, сніг)` ★★★ (it's raining/snowing)
+- `світить (сонце)` ★★ (the sun is shining)
+- `прогнозувати` ★ (to forecast) (Source 12)
+
+### Прикметники (Adjectives)
+- `гарний` / `хороший` ★★★ (good)
+- `поганий` ★★★ (bad)
+- `теплий` ★★ (warm, for objects/days)
+- `холодний` ★★ (cold, for objects/days)
+- `чудовий` ★ (wonderful)
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Conversational Q&A Practice (Based on Source 2)**
+- **Format:** Question and Answer Drill.
+- **Prompt:** "Answer the questions about the weather in different cities. Use the words in parentheses."
+  - `Яка погода в Києві? (холодно, +3)` -> `У Києві холодно, температура плюс три.`
+  - `Яка погода в Лос-Анджелесі? (тепло, сонячно)` -> `В Лос-Анджелесі тепло і сонячно.`
+  - `Яка погода у вашому місті?` -> (Learner provides their own answer).
+
+**2. Dialogue Completion (Based on Source 12, 17)**
+- **Format:** Fill-in-the-blanks dialogue.
+- **Prompt:** "Complete the dialogue between two friends talking about the weather."
+  - **Анна:** `Яка __________ сьогодні?`
+  - **Марк:** `Сьогодні __________ і йде __________.`
+  - **Анна:** `А яка __________?`
+  - **Марк:** `Тільки __________ п'ять градусів.`
+  - **Анна:** `Ой, мені дуже __________!`
+  - *Word bank: `погода`, `холодно`, `дощ`, `температура`, `плюс`, `холодно`.*
+
+**3. Folk Sayings Interpretation (Based on Source 10, 38)**
+- **Format:** Reading and discussion.
+- **Prompt:** "Read the folk sayings about weather. How did ancient Ukrainians predict the weather? Do you have similar sayings in your country?"
+  - `Якщо на Покрову вітер, весна буде вітряна.` (If it's windy on Pokrova holiday, the spring will be windy.) (Source 10)
+  - `Ластівки літають низько — завтра буде дощ.` (Swallows are flying low — tomorrow it will rain.) (Source 38)
+  - `Яка погода на Покрову, такою буде і зима.` (Whatever the weather is on Pokrova, so will be the winter.) (Source 10)
+
+**4. Adjective to Adverb Transformation (Based on Source 2, 44)**
+- **Format:** Transformation drill.
+- **Prompt:** "Change the adjective describing an object into an adverb describing the weather."
+  - `Це теплий чай.` -> `Сьогодні тепло.`
+  - `Це холодний день.` -> `Надворі холодно.`
+  - `Це сонячний ранок.` -> `Зранку сонячно.`
+  - `Це хмарне небо.` -> `Сьогодні хмарно.`
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/seasons-and-months`
+- `pedagogy/a1/impersonal-sentences`
+- `pedagogy/a1/adverbs-of-state`
+- `pedagogy/a1/dative-case`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 251
-> **Score:** 0.50
->
-> 251
-> Кажу** літу:
-> — Ти вже врізало день, щодня доточуєш ночі, підганяєш 
-> усіх достигати, а саме — холоднішати. Навіщо? Я ще нічого 
-> літнього не встигла.
-> А воно мені каже:
-> — Якби я чекало, допоки люди перероблять свою роботу, 
-> то так ніколи б і не настало. Або ніколи не скінчилося.
-> — Другий варіант мені подобається більше.
-> — Ну навряд чи тобі хотілось би жити у світі вічнозелених 
-> вишень і ніколи недостиглих кавунів. Усьому свій час. Мені 
-> час минати потроху.
-> — Але ж…
-> — Що але ж? Просто не відкладай мене на завтра. Бо кожне 
-> завтра я вночі роблю коротшим за сьогодні (А. Акуленко).
-> Запитання
-> Завдання
-> 1. Які слова вжито в перенос-
-> ному значенні?
-> 2. Скільки звуків позначають 
-> букви я, є та ю у виділених 
-> словах? Поясніть.
-> 3. Як правильно вимовити 
-> слово «подобається»?
-> 4.
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 27
-> **Score:** 0.25
->
-> 27
->  § 10. Лексичне  значення  слова
-> 1. Прочитайте діалог між братом і молодшою сестрою та виконайте зав­
-> дання. 
-> — На вулиці посіріло, зірвався вітер, мабуть, зараз піде дощ!
-> — Піде?! А хіба дощ може ходити? 
-> А. Через яке слово сестра не зрозуміла брата?
-> Б. Яка причина непорозуміння?
-> Лексичне значення — це те, що означає слово. Наприклад, лексичне 
-> значення слова дощ — різновид опадів, що випадають із хмар у вигляді 
-> краплин води. 
-> Лексичне значення слів можна з’ясувати за тлумачним словником. 
-> Слова бувають однозначні та багатозначні. Наприклад, слово годин-
-> ник однозначне, адже воно означає лише прилад для вимірювання 
-> часу протягом доби. А слово йти багатозначне, бо має багато значень. 
-> 1. Ступаючи ногами, пересуватися, рухатися, змінюючи місце в про-
-> сторі: ідуть футболісти. 
-> 2.
-
-## Яка погода? (What's the Weather?)
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 27
-> **Score:** 0.50
->
-> 27
->  § 10. Лексичне  значення  слова
-> 1. Прочитайте діалог між братом і молодшою сестрою та виконайте зав­
-> дання. 
-> — На вулиці посіріло, зірвався вітер, мабуть, зараз піде дощ!
-> — Піде?! А хіба дощ може ходити? 
-> А. Через яке слово сестра не зрозуміла брата?
-> Б. Яка причина непорозуміння?
-> Лексичне значення — це те, що означає слово. Наприклад, лексичне 
-> значення слова дощ — різновид опадів, що випадають із хмар у вигляді 
-> краплин води. 
-> Лексичне значення слів можна з’ясувати за тлумачним словником. 
-> Слова бувають однозначні та багатозначні. Наприклад, слово годин-
-> ник однозначне, адже воно означає лише прилад для вимірювання 
-> часу протягом доби. А слово йти багатозначне, бо має багато значень. 
-> 1. Ступаючи ногами, пересуватися, рухатися, змінюючи місце в про-
-> сторі: ідуть футболісти. 
-> 2.
-
-## Погода і пори року (Weather and Seasons)
-
-> **Source:** , Grade 4
-> **Section:** Сторінка 169
-> **Score:** 0.50
->
-> Сади цвітуть коли? Навесні,
-> Улітку трав поля шовкові,
-> А восени врожай збирають,
-> Узимку снігу всі чекають.
-> Прислівників багато має мова —
-> Усі яскраві, всі чудові!
-> •  Спишіть вірш. Підкресліть словосполучення прислівника з діє­
-> словом. Визначте питання, на які відповідають прислівники.
-> •  Позначте будову виділеного прислівника.
-> Прислівники не зм іню ю ться, тому вони не мають 
-> [ закінчення. Вони закінчую ться суф іксом  або ко - [ 
-> « рєнем . Наприклад: весело, завжди, повік, угорі, « 
-> І Тцоденно.
-> 384. Прочитайте сполучення дієслів із прислівниками.
-> Світить (як?) яскраво,.... Світить (де?) високо,.... Ходить 
-> (як?) легенько,.... Почулося (звідки?) ззаду,.... Росте (де?) 
-> вдалині,.... Сгі\ває(як?) радісно, .... Кружляє (як?) тихо, ... . 
-> Написав (коли?) вчора,... .
-
-## Підсумок — Summary
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 105
-> **Score:** 0.50
->
-> 105
-> 249.		Прочитай сполучення слів.
-> Столяр (що робить? одн.) майструє, лікарі лікують, са-
-> доводи вирощують, спортсмен пливе, птахи прилетіли, 
-> синиця співає, шишкарі зимують, комп’ютер працює.
-> 	 Запиши сполучення слів, указавши в дужках питання та число 
-> за зразком першого.
-> 250.		Прочитай прислів’я та прикмету.
-> Ноги носять, а руки годують. Сонце гріє, сонце сяє — 
-> уся природа воскресає. Ластівки низько літають — дощ 
-> обіцяють. Учений іде, а неук слідом спотикається (Нар. 
-> тв.).
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 27
-> **Score:** 0.33
->
-> 27
->  § 10. Лексичне  значення  слова
-> 1. Прочитайте діалог між братом і молодшою сестрою та виконайте зав­
-> дання. 
-> — На вулиці посіріло, зірвався вітер, мабуть, зараз піде дощ!
-> — Піде?! А хіба дощ може ходити? 
-> А. Через яке слово сестра не зрозуміла брата?
-> Б. Яка причина непорозуміння?
-> Лексичне значення — це те, що означає слово. Наприклад, лексичне 
-> значення слова дощ — різновид опадів, що випадають із хмар у вигляді 
-> краплин води. 
-> Лексичне значення слів можна з’ясувати за тлумачним словником. 
-> Слова бувають однозначні та багатозначні. Наприклад, слово годин-
-> ник однозначне, адже воно означає лише прилад для вимірювання 
-> часу протягом доби. А слово йти багатозначне, бо має багато значень. 
-> 1. Ступаючи ногами, пересуватися, рухатися, змінюючи місце в про-
-> сторі: ідуть футболісти. 
-> 2.
-
-## Grammar Reference
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 81
-> **Score:** 0.50
->
-> 81
-> Мої навчальні досягнення
-> Карта пам’яті: від тексту — до мене
-> Прочитайте текст.
-> Падає білий лапатий сніг. Пух-
-> настий, як ковдра, що подарувала 
-> моя бабуся. Світ поволі стає по-
-> дібним до чарівної казки. Зранку 
-> голубе небо не обіцяло зміни по-
-> годи. А перед обідом чисте небо 
-> вкрилося (сірий) хмарами. Вони 
-> опустилися дуже низько. Суха 
-> трава побіліла. Голі дерева гойда-
-> лися від зимового вітру. А завтра 
-> місто прокинеться в білій льолі. 
-> Жваві колядники заспівають йому 
-> веселих колядок (За З. Живкою).
-> Зміст
-> 1.	 Де відбувається подія?
-> 2.	 Коли відбувається подія?
-> 3.	 Хто веде розповідь?
-> Словосполучення
-> 1.	Випиши словосполучення, у якому прикметник 
-> стоїть у початковій формі.
-> 2.	Випиши словосполучення, у яких прикметник у 
-> формі середнього роду; жіночого роду.
-> 1.
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Словосполучення
-> **Source:** МійКлас — [Словосполучення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/slovospoluchennia-39535)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
-Словосполучення
-Словосполучення — це поєднання дв**ох і більше повнозначних слів**, одне з яких є головним, а інше \(інші\) — залежним\(\-и\). 
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-Слова у словосполученні поєднуються за допомогою **граматичного зв'язку \(закінчень і прийменників\) або за змістом і граматично.**
-Приклад:
-Прикласти листок подорожника, зелений  сад, червоний **від** сорому, вивчена напам'ять поезія, занадто далеко.
-**Слово**, від якого ставимо запитання, називається головним.
- 
-**Слово**, до якого ставимо запитання, називається залежним.
-Приклад:
-Вправа \(яка?\) *цікава*, приїхали \(з якою метою?\) *відпочити*, знайшов \(що?\) *бурштин*, біжу \(яким способом?\) *наввипередки*, черга \(яка?\) *до лікаря*.
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-### Ознаки словосполучення. Типи зв'язку слів
-> **Source:** МійКлас — [Ознаки словосполучення. Типи зв'язку слів](https://www.miyklas.com.ua/p/ukrainska-mova/8-klas/slovospoluchennia-i-rechennia-39534/oznaki-slovospoluchennia-golovne-i-zalezhne-slovo-v-slovospoluchenni-tip_-476383)
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-### Теорія:
+## Послідовність введення (Introduction Sequence)
 
-*www.ua.pistacja.tv*  
- 
-**Словосполучення за будовою поділяються на прості і складні**.
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
 
-Прості \(непоширені\) словосполучення складаються з двох повнозначних слів — одного головного і одного залежного  \(*сміливий вчинок*\).
-У складних словосполученнях \(поширених\) поєднано три й більше повнозначні слова: *\(героїчний подвиг народу*\).
-****Залежне слов
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
 
-... (truncated for context window)
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -585,7 +607,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Яка погода? (What's the Weather?)` (~300 words)
 - `## Погода і пори року (Weather and Seasons)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -640,7 +661,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -740,59 +761,33 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги (Dialogues) (~300 words total)
+- P1 (~60 words): [Setting the scene: Intro to Ivan and Halya looking out the window. Mentioning the context of morning routine and deciding on outdoor plans.]
+- D1 (~120 words): [Dialogue 1: Focus on immediate weather and future prediction. Phrases: "Яка сьогодні погода?", "Сьогодні холодно і йде дощ", "Завтра буде тепло і сонячно". Using "буде" as a chunk for future weather.]
+- D2 (~120 words): [Dialogue 2: Conversation about personal preferences for seasons from M23. Phrases: "Яка пора року тобі подобається?", "Мені подобається літо", "Влітку тепло і сонячно", "Восени красиво і прохолодно".]
 
-- P1 (~30 words): Scene-setter — two friends Іванко and Галя stand at a window on a grey morning, deciding whether to go hiking today or tomorrow.
-- Dialogue 1 (~110 words): Іванко/Галя — looking out the window. 6-turn exchange: — Яка сьогодні погода? — Сьогодні холодно і йде дощ. — А завтра? — Завтра буде тепло і сонячно. — Добре! Тоді завтра гуляємо! Gloss three key phrases inline: яка погода (what weather), холодно (it's cold), буде тепло (it will be warm). Source: Avramenko Grade 5 p.27 — піде дощ as a natural idiom.
-- P2 (~30 words): Bridge note — in Ukrainian weather just IS: no subject, no "it." Сьогодні холодно means exactly "cold today." The language skips the dummy subject English needs.
-- Dialogue 2 (~110 words): Іванко/Галя — seasons preference. 8-turn exchange: — Яка пора року тобі подобається? — Мені подобається літо. — Чому? — Тому що влітку тепло і сонячно. А тобі? — Мені подобається осінь. Восени красиво. — А взимку? — Взимку холодно, але красиво. Йде сніг! Gloss: тому що (because), подобається (you like), восени (in autumn).
-- P3 (~50 words): Observation box — notice the season-adverbs: взимку, навесні, влітку, восени. These are frozen adverbs (from M23). They don't decline. Pair each with the weather you just heard: взимку — холодно, влітку — тепло, восени — дощ.
+## Яка погода? (What's the Weather?) (~300 words total)
+- P1 (~100 words): [Explanation of impersonal weather expressions. Ukrainian describes the state without a subject or the verb "to be". Contrast "It is cold" with "Холодно". Specifically warning against the L2 error "Це є тепло" or "Воно є сонячно".]
+- P2 (~100 words): [Core weather adverbs: тепло, холодно, спекотно, прохолодно. Explaining how to use "дуже" (very) to modify these states. Examples: "Сьогодні дуже спекотно", "Вчора було прохолодно".]
+- P3 (~100 words): [Precipitation as an action using the verb "іти" (to go). Teaching the fixed paradigms "іде дощ" (it's raining) and "іде сніг" (it's snowing). Mentioning "світить сонце" (the sun is shining) and "дме вітер" (the wind is blowing).]
+- <!-- INJECT_ACTIVITY: fill-in-weather-dialogue --> [fill-in, focus: Complete the dialogue about the weather using vocabulary like погода, буде, подобається, 4 items]
 
----
+## Погода і пори року (Weather and Seasons) (~330 words total)
+- P1 (~110 words): [Connecting weather states to seasonal adverbs from M23: взимку, навесні, влітку, восени. Examples: "Взимку холодно і часто йде сніг", "Влітку зазвичай спекотно і сонячно".]
+- P2 (~110 words): [Sky conditions: хмарно (cloudy), ясно (clear), сонячно (sunny). Explaining the logical link between sky state and precipitation: "Коли хмарно, сонце не світить і може йти дощ".]
+- P3 (~110 words): [Talking about temperature using numbers. Introduction of "градуси" (degrees), "плюс" (plus), and "мінус" (minus). Question: "Яка температура?". Answer: "Сьогодні плюс двадцять градусів" or "Зараз мінус десять".]
+- <!-- INJECT_ACTIVITY: match-up-weather-season --> [match-up, focus: Match weather phrases to logical context/season, 8 pairs]
+- <!-- INJECT_ACTIVITY: fill-in-season-weather --> [fill-in, focus: Choose the logical weather adverb or precipitation for the season, 6 items]
 
-## Яка погода? (What's the Weather?) (~340 words total)
+## Підсумок — Summary (~300 words total)
+- P1 (~150 words): [Comprehensive recap of the Weather Toolkit. Listing the key question "Яка сьогодні погода?", temperature adverbs (холодно/тепло/спекотно), precipitation patterns (іде дощ/сніг), and sky states (хмарно/ясно).]
+- P2 (~150 words): [Self-check Q&A. Provide the following bulleted list for the learner to practice answering:
+    - Яка сьогодні погода у твоєму місті?
+    - Яка температура сьогодні: плюс чи мінус?
+    - Яка твоя улюблена пора року? Чому?
+    - Що йде взимку: дощ чи сніг?]
 
-- P1 (~70 words): Introduce impersonal weather constructions. Ukrainian says Сьогодні холодно — no subject, just the state. Compare the four temperature adverbs side by side: холодно (cold) / прохолодно (cool) / тепло (warm) / спекотно (hot). Each is an adverb that doubles as a predicate — nothing else needed. Source concept: Заболотний Grade 8 p.126, безособові речення для явищ природи.
-- P2 (~80 words): Extend with sky conditions: хмарно (cloudy), ясно (clear), сонячно (sunny). Show the contrast — Сьогодні ясно і сонячно vs. Сьогодні хмарно. Then add the two adverbs for time that toggle between today and tomorrow: Сьогодні хмарно. Завтра буде сонячно. Point out буде is used as a chunk here — future marker, not a full verb lesson yet.
-- Exercise 1 (~30 words overhead): Fill-in — 6 items choosing the logical weather for the situation: Сьогодні плюс двадцять п'ять, {тепло|прохолодно|холодно}. Сьогодні мінус п'ять, дуже {холодно|тепло|спекотно}. (From activity_hints fill-in set 2, items 5-6 + 2 new temperature items.)
-- P3 (~90 words): Precipitation and movement patterns. Іде дощ (rain goes), Іде сніг (snow goes), Дме вітер (wind blows), Світить сонце (sun shines). Textbook hook: Avramenko Grade 5 p.27 dialogue — А хіба дощ може ходити? — sister's confusion shows this is a real idiom, not literal walking. Contrast the four verbs: іде (goes), дме (blows), світить (shines) — each weather phenomenon has its own verb. Learners get all four as fixed chunks.
-- P4 (~70 words): Temperature numbers. градуси (degrees) — Сьогодні двадцять градусів. плюс / мінус as temperature operators — Плюс тридцять (hot), Мінус десять (very cold). Show that Ukrainians drop the word градусів in speech: simply Сьогодні мінус десять. Практичний tip: Ukrainian weather forecasts always use Celsius — 20°C is тепло, 30°C is спекотно, −10°C is дуже холодно.
-
----
-
-## Погода і пори року (Weather and Seasons) (~340 words total)
-
-- P1 (~90 words): Connect weather to all four seasons using the adverbs from M23. Present as four mini-portraits: Взимку холодно. Іде сніг. Все біле. / Навесні тепло. Іде дощ. Все зелене. / Влітку спекотно. Світить сонце. Все квітне. / Восени прохолодно. Дме вітер. Іде дощ. Листя жовте. Each portrait = two weather facts + one nature image. Source pattern: Grade 4 poem (сади цвітуть навесні, улітку трав поля шовкові).
-- Exercise 2 (~30 words overhead): Fill-in — 6 items selecting logical weather for the season: Взимку часто {іде сніг|іде дощ|світить сонце}. Влітку дуже {спекотно|холодно|хмарно}. Восени часто {іде дощ|іде сніг|сонячно}. Навесні {тепло|холодно|спекотно} і красиво. (Full activity_hints fill-in set 1.)
-- P2 (~80 words): Weather descriptions as opinions. Introduce Мені подобається осінь, бо восени прохолодно і красиво. Show learners how to chain: season adverb + weather word + opinion. Three model sentences: Мені подобається зима, бо іде сніг і все біле. / Я люблю літо, бо спекотно і сонячно. / Навесні подобається, бо тепло і все зелене. Recycling подобається / люблю from M15.
-- Exercise 3 (~30 words overhead): Match-up — 8 pairs linking weather phrase to logical context: іде дощ ↔ холодно і мокро / іде сніг ↔ зима / світить сонце ↔ сонячно / дме вітер ↔ прохолодно / мінус десять ↔ холодно / плюс тридцять ↔ спекотно / плюс двадцять ↔ тепло / хмарно ↔ сонце не світить. (Full activity_hints match-up set.)
-- P3 (~110 words): Extended dialogue practice — Іванко asks Галя about her dream weather. 8-turn exchange using all vocabulary from the section: — Яка твоя ідеальна погода? — Плюс двадцять, сонячно і без вітру. — А взимку ти любиш сніг? — Так, але тільки коли не дуже холодно. — У Києві зараз мінус п'ять. — О, тоді дуже холодно! А яка погода у тебе? — У мене сьогодні тепло — плюс п'ятнадцять і хмарно. — Добре! Глосс: ідеальна (ideal), без вітру (without wind), тільки коли (only when).
-
----
-
-## Підсумок — Summary (~310 words total)
-
-- P1 (~60 words): Brief recap — you now have three weather tools: (1) state adverbs for temperature (холодно/тепло/спекотно/прохолодно/хмарно/ясно/сонячно), (2) movement verbs for precipitation and sky (іде дощ, іде сніг, дме вітер, світить сонце), (3) season-weather combinations (взимку холодно, влітку спекотно). Together these cover everything a real conversation about weather needs.
-- Weather toolkit box (~80 words): Formatted quick-reference list —
-  - Питання: Яка сьогодні погода?
-  - Температура: холодно / прохолодно / тепло / спекотно
-  - Опади: іде дощ · іде сніг
-  - Небо: хмарно · ясно · сонячно
-  - Вітер/сонце: дме вітер · світить сонце
-  - Градуси: плюс двадцять · мінус десять
-  - Час: сьогодні · завтра · вчора
-  - Пори року: взимку · навесні · влітку · восени
-- Exercise 4 (~30 words overhead): Fill-in dialogue — 4 items completing a short weather exchange: — Яка сьогодні {погода|сонце|дощ}? — Сьогодні тепло. / — Завтра {буде|є|був} сонячно. — Добре, гуляємо! / — Яка пора року тобі {подобається|любить|робить}? — Літо. / — Чому ти любиш літо? — Тому що влітку {сонячно|холодно|хмарно}. (From activity_hints fill-in set 3.)
-- Self-check (~80 words): Bulleted prompt list —
-  - Опиши сьогоднішню погоду трьома реченнями.
-  - Яка погода взимку там, де ти живеш?
-  - Яка твоя улюблена пора року і чому?
-  - Скажи: tomorrow it will be warm and sunny.
-  - Скажи: I like autumn because it's cool.
-  - Як сказати "it's raining" українською? А "it's snowing"?
-- P2 (~60 words): Preview — next module My Day (M25) builds a full daily schedule. You'll need today's weather to decide what to wear and where to go — all the vocabulary from this module feeds directly into М25 morning routines and outdoor plans.
-
-Grand total: ~1320 words
+Grand total: ~1230 words
 </skeleton>
 
 ## Output Format

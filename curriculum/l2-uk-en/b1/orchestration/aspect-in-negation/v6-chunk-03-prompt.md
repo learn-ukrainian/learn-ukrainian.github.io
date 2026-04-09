@@ -1,0 +1,612 @@
+# Section-by-Section Generation — Section 3/4
+
+You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
+
+**Module:** 8: Вид і заперечення (B1, B1.0 [Baselines & Aspect Mastery])
+**Section to write:** Ще не + доконаний: очікуване завершення (~1150 words total)
+**Word target for this section:** 1150 words (aim for 1265 to account for undershoot)
+
+---
+
+## Section Skeleton (follow this exactly)
+
+## Ще не + доконаний: очікуване завершення (~1150 words total)
+- P1 (~170 words): [Core Rule: The 'Pending Result' pattern. Introduce 'ще не + доконаний вид'. Explain that this construction is used when the speaker *expects* the action to be finished. Reference Lytvynova Grade 7 (p.38). Example: 'Я ще не прочитав цю книжку' (I am in the middle of it/I plan to finish it).]
+- P2 (~160 words): [The 'Magic' of 'Ще'. Explain that 'ще' (yet/still) acts as a bridge between the past non-occurrence and the future completion. Without 'ще', perfective negation often sounds like a negative judgment ('Він не здав екзамен'—He failed). With 'ще', it’s just a delay ('Він ще не здав екзамен'—He hasn't taken/passed it yet).]
+- P3 (~170 words): [Future Tense Negation. Explain how 'ще не + pf' works for future deadlines. 'Я не зроблю це до вечора' (I won't have it done—admitting lack of result). This is crucial for career contexts where deadlines are central. Example: 'Ми ще не закінчимо проект до п'ятниці'.]
+- P4 (~160 words): [Pragmatic Contrast: 'Не писав' vs 'Ще не написав'. Detailed breakdown of a letter scenario. 'Я не писав лист' (I didn't sit down to write). 'Я ще не написав лист' (The draft isn't finished; the post office is waiting). Explain how 'ще не' acknowledges the social obligation.]
+- P5 (~160 words): [The 'Internalized Expectation'. Explain that 'ще не + pf' is often used even if no one else is waiting, but the speaker feels the action *should* be done. 'Я ще не вивчив ці слова' (I am disappointed in my progress). Use the verb 'вивчити' (to master) vs 'вчити' (to study).]
+- <!-- INJECT_ACTIVITY: error-correction-negated-aspect --> [error-correction, Find and correct aspect errors in negated sentences (*ще не читав → ще не прочитав; *не написав without context → не писав), 6 items]
+- P6 (~160 words): [Common pitfalls: Mixing 'ще не' with the imperfective. Explain why '*Я ще не читав цю книжку' sounds awkward to a native speaker (it mixes 'yet' with 'general fact'). Correcting it to either 'Я не читав' or 'Я ще не прочитав'.]
+- P7 (~170 words): [The 'Intentionality' factor. Explain that 'ще не + pf' implies 'I want to/I am trying to'. It is a 'soft' negation. It keeps the possibility of the action alive. Contrast 'Вона не прийшла' (She didn't come—fact) with 'Вона ще не прийшла' (We are still waiting at the door).]
+- <!-- INJECT_ACTIVITY: match-up-pragmatic-context --> [match-up, Match pragmatic situations (boss asking about tasks, friend asking about books, teacher checking homework) to the correct negation pattern, 8 items]
+
+---
+## Previous Sections (for continuity — do NOT repeat this content)
+
+<previous_context>
+[...previous sections truncated...]
+
+не прочитав, але я обов'язково зроблю це завтра». Він просто назавжди закриває цю книгу і залишає ситуацію в минулому. Така прямолінійність іноді може здаватися співрозмовнику трохи різкою, але вона є абсолютно незамінною стратегією, коли вам потрібно дуже чітко окреслити свої особисті межі. Ви просто спокійно повідомляєте: цієї події ніколи не було, і на цьому крапка. Це ваша надійна лінія захисту, яка не залишає вільного місця для маніпуляцій з боку співрозмовника. <!-- INJECT_ACTIVITY: fill-in, Complete negated sentences with the correct aspect form based on the speaker's attitude (neutral fact), 8 items --> Ця унікальна здатність недоконаного виду безпристрасно описувати загальну об'єктивну картину робить його дійсно ідеальним інструментом для **заперечення факту** *(factual denial)* у значно складніших і триваліших життєвих ситуаціях. Коли ми говоримо про довгострокові стани, складні процеси або періоди людського життя, загальне заперечення надійно покриває весь цей час суцільною ковдрою. Розглянемо детальніше класичний біографічний приклад: «Він **не жив** у Києві» *(He didn't live in Kyiv)*. Ця проста фраза легко охоплює весь довгий період його минулого життя. Вона чітко означає, що сам процес проживання в українській столиці ніколи не був частиною його унікального досвіду. Це фундаментальний і беззаперечний факт його біографії. А тепер уважно порівняйте це з дієсловом доконаного виду: «Він **не переїхав** у Київ» *(He failed to move to Kyiv)*. Це вже зовсім інша, значно драматичніша історія. Тут ми чітко бачимо конкретну точку в часі, амбітний план, який зазнав невдачі, або очікуваний результат, який так і не був досягнутий. Недоконаний вид у фразі «не жив» свідомо ігнорує будь-який нереалізований намір чи амбіції. Він просто сухо описує період абсолютної відсутності події. Саме тому, коли публічні особи хочуть категорично відкинути серйозні звинувачення за довгий період часу, вони завжди майстерно використовують недоконаний вид. Щоб вам було значно легше орієнтуватися в цих граматичних тонкощах на практиці, варто запам'ятати кілька спеціальних слів-маркерів. Ці конкретні слова діють у реченні як дуже потужні магніти: вони майже завжди неминуче притягують до себе дієслова саме недоконаного виду в різноманітних заперечних реченнях. Найсильнішим і найпомітнішим із таких маркерів є категоричне слово **ніколи** *(never)*. Якщо ви впевнено заперечуєте певну дію протягом усього свого життя, ви просто не можете говорити про якийсь один завершений результат. Ви дуже впевнено скажете: «Я ніколи **не купував** такі шалено дорогі речі» *(I have never bought such wildly expensive things)*. Іншим надзвичайно потужним маркером є популярне слово **взагалі** *(at all)*. Воно максимально підсилює абсолютну відсутність будь-якого процесу: «Вона взагалі **не дивилася** телевізор у своєму дитинстві» *(She didn't watch TV at all in her childhood)*. Також недоконаний вид завжди використовується, коли ми прямо заперечуємо регулярність певної дії. Наприклад, це відбувається разом із словом **часто** *(often)*: «Ми не часто **зустрічалися** минулого важкого року» *(We didn't meet often last difficult year)*. Усі ці корисні слова яскраво підкреслюють, що ми зараз говоримо про глобальну картину, наші усталені звички або повну відсутність досвіду. Навчившись помічати ці маркери, ви зможете будувати свої заперечні речення абсолютно природно, як це роблять носії української мови. <!-- INJECT_ACTIVITY: group-sort, Sort negated sentences into загальне заперечення (не + impf) and незавершене очікування (ще не + pf), 10 items -->
+</previous_context>
+
+Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
+
+---
+## Full Plan (for reference)
+
+<plan_content>
+module: b1-009
+level: B1
+sequence: 9
+slug: aspect-in-negation
+version: '1.0'
+title: "Вид і заперечення"
+subtitle: "Не робив vs ще не зробив — заперечення факту чи очікування"
+focus: aspect-negation
+pedagogy: TTT
+phase: "B1.0 [Baselines & Aspect Mastery]"
+word_target: 4000
+objectives:
+  - "Learner can distinguish не + недоконаний вид (general negation — the action didn't
+    happen at all) from ще не + доконаний вид (expected completion — hasn't happened
+    YET) and produce both forms naturally"
+  - "Learner can explain how aspect choice in negation changes the pragmatic meaning
+    of a sentence using Ukrainian metalanguage (загальне заперечення vs незавершене
+    очікування)"
+  - "Learner can apply the negation-aspect pattern across all three tenses (past,
+    present, future) and in questions (Ти не читав? vs Ти ще не прочитав?)"
+  - "Learner can use negated aspect pairs in natural conversation to express factual
+    denial, incomplete expectations, and general statements about non-occurrence"
+dialogue_situations:
+  - setting: "Two roommates — one asks about household tasks. The other distinguishes
+      between things they didn't do at all vs things they haven't finished yet: Ти
+      прибрав кімнату? — Ні, я не прибирав. А посуд? — Посуд я мив, але ще не домив —
+      залишилося трохи."
+    speakers:
+      - Ольга
+      - Михайло
+    motivation: "Natural contrast: не + impf (didn't do it at all / general negation)
+      vs ще не + pf (haven't finished yet / expected completion)"
+  - setting: "Student and professor discussing a paper deadline — professor asks about
+      progress, student explains what's not yet done: Ви вже написали вступ? — Ще не
+      написав, але я працюю над ним. А літературу ви читали? — Ні, ще не читав — не
+      знаю, з чого почати."
+    speakers:
+      - Професор
+      - Студент
+    motivation: "ще не + pf (expected progress not yet achieved) vs не + impf (the
+      activity hasn't been engaged with at all)"
+content_outline:
+  - section: "Тест: що ви заперечуєте?"
+    words: 850
+    points:
+      - "Diagnostic: 10 sentence pairs with negation — learners choose the natural
+        option. Examples: — Ти читав цю книжку? — Ні, (не читав / ще не прочитав).
+        [Both are valid — but they mean different things. Which fits the context?]
+        — Ти написав звіт? — (Не писав / Ще не написав). — Чому ти не їв? / Чому ти
+        ще не поїв?"
+      - "Self-assessment: learners notice that both options often 'work' grammatically,
+        but the MEANING shifts. This module teaches how to control that shift
+        intentionally."
+      - "Key concept: negation + aspect = TWO different speech acts. Не + недоконаний:
+        'This activity didn't happen. I'm stating a fact.' Ще не + доконаний: 'This
+        result hasn't been achieved yet, but it's expected.' The speaker's attitude
+        toward the action (neutral fact vs pending expectation) determines the aspect."
+      - "Mini-dialogue illustrating the difference: — Ти вже обідав? — Ні, не обідав.
+        (Factual: I haven't eaten lunch.) vs — Ти вже пообідав? — Ще не пообідав.
+        (Expected: I haven't had lunch YET — but I will.)"
+  - section: "Не + недоконаний: загальне заперечення"
+    words: 1050
+    points:
+      - "Core pattern: не + недоконаний вид = the action is denied as a general fact
+        (Заболотний Grade 7 p.57). Я не читав цю книжку. (Never read it — factual.)
+        Вона не телефонувала. (She didn't call — no call occurred.) Ми не обговорювали
+        це питання. (We didn't discuss it — the topic wasn't raised.) Він не вчив
+        українську. (He didn't study Ukrainian — general statement.)"
+      - "In present tense: not doing something now/generally. Я не розумію. (I don't
+        understand — ongoing state.) Він не працює сьогодні. (He's not working today.)
+        Вона не їсть м'ясо. (She doesn't eat meat — general habit.) All naturally
+        imperfective because the present tense itself is imperfective."
+      - "In questions: Ти не бачив моїх ключів? (general — have you seen my keys at
+        all?) Ви не знаєте, де бібліотека? (polite question — impf natural). Чому ви
+        не відповідали на листи? (why didn't you respond — general non-occurrence)."
+      - "Practice: learners answer questions with не + impf to express general negation.
+        — Ти дивився цей фільм? — Ні, не дивився. — Вона вчила іспанську? — Ні, не
+        вчила. Focus: the speaker makes no comment about whether they SHOULD have
+        done it."
+  - section: "Ще не + доконаний: очікуване завершення"
+    words: 1050
+    points:
+      - "Core pattern: ще не + доконаний вид = expected result has not been achieved
+        YET (Литвінова Grade 7 p.38). Я ще не прочитав цю книжку. (I haven't read it
+        yet — but I intend to / I'm expected to.) Вона ще не зателефонувала. (She
+        hasn't called yet — but she's supposed to.) Ми ще не вирішили. (We haven't
+        decided yet — decision pending.)"
+      - "The word ще is the key signal: it marks the expectation that the action WILL
+        eventually be completed. Without ще, perfective negation is rare and marked:
+        Він не прочитав книжку (unusual — implies specific failure). With ще: Він ще
+        не прочитав книжку (natural — pending completion)."
+      - "In future: Я ще не зроблю це до п'ятниці. (I won't have done it by Friday —
+        result pending.) Вона ще не закінчить до вечора. (She won't have finished by
+        evening.) These express incomplete progress toward an expected endpoint."
+      - "Contrastive pairs — same sentence, different aspect, different pragmatics:
+        Він не писав лист. (General: he didn't write any letter.) Він ще не написав
+        лист. (Specific: the letter exists as expectation, but isn't done yet.)
+        Я не вчила цей матеріал. (I didn't study this material at all.) Я ще не
+        вивчила цей матеріал. (I haven't mastered it yet — but I'm working on it.)
+        Practice: learners produce both variants and explain the pragmatic difference."
+  - section: "Підсумок: заперечення як прагматичний вибір"
+    words: 1050
+    points:
+      - "Synthesis: negation + aspect is about the speaker's ATTITUDE, not about
+        objective reality. The same factual situation (no letter was written) can be
+        expressed as не писав (neutral fact) or ще не написав (pending expectation).
+        The speaker CHOOSES how to frame the non-occurrence."
+      - "Extended dialogue practice: learners roleplay a scenario where a boss asks
+        about project progress. Employee uses не + impf for tasks they weren't assigned
+        (Ні, я не працював над цим — це не моє завдання) and ще не + pf for tasks in
+        progress (Ще не закінчив, але закінчу до п'ятниці). The aspect reveals the
+        employee's relationship to each task."
+      - "Common errors: *Я ще не читав цю книжку (mixing ще не with impf — awkward;
+        choose either не читав or ще не прочитав). *Він не написав лист (without ще,
+        perfective negation sounds like accusation or complaint — unnatural for neutral
+        statement). Over-using ще не — not every negation implies pending completion."
+      - "Preview of next module: after work-and-career thematic break, aspect-in-
+        conditionals — how aspect behaves in якщо/якби sentences."
+vocabulary_hints:
+  - word: "заперечення"
+    pos: "noun:n"
+    translation: "negation (denial of an action)"
+  - word: "загальне заперечення"
+    pos: "noun phrase"
+    translation: "general negation (не + impf — factual denial)"
+  - word: "очікуване завершення"
+    pos: "noun phrase"
+    translation: "expected completion (ще не + pf — pending result)"
+  - word: "ще"
+    pos: "adv/part"
+    translation: "yet, still (signals pending expectation with pf negation)"
+  - word: "факт"
+    pos: "noun:m"
+    translation: "fact (не + impf states a fact of non-occurrence)"
+  - word: "очікування"
+    pos: "noun:n"
+    translation: "expectation (ще не + pf implies an expected outcome)"
+  - word: "прагматика"
+    pos: "noun:f"
+    translation: "pragmatics — how context shapes meaning"
+  - word: "обговорювати"
+    pos: "verb:impf"
+    translation: "to discuss (impf — не обговорювали = didn't discuss)"
+  - word: "обговорити"
+    pos: "verb:pf"
+    translation: "to discuss (pf — ще не обговорили = haven't discussed yet)"
+  - word: "вирішувати"
+    pos: "verb:impf"
+    translation: "to decide (impf — process of deciding)"
+  - word: "вирішити"
+    pos: "verb:pf"
+    translation: "to decide (pf — ще не вирішили = haven't decided yet)"
+  - word: "відповідати"
+    pos: "verb:impf"
+    translation: "to answer/respond (impf)"
+  - word: "відповісти"
+    pos: "verb:pf"
+    translation: "to answer/respond (pf — result: answer given)"
+  - word: "домити"
+    pos: "verb:pf"
+    translation: "to finish washing (pf — ще не домив)"
+  - word: "дочитати"
+    pos: "verb:pf"
+    translation: "to finish reading (pf — ще не дочитав)"
+  - word: "доробити"
+    pos: "verb:pf"
+    translation: "to finish doing (pf — pending completion)"
+  - word: "нейтральний"
+    pos: "adj"
+    translation: "neutral (не + impf = neutral factual negation)"
+  - word: "незавершений"
+    pos: "adj"
+    translation: "unfinished, incomplete (ще не + pf context)"
+  - word: "намір"
+    pos: "noun:m"
+    translation: "intention (ще не implies intention to complete)"
+activity_hints:
+  - type: quiz
+    focus: "Choose не + impf or ще не + pf based on context — factual denial vs
+      pending expectation"
+    items: 10
+  - type: fill-in
+    focus: "Complete negated sentences with the correct aspect form based on the
+      speaker's attitude (neutral fact vs 'not yet')"
+    items: 8
+  - type: group-sort
+    focus: "Sort negated sentences into загальне заперечення (не + impf) and
+      незавершене очікування (ще не + pf)"
+    items: 10
+  - type: error-correction
+    focus: "Find and correct aspect errors in negated sentences (*ще не читав →
+      ще не прочитав; *не написав without context → не писав)"
+    items: 6
+  - type: match-up
+    focus: "Match pragmatic situations (boss asking about tasks, friend asking about
+      books, teacher checking homework) to the correct negation pattern"
+    items: 8
+  - type: open-writing
+    focus: "Write a dialogue where one person asks about progress on several tasks —
+      use не + impf for unstarted tasks and ще не + pf for pending tasks"
+    items: 6
+connects_to:
+  - "b1-008 (Вид у наказовому способі — aspect in imperatives, prerequisite)"
+  - "b1-011 (Вид в умовних реченнях — aspect in conditionals)"
+  - "b1-004 (Вид у минулому часі — negation pairs build on past-tense aspect)"
+prerequisites:
+  - "b1-008 aspect-in-imperatives (aspect pragmatics in commands)"
+  - "b1-004 aspect-past-tense (aspect choice in past tense)"
+grammar:
+  - "Не + недоконаний вид: загальне заперечення — факт ненастання дії"
+  - "Ще не + доконаний вид: очікуване, але незавершене — результат ще попереду"
+  - "Прагматична різниця: нейтральний факт vs незавершене очікування"
+  - "Заперечення у всіх часах: минулий, теперішній, майбутній"
+  - "Дієслова з префіксом до- (домити, дочитати, доробити) у контексті ще не"
+register: розмовний
+references:
+  - title: "Заболотний Grade 7, p.54-60"
+    notes: "Вид дієслова: заперечення і вид, вибір виду в заперечних конструкціях,
+      вправи на мінімальні пари з запереченням."
+  - title: "Литвінова Grade 7, p.36-40"
+    notes: "Вид і заперечення: ще не + доконаний як маркер очікуваного завершення,
+      не + недоконаний як загальне заперечення."
+  - title: "Авраменко Grade 7, p.63-70"
+    notes: "Заперечні конструкції з видом: вправи на розрізнення загального заперечення
+      і незавершеного очікування."
+
+</plan_content>
+
+---
+
+## Knowledge Packet
+
+<knowledge_packet>
+# Knowledge Packet: Вид і заперечення
+**Module:** aspect-in-negation | **Track:** B1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: grammar/b1/aspect-in-negation.md
+
+# Граматика B1: Вид і заперечення
+
+
+
+## Як це пояснюють у школі (How Schools Teach This)
+
+Українські шкільні підручники вводять поняття виду дієслова (aspect) у 6-7 класах, зосереджуючись на фундаментальному протиставленні: **недоконаний вид** (незавершена дія) та **доконаний вид** (завершена, результативна дія).
+
+1.  **Основне визначення:**
+    *   **Недоконаний вид** (imperfective) відповідає на питання `що робити?` і позначає незавершену, тривалу або повторювану дію (Джерело: `6-klas-ukrmova-betsa-2023_s0200`, `7-klas-ukrmova-litvinova-2024_s0037`).
+    *   **Доконаний вид** (perfective) відповідає на питання `що зробити?` і позначає завершену дію, яка має результат (Джерело: `7-klas-ukrmova-avramenko-2024_s0064`).
+
+2.  **Формування видових пар:** Підручники пояснюють, що більшість дієслів утворюють видові пари, і показують основні способи їх творення (Джерела: `7-klas-ukrmova-avramenko-2024_s0064`, `10-klas-ukrmova-karaman-2018_s0322`):
+    *   **Префіксація:** `робити` → `зробити`, `читати` → `прочитати`.
+    *   **Суфіксація:** `стукати` → `стукнути`, `вирішувати` → `вирішити`.
+    *   **Чергування звуків в основі:** `витирати` → `витерти`, `перевозити` → `перевезти`.
+    *   **Зміна наголосу:** `розки́дати` → `розкида́ти`.
+    *   **Різні основи (суплетивізм):** `брати` → `взяти`, `ловити` → `піймати`.
+
+3.  **Зв'язок з часом:** Важливим моментом є те, що дієслова доконаного виду **не мають форми теперішнього часу**. Їхня "майбутня проста" форма (`напишу`, `зроблю`) граматично є формою теперішнього часу, але семантично вказує на майбутнє (Джерела: `ext-other_blogs-44`, `7-klas-ukrmova-litvinova-2024_s0045`). Дієслова недоконаного виду мають усі три часи.
+
+4.  **Заперечення:**
+    *   Частка `не` з дієсловами пишеться окремо. Це базове правило орфографії (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0189`).
+    *   Підручники не завжди явно фокусуються на виборі виду в заперечних реченнях, але це демонструється через приклади. Наказовий спосіб у заперечній формі (прохання або заборона) майже завжди використовує дієслова **недоконаного виду**: `не поспішайте` (Source `ext-ulp_youtube-190`), `не думайте` (Source `ext-ulp_youtube-211`).
+    *   Конструкції з `ні` (подвійне заперечення) пояснюються в контексті правопису займенників та прислівників, де `ні` посилює заперечення, виражене часткою `не` при дієслові: `Хто нічого не робить...` (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0189`).
+
+Основна ідея, яку доносять до учнів: вибір виду залежить від того, чи говоримо ми про сам процес/факт дії (недоконаний), чи про її результат/завершеність (доконаний). Ця логіка зберігається і в заперечних реченнях.
+
+## Повна парадигма (Full Paradigm)
+
+Ключова відмінність у запереченні з різними видами полягає в тому, **що саме** заперечується: сам факт/процес дії чи її результат.
+
+### Таблиця 1: Заперечення в минулому часі
+
+| Вид | Конструкція | Значення | Приклад |
+| :-- | :--- | :--- | :--- |
+| **Недоконаний** | `не` + дієслово минулого часу | Заперечення факту або процесу. Дія не відбувалася взагалі. | `Я не читав цю книжку.`<br/>*(I didn't read this book / I have not read this book.)* |
+| **Доконаний** | `не` + дієслово минулого часу | Заперечення результату. Дія, можливо, почалася, але не була завершена успішно. | `Я не прочитав цю книжку.`<br/>*(I didn't finish reading this book.)* |
+
+**Приклад з джерел:**
+*   Недоконаний: `Я не знала, тому переплатила за таксі.` (I didn't know, so I overpaid for the taxi.) (Джерело: `ext-ulp_youtube-218`). Заперечується факт знання.
+*   Доконаний (з модальним дієсловом): `...ще не встигла спитати Лесю...` (...I didn't manage to ask Lesia yet...) (Джерело: `ext-ulp_youtube-213`). Заперечується досягнення результату.
+
+### Таблиця 2: Заперечення в майбутньому часі
+
+| Вид | Конструкція | Значення | Приклад |
+| :-- | :--- | :--- | :--- |
+| **Недоконаний** | `не буду/будеш...` + інфінітив | Заперечення наміру або дії в майбутньому (складена форма). | `Я не буду читати цю книжку.`<br/>*(I will not read this book.)* |
+| **Доконаний** | `не` + дієслово майбутнього часу | Заперечення можливості або бажання досягти результату в майбутньому (проста форма). | `Я не прочитаю цю книжку.`<br/>*(I won't (be able to) finish this book.)* |
+
+### Таблиця 3: Заперечення в наказовому способі (Заборона)
+
+| Вид | Конструкція | Значення | Приклад |
+| :-- | :--- | :--- | :--- |
+| **Недоконаний** | `не` + дієслово 2-ї особи | Заборона дії, прохання не робити щось. **Стандартна форма.** | `Не читай цю книжку!`<br/>*(Don't read this book!)* |
+| **Доконаний** | `не` + дієслово 2-ї особи | Рідкісна форма, зазвичай попередження не зробити щось випадково. | `Не впади!`<br/>*(Don't fall! / Be careful not to fall!)* |
+
+**Приклад з джерел:** `не думайте, вам дуже личить` (Don't think, it suits you very well.) (Джерело: `ext-ulp_youtube-211`). Це порада не виконувати дію (думання), тому використовується недоконаний вид.
+
+### Таблиця 4: Подвійне заперечення
+
+Конструкція `ні-` (займенник/прислівник) + `не` + дієслово є граматичною нормою в українській мові.
+
+| Конструкція | Значення | Приклад |
+| :--- | :--- | :--- |
+| `Ніхто не` + дієслово | Nobody ... | `Ніхто не знав.` (Nobody knew.) |
+| `Нічого не` + дієслово | Nothing ... | `Я нічого не робив.` (I did nothing.) |
+| `Ніколи не` + дієслово | Never ... | `З його обличчя... ніколи не сходило літо.` (Summer never left his face.) (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0189`) |
+| `Ніякий не` + дієслово | No / not any ... | `Ніякий дощ нас не зупинить.` (No rain will stop us.) |
+
+## Частотність і пріоритети
+
+Для рівня B1 пріоритети вивчення наступні:
+
+1.  **Заборона в наказовому способі (`не` + недоконаний вид):** Це найчастотніша і найважливіша конструкція для повсякденного спілкування. `Не хвилюйся`, `не кажи`, `не робіть`.
+2.  **Заперечення факту в минулому (`не` + недоконаний вид):** Критично важливо для розповіді про минулі події. `Я не ходив`, `вона не бачила`, `ми не знали`.
+3.  **Подвійне заперечення з `ніхто`, `нічого`, `ніколи`:** Дуже поширене в розмовній мові. `Я ніколи не був у Львові`, `Він нічого не сказав`.
+4.  **Різниця між `не`+недоконаний та `не`+доконаний в минулому:** Це ключова семантична відмінність, що показує просунутий рівень володіння мовою. Розрізнення `не робив` (didn't do it) і `не зробив` (failed to do it) є метою для рівня B1.
+5.  **Заперечення в майбутньому часі:** Складена форма (`не буду робити`) є простішою і більш універсальною для початку. Проста форма (`не зроблю`) додає нюанс неможливості/нездатності.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Не забудь!`<br/>*(Як загальна порада)* | `Не забувай!` | Для загальної заборони або поради, що стосується процесу, використовується недоконаний вид. `Не забудь!` – це більш специфічне нагадування про конкретну, одноразову дію ("don't you dare forget this one thing"). |
+| `Я не буду прочитати книгу.` | `Я не буду читати книгу.` | У складеній формі майбутнього часу (`буду` + інфінітив) завжди використовується інфінітив **недоконаного** виду. (Джерело: `7-klas-ukrmova-litvinova-2024_s0045`). |
+| `Я нічого робив.` | `Я нічого не робив.` | В українській мові подвійне заперечення є обов'язковим. Якщо є заперечний займенник/прислівник (`ніхто`, `нічого`, `ніде`), дієслово також повинно мати заперечну частку `не`. (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0189`). |
+| `Він не має машину.` | `Він не має машини.` <br/> або <br/> `У нього немає машини.` | Після заперечення з дієсловом `мати` або в конструкції `немає` іменник-додаток ставиться в родовому відмінку (Genitive case), а не в знахідному (Accusative). |
+| `Вона не закінчила роботу вчора.`<br/>*(Прямий переклад з англ.)* | `Вона не закінчила роботу вчора.`<br/>*(дія не завершена)*<br/>`Вона не робила роботу вчора.`<br/>*(дія не починалась)* | Англійська мова не має граматичної категорії виду, тому носії часто не розрізняють заперечення процесу і заперечення результату, використовуючи доконаний вид за замовчуванням. Українською `не закінчила` означає, що вона пробувала, але не встигла, а `не робила` — що вона навіть не починала. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+1.  **Українська граматика є самодостатньою:** Категорія виду та правила заперечення є невід'ємною частиною слов'янської мовної групи. Пояснювати українські правила слід через внутрішню логіку української мови, а не через порівняння з російською.
+2.  **Подвійне заперечення — норма, а не помилка:** Конструкція `Я нічого не знаю` є граматичною нормою для української мови. Це не "нелогічно" порівняно з англійською, а є стандартною ознакою багатьох мов, включно з українською.
+3.  **Лексичні відмінності у видових парах:** Хоча механізми творення виду (префікси, суфікси) є спільними для слов'янських мов, конкретні видові пари можуть не збігатися з російськими. Наприклад, пара `брати – взяти` (Джерело: `10-klas-ukrmova-karaman-2018_s0322`) фонетично відрізняється від російського аналога. Навчання має фокусуватися виключно на українських парах.
+4.  **Уникати "суржикізмів":** Неприпустимо використовувати російські дієслівні форми чи видові пари в українському мовленні. Наприклад, вживати російське `не надо` замість українських `не треба` або `не потрібно`.
+
+## Природні приклади (Natural Examples)
+
+### Група 1: Заперечення факту/процесу (`не` + недоконаний вид)
+*   `Він не читав цієї книжки.` (He hasn't read this book.) (Джерело: `8-klas-ukrlit-zabolotnyi-2025_s0288`)
+*   `Я не знала, тому переплатила за таксі.` (I didn't know, so I overpaid.) (Джерело: `ext-ulp_youtube-218`)
+*   `...зараз я не вишиваю, бо це займає досить багато часу.` (...now I don't embroider because it takes quite a lot of time.) (Джерело: `ext-ulp_youtube-190`)
+
+### Група 2: Заперечення результату/завершеності (`не` + доконаний вид)
+*   `І не всі теореми доведені, не дочитані всі казки.` (And not all theorems are proven, not all fairy tales are read to the end.) (Джерело: `10-klas-ukrmova-zabolotnyi-2018_s0189`)
+*   `Не зчувся – літо проминуло.` (He didn't notice – summer passed.) (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0189`)
+*   `...не встигла я розпакувати валізу, як вона почала мене пригощати...` (...I hadn't managed to unpack my suitcase when she started treating me...) (Джерело: `ext-ulp_youtube-218`)
+
+### Група 3: Заборони та прохання (`не` + недоконаний вид)
+*   `Не думайте, вам дуже личить.` (Don't think, it suits you very well.) (Джерело: `ext-ulp_youtube-211`)
+*   `Не поспішайте.` (Don't rush.) (Джерело: `ext-ulp_youtube-190`)
+*   `Перестань мене спамити.` (Stop spamming me.) (Джерело: `ext-ulp_youtube-124`)
+
+### Група 4: Подвійне заперечення
+*   `Хто нічого не робить, той ніколи не має часу.` (He who does nothing never has time.) (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0189`, адаптовано)
+*   `У нас немає такого слова, як jetlag.` (We don't have such a word as "jetlag".) (Джерело: `ext-ulp_youtube-218`)
+*   `Мені поля задумливо шептали свої ніким не співані пісні.` (The fields thoughtfully whispered to me their songs, sung by no one.) (Джерело: `10-klas-ukrmova-zabolotnyi-2018_s0189`)
+
+## Рекомендації для вправ (Activity Concepts)
+
+*   **Phase 1: Розпізнавання (Recognition)**
+    *   **Вправа "Детектив":** Дати студентам пари речень, як-от `Я не писав листа` / `Я не написав листа`. Вони мають пояснити різницю в ситуації для кожного речення.
+    *   **Вправа "Знайди заборону":** У тексті (напр., діалозі з `ext-ulp_youtube-211`) знайти всі речення, що виражають заборону, пораду або прохання, і звернути увагу, що в них завжди вжито недоконаний вид.
+
+*   **Phase 2: Контрольована практика (Controlled Practice)**
+    *   **Вправа "Трансформація":** Перетворити стверджувальне речення на заперечне, обравши правильний вид залежно від контексту.
+        *   Ствердження: `Вона прочитала статтю.`
+        *   Контекст 1: `У неї не було бажання.` → `Вона не читала статтю.`
+        *   Контекст 2: `Вона була занадто зайнята, щоб закінчити.` → `Вона не прочитала статтю.`
+    *   **Вправа "Що не так?":** Дати речення з типовими помилками (див. секцію "Типові помилки L2") і попросити їх виправити. Наприклад: `*Я ніколи не був в Києві.` → `Я ніколи не був у Києві.`.
+
+*   **Phase 3: Вільне мовлення (Production)**
+    *   **Вправа "Список виправдань":** "Чому ви не зробили домашнє завдання вчора?" Студенти мають навести кілька причин, використовуючи `не зробив, бо...` (заперечення результату) та `не робив, бо...` (заперечення дії).
+    *   **Вправа "Правила поведінки":** Скласти список правил для бібліотеки, музею або класу, використовуючи `не` + недоконаний вид наказового способу (`не бігайте`, `не розмовляйте голосно`).
+
+## Зв'язки з іншими темами
+
+*   **Попередні теми:**
+    *   **Вид дієслова (Aspect):** Це пряме розширення теми виду. Неможливо зрозуміти вибір виду в запереченні без базового розуміння доконаного/недоконаного виду.
+    *   **Часи дієслова (Tenses):** Тема тісно пов'язана з утворенням минулого та майбутнього часів, оскільки вибір виду впливає на форму (`буду робити` vs. `зроблю`).
+    *   **Наказовий спосіб (Imperative Mood):** Заперечення є ключовою функцією наказового способу (заборони).
+
+*   **Наступні теми:**
+    *   **Дієприкметники (Participles):** Заперечення з дієприкметниками (`непрочитана книга`) базується на виді дієслова, від якого утворено дієприкметник.
+    *   **Безособові форми на -но, -то:** Заперечення з цими формами (`не зроблено`, `не написано`) майже завжди використовує доконаний вид, оскільки вони констатують відсутність результату.
+    *   **Родовий відмінок (Genitive Case):** Заперечні конструкції, як-от `немає + іменник` або `не мати + іменник`, вимагають вживання родового відмінка, що є важливою темою для B1/B2.
+
+## Пов'язані статті
+*   `grammar/a2/verb-aspect-introduction`
+*   `grammar/b1/imperative-mood`
+*   `grammar/a2/future-tense`
+*   `grammar/b2/genitive-case-negation`
+
+---
+
+### Вікі: grammar/b1/aspect-in-narration.md
+
+# Граматика B1: Вид у розповіді
+
+
+
+## Як це пояснюють у школі (How Schools Teach This)
+
+Українські шкільні підручники вводять поняття **розповіді** як типу мовлення, що повідомляє про події в певній послідовності (Source 17: `5-klas-ukrmova-zabolotnyi-2023_s0224`). Основна структура розповіді: **початок дії (зав'язка), розвиток дії та кінець дії (розв'язка)** (Source 42: `5-klas-ukrmova-zabolotnyi-2023_s0225`, Source 36: `5-klas-ukrmova-golub-2022_s0168`).
+
+Вид дієслова (аспект) є ключовим інструментом для побудови розповіді. Ця тема вивчається системно, починаючи приблизно з 5-7 класів.
+
+1.  **Функціональне розрізнення**: Акцент робиться на протиставленні **незавершеної дії** (недоконаний вид) і **завершеної дії** або **результату** (доконаний вид) (Source 39: `7-klas-ukrmova-avramenko-2024_s0064`). У діалозі про прибирання кімнати, мати підкреслює різницю: «Прибирати й прибрати — різні дії» (Source 39), де `прибирав` — це процес, а `прибрав` — результат.
+
+2.  **Аспект у контексті**: Підручники та практичні посібники пояснюють вибір виду через контекст і маркерні слова.
+    *   **Недоконаний вид** використовується для опису регулярних, повторюваних дій, часто із прислівниками `завжди`, `постійно`, `часто`, `інколи`, `зазвичай` (Source 7: `ext-ulp_youtube-212`). Він також описує процес або одночасні дії.
+    *   **Доконаний вид** використовується для опису одноразових, завершених дій та послідовності подій (сюжету), часто зі словами `вже`, `нарешті` (Source 7: `ext-ulp_youtube-212`). Це «ланцюжок» дій, що рухає розповідь уперед.
+
+3.  **Структура розповіді**: Шкільні завдання часто передбачають складання плану розповіді, що допомагає учням структурувати послідовність подій (Source 20: `3-klas-ukrainska-mova-savchuk-2020-2_s0015`, Source 13: `4-klas-ukrayinska-mova-savchenko-2021-2_s0117`). Кожен пункт плану, по суті, відповідає завершеній дії (доконаний вид), що є кроком у сюжеті.
+
+4.  **Практичні завдання**: Учні вчаться на практиці, переказуючи тексти (Source 21: `4-klas-ukrayinska-mova-kravtsova-2021-1_s0091`), складаючи розповіді за малюнками (Source 41: `2-klas-ukrmova-bolshakova-2019-2_s0029`) або на основі власного досвіду (Source 10: `5-klas-ukrmova-zabolotnyi-2023_s0232`). Ці вправи вимагають інтуїтивного та свідомого використання обох видів для створення зв'язного тексту.
+
+Отже, шкільний підхід не стільки теоретичний, скільки функціональний: вид дієслова подається як інструмент, необхідний для того, щоб розповісти історію, відрізнити фон від дії, а процес від результату.
+
+## Повна парадигма (Full Paradigm)
+
+У розповіді вид дієслова не є парадигмою відмінювання, а **функціональним вибором** для передачі характеру дії. Основне протиставлення відбувається між недоконаним (процес, фон, повторення) та доконаним (завершений факт, крок у сюжеті) видами.
+
+| Функція в розповіді | Вид дієслова | Питання | Приклад у реченні | Пояснення |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Послідовність дій (ланцюжок сюжету)** | **Доконаний (Perfective)** | Що зробив? Що зробила? | Кіт миттю **видряпався** на дерево і **сховався**. (Source 11) | Оповідач повідомляє про два послідовні завершені факти, що рухають сюжет. |
+| **2. Результат або одноразова дія** | **Доконаний (Perfective)** | Що зробив? | Я **вирішила** записати тобі звісточку. (Source 6) | Дія є завершеним фактом. Результат — повідомлення записане. |
+| **3. Фон, обставини, опис сцени** | **Недоконаний (Imperfective)** | Що робив? Що робила? | За вікном **ішов** дощ, а ми **пили** гарячий чай. <!-- VERIFY --> | Дві тривалі, одночасні дії створюють атмосферу, але не рухають сюжет вперед. |
+| **4. Повторювана або звична дія в минулому** | **Недоконаний (Imperfective)** | Що робив? | Він охоче **розповідав** про себе та Запорожжя. (Source 2) | Це була його звичка, дія, що повторювалася багато разів. |
+| **5. Процес, перерваний іншою дією** | **Недоконаний (Imperfective)** | Що робив? | Коли я **йшла** додому, раптом **побачила** подругу. <!-- VERIFY --> | Тривалий процес (`йшла`) переривається раптовою, завершеною дією (`побачила`). |
+| **6. Одночасні дії** | **Недоконаний (Imperfective)** | Що роблячи? | Співають **ідучи** дівчата. (Source 16) | Основна дія (`співають`) і додаткова (`ідучи`) відбуваються одночасно. |
+| **7. Нарація майбутнього (плани)** | **Доконаний (Perfective)** | Що зроблю? | **Заберу** тебе з аеропорту і ми **поїдемо** до мене. (Source 5) | План складається з послідовності майбутніх завершених дій. |
+
+## Частотність і пріоритети
+
+У будь-якій розповіді (про минулі події чи майбутні плани) обидва види є критично важливими. Пріоритетність для учня рівня B1 така:
+
+1.  **Майстерність доконаного виду минулого часу**: Це основа будь-якої історії. Учень повинен вміти створювати ланцюжок завершених дій: «Я **прокинувся**, **вмився**, **поснідав** і **пішов** на роботу». Без цього розповідь перетворюється на незв'язний опис.
+
+2.  **Використання недоконаного виду минулого часу для фону**: Уміння описати обставини, погоду, стан чи паралельні дії, що відбувалися, коли трапилася основна подія. Наприклад: «Сонце **сяяло**, пташки **співали**, а я **йшов** парком. Раптом я **побачив**...»
+
+3.  **Контраст "процес vs. результат"**: Розуміння різниці між «я **читав** книгу» (процес, можливо, не до кінця) і «я **прочитав** книгу» (результат, книга прочитана). Це важливо для передачі точного змісту. Приклад з прибиранням кімнати є ідеальним для ілюстрації (Source 39).
+
+4.  **Доконаний вид майбутнього часу для планів**: Здатність розповісти про свої плани на майбутнє, використовуючи ланцюжок доконаних дієслів: «Завтра я **зустрінуся** з друзями, ми **підемо** в кіно, а потім **повечеряємо** в кафе» (аналогічно до Source 5).
+
+Форми недоконаного виду для опису звичок у минулому (`раніше я завжди читав...`) менш пріоритетні для базової розповіді, але стають важливими на рівні B2 для глибших описів.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| Я **читав** цю книгу вчора. (натякає на процес, а не на завершення) | Я **прочитав** цю книгу вчора. | Англійська не має граматичної категорії виду, тому `I read this book yesterday` може означати і процес, і результат. В українській мові, якщо дія завершена і є результатом, потрібен доконаний вид. |
+| Вчора я **пішов** додому, **побачив** друга і **поговорив** з ним. Потім я **прийшов** додому і **почав** робити домашнє завдання. | Вчора я **йшов** додому, коли **побачив** друга. Ми **поговорили** трохи. Потім я **прийшов** додому і **почав** робити домашнє завдання. | Використання лише доконаного виду робить розповідь схожою на сухий звіт. Для опису фонової дії (`йшов додому`) використовується недоконаний вид, що робить розповідь природнішою. |
+| Мамо, я **прибрав** у кімнаті цілу годину! | Мамо, я **прибирав** у кімнаті цілу годину! | Якщо акцент робиться на тривалості процесу (`цілу годину`), а не на фінальному результаті, використовується недоконаний вид. Доконаний вид (`прибрав`) підкреслив би лише факт завершення роботи. (Ідея з Source 39). |
+| Де можна **купувати** сувеніри? | Де можна **купити** сувеніри? | Запитання про одноразову можливість (`one-time action`) вимагає доконаного виду. `Купувати` означало б процес або регулярну дію ("де тут зазвичай купують сувеніри?"). (Аналогія з Source 7). |
+| *Він розказував* історію і *заснув*. | Він **розповідав** історію і **заснув**. | Змішування доконаного (`розказав`) і недоконаного (`розповідав`) виду в одній видовій парі є поширеною помилкою. Недоконаний вид `розповідав` описує тривалий процес, який був перерваний доконаною дією `заснув`. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+1.  **Вид — не російська інновація**: Категорія виду є спільною для більшості слов'янських мов і походить ще з праслов'янської мови. Не слід подавати український вид як варіацію російського. Українська система виду розвивалася самостійно.
+
+2.  **Різні видові пари**: Хоча багато видових пар утворюються схожим чином (через префікси `з-`, `по-`, `на-` тощо), існують пари, унікальні для української мови або відмінні від російських аналогів. Наприклад:
+    *   `брати / взяти` (укр) vs `брать / взять` (рос) — схожі.
+    *   `ловити / піймати` (укр) vs `ловить / поймать` (рос) — схожі.
+    *   `шукати / знайти` (укр) vs `искать / найти` (рос) — схожі.
+    *   Однак, вивчення має базуватися виключно на українських прикладах і словниках. Спроби калькувати префіксацію з російської мови можуть призвести до помилок або русизмів.
+
+3.  **Нюанси префіксів**: Той самий префікс може мати дещо інші відтінки значення в українській та російській мовах при творенні доконаного виду. Наприклад, префікс `по-` може вказувати на початок дії (`побігти`), дію, що тривала недовго (`поговорити`), або просто утворювати доконаний вид (`пообіцяти`). Ці нюанси слід вивчати на українському матеріалі.
+
+4.  **Уникати "загальносхіднослов'янських" прикладів**: Приклади для ілюстрації видів мають бути автентично українськими (з української літератури, преси, підручників), а не перекладеними з російської чи взятими з радянських посібників, які часто нівелювали відмінності.
+
+## Природні приклади (Natural Examples)
+
+**Група 1: Ланцюжок завершених дій (Доконаний вид, минулий час)**
+*   у зв'язку з цим ми **вирішили** переїхати. Ми **переїхали** зі Стокгольма... (Source 1: `ext-ulp_youtube-32`)
+*   Собаки **наздогнали** лиса й **схопили** його. (Source 11: `2-klas-ukrmova-bolshakova-2019-1_s0045`)
+*   Він **узяв** його в руки, **роздивився** з різних боків і **сховав** у свою сумку. (Source 21: `4-klas-ukrayinska-mova-kravtsova-2021-1_s0091`)
+
+**Група 2: Фон або повторювана дія (Недоконаний вид, минулий час)**
+*   там я **казала** про різні переваги і недоліки життя у Швеції на той час... (Source 1: `ext-ulp_youtube-32`)
+*   Микита Корж... охоче **розповідав** про себе та Запорожжя. (Source 2: `ext-imtgsh-3`)
+*   Кожен з них **розпоряджався** своїм куреним. (Source 2: `ext-imtgsh-3`)
+
+**Група 3: Взаємодія видів: фон (недоконаний) і подія (доконаний)**
+*   Промайнувши коридор, пес-дослідник **зазирнув** до їдальні. Звідти **доносилися** настільки смачні аромати, що Бруно навіть **вирішив** більше нікуди не йти. (Source 8: `3-klas-ukrainska-mova-savchuk-2020-2_s0042`)
+*   Коли вони **від’їжджали**, біля воріт ще довго **стояв** дід Степан. Сашкові **подумалося**: мабуть, усе на світі знає, що скоро прийде зима... (Source 20: `3-klas-ukrainska-mova-savchuk-2020-2_s0015`)
+
+**Група 4: Розповідь про плани (Доконаний вид, майбутній час)**
+*   **Заберу** тебе з аеропорту і ми **поїдемо** до мене на квартиру, ти трохи **відпочинеш**... нарешті **познайомлю** тебе з Лесею. (Source 5: `ext-ulp_youtube-204`)
+*   Спочатку Христина **купить** овочі на ярмарку, а тоді **надішле** листівку. (Адаптовано з Source 7: `ext-ulp_youtube-212`)
+
+**Група 5: Процес vs. Одноразова дія**
+*   Я там завжди **купую** овочі... (Недоконаний вид: регулярна дія) (Source 7: `ext-ulp_youtube-212`)
+*   Де можна десь тут **купити** фрукти й овочі? (Доконаний вид: одноразова дія) (Source 7: `ext-ulp_youtube-212`)
+
+## Рекомендації для вправ (Activity Concepts)
+
+**Phase 1: Ідентифікація та аналіз**
+1.  **"Детектив розповіді"**: Дати учням короткий текст-розповідь (напр., про пса Бруно з Source 8). Завдання: підкреслити всі дієслова минулого часу. Потім розділити їх на дві колонки: "рушії сюжету" (доконаний вид) і "опис сцени/фону" (недоконаний вид).
+2.  **"Що сталося? Що відбувалося?"**: Надати пари речень (`Я прочитав книгу` / `Я читав книгу`). Учні мають пояснити різницю в значенні та придумати контекст для кожного речення.
+
+**Phase 2: Контрольована практика**
+1.  **"Ланцюжок подій"**: Вчитель починає історію з одного речення з дієсловом доконаного виду: «Одного разу я **прокинувся** дуже рано...». Учні по черзі додають по одному реченню, утворюючи логічний ланцюжок завершених дій: «...я **подивився** у вікно і **побачив** сніг...».
+2.  **"Вибери правильний вид"**: Створити вправи з пропусками, де учень має вибрати між недоконаним і доконаним видом. *Приклад: "Коли я вчора (йшов/пішов) додому, я (зустрічав/зустрів) старого друга. Ми не (бачили/побачили) один одного багато років."*
+3.  **"Від інфінітивів до історії"**: Дати список інфінітивів у довільному порядку (напр., *прокинутися, піти, снідати, зустріти, говорити, повернутися*). Завдання: скласти з них зв'язну розповідь у минулому часі, правильно використовуючи види.
+
+**Phase 3: Вільна практика**
+1.  **"Розповідь за малюнками"**: Надати серію з 3-5 малюнків, що зображують просту історію. Завдання: написати або розповісти історію, що об'єднує ці малюнки, фокусуючись на правильному чергуванні видів для опису фону та послідовності дій (як у Source 41).
+2.  **"Мій минулий тиждень"**: Дати завдання розповісти про найцікавіший день минулого тижня. Заохочувати використовувати недоконаний вид для опису загальної атмосфери (`була чудова погода, я гуляв...`) і доконаний для ключових подій (`...потім я зустрівся з друзями і ми пішли в кіно`).
+
+## Зв'язки з іншими темами
+
+*   **Передумови**:
+    *   **Часи дієслів**: Учень повинен вільно утворювати форми минулого та майбутнього часу.
+    *   **Дієвідміни**: Необхідні для правильного утворення форм теперішнього та майбутнього часу.
+    *   **Дієслівні префікси**: Базове розуміння того, що префікси можуть змінювати значення дієслова, є корисним, оскільки вони є основним способом утворення доконаного виду.
+
+*   **Наступні теми (що це уможливлює)**:
+    *   **Дієприслівники (Gerunds)**: Вид дієприслівника (напр., `читаючи` vs `прочитавши`) безпосередньо залежить від виду вихідного дієслова. Правильне використання дієприслівників (`Прочитавши книгу, я ліг спати`) виводить розповідь на новий рівень складності (Source 16: `ext-other_blogs-49`, Source 32: `10-klas-ukrmova-karaman-2018_s0344`).
+    *   **Складні речення**: Розуміння видів допомагає правильно будувати складні речення, де одна дія є фоном для іншої (напр., "Коли ми **розмовляли**, він раптом щось **згадав**").
+    *   **Автентичне аудіювання та читання**: Без розуміння функцій виду неможливо повноцінно сприймати автентичні тексти, подкасти (як у Source 1) чи літературні твори, де автори майстерно чергують види для створення динаміки.
+
+## Пов'язані статті
+
+*   grammar/a2/past-tense-conjugation
+*   grammar/a2/future-tense-simple-and-compound
+*   grammar/b2/verbal-adverbs-dieprysivnyky
+*   grammar/b1/verbs-of-motion
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
+</knowledge_packet>
+
+---
+
+
+
+## Rules
+
+Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
+
+GRAMMAR RULES:
+- Max 30 words per Ukrainian sentence
+- Max 4 clauses per sentence
+- All grammar constructions allowed
+- Participles allowed
+- Complex subordinate clauses allowed
+
+
+
+- **NO IPA, NO Latin transliteration** — describe sounds by comparison.
+- **Ukrainian quotes: «...»** for Ukrainian text.
+- **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
+- **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
+- **Zero Russian, zero Surzhyk, zero calques.**
+- **Every bold Ukrainian word MUST have an English translation on first use.**
+- **NO stress marks** — a deterministic tool adds them later.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+  > — **Оксана:** Привіт! *(Hi!)*
+  > — **Степан:** Добрий день! *(Good day!)*
+  > — **Оксана:** Як справи? *(How are you?)*
+
+## Output
+
+Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.

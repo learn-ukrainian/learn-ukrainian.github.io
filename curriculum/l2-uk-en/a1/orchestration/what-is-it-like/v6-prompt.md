@@ -1,33 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Too short: 391 words (target: 1200, minimum: 1020)
-- NOTE: Plan expects 4 exercise(s) but content has 3
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -60,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок — Summary`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -252,510 +234,347 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-- **Confirmed (17/17):** який (adj), яка (adj form of який), яке (adj form of який), великий (adj), маленький (adj), новий (adj), старий (adj), гарний (adj), чистий (adj), дорогий (adj), дешевий (adj), поганий (adj), брудний (adj), світлий (adj), темний (adj), а (conj/part/intj), але (conj/part/intj)
-- **Not found:** — (none)
-
-All 17 plan vocabulary words are fully attested in VESUM. No substitutions needed.
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги — Describing a room
-> «Одна кімната велика. У ній є зручний вихід на балкон. Друга — менша, але вона світла й затишна.»
-> Source: Вашуленко, Grade 3, p.130 (§41 «Змінювання прикметників за родами»)
-
-**Note:** Plan cites p.131 «Моя кімната»; RAG confirms adjacent p.130 has the room description. Same lesson unit — page reference is ±1 due to scan pagination. Content fully confirmed. The exact string «Яка твоя кімната? — Моя кімната велика і світла» is a natural A1 derivative of this textbook context.
-
-### Section: Діалоги — Shopping (window shopping)
-> «— Боже ж мій, яка сумка! [...] Це дешевий клатч! [...] Справді, для тебе — дешевий?»; also: «— Скільки вона коштує? — Дев'ять тисяч гривень.» (music shop dialogue with price question)
-> Source 1: Заболотний, Grade 8, p.194 (natural shopping/window-shopping scene with дорогий/дешевий)
-> Source 2: Авраменко, Grade 6, p.18 (§8 «Пряма мова. Діалог» — model shop dialogue)
-
-The Grade 8 extract is too lexically complex for A1. However it confirms that «яка сумка!» + price discussion is a **textbook-attested natural situation**, not an invented one. The Grade 6 shop dialogue confirms the pattern «Скільки це коштує?» as the natural price question. Plan dialogue is pedagogically grounded. ✅
-
-### Section: Який? Яка? Яке? — Gender agreement table
-> «Прикметники чоловічого роду мають закінчення -ий, -ій (гарний чоловік, синій колір), жіночого роду — -а, -я (гарна жінка, синя хустка), середнього роду — -е, -є (гарне пальто, синє небо).»
-> Source: Пономарова, Grade 3, p.99 (§ «Визначаю родові закінчення прикметників»)
-
-> Corroborated by table in Кравцова, Grade 3, p.72: «який? ч. р. → -ий, -ій / яка? ж. р. → -а, -я / яке? с. р. → -е, -є / які? → -і»
-> Source: Кравцова, Grade 3, p.72
-
-**Note:** Вашуленко (p.130) lists neuter ending as «-о, -є» (archaic/regional variant). Пономарова and Кравцова give «-е, -є», which matches the plan's examples (чисте вікно, нове ліжко). Plan is correct — use Пономарова/Кравцова as authority here.
-
-### Section: Прикметники — Antonym pairs
-> «Слова «великий» і «малий», «сідати» і «вставати», «холодний» — «теплий» антонімами звати.»; also «темний — світлий, сідати — уставати» as canonical antonym pairs.
-> Source 1: Кравцова, Grade 3, p.95 (вірш про антоніми — explicit antonym pairs cited)
-> Source 2: Авраменко, Grade 10, p.28 (антоніми — «темний — світлий» as example pair)
-> Source 3: Вашуленко, Grade 3, p.56 (§18 «Протилежні за значенням слова — антоніми»)
-
-Teaching adjectives in antonym pairs is **explicitly the Ukrainian textbook method** from Grade 3 upward. Plan structure is fully textbook-aligned. ✅
-
-### Section: Підсумок — Self-check summary
-No direct textbook match for a self-check summary of adjective gender endings specifically at A1 level. However, the question pattern «Яке закінчення мають прикметники чоловічого/жіночого/середнього роду?» is the standard Кравцова/Пономарова consolidation format (Grade 3). Plan's self-check questions («What ending does a masculine adjective have?») directly mirror this textbook approach. ✅
-
----
+- Confirmed: який, яка, яке, великий, маленький, новий, старий, гарний, чистий, дорогий, дешевий, поганий, брудний, світлий, темний, а, але
+- Not found: [none]
 
 ## Grammar Rules
-
-- **Adjective gender agreement (endings -ий/-а/-е):** Confirmed by Пономарова Grade 3 §«Визначаю родові закінчення прикметників» and Кравцова Grade 3 p.72. Rule: «Прикметники в однині змінюються за родами. Чол. рід: -ий/-ій; Жін. рід: -а/-я; Сер. рід: -е/-є.»
-
-- **Правопис §33** (returned by query): Covers adjective *derivational* suffixes (-н-, -ист-, -ев- etc.) — **not** relevant to this module's gender agreement rule. Gender agreement endings for adjectives are covered in Ukrainian school grammar (morphology), not Правопис 2019 per se. No Правопис section conflict — gender agreement is unambiguous.
-
-- **Adjective agrees in gender with its noun:** Confirmed by Заболотний Grade 11 (coordination/узгодження rule): «Залежне слово вживається у тому самому роді, числі й відмінку, що й головне слово» — covers the agreement principle underlying this module.
-
----
+- Adjective Gender Agreement: Правопис § 33 (and general declension) — Adjectives agree with nouns in gender, number, and case. In the nominative singular: Masculine endings are typically **-ий** (e.g., *новий*), Feminine **-а** (e.g., *нова*), and Neuter **-е** (e.g., *нове*).
+- Conjunction "а" (Contrast): СУМ-11 — "А" is a contrastive conjunction (протиставний сполучник) used to join sentences or parts of sentences that are contrasted with each other, similar to "але" but often used for lighter juxtaposition (e.g., *Стіл новий, а ліжко — старе*).
 
 ## Calque Warnings
-
-- **«гарний» vs «красивий»:** ✅ OK — Антоненко-Давидович explicitly recommends гарний over красивий: *«Який красивий будинок! — не замислюючись над тим що, може краще сказати: гарний (чудовий) будинок»*. Plan correctly uses **гарний**. Do NOT use красивий in this module.
-
-- **«а» (contrast) vs «але» (adversative):** ✅ OK — Антоненко-Давидович confirms «а» is used for contrast in Ukrainian (е.g. «Брати працювали, а я сидів»). Plan correctly distinguishes «а» (contrast/and-but) from «але» (stronger adversative). Note: also confirmed in plan example «Стілець старий, а ліжко — нове» — this is textbook-natural.
-
-- **«дешевий/дорогий»:** ✅ No calque issues. Both are native Ukrainian words with no style guide concerns.
-
----
+- який він / яка вона: OK — These are standard Ukrainian constructions for asking about properties or characteristics when the subject is known.
+- гарна сумка: OK — Natural Ukrainian for "nice/beautiful bag."
+- великий і дешевий: OK — Natural use of adjectives to describe an object.
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|---|---|---|
-| який | A1 | ✅ On target |
-| великий | A1 | ✅ On target |
-| маленький | A1 | ✅ On target |
-| новий | A1 | ✅ On target |
-| старий | A1 | ✅ On target |
-| гарний | A1 | ✅ On target |
-| дорогий | A1 | ✅ On target |
-| поганий | A1 | ✅ On target |
-| темний | A1 | ✅ On target |
-| світлий | A1 | ✅ On target |
-| чистий | A2 | ⚠️ One level above target |
-| брудний | A2 | ⚠️ One level above target |
-| дешевий | A2 | ⚠️ One level above target |
-
-**Assessment on A2-tagged words:** чистий, брудний, and дешевий are PULS-tagged A2, but this is **M09 in A1.2** (not A1.1 beginner). All three are: (a) VESUM-confirmed standard adjectives, (b) part of the pedagogically essential antonym pairs (чистий↔брудний, дорогий↔дешевий), and (c) thematically necessary for describing rooms and shopping. **Recommend retaining all three** — they are appropriate stretch vocabulary for A1.2 and directly serve the module's paired-antonym teaching strategy.
+- великий: A1 — OK
+- маленький: A1 — OK
+- чистий: A1 — OK
+- брудний: A1 — OK
+- дорогий: A1 — OK
+- дешевий: A1 — OK
+- новий/старий: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: What Is It Like?
-**Module:** what-is-it-like | **Phase:** A1.2 [My World]
-**Textbook grades searched:** 1, 2, 3
+# Knowledge Packet: What Is It Like?
+**Module:** what-is-it-like | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/what-is-it-like.md
+
+# Педагогіка A1: What Is It Like
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The core of teaching descriptive language at the A1 level is to establish the **прикме́тник (adjective)** as a word that answers the questions **яки́й? яка́? яке́? які́?** (what kind of?) and describes an **озна́ку предме́та (an attribute of an object)** (Source `3-klas-ukrainska-mova-vashulenko-2020-1_s0120`, Source `2-klas-ukrmova-kravcova-2019-1_s0075`). The native Ukrainian pedagogy, evident in early grade textbooks, avoids dense grammatical tables. Instead, it builds an intuitive understanding of agreement through question-and-answer pairings.
+
+The primary method is to always present adjectives in tight connection with the noun they modify. Exercises in Grade 2 and 3 textbooks consistently model this relationship (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0081`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0123`). For example, a teacher would ask, "Огірок (який?)" and expect the answer "зелений" (Source `2-klas-ukrmova-kravcova-2019-1_s0075`). This constant questioning reinforces the concept of gender and number agreement organically before the formal case system is introduced.
+
+The initial focus is on **які́сні прикме́тники (qualitative adjectives)**—those describing a quality that can exist in degrees (e.g., big, small, good, bad)—as they are the most frequent and intuitive for beginners (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0135`). The concept of comparative (`вищий ступінь`) and superlative (`найвищий ступінь`) is introduced with only the most common, irregular forms (`кращий`, `більший`) at first, mirroring how they appear in natural A1-level conversation (Джерело: `ext-ulp_youtube-199`).
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction of descriptive language must be systematic and build from the concrete to the abstract.
+
+1.  **Step 1: Core Concept & Basic Vocabulary.** Introduce the `прикметник` as a "describing word." Start with a small set of high-frequency, concrete adjectives related to size, quality, and color.
+    *   **Size:** `вели́кий` (big), `мали́й` (small) (Source `ext-ulp_youtube-251`)
+    *   **Quality:** `га́рний` (good/nice), `пога́ний` (bad), `нови́й` (new), `стари́й` (old) (Source `5-klas-ukrmova-uhor-2022-1_s0034`)
+    *   **Color:** `бі́лий` (white), `чо́рний` (black), `черво́ний` (red), `си́ній` (blue) (Джерело: `4-klas-ukrmova-zaharijchuk_s0107`)
+
+2.  **Step 2: Nominative Case Agreement (Gender & Number).** This is the most critical A1 skill. Teach the pattern of endings `-ий, -а, -е, -і` through examples, not rules.
+    *   `гарний стіл` (masculine)
+    *   `гарна ручка` (feminine)
+    *   `гарне вікно` (neuter)
+    *   `гарні книги` (plural)
+    *   This pattern is consistently drilled in early-grade textbooks (Джерело: `5-klas-ukrmova-uhor-2022-1_s0034`).
+
+3.  **Step 3: Expanding Vocabulary & Simple Phrases.** Introduce adjectives for weather, feelings, and taste. Practice them in simple phrases like `Мені подо́бається...` or `Це...`.
+    *   **Weather/Temp:** `холо́дний` (cold), `те́плий` (warm)
+    *   **Feelings:** `весе́лий` (happy), `сумни́й` (sad)
+    *   **Taste:** `смачни́й` (tasty), `соло́дкий` (sweet) (Source `6-klas-ukrmova-avramenko-2023_s0154`)
+
+4.  **Step 4: Introduction to Simple Comparatives.** Introduce only the most essential, suppletive (irregular) forms that are unavoidable in A1 conversation.
+    *   `гарний → кра́щий` (good → better)
+    *   `поганий → гі́рший` (bad → worse)
+    *   `великий → бі́льший` (big → bigger)
+    *   `малий → ме́нший` (small → smaller)
+    *   This is explicitly supported by multiple grammar guides (Джерело: `6-klas-ukrmova-litvinova-2023_s0206`, `6-klas-ukrmova-golub-2023_s0134`). The form `більш/менш + adjective` should be delayed until A2, as it is a more formal, "bookish" construction (Джерело: `11-klas-ukrajinska-mova-glazova-2019_s0022`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often struggle with agreement and transfer habits from English.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `це *гарний* книга` | `це *гарна* книга` | **Gender Agreement Failure.** English adjectives are invariable. Learners must be drilled to match the adjective's ending to the noun's gender. The question `книга (яка?)` helps correct this (Джерело: `5-klas-ukrmova-uhor-2022-1_s0034`). |
+| `мій *новий* друзі` | `мої *нові* друзі` | **Number Agreement Failure.** The learner forgets to make the adjective plural to match the plural noun. The question `друзі (які?)` reinforces the correct form (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0120`). |
+| `*самий кращий* день` | `*найкращий* день` | **Russian Calque.** This is a direct translation of the Russian superlative construction (`самый лучший`). Ukrainian uses the prefix `най-`. This error is a critical one to correct, as it is a hallmark of Surzhyk. Textbooks for natives explicitly forbid using `самий` (Джерело: `6-klas-ukrmova-betsa-2023_s0121`, `6-klas-ukrmova-golub-2023_s0134`). |
+| `Вона співає *гарний*.` | `Вона співає *гарно*.` | **Adjective/Adverb Confusion.** In English, the distinction between "good" (adjective) and "well" (adverb) can be fluid. Ukrainian maintains a strict distinction between `гарний` (describes a noun) and `гарно` (describes a verb). This must be taught explicitly (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0118`). |
+| `Він *великий* за мене.` | `Він *більший* за мене.` | **Using Base Adjective for Comparison.** English uses "bigger than," not "big than." The learner attempts a literal translation without using the comparative form (`вищий ступінь`). It's crucial to teach that comparisons require a special form (`більший`, `кращий`, etc.) (Джерело: `11-klas-ukrajinska-mova-glazova-2019_s0023`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian on its own terms from day one is non-negotiable.
+
+1.  **NO Russian Analogies:** Never teach Ukrainian phonetics or letters by comparing them to Russian (e.g., "Ukrainian `и` is like Russian `ы`"). Teach the sounds of Ukrainian independently, using native audio and phonetic descriptions relevant to an English speaker's palate. The learner must build a new, separate phonetic system for Ukrainian.
+
+2.  **Color Terminology:** Be precise with color names that are false friends with Russian.
+    *   `си́ній` in Ukrainian is a deep, dark blue. The lighter, sky-blue color is `блаки́тний` or `голуби́й`. Historical linguistic sources show that `синій` historically meant "dark" or even "black," which explains its modern usage for dark shades (Джерело: `ext-istoria_movy-78`). Confusing it with Russian `синий` (which covers a broader blue spectrum) leads to unnatural phrasing.
+    *   `черво́ний` is the standard word for "red." The word `кра́сний` is archaic/poetic for "beautiful" and should not be taught as "red," which is its primary meaning in Russian.
+
+3.  **Source of Vocabulary:** When discussing shared Slavic words (e.g., `стодола`, `груба`), present them as part of a shared heritage or as Ukrainian words that influenced neighboring languages like Romanian, rather than defaulting to a narrative of Russian influence (Джерело: `ext-istoria_movy-10`). This correctly positions Ukrainian as a historically significant and independent language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is foundational for A1 learners to describe their immediate world.
+
+**Прикметники (Adjectives):**
+*   ★★★ (Essential): `га́рний` (good, nice), `пога́ний` (bad), `вели́кий` (big), `мали́й`/`мале́нький` (small), `нови́й` (new), `стари́й` (old), `добрий` (kind), `ціка́вий` (interesting), `холо́дний` (cold), `те́плий` (warm). Colors: `бі́лий`, `чо́рний`, `черво́ний`, `си́ній`, `зеле́ний`, `жо́втий`.
+*   ★★ (Useful): `смачни́й` (tasty), `швидки́й` (fast), `пові́льний` (slow), `важки́й` (heavy, difficult), `легки́й` (light, easy), `деше́вий` (cheap), `дороги́й` (expensive), `весе́лий` (cheerful), `сумни́й` (sad).
+*   ★ (Can wait): `чи́стий` (clean), `брудни́й` (dirty), `висо́кий` (tall/high), `низьки́й` (short/low), `широ́кий` (wide), `вузьки́й` (narrow).
+
+**Іменники (Nouns to pair with):**
+*   ★★★: `день`, `дім`, `стіл`, `друг`; `кни́га`, `робо́та`, `вода́`, `їжа`; `вікно́`, `сло́во`, `мі́сто`; `лю́ди`, `ді́ти`, `о́чі`.
+
+**Дієслова (Verbs to use in sentences):**
+*   ★★★: `бу́ти` (to be), `ма́ти` (to have), `хоті́ти` (to want), `люби́ти` (to love), `ба́чити` (to see), `зна́ти` (to know), `подо́батися` (to like).
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises from Ukrainian textbooks are the gold standard for A1 activities. They are simple, repetitive, and build intuition for agreement.
+
+1.  **Question-based Completion (Source: `2-klas-ukrmova-kravcova-2019-1_s0075`)**
+    *   **Format:** The student is given a noun and a question word to prompt the correct adjective form.
+    *   **Example:**
+        *   `Огірок (який?) ______________`
+        *   `Диня (яка?) ______________`
+        *   `Сонце (яке?) ______________`
+        *   `Кабачки (які?) ______________`
+    *   **Pedagogical Value:** Directly links the noun's gender/number to the adjective's ending through the question word.
+
+2.  **Identifying Nouns by Attribute (Source: `2-klas-ukrmova-kravcova-2019-1_s0075`)**
+    *   **Format:** The student fills in the blank with a noun that matches the given adjective.
+    *   **Example:**
+        *   `Колючий ...` (їжак)
+        *   `Великий ...` (ведмідь)
+        *   `Хитра ...` (лисиця)
+        *   `Пухнасте ...` (курчатко)
+    *   **Pedagogical Value:** Reinforces adjective-noun collocations and vocabulary.
+
+3.  **Pattern Drill for Agreement (Source: `5-klas-ukrmova-uhor-2022-1_s0034`)**
+    *   **Format:** The student applies a single adjective to a list of nouns with different genders and numbers.
+    *   **Example:** `(гарний) шарф — дівчина — озеро — квіти.`
+    *   **Expected Output:** `гарний шарф, гарна дівчина, гарне озеро, гарні квіти.`
+    *   **Pedagogical Value:** Isolates and drills the core A1 skill of changing adjective endings to match the noun.
+
+4.  **Fill-in-the-blank from a Word Bank (Source: `4-klas-ukrmova-zaharijchuk_s0089`)**
+    *   **Format:** Students complete a short poem or text by choosing appropriate adjectives from a provided list (`Довідка`).
+    *   **Example:**
+        ```
+        І цей ... та ... запах
+        Прийшов до мене уві сні.
+        А ранком кіт приніс на лапах
+        ... ... перший сніг!
+        Довідка: п’янку, тонкий, ніжний, пухнастий, білий.
+        ```
+    *   **Pedagogical Value:** Combines reading comprehension with adjective agreement in a meaningful context.
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/nominative-case`
+- `pedagogy/a1/asking-questions`
+- `grammar/adjectives/comparative-superlative`
+- `decolonization/surzhyk-and-russianisms`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/what-i-like.md
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 131
-> **Score:** 0.50
->
-> 131
-> 	
->   Перевірте свої міркування за поданим висновком. 
-> крісло
-> зручне
-> Шукаймо 
-> прикметники до назв 
-> предметів інтер’єру!
-> 	 	
-> 3   Склади усну розповідь на тему «Моя кімната», використову-
-> ючи іменники з довідки. Добери до іменників прикметники 
-> і використай їх у тексті. 
-> Кімната, двері, вікно, стеля, стіни, коридор, шафа, стіл, стілець, 
-> тумбочка, ліжко, підлога. 
-> Довідка
-> Навчаюся визначати рід і число прикметників  
-> за іменником
-> Рід і число прикметників визначаються за формами 
-> роду і числа іменників, з якими зв’язані прикметники. 
-> 	 	
-> 4   Прочитайте сполучення слів і порівняйте їх.
-
-## Який? Яка? Яке? (What kind?)
-
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 66
-> **Score:** 0.50
->
-> 66
-> Знайди букви Я і я в рядку.
-> Я 
-> Ф 
-> В 
-> Р 
-> я 
-> р 
-> ф 
-> ь 
-> я 
->  
->  яб 
-> яв 
-> яг 
-> яд 
-> яз 
-> як 
-> ял 
-> ям 
-> ян 
-> яп
->  яр 
-> яс 
-> ят 
-> ях 
-> яш 
-> ящ 
-> яб 
-> яв 
-> яг 
-> яд
->  
-> Знайди слово — підпис до малюнка. 
->  
-> ягода 
-> яма 
-> ясен 
-> маяк
->  
-> ялина 
-> явір 
-> язик 
-> мрія
->  
-> яблуня 
-> якір 
-> ящик 
-> надія
->  
-> Буква я позначає два звуки [йа] на початку слова і складу.
-> М А|Я К
-> Я К
-> [й а]
-> [й а]
-> «Зайві» слова
->  Над болотом летить яблуко, крапля, чапля.
->  У вазі стояла конвалія, мелодія, паляниця.
->  У дворі росла парасоля, тополя, яблуня.
-> 1
-> 2
-> 3
-> 4
-> Я я
-> я|бл у|к о
-
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 35
-> **Score:** 0.50
->
-> 35
-> Книжки треба шанувати. Не можна 
-> їх бруднити, рвати. Пошкоджені книжки 
-> слід полагодити.
-> Прочитай і розкажи 
-> у класі.
-> Я — учителька
-> Я — учитель
-> Якщо речення вимовляють з особ­
-> ливим почуттям, із підсилювальною 
-> інтонацією, то вони стають оклич-
-> ними. У кінці окличних речень став-
-> лять знак оклику.
-> 2   Прочитай текст. Визнач, які це речення 
-> за метою висловлювання.
-> 	 	
-> 3   Розгляньте малюнки. Складіть за одним із них невеликий 
-> текст, використовуючи окличні речення. Прочитайте його 
-> з потрібною інтонацією.
-> 	 	
->   Перебудуй речення так, щоб вони стали спонукальними. Запиши 
-> утворений текст.
->   Запишіть текст, ставлячи потрібні розділові знаки в кінці речень.
-
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 36
-> **Score:** 0.50
->
-> 36
-> Запиши слова з буквою ї. Визнач звуки, які позначає буква ї.
-> Мій — мої, твій — твої, вія — вії, лілія — лілії, лінія — лінії.
->  
-> Утвори і запиши речення за зразком.
-> Зразок. Колюче їжаченя з’їло слимака.
-> Колючий
-> Колюча
-> Колюче
-> Колючі
-> їжак
-> їжачиха
-> їжаченя
-> їжаки
-> їсть
-> з’їла
-> з’їло
-> їдять
-> слимака.
-> жука.
-> равлика.
-> черв’яка.
->  
-> Редагуємо
-> Їжак і жаба допомагають 
-> садівнику поїдати комах. 
->  
-> Запиши речення на вибір, у якому: 1) пояснюється, чому їжак 
-> не робить запаси на зиму; 2) описується поведінка їжачка 
-> восени. 
-> Восени їжачок носить на своїх голках листя, а не їжу. 
-> Їжак не запасає їжу на зиму. Узимку він не їсть, а спить. 
-> Тому і готує звірятко тепле гніздо для зимівлі. 
-> • Склади речення за питаннями.
-> Коли?
-> Хто?
-> Що?
-> Що робить?
-> Де?
-> скЛаД. наГоЛос.
-
-## Прикметники (Common Adjectives)
-
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 31
-> **Score:** 0.33
->
-> СЛОВО 
-> ЗНАЧЕННЯ СЛОВА
-> А
-> У розділі ти будеш вивчати:
-> г
-> СЛОВА, БЛИЗЬКІ
-> ЗА ЗНАЧЕННЯМ
-> СЛОВА, ПРОТИЛЕЖНІ 
-> ЗА ЗНАЧЕННЯМ
-> красивий, гарний, 
-> хороший
-> працювати — 
-> відпочивати
-> говорити, балакати, 
-> розмовляти
-> великий — малий
-> БАГАТОЗНАЧНІ 
-> СЛОВА
-> гребінець у півня — 
-> гребінець у хлопчика — 
-> гребінець хвилі
-> СЛОВА ІЗ ПРЯМИМ 
-> І ПЕРЕНОСНИМ 
-> ЗНАЧЕННЯМ
-> золота сережка —
-> золота осінь
-
-> **Source:** ponomarova, Grade 3
-> **Section:** Сторінка 98
-> **Score:** 0.33
->
-> 98
-> Прикметники в однині змінюються за родами. 
-> Прикметник має такий рід, як іменник, з яким він 
-> зв’язаний. Наприклад: зелена трава, зелене дерево, 
-> зелений кущ.
-> У множині рід прикметника не визначається.
-> 2. Прочитай інформацію Ґаджика. Випиши з виділених
-> речень сполучення іменників з прикметниками. Познач 
-> рід прикметників.
-> 2
-> Одеса — велике місто. За кількістю жителів 
-> воно посідає третє місце в Україні. Морський порт
-> в Одесі є найбільшим у нашій державі. 
-> Назву місту дала французька мова. У ній є 
-> вислів, що означає «достатньо води». Якщо його 
-> прочитати у зворотному напрямку, то отримаємо 
-> слово «одеса».
->                      ж. р.
-> Зразок: чиста вода.
-> 4. Прочитай і спиши текст. Підкресли прикметники разом з 
-> іменниками, з якими вони зв’язані. 
-> Є на Одещині містечко Вилкове.
-
-## Підсумок — Summary
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 18
-> **Score:** 0.25
->
-> 16
-> Й й
-> Бачу Й, й (йот). Чую  [й].
-> а й в а
->  [ •  =   |  –• ]
-> а й с т р и
-> * а й в о р о
-> а
-> о
-> и
-> і
-> Й
-> га
-> ми
-> рі
-> Й
-> н о к
-> лій- 
-> 	
-> ліній-
-> 	
-> май- 
-> чай- 
-> 	
-> гай- 
-> 	
-> чай- 
-> мий	
-> лий 	
-> чай	
-> грай
-> вимий	
-> долий	
-> чайник	
-> зіграй
-> ай
-> ой
-> ий
-> ій
-> а
-> о
-> і
-> і
-> ч
-> й
-> д
-> м
-> й
-> Pidruchnyk.com.ua
-
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 36
-> **Score:** 0.33
->
-> 36
-> Запиши слова з буквою ї. Визнач звуки, які позначає буква ї.
-> Мій — мої, твій — твої, вія — вії, лілія — лілії, лінія — лінії.
->  
-> Утвори і запиши речення за зразком.
-> Зразок. Колюче їжаченя з’їло слимака.
-> Колючий
-> Колюча
-> Колюче
-> Колючі
-> їжак
-> їжачиха
-> їжаченя
-> їжаки
-> їсть
-> з’їла
-> з’їло
-> їдять
-> слимака.
-> жука.
-> равлика.
-> черв’яка.
->  
-> Редагуємо
-> Їжак і жаба допомагають 
-> садівнику поїдати комах. 
->  
-> Запиши речення на вибір, у якому: 1) пояснюється, чому їжак 
-> не робить запаси на зиму; 2) описується поведінка їжачка 
-> восени. 
-> Восени їжачок носить на своїх голках листя, а не їжу. 
-> Їжак не запасає їжу на зиму. Узимку він не їсть, а спить. 
-> Тому і готує звірятко тепле гніздо для зимівлі. 
-> • Склади речення за питаннями.
-> Коли?
-> Хто?
-> Що?
-> Що робить?
-> Де?
-> скЛаД. наГоЛос.
-
-## Grammar Reference
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 103
-> **Score:** 0.50
->
-> 101
-> Повторюємо разом
-> Слова — назви ознак. 
-> Слова, протилежні за 
-> значенням
->  
-> 	 Розглянь малюнки. 
-> Який?
-> Яка? 
-> Яка? 
-> Слова, які відповідають на питання 
-> який? яка? яке? які?, указують на 
-> ознаку предмета.
-> 	 Перепиши перше речення тексту (с. 99). Під-
-> кресли слова — назви ознак кошеняти. По-
-> став до цих слів запитання.
-> 	 Прочитай текст.
-> Чижик-Пижик сидів на високій гілці й 
-> крутив головою. Раптом перед ним про-
-> летіла яскрава бабка. Він хотів її схопи-
-> ти, але зірвався з гілки. Зірвався, за-
-> крутився і полетів!
-> Pidruchnyk.com.ua
+# Педагогіка A1: What I Like
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core pedagogical goal at A1 is to empower learners to express personal preferences simply and confidently. Ukrainian textbooks for native children achieve this through a communicative and iterative approach, which should be adapted for L2 learners.
 
-### Теорія:
-  
+The primary structure is introducing a verb of preference followed by either a noun or another verb in the infinitive. The most fundamental verb, **`любити`** (to love/like), is introduced very early. First-grade materials (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`) present it in simple, contrasting pairs: "**Я люблю** малювати. **Я не люблю** грати в хокей." This immediately establishes the verb and its negation as tools for expressing personal choice.
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+The second key structure, **`Мені подобається`** (I like, lit. "To me it is pleasing"), is introduced as a parallel concept. While grammatically more complex (requiring the Dative case), it is frequently used for general likes and is presented as a chunk (Джерело: `ext-ulp_youtube-290`). Textbooks for slightly older children (2nd-3rd grade) begin to use it in questions like "Що тобі подобається найбільше у школі?" (What do you like most at school?) (Джерело: `2-klas-ukrmova-vashulenko-2019-2_s0011`).
 
-### Іменник як частина мови
-> **Source:** МійКлас — [Іменник як частина мови](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/imennik-iak-chastina-movi-41979)
+The learning process is built around thematic vocabulary clusters related to personal life:
+1.  **Food and Drink:** "Я люблю пироги з вишнями" (I love pies with cherries) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`).
+2.  **Activities and Hobbies:** "Люблю читати книжку я" (I love to read a book) (Джерело: `6-klas-ukrmova-betsa-2023_s0198`), "Кататися на роликах, ... читати книжки, слухати музику" (Rollerblading, reading books, listening to music) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`).
+3.  **School and Learning:** "Мені подобається дізнаватися про вулкани" (I like to learn about volcanoes) (Джерело: `2-klas-ukrmova-vashulenko-2019-2_s0011`).
 
-### Теорія:
+Exercises are practical and action-oriented, moving from simple sentence construction to dialogues and short narratives about oneself (Джерело: `8-klas-ukrmova-zabolotnyi-2025_s0062`, `6-klas-ukrmova-betsa-2023_s0026`). The focus is always on what the learner can *do* with the language.
 
-*www.ua.pistacja.tv*  
- 
-**Що ж ми називаємо іменником?**
-***
-***Дмитро Білоус дав таке визначення іменнику:
-Іменник\! Він узяв собі на плечі
-Велике діло — визначати речі…
-Зверни увагу\!
-Назву «*іме
+## Послідовність введення (Introduction Sequence)
 
-... (truncated for context window)
+The introduction must be carefully staged to avoid cognitive overload, moving from grammatically simple structures to more complex ones.
+
+-   **Step 1: The Verb `любити` + Noun (Accusative Case)**
+    Introduce `Я люблю` (I love/like) with simple, concrete nouns. This is the most direct parallel to the English "I like X." At this stage, use only feminine nouns that have a clear Accusative `-у` ending or masculine inanimate nouns that don't change.
+    -   `Я люблю **музику**.` (I like music.) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0077`)
+    -   `Я люблю **свою рідну землю**.` (I love my native land.) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0014`)
+    -   Explain this as a strong, general liking, akin to "love" or a deeply held preference.
+
+-   **Step 2: `любити` + Verb (Infinitive)**
+    Immediately expand on Step 1 by showing that `любити` can be followed by an action. This is the gateway to talking about hobbies. The infinitive form, always ending in `-ти`, is presented as a fixed unit.
+    -   `Я люблю **малювати**.` (I love to draw.) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+    -   `Катерина любить **читати**.` (Kateryna loves to read.) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
+    -   Reinforce with the negative: `Я не люблю **грати** в хокей.` (I don't like to play hockey.) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`).
+
+-   **Step 3: The `подобатися` Construction (Dative + Nominative)**
+    Introduce `Мені подобається` as a common alternative for "I like." It's crucial to present `Мені подобається` as a memorized chunk (Джерело: `ext-ulp_youtube-290`). Explain its logic: "To me, X is pleasing."
+    -   Start with a noun: `Мені подобається **кімната** моєї старшої сестри.` (I like my older sister's room.) (Джерело: `6-klas-ukrmova-betsa-2023_s0126`). The liked object (`кімната`) is in the Nominative case (the subject of the sentence).
+    -   Then add an infinitive: `Мені подобається **дізнаватися** про вулкани...` (I like to learn about volcanoes...) (Джерело: `2-klas-ukrmova-vashulenko-2019-2_s0011`).
+
+-   **Step 4: Distinguishing `любити` and `подобатися`**
+    Once both forms are familiar, clarify the nuance. `любити` is for passions, deep affection, and established favorites. `подобатися` is for general liking, first impressions, and objective appeal. A podcast for learners explicitly makes this distinction, noting `любити` is a "very strong phrase" whereas `подобатися` is the more general "like" (Джерело: `ext-ulp_youtube-290`). For A1, the rule of thumb is: use `любити` for hobbies you are passionate about, and `подобатися` for things you generally enjoy.
+
+-   **Step 5: Expanding Hobby Vocabulary with Prepositions**
+    Introduce specific constructions for activities that require prepositions. These must be taught as fixed phrases.
+    -   `**грати у** + [sport]`: `грати у футбол` (to play football) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`).
+    -   `**грати на** + [instrument]`: `грати на гітарі` (to play the guitar) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`).
+    -   `**кататися на** + [vehicle/equipment]`: `кататися на велосипеді` (to ride a bicycle) (Джерело: `ext-ulp_youtube-107`), `кататися на роликах` (to rollerblade) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers often map their native grammar onto Ukrainian, leading to predictable errors.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я подобаюся футбол.` | `Мені подобається футбол.` | This is a direct translation of "I like football." The learner assumes `подобатися` is a regular transitive verb like English "to like" and conjugates it for "I" (`я`). The correct structure requires the Dative pronoun `мені` ("to me") and the verb agrees with the thing being liked, `футбол` (Джерело: `ext-other_blogs-10`). |
+| `Я люблю грати футбол.` | `Я люблю грати у футбол.` | The preposition `у`/`в` is required when playing a sport (`грати у`). English structure ("play football") lacks a preposition, so learners often omit it. This rule is explicitly demonstrated in textbook examples (Джерело: `6-klas-ukrmova-betsa-2023_s0020`). |
+| `Я люблю грати на футбол.` | `Я люблю грати у футбол.` | Learners overgeneralize the `грати на` rule for musical instruments (`грати на гітарі`) and apply it incorrectly to sports. The distinction between `у` (sports) and `на` (instruments) must be explicitly taught (Джерело: `6-klas-ukrmova-betsa-2023_s0020`). |
+| `Мені подобаюся фільми.` | `Мені подобаються фільми.` | The learner correctly uses the Dative `Мені` but fails to make the verb agree with the plural subject `фільми`. The verb must be in the 3rd person plural (`подобаються`), not singular. English "I like" doesn't change based on the object, causing this interference. |
+| `Я люблю читати книга.` | `Я люблю книгу.` / `Я люблю читати книги.` | The verb `любити` takes a direct object in the Accusative case. Learners often forget to decline the noun, leaving it in the Nominative (`книга`). This must be drilled with examples like `любити (що?) країну` (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0044`). |
+| `Я хочу бути актриса.` | `Я хочу бути актрисою!` | This is a more advanced error, but relevant. The instrumental case is used for professions after "to be". A learner might use the nominative case. The example `Я хочу бути актрисою!` appears in source material (Джерело: `5-klas-ukrlit-avramenko-2022_s0303`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**This is a mandatory section for all pedagogical briefs.** The goal is to build a learner's understanding of Ukrainian *from a Ukrainian foundation*, not as a derivative of another language, particularly Russian.
+
+1.  **Teach Ukrainian on its Own Terms:** Never introduce Ukrainian grammar or vocabulary by comparing it to Russian. Avoid phrases like, "Ukrainian `любити` is like Russian `любить`," or "Ukrainian `и` is like Russian `ы`." This frames Ukrainian as a variant rather than a distinct language and builds an incorrect mental model.
+
+2.  **Use Authentic Ukrainian Sources:** All examples, vocabulary, and pedagogical models should come from modern Ukrainian textbooks (e.g., Большакова, Вашуленко, Угор) and media created for Ukrainians or Ukrainian learners (e.g., Ukrainian Lessons Podcast). This ensures cultural and linguistic authenticity. The source material for this brief is exclusively Ukrainian (Джерела: 1-50).
+
+3.  **Correctly Frame Shared Vocabulary:** When encountering cognates (words that are similar in Ukrainian and Russian, like `читати`/`читать`), present them as part of a shared Common Slavic heritage. Do not describe them as "Russian words used in Ukrainian" or "borrowings from Russian." A podcast source notes that about a third of Slavic vocabulary is shared, but this does not imply a parent-child language relationship (Джерело: `ext-ulp_youtube-139`).
+
+4.  **Emphasize Different Usage Patterns:** Even when words are cognates, their usage frequency and grammatical behavior can differ significantly. For example, the `Мені подобається` construction is central to expressing "like" in Ukrainian. While a similar structure exists in Russian (`Мне нравится`), its idiomatic use, frequency, and social context are not identical. Teach the Ukrainian pattern `Мені подобається` based on its own merits and prevalence in Ukrainian speech (Джерело: `ext-ulp_youtube-290`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for the A1 level and is drawn from the provided source materials (Grades 1-6 and beginner podcasts).
+
+### Дієслова (Verbs)
+
+-   `любити` ★★★ (to love, like) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+-   `подобатися` ★★★ (to like, be pleasing to) (Джерело: `6-klas-ukrmova-betsa-2023_s0126`)
+-   `читати` ★★★ (to read) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
+-   `дивитися` ★★★ (to watch) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0077`)
+-   `слухати` ★★★ (to listen to) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0077`)
+-   `грати` ★★ (to play) (Джерело: `6-klas-ukrmova-betsa-2023_s0020`)
+-   `малювати` ★★ (to draw) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+-   `кататися` ★★ (to ride, go for a ride) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`)
+-   `співати` ★★ (to sing) (Джерело: `5-klas-ukrmova-golub-2022_s0027`)
+-   `подорожувати` ★ (to travel) (Джерело: `5-klas-ukrmova-golub-2022_s0028`)
+-   `плавати` ★ (to swim) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0049`)
+-   `їсти` ★ (to eat) (Джерело: `ext-ulp_youtube-290`)
+-   `пити` ★ (to drink) (Джерело: `ext-ulp_youtube-290`)
+
+### Іменники (Nouns)
+
+-   `книга` / `книжки` ★★★ (book/books) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
+-   `музика` ★★★ (music) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0077`)
+-   `фільм` ★★★ (film, movie) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0077`)
+-   `футбол` ★★ (football) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
+-   `велосипед` ★★ (bicycle) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`)
+-   `літо` ★★ (summer) (Джерело: `ext-ulp_youtube-290`)
+-   `осінь` ★★ (autumn) (Джерело: `ext-ulp_youtube-290`)
+-   `чай` ★★ (tea) (Джерело: `ext-ulp_youtube-290`)
+-   `гітара` ★ (guitar) (Джерело: `6-klas-ukrmova-betsa-2023_s0020`)
+-   `ролики` ★ (rollerblades) (Джерело: `6-klas-ukrmova-betsa-2023_s0026`)
+-   `шахи` ★ (chess) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises are models for the types of activities the content writer should create.
+
+1.  **Simple Sentence Completion (Verb + Infinitive)**
+    This exercise from a Grade 8 textbook (adaptable for A1) reinforces the core structure of liking an action.
+    *   **Prompt format:** "Підготуйте коротку розповідь про себе ... використовуючи складені дієслівні присудки." (Prepare a short story about yourself... using compound verbal predicates.)
+    *   **Example List:**
+        -   `люблю читати (спостерігати)`
+        -   `хочу поїхати в Карпати`
+        -   `умію готувати`
+        -   `мрію побудувати дім`
+        -   `почав грати у футбол`
+    *   **Source:** `8-klas-ukrmova-zabolotnyi-2025_s0062`
+
+2.  **Collocation Building (Verb + Noun)**
+    This exercise forces learners to connect the correct verb with a list of nouns, building natural-sounding phrases.
+    *   **Prompt format:** "Складіть словосполучення. Озвучте складені словосполучення." (Create word combinations. Voice the created combinations.)
+    *   **Example:**
+        -   **ДИВИТИСЯ:** `серіал, фільм, мультфільм, балет, телепередачу...`
+        -   **СЛУХАТИ:** `концерт, музику, класичну музику, оперу, сучасну музику...`
+        -   **ЧИТАТИ:** `підручник, словник, детектив, журнал, електронний лист...`
+    *   **Source:** `5-klas-ukrmova-uhor-2022-1_s0077`
+
+3.  **Structured Sentence Building**
+    This activity guides the learner from simple concepts to a full sentence, practicing word order and verb conjugation.
+    *   **Prompt format:** "Складіть речення за зразком." (Create sentences according to the model.)
+    *   **Example:**
+        -   **Input:** `Томаш — кататися на ковзанах — льодовий майданчик.`
+        -   **Output:** `Томаш катається на ковзанах на льодовому майданчику.`
+        -   *Further expansion:* `Узимку Томаш катається на ковзанах на міському льодовому майданчику.`
+    *   **Source:** `6-klas-ukrmova-betsa-2023_s0020`
+
+4.  **Communicative Question & Answer**
+    This exercise places the target language in a realistic, personal context, encouraging learners to talk about themselves.
+    *   **Prompt format:** "Дайте усну відповідь на запитання." (Give an oral answer to the questions.)
+    *   **Example Questions:**
+        -   `Як тебе звати?`
+        -   `Які шкільні уроки тобі подобаються?`
+        -   `Чим ти любиш займатися у вільний час?`
+    *   **Source:** `6-klas-ukrmova-betsa-2023_s0026`
+
+## Пов'язані статті (Related Articles)
+
+-   `pedagogy/a1/dative-case`
+-   `pedagogy/a1/accusative-case`
+-   `pedagogy/a1/verb-conjugation-present-tense`
+-   `pedagogy/a1/infinitive-verbs`
+-   `vocabulary/a1/hobbies-and-leisure`
+-   `vocabulary/a1/food-and-drink`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -768,7 +587,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Який? Яка? Яке? (What kind?)` (~300 words)
 - `## Прикметники (Common Adjectives)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок — Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -823,7 +641,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -921,77 +739,38 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Діалоги (Dialogues) (~330 words total)
+- P1 (~60 words): [Introduction to the scene — setting the stage at a weekend book fair. Brief context on why Taras and Sofia are looking at items like books, maps, and posters.]
+- P2 (~100 words): [Dialogue 1: At the Book Fair. Taras and Sofia browse items. Taras: "Який великий плакат!" Sofia: "А яка цікава книга!" Use specific plan nouns: новий атлас (m), цікава книга (f), старе фото (n), великий плакат (m), маленька листівка (f).]
+- P3 (~70 words): [Transition and context shift to a second dialogue based on describing a room (referencing Вашуленко p.131). Sofia describes her room to Taras using the M08 nouns.]
+- P4 (~100 words): [Dialogue 2: Моя кімната. Sofia: "Моя кімната велика і світла." Taras: "А стіл?" Sofia: "Стіл новий, а ліжко старе." Focus on immediate agreement: велика кімната, світла кімната, новий стіл, старе ліжко.]
 
-- P1 (~35 words): Scene-setting intro. Adjectives describe what nouns ARE LIKE. Two dialogues show this in real life: first, a room at home; second, browsing a book fair. No grammar yet — just exposure.
+## Який? Яка? Яке? (What kind?) (~340 words total)
+- P1 (~80 words): [Introducing the concept of the 'describing word' — прикметник. Explain that it answers the question "What kind?" and that this question word must change based on the gender of the noun, following the мій/моя/моє pattern learned in M08.]
+- P2 (~80 words): [Detailing Masculine and Feminine agreement. Masculine nouns take 'який?' and adjectives ending in -ий (новий стіл, великий плакат). Feminine nouns take 'яка?' and adjectives ending in -а (нова книга, велика листівка).]
+- P3 (~80 words): [Detailing Neuter agreement. Neuter nouns take 'яке?' and adjectives ending in -е (нове фото, чисте вікно). Note that while soft-stem endings like -ій/-я/-є exist, they will be covered in M10 (Colors) — for now, focus on the -ий/-а/-е pattern.]
+- P4 (~100 words): [Linguistic nuance: The rule from Пономарова p.98: 'Прикметник має такий рід, як іменник, з яким він зв’язаний.' Explain that the noun is the 'boss' and the adjective is the 'assistant' that copies its gender.]
+- <!-- INJECT_ACTIVITY: quiz-question-word --> [Quiz, choosing correct question word (який/яка/яке) for nouns, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-adjective-endings --> [Fill-in, adding correct adjective endings (-ий, -а, -е) to given roots, 10 items]
 
-- Dialogue 1 (~90 words): Room description (Вашуленко Grade 3 p.131 pattern). Тарас asks, Оля answers. 5 exchanges: — Яка твоя кімната? — Велика і світла. — А стіл? — Стіл новий. — А ліжко? — Воно старе. — Вікно? — Вікно чисте і велике. — А стілець? — Маленький, але зручний. Nouns: кімната (f), стіл (m), ліжко (n), вікно (n), стілець (m) — all M08 nouns, now with adjectives attached.
+## Прикметники (Common Adjectives) (~350 words total)
+- P1 (~90 words): [Introducing the 'Opposites Strategy' for vocabulary. Present the primary size and age pairs: великий ↔ маленький (big ↔ small) and новий ↔ старий (new ↔ old). Examples: великий стіл, маленька ручка, новий телефон, старе фото.]
+- P2 (~90 words): [Expanding the set with quality and light pairs: гарний ↔ поганий (nice ↔ bad), чистий ↔ брудний (clean ↔ dirty), світлий ↔ темний (light ↔ dark). Examples: гарний день, чиста вода, світла кімната.]
+- P3 (~90 words): [Introducing value pairs: дорогий ↔ дешевий (expensive ↔ cheap). Connect back to the shopping dialogue in the plan: "Яка гарна сумка! — Так, але вона дорога."]
+- P4 (~80 words): [Grammar spotlight: The contrastive 'а' (and/but) vs the parallel 'і' (and). Explain that 'а' is used when comparing opposites: "Стіл новий, а ліжко старе." Explain 'і' for combined qualities: "Кімната велика і світла."]
+- <!-- INJECT_ACTIVITY: match-up-opposites --> [Match-up, pairing adjective opposites like великий with маленький, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-room-description --> [Fill-in, describing a room using a word bank of nouns and adjectives, 6 items]
 
-- P2 (~30 words): Bridge note. Same question word — Який? Яка? Яке? — but a new setting: a weekend book fair. Watch how the question word shifts with each noun.
-
-- Dialogue 2 (~100 words): Book fair. Тарас і Софія browse. 6 exchanges: — Який цікавий атлас! — Так, але він дорогий. — А ця книга? Яка вона? — Нова і дешева. — Яке гарне фото! — Справді. А плакат? — Великий і яскравий. — Подивись — маленька листівка. Яка вона? — Стара, але гарна. Items: атлас (m), книга (f), фото (n), плакат (m), листівка (f) — five genders represented deliberately.
-
-- P3 (~30 words): Observation prompt. In Dialogue 2: атлас → який, книга → яка, фото → яке. The question word matched the noun. That pattern is the entire grammar point for this module.
-
-- Exercise (~45 words): **Comprehension check (3 true/false statements)** — "Атлас дешевий. True or false?" / "Книга стара. True or false?" / "Листівка маленька. True or false?" Forces learners to re-read dialogues for adjective meaning before studying the pattern formally.
-
----
-
-## Який? Яка? Яке? (What kind?) (~330 words total)
-
-- P1 (~60 words): Core rule. In Ukrainian, the question "What kind?" changes its ending to match the noun's gender — just like мій/моя/моє from M08. Masculine noun → Який? (Який стіл? → Великий стіл.) Feminine noun → Яка? (Яка книга? → Нова книга.) Neuter noun → Яке? (Яке вікно? → Чисте вікно.) Three questions, three answers — same gender in each pair.
-
-- P2 (~70 words): Ending pattern laid out clearly. Adjectives change the same way as the question word. Masculine: -ий (великий, новий, чистий, дорогий). Feminine: -а (велика, нова, чиста, дорога). Neuter: -е (велике, нове, чисте, дороге). Source: Пономарова Grade 3 p.98: "Прикметник має такий рід, як іменник, з яким він зв'язаний." The adjective copies the gender of its noun — always.
-
-- P3 (~50 words): Pattern comparison to мій/моя/моє. Learners already know: мій стіл, моя книга, моє вікно. Adjectives follow the exact same rule. If you can say мій стіл, you can say великий стіл. The gender is in the noun — the adjective just agrees.
-
-- Exercise (~45 words): **Fill-in (10 items)** — add correct ending: нов__ книга → нова; велик__ стіл → великий; чист__ вікно → чисте; стар__ атлас → старий; дорог__ листівка → дорога; нов__ фото → нове; маленьк__ плакат → маленький; гарн__ кімната → гарна; дешев__ олівець → дешевий; чист__ небо → чисте.
-
-- P4 (~55 words): Soft-stem preview note. Some adjectives end in -ій/-я/-є (синій, синя, синє). These follow the same gender logic but with a soft stem. They appear in M10 (Colors) — don't worry about them now. For this module: всі прикметники end in hard -ий/-а/-е. One pattern, one module.
-
-- P5 (~50 words): Three mini-sentences modeling full descriptions using M08 nouns + M09 adjectives together: У мене є великий стіл. (m) / Моя кімната маленька, але гарна. (f) / Вікно велике і чисте. (n) — Learners see the adjective placed both before and after the noun. Both positions are correct in Ukrainian.
-
----
-
-## Прикметники (Common Adjectives) (~330 words total)
-
-- P1 (~45 words): Strategy note. Ukrainian vocabulary is easier to learn in opposites — your brain stores both at once. This module's core adjectives come in six pairs. Each pair, one example sentence shows both words in use together with an M08 noun.
-
-- P2 (~120 words): Six adjective pairs with example sentences for each:
-  1. великий ↔ маленький — Стіл великий, а стілець маленький.
-  2. новий ↔ старий — Книга нова, але атлас старий.
-  3. гарний ↔ поганий — Яка гарна листівка! А цей плакат поганий.
-  4. чистий ↔ брудний — Вікно чисте, а підлога брудна.
-  5. дорогий ↔ дешевий — Атлас дорогий. Книга дешева.
-  6. світлий ↔ темний — Кімната світла і велика.
-  Each pair presented as: bold headword (m form) ↔ bold headword (m form), then one sentence showing both in action. Feminine and neuter forms illustrated where the example sentence uses f or n nouns.
-
-- Exercise (~40 words): **Match-up (6 pairs)** — match adjective opposites: великий / маленький / новий / старий / чистий / брудний / дорогий / дешевий / світлий / темний / гарний / поганий. Reinforces both vocabulary and the concept of opposition.
-
-- P3 (~70 words): Building full descriptions — combining M08 nouns with M09 adjectives into connected sentences. Model paragraph about a room: У мене є маленька кімната. Стіл новий, а ліжко старе. Вікно велике і чисте. Стілець — маленький і старий, але зручний. — Point out two connectors: і = and (both true in parallel); а = and/but (contrast between two things). Example: Стіл новий, а стілець старий. vs. Кімната мала і темна.
-
-- Exercise (~55 words): **Fill-in (6 items)** — describe a room using given noun + adjective pair. Learner writes the full sentence with correct agreement: (вікно / чистий) → Вікно чисте. (кімната / світлий) → Кімната світла. (стіл / новий) → Стіл новий. (ліжко / старий) → Ліжко старе. (стілець / маленький) → Стілець маленький. (книга / цікавий) → Книга цікава.
-
----
-
-## Підсумок — Summary (~330 words total)
-
-- P1 (~50 words): Module recap. Today's core: adjectives in Ukrainian change their ending to match the gender of the noun they describe. Three endings to know now: -ий (m), -а (f), -е (n). The question words Який? Яка? Яке? follow the same pattern. The adjective always agrees with its noun.
-
-- Self-check Q&A (~100 words):
-  - What ending does a masculine adjective have? → -ий (великий, новий, чистий)
-  - What ending does a feminine adjective have? → -а (велика, нова, чиста)
-  - What ending does a neuter adjective have? → -е (велике, нове, чисте)
-  - Which question word goes with книга? → Яка? (Яка книга?)
-  - Which question word goes with стіл? → Який? (Який стіл?)
-  - Which question word goes with вікно? → Яке? (Яке вікно?)
-  - What's the difference between і and а? → і = and (parallel); а = and/but (contrast)
-  - Name three adjective opposites. → великий/маленький, новий/старий, дорогий/дешевий
-
-- Exercise (~60 words): **Quiz (6 items)** — choose Який / Яка / Яке for each noun: стіл → Який; кімната → Яка; фото → Яке; плакат → Який; книга → Яка; ліжко → Яке. Immediate application of the gender-agreement rule before the module closes.
-
-- P2 (~60 words): What's coming next. Colors in Ukrainian (M10) introduce soft-stem adjectives: синій (m) / синя (f) / синє (n) — the same gender logic, different stem. After M10, describing objects will be fully unlocked: великий синій стіл, нова червона книга, чисте біле вікно. The pattern you learned today carries forward into every module that follows.
-
-- P3 (~60 words): Production prompt. Write 3 sentences describing your real room or your desk using today's adjectives. Try to use: one masculine noun + adjective, one feminine noun + adjective, one neuter noun + adjective. Use і or а to connect at least one pair. No English. Think in Ukrainian: Який мій стіл? → Мій стіл ____. Don't translate — describe directly.
+## Підсумок — Summary (~300 words total)
+- P1 (~150 words): [Recap of the module's core logic. 
+  - Masculine: який? → -ий (великий)
+  - Feminine: яка? → -а (велика)
+  - Neuter: яке? → -е (велике)
+  - Use 'а' to show contrast between two things.]
+- P2 (~150 words): [Self-check Q&A:
+  - Як буде "What kind of book?" (Яка книга?)
+  - Яке закінчення (ending) має чоловічий рід? (-ий)
+  - Як сказати "The table is big, but the chair is small"? (Стіл великий, а стілець маленький.)
+  - Завдання: Опишіть вашу кімнату. Використовуйте 3 речення і прикметники великий, світлий, новий.]
 
 Grand total: ~1320 words
 </skeleton>

@@ -1,86 +1,50 @@
 ## Linguistic Scan
-Found several critical phonetic errors related to manual stress marks. The writer manually inserted combining acute accents (U+0301) throughout the text. While this violates the pipeline rule (stress should be handled deterministically downstream), the critical issue is that several of these marks are factually wrong and teach incorrect pronunciation:
-- `у мене́` and `у тебе́` (stress shifts to the first syllable after prepositions: `у ме́не`, `у те́бе`).
-- `йо́го` (stress is `його́`).
-- `Дру́жина` (stress is `дружи́на` for "wife"; `дру́жина` is an Old East Slavic retinue).
-- `Катя́` (stress is `Ка́тя`).
-- `На́зви` (as an imperative verb "Name!", the stress is `Назви́`. `На́зви` is the plural noun "names").
-
-No Russianisms, Surzhyk, or Calques were found. The vocabulary is authentic.
+No linguistic errors found.
 
 ## Exercise Check
-- `match-family-vocab` is correctly placed after the "Сім'я" section.
-- `quiz-u-tebe-ye` is correctly placed after the "У мене є" section.
-- `fill-in-possessives` is correctly placed after the "Мій, моя, моє" section.
-- `fill-in-family-dialogue` is also correctly placed at the end of the grammar section.
-- All marker IDs match the plan's `activity_hints`.
-- The exercises perfectly align with the targeted grammatical and vocabulary milestones taught immediately prior to their injection points.
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` is placed after section 1. This activity tests possessive pronouns (`мій`, `твій`), which are not explicitly taught until section 4.
+- `<!-- INJECT_ACTIVITY: match-family -->` is placed correctly after section 2.
+- `<!-- INJECT_ACTIVITY: quiz-possession -->` is placed correctly after section 3.
+- `<!-- INJECT_ACTIVITY: fill-in-possessives -->` is placed correctly after section 4.
+Issue found: The first marker must be moved to the end to respect the PPP flow and test the concept only after it has been taught.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all outline points exactly, including the specific `Anna Ep6-7` dialogues and the "NO single word for grandparents" rule. |
-| 2. Linguistic accuracy | 6/10 | Critical phonetic errors due to incorrect manual stress marks: `«У мене́ є...»`, `Як йо́го зва́ти?`, `**Дру́жина**`, `Катя́`, and `На́зви` (imperative). |
-| 3. Pedagogical quality | 10/10 | Exceptional integration of authentic textbook references (Grade 1 Захарійчук, Grade 3 Вашуленко) to explain grammar simply and naturally. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items are naturally embedded in the text. |
-| 5. Exercise quality | 10/10 | Inject markers are present, correctly named, and sequentially logical. |
-| 6. Engagement & tone | 9/10 | Highly engaging, but contains a slightly dramatic/corporate-speak meta-comment at the end: "This is yours now." |
-| 7. Structural integrity | 8/10 | The text is beautifully formatted but significantly exceeds the 1200 word target (1604 words is >30% over budget). Additionally, the manual generation of stress marks violates the pipeline formatting rules. |
-| 8. Cultural accuracy | 10/10 | Perfectly explains the cultural nuance of `сім'я` vs `родина` and the lack of a generic "grandparents" word. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, communicative, and highly authentic for the A1 level. |
+| 1. Plan adherence | 9/10 | Covers all plan points completely, but the dialogue fill-in activity hint (testing possessives) is mapped to a marker placed before possessives are taught. |
+| 2. Linguistic accuracy | 10/10 | Flawless Ukrainian throughout. No Russianisms, Surzhyk, or calques. `його/її` correctly described as unchanging. |
+| 3. Pedagogical quality | 9/10 | The PPP flow is mostly excellent, but placing an activity that tests unlearned grammar (`твій/мій` in section 1) violates the step-by-step progression. |
+| 4. Vocabulary coverage | 10/10 | 100% of required and recommended vocabulary from the plan is introduced naturally in the text. |
+| 5. Exercise quality | 8/10 | Marker placement for `fill-in-dialogue` asks learners to produce target language before the practice phase. |
+| 6. Engagement & tone | 10/10 | Warm, natural teaching voice. "Expressing possession in Ukrainian requires a completely different mindset..." is great pedagogical framing. |
+| 7. Structural integrity | 10/10 | All H2 headings match the plan exactly. Word count is 1456 (above 1200 target). |
+| 8. Cultural accuracy | 10/10 | Correctly notes that asking about siblings is natural small talk in Ukraine, and explains the lack of a single overarching word for "grandparents". |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly realistic and natural, matching the Anna episode references perfectly. |
 
 ## Findings
-[Linguistic accuracy] [critical]
-Location: `«У тебе́ є брати́ чи се́стри?»` and `«У мене́ є...»`
-Issue: Incorrect phonetic stress. After prepositions, the stress on these pronouns shifts to the first syllable (у ме́не, у те́бе).
-Fix: Change to `«У те́бе є брати́ чи се́стри?»` and `«У ме́не є...»`.
-
-[Linguistic accuracy] [critical]
-Location: `Як йо́го зва́ти?`
-Issue: Incorrect phonetic stress. The stress falls on the second syllable (його́).
-Fix: Change to `Як його́ зва́ти?`.
-
-[Linguistic accuracy] [critical]
-Location: `Це моя сестра Катя́ і мої́ брати`
-Issue: Incorrect phonetic stress. The stress falls on the first syllable (Ка́тя).
-Fix: Change to `Це моя сестра Ка́тя і мої́ брати`.
-
-[Linguistic accuracy] [critical]
-Location: `**Дру́жина** means "wife."`
-Issue: Incorrect phonetic stress. "Wife" is `дружи́на`. (`дру́жина` means an ancient military retinue).
-Fix: Change to `**Дружи́на** means "wife."`.
-
-[Linguistic accuracy] [critical]
-Location: `- На́зви 5 чле́нів сім'ї́ украї́нською.`
-Issue: Incorrect phonetic stress. As an imperative verb ("Name!"), the stress is `Назви́`. `На́зви` is a plural noun ("names").
-Fix: Change to `- Назви́ 5 чле́нів сім'ї́ украї́нською.`.
-
-[Structural integrity] [major]
-Location: End of file (`Deterministic word count: 1604 words`)
-Issue: The module exceeds the 1200 word target by over 30% (1604 words).
-Fix: Length reduction is required. While an automated bulk cut is impossible via a simple regex fix without ruining the pedagogy, some meta-fluff will be removed as a token fix.
-
-[Engagement & tone] [minor]
-Location: `Use this as a template — swap in your real family, your real names, your real details. This is yours now.`
-Issue: The phrase "This is yours now" is unnecessary corporate/gamified language.
-Fix: Remove the phrase.
+[5. Exercise quality] [major]
+Location: `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` placed immediately after `## Діалоги — Dialogues`
+Issue: The activity tests possessive pronouns (`твій`, `мій`), which are not explicitly taught until section 4 (`## Мій, моя, моє — Possessive Pronouns`). Placing this exercise in section 1 breaks the PPP flow as it tests a concept before teaching it.
+Fix: Move `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` to the end of the module, after the `Підсумок — Summary` section.
 
 ## Verdict: REVISE
-The module is pedagogically brilliant and incorporates textbook references masterfully, but it fails the severity gate due to factually incorrect manual stress marks that teach the wrong pronunciation for core A1 vocabulary (у ме́не, його́, дружи́на, Ка́тя, назви́). These must be corrected before the module can be deployed.
+The content is grammatically and linguistically flawless, but the first activity marker is placed too early, violating the pedagogical sequence. Moving it to the end resolves this entirely.
 
 <fixes>
-- find: "«У тебе́ є брати́ чи се́стри?»"
-  replace: "«У те́бе є брати́ чи се́стри?»"
-- find: "«У мене́ є...»"
-  replace: "«У ме́не є...»"
-- find: "Як йо́го зва́ти?"
-  replace: "Як його́ зва́ти?"
-- find: "Це моя сестра Катя́ і мої́ брати"
-  replace: "Це моя сестра Ка́тя і мої́ брати"
-- find: "**Дру́жина** means \"wife.\""
-  replace: "**Дружи́на** means \"wife.\""
-- find: "На́зви 5 чле́нів сім'ї́ украї́нською."
-  replace: "Назви́ 5 чле́нів сім'ї́ украї́нською."
-- find: "Use this as a template — swap in your real family, your real names, your real details. This is yours now."
-  replace: "Use this as a template — swap in your real family, your real names, your real details."
+- find: |
+    mention your siblings.
+
+    <!-- INJECT_ACTIVITY: fill-in-dialogue -->
+
+    ## Сім'я — Family Vocabulary
+  replace: |
+    mention your siblings.
+
+    ## Сім'я — Family Vocabulary
+- find: |
+    state who is in your family.
+  replace: |
+    state who is in your family.
+
+    <!-- INJECT_ACTIVITY: fill-in-dialogue -->
 </fixes>

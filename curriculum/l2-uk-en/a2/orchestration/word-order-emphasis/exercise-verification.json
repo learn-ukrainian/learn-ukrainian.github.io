@@ -1,0 +1,405 @@
+{
+  "total_items": 207,
+  "grounded_items": 142,
+  "ungrounded": [
+    {
+      "word": "помила",
+      "exercise_type": "quiz",
+      "context": "— Хто помив посуд?\n— Посуд помила Оленка. (Що тут рема?)",
+      "role": "context"
+    },
+    {
+      "word": "учора",
+      "exercise_type": "quiz",
+      "context": "— Де ти був учора?\n— Вчора я був удома. (Що тут рема?)",
+      "role": "context"
+    },
+    {
+      "word": "іде",
+      "exercise_type": "match-up",
+      "context": "Дощ іде в Києві.",
+      "role": "context"
+    },
+    {
+      "word": "маркований",
+      "exercise_type": "group-sort",
+      "context": "Емфатичний (маркований) порядок",
+      "role": "context"
+    },
+    {
+      "word": "історії",
+      "exercise_type": "error-correction",
+      "context": "Початок історії: Весна прийшла в місто.",
+      "role": "context"
+    },
+    {
+      "word": "десять",
+      "exercise_type": "fill-in",
+      "context": "десять",
+      "role": "answer"
+    },
+    {
+      "word": "років",
+      "exercise_type": "quiz",
+      "context": "Що означає фраза «років двадцять»?",
+      "role": "context"
+    },
+    {
+      "word": "двадцять",
+      "exercise_type": "quiz",
+      "context": "Що означає фраза «років двадцять»?",
+      "role": "context"
+    },
+    {
+      "word": "годин",
+      "exercise_type": "match-up",
+      "context": "сім годин",
+      "role": "answer"
+    },
+    {
+      "word": "км",
+      "exercise_type": "fill-in",
+      "context": "Це точно 5 км. До центру _____ кілометрів.",
+      "role": "context"
+    },
+    {
+      "word": "приблизно",
+      "exercise_type": "fill-in",
+      "context": "Це приблизно 5 км. До центру кілометрів _____.",
+      "role": "context"
+    },
+    {
+      "word": "вісім",
+      "exercise_type": "fill-in",
+      "context": "вісім",
+      "role": "answer"
+    },
+    {
+      "word": "працював",
+      "exercise_type": "fill-in",
+      "context": "Він працював рівно 8 годин. Він працював _____ годин.",
+      "role": "context"
+    },
+    {
+      "word": "близько",
+      "exercise_type": "fill-in",
+      "context": "Він працював близько 8 годин. Він працював годин _____.",
+      "role": "context"
+    },
+    {
+      "word": "роки",
+      "exercise_type": "match-up",
+      "context": "два роки",
+      "role": "answer"
+    },
+    {
+      "word": "сім",
+      "exercise_type": "match-up",
+      "context": "сім годин",
+      "role": "answer"
+    },
+    {
+      "word": "комусь",
+      "exercise_type": "match-up",
+      "context": "Контраст: я вірю тобі, а не комусь іншому",
+      "role": "context"
+    },
+    {
+      "word": "іншому",
+      "exercise_type": "match-up",
+      "context": "Контраст: я вірю тобі, а не комусь іншому",
+      "role": "context"
+    },
+    {
+      "word": "хтось",
+      "exercise_type": "match-up",
+      "context": "Фокус: саме Тарас, а не хтось інший",
+      "role": "context"
+    },
+    {
+      "word": "інший",
+      "exercise_type": "match-up",
+      "context": "Фокус: саме Тарас, а не хтось інший",
+      "role": "context"
+    },
+    {
+      "word": "нейтрально",
+      "exercise_type": "match-up",
+      "context": "Нейтрально: я повідомляю факт",
+      "role": "context"
+    },
+    {
+      "word": "повідомляю",
+      "exercise_type": "match-up",
+      "context": "Нейтрально: я повідомляю факт",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "match-up",
+      "context": "Фокус: саме я, а не мій брат",
+      "role": "context"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "match-up",
+      "context": "Фокус: саме я, а не мій брат",
+      "role": "context"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "match-up",
+      "context": "Книгу я вже читав.",
+      "role": "answer"
+    },
+    {
+      "word": "йому",
+      "exercise_type": "fill-in",
+      "context": "_____ я вірю, а йому — ні.",
+      "role": "context"
+    },
+    {
+      "word": "її",
+      "exercise_type": "fill-in",
+      "context": "її",
+      "role": "answer"
+    },
+    {
+      "word": "бачили",
+      "exercise_type": "fill-in",
+      "context": "Не _____ ми бачили, а іншу людину.",
+      "role": "context"
+    },
+    {
+      "word": "іншу",
+      "exercise_type": "fill-in",
+      "context": "Не _____ ми бачили, а іншу людину.",
+      "role": "context"
+    },
+    {
+      "word": "людину",
+      "exercise_type": "fill-in",
+      "context": "Не _____ ми бачили, а іншу людину.",
+      "role": "context"
+    },
+    {
+      "word": "вас",
+      "exercise_type": "fill-in",
+      "context": "вас",
+      "role": "answer"
+    },
+    {
+      "word": "чекали",
+      "exercise_type": "fill-in",
+      "context": "Саме _____ ми чекали цілу годину!",
+      "role": "context"
+    },
+    {
+      "word": "цілу",
+      "exercise_type": "fill-in",
+      "context": "Саме _____ ми чекали цілу годину!",
+      "role": "context"
+    },
+    {
+      "word": "годину",
+      "exercise_type": "fill-in",
+      "context": "Саме _____ ми чекали цілу годину!",
+      "role": "context"
+    },
+    {
+      "word": "їм",
+      "exercise_type": "fill-in",
+      "context": "їм",
+      "role": "answer"
+    },
+    {
+      "word": "розповів",
+      "exercise_type": "fill-in",
+      "context": "_____ я вже розповів цю історію.",
+      "role": "context"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)",
+      "role": "context"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)",
+      "role": "context"
+    },
+    {
+      "word": "нас",
+      "exercise_type": "group-sort",
+      "context": "нас",
+      "role": "answer"
+    },
+    {
+      "word": "пане",
+      "exercise_type": "quiz",
+      "context": "— Пане професоре, _____ я дуже поважаю!",
+      "role": "context"
+    },
+    {
+      "word": "професоре",
+      "exercise_type": "quiz",
+      "context": "— Пане професоре, _____ я дуже поважаю!",
+      "role": "context"
+    },
+    {
+      "word": "поважаю",
+      "exercise_type": "quiz",
+      "context": "— Пане професоре, _____ я дуже поважаю!",
+      "role": "context"
+    },
+    {
+      "word": "оленко",
+      "exercise_type": "quiz",
+      "context": "— Оленко, _____ я завжди вірю!",
+      "role": "context"
+    },
+    {
+      "word": "друже",
+      "exercise_type": "quiz",
+      "context": "— Друже, цю книгу я дав _____.",
+      "role": "context"
+    },
+    {
+      "word": "дав",
+      "exercise_type": "quiz",
+      "context": "— Друже, цю книгу я дав _____.",
+      "role": "context"
+    },
+    {
+      "word": "шановні",
+      "exercise_type": "quiz",
+      "context": "— Шановні гості, це _____ я сьогодні чекав.",
+      "role": "context"
+    },
+    {
+      "word": "гості",
+      "exercise_type": "quiz",
+      "context": "— Шановні гості, це _____ я сьогодні чекав.",
+      "role": "context"
+    },
+    {
+      "word": "чекав",
+      "exercise_type": "quiz",
+      "context": "— Шановні гості, це _____ я сьогодні чекав.",
+      "role": "context"
+    },
+    {
+      "word": "мамо",
+      "exercise_type": "quiz",
+      "context": "— Мамо, _____ я люблю найбільше.",
+      "role": "context"
+    },
+    {
+      "word": "люблю",
+      "exercise_type": "quiz",
+      "context": "— Мамо, _____ я люблю найбільше.",
+      "role": "context"
+    },
+    {
+      "word": "пані",
+      "exercise_type": "quiz",
+      "context": "— Пані Маріє, _____ я довіряю цей проект.",
+      "role": "context"
+    },
+    {
+      "word": "маріє",
+      "exercise_type": "quiz",
+      "context": "— Пані Маріє, _____ я довіряю цей проект.",
+      "role": "context"
+    },
+    {
+      "word": "довіряю",
+      "exercise_type": "quiz",
+      "context": "— Пані Маріє, _____ я довіряю цей проект.",
+      "role": "context"
+    },
+    {
+      "word": "проект",
+      "exercise_type": "quiz",
+      "context": "— Пані Маріє, _____ я довіряю цей проект.",
+      "role": "context"
+    },
+    {
+      "word": "вільний",
+      "exercise_type": "fill-in",
+      "context": "Українське _____ має вільний порядок слів.",
+      "role": "context"
+    },
+    {
+      "word": "створити",
+      "exercise_type": "fill-in",
+      "context": "Інверсія допомагає створити сильний _____.",
+      "role": "context"
+    },
+    {
+      "word": "фіксований",
+      "exercise_type": "true-false",
+      "context": "В українській мові порядок слів завжди фіксований, як в англ",
+      "role": "context"
+    },
+    {
+      "word": "наприкінці",
+      "exercise_type": "true-false",
+      "context": "Рема (нова інформація) зазвичай стоїть наприкінці речення.",
+      "role": "context"
+    },
+    {
+      "word": "відстань",
+      "exercise_type": "true-false",
+      "context": "Фраза «п'ять кілометрів» означає приблизну відстань.",
+      "role": "context"
+    },
+    {
+      "word": "українському",
+      "exercise_type": "quiz",
+      "context": "Де зазвичай стоїть найважливіша (нова) інформація в українсь",
+      "role": "context"
+    },
+    {
+      "word": "виділяють",
+      "exercise_type": "quiz",
+      "context": "Як українці виділяють слово голосом?",
+      "role": "context"
+    },
+    {
+      "word": "який",
+      "exercise_type": "quiz",
+      "context": "Який порядок слів є базовим (нейтральним)?",
+      "role": "context"
+    },
+    {
+      "word": "базовим",
+      "exercise_type": "quiz",
+      "context": "Який порядок слів є базовим (нейтральним)?",
+      "role": "context"
+    },
+    {
+      "word": "нейтральним",
+      "exercise_type": "quiz",
+      "context": "Який порядок слів є базовим (нейтральним)?",
+      "role": "context"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "quiz",
+      "context": "Як найкраще представити нового героя або подію в розповіді?",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 13,
+    "not_tested": [
+      "виділяти",
+      "кінець"
+    ]
+  },
+  "all_grounded": false
+}

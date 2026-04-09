@@ -3,50 +3,50 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 10
-  evidence: Flawlessly adhered to the `content_outline`. The writer effectively bypassed
-    errors in the plan, such as correcting the claim that `нежить` is feminine (plan
-    had `нежиті (for runny nose, f)`), and ins
+  evidence: The module covers all content outlines. It even successfully corrected
+    the plan's grammatical error ("від нежиті" -> "від нежитю") and turned it into
+    a teaching moment. Included all required vocabular
 - dimension: 2
   name: Linguistic accuracy
   score: 9
-  evidence: Almost perfect, but uses the rare/non-standard adjective form `болячий`
-    ("болячий зуб") instead of the standard `болючий`. The writer's correction of
-    the Russianism "від кашлю/нежиті" to "проти кашлю/
+  evidence: Grammar is perfect throughout. Excellent explanation of the masculine
+    gender of "нежить". Minor orthography error inherited from the plan ("З учора"
+    instead of "Відучора").
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: Exceptional. The note explaining that `рука` and `нога` encompass the
-    whole limb is a brilliant pedagogical insight for English speakers. Furthermore,
-    the writer correctly ignored the plan's instructi
+  evidence: Brilliant presentation of "У мене болить" as a fixed chunk rather than
+    a grammar puzzle. Correctly and explicitly warns against translating the English
+    phrase "My head hurts" literally.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items are naturally embedded into
-    the dialogues and phrases without reading like a dictionary.
+  evidence: All required and recommended words are integrated naturally into the instructional
+    text and dialogues.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Activity markers match the plan's hints perfectly and are positioned precisely
-    after the concepts are taught.
+  evidence: All four markers are injected at logical points right after the concepts
+    are introduced, matching the plan's activity hints exactly.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: Professional, direct, and authoritative. The writer avoids fluff and focuses
-    purely on high-signal explanations and cultural norms.
+  evidence: Tone is encouraging and informative. Provides excellent cultural context
+    regarding the directness of communication at the doctor's office.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Headers exactly match the plan's `content_outline`. The deterministic
-    word count is safely within bounds.
+  evidence: All Markdown formatting, blockquotes, and notes are clean. Word count
+    of 1547 easily clears the 1200 minimum target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The writer explicitly catches a Russianism/calque ("від нежиті" -> "проти
-    нежитю") and explains why `проти` is the authentic Ukrainian pattern. This is
-    elite decolonized teaching.
+  evidence: Accurately describes the cultural expectation that Ukrainian patients
+    answer doctors directly with symptoms rather than using English-style small talk
+    ("I am not feeling well today").
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: The two dialogues are highly realistic, capturing exact exchanges a learner
-    would have in a Ukrainian pharmacy or clinic without sounding robotic.
+  evidence: Dialogues are natural, transactional, and realistic. Speakers are named
+    properly and the flow makes perfect sense.
 findings: []

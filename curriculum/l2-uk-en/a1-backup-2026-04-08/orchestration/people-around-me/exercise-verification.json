@@ -1,0 +1,26 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "бачити",
+      "викладач",
+      "вчитель",
+      "друг",
+      "знати",
+      "колега",
+      "любити",
+      "лікар",
+      "подруга",
+      "покупець",
+      "продавець",
+      "сусід",
+      "чекати",
+      "шукати"
+    ]
+  },
+  "all_grounded": true
+}

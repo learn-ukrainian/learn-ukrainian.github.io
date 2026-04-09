@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers all required sections, but missed the "Practice table
+    with 5 verb pairs for full conjugation" in the "Дієвідмінювання у майбутньому
+    часі" section, and skipped the "dialogue between t
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'A critical error exists in explaining the synthetic future formation:
+    the text instructs learners to take the full infinitive and add "-тиму" (which
+    would produce "працюватитиму"), contradicting its o'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The explanation of why perfective verbs lack a present tense is excellent
+    and intuitive. However, the contradictory rule for forming the synthetic future
+    creates severe pedagogical confusion.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is seamlessly integrated into the prose in a natural
+    way.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The writer included an extra `fill-in-simple-future` marker not requested
+    by the plan's `activity_hints`, causing a mismatch.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and uses excellent metaphors (like the
+    bridge metaphor for aspect) without relying on gamified corporate filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All Markdown headings match the plan exactly. The word count (4759) well
+    exceeds the 4000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Demonstrates deep understanding of Ukrainian worldview (the focus on result
+    vs process). Authentic examples (Kharkiv university, Taras Shevchenko park).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and multi-turn, though one required dialogue was
+    omitted.
+findings: []

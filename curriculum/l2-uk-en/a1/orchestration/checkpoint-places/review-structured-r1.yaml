@@ -3,55 +3,46 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: 'All 5 content_outline sections present in correct order. Що ми знаємо
-    covers M28-M34 self-check (plan: "Self-check covering M28-M34"). Читання provides
-    connected reading with all patterns (plan: "a to'
+  evidence: The plan requires "автобусом" for transport, but the module uses the calqued
+    phrase "на автобусі". All other points covered.
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: All 142 common words VESUM-verified ✓. 13 proper nouns correctly not in
-    VESUM. No Russianisms, surzhyk, or calques found via `search_style_guide`. Case
-    endings correct throughout (e.g., "у Києві" — lo
+  score: 7
+  evidence: The imperative "Ідіть" (to walk) is incorrectly translated as "Go by subway"
+    in the dialogue. Ukrainian requires "Їдьте" for vehicular transport. Also uses
+    colloquial "на автобусі".
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Strong PPP flow: Що ми знаємо (self-assessment) → Читання (input) → Граматика
-    (systematization) → Діалог (production). Every grammar pattern has 2-4 examples.
-    Pattern comparisons are excellent: "у шко'
+  score: 9
+  evidence: Good progression and clear summaries, though the "strictly used" claim
+    about в/на is slightly simplified.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'Plan specifies no required/recommended vocabulary (empty lists — this
-    is a checkpoint review module). All vocabulary from M28-M34 appears naturally
-    in prose: euphony pairs (у/в, і/й, з/із/зі), city pl'
+  evidence: All review vocabulary from the plan is naturally integrated into the text
+    and dialogue.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 4 activity markers match 4 plan hints in type and focus. Good spread across
-    sections. Each marker follows its teaching content. Plan's activity_hints specify
-    concrete items (8-item quiz, 6-blank fill-
+  score: 10
+  evidence: Four exercise markers correctly placed after their respective grammar/reading
+    blocks.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: 'No motivational filler ("Numbers unlock..." etc.). No meta-commentary.
-    Opening is direct: "Seven modules of A1.5 are behind you... test yourself." The
-    reading passage tells a concrete story (Tomas fro'
+  score: 8
+  evidence: 'Violates the prompt''s tone rule by including a self-congratulatory opener:
+    "Congratulations on reaching the end of the A1.5 phase!".'
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'All H2 headings present and correctly ordered. Word count 1572 vs 1200
-    target ✓. Clean markdown throughout EXCEPT: the `<div class="dialogue">` in the
-    Читання section is embedded inside a blockquote ('
+  score: 10
+  evidence: Word count is 1636 (comfortably over the 1200 target). All required headings
+    are present.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. Real Kyiv locations (Хрещатик, Арсенальна,
-    Лавра, площа Незалежності). Odesa landmarks (Дерибасівська вулиця, Потьомкінські
-    сходи, порт, пляж). No "like Russian b
+  evidence: Contextually rich scenarios (tourist in Kyiv, polite register, Odesa landmarks).
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Main dialogue (Марко/Оксана) has named speakers with distinct roles —
-    Марко is a curious, polite tourist; Оксана is a helpful, concise local. Multi-turn
-    (12 exchanges), natural progression from greeti
+  score: 8
+  evidence: Good transactional scenario but contains the critical linguistic error
+    ("Ідіть" vs "Їдьте") which disrupts the reality of the exchange.
 findings: []

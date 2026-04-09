@@ -149,44 +149,8 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: грамати́чний рід
-  translation: gender
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: позавідмінювані
-  translation: outside the declension groups
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: парні предме́ти
-  translation: paired objects
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
 - word: імени́ни
   translation: name day
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: поми́ї
-  translation: slops
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: рукави́ці
-  translation: mittens
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сходи
-  translation: stairs
   expression: false
   pos: ім.
   gender: ''
@@ -197,8 +161,8 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: су́тінки
-  translation: twilight
+- word: сходи
+  translation: stairs
   expression: false
   pos: ім.
   gender: ''
@@ -221,17 +185,29 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
+- word: добро́
+  translation: goodness
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: со́вість
+  translation: conscience
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дру́жба
+  translation: friendship
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: ща́стя
   translation: happiness
   expression: false
   pos: ім.
   gender: с.
-  verified: true
-- word: смі́ли́вість
-  translation: bravery
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: молоко́
   translation: milk
@@ -245,8 +221,8 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: бо́рошно
-  translation: flour
+- word: зо́лото
+  translation: gold
   expression: false
   pos: ім.
   gender: с.
@@ -257,14 +233,8 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: срі́бло́
-  translation: silver
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мо́лодь
-  translation: youth
+- word: кре́йда
+  translation: chalk
   expression: false
   pos: ім.
   gender: ж.
@@ -276,7 +246,7 @@ vocabulary:
   gender: с.
   verified: true
 - word: дітвора́
-  translation: children
+  translation: kids
   expression: false
   pos: ім.
   gender: ж.
@@ -287,74 +257,68 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: Гове́рла
-  translation: Hoverla
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Дуна́й
-  translation: Danube
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Харків
-  translation: Kharkiv
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: скля́нка
-  translation: glass
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пля́шка
-  translation: bottle
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: здоро́в'я
-  translation: health
+- word: ли́стя
+  translation: leaves
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: одні́
-  translation: one / a pair of
+- word: мо́лодь
+  translation: youth
   expression: false
-  pos: числ.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
-- word: дво́є
-  translation: two
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: тро́є
-  translation: three
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: Тест на одиницю
-  translation: Test of One
+- word: вставні голосні
+  translation: fleeting vowels
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: радості життя
-  translation: joys of life
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: збірні числівники
+  translation: collective numerals
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: красоти природи
-  translation: beauties of nature
+- word: одні двері
+  translation: one door
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: двоє дверей
+  translation: two doors
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: троє ножиць
+  translation: three pairs of scissors
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мої окуляри зламалися
+  translation: my glasses broke
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зачинені на ключ
+  translation: locked with a key
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: готівкові гроші
+  translation: cash
   expression: true
   pos: ''
   gender: ''

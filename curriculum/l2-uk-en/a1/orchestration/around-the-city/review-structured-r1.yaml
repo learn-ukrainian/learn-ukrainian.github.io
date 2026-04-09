@@ -2,56 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 4 content_outline sections present in correct order. Dialogue 1 (asking
-    directions) and Dialogue 2 (describing route) match plan exactly — same speakers,
-    same structures. "Де і куди разом" covers '
+  score: 10
+  evidence: Covers all content outline points faithfully, integrates required and
+    recommended vocabulary, and exceeds word targets (1702 words).
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'All 126 VESUM-verified words confirmed correct. Case usage throughout
-    is accurate: `у парку` (locative), `в магазин` (accusative), `автобусом` (instrumental),
-    `біля мого дому` (genitive). Imperative f'
+  score: 8
+  evidence: Excellent and highly natural Ukrainian usage overall, but contains a grammatical
+    classification error ("adjectives" instead of "adverbs" for "далеко"/"близько")
+    and a minor euphony issue ("З замку").
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Excellent PPP flow: each section opens with a situation (dialogue/narrative),
-    extracts the pattern (table, examples), then points to practice (activity marker).
-    The Dialogue 1 explanation walks throug'
+  score: 9
+  evidence: Provides a superb breakdown of locative vs. accusative navigation and
+    effective usage of sequence words. The deduction is strictly for the grammatical
+    misclassification.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All `required` vocab used naturally: `пішки` (multiple contexts — Dialogue
-    2, Мій район, examples), `хвилина` (п''ять хвилин пішки — multiple times), `район`
-    (section title + У моєму районі), `центр` ('
+  evidence: Seamlessly includes all required (`пішки`, `хвилина`, `район`, `центр`,
+    `вибачте`) and recommended (`дістатися`, `ідіть`, `їдьте`, `поруч`) words in context.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 activity markers matching all 4 plan activity_hints. Types match: fill-in
-    (directions), quiz (де/куди), fill-in (transport), match-up (navigation). The
-    inline self-check in Summary is well-designed '
+  score: 10
+  evidence: The four injected activity markers align perfectly with the four hints
+    in the plan and are placed logically after the relevant instruction.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no "magic of," no gamified language. The opening
-    is direct and practical: "Navigating a Ukrainian city means juggling two questions
-    at once." Dialogues have named speakers wit'
+  score: 10
+  evidence: The tone is helpful, encouraging, and grounded in a highly relevant real-world
+    scenario (Lviv walking tour).
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 sections present and ordered per plan: Діалоги → Де і куди разом
-    → Мій район → Підсумок. Clean markdown with proper div classes for dialogues,
-    tip/note blocks, table formatting. Word count 12'
+  evidence: Clean markdown structure. All H2 headings match the plan, and the word
+    count is robust (1702 vs target of 1200).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms throughout. No "like Russian but..."
-    comparisons. City examples use Ukrainian cities (Lviv, Kyiv's Khreshchatyk). Street
-    names honor Ukrainian cultural figures (Фр
+  evidence: Excellent decolonized instruction regarding "автовокзал" vs "залізничний
+    вокзал" and the clear explanation of why "вибачаюся" is an unnatural Russian calque.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: 'Dialogue 1: natural stranger-on-street interaction with appropriate politeness
-    register (вибачте, formal imperatives). Multi-turn with escalation (library →
-    museum, walking → metro). Dialogue 2: two f'
+  evidence: Dialogues represent authentic, polite, and practical street interactions
+    with named speakers.
 findings: []

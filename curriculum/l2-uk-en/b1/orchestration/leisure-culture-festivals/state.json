@@ -1,0 +1,55 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "leisure-culture-festivals",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T23:04:47.596635+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T23:04:47.616055+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T23:05:30.631903+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T23:10:31.712878+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T23:19:30.972273+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T23:19:30.972571+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-09T23:21:45.411527+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T23:21:45.478800+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-09T23:21:45.491034+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-09T23:22:21.061022+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-09T23:22:21.061211+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-09T23:22:21.546214+00:00"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The plan explicitly lists "галушки" as an iconic cultural food to include,
+    but it is missing from the prose.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No linguistic errors found. Gender assignments (каша, f; м'ясо, n; борщ,
+    m) are accurate, and natural vocabulary ("зазвичай", "щоранку") is used.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: Exercises test concepts before they are taught. `fill-in-z-chunks` tests
+    "вода" and "м'ясо" right after the first dialogue, before the Food/Drinks sections
+    introduce them. `quiz-meals-dishes` asks abo
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is present naturally. From the recommended list,
+    "піца" is missing.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Exercises match the plan's focus well, but suffer from the pedagogical
+    placement issues noted above.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Some meta-commentary is present ("A learner who knows борщ... is not just
+    vocabulary-trained — they carry a signal of respect"). This tells rather than
+    shows.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: A stray HTML comment `<!-- A2-word -->` was left in the prose after "компот".
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of UNESCO's recognition of Ukrainian borshch and
+    natural cultural context for salo and varanyky.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, multi-turn, and effectively use the target chunks
+    ("Кашу з молоком чи без? З молоком, звичайно!").
+findings: []

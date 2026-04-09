@@ -1,0 +1,392 @@
+version: '1.0'
+module: indefinite-negative-pronouns
+level: a2
+inline:
+- id: group-sort-sort-pronouns-by-series
+  type: group-sort
+  instruction: Розподіліть слова за їхніми групами та префіксами/суфіксами
+  groups:
+  - label: Суфікс -сь (реальне, але невідоме)
+    items:
+    - хтось
+    - щось
+    - десь
+    - колись
+  - label: Частка -небудь (абсолютно будь-яке)
+    items:
+    - хто-небудь
+    - що-небудь
+    - де-небудь
+  - label: Префікс будь- (без обмежень)
+    items:
+    - будь-хто
+    - будь-що
+    - будь-який
+  - label: Префікс де- (частина цілого)
+    items:
+    - дехто
+    - дещо
+    - деякий
+  - label: Префікс ні- (заперечення)
+    items:
+    - ніхто
+    - ніщо
+    - ніде
+    - ніколи
+- id: fill-in-complete-sentences-with-the-appropriate-or-form
+  type: fill-in
+  instruction: Вставте правильне слово в речення
+  items:
+  - sentence: Я ______ не бачу в темряві.
+    answer: нічого
+    options:
+    - нічого
+    - щось
+    - ніщо
+    - будь-що
+  - sentence: ______ тихо стукає у двері.
+    answer: Хтось
+    options:
+    - Хтось
+    - Ніхто
+    - Будь-хто
+    - Абихто
+  - sentence: Дай мені ______ почитати ввечері.
+    answer: що-небудь
+    options:
+    - щось
+    - що-небудь
+    - ніщо
+    - будь-що
+  - sentence: ______ з нас уже бачив цей новий фільм.
+    answer: Дехто
+    options:
+    - Хтось
+    - Дехто
+    - Ніхто
+    - Будь-хто
+  - sentence: ______ може це зробити. Це дуже просто.
+    answer: Будь-хто
+    options:
+    - Хтось
+    - Дехто
+    - Будь-хто
+    - Абихто
+  - sentence: Ми ______ не здаємося.
+    answer: ніколи
+    options:
+    - колись
+    - ніколи
+    - десь
+    - ніде
+  - sentence: Він поклав ключі ______ на стіл, але не пам'ятає де.
+    answer: десь
+    options:
+    - ніде
+    - десь
+    - будь-де
+    - абияк
+  - sentence: Я не хочу працювати з ______. Мені потрібен справжній професіонал.
+    answer: абиким
+    options:
+    - кимось
+    - ніким
+    - будь-ким
+    - абиким
+- id: true-false-identify-correct-double-negation-usage-in-sentences
+  type: true-false
+  instruction: Правда чи ні? Визначте, чи правильно побудоване речення із запереченням.
+  items:
+  - statement: Я нічого бачу.
+    correct: false
+    explanation: 'В українській мові обов''язкове подвійне заперечення. Правильно:
+      Я нічого НЕ бачу.'
+  - statement: Ніхто не знає відповіді на це питання.
+    correct: true
+    explanation: 'Правильно: є заперечний займенник «ніхто» і частка «не».'
+  - statement: Він ніколи спить вдень.
+    correct: false
+    explanation: 'Бракує частки «не». Правильно: Він ніколи НЕ спить вдень.'
+  - statement: Вона ні про що не думає.
+    correct: true
+    explanation: Правильно. Прийменник «про» розриває займенник «ніщо», і є частка
+      «не».
+  - statement: Я говорив з ніким.
+    correct: false
+    explanation: 'Прийменник «з» має стояти всередині. Правильно: Я говорив НІ З КИМ.'
+  - statement: Мені нічого не треба купувати.
+    correct: true
+    explanation: Правильно побудоване подвійне заперечення.
+  - statement: Ми ніде бачили його вчора.
+    correct: false
+    explanation: 'Обов''язково треба додати «не». Правильно: Ми ніде НЕ бачили його.'
+  - statement: Ніхто не прийшов на нашу вечірку.
+    correct: true
+    explanation: Правильне речення з подвійним запереченням.
+- id: quiz-pronoun-context
+  type: quiz
+  instruction: Оберіть правильний неозначений або заперечний займенник за контекстом
+  items:
+  - question: В кімнаті порожньо. Тут ______ немає.
+    options:
+    - нікого
+    - когось
+    - будь-кого
+    - декого
+    correct: 0
+  - question: Я загубив свій телефон ______. Допоможи мені його знайти.
+    options:
+    - десь
+    - ніде
+    - ніщо
+    - хтось
+    correct: 0
+  - question: Цей тест такий легкий, що ______ може його написати на відмінно.
+    options:
+    - будь-хто
+    - дехто
+    - ніхто
+    - абихто
+    correct: 0
+  - question: Я не голодний. Я ______ не хочу їсти.
+    options:
+    - нічого
+    - щось
+    - будь-що
+    - дещо
+    correct: 0
+  - question: ______ забув свою чорну парасольку на столі в кафе.
+    options:
+    - Хтось
+    - Ніхто
+    - Будь-хто
+    - Абихто
+    correct: 0
+  - question: Ти бачив ______ у парку біля школи?
+    options:
+    - кого-небудь
+    - декого
+    - нікого
+    - нічим
+    correct: 0
+  - question: Він робить свою роботу ______, тому вона завжди така погана.
+    options:
+    - абияк
+    - якось
+    - ніколи
+    - колись
+    correct: 0
+  - question: ______ з нас люблять читати книги, а інші люблять дивитися фільми.
+    options:
+    - Дехто
+    - Ніхто
+    - Будь-хто
+    - Хтось
+    correct: 0
+workbook:
+- id: match-up-pronoun-meanings
+  type: match-up
+  instruction: З'єднайте українські займенники з їхніми значеннями англійською
+  pairs:
+  - left: хтось
+    right: someone
+  - left: щось
+    right: something
+  - left: ніхто
+    right: nobody
+  - left: ніщо
+    right: nothing
+  - left: десь
+    right: somewhere
+  - left: будь-хто
+    right: anyone at all
+  - left: дехто
+    right: some people
+  - left: абияк
+    right: carelessly
+- id: error-correction-prepositions-and-negation
+  type: error-correction
+  instruction: Знайдіть і виправте помилку з прийменниками або запереченням
+  items:
+  - sentence: Я хочу поговорити з будь-ким у цій кімнаті.
+    error: з будь-ким
+    correction: будь з ким
+    error_type: phrase
+    options:
+    - будь з ким
+    - з ким-будь
+    - з будь ким
+    explanation: Прийменник 'з' повністю розриває займенник з префіксом 'будь-'. Усі
+      три слова пишуться окремо.
+  - sentence: Вона прийшла на зустріч з ніким.
+    error: з ніким
+    correction: ні з ким
+    error_type: phrase
+    options:
+    - ні з ким
+    - з ні з ким
+    - не з ким
+    explanation: Прийменник 'з' завжди ставиться між префіксом 'ні' та самим займенником.
+  - sentence: Я не знаю про ніщо.
+    error: про ніщо
+    correction: ні про що
+    error_type: phrase
+    options:
+    - ні про що
+    - не про що
+    - ні про ніщо
+    explanation: 'Прийменник розриває заперечний займенник. Усі три слова пишуться
+      окремо: ні про що.'
+  - sentence: Ця цікава історія написана для будь-кого.
+    error: для будь-кого
+    correction: будь для кого
+    error_type: phrase
+    options:
+    - будь для кого
+    - для кого-будь
+    - будь для якого
+    explanation: 'Короткий прийменник стає всередину: будь для кого.'
+  - sentence: Він пішов гуляти з абиким.
+    error: з абиким
+    correction: аби з ким
+    error_type: phrase
+    options:
+    - аби з ким
+    - з ким-аби
+    - аби з кимось
+    explanation: Префікс 'аби-' відокремлюється від слова прийменником 'з'.
+  - sentence: Ми не питали поради в нікого.
+    error: в нікого
+    correction: ні в кого
+    error_type: phrase
+    options:
+    - ні в кого
+    - в не кого
+    - ні від кого
+    explanation: Прийменник 'в' стає між часткою 'ні' та займенником 'кого'.
+- id: unjumble-pronoun-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - не
+    - бачу
+    - Я
+    - нічого.
+    correct_order:
+    - Я
+    - нічого
+    - не
+    - бачу.
+  - words:
+    - прийшов
+    - Ніхто
+    - не
+    - вчора.
+    correct_order:
+    - Ніхто
+    - не
+    - прийшов
+    - вчора.
+    hint: Подвійне заперечення
+  - words:
+    - забудемо
+    - ніколи
+    - не
+    - Ми
+    - це.
+    correct_order:
+    - Ми
+    - ніколи
+    - не
+    - забудемо
+    - це.
+  - words:
+    - Вона
+    - не
+    - ким
+    - говорить.
+    - з
+    - ні
+    correct_order:
+    - Вона
+    - ні
+    - з
+    - ким
+    - не
+    - говорить.
+    hint: Прийменник розриває заперечний займенник.
+  - words:
+    - Тут
+    - нікого
+    - немає.
+    correct_order:
+    - Тут
+    - нікого
+    - немає.
+  - words:
+    - про
+    - думаю.
+    - не
+    - Я
+    - ні
+    - що
+    correct_order:
+    - Я
+    - ні
+    - про
+    - що
+    - не
+    - думаю.
+- id: translate-pronoun-sentences
+  type: translate
+  instruction: Оберіть правильний переклад українською
+  items:
+  - source: Someone is walking.
+    options:
+    - text: Хтось іде.
+      correct: true
+    - text: Ніхто не іде.
+      correct: false
+    - text: Будь-хто іде.
+      correct: false
+  - source: I see something interesting.
+    options:
+    - text: Я бачу щось цікаве.
+      correct: true
+    - text: Я бачу ніщо цікаве.
+      correct: false
+    - text: Я бачу дещо цікаво.
+      correct: false
+  - source: We never give up.
+    options:
+    - text: Ми ніколи не здаємося.
+      correct: true
+    - text: Ми ніколи здаємося.
+      correct: false
+    - text: Ми ніде не здаємося.
+      correct: false
+  - source: Choose any book.
+    options:
+    - text: Вибирай будь-яку книгу.
+      correct: true
+    - text: Вибирай якусь книгу.
+      correct: false
+    - text: Вибирай деяку книгу.
+      correct: false
+  - source: He did his job carelessly.
+    options:
+    - text: Він зробив свою роботу абияк.
+      correct: true
+    - text: Він зробив свою роботу якось.
+      correct: false
+    - text: Він зробив свою роботу ніяк.
+      correct: false
+  - source: I didn't speak with anybody.
+    options:
+    - text: Я ні з ким не говорив.
+      correct: true
+    - text: Я не говорив з ніким.
+      correct: false
+    - text: Я не говорив нікого.
+      correct: false

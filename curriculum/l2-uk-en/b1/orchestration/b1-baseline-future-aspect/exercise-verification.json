@@ -1,0 +1,289 @@
+{
+  "total_items": 221,
+  "grounded_items": 179,
+  "ungrounded": [
+    {
+      "word": "ставимо",
+      "exercise_type": "quiz",
+      "context": "Яке питання ми ставимо до дієслова **доконаного виду**?",
+      "role": "context"
+    },
+    {
+      "word": "домашнє",
+      "exercise_type": "fill-in",
+      "context": "Ти ____ (зробити) домашнє завдання до вечора?",
+      "role": "context"
+    },
+    {
+      "word": "завдання",
+      "exercise_type": "fill-in",
+      "context": "Ти ____ (зробити) домашнє завдання до вечора?",
+      "role": "context"
+    },
+    {
+      "word": "вечора",
+      "exercise_type": "fill-in",
+      "context": "Ти ____ (зробити) домашнє завдання до вечора?",
+      "role": "context"
+    },
+    {
+      "word": "купимо",
+      "exercise_type": "fill-in",
+      "context": "купимо",
+      "role": "answer"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ (купити) квитки на поїзд до Харкова.",
+      "role": "context"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ (купити) квитки на поїзд до Харкова.",
+      "role": "context"
+    },
+    {
+      "word": "харкова",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ (купити) квитки на поїзд до Харкова.",
+      "role": "context"
+    },
+    {
+      "word": "виграють",
+      "exercise_type": "fill-in",
+      "context": "виграють",
+      "role": "answer"
+    },
+    {
+      "word": "виграти",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ (виграти) цей важливий матч.",
+      "role": "context"
+    },
+    {
+      "word": "прийти",
+      "exercise_type": "fill-in",
+      "context": "Я обов'язково ____ (прийти) вчасно на зустріч.",
+      "role": "context"
+    },
+    {
+      "word": "скаже",
+      "exercise_type": "fill-in",
+      "context": "скаже",
+      "role": "answer"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "fill-in",
+      "context": "Він ____ (сказати) нам усю правду.",
+      "role": "context"
+    },
+    {
+      "word": "допомоги",
+      "exercise_type": "fill-in",
+      "context": "Я ____ (попросити) допомоги у свого друга.",
+      "role": "context"
+    },
+    {
+      "word": "прочитає",
+      "exercise_type": "group-sort",
+      "context": "прочитає",
+      "role": "answer"
+    },
+    {
+      "word": "займе",
+      "exercise_type": "fill-in",
+      "context": "Завтра вранці я ____ новий підручник з історії, це займе вес",
+      "role": "context"
+    },
+    {
+      "word": "наступного",
+      "exercise_type": "fill-in",
+      "context": "Наступного року я щотижня ____ на заняття в університет.",
+      "role": "context"
+    },
+    {
+      "word": "університету",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ кошти для університету цілий тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "намалюю",
+      "exercise_type": "fill-in",
+      "context": "намалюю",
+      "role": "answer"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "fill-in",
+      "context": "Взимку я завжди ____ теплу шапку, бо на вулиці холодно.",
+      "role": "context"
+    },
+    {
+      "word": "холодно",
+      "exercise_type": "fill-in",
+      "context": "Взимку я завжди ____ теплу шапку, бо на вулиці холодно.",
+      "role": "context"
+    },
+    {
+      "word": "пізно",
+      "exercise_type": "error-correction",
+      "context": "Завтра я будуся повертати додому пізно.",
+      "role": "context"
+    },
+    {
+      "word": "писатимемо",
+      "exercise_type": "error-correction",
+      "context": "писатимемо",
+      "role": "answer"
+    },
+    {
+      "word": "звіти",
+      "exercise_type": "error-correction",
+      "context": "Ми напишемо ці звіти кожного дня наступного місяця.",
+      "role": "context"
+    },
+    {
+      "word": "кожного",
+      "exercise_type": "error-correction",
+      "context": "Ми напишемо ці звіти кожного дня наступного місяця.",
+      "role": "context"
+    },
+    {
+      "word": "місяця",
+      "exercise_type": "error-correction",
+      "context": "Ми напишемо ці звіти кожного дня наступного місяця.",
+      "role": "context"
+    },
+    {
+      "word": "пише",
+      "exercise_type": "error-correction",
+      "context": "пише",
+      "role": "answer"
+    },
+    {
+      "word": "своєму",
+      "exercise_type": "error-correction",
+      "context": "Вона зараз напише листа своєму другу.",
+      "role": "context"
+    },
+    {
+      "word": "куртку",
+      "exercise_type": "error-correction",
+      "context": "Взимку я завжди буду носитиму теплу куртку.",
+      "role": "context"
+    },
+    {
+      "word": "одновидовим",
+      "exercise_type": "true-false",
+      "context": "Дієслово «схаменутися» є одновидовим і має лише доконаний ви",
+      "role": "context"
+    },
+    {
+      "word": "отримує",
+      "exercise_type": "true-false",
+      "context": "У складеній формі «буду писати», особові закінчення отримує ",
+      "role": "context"
+    },
+    {
+      "word": "позначають",
+      "exercise_type": "true-false",
+      "context": "Форми «я буду читати» та «я читатиму» є повними синонімами і",
+      "role": "context"
+    },
+    {
+      "word": "стояти",
+      "exercise_type": "true-false",
+      "context": "Зворотна частка «-ся» у формі «буду повертатися» може стояти",
+      "role": "context"
+    },
+    {
+      "word": "перед",
+      "exercise_type": "true-false",
+      "context": "Зворотна частка «-ся» у формі «буду повертатися» може стояти",
+      "role": "context"
+    },
+    {
+      "word": "допоміжним",
+      "exercise_type": "true-false",
+      "context": "Зворотна частка «-ся» у формі «буду повертатися» може стояти",
+      "role": "context"
+    },
+    {
+      "word": "дієсловом",
+      "exercise_type": "true-false",
+      "context": "Зворотна частка «-ся» у формі «буду повертатися» може стояти",
+      "role": "context"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "match-up",
+      "context": "купувати",
+      "role": "answer"
+    },
+    {
+      "word": "запрошувати",
+      "exercise_type": "match-up",
+      "context": "запрошувати",
+      "role": "answer"
+    },
+    {
+      "word": "полетіти",
+      "exercise_type": "match-up",
+      "context": "полетіти",
+      "role": "context"
+    },
+    {
+      "word": "замовляти",
+      "exercise_type": "match-up",
+      "context": "замовляти",
+      "role": "answer"
+    },
+    {
+      "word": "замовити",
+      "exercise_type": "match-up",
+      "context": "замовити",
+      "role": "context"
+    },
+    {
+      "word": "організовувати",
+      "exercise_type": "match-up",
+      "context": "організовувати",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 34,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "видова",
+      "двовидовий",
+      "допоміжне",
+      "дійсний",
+      "дія",
+      "дієвідміна",
+      "дієвідмінювання",
+      "завершена",
+      "майбутній",
+      "наголос",
+      "одновидовий",
+      "основа",
+      "особове",
+      "пара",
+      "повторювана",
+      "приголосних",
+      "спосіб",
+      "суфікс",
+      "тривала",
+      "час",
+      "часова",
+      "чергування",
+      "інфінітив",
+      "інфінітива"
+    ]
+  },
+  "all_grounded": false
+}

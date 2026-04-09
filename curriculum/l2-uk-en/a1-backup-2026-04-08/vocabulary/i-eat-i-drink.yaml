@@ -1,0 +1,223 @@
+vocabulary:
+- word: ї́сти
+  translation: to eat (irregular verb)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пи́ти
+  translation: to drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: їм
+  translation: I eat
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: їси́
+  translation: you eat (singular)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: їсть
+  translation: he/she eats
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: їмо́
+  translation: we eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: їсте́
+  translation: you eat (plural/formal)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: їдя́ть
+  translation: they eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: п'ю
+  translation: I drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: п'єш
+  translation: you drink (singular)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: п'є
+  translation: he/she drinks
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: п'ємо́
+  translation: we drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: п'єте́
+  translation: you drink (plural/formal)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: п'ють
+  translation: they drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ка́ву
+  translation: coffee (accusative)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: воду́
+  translation: water (accusative)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ри́бу
+  translation: fish (accusative)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́шу
+  translation: porridge (accusative)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: карто́плю
+  translation: potatoes (accusative)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: смета́ну
+  translation: sour cream (accusative)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ри́ба
+  translation: fish
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ша
+  translation: porridge
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: карто́пля
+  translation: potatoes
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: смета́на
+  translation: sour cream
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: яйце́
+  translation: egg
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: я́йця
+  translation: eggs (plural)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: бана́н
+  translation: banana
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́сло
+  translation: butter
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сала́т
+  translation: salad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сніда́нок
+  translation: breakfast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: що?
+  translation: what? (accusative question word)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: замовля́й
+  translation: go ahead and order (informal imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: або́
+  translation: or
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: до́бре
+  translation: okay, good
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true

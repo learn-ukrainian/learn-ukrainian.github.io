@@ -2,12 +2,6 @@
   "attempt": 2,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/5 required vocab: кава (coffee, f)"
-    }
-  ],
-  "timestamp": "2026-03-30T02:58:51.617294+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-09T02:55:05.041048+00:00"
 }

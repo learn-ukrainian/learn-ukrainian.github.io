@@ -1,106 +1,87 @@
 ## Linguistic Scan
-No major Russianisms found in the general vocabulary (proper nouns like Дніпро, Карпати, Києва are correct). However, one critical pedagogical calque was identified: the text teaches "мова йде про" as a "спеціальна конструкція" (special construction) to use, but according to Antonenko-Davydovych's style guide, this is a calque. The natural Ukrainian construction is "йдеться про" or "мовиться про".
+Found errors:
+- "на найбли कूलзу зупинку" — Critical artifact; foreign characters (Bengali/Hindi) injected into the text instead of a Ukrainian word.
+- "ти їзздиш" — Typo in the conjugation paradigm.
+- "знаходиться зовсім близько" — Calque of Russian "находится"; should be "перебуває" when describing physical presence.
+- "приймаєте рішення" — Calque of Russian "принимать решение"; should be "вирішуєте" or "ухвалюєте рішення".
+- "відправиться" — Russicism for departing transport; normative Ukrainian uses "вирушить".
+- "парковці" — Colloquialism/Russicism; should be "автостоянці".
 
 ## Exercise Check
-**CRITICAL FAILURE.** The writer completely ignored the `activity_hints` array in the plan (which specified exactly 6 activities: quiz, fill-in, match-up, error-correction, group-sort, free-write). Instead, the writer hallucinated 19 different `INJECT_ACTIVITY` markers with broken syntax, placing entire activity descriptions inside the ID field (e.g., `<!-- INJECT_ACTIVITY: quiz, Case agreement: 8 sentences... -->`). 
-
-Additionally, the plan explicitly required a self-assessment framework to be placed *after each block*. The writer introduced the concept in the first paragraph but failed to actually place the self-assessment forms at the end of the blocks.
+The generated text contains 13 exercise placeholders, whereas the plan only outlines 6 in `activity_hints`. While all requested activity types are present (quiz, fill-in, match-up, error-correction, group-sort, free-write), the excessive fragmentation of markers clutters the file structure. However, the inline reading comprehension questions and dialogues are well-formed and placed correctly after their respective theory blocks. 
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | The text hallucinates 19 incorrect activity markers instead of the 6 planned ones. It also fails to place the self-assessment framework "after each block" as required. |
-| 2. Linguistic accuracy | 8/10 | The text incorrectly teaches the calque "мова йде про" as a special standard construction instead of the correct "йдеться про". Everything else, including preposition/case government and prefix semantics, is very well explained. |
-| 3. Pedagogical quality | 8/10 | Strong grammatical explanations with clear examples. However, teaching a calque ("мова йде про") as the target construction is a serious flaw. |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary from the plan is integrated organically. |
-| 5. Exercise quality | 2/10 | The `INJECT_ACTIVITY` markers use completely broken syntax instead of standard IDs, and the writer spammed 19 markers instead of the 6 planned ones. |
-| 6. Engagement & tone | 4/10 | Heavy use of meta-commentary and generic hype, especially in the intro: "Це справжня нервова система української граматики...", "ми свідомо використовуємо науково-навчальний стиль мовлення...". The text frequently tells instead of shows. |
-| 7. Structural integrity | 6/10 | The word count is 5177 words, which is nearly 30% over the 4000-word target. The text is bloated with meta-commentary. |
-| 8. Cultural accuracy | 10/10 | Authentic proverbs ("Сім разів відміряй — один відріж") and good cultural context for travel in Ukraine. |
-| 9. Dialogue & conversation quality | 9/10 | The oral exam dialogue is a realistic academic situation and successfully integrates the grammar points. |
+| 1. Plan adherence | 8/10 | The text missed the `dialogue_situations` meta-requirement for an Oral Exam setting with an Examiner and Student, writing only the train station dialogue. It also missed the explicit contrast `літак летить (literal)` requested in Block 5. |
+| 2. Linguistic accuracy | 7/10 | Contains a critical gibberish artifact ("найбли कूलзу"), a conjugation typo ("їзздиш"), and several common calques/Russicisms ("приймаєте рішення", "знаходиться", "відправиться"). |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow. It breaks down the prefixes into logical groups (arrival vs departure, crossing vs passing) and clearly explains the difficult rules for case government. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words (контрольна робота, різноспрямований, маршрут, самооцінка, etc.) are present and naturally integrated. |
+| 5. Exercise quality | 9/10 | Over-fragmented with 13 markers instead of the 6 planned, but the markers logically follow the taught sections. |
+| 6. Engagement & tone | 10/10 | Very supportive, natural teacher persona. Uses great examples to make spatial rules concrete. |
+| 7. Structural integrity | 9/10 | Meets the 4000-word target perfectly (4305). However, a broken unicode string artifact slipped into the prose. |
+| 8. Cultural accuracy | 10/10 | Accurate geography and authentic examples from Ukrainian realia (Lviv, Carpathians, Yaremche, Boryspil). |
+| 9. Dialogue & conversation quality | 9/10 | The train station dialogue is natural and useful, but the planned Oral Exam dialogue was completely absent. |
 
 ## Findings
+[2. Linguistic accuracy] [Critical]
+Location: `[3. __________] на найбли कूलзу зупинку.`
+Issue: Gibberish/foreign character artifact instead of a Ukrainian word.
+Fix: Replace `на найбли कूलзу зупинку.` with `на найближчу зупинку.`
 
-[Plan adherence] [Major]
-Location: Throughout the module.
-Issue: The plan specified 6 specific `activity_hints`, but the text hallucinates 19 `INJECT_ACTIVITY` markers with broken syntax (putting descriptions in the ID field).
-Fix: Replace all 19 markers with the 6 correct markers from the plan, placed strategically at the end of the blocks.
+[2. Linguistic accuracy] [Critical]
+Location: `«Їздити»: я їжджу, ти їзздиш, вона їздить,`
+Issue: Typo in the conjugation paradigm for "їздити".
+Fix: Replace `ти їзздиш,` with `ти їздиш,`
 
-[Plan adherence] [Major]
-Location: End of Blocks 1-6.
-Issue: The plan required a "Self-assessment framework: after each block, rate your confidence". The text introduces this idea but fails to actually place the forms at the end of the blocks.
-Fix: Inject a self-assessment line at the end of each block.
+[2. Linguistic accuracy] [Major]
+Location: `Якщо ж ви хочете підкреслити, що хтось знаходиться зовсім близько,`
+Issue: Use of "знаходитися" to indicate physical presence is a calque of Russian "находиться".
+Fix: Replace `що хтось знаходиться зовсім близько,` with `що хтось перебуває зовсім близько,`
 
-[Linguistic accuracy] [Critical]
-Location: Блок 5 (paragraph 2): "...ми завжди використовуємо спеціальну конструкцію: **мова йде про...**"
-Issue: "Мова йде про" is a recognized calque/Russicism (Антоненко-Давидович confirms it). The correct, natural Ukrainian construction to teach is "йдеться про". Teaching the calque as the official rule is a critical error.
-Fix: Change "мова йде про..." to "йдеться про...".
+[2. Linguistic accuracy] [Major]
+Location: `Ви сідаєте в таксі і приймаєте рішення швидко поїхати на вокзал`
+Issue: "приймати рішення" is a direct calque from Russian "принимать решение".
+Fix: Replace `і приймаєте рішення швидко поїхати на вокзал` with `і вирішуєте швидко поїхати на вокзал`
 
-[Engagement & tone] [Major]
-Location: Вступ (paragraphs 1 & 2).
-Issue: The introduction is full of meta-commentary ("ми свідомо використовуємо науково-навчальний стиль") and generic hype ("справжня нервова система").
-Fix: Delete the meta-commentary and hype to make the tone direct and professional.
+[2. Linguistic accuracy] [Major]
+Location: `Зрозумів. А о котрій годині він відправиться (will depart) далі?`
+Issue: "відправлятися" is a Russicism when used for departing transport. Normative Ukrainian uses "вирушати".
+Fix: Replace `о котрій годині він відправиться (will depart) далі?` with `о котрій годині він вирушить (will depart) далі?`
+
+[2. Linguistic accuracy] [Minor]
+Location: `Ми залишили нашу машину на безпечній парковці навпроти готелю`
+Issue: "парковка" is colloquial; the standard term is "автостоянка".
+Fix: Replace `на безпечній парковці навпроти готелю` with `на безпечній автостоянці навпроти готелю`
+
+[1. Plan adherence] [Major]
+Location: `Це був ідеальний маршрут для нашої відпустки, який я запам'ятаю назавжди!` (End of Block 6 narrative).
+Issue: The generator followed the `content_outline` dialogue but ignored the explicit `dialogue_situations` meta requirement for an "Oral exam — the student describes a journey" setting.
+Fix: Inject a short oral exam exchange by adding it to the end of the paragraph: `який я запам'ятаю назавжди!\n\nА тепер уявіть, що ви складаєте усний іспит. Вам потрібно описати свій щоденний маршрут, використовуючи всі групи префіксів.\n\n> — **Екзаменатор:** Розкажіть, як ви провели вчорашній день?\n> — **Студент:** Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова, обійшов центр і зайшов у кав'ярню.`
+
+[1. Plan adherence] [Minor]
+Location: `і не помічаєте, як швидко минають години, ідеальною фразою буде «час летить (time flies)».`
+Issue: The content outline explicitly requests contrasting `Час летить (figurative)` with `Літак летить (literal)`, but the literal counter-example is missing from the explanation block.
+Fix: Replace `швидко минають години, ідеальною фразою буде «час летить (time flies)».` with `швидко минають години, ідеальною фразою буде «час летить (time flies)». Це переносне значення, адже в прямому значенні ми кажемо «літак летить (literal)».`
 
 ## Verdict: REVISE
-The module contains an excellent and thorough grammatical breakdown of motion verbs. However, the writer completely failed the exercise injection protocol and bloated the text with meta-commentary. The fixes below correct the calque, clean up the tone, inject the missing self-assessments, and repair the broken activity markers.
+The module covers the massive topic of motion verbs exceptionally well, delivering high-quality pedagogical explanations and a very positive tone. However, the presence of a critical character artifact ("найбли कूलзу"), a conjugation typo ("їзздиш"), several calques ("приймати рішення", "знаходиться"), and a missing planned dialogue sequence require a revision before publishing.
 
 <fixes>
-- find: "Ця **контрольна робота** *(assessment)* є підсумком масштабного і надзвичайно важливого етапу. Вона комплексно перевіряє ваші знання матеріалу з модулів від двадцять сьомого до тридцять шостого. Це четвертий етап рівня B1, який ми заслужено називаємо «Всесвіт дієслів руху»."
-  replace: "Ця **контрольна робота** *(assessment)* комплексно перевіряє ваші знання матеріалу з модулів від двадцять сьомого до тридцять шостого («Всесвіт дієслів руху»)."
-- find: "Концепція напрямку та руху — це справжня нервова система української граматики на цьому етапі навчання. Глибоке розуміння того, як **односпрямований** *(unidirectional)* та **різноспрямований** *(multidirectional)* рух органічно поєднується з префіксами напрямку, дає вам велику свободу. Це дозволяє вам вільно та максимально точно описувати будь-яку **подорож** *(journey)*, зміну локації або звичайну щоденну рутину."
-  replace: "Розуміння того, як **односпрямований** *(unidirectional)* та **різноспрямований** *(multidirectional)* рух поєднується з префіксами напрямку, дозволяє вам вільно та точно описувати будь-яку **подорож** *(journey)*, зміну локації або звичайну щоденну рутину."
-- find: "Для цієї роботи ми свідомо використовуємо **науково-навчальний** *(scientific-educational)* стиль мовлення у всіх поясненнях та інструкціях. Це означає, що всі тексти будуть максимально чіткими, структурованими, академічними та подаватимуться виключно українською мовою. Виконайте всі запропоновані **завдання** *(exercises)* послідовно, крок за кроком."
-  replace: "Виконайте всі запропоновані **завдання** *(exercises)* послідовно, крок за кроком."
-- find: "спеціальну конструкцію: **мова йде про...** *(it is about / the talk goes about...)* нові фінансові"
-  replace: "спеціальну конструкцію: **йдеться про...** *(it is about / the talk goes about...)* нові фінансові"
-- find: "Правильний та усвідомлений вибір найбільш влучного синоніма яскраво демонструє ваш справжній, глибокий рівень практичного володіння мовою."
-  replace: "Правильний та усвідомлений вибір найбільш влучного синоніма яскраво демонструє ваш справжній, глибокий рівень практичного володіння мовою.\n\n**Самооцінка (Блок 1):** [ ] Впевнено | [ ] Потребую повторення | [ ] Не розумію"
-- find: "Розуміння цих парних просторових зв'язків дозволить вам будувати точні маршрути без помилок."
-  replace: "Розуміння цих парних просторових зв'язків дозволить вам будувати точні маршрути без помилок.\n\n**Самооцінка (Блок 2):** [ ] Впевнено | [ ] Потребую повторення | [ ] Не розумію"
-- find: "Завжди враховуйте цю важливу специфіку фізичного простору під час ваших розповідей."
-  replace: "Завжди враховуйте цю важливу специфіку фізичного простору під час ваших розповідей.\n\n**Самооцінка (Блок 3):** [ ] Впевнено | [ ] Потребую повторення | [ ] Не розумію"
-- find: "Наприклад, відомі і дуже сміливі мандрівники часто мріють **об'їхати** *(to travel around)* весь світ на своєму кораблі."
-  replace: "Наприклад, відомі і дуже сміливі мандрівники часто мріють **об'їхати** *(to travel around)* весь світ на своєму кораблі.\n\n**Самооцінка (Блок 4):** [ ] Впевнено | [ ] Потребую повторення | [ ] Не розумію"
-- find: "Знання і розуміння таких давніх культурних висловів робить вашу щоденну українську мову справді природною, багатою, глибокою та живою."
-  replace: "Знання і розуміння таких давніх культурних висловів робить вашу щоденну українську мову справді природною, багатою, глибокою та живою.\n\n**Самооцінка (Блок 5):** [ ] Впевнено | [ ] Потребую повторення | [ ] Не розумію"
-- find: "Після цього я **обійду** *(will walk around)* місцевий парк, щоб не йти через темні алеї, і нарешті швидко **прийду** *(will arrive)* додому."
-  replace: "Після цього я **обійду** *(will walk around)* місцевий парк, щоб не йти через темні алеї, і нарешті швидко **прийду** *(will arrive)* додому.\n\n**Самооцінка (Блок 6):** [ ] Впевнено | [ ] Потребую повторення | [ ] Не розумію"
-- find: "<!-- INJECT_ACTIVITY: quiz, Case agreement: 8 sentences requiring correct ending for nouns after prepositions (e.g., \"навпроти будинку\", \"над головою\"). -->"
-  replace: "<!-- INJECT_ACTIVITY: quiz -->"
-- find: "<!-- INJECT_ACTIVITY: quiz, Preposition choice: 6 sentences choosing the most natural synonym (e.g., \"біля\" vs \"поруч з\") based on context clues. -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Preposition vs Adverb: 4 sentence pairs to distinguish function (e.g., \"Він стояв навпроти\" vs \"Він стояв навпроти кінотеатру\"). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Verb choice: 8 sentences selecting between pairs like нести/носити or везти/возити based on temporal markers. -->"
-  replace: "<!-- INJECT_ACTIVITY: error-correction -->"
-- find: "<!-- INJECT_ACTIVITY: fill-in, Conjugation: Full present tense paradigms for 4 irregular base verbs (ходити, їхати, бігти, летіти). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: fill-in, Prepositions of direction: 4 sentences choosing between \"в\", \"на\", \"до\", \"з\", \"від\" for specific travel contexts. -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Prefix selection: 8 sentences choosing between arrival (при/до) and departure (пі/від) prefixes. -->"
-  replace: "<!-- INJECT_ACTIVITY: group-sort -->"
-- find: "<!-- INJECT_ACTIVITY: fill-in, Aspect pairs: 6 items converting perfective prefixed verbs to imperfective (e.g., приїхати -> приїжджати). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: group-sort, Journey ordering: Arrange 6 sentences into a logical travel sequence (Start -> Transit -> Arrival). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Prefix selection: 10 sentences testing all 6 prefixes in this section (e.g., \"Він ___йшов (passed) повз мене\"). -->"
-  replace: "<!-- INJECT_ACTIVITY: match-up -->"
-- find: "<!-- INJECT_ACTIVITY: match-up, Opposite pairs: 6 items matching spatial opposites (зайти/вийти, підійти/відійти, заїхати/виїхати). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: fill-in, Preposition + case: 6 items completing sentences like \"зайти ___ (into) будинок\", \"проїхати ___ (past) театр\". -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Air/water motion: 6 sentences testing prefixed forms of \"летіти\" and \"пливти\" in travel contexts. -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Literal vs Figurative: 8 sentences to categorize usage (e.g., \"Годинник іде\" vs \"Хлопчик іде\"). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: fill-in, Figurative expression completion: 4 items (e.g., \"Справи ___ (go) вгору\"). -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: quiz, Reading comprehension: 6 questions testing details of the narrative's motion and route. -->"
-  replace: "<!-- INJECT_ACTIVITY: free-write -->"
-- find: "<!-- INJECT_ACTIVITY: fill-in, Dialogue completion: 6 exchanges in a station dialogue where motion verbs are missing. -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: free-write, Travel Plan: Write a 6-sentence plan for a weekend trip using 8 prefixes and 5 transport terms. -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: fill-in, Один день із життя мандрівника: 10 blanks testing prefixes, base verbs, and case agreement. -->"
-  replace: "<!-- INJECT_ACTIVITY: fill-in -->"
+- find: "на найбли कूलзу зупинку."
+  replace: "на найближчу зупинку."
+- find: "ти їзздиш,"
+  replace: "ти їздиш,"
+- find: "що хтось знаходиться зовсім близько,"
+  replace: "що хтось перебуває зовсім близько,"
+- find: "і приймаєте рішення швидко поїхати на вокзал"
+  replace: "і вирішуєте швидко поїхати на вокзал"
+- find: "о котрій годині він відправиться (will depart) далі?"
+  replace: "о котрій годині він вирушить (will depart) далі?"
+- find: "на безпечній парковці навпроти готелю"
+  replace: "на безпечній автостоянці навпроти готелю"
+- find: "який я запам'ятаю назавжди!"
+  replace: "який я запам'ятаю назавжди!\n\nА тепер уявіть, що ви складаєте усний іспит. Вам потрібно описати свій щоденний маршрут, використовуючи всі групи префіксів.\n\n> — **Екзаменатор:** Розкажіть, як ви провели вчорашній день?\n> — **Студент:** Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова, обійшов центр і зайшов у кав'ярню."
+- find: "швидко минають години, ідеальною фразою буде «час летить (time flies)»."
+  replace: "швидко минають години, ідеальною фразою буде «час летить (time flies)». Це переносне значення, адже в прямому значенні ми кажемо «літак летить (literal)»."
 </fixes>

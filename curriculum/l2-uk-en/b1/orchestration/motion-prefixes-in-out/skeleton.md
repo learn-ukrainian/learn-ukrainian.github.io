@@ -1,0 +1,42 @@
+## Входити і виходити: за- та ви- (~550 words total)
+- P1 (~150 words): [Introduction to the spatial "zoom-in." Bridge from M29-M30 prefixes of arrival (при-) and departure (пі-/по-). Explain that while those prefixes cover the journey's start and end, "за-" and "ви-" describe the specific boundary crossing into or out of a container-like space (a building, a room, a car). Use the analogy of a camera zooming in on a door.]
+- P2 (~250 words): [Reading passage: "Метушливий ранок у Львові" (A busy morning in Lviv). Narrative text where a character moves through the city. Examples: "Олег виходить з дому о восьмій," "Він заходить до кав’ярні за горнятком лате," "Потім він забігає до книгарні," "Його колега виїжджає з підземного паркінгу." Highlight the interaction of the prefixes with the physical environment.]
+- P3 (~150 words): [Crucial disambiguation: distinguish "за-" in motion verbs (entering/dropping by) from the inchoative "за-" (beginning an action) used with non-motion verbs. Contrast "він зайшов у кімнату" (he entered) with "він заспівав" (he started singing) and "вона засміялася" (she started laughing). Emphasize that with motion, "за-" always implies spatial movement.]
+- <!-- INJECT_ACTIVITY: quiz-in-out-logic --> [quiz, focus: Identifying the logical direction of movement (into vs. out of) in simple scenarios, 8 items]
+
+## Префікс за-: увійти, забігти, заскочити (~900 words total)
+- P1 (~200 words): [Detailed breakdown of "за-" meaning "entering." Cover "зайти" (on foot), "заїхати" (by vehicle), "забігти" (running), "залетіти" (flying), and "заплисти" (swimming/sailing). Provide clear situational examples: "Зайди в хату, бо холодно," "Машина заїхала у двір," "Птах залетів у відкрите вікно."]
+- P2 (~200 words): [The "dropping by" nuance of "за-." Explain this as a brief, often incidental stop on the way to somewhere else. Contrast this with "прийти" (arrival at destination). Examples: "Я зайду до тебе на хвилинку" (I'll drop by your place for a minute), "Заїдемо до заправки по дорозі," "Треба забігти в аптеку."]
+- P3 (~150 words): [Transitive motion verbs with "за-" (carrying/leading/transporting in). Focus on "занести" (to carry in), "завести" (to lead/bring someone in), and "завезти" (to deliver/bring in by vehicle). Examples: "Занеси парасолю в дім," "Він завів гостей до вітальні," "Кур’єр завіз піцу у двір."]
+- P4 (~150 words): [Conjugation focus for "зайти." Present a full paradigm table for future/present and past. Highlight the stem change: "зайду, зайдеш, зайде, зайдемо, зайдете, зайдуть." Past forms: "зайшов, зайшла, зайшло, зайшли." Note the stress pattern and the decolonization point: the Ukrainian "и" sound in the root must be crisp, not the Russian "ы".]
+- P5 (~200 words): [Imperfective counterparts for habitual actions: "заходити," "заїжджати," "забігати," "заносити." Explain that these describe routine or ongoing entries. Contrast: "Я зайшов один раз" (pf) vs. "Я часто заходжу" (impf). 8 example sentences focusing on frequency adverbs like "щодня," "зазвичай," "кожного разу."]
+
+## Префікс ви-: вийти, виїхати, вибігти (~900 words total)
+- P1 (~200 words): [Detailed breakdown of "ви-" meaning "exiting, emerging, or going out." Cover "вийти," "виїхати," "вибігти," "вилетіти," and "виплисти." Provide examples: "Вона вийшла з офісу," "Трамвай виїхав із депо," "Діти вибігли на подвір’я," "Птах вилетів із клітки."]
+- P2 (~200 words): [Abstract and extended meanings of "ви-." Explain common idiomatic uses: "вийти з ситуації" (to resolve/get out of a situation), "вийти заміж" (to get married — literal 'go out behind'), "вийти на зв'язок" (to get in touch), "вийти з ладу" (to break down). Emphasize that "вийти" often implies a result or transition to a new state.]
+- P3 (~150 words): [Transitive motion verbs with "ви-" (carrying/leading/transporting out). Focus on "винести" (to carry out), "вивести" (to lead out), and "вивезти" (to transport out). Practical examples: "Винеси, будь ласка, сміття," "Вона вивела собаку на прогулянку," "Зі складу вивезли всі меблі."]
+- P4 (~150 words): [Conjugation focus for "вийти." Present a full paradigm table. Note the stress always falls on the prefix "ви-" in these forms: "вийду, вийдеш, вийде..." and "вийшов, вийшла, вийшли." This is a key phonetic marker of the prefix "ви-" in Ukrainian.]
+- P5 (~200 words): [Imperfective counterparts for "ви-": "виходити," "виїжджати," "вибігати," "виносити." Describe habitual exits or processes. Examples: "Ми щоранку виходимо о восьмій," "Машини постійно виїжджають із цих воріт." Include 10 short example sentences to reinforce the "habit" meaning.]
+
+## За- чи ви-? Пари протилежностей (~800 words total)
+- P1 (~200 words): [Symmetry and spatial opposites. Create a comparative table showing "за-" vs. "ви-" as functional antonyms. "зайти ↔ вийти," "заїхати ↔ виїхати," "занести ↔ винести." Explain that mastering one usually gives you the other through simple prefix substitution.]
+- P2 (~200 words): [Preposition and case mapping. This is a critical technical point. Explain that "за-" typically pairs with "в/у + Acc." (destination) or "до + Gen." (dropping by someone), while "ви-" typically pairs with "з/із + Gen." (origin) or "на + Acc." (emerging onto an open space). Examples: "зайшов у будинок" vs. "вийшов із будинку," "вийшов на вулицю."]
+- P3 (~200 words): [Synthesizing the prefix system (M29-M31). Demonstrate how these prefixes build a complete narrative arc of movement. Example chain: "Вийшов з дому (exit) → пішов до зупинки (setting off) → приїхав на роботу (arrival) → зайшов у кабінет (entry)." Show how the prefixes act as waypoints in a journey.]
+- P4 (~200 words): [Practice scenarios: presenting spatial dilemmas. "You are in a car and want to park in a garage — which prefix?" "You are in a shop and want to go to the street — which prefix?" Detailed guidance on selecting the prefix based on the "container" boundary.]
+- <!-- INJECT_ACTIVITY: match-opposites --> [match-up, focus: Pairing "за-" and "ви-" verbs with opposite meanings, 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-prefixes --> [group-sort, focus: Categorizing verbs into Arrival (при/до), Departure (пі/по/від), Entry (за), and Exit (ви), 12 items]
+
+## Практика: за- і ви- в повсякденному житті (~550 words total)
+- P1 (~150 words): [Dialogue: "Телефонна розмова про справи" (Phone call about errands). A natural exchange using "за-" for dropping by and "ви-" for leaving locations. Secretary: "Ви вже вийшли з банку?" Employee: "Так, уже вийшов і зараз заходжу до пошти. Потім забіжу в аптеку і прийду в офіс."]
+- P2 (~150 words): [Narrative model: A sequence of errands. "Мій вечір після роботи." A model text using multiple "за-" and "ви-" verbs in a logical sequence. "Я вийшла з університету. По дорозі зайшла в супермаркет. Потім заїхала до мами. Нарешті зайшла додому."]
+- P3 (~150 words): [Aspect choice in narrative. Explain the nuances of choosing between "зайшов" (completed entry) and "заходив" (was entering/habit). Use the example: "Коли я заходив, задзвонив телефон" (interrupting a process) vs. "Я зайшов і зняв пальто" (completed sequence).]
+- P4 (~100 words): [Error correction and naturalness check. Highlight common L2 mistakes like using "з" with "зайти" or omitting the preposition with "вийти." Explain why "*Вийди кімнату" is wrong and must be "Вийди з кімнати." Point out that "вийти заміж" is gender-specific.]
+- <!-- INJECT_ACTIVITY: fill-in-errand-context --> [fill-in, focus: Completing an errand narrative with correct prefixed verbs and prepositions, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-preps --> [error-correction, focus: Identifying and fixing case and preposition errors with "за-" and "ви-" verbs, 6 items]
+- <!-- INJECT_ACTIVITY: free-write-routine --> [free-write, focus: Describing a daily or morning routine using at least 4 "за-" and 4 "ви-" verbs, 6 items]
+
+## Підсумок: за- і ви- (~350 words total)
+- P1 (~200 words): [Master Summary Table. List all base verbs (йти, їхати, бігти, нести, вести, везти, летіти, плисти) with both "за-" and "ви-" prefixes in their perfective and imperfective forms. This serves as a comprehensive reference for the learner.]
+- P2 (~150 words): [Final recap: "за-" is entry or dropping by; "ви-" is exit or emergence. Remind learners of the specific preposition pairings: "за- в/до" and "ви- з/на." Preview Module 32: "Перейти, проїхати" — the logic of crossing over and passing through spaces.]
+
+Grand total: ~4050 words

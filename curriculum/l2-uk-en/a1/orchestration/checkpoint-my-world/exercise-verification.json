@@ -1,236 +1,90 @@
 {
-  "total_items": 112,
-  "grounded_items": 66,
+  "total_items": 70,
+  "grounded_items": 56,
   "ungrounded": [
     {
-      "word": "предмети",
+      "word": "речі",
       "exercise_type": "group-sort",
-      "context": "Предмети (Objects)"
+      "context": "Речі (Objects)",
+      "role": "context"
     },
     {
       "word": "кольори",
       "exercise_type": "group-sort",
-      "context": "Кольори (Colors)"
-    },
-    {
-      "word": "білий",
-      "exercise_type": "group-sort",
-      "context": "білий"
+      "context": "Кольори (Colors)",
+      "role": "context"
     },
     {
       "word": "жовтий",
       "exercise_type": "group-sort",
-      "context": "жовтий"
+      "context": "жовтий",
+      "role": "answer"
+    },
+    {
+      "word": "білий",
+      "exercise_type": "group-sort",
+      "context": "білий",
+      "role": "answer"
     },
     {
       "word": "числа",
       "exercise_type": "group-sort",
-      "context": "Числа (Numbers)"
+      "context": "Числа (Numbers)",
+      "role": "context"
     },
     {
-      "word": "біле",
+      "word": "великий",
       "exercise_type": "quiz",
-      "context": "біле"
+      "context": "Цей великий стіл.",
+      "role": "context"
     },
     {
-      "word": "маленька",
+      "word": "нове",
       "exercise_type": "quiz",
-      "context": "маленька"
+      "context": "Це нове вікно.",
+      "role": "context"
     },
     {
-      "word": "маленьке",
+      "word": "стара",
       "exercise_type": "quiz",
-      "context": "маленьке"
+      "context": "Ця стара лампа.",
+      "role": "context"
     },
     {
-      "word": "цікавий",
+      "word": "зручний",
       "exercise_type": "quiz",
-      "context": "цікавий"
+      "context": "Цей зручний стілець.",
+      "role": "context"
     },
     {
-      "word": "цікава",
+      "word": "стілець",
       "exercise_type": "quiz",
-      "context": "цікава"
+      "context": "Цей зручний стілець.",
+      "role": "context"
     },
     {
-      "word": "цікаве",
-      "exercise_type": "quiz",
-      "context": "цікаве"
+      "word": "стіна",
+      "exercise_type": "group-sort",
+      "context": "стіна",
+      "role": "answer"
     },
     {
-      "word": "коричнева",
-      "exercise_type": "quiz",
-      "context": "коричнева"
+      "word": "старий",
+      "exercise_type": "true-false",
+      "context": "старий ручка",
+      "role": "context"
     },
     {
-      "word": "коричневе",
-      "exercise_type": "quiz",
-      "context": "коричневе"
+      "word": "нові",
+      "exercise_type": "true-false",
+      "context": "нові книги",
+      "role": "context"
     },
     {
-      "word": "гарний",
-      "exercise_type": "quiz",
-      "context": "гарний"
-    },
-    {
-      "word": "книгу",
-      "exercise_type": "quiz",
-      "context": "книгу"
-    },
-    {
-      "word": "книгах",
-      "exercise_type": "quiz",
-      "context": "книгах"
-    },
-    {
-      "word": "столу",
-      "exercise_type": "quiz",
-      "context": "столу"
-    },
-    {
-      "word": "стола",
-      "exercise_type": "quiz",
-      "context": "стола"
-    },
-    {
-      "word": "вікну",
-      "exercise_type": "quiz",
-      "context": "вікну"
-    },
-    {
-      "word": "вікні",
-      "exercise_type": "quiz",
-      "context": "вікні"
-    },
-    {
-      "word": "вікном",
-      "exercise_type": "quiz",
-      "context": "вікном"
-    },
-    {
-      "word": "вишиванок",
-      "exercise_type": "quiz",
-      "context": "вишиванок"
-    },
-    {
-      "word": "вишиванці",
-      "exercise_type": "quiz",
-      "context": "вишиванці"
-    },
-    {
-      "word": "вишиванку",
-      "exercise_type": "quiz",
-      "context": "вишиванку"
-    },
-    {
-      "word": "глечика",
-      "exercise_type": "quiz",
-      "context": "глечика"
-    },
-    {
-      "word": "глечику",
-      "exercise_type": "quiz",
-      "context": "глечику"
-    },
-    {
-      "word": "глечиків",
-      "exercise_type": "quiz",
-      "context": "глечиків"
-    },
-    {
-      "word": "ламп",
-      "exercise_type": "quiz",
-      "context": "ламп"
-    },
-    {
-      "word": "лампи",
-      "exercise_type": "quiz",
-      "context": "лампи"
-    },
-    {
-      "word": "лампі",
-      "exercise_type": "quiz",
-      "context": "лампі"
-    },
-    {
-      "word": "лампу",
-      "exercise_type": "quiz",
-      "context": "лампу"
-    },
-    {
-      "word": "намисту",
-      "exercise_type": "quiz",
-      "context": "намисту"
-    },
-    {
-      "word": "намисті",
-      "exercise_type": "quiz",
-      "context": "намисті"
-    },
-    {
-      "word": "намистах",
-      "exercise_type": "quiz",
-      "context": "намистах"
-    },
-    {
-      "word": "писанок",
-      "exercise_type": "quiz",
-      "context": "писанок"
-    },
-    {
-      "word": "писанку",
-      "exercise_type": "quiz",
-      "context": "писанку"
-    },
-    {
-      "word": "писанці",
-      "exercise_type": "quiz",
-      "context": "писанці"
-    },
-    {
-      "word": "сорок",
-      "exercise_type": "fill-in",
-      "context": "сорок"
-    },
-    {
-      "word": "чотири",
-      "exercise_type": "fill-in",
-      "context": "чотири"
-    },
-    {
-      "word": "сімдесят",
-      "exercise_type": "fill-in",
-      "context": "сімдесят"
-    },
-    {
-      "word": "великі",
+      "word": "там",
       "exercise_type": "error-correction",
-      "context": "великі"
-    },
-    {
-      "word": "моє",
-      "exercise_type": "error-correction",
-      "context": "Моє"
-    },
-    {
-      "word": "мої",
-      "exercise_type": "error-correction",
-      "context": "Мої"
-    },
-    {
-      "word": "червоні",
-      "exercise_type": "error-correction",
-      "context": "червоні"
-    },
-    {
-      "word": "картини",
-      "exercise_type": "match-up",
-      "context": "картини"
-    },
-    {
-      "word": "ті",
-      "exercise_type": "quiz",
-      "context": "Ті"
+      "context": "Там є три синій книги.",
+      "role": "context"
     }
   ],
   "vocab_coverage": {},

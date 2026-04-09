@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "metalanguage-sentences-and-classroom",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-08T20:55:52.338273+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-08T20:55:52.348571+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-08T20:58:22.609162+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-08T21:01:16.802659+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-08T21:27:43.571573+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T21:27:43.571863+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-08T21:29:31.919403+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T21:29:31.954312+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-08T21:29:31.962250+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-08T21:30:07.334543+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-08T21:30:07.334725+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-08T21:30:07.659233+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-08T21:32:06.584114+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-08T21:32:06.770503+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-08T21:32:08.723398+00:00"
+    }
+  }
+}

@@ -24,181 +24,109 @@ vocabulary:
   gender: ''
   verified: true
 - word: прилеті́ти
-  translation: to arrive by air
+  translation: to arrive by air (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приліта́ти
+  translation: to arrive by air (imperfective/regularly)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відліта́ти
+  translation: to fly away (imperfective/regularly)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: ви́летіти
-  translation: to depart by air / fly out
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: долеті́ти
-  translation: to fly all the way to
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: перелеті́ти
-  translation: to fly across
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пролеті́ти
-  translation: to fly past / through
+  translation: to take off / depart by air (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: залеті́ти
-  translation: to fly in
+  translation: to fly into / fly too far (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: долеті́ти
+  translation: to fly all the way to (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перелеті́ти
+  translation: to fly across / over (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пролеті́ти
+  translation: to fly past / through (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: припливти́
-  translation: to arrive by water
+  translation: to arrive by water (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: попливти́
+  translation: to set sail / set off swimming (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: переплисти́
-  translation: to swim across
+  translation: to swim/sail across (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: доплисти́
-  translation: to swim all the way to
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: проплисти́
-  translation: to sail past
+  translation: to swim/sail all the way to (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: обплисти́
-  translation: to sail around
+  translation: to sail around (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заплисти́
+  translation: to swim/sail into (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́плисти
+  translation: to swim out / emerge (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проплисти́
+  translation: to sail/swim past (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: підплисти́
-  translation: to swim up to
+  translation: to swim/sail up to (perfective)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: запливти́
-  translation: to swim into
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ви́пливти
-  translation: to swim out
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: аеропо́рт
-  translation: airport
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: терміна́л
-  translation: terminal
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: рейс
-  translation: flight
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: реєстрація на рейс
-  translation: flight check-in
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: поса́дка
-  translation: boarding / landing
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: посадковий талон
-  translation: boarding pass
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: злітна смуга
-  translation: runway
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: прямий рейс
-  translation: direct flight
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: стикувальний рейс
-  translation: connecting flight
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: переса́дка
-  translation: transfer / connection
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: порт
-  translation: port / harbor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: прича́л
-  translation: pier / dock
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: при́стань
-  translation: jetty / wharf
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: затока
-  translation: bay / strait
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: поро́м
-  translation: ferry
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: корабе́ль
-  translation: ship
+- word: літа́к
+  translation: plane
   expression: false
   pos: ім.
   gender: ч.
@@ -209,11 +137,71 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: я́хта
-  translation: yacht
+- word: корабе́ль
+  translation: ship
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
+  verified: true
+- word: поро́м
+  translation: ferry
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: аеропо́рт
+  translation: airport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: порт
+  translation: port/harbor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: терміна́л
+  translation: terminal
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: реєстрація на рейс
+  translation: check-in
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зал очікування
+  translation: waiting lounge
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вихід на посадку
+  translation: gate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: злітна смуга
+  translation: runway
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прича́л
+  translation: pier/dock
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: при́стань
+  translation: landing stage
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: па́луба
   translation: deck
@@ -233,17 +221,53 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: не́бо
-  translation: sky
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мо́ре
-  translation: sea
+- word: матро́с
+  translation: sailor
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: прямий рейс
+  translation: direct flight
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рейс із пересадкою
+  translation: connecting flight
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переса́дка
+  translation: transfer/connection
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сісти на літак
+  translation: to board a plane
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зійти з літака
+  translation: to disembark from a plane
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зліт
+  translation: takeoff
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поса́дка
+  translation: landing / boarding
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: час летить
   translation: time flies
@@ -252,19 +276,19 @@ vocabulary:
   gender: ''
   verified: true
 - word: гроші летять
-  translation: money disappears fast
+  translation: money is spent quickly
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: новина летить
-  translation: news travels fast
+- word: думка летить
+  translation: thought flies
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: хмари пливуть
-  translation: clouds drift
+  translation: clouds sail/float
   expression: true
   pos: ''
   gender: ''
@@ -275,14 +299,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: думки пливуть
-  translation: thoughts drift / wander
+- word: життя пливе спокійно
+  translation: life flows calmly
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: все пливе перед очима
-  translation: everything is spinning / blurry
+- word: усе пливе перед очима
+  translation: everything is blurry
   expression: true
   pos: ''
   gender: ''
@@ -293,27 +317,9 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: летіти на всіх вітрилах
-  translation: to rush at full speed / with all sails set
+- word: летіти як на крилах
+  translation: to fly as if on wings
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: пливти в руки
-  translation: to come easily / fall into one's lap
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: шпарга́лка
-  translation: cheat sheet
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: самопере́ві́рка
-  translation: self-check
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true

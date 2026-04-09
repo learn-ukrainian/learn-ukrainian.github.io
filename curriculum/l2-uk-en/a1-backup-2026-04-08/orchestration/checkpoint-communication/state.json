@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "checkpoint-communication",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-30T21:21:59.882145+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-30T21:23:06.286098+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-30T21:24:01.739623+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-30T21:26:19.704552+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-30T21:30:52.904607+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T21:30:52.904927+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-30T21:36:03.005563+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-30T21:36:03.035611+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-30T21:36:03.053912+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-30T21:36:41.735675+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-30T21:36:42.853568+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-30T21:36:42.979126+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-03T21:56:28.913771+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T15:10:03.599109+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T15:10:09.402712+00:00"
+    }
+  }
+}

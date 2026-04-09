@@ -1,27 +1,113 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 58,
+  "grounded_items": 42,
+  "ungrounded": [
+    {
+      "word": "два",
+      "exercise_type": "quiz",
+      "context": "Один стіл, а два...",
+      "role": "context"
+    },
+    {
+      "word": "одна",
+      "exercise_type": "quiz",
+      "context": "Одна сумка, а дві...",
+      "role": "context"
+    },
+    {
+      "word": "дві",
+      "exercise_type": "quiz",
+      "context": "Одна сумка, а дві...",
+      "role": "context"
+    },
+    {
+      "word": "одне",
+      "exercise_type": "quiz",
+      "context": "Одне крісло, а два...",
+      "role": "context"
+    },
+    {
+      "word": "річ",
+      "exercise_type": "quiz",
+      "context": "Одна річ, а три...",
+      "role": "context"
+    },
+    {
+      "word": "там",
+      "exercise_type": "fill-in",
+      "context": "Там є ____ вікна.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "fill-in",
+      "context": "У мене є ____ ручки.",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "fill-in",
+      "context": "Я маю ____ зошити.",
+      "role": "context"
+    },
+    {
+      "word": "стоять",
+      "exercise_type": "fill-in",
+      "context": "Там стоять ____ ліжка.",
+      "role": "context"
+    },
+    {
+      "word": "бачу",
+      "exercise_type": "fill-in",
+      "context": "Я бачу ____ дзеркала.",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Множина слова «стіл» — це «столи».",
+      "role": "context"
+    },
+    {
+      "word": "книгі",
+      "exercise_type": "true-false",
+      "context": "Множина слова «книга» — це «книгі».",
+      "role": "context"
+    },
+    {
+      "word": "має",
+      "exercise_type": "true-false",
+      "context": "Слово «стільці» має закінчення -і.",
+      "role": "context"
+    },
+    {
+      "word": "ліжки",
+      "exercise_type": "true-false",
+      "context": "Множина слова «ліжко» — це «ліжки».",
+      "role": "context"
+    },
+    {
+      "word": "завжди",
+      "exercise_type": "true-false",
+      "context": "Прикметники у множині завжди мають закінчення -і.",
+      "role": "context"
+    },
+    {
+      "word": "дуже",
+      "exercise_type": "error-correction",
+      "context": "Ці вікно дуже чисті.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "вікна",
-      "дзеркала",
-      "зошити",
-      "книги",
       "крісла",
-      "лампи",
-      "мої",
       "речі",
-      "ручки",
-      "столи",
-      "стільці",
       "сумки",
-      "ті",
-      "ці",
-      "які"
+      "ті"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,0 +1,193 @@
+vocabulary:
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: односпрямо́ваний
+  translation: unidirectional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: різноспрямо́ваний
+  translation: multidirectional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: багатоспрямований
+  translation: multidirectional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зві́дки
+  translation: from where
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: куди́
+  translation: where to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: іти́
+  translation: to go on foot (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go on foot (multidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́хати
+  translation: to go by vehicle (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́здити
+  translation: to go by vehicle (multidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: леті́ти
+  translation: to fly (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: літа́ти
+  translation: to fly (multidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: піти
+  translation: to leave on foot (perfective)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пої́хати
+  translation: to leave by vehicle (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: полеті́ти
+  translation: to fly off (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пи́ти
+  translation: to drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: боро́тися
+  translation: to fight / struggle
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: на́прямок
+  translation: direction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рух
+  translation: movement / motion
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: писа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: би́ти
+  translation: to hit / beat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ли́ти
+  translation: to pour
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: че́рез
+  translation: through / across (preposition)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: по
+  translation: along / around (preposition)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: туди й назад
+  translation: back and forth
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у справах
+  translation: for business
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на вихідних
+  translation: on weekends
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пішов геть
+  translation: left away / gone
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щасливої дороги!
+  translation: have a safe trip!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Поїхали!
+  translation: Let's go! / We're off!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

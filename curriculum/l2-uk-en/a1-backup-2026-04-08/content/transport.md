@@ -1,0 +1,110 @@
+## Діало́ги (Dialogues)
+Оля meets her friend Марко́ at Бори́спіль airport. He has just arrived in Kyiv for the first time and needs to get to his hotel in the city centre.
+> — **Марко:** Приві́т, Олю! Як діста́тися до це́нтру? *(Hi, Olya! How do I get to the centre?)*
+> — **Оля:** Привіт! Є три варіа́нти. *(Hi! There are three options.)*
+> — **Оля:** Мо́жна ї́хати авто́бусом — но́мер сімдеся́т оди́н. *(You can go by bus — number seventy-one.)*
+> — **Оля:** Можна по́тягом — «Експре́с». *(Or by train — the "Express".)*
+> — **Оля:** А́бо на таксі́. *(Or by taxi.)*
+> — **Марко:** А метро́ є? *(Is there a metro?)*
+> — **Оля:** Метро нема́ в аеропорту́. *(There's no metro at the airport.)*
+> — **Оля:** Але́ в це́нтрі є. *(But there is one in the centre.)*
+> — **Оля:** Їдь потягом, а по́тім на метро. *(Take the train, then the metro.)*
+> — **Марко:** До́бре. А де купи́ти квито́к? *(OK. And where do I buy a ticket?)*
+> — **Оля:** Ось там, у ка́сі. *(Over there, at the ticket window.)*
+
+Two patterns appear in this dialogue. Оля says **їхати автобусом** and **їхати потягом** — transport with a special word ending. But she says **на таксі** and **на метро** — transport with **на**. Both mean "by (transport)." You will study both patterns below.
+Марко walks to the ticket window.
+> — **Марко:** Один квиток до центру, будь ла́ска. *(One ticket to the centre, please.)*
+> — **Каса:** В один бік чи туди́ й наза́д? *(One way or round trip?)*
+> — **Марко:** Туди й назад. *(Round trip.)*
+> — **Каса:** На авто́бус чи на по́тяг? *(For the bus or the train?)*
+> — **Марко:** На потяг. *(For the train.)*
+> — **Каса:** Гара́зд. Дві́сті со́рок гри́вень. *(OK. Two hundred forty hryvnias.)*
+> — **Марко:** О котрі́й відпра́влення? *(What time is the departure?)*
+> — **Каса:** О дев'я́тій два́дцять. *(At nine twenty.)*
+> — **Марко:** Дякую! *(Thanks!)*
+> — **Каса:** Будь ласка. Приє́мної пої́здки! *(You're welcome. Have a good trip!)*
+
+Three new phrases worth remembering: **В один бік чи туди й назад?** (One way or round trip?) — you will hear this at every ticket window in Ukraine. **О котрій відправлення?** (What time is the departure?) — this is the standard way to ask about departure time at any Ukrainian station. And **Приємної поїздки!** (Have a good trip!) — a fixed well-wishing phrase you can use as-is.
+The dialogue introduced four transport words: **автобус** (bus, masculine), **потяг** (train, masculine), **метро** (metro, neuter), and **таксі** (taxi, neuter). Their genders matter — they determine which of the two travel patterns each word uses.
+<!-- INJECT_ACTIVITY: quiz-transport-match -->
+## Транспорт (Transport Types)
+Ukrainian cities have rich public transport. Here are the main types for getting around:
+- **автобус** (bus, m) — found in virtually every city
+- **тролейбус** (trolleybus, m) — common in larger cities, runs on electric wires
+- **трамвай** (tram, m) — operates in Kyiv, Lviv, and Vinnytsia among others
+- **маршрутка** (minibus, f) — a small minibus, extremely popular across Ukraine
+For longer distances:
+- **потяг** (train, m) — Укрзалізни́ця connects all major Ukrainian cities
+- **літак** (plane, m) — for longer routes
+Two transport words never change their form, no matter the sentence: **метро** (metro, n) and **таксі** (taxi, n). These are borrowed words ending in a vowel — they stay the same always. You cannot add endings to them the way you can to **потяг** or **автобус**. This difference creates two travel patterns.
+**Pattern 1 — їхати + instrumental chunk.** When the transport word *can* change form, it takes a special ending. Learn each word together with its form as a single chunk — do not analyse the ending at this stage:
+| Transport | "By..." form |
+|---|---|
+| автобус (bus) | їхати **автобусом** |
+| тролейбус (trolleybus) | їхати **тролейбусом** |
+| трамвай (tram) | їхати **трамваєм** |
+| маршрутка (minibus) | їхати **маршруткою** |
+| потяг (train) | їхати **потягом** |
+**Pattern 2 — їхати на + noun.** When the transport word *cannot* change (or uses **на** by convention), the structure is simpler:
+- їхати **на метро** (by metro)
+- їхати **на таксі** (by taxi)
+- їхати **на машині** (by car)
+Which pattern does a word use? Learn it *with* the word: **потяг → потягом**; **метро → на метро**. If the word sounds the same in every context (метро, таксі), use **на**. If it takes endings (автобус → автобусом), use the ending form.
+<!-- INJECT_ACTIVITY: quiz-pattern-choice -->
+## Ко́ри́сні фра́зи (Useful Phrases)
+Марко is now in the city and needs to find a bus stop. He approaches a passer-by.
+> — **Марко:** Ви́бачте, де зупи́нка авто́буса? *(Excuse me, where is the bus stop?)*
+> — **Перехожий:** Ось там, навпро́ти. *(Over there, across the street.)*
+
+At the stop and at the station, these phrases cover the essentials:
+- **Де зупинка автобуса?** — Where is the bus stop?
+- **Один квиток, будь ласка.** — One ticket, please.
+- **Скільки ко́шту́є квиток?** — How much is a ticket?
+- **В один бік чи туди й назад?** — One way or round trip?
+- **Коли насту́пний потяг до Льво́ва?** — When is the next train to Lviv?
+Key vocabulary: **зупинка** (stop, f), **квиток** (ticket, m), **каса** (ticket window, f), **відправлення** (departure, n).
+<!-- INJECT_ACTIVITY: fill-in-ticket -->
+Once you are on a vehicle or navigating on foot, five more phrases help you get where you need to go:
+- **Яка це зупинка?** — What stop is this?
+- **Мені виходити тут?** — Do I get off here?
+- **Вибачте, як дістатися до вокза́лу?** — Excuse me, how do I get to the station?
+- **Їдьте пря́мо.** — Go straight.
+- **Поверніть напра́во / налі́во.** — Turn right / left.
+On the Kyiv metro, stop names are announced aloud — listen for **«Насту́пна ста́нція — Хреща́тик»**. Three direction words to remember: **прямо** (straight), **направо** (right), **наліво** (left). And **дістатися** (to get to) is used in questions as a fixed phrase: **Як дістатися до...?**
+<!-- INJECT_ACTIVITY: fill-in-directions -->
+Марко arrives at Ки́їв-Пасажи́рський station. He steps off the train and asks a passer-by:
+> — **Марко:** Вибачте, як дістатися до метро? *(Excuse me, how do I get to the metro?)*
+> — **Перехожий:** Прямо, потім направо. П'ять хвили́н. *(Straight, then right. Five minutes.)*
+
+He buys a metro token at the window:
+> — **Марко:** Один жето́н, будь ласка. Скільки коштує? *(One token, please. How much?)*
+> — **Каса:** Вісімна́дцять гривень. *(Eighteen hryvnias.)*
+
+He enters the metro and checks the display.
+> — **Марко:** Яка це станція? *(What station is this?)*
+> — **Пасажир:** Вокза́льна. *(Vokzalna.)*
+
+New vocabulary: **жетон** (metro token, m), **станція** (station, f). Марко did it — he got from the airport to the metro using only Ukrainian.
+## Підсумок — Summary
+Transport in Ukrainian cities is varied: **автобус**, **тролейбус**, **трамвай**, and **маршрутка** run in most cities. **Метро** operates in Kyiv, Kharkiv, and Dnipro. For intercity travel, **потяг** is the most popular choice — Укрзалізниця connects all major cities. **Літак** covers longer distances. Two of these words never change form: **метро** and **таксі** — they always use **на**.
+Here are the two patterns side by side:
+| їхати + instrumental | їхати на + noun |
+|---|---|
+| **автобусом** | **на метро** |
+| **тролейбусом** | **на таксі** |
+| **трамваєм** | **на машині** |
+| **маршруткою** | |
+| **потягом** | |
+A helpful guide: if the word takes endings (автобус → автобусом), use the ending form. If it always stays the same (метро, таксі), use **на**.
+### Самопере́ві́рка (Self-Check)
+- Як сказа́ти "by bus"? → **автобусом**
+- Як сказати "by metro"? → **на метро**
+- Як запита́ти про зупи́нку? → **Де зупинка автобуса?**
+- Як купити квиток? → **Один квиток до ___, будь ласка.**
+- Як запитати ціну́? → **Скільки коштує квиток?**
+- Як запитати час відправлення? → **О котрій відправлення?**
+- Як запитати, як дістатися? → **Як дістатися до ___?**
+- Як сказати "turn right"? → **Поверніть направо.**
+- Challenge: How does Марко get from Бориспіль airport to his hotel using two types of transport? Write two sentences using **їхати**.
+<!-- INJECT_ACTIVITY: quiz-which-transport -->

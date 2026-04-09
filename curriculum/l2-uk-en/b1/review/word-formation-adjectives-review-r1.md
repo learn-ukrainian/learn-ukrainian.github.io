@@ -1,118 +1,94 @@
 ## Linguistic Scan
-- **Russianisms / Calques**: 
-  - `міський вид` sounds like a calque from the Russian "городской вид". In Ukrainian, especially in the context of an art gallery, it should be `міський пейзаж` (which also aligns exactly with the plan). 
-  - `наполовину пуста` uses the word `пуста` where `порожня` is the standard and more natural Ukrainian equivalent for an empty container/glass.
-- **Phonetics & Morphology Errors**:
-  - The text claims that the verb is `кміти` ("від старовинного слова «кміти»"). This word does not exist in standard Ukrainian (confirmed via VESUM verification). The correct verb is `кмітити` (or `кметувати`). 
-  - The text incorrectly groups consonant alternations for the first palatalization: `перехід дзвінких звуків [г], [ж], [з] у звук [ж]`. The sound `[ж]` does not transition into `[ж]`. The correct base consonants transitioning to `[ж]` are `[г]` and `[з]`. Similar incorrect groupings occur for `[к, ч, ц]` and `[х, ш, с]`.
-  - The text makes a factually incorrect phonetic claim about the suffix `-ськ-`: `Ці приголосні звуки зливаються разом і завжди перетворюються на один м'який звук [ц'].` They do not merge into a single `[ц']` sound; they merge to form the suffix `-цьк-` (which contains `[ц'к]`). 
+Errors found. Several factual and orthographic errors are present:
+1. **Russian orthography rule taught as Ukrainian:** The text claims the prefix `без-` changes to `бес-` before certain consonants. This is a Russian rule. In Ukrainian, `без-` never changes its spelling.
+2. **Hallucinated words:** The adjective `піддашний` (from `під дахом`) and `здоровенюча` (augmentative) are not attested in standard Ukrainian dictionaries (VESUM/SUM-11).
+3. **Wrong derivational base:** The text claims `кмітливий` is formed from the verb `думати`, which is factually incorrect (it comes from `кмітити`).
+4. **Russianisms/Calques:** The use of `існуючий` as an active adjective is a well-known calque from Russian ("существующий").
+5. **Typo:** `кольовий` instead of `кольоровий`.
 
 ## Exercise Check
-- **Marker Count**: 8 injected, but the plan only specified 6 `activity_hints`. 
-- **Alignment with Plan**:
-  - The plan asked for a `quiz` with the focus: "Identify formation method and correct suffix for given adjectives".
-  - The writer injected a `quiz` about possessive forms instead.
-  - The writer added an unprompted extra `fill-in` activity for possessive forms.
-  - The writer added an unprompted extra `match-up` activity for compound adjectives.
-- The `group-sort`, `mark-the-words`, and `error-correction` activities match the plan perfectly. The extraneous and deviated activities must be removed/replaced to match the plan precisely.
+- Marker placement: Markers are excellently spread across all 6 sections, which is an improvement over the plan's grouping.
+- Marker IDs: The writer hallucinated long, unstructured IDs for the activities (e.g., `error-correction-focus-on-fixing-adjectives-where-the-alternation-was-missed-e-g-instead-of`) and ignored the specific `focus` tags from the plan's `activity_hints`. For example, the plan requested a `fill-in` for Suffixal formation, but the writer used it for Possessives.
+- Fix needed: Rename the marker IDs to match the plan's `type` and `focus` hints, aligning them with the sections where they were placed to maintain the good spread.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | Failed to explicitly cite any of the 5 textbook references provided in the plan. Replaced the planned `пейзаж` with `вид`. Added extra activities not in the plan. |
-| 2. Linguistic accuracy | 7/10 | Included a non-existent word (`кміти` instead of `кмітити`). Made multiple sloppy phonetic claims regarding consonant alternations (`[ж]` turning into `[ж]`, and `[к] + [с]` turning into a single `[ц']` sound). |
-| 3. Pedagogical quality | 9/10 | Excellent pedagogical breakdown of the rules. The explanation of `журавлиний` vs `журавлинний` is brilliant. Short forms of possessives in the accusative case (for inanimate objects) were noted with high accuracy. |
-| 4. Vocabulary coverage | 10/10 | Effectively wove in all required terms (`словотвір`, `суфікс`, `префікс`, `продуктивний`, `присвійний`, etc.) organically. |
-| 5. Exercise quality | 5/10 | Injected 8 markers instead of the 6 planned. Changed the focus of the main quiz and injected random `fill-in` and `match-up` blocks that the plan didn't ask for. |
-| 6. Engagement & tone | 6/10 | Used forbidden motivational openers ("це справжня суперсила") and excessive meta-commentary ("Давайте детально проаналізуємо", "Тепер варто значно детальніше поговорити", "Розглянемо ще п'ять"). |
-| 7. Structural integrity | 7/10 | The module is structurally sound but significantly over the word count target (5210 words vs 4000 planned target). |
-| 8. Cultural accuracy | 10/10 | Culturally on-point. Great local examples (Kyiv gallery, Ukrainian cities, Halych). |
-| 9. Dialogue & conversation quality | 9/10 | The gallery dialogue sets up the vocabulary well, though slightly formal, it perfectly matches the `науково-навчальний` register. |
+| 1. Plan adherence | 9/10 | Missed two recommended vocabulary words (`похідне слово`, `мотивувальне слово`), which will be injected. Note: The writer brilliantly ignored the plan's incorrect claim that `г->ж` is a "second palatalisation pattern" and accurately taught the first palatalization instead. However, the writer unfortunately copied the plan's erroneous `без-/бес-` spelling rule. |
+| 2. Linguistic accuracy | 8/10 | Multiple critical factual errors: teaching the Russian `бес-` spelling rule, hallucinating words like `піддашний` and `здоровенюча`, and assigning the wrong base verb (`думати`) to `кмітливий`. `існуючий` is a calque. |
+| 3. Pedagogical quality | 9/10 | Excellent pedagogical flow. The progression from explaining the concept to providing concrete examples before showing the rule is highly effective. |
+| 4. Vocabulary coverage | 9/10 | All required words used naturally. Two recommended words missing (fixed in revision). |
+| 5. Exercise quality | 8/10 | Markers are placed perfectly, but the IDs deviate from the plan's required focus topics. |
+| 6. Engagement & tone | 10/10 | The tone is warm, encouraging, and avoids generic or gamified filler. "Уявіть, що ви знаєте лише одне базове слово..." is a great hook. |
+| 7. Structural integrity | 10/10 | 5202 words. All sections present, well-formatted, clean markdown. |
+| 8. Cultural accuracy | 10/10 | Explicitly calls out the Russian calque `-ов` for male names (like `Миколов` instead of `Миколин`), which is excellent decolonized pedagogy. |
+| 9. Dialogue & conversation quality | 10/10 | Natural and contextually appropriate art gallery dialogue successfully incorporating the target suffixal adjectives. |
 
 ## Findings
+[2. Linguistic accuracy] [CRITICAL]
+Location: Section "Префіксальне та префіксально-суфіксальне творення" — "Інший важливий префікс — це **без-** (який змінюється на **бес-** перед певними приголосними)."
+Issue: This is a Russian orthography rule. In Ukrainian, `без-` and `роз-` NEVER change to `бес-` or `рос-`.
+Fix: Remove the parenthetical note about `бес-`.
 
-[Linguistic accuracy] [CRITICAL]
-Location: `від старовинного слова «кміти»`
-Issue: The verb "кміти" does not exist in standard Ukrainian. The correct verb is "кмітити".
-Fix: Replace with `від старовинного слова «кмітити»`.
+[2. Linguistic accuracy] [CRITICAL]
+Location: Section "Префіксальне та префіксально-суфіксальне творення" — "А якщо затишна кімната розташована безпосередньо під дахом, вона цілком закономірно називається словом піддашний (under-roof)."
+Issue: `піддашний` is a hallucinated word that does not exist in VESUM or SUM-11 (the correct word for an attic space is `горищний` or `мансардний`).
+Fix: Replace the example with a valid `під-...-н-` construction, such as `підвіконний` (under-window).
 
-[Linguistic accuracy] [CRITICAL]
-Location: `Ці приголосні звуки зливаються разом і завжди перетворюються на один м'який звук [ц'].`
-Issue: Factually wrong phonetic claim. The consonants [к, ч, ц] and [с] from the suffix do not merge into a single [ц'] sound; they merge to form the suffix `-цьк-`.
-Fix: Replace with `Ці приголосні звуки зливаються разом і утворюють новий суфікс «-цьк-».`
+[2. Linguistic accuracy] [CRITICAL]
+Location: Section "Суфіксальне творення прикметників" — "Від відомого дієслова думати можна швидко утворити корисне слово кмітливий (clever)..."
+Issue: `кмітливий` does not come from `думати`. It comes from the verb `кмітити`. Teaching the wrong derivational root undermines the lesson on word formation.
+Fix: Change `думати` to `кмітити`.
 
-[Linguistic accuracy] [MAJOR]
-Location: `Перша важлива і дуже поширена група — це перехід дзвінких звуків [г], [ж], [з] у звук [ж].` (and subsequent similar lists for ч/ш)
-Issue: Sloppy phonetics. `[ж]` does not transition into `[ж]`. The base consonants that alternate to `[ж]` in these formations are `[г]` and `[з]`.
-Fix: Replace the lists with the accurate base consonants (`[г] та [з] у звук [ж]`, `[к] та [ц] у звук [ч]`, `[х] та [с] у приголосний [ш]`).
+[2. Linguistic accuracy] [MAJOR]
+Location: Section "Суфіксальне творення прикметників" — "Так само величезна і масивна річ може називатися здоровенюча (huge)..."
+Issue: Although `здоровенюча` was in the plan, it is a non-standard augmentative not found in VESUM/SUM. 
+Fix: Change the example to `товстюча` (from `товста`), which is a valid and attested `-юч-` adjective.
 
-[Plan adherence] [MAJOR]
-Location: `А ось цей **міський** (urban) вид здається мені`
-Issue: The plan explicitly specifies using "пейзаж" in this dialogue sentence. Using "вид" here sounds like a calque from the Russian "городской вид".
-Fix: Replace with `А ось цей **міський** (urban) пейзаж здається мені`.
+[2. Linguistic accuracy] [MAJOR]
+Location: Section "Префіксальне та префіксально-суфіксальне творення" — "...ми беремо вже існуючий, повноцінний прикметник..."
+Issue: `існуючий` is an active participle calqued from Russian. It is poor stylistic practice in modern Ukrainian.
+Fix: Change to `наявний`.
 
-[Plan adherence] [MAJOR]
-Location: Entire prose text.
-Issue: The writer failed to explicitly cite any of the textbook references provided in the plan (Литвінова, Заболотний, Авраменко, Голуб).
-Fix: Inject citations naturally into the sections where those specific grammar points are introduced.
+[4. Vocabulary coverage] [MINOR]
+Location: Section "Префіксальне та префіксально-суфіксальне творення" — "...ми беремо вже існуючий, повноцінний прикметник і просто приєднуємо до нього відповідний префікс."
+Issue: Missing recommended vocabulary words `мотивувальне слово` and `похідне слово`.
+Fix: Inject them into the sentence while fixing the `існуючий` calque.
 
-[Exercise quality] [MAJOR]
-Location: `<!-- INJECT_ACTIVITY: quiz... -->` and `<!-- INJECT_ACTIVITY: fill-in... -->` (possessives), `<!-- INJECT_ACTIVITY: match-up... -->` (compounds).
-Issue: The writer injected 8 activity markers instead of the planned 6, deviating from the prescribed `activity_hints`.
-Fix: Delete the extraneous possessive markers and replace the final `match-up` with the plan's exact `quiz` marker.
+[2. Linguistic accuracy] [MINOR]
+Location: Section "Складне творення прикметників" — "Кожен кольовий компонент зберігає свою індивідуальність..."
+Issue: Typo in `кольоровий`.
+Fix: Fix typo.
 
-[Engagement & tone] [MAJOR]
-Location: `Словотвір (word formation) — це справжня суперсила...`, `Давайте детально проаналізуємо...`, `Тепер варто значно детальніше поговорити про...`
-Issue: Contains forbidden generic motivational openers and meta-commentary/coursebook filler.
-Fix: Remove the meta-commentary phrases to show rather than tell.
-
-[Linguistic accuracy] [MINOR]
-Location: `що склянка наполовину пуста, ми використовуємо`
-Issue: While understandable, `пуста` is heavily influenced by Russian in this context. `порожня` is the standard Ukrainian equivalent for an empty container.
-Fix: Replace with `що склянка наполовину порожня, ми використовуємо`.
+[5. Exercise quality] [MINOR]
+Location: Throughout the document.
+Issue: Activity marker IDs do not align with the plan's `type` and `focus` hints, and use overly long unstructured names.
+Fix: Rename the 5 misplaced/long markers to strictly align with the plan's intentions while keeping them where they are.
 
 ## Verdict: REVISE
-The writer did an excellent job with the morphological explanations and pedagogical depth, but failed on strict prompt compliance (meta-commentary, missing textbook citations, injecting rogue activity blocks) and made several sloppy phonetic claims that qualify as critical errors. A round of deterministic fixes is required.
+The module contains multiple critical factual errors concerning Ukrainian orthography and word roots (notably the Russian `бес-` rule and the hallucinated root for `кмітливий`). These must be patched deterministically.
 
 <fixes>
-- find: "від старовинного слова «кміти»"
-  replace: "від старовинного слова «кмітити»"
-- find: "А ось цей **міський** (urban) вид здається мені дещо холодним"
-  replace: "А ось цей **міський** (urban) пейзаж здається мені дещо холодним"
-- find: "Перша важлива і дуже поширена група — це перехід дзвінких звуків [г], [ж], [з] у звук [ж]."
-  replace: "Перша важлива група — це перехід приголосних звуків [г] та [з] у звук [ж]."
-- find: "Друга, не менш поширена фонетична група — це перехід приголосних [к], [ч], [ц] у звук [ч]."
-  replace: "Друга фонетична група — це перехід приголосних [к] та [ц] у звук [ч]."
-- find: "І третя типова зміна — це плавний перехід звуків [х], [ш], [с] у приголосний [ш]."
-  replace: "І третя типова зміна — це перехід приголосних [х] та [с] у приголосний [ш]."
-- find: "Ці приголосні звуки зливаються разом і завжди перетворюються на один м'який звук [ц']."
-  replace: "Ці приголосні звуки зливаються разом і утворюють новий суфікс «-цьк-»."
-- find: "<!-- INJECT_ACTIVITY: quiz, 8 items identifying the correct possessive form for family members and personal names (e.g., Сашко -> ?, Ганна -> ?, дід -> ?) -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: fill-in, 4 items completing sentences using the correct form of a possessive adjective from a bracketed noun (e.g., \"Це (сусід) кіт.\") -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: match-up, 8 word pairs (жовтий + гарячий, право + берег, синій + зелений, ліс + степ) to be combined into correct compound adjectives -->"
-  replace: "<!-- INJECT_ACTIVITY: quiz, Identify formation method and correct suffix for given adjectives, items: 8 -->"
-- find: "**Словотвір** (word formation) — це справжня суперсила для тих, хто вивчає українську мову на середньому рівні. Розуміння того, як працюють **суфікси** (suffixes), відкриває двері до тисяч нових слів у вашому активному словнику. Вам більше не потрібен словник для кожного нового поняття чи явища, з яким ви стикаєтеся. Якщо ви знаєте **корінь**"
-  replace: "Якщо ви знаєте **корінь**"
-- find: "Давайте детально проаналізуємо слова з нашого діалогу в столичній мистецькій галереї. Слово «лісовий» утворене від іменника"
-  replace: "У нашому діалозі слово «лісовий» утворене від іменника"
-- find: "Від дієслова «холодити» логічно утворюється прикметник «холодильний» (refrigerating). Розглянемо ще п'ять класичних прикладів такого переходу. Слово «залізо» дає нам прикметник «залізний»"
-  replace: "Від дієслова «холодити» логічно утворюється прикметник «холодильний» (refrigerating). Слово «залізо» дає нам прикметник «залізний»"
-- find: "Тепер варто значно детальніше поговорити про **відмінювання** (declension) цих цікавих та корисних слів. Присвійні прикметники мають одну дуже специфічну граматичну особливість, про яку студенти часто забувають. У називному відмінку однини"
-  replace: "**Відмінювання** (declension) цих слів має одну специфічну граматичну особливість. У називному відмінку однини"
-- find: "Отже, ми детально розглянули всі основні способи **словотворення** (word formation) прикметників в українській мові. Давайте узагальнимо цю надзвичайно важливу інформацію, щоб вона назавжди залишилася у вашій пам'яті. Найпопулярнішим і найпродуктивнішим"
-  replace: "Найпопулярнішим і найпродуктивнішим"
-- find: "Відносні прикметники завжди походять від інших самостійних частин мови, найчастіше — від іменників або дієслів. Найбільш **продуктивний** (productive) суфікс в усій українській мові — це звичайний суфікс «-н-»."
-  replace: "Як зазначає підручник Литвінової для 6 класу (с. 208), найбільше прикметників утворено саме за допомогою суфіксів. Відносні прикметники завжди походять від інших самостійних частин мови, найчастіше — від іменників або дієслів. Найбільш **продуктивний** (productive) суфікс в усій українській мові — це звичайний суфікс «-н-»."
-- find: "Один із найважливіших суфіксів для правильного творення географічних і соціальних прикметників — це суфікс «-ськ-». Він регулярно допомагає нам утворювати слова"
-  replace: "Один із найважливіших суфіксів для правильного творення географічних і соціальних прикметників — це суфікс «-ськ-». Як пояснює Заболотний (7 клас, с. 132), він регулярно допомагає нам утворювати слова"
-- find: "Але існує також **префіксальний** (prefixal) спосіб творення нових слів. У цьому цікавому випадку префікс приєднується до вже готового, повноцінного прикметника."
-  replace: "Але існує також **префіксальний** (prefixal) спосіб творення нових слів, який детально описує Авраменко (6 клас, с. 136). У цьому цікавому випадку префікс приєднується до вже готового, повноцінного прикметника."
-- find: "Одним із найважливіших і водночас найлогічніших правил української орфографії є правильне написання літер «н» та «нн» у прикметниках. Студенти часто роблять тут прикрі помилки, але логіка цього граматичного явища дуже проста"
-  replace: "Одним із найважливіших і водночас найлогічніших правил української орфографії є правильне написання літер «н» та «нн» у прикметниках (див. Заболотний, 6 клас, с. 155). Студенти часто роблять тут прикрі помилки, але логіка цього граматичного явища дуже проста"
-- find: "Окрім суфіксів та префіксів, українська мова активно використовує ще один надзвичайно цікавий метод. Це **складання основ** (compounding of stems)"
-  replace: "Окрім суфіксів та префіксів, як підкреслює Голуб (6 клас, с. 35), українська мова активно використовує ще один надзвичайно цікавий метод. Це **складання основ** (compounding of stems)"
-- find: "що склянка наполовину пуста, ми використовуємо"
-  replace: "що склянка наполовину порожня, ми використовуємо"
+- find: "Коли ми використовуємо суто префіксальний спосіб творення прикметників, ми беремо вже існуючий, повноцінний прикметник і просто приєднуємо до нього відповідний префікс. Важливо пам'ятати, що при цьому нове слово залишається в тій самій граматичній групі, але отримує новий семантичний відтінок."
+  replace: "Коли ми використовуємо суто префіксальний спосіб творення прикметників, ми беремо вже наявний, повноцінний прикметник (який діє як мотивувальне слово) і просто приєднуємо до нього відповідний префікс. Важливо пам'ятати, що при цьому утворене похідне слово залишається в тій самій граматичній групі, але отримує новий семантичний відтінок."
+- find: "Кожен кольовий компонент зберігає свою індивідуальність, тому вони надійно розділені дефісом."
+  replace: "Кожен кольоровий компонент зберігає свою індивідуальність, тому вони надійно розділені дефісом."
+- find: "Так само величезна і масивна річ може називатися здоровенюча (huge), одразу підкреслюючи надзвичайний розмір предмета у просторі."
+  replace: "Так само дуже товста і масивна книга може називатися товстюча (thick), одразу підкреслюючи надзвичайний розмір предмета у просторі."
+- find: "Від відомого дієслова думати можна швидко утворити корисне слово кмітливий (clever), що означає природну здатність дуже швидко міркувати."
+  replace: "Від дієслова кмітити (to grasp) можна швидко утворити корисне слово кмітливий (clever), що означає природну здатність дуже швидко міркувати."
+- find: "Інший важливий префікс — це **без-** (який змінюється на **бес-** перед певними приголосними). Він вказує на повну, абсолютну відсутність певної якості чи ознаки."
+  replace: "Інший важливий префікс — це **без-**. Він вказує на повну, абсолютну відсутність певної якості чи ознаки."
+- find: "А якщо затишна кімната розташована безпосередньо під дахом, вона цілком закономірно називається словом піддашний (under-roof)."
+  replace: "А якщо горщик із квітами стоїть безпосередньо під вікном, він цілком закономірно називається словом підвіконний (under-window)."
+- find: "<!-- INJECT_ACTIVITY: fill-in-possessive -->"
+  replace: "<!-- INJECT_ACTIVITY: essay-response-possessive -->"
+- find: "<!-- INJECT_ACTIVITY: quiz-focus-on-choosing-between-and-in-various-context-sentences -->"
+  replace: "<!-- INJECT_ACTIVITY: fill-in-suffixal -->"
+- find: "<!-- INJECT_ACTIVITY: match-formation-methods -->"
+  replace: "<!-- INJECT_ACTIVITY: error-correction-possessive -->"
+- find: "<!-- INJECT_ACTIVITY: error-correction-focus-on-fixing-adjectives-where-the-alternation-was-missed-e-g-instead-of -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz-suffixal -->"
+- find: "<!-- INJECT_ACTIVITY: essay-compound-adjectives-essay-response-focus-on-describing-a-favorite-landscape-or-person-using-at-least-5-compound-adjectives-minimum-150-words -->"
+  replace: "<!-- INJECT_ACTIVITY: match-up-possessive -->"
 </fixes>

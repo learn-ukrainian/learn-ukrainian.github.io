@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 5 content_outline sections present with correct headings. Self-check
+    covers M36-M40 as specified. Reading follows plan''s Anna scenario (market → café
+    → meets friend → introduces brother). Grammar '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian forms verified against VESUM. Accusative paradigm correctly
+    presented for all four subcategories. Vocatives correct (Олено, Анно, Дмитре,
+    Михайле). No Russianisms, surzhyk, calques, or p
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: self-check → reading → grammar summary → connected dialogue
+    → summary. Grammar presented with examples, not bare lists (e.g., Pattern 2 shows
+    борщ→борщ, кава→каву with full example se'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All plan vocabulary present: їжа, напої, meals (сніданок, обід, вечеря),
+    accusative forms, café phrases (Мені..., Рахунок, Можна карткою?), market phrases
+    (Скільки коштує/коштують, Дайте кілограм), з+'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 4 activity markers matching all 4 plan activity_hints. Markers placed
+    after relevant teaching sections. Plan activities have varied correct-answer positions
+    (not all index 0). Distractors are plausibl
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers or meta-commentary. Direct, teacher-like tone:
+    "Go through each checkpoint honestly — if something feels shaky, that''s useful
+    information." Reading section is a realistic scena'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'All H2 headings present and ordered correctly. Word count 1265 vs 1000
+    target ✓. Clean markdown structure with dialogue divs. **Deductions:** (1) Truncated
+    sentence "If yes, " is a structural defect. '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian" comparisons. Market
+    and café scenarios are culturally authentic Ukrainian settings. Гривня as currency.
+    Борщ зі сметаною, вареники, каша — authe
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Reading section dialogue is natural with named speakers. **But the Connected
+    Dialogue has two significant logic errors:** (1) Дмитро says "Ти знаєш мого брата
+    Дмитра?" — introducing a brother with his
+findings: []

@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-add-sya -->`
-- `<!-- INJECT_ACTIVITY: quiz-reflexive-or-not -->`
-- `<!-- INJECT_ACTIVITY: fill-in-morning-order -->`
-- `<!-- INJECT_ACTIVITY: fill-in-describe-morning -->`
+- `<!-- INJECT_ACTIVITY: fill-in-reflexive-endings -->`
+- `<!-- INJECT_ACTIVITY: quiz-reflexive-choice -->`
+- `<!-- INJECT_ACTIVITY: order-morning-sequence -->`
+- `<!-- INJECT_ACTIVITY: write-morning-routine -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -88,178 +88,127 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Dialogues
 
-It's Monday morning. Ліна and Настя share an apartment. They're both in the kitchen — one is already dressed, the other still half-asleep. Their conversation is about to teach you one of the most useful verb patterns in Ukrainian.
+Every morning has a distinct rhythm. We use specific verbs to describe daily routines, and in Ukrainian, many of these share a special feature because they describe actions performed on ourselves. Consider a typical morning scenario. Two roommates, **Ліна** (Lina) and **Настя** (Nastia), are in their shared kitchen on a Tuesday morning. The time is early, and the sun is just coming up. Lina is an early bird; she is already sitting at the table and drinking her morning coffee. Nastia, however, is just starting her daily routine and walks into the kitchen looking a bit sleepy. Lina asks Nastia about her timing, wanting to know exactly when her day begins. Nastia explains her sequence clearly.
 
-### Діалог 1 — Ранок у будні (Weekday morning)
+> **Ліна:** Коли ти прокидаєшся? *(When do you wake up?)*
+> **Настя:** Я прокидаюся о сьомій. *(I wake up at seven.)*
+> **Ліна:** Що ти робиш потім? *(What do you do then?)*
+> **Настя:** Вмиваюся, одягаюся і снідаю. *(I wash up, get dressed, and have breakfast.)*
+> **Ліна:** А коли ти йдеш на роботу? *(And when do you go to work?)*
+> **Настя:** О восьмій. *(At eight.)*
 
-> **Настя:** Ліно, коли ти прокидаєшся? *(Lina, when do you wake up?)*
-> **Ліна:** Я прокидаюся о сьомій. *(I wake up at seven.)*
-> **Настя:** А що ти робиш потім? *(And what do you do next?)*
-> **Ліна:** Спочатку вмиваюся, потім одягаюся і снідаю. *(First I wash up, then I get dressed and have breakfast.)*
-> **Настя:** А коли йдеш на роботу? *(And when do you go to work?)*
-> **Ліна:** О восьмій. А ти? *(At eight. And you?)*
-> **Настя:** Я прокидаюся о шостій. Довго збираюся! *(I wake up at six. I take a long time getting ready!)*
-> **Ліна:** О шостій? Це рано! *(At six? That's early!)*
+Notice the specific verbs Nastia uses to describe her routine. She says **прокидаюся** (I wake up), **вмиваюся** (I wash up), and **одягаюся** (I get dressed). These verbs all end in the same distinct suffix. However, when she mentions eating, she simply says **снідаю** (I have breakfast) without that special ending. The first three verbs reflect actions Nastia is doing to her own body, while having breakfast is an external action.
 
-Look at the verbs Ліна uses to describe her morning: **прокидаюся** (I wake up), **вмиваюся** (I wash up), **одягаюся** (I get dressed), **збираюся** (I get ready). Every single one ends in **-ся**. That's not a coincidence — it's a pattern, and it's the grammar heart of this module.
+Their conversation continues as they compare this busy weekday routine to their typical weekend habits. The pace of a weekend morning is entirely different.
 
-### Діалог 2 — Вихідний ранок (Weekend morning)
+> **Настя:** У суботу ти теж поспішаєш? *(Do you also hurry on Saturday?)*
+> **Ліна:** У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон. *(On Saturday I do not hurry. I wake up late, lie down, look at the phone.)*
+> **Настя:** А я навчаюся вранці. Потім гуляю. *(And I study in the morning. Then I walk.)*
 
-> **Ліна:** У суботу я не поспішаю. *(On Saturday I don't rush.)*
-> **Настя:** А що ти робиш? *(And what do you do?)*
-> **Ліна:** Прокидаюся пізно, лежу, дивлюся в телефон. *(I wake up late, lie around, look at my phone.)*
-> **Настя:** А я навчаюся вранці. Снідаю, потім гуляю. *(And I study in the morning. I have breakfast, then go for a walk.)*
-> **Ліна:** Ти навчаєшся у суботу? *(You study on Saturday?)*
-> **Настя:** Так! Я повертаюся додому о другій. *(Yes! I come back home at two.)*
+In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular verbs like **лежу** (I lie down) and **дивлюся** (I look). Nastia mentions another verb with that special ending: **навчаюся** (I study). Mixing these different verb types is how you naturally describe your day in Ukrainian.
 
-This dialogue mixes two kinds of verbs. Some end in **-ся**: **прокидаюся**, **дивлюся**, **навчаюся** (I study), **повертаюся** (I return). Others don't: **снідаю** (I have breakfast), **гуляю** (I walk), **лежу** (I lie down). Notice the difference? Verbs with **-ся** describe actions you do *to yourself* or *for yourself*. Verbs without it describe actions directed outward. The next section explains exactly how this works.
+## Дієслова на -ся — Reflexive Verbs
 
-## Дієслова на -ся (Reflexive Verbs)
+The special verbs you saw in the dialogue are called reflexive verbs. As explained in the textbook *Караман Grade 10 (p. 176)*, the core rule is straightforward: «Дієслова із суфіксом -ся(-сь) означають дію, спрямовану на себе». This means verbs with the suffix **-ся** (or **-сь**) indicate an action directed at oneself. Think of this suffix as the English equivalent of the words "oneself" or "myself." If you take a standard verb and attach this suffix, you instantly change the target of the action from an external object back to the speaker.
 
-Ukrainian textbooks call these **зворотні дієслова** — verbs where the action turns back onto the person doing it. The suffix **-ся** (short for the old pronoun **себе**, meaning "oneself") attaches to the end of the verb and changes its direction.
+*   **вмивати** (to wash someone) → **вмиватися** (to wash oneself)
+*   **одягати** (to dress someone) → **одягатися** (to dress oneself)
 
-Compare these pairs:
+Conjugating these verbs is simple because the core mechanics do not change. You take the standard verb endings you already know from Group I and simply attach **-ся** to the very end. The reflexive suffix acts like a fixed addition hooked to the end of the conjugated form. The conjugation paradigm for the present tense demonstrates this consistent pattern.
 
-- **вмивати** (to wash someone) → **вмиватися** (to wash oneself)
-- **одягати** (to dress someone) → **одягатися** (to dress oneself)
+| Займенник | Дієслово | Переклад |
+| --- | --- | --- |
+| Я | **вмиваю-ся** | I wash myself |
+| Ти | **вмиваєш-ся** | You wash yourself |
+| Він / Вона | **вмиваєть-ся** | He / She washes himself/herself |
 
-A mother washes her child: **Мама вмиває дитину.** *(Mom washes the child.)* But when you wash your own face in the morning: **Я вмиваюся.** *(I wash up.)* The action loops back — that's what **-ся** signals.
+Notice that the core endings (**-ю**, **-єш**, **-єть**) remain perfectly regular. You just add the **-ся** suffix immediately after them.
 
-### How to conjugate reflexive verbs
+While the spelling is perfectly regular, the pronunciation holds a secret. According to the textbook *Кравцова Grade 4 (p. 113)*, there is a crucial pronunciation note you must memorize to sound natural. The letters combine to create completely new sounds, hiding the original consonants.
 
-The good news: reflexive verbs use the same endings as regular Group I verbs. You just add **-ся** after every ending. Here is **вмиватися** (to wash up) in the present tense:
-
-| | вмиватися |
-|---|---|
-| я | вмиваюся |
-| ти | вмиваєшся |
-| він/вона | вмивається |
-| ми | вмиваємося |
-| ви | вмиваєтеся |
-| вони | вмиваються |
-
-The pattern is identical for **прокидатися** (to wake up): **я прокидаюся, ти прокидаєшся, він прокидається**. Once you know how to conjugate one reflexive verb, you can conjugate them all.
-
-### Pronunciation secret
-
-Here's something that trips up learners: the way you *write* these endings and the way you *say* them are different.
-
-- **-шся** (written) sounds like a long, soft "с" — say it quickly and your mouth naturally makes the right sound. So **вмиваєшся** sounds like "вмиваєс':а" in fast speech.
-- **-ться** (written) sounds like a long, soft "ц" — so **вмивається** sounds like "вмиваєц':а."
-
-:::tip
-Don't overthink the pronunciation. Spell it correctly on paper: **вмиваєшся**, **вмивається**. When you say it aloud at normal speed, the sounds merge naturally. Ukrainian children learn this the same way — Kravtsova's Grade 4 textbook has students whisper the endings quickly to discover the sound shift themselves.
+:::caution
+*   The combination **-шся** sounds like a long, soft **[с':а]**: **вмиваєшся** is pronounced **[вмиваєс':а]**.
+*   The combination **-ться** sounds like a long, soft **[ц':а]**: **вмивається** is pronounced **[вмиваєц':а]**.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in-add-sya -->
+The spelling and pronunciation differ significantly here. You must write the distinct letters precisely, but you must pronounce the merged, soft sounds. This rule is fundamental to fluent Ukrainian speech, and native children practice it extensively in primary school.
 
-<!-- INJECT_ACTIVITY: quiz-reflexive-or-not -->
+It is important to know exactly when to use these reflexive forms. A reflexive verb is always intransitive, meaning it cannot take a direct object. You cannot use a reflexive verb to act upon something else. If you are getting a child ready for school, you use the non-reflexive form **одягати дитину** (to dress a child). But if you are getting dressed yourself, you must use the reflexive form **одягатися** (to get dressed). Understanding this distinction between acting on others and acting on yourself is the key to mastering Ukrainian morning routines.
 
-## Мій ранок (My Morning)
+<!-- INJECT_ACTIVITY: fill-in-reflexive-endings -->
 
-Now you have the tools to describe an entire morning. Let's build your vocabulary in two groups: reflexive verbs (actions on yourself) and non-reflexive verbs (actions on the world around you).
+<!-- INJECT_ACTIVITY: quiz-reflexive-choice -->
 
-### Reflexive morning verbs
+## Мій ранок — My Morning
 
-Each of these describes something you do to or for yourself:
+With an understanding of how reflexive verbs work, we can build a complete morning timeline. The vocabulary for your morning routine relies heavily on these reflexive verbs, but it also includes some standard verbs for contrast.
 
-- **прокидатися** (to wake up) — Я прокидаюся о сьомій годині. *(I wake up at seven o'clock.)*
-- **вмиватися** (to wash face/hands) — Вона вмивається в ванній. *(She washes up in the bathroom.)*
-- **одягатися** (to get dressed) — Він одягається швидко. *(He gets dressed quickly.)*
-- **збиратися** (to get ready) — Ти збираєшся довго! *(You take a long time getting ready!)*
-- **навчатися** (to study) — Ми навчаємося разом. *(We study together.)*
-- **повертатися** (to return) — Я повертаюся додому о шостій. *(I return home at six.)*
+*   **прокидатися** (to wake up)
+*   **вмиватися** (to wash face/hands)
+*   **одягатися** (to get dressed)
+*   **збиратися** (to get ready)
+*   **повертатися** (to return home)
 
-### Non-reflexive morning verbs
+There is a conceptual difference between the first actions of the day. The verb **прокидатися** means to wake up, specifically the moment you open your eyes and become conscious. A different verb, **вставати**, means to physically get out of bed. Another essential daily action is **чистити зуби** (to brush teeth), which is a common non-reflexive routine phrase. We also use non-reflexive verbs for consuming our morning food and drinks: **снідати** (to have breakfast) and **пити каву** (to drink coffee).
 
-These describe actions directed at something else — food, coffee, the outside world:
+Once you are ready, you have to leave the house. To describe this, we use the verb **йти** (to go). This is an irregular verb, meaning it does not perfectly follow the standard Group I or Group II patterns. You simply have to memorize its forms.
 
-- **снідати** (to have breakfast) — Я снідаю о восьмій. *(I have breakfast at eight.)*
-- **пити каву** (to drink coffee) — Він п'є каву. *(He drinks coffee.)*
-- **гуляти** (to walk/stroll) — Вона гуляє вранці. *(She takes a walk in the morning.)*
+| Займенник | Дієслово | Переклад |
+| --- | --- | --- |
+| Я | **йду** | I go |
+| Ти | **йдеш** | You go |
+| Він / Вона | **йде** | He / She goes |
+| Ми | **йдемо** | We go |
+| Ви | **йдете** | You (pl/formal) go |
+| Вони | **йдуть** | They go |
 
-No **-ся** here — because you eat breakfast, you don't "breakfast yourself." The action goes outward.
+This verb is used constantly when talking about daily schedules, specifically for leaving the house to go to work or study.
 
-### The irregular verb йти (to go)
+When you tell someone about your day, you do not just recite a random list of verbs. You connect your actions into a logical sequence. We use specific sequence words for telling a story smoothly.
 
-One essential morning verb breaks the rules. **Йти** (to go on foot) has its own conjugation that doesn't follow Group I or Group II patterns. Memorize these forms:
+*   **спочатку** (first)
+*   **потім** (then)
+*   **після цього** (after this)
+*   **нарешті** (finally)
 
-| | йти |
-|---|---|
-| я | йду |
-| ти | йдеш |
-| він/вона | йде |
-| ми | йдемо |
-| ви | йдете |
-| вони | йдуть |
+These sequence words act as the structural glue holding your narrative together. They turn a disconnected list of verbs into a coherent description of your morning. A complete paragraph combines reflexive verbs, regular verbs, and sequence words naturally. Here is a model narrative showing a realistic timeline:
 
-- Я йду на роботу о восьмій. *(I go to work at eight.)*
-- Вона йде до школи. *(She goes to school.)*
-- Ти йдеш зараз? *(Are you going now?)*
+*   **Спочатку я прокидаюся.** (First, I wake up.)
+*   **Потім вмиваюся і одягаюся.** (Then I wash up and get dressed.)
+*   **Після цього снідаю.** (After this, I have breakfast.)
+*   **Нарешті йду на роботу.** (Finally, I go to work.)
 
-### Telling your morning as a story
+This simple structure is exactly how a native speaker outlines their basic routine. Practice sequencing your own actions using these identical words.
 
-Four words let you string your morning into a sequence:
+<!-- INJECT_ACTIVITY: order-morning-sequence -->
 
-- **спочатку** (first, at first)
-- **потім** (then, next)
-- **після цього** (after this)
-- **нарешті** (finally)
-
-Put them together and you get a complete mini-narrative:
-
-- Спочатку я прокидаюся о сьомій. *(First I wake up at seven.)*
-- Потім вмиваюся і одягаюся. *(Then I wash up and get dressed.)*
-- Після цього снідаю і п'ю каву. *(After this I have breakfast and drink coffee.)*
-- Нарешті йду на роботу о восьмій. *(Finally I go to work at eight.)*
-
-These sequence words typically stand at the beginning of the sentence. They're the glue that turns isolated actions into a real story.
-
-<!-- INJECT_ACTIVITY: fill-in-morning-order -->
+<!-- INJECT_ACTIVITY: write-morning-routine -->
 
 ## Підсумок — Summary
 
-### Grammar recap
+The core concepts of this module follow a clear pattern. The fundamental formula for creating reflexive verbs is simple: regular verb plus **ся** at the end. These verbs are essential because they describe actions directed at the speaker, which is exactly what a morning routine involves. The conjugation follows the standard Group I pattern with the suffix attached securely to the end.
 
-Reflexive verbs = a regular verb + the suffix **-ся**. The suffix never changes — it attaches after every personal ending: **-юся, -єшся, -ється, -ємося, -єтеся, -ються** (Group I pattern). The action turns back onto the person doing it: **вмивати** (to wash someone else) versus **вмиватися** (to wash yourself).
+*   **я** ending: **-юся**
+*   **ти** ending: **-єшся**
+*   **він / вона** ending: **-ється**
 
-Two pronunciation rules to keep in mind: **-шся** sounds like a long soft "с," and **-ться** sounds like a long soft "ц." Write the full spelling, say the short form.
+The sequence of a standard morning routine flows logically through these verbs: **прокидатися** → **вмиватися** → **одягатися** → **снідати** → **йти**. To connect these actions into a fluent story, you must use the sequencing adverbs: **спочатку**, **потім**, **після цього**, and **нарешті**.
 
-One irregular verb to know by heart: **я йду, ти йдеш, він йде, ми йдемо, ви йдете, вони йдуть**.
-
-### Your morning vocabulary
-
-Here's the full chain for describing a morning routine:
-
-**Reflexive chain:** прокидатися (to wake up) → вмиватися (to wash up) → одягатися (to get dressed) → збиратися (to get ready) → йти на роботу (to go to work)
-
-**Return:** повертатися додому (to return home)
-
-**Non-reflexive:** снідати (to have breakfast), пити каву (to drink coffee), гуляти (to walk)
-
-**Supporting words:** вранці (in the morning), пізно (late), поспішати (to hurry), навчатися (to study)
-
-**Sequence glue:** спочатку (first), потім (then), після цього (after this), нарешті (finally)
-
-### The reflexive test
-
-:::note
-How do you know if a verb is reflexive? Ask: can I do this action *to another person*? If yes, the non-reflexive form exists and means something different. **Вмивати когось** (to wash someone) ≠ **вмиватися** (to wash oneself). **Одягати дитину** (to dress a child) ≠ **одягатися** (to get dressed). The **-ся** signals the action loops back to the subject.
+:::tip
+Phonetics play a massive role in making your speech sound natural. The written letters and the spoken sounds are entirely different for the **ти** and **він/вона** forms of reflexive verbs. The ending **-шся** must always be pronounced as a long, soft **[с':а]**. The ending **-ється** must always be pronounced as a long, soft **[ц':а]**. Focus heavily on these soft, merged sounds to develop an authentic Ukrainian accent.
 :::
 
-## Підсумок
+To ensure you have mastered this material, perform a quick self-check. Try to answer the following questions mentally or aloud. Use full sentences and incorporate the sequencing words where possible.
 
-Now it's your turn. Describe your own morning using the sequence words and reflexive verbs from this module. Three sentences is enough to start:
+*   **О котрій годині ти прокидаєшся?** (At what time do you wake up?)
+*   **Що ти робиш спочатку?** (What do you do first?)
+*   **Ти п'єш каву чи чай вранці?** (Do you drink coffee or tea in the morning?)
+*   **Коли ти йдеш на роботу або навчання?** (When do you go to work or study?)
+*   **Ти одягаєшся швидко чи повільно?** (Do you get dressed quickly or slowly?)
 
-- **Спочатку** я ___ (what time? what do you do?)
-- **Потім** я ___ і ___.
-- **Нарешті** я ___.
-
-Use the verbs you've learned: **прокидатися, вмиватися, одягатися, снідати, йти**. Combine them with **спочатку, потім, після цього, нарешті** — and you can tell anyone about your morning in Ukrainian.
-
-<!-- INJECT_ACTIVITY: fill-in-describe-morning -->
+Describe your morning in four to five sentences using the sequence words. If you can confidently answer these questions and build that short narrative, you are successfully mastering the mechanics of Ukrainian reflexive verbs.
 
 </module_content>
 
@@ -349,30 +298,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -388,36 +377,77 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: grammar-possession [§4.2.1.4, §4.2.2]
+**Присвійність** (Possession)
+- **fill-in** — У мене є...: Структура «У мене/тебе/нього є...» — як українська виражає володіння / Structure «У мене/тебе/нього є...» — how Ukrainian expresses possession
+  - Instruction: *Вставте правильне слово*
+- **fill-in** — Мій, твій, наш...: Обрати присвійний займенник, що узгоджується з родом та числом іменника / Choose possessive pronoun matching noun gender and number
+  - Instruction: *Вставте правильну форму*
+- **match-up** — Чий? Чия? Чиє?: Зіставити присвійний займенник з іменником за родом / Match possessive pronoun to noun by gender
+  - Instruction: *З'єднайте*
+- **quiz** — У кого є?: Визначити, хто має щось, за контекстом речення / Determine who has something based on sentence context
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: «У мене є» — унікальна українська структура. Переклад з англ. «I have» маскує різницю
+
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -449,68 +479,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

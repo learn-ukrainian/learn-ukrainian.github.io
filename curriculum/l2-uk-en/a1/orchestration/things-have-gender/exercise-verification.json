@@ -1,32 +1,11 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
+  "total_items": 31,
+  "grounded_items": 31,
   "ungrounded": [],
   "vocab_coverage": {
     "plan_vocab_total": 20,
-    "tested_in_exercises": 0,
-    "not_tested": [
-      "вона",
-      "воно",
-      "вікно",
-      "він",
-      "дзеркало",
-      "зошит",
-      "ключ",
-      "книга",
-      "комп'ютер",
-      "крісло",
-      "кімната",
-      "лампа",
-      "ліжко",
-      "ручка",
-      "стіл",
-      "стілець",
-      "стіна",
-      "сумка",
-      "телефон",
-      "фото"
-    ]
+    "tested_in_exercises": 20,
+    "not_tested": []
   },
   "all_grounded": true
 }

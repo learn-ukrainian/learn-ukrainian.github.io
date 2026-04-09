@@ -1,33 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Dialogues'
-- FIX: Missing section heading: 'Summary'
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -60,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -265,376 +246,366 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (15/15):**
-- ✅ план (noun)
-- ✅ тиждень (noun)
-- ✅ вільний (adj)
-- ✅ зустріч (noun)
-- ✅ відпочивати (verb)
-- ✅ прибирати (verb)
-- ✅ вечірка (noun)
-- ✅ зустрінемося → lemmas: зустрінутися / зустрітися (verb — both found)
-- ✅ задоволення (noun — base of «з задоволенням»)
-- ✅ жаль (adv + noun — base of «на жаль»)
-- ✅ допізна (adv)
-- ✅ звичайно (adv)
-- ✅ квартира (noun)
-- ✅ кіно (noun)
-- ✅ вчити (verb)
-
-**Not found:** — none. All 15 vocabulary items confirmed in VESUM.
-
----
-
-## Textbook Excerpts
-
-### Section: Dialogues — Planning / Future tense
-> "У середу я планую ? . Для цього мені потрібно ? . Я маю зробити ? . Розкажіть, як ви плануєте свій день (один із днів тижня на вибір). Що ви в цей день **будете робити**? Наведіть приклад такого плану за зразком. **План — заздалегідь визначена програма дій на певний час.**"
->
-> Source: Вашуленко, Grade 2 (p. 83) — confirms days of week + буду + infinitive as the natural planning frame at early levels
-
-### Section: Планування (Planning) — Future tense analytic form
-> "Дієслова майбутнього часу, які відповідають на питання що буду робити?, виражених двома словами: **буду іти / будеш іти / буде іти / будемо іти / будете іти / будуть іти**. При змінюванні дієслів майбутнього часу, виражених двома словами, змінюється тільки допоміжне слово **бути**."
->
-> Source: Кравцова, Grade 4 (p. 109) — confirms the analytic future (буду + infinitive) conjugation pattern
-
-### Section: Планування — Time expressions (зранку/вдень/ввечері + days)
-> "Зараз я (що роблю?) … . Після уроків я (що буду робити?) … . Увечері я (що робитиму?) … ."
->
-> Source: Захарійчук, Grade 4 (p. 106) — confirms time-of-day adverbs used naturally alongside future tense planning sentences
-
-### Section: Мій тиждень (My Week) — Days of the week
-> "Тиждень починає … . Після нього приходить … . За ним настає … . Четвертий день тижня — … . А п'ятий — … . П'ять днів працюємо, а в **суботу і неділю** відпочиваємо."
->
-> Source: Пономарова, Grade 3 (p. 77) — confirms all 7 day names; confirms «в суботу» / «в неділю» as established usage
-
-### Section: Invitation phrases / Responses (згода/відмова)
-> "Дякую за запрошення, мені приємно. **Обов'язково прийду.** Радо приймаю твоє запрошення! … **Дякую, але я не зможу бути.** Мені приємно, однак у цей день я не зможу прийти. **Мені шкода**, але я не зможу бути."
->
-> Source: Голуб, Grade 5 (p. 202) — rich inventory of natural invitation acceptance/refusal phrases; validates using «Добре! З задоволенням!» and «На жаль, не можу» as the natural register for this module
-
-### Section: Summary (planning toolkit)
-> "Уміння планувати й структурувати свій **день, тиждень**, місяць і навіть рік дуже спростить ваше життя й обов'язково приведе до успіху. … Плануйте свій день (тиждень, місяць). Складайте список найбільш термінових завдань."
->
-> Source: Заболотний, Grade 8 (p. 239) — confirms «планувати тиждень» as the natural framing; validates the module's planning lexis
-
----
+- Confirmed: план, тиждень, вільний, зустріч, відпочивати, прибирати, вечірка, зустрінемося, задоволенням, жаль, допізна, звичайно, квартира, кіно, вчити
+- Not found: [] (All words verified in VESUM)
 
 ## Grammar Rules
-
-- **Analytic future (буду + infinitive):** Confirmed by Grades 4 textbooks (Вarzatska, Kravtsova, Zahariichuk). Rule: the two-word future form conjugates only the auxiliary **бути** (буду / будеш / буде / будемо / будете / будуть); the main verb stays in infinitive. This is the primary future form for A1 learners. Grade 7 (Litvinova p. 47) adds context: «Дієслова у формі майбутнього часу позначають дію, що відбуватиметься або відбудеться після моменту мовлення.»
-
-- **У/В alternation before days of week:** Правопис §23 — confirmed. The plan's usage is correct:
-  - «у понеділок, у вівторок, у середу, у четвер, у п'ятницю, у суботу» — У before consonant (п, в, с, ч, п, с) ✅ (§23.1.1 — «у вівторок» specifically covered by §23.1.4: use У before в)
-  - «в неділю» when preceded by «у суботу» — суботу ends in vowel У → use В before consonant Н (§23.2.6) ✅
-
-- **Days of week (spelling):** Confirmed by Grade 3 (Ponomarova p. 77) — all day names are dictionary words that must be verified. All lowercase in running text.
-
----
+- **Prepositions У/В**: Правопис § 23 — Rules for alternation to achieve euphony (euphony/милозвучність). Use 'у' between consonants or at the start of a sentence before a consonant. Use 'в' between vowels.
+- **Time expressions (О/ОБ)**: Confirmed by usage in Grade 5 textbooks (e.g., "о шістнадцятій годині"). 'О' is used before most numbers, 'об' before vowels (e.g., об одинадцятій).
+- **Future Tense (Буду + Infinitive)**: Confirmed by Grade 3 textbook usage (e.g., "Як ви будете це робити?"). This is the standard compound future for imperfective verbs.
 
 ## Calque Warnings
-
-- **«з задоволенням»** (with pleasure): Style guide search returned no warning for this phrase. Natural Ukrainian — the noun задоволення (satisfaction/pleasure) is in VESUM with 7 lemma matches. The phrase is standard and widely attested. **OK ✅**
-
-- **«на жаль»** (unfortunately): Style guide returned no calque warning. Natural Ukrainian adverbial phrase. **OK ✅**
-
-- **«звичайно»** (of course): Style guide returned no direct warning. PULS confirms it as A1. Note: Антоненко-Давидович entry on «звісно» (B1 per PULS) suggests «звісно» as a stylistic alternative, but «звичайно» in the sense of "of course" is standard Ukrainian. **OK ✅**
-
-- **«давай зустрінемося»** (let's meet): ⚠️ **PARTIAL FLAG.** The style guide entry (AD-149) warns that «зустрічатися» must NOT be used in the sense of "to be found / to occur" (a Russianism calquing Russian «встречается»). However, «зустрінемося» in the sense of **physically meeting a person** is the correct, natural usage — confirmed by the style guide example itself: «Зустрінемось через кілька день (днів)» (AD-201). The module usage is correct. **OK for the intended meaning ✅** — but the writer should NOT use «зустрічатися» to mean "to be encountered/found."
-
-- **«вчитися» vs «навчатися»:** The plan uses «буду вчитися» — both вчитися (A1) and навчатися are correct Ukrainian. No calque risk. **OK ✅**
-
----
+- **робити плани**: Calque (likely from English 'to make plans' or Russian 'делать планы') — use **мати плани** (to have plans) or **планувати** (to plan).
+- **зустріч з друзями**: OK — Standard Ukrainian phrasing for "meeting with friends."
+- **з задоволенням**: OK — Confirmed in Grade 5 textbook (Uhor, p. 94) as a natural response.
+- **на жаль**: OK — Standard phrase for "unfortunately."
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| план | A1 | ✅ On target |
-| тиждень | A1 | ✅ On target |
-| відпочивати | A1 | ✅ On target |
-| звичайно | A1 | ✅ On target |
-| квартира | A1 | ✅ On target |
-| кіно | A1 | ✅ On target |
-| вчити / вчитися | A1 | ✅ On target |
-| вільний | **A2** | ⚠️ One level above — acceptable for M51 (A1.8, graduation) |
-| вечірка | **A2** | ⚠️ One level above — acceptable for A1.8 graduation module |
-| прибирати | **A2** | ⚠️ One level above — acceptable for A1.8 graduation module |
-| допізна | **Not in PULS** | ⚠️ Level unverified — VESUM confirms it exists as adv.; use with care, introduce with context |
-| зустріч (noun) | **Not directly in PULS** | ⚠️ зустрітися = A2; зустрінутися = B1. Treat зустріч as A2-level item |
-
-**Summary of CEFR flags:**
-- 7 words confirmed A1 ✅
-- 3 words at A2 (вільний, вечірка, прибирати) — acceptable for A1.8 graduation module, but should be explicitly introduced/glossed
-- допізна: not in PULS database; attested in VESUM; treat as above-A1, use sparingly with full context clue in dialogue
-- зустрінемося (chunk): the verb root зустрітися is A2/B1 — present as a formulaic **chunk** ("let's meet"), not as a productive grammar item, which is the plan's stated approach ✅
+- **тиждень**: A1 — OK (Found in Grade 1-4 textbooks)
+- **вільний**: A1 — OK (Found in Grade 5 "Social/Talk" sections, level-appropriate)
+- **вечірка**: A1 — OK (Found in Grade 3 textbooks, standard for early levels)
+- **квартира**: A1 — OK (Found in Grade 2 textbooks, basic housing vocabulary)
+- **відпочивати**: A1 — OK (Found in Grade 3-5, core daily activity)
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: My Plans
-**Module:** my-plans | **Phase:** A1.8 [Past, Future, Graduation]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: My Plans
+**Module:** my-plans | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/my-plans.md
+
+# Педагогіка A1: My Plans
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The topic of "My Plans" is a cornerstone of A1 communicative ability, moving the learner from simple statements of fact to expressing future intentions. The native pedagogical approach is highly practical and scaffolded, focusing on building conversational competence with predictable structures.
+
+The core teaching strategy, as demonstrated in Ukrainian pedagogy podcasts and early-grade textbooks, revolves around the concept of a **`розклад`** (schedule) or **`план`** (plan) (Джерело: `ext-ulp_youtube-246`, `2-klas-ukrmova-vashulenko-2019-1_s0081`). The week serves as the primary organizational framework.
+
+1.  **Establish the Timeline:** The foundation is the days of the week (`Дні тижня`). This is introduced as a fixed sequence from Monday to Sunday (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0090`).
+2.  **Anchor Activities to Days:** Learners are immediately taught to connect activities to specific days using the structure `У [день тижня] я [роблю щось]`. For example, `У понеділок я працюю.` or `У суботу я відпочиваю.` (Джерело: `ext-ulp_youtube-243`). This pattern drills the essential use of the Accusative case for days of the week in a temporal context.
+3.  **Introduce Future Tense:** The compound future tense (`буду + інфінітив`) is the primary tool for discussing plans. It is grammatically straightforward and avoids the complexities of aspect for beginners. The pattern `Я буду [робити]` is heavily used in beginner dialogues about plans (Джерело: `ext-ulp_youtube-246`).
+4.  **Use Listening Comprehension:** A common and effective technique is to present a short monologue about a person's weekly schedule (Джерело: `ext-ulp_youtube-243`, `ext-ulp_youtube-246`). The learner listens for key information (e.g., "What does she do on Friday?"), which reinforces vocabulary and grammar in context.
+5.  **Build Communicative Chunks:** Focus on teaching functional phrases for making, accepting, and declining invitations. Phrases like `Ходімо в кіно?`, `Домовились!`, and `На жаль, я не можу.` are taught as complete units for immediate use (Джерело: `5-klas-ukrmova-uhor-2022-1_s0092`, `22`).
+
+The goal is not to have students master all declensions related to time, but to confidently use a set of high-frequency patterns to express their immediate future plans.
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction of concepts should be layered to build complexity gradually.
+
+1.  **Крок 1: Дні тижня (Days of the Week):**
+    *   Introduce all seven days, from `понеділок` to `неділя`.
+    *   Immediately teach the temporal use of the Accusative case with the preposition `у` (`в`). Explain the ending change for feminine nouns: `у понеділок`, `у вівторок`, but `у середу`, `у п'ятницю` (Джерело: `ext-ulp_youtube-246`). This is a non-negotiable A1 pattern.
+
+2.  **Крок 2: Частини дня (Parts of the Day):**
+    *   Introduce `вранці`, `вдень`, `ввечері`, `вночі`.
+    *   Combine them with the days of the week: `У понеділок вранці я працюю.` (Джерело: `ext-ulp_youtube-243`).
+
+3.  **Крок 3: Майбутній час (Future Tense):**
+    *   Introduce the compound future: `я буду`, `ти будеш`, etc. + imperfective infinitive (`читати`, `робити`, `гуляти`).
+    *   Practice forming simple sentences about plans: `Завтра я буду читати.` or `У суботу ми будемо дивитися фільм.` (Джерело: `ext-ulp_youtube-246`).
+
+4.  **Крок 4: Запитуємо про час (Asking about Time):**
+    *   Introduce the key question: `О котрій годині?` (At what time?).
+    *   Teach the basic response structure: `О [порядковий числівник]-ій годині.` (e.g., `о першій годині`, `о дев'ятій годині`). Explain this uses the Locative case (Джерело: `ext-ulp_youtube-236`).
+    *   Explicitly teach the `об` variant before a vowel: `об одинадцятій годині` (Джерело: `ext-ulp_youtube-235`).
+    *   *Avoid* complex time expressions like "quarter past" or "ten to" at this stage. Stick to the hour.
+
+5.  **Крок 5: Лексика для планів (Vocabulary for Plans):**
+    *   Introduce core verbs: `хотіти`, `планувати`, `зустрітися`, `піти`.
+    *   Introduce core nouns (places): `кіно`, `театр`, `парк`, `кафе`, `ресторан`.
+    *   Introduce core nouns (events): `зустріч`, `концерт`, `фільм`, `вечірка`.
+
+6.  **Крок 6: Пропозиції та відповіді (Making Suggestions & Responding):**
+    *   Teach suggestion phrases: `Ходімо...?` (Let's go...?), `Давай...?` (Let's...?).
+    *   Teach responses:
+        *   Accepting: `Домовились!` (Agreed!), `Із задоволенням!` (With pleasure!) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0092`).
+        *   Declining: `На жаль, я не можу.` (Unfortunately, I can't.), `Шкода! Іншим разом!` (A pity! Another time!) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0092`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors based on interference from English structure and unfamiliarity with Slavic cases.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я маю плани.` | `У мене є плани.` | This is a direct translation of "I have plans." Ukrainian uses the `У [Genitive] є [Nominative]` construction to express possession. While `я маю` exists, `у мене є` is the natural, default way to state possession of an object or concept like "plans" (Джерело: `ext-ulp_youtube-197`). |
+| `Зустрінемося в сім годин.` | `Зустрінемося о сьомій годині.` | English uses "at 7 o'clock." Learners incorrectly map this to the preposition `в` (in). Ukrainian requires the preposition `о` + the Locative case of the ordinal number to state the time of an event (Джерело: `ext-ulp_youtube-236`). |
+| `Розклад для тижня.` | `Розклад на тиждень.` | English uses "schedule *for* the week." Learners translate "for" as `для`. However, when specifying the duration or scope of a plan, Ukrainian uses the preposition `на` + Accusative case (Джерело: `ext-ulp_youtube-246`, `8-klas-ukrmova-zabolotnyi-2025_s0086`). |
+| `Я хочу зробити зустріч.` | `Я хочу записатися.` | "Make an appointment" is literally translated. The correct reflexive verb for signing up for a service (doctor, hairdresser, etc.) is `записатися` (Джерело: `ext-ulp_youtube-235` explicitly corrects this). |
+| `У п'ятниця ми йдемо в кіно.` | `У п'ятницю ми йдемо в кіно.` | Learners forget to apply the Accusative case to feminine days of the week when used with the preposition `у` to indicate time. They default to the Nominative form (Джерело: `ext-ulp_youtube-246`). |
+| `Що ти робиш в вихідні?` | `Що ти робиш на вихідних?` | For the concept of "on the weekend," Ukrainian uses the preposition `на` + Locative plural (`на вихідних`), not `в` + Accusative (Джерело: `ext-ulp_youtube-197`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+It is critical to teach Ukrainian on its own terms, building phonetic and grammatical categories from scratch without reference to Russian. This prevents the common pitfall of treating Ukrainian as a "dialect" of Russian and avoids embedding hard-to-unlearn errors.
+
+1.  **False Friend: `Неділя` vs. `Неделя`:** This is a major point of confusion. In Ukrainian, **`неділя`** means **Sunday**. The word for "week" is **`тиждень`**. The Russian word `неделя` means "week." This distinction must be taught explicitly and early to prevent a fundamental vocabulary error. The writer must *never* use the Russian meaning as a point of comparison. (Джерело: `ext-ulp_youtube-246`).
+
+2.  **Time-telling Constructions:** Avoid comparing with Russian time-telling. The Russian construction `в семь часов` (using `в` + Nominative) is a common error for learners who have prior exposure to Russian. Emphasize the unique Ukrainian structure `о сьомій годині` (`о` + Locative) as the *only* correct form (Джерело: `ext-ulp_youtube-236`).
+
+3.  **Vocabulary Purity:** Use exclusively Ukrainian vocabulary. For "let's go," teach `ходімо`, not a calque from Russian. Ensure that all example sentences and vocabulary lists have been vetted for subtle Russianisms. For instance, when discussing plans, the natural Ukrainian expression is `У мене є плани`, not the more Russian-influenced `Я маю плани`.
+
+4.  **Phonetic Independence:** Do not describe Ukrainian sounds as "like Russian X but...". For example, the Ukrainian `и` has a unique sound, distinct from Russian `ы`. Learners must build a new phonetic category based on native Ukrainian audio, not by modifying a sound from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is sufficient for A1 learners to discuss simple plans.
+
+**Іменники (Nouns):**
+-   `план` ★★★
+-   `розклад` ★★
+-   `тиждень`, `вихідні` ★★★
+-   `понеділок`, `вівторок`, `середа`, `четвер`, `п'ятниця`, `субота`, `неділя` ★★★
+-   `ранок`, `день`, `вечір`, `ніч` ★★★
+-   `година`, `час` ★★★
+-   `кіно`, `театр`, `концерт`, `музей` ★★
+-   `парк`, `ресторан`, `кафе` ★★
+-   `зустріч`, `робота`, `урок` ★★★
+
+**Дієслова (Verbs):**
+-   `планувати` ★★★
+-   `хотіти` ★★★
+-   `робити` / `зробити` (introduce `робити` first) ★★★
+-   `бути` ★★★
+-   `мати` (in `у мене є` construction) ★★★
+-   `працювати`, `вчити(ся)`, `відпочивати` ★★★
+-   `йти` / `ходити` (introduce `йти` for specific plan, e.g., `завтра я йду в кіно`) ★★★
+-   `зустрічатися` / `зустрітися` ★★
+-   `гуляти`, `дивитися`, `слухати` ★★★
+-   `починатися`, `закінчуватися` ★★
+-   `запросити` / `запрошувати` ★
+
+**Прислівники (Adverbs):**
+-   `сьогодні`, `завтра` ★★★
+-   `потім`, `разом` ★★★
+-   `вранці`, `вдень`, `ввечері` ★★★
+-   `рано`, `пізно` ★★
+
+**Ключові фрази (Key Phrases):**
+-   `У мене є плани / У мене немає планів` ★★★
+-   `Що ти робиш у [день]?` ★★★
+-   `О котрій годині?` ★★★
+-   `Ходімо в...` / `Давай...` ★★★
+-   `Домовились!`, `Звичайно!`, `Із задоволенням!` ★★★
+-   `На жаль, я не можу.`, `Я зайнятий/зайнята.` ★★
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises provide concrete patterns for the content writer to emulate.
+
+1.  **Activity: My Weekly Plan (Template Completion)**
+    *   This exercise from a 2nd-grade textbook is perfect for A1 beginners. It provides a simple, repeatable structure for stating plans. (Джерело: `2-klas-ukrmova-vashulenko-2019-1_s0081`)
+    *   **Prompt:** `Розкажіть, як ви плануєте свій день (один із днів тижня на вибір).`
+    *   **Template:**
+        ```
+        У середу я планую __________.
+        Для цього мені потрібно __________.
+        Я маю зробити __________.
+        ```
+
+2.  **Activity: Arranging a Meeting (Dialogue Phrases)**
+    *   This exercise focuses on the communicative function of making and confirming plans. It uses a list of essential phrases from a 5th-grade textbook. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0092`)
+    *   **Prompt:** Your friend asks, `Ти маєш вільний час сьогодні ввечері?`. How do you respond? Use the phrases below.
+    *   **Phrase Bank:**
+        *   `Із задоволенням!`
+        *   `Домовились!`
+        *   `Шкода! Іншим разом!`
+        *   `У мене немає вільного часу.`
+        *   `Де і коли ми зустрінемося?`
+
+3.  **Activity: Schedule Listening Comprehension**
+    *   Modeled after the ULP podcast lessons, this activity tests understanding of a spoken schedule. (Джерело: `ext-ulp_youtube-243`, `ext-ulp_youtube-246`)
+    *   **Spoken Text (example):** "Привіт! Це мій розклад. У понеділок і вівторок я працюю. У середу я вчу українську мову. У четвер я йду в спортзал. У п'ятницю я зустрічаюся з друзями в кафе. У суботу і неділю я відпочиваю вдома."
+    *   **Questions:**
+        1.  Коли він працює? (а) У понеділок і середу (б) У понеділок і вівторок
+        2.  Що він робить у п'ятницю? (а) Відпочиває вдома (б) Зустрічається з друзями
+        3.  Де він відпочиває на вихідних? (а) Вдома (б) В парку
+
+4.  **Activity: Making an Appointment (Sentence Construction)**
+    *   This exercise drills the specific vocabulary and grammar for making an appointment, based on a dialogue from a ULP lesson. (Джерело: `ext-ulp_youtube-235`)
+    *   **Prompt:** You need a haircut. Call the salon "Краса" and make an appointment with the stylist `Олена` for Friday at 2 PM.
+    *   **Building Blocks:** `Я хочу записатися`, `до...`, `на...`, `у п'ятницю`, `о другій годині`.
+    *   **Expected Answer:** `Добрий день. Я хочу записатися до Олени на стрижку у п'ятницю о другій годині.`
+
+## Пов'язані статті (Related Articles)
+
+-   `pedagogy/a1/days-of-the-week`
+-   `pedagogy/a1/telling-time`
+-   `grammar/future-tense`
+-   `grammar/accusative-case`
+-   `grammar/locative-case`
+-   `pedagogy/a2/verbs-of-motion`
 
 ---
 
-## Dialogues
+### Вікі: pedagogy/a1/checkpoint-my-world.md
 
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 140
-> **Score:** 0.33
->
-> § 23  Прислівник як частина мови  
-> 137
-> Їсти (піцу/смачно), повернутися (надвечір/після уроків), 
-> чекати (біля супермаркету/отам), планувати (цієї зими/взим­
-> ку), працювати (довго/три години), бути (в школі/деінде), по­
-> бачитися (зранку/о дев’ятій), дістатися (пішки/тролейбусом), 
-> говорити (по­китайськи/китайською мовою).
-> Вправа 186
->  
-> Доповніть словосполучення прислівниками, що відповідатимуть на по-
-> ставлені питання 
-> Іти (куди?), іти (коли?), іти (звідки?), іти (як?); співати (як?), 
-> співати (коли?), співати (де?); радіти (наскільки?), радіти (де?), 
-> радіти (як?), радіти (з якої причини?).
-> Вправа 187
->  
-> Складіть кілька словосполучень із кожним запропонованим 
-> діє словом так, щоб залежним словом був прислівник (за 
-> зразком попередньої вправи) 
-> Бігти, писати, розуміти.
+# Педагогіка A1: Checkpoint My World
 
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 33
-> **Score:** 0.50
->
-> 33
-> 69   Визначте основну думку тексту. Випишіть приклади словозміни 
-> і словотворення. Поділіться досвідом прибирання своєї кімнати, 
-> квартири чи будинку. Розберіть за будовою виділені слова. Випи-
-> шіть слова, уставляючи пропущені букви. Уявімо собі захаращену кімнату. Безлад у ній не утворю-
-> ється сам собою. Ви, людина, яка живе в ній, утворюєте без-
-> лад. Є такий вислів: «Безлад у кімнаті — безлад у голові». Чи говорили ви собі: «Я просто не вмію приб..рати» або 
-> «Немає сенсу пр..бирати: я від пр..роди неохайна людина»? Багато людей роками підтримують таке негативне уявлення 
-> про себе, але воно зникає одразу ж, коли вони опиняються 
-> у своєму б..здоганно чистому просторі. Щойно ви почнете пр..бирати, ви «перезавантажите» своє 
-> життя. У результаті воно почне змінюватися.
 
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 142
-> **Score:** 0.50
->
-> 138
-> 138
-> Варіант В. Напишіть есе (6–8 речень) на одну із запропонованих тем: «Мій 
-> вихідний», «Мої домашні обов’язки», «Мій день народження». Використайте що-
-> найменше два дієприслівники та два дієприкметники.
-> Виконайте завдання. 
-> 1. Пасивними є обидва дієприкметники в рядку
-> А перебитий, усвідомлений
-> В розбитий, змарнілий
-> Б посивілий, змоклий 
-> Г замусолений, навислий
-> 2. Орфографічну помилку допущено в рядку
-> А Відійшов, не здужавши підняти штангу.
-> Б Недобачаючи в темряві, спіткнувся.
-> В Говорив завжди правду, не навидячи брехню.
-> Г Програли, недооцінивши сили суперника. 
-> 3. Окремо треба писати не з дієприкметником у рядку
-> А не/дописана картина відомого художника
-> Б не/з’ясовані вчасно важливі питання
-> В не/прочитаний допис у соцмережі
-> Г не/дооцінений талант молодого артиста
-> 4.
 
-## Планування (Planning)
+## Методичний підхід (Methodological Approach)
+The "My World" checkpoint is a crucial consolidation module for A1 learners. The primary pedagogical goal is to shift the learner from passive recognition and simple responses to active, structured production. This module assesses the learner's ability to synthesize vocabulary and grammar from previous lessons to talk about the most important topic: themselves.
 
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 255
-> **Score:** 0.33
->
-> 252
-> Повторення
-> ***
-> У мене стільки планів на канікули. А в підсумку як 
-> завжди: комп — спати — комп — спати — комп — спати… 
-> Проти системи не попреш.
-> ***
-> Останній тиждень перед літніми канікулами — це така 
-> довга п’ятниця перед великими вихідними.
-> 2   Випишіть у три групи прийменники, сполучники та частки 
-> Вправа 337
-> 1  Спишіть сполучення слів, заповнивши пропуски та знявши риску 
-> Не/мов/би/то зна..мо, пиш..мо смс/повідомлення аби/
-> кому, без/перестанку роб..ш, чим/дуж намага..мося, при-
-> йшли хтозна/на/віщо, не/стямлюся з радости, дивит..ся 
-> с/під/лоба, робити не/зважаючи/на втому, не/втомний сусід, 
-> побач..мося завтра в/день, займа..ся що/неділі.
+The core methodology is **scaffolding from dialogue to monologue**. Ukrainian pedagogy for young learners heavily emphasizes this transition. We start with simple, structured question-and-answer pairs and gradually build towards a short, coherent narrative. As seen in `Source 15` (`6-klas-ukrmova-betsa-2023_s0018`), a key exercise is to "Трансформуйте діалог у монолог" (Transform the dialogue into a monologue). This provides a clear pathway for learners, reducing the cognitive load of spontaneous production.
 
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 193
-> **Score:** 0.50
->
-> 193
-> Відомості із синтаксису й пунктуації. Словосполучення
-> 08.00
-> 08.15
-> 08.30
-> 08.45
-> 2. Усно назвіть час усіма можливими способами .
-> 3. Доповніть і  розіграйте діалог про розклад дзвінків .
-> — Коли починається перший урок?
-> — О …
-> — А закінчується?
-> — …
-> 4. Об’єднайтесь у  групи й  підготуйте діалоги для різних ситуацій з  вико-
-> ристанням позначення часу (зустріч із друзями, відвідування спортивної 
-> секції, перегляд улюбленого серіалу…) . Розіграйте ситуації перед класом . 
-> Жартувати й  фантазувати можна і  варто!
-> Вправа 313
-> Виправте помилки .
+The structure of the produced text is explicitly taught, following the model used in Ukrainian primary schools: **Зачин (Introduction), Основна частина (Main Part), and Кінцівка (Conclusion)** (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0119`). This simple three-part structure gives learners a reliable template for organizing their thoughts, whether they are writing about their family, their day, or their hobbies. The goal is not literary prowess, but clear, logical communication.
 
-## Мій тиждень (My Week)
+Finally, this module is an opportunity for **active recall and application**. It is not about introducing a large volume of new material. Instead, it's about activating what has already been learned in a meaningful, personalized context. The focus is on communicative competence and building the learner's confidence in using Ukrainian to express personal information (Source 31: `ext-ulp_youtube-60`).
 
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 16
-> **Score:** 0.33
->
-> § 1  Мовні обов’язки українців та українок  
-> 13
-> 3   Що нового для себе ви дізналися з  інфографіки?
-> 4  Розіграйте ситуації, у  яких дотримано наведених статей Закону  Напри-
-> клад, ви сплачуєте за обід у  шкільній їдальні, проводите шкільний захід, 
-> купуєте квиток на фільм, обговорюєте план заходів на перший семестр 
-> тощо 
-> 5   Пригадайте, чи спостерігали ви порушення Закону про мову  Розка-
-> жіть про ці випадки 
-> 6   Поміркуйте, як варто поводитися в  ситуації, коли Закон про мову по-
-> рушують  Наведіть приклади реплік  Змоделюйте ситуацію 
-> Вправа 6 
-> 1   Ознайомтеся зі статтею із тлумачного словника 
-> Обо́в’язок — те, чого треба беззастережно дотримуватися, 
-> що слід безвідмовно виконувати відповідно до вимог суспіль-
-> ства або виходячи з власного сумління.
+## Послідовність введення (Introduction Sequence)
+The "My World" checkpoint should follow a logical progression from simple questions to a structured personal narrative. The sequence of tasks should be designed to build confidence at each stage.
 
-## Summary
+1.  **Step 1: Foundational Q&A (Recycled Vocabulary).**
+    Begin by activating core introductory phrases. The task is a simple dialogue where the learner answers basic questions about themselves. This reinforces patterns they should already know.
+    *   *Prompt:* — Як тебе звуть? / — Мене звуть... (Джерело: `6-klas-ukrmova-betsa-2023_s0014`)
+    *   *Prompt:* — Як твоє прізвище? / — Моє прізвище... (Джерело: `6-klas-ukrmova-betsa-2023_s0014`)
+    *   *Prompt:* — Звідки ти? / — Я з [country/city].
+    *   *Prompt:* — Де ти живеш? / — Я живу в [city].
 
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 205
-> **Score:** 0.25
->
-> 205
-> Відомості із синтаксису й пунктуації. Види речень за метою висловлення
-> ОП
-> О
-> І
-> П
-> Н
-> М
-> Н
-> Т
-> М
-> Ольга Петрівна: Добрий 
-> день, шановні учні! 
-> Усі пам’ятають, що 
-> завтра йдемо на екс-
-> курсію? Збираємося 
-> біля школи о 10.00. 
-> Візьміть із собою 
-> бутерброди, воду 
-> й кишенькові гро-
-> ші. Не запізнюйтеся: 
-> на нас чекатимуть. 
-> До зустрічі!
-> Оксана: Усе зрозуміла, 
-> дякую.
-> Іван: Ok
-> Петро: 
-> Наталка: 
-> Микита: Це вже завтра?!
-> Ніна: 
-> Термінатор:  
-> Микола: Дякую 
-> за нагадування!
-> Вправа 333
-> 1. Прочитайте повідомлення в  чаті 
-> класу .
-> 2. Назвіть спочатку розповідні ре-
-> чення, потім питальні та  спону-
-> кальні .
-> 3. Знайдіть у  чаті та випишіть усі 
-> односкладні речення . Поміркуйте 
-> та висловте припущення: чому їх 
-> так багато?
-> 4. Чи всі учасники чату дотримують-
-> ся норм мовленнєвого етикету?
-> 5.
+2.  **Step 2: Expanding the Circle (Family & Professions).**
+    Introduce questions about the people in the learner's "world." This stage focuses on using third-person pronouns (*він, вона*) and possessives (*його, її*), along with the instrumental case for professions.
+    *   *Prompt:* — Розкажи... хто це на фото? (Джерело: `6-klas-ukrmova-betsa-2023_s0018`)
+    *   *Model:* — Ось це моя мама. Її звуть... Вона працює лікаркою. (Джерело: `6-klas-ukrmova-betsa-2023_s0018`)
+    *   This step requires learners to correctly apply noun gender for family members (мама, тато) and agree possessive pronouns accordingly (моя мама, мій тато).
 
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 140
-> **Score:** 0.50
->
-> § 23  Прислівник як частина мови  
-> 137
-> Їсти (піцу/смачно), повернутися (надвечір/після уроків), 
-> чекати (біля супермаркету/отам), планувати (цієї зими/взим­
-> ку), працювати (довго/три години), бути (в школі/деінде), по­
-> бачитися (зранку/о дев’ятій), дістатися (пішки/тролейбусом), 
-> говорити (по­китайськи/китайською мовою).
-> Вправа 186
->  
-> Доповніть словосполучення прислівниками, що відповідатимуть на по-
-> ставлені питання 
-> Іти (куди?), іти (коли?), іти (звідки?), іти (як?); співати (як?), 
-> співати (коли?), співати (де?); радіти (наскільки?), радіти (де?), 
-> радіти (як?), радіти (з якої причини?).
-> Вправа 187
->  
-> Складіть кілька словосполучень із кожним запропонованим 
-> діє словом так, щоб залежним словом був прислівник (за 
-> зразком попередньої вправи) 
-> Бігти, писати, розуміти.
+3.  **Step 3: Transitioning from Dialogue to Monologue.**
+    This is the most critical step. Guide the learner to connect their previous answers into a simple, continuous text. The prompt is direct: "Transform the dialogue into a monologue" (Джерело: `6-klas-ukrmova-betsa-2023_s0018`).
+    *   *Model:* "Мене звати [Ім'я]. Я з [країна]. Я живу в [місто]. Це моя мама. Її звати... Вона працює вчителькою."
 
-## Grammar Reference
+4.  **Step 4: Explicitly Structuring the Narrative.**
+    Introduce the formal structure for any simple text, as taught in Ukrainian schools. This provides a mental checklist for the learner.
+    *   **Зачин (Introduction):** State the topic. ("Я хочу розповісти про свою сім'ю.")
+    *   **Основна частина (Main Part):** Provide the details. (Names, professions, etc.)
+    *   **Кінцівка (Conclusion):** A simple closing sentence. ("Я люблю свою родину.")
+    *   This framework helps organize the information from Step 3 into a more formal composition (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0119`).
 
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 170
-> **Score:** 0.50
->
-> 167
-> § 77.  Особливості  вживання  прийменників
-> Зауважте!
-> Подані словосполучення можна вживати паралельно: гуляти міс-
-> том — гуляти по місту; надіслати поштою — надіслати по пошті; 
-> тренуватися щосереди — тренуватися по середах; працювати ноча-
-> ми — працювати по ночах. 
-> 4.	 Відредагуйте та запишіть словосполучення.
-> Згідно правила, не прийти із-за хвороби, ліки від ковіду, відповідно із за-
-> коном, зошит по хімії, на протязі року, бал по самостійній роботі, сходили за 
-> водою, прийшли по справах, виконувати по схемі, поїхати за грибами, зро-
-> бити за вимогою, не дивлячись на обставини, стояв у тополі, пливти по течії.
->  
-> Зауважте!
-> Вибір прийменників у/в, з/із/зі (зо) залежить від звукового оточення. 
-> Пригадайте правила вживання цих прийменників.
+5.  **Step 5: Final Production (Written or Spoken).**
+    The culminating task is a free, but guided, production. The prompt should be specific but allow for personalization.
+    *   *Prompt Example:* "Напишіть розповідь «Моя сім’я»" (Джерело: `6-klas-ukrmova-betsa-2023_s0018`).
+    *   *Alternative Prompts:* "Опиши свого друга / свою подругу", "Розкажи про свій дім".
 
-> **Source:** litvinova, Grade 7
-> **Secti
+## Типові помилки L2 (Common L2 Errors)
+For English-speaking learners, the "My World" topic surfaces several predictable errors related to gender, case, and sentence structure.
 
-... (truncated for context window)
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Моя тато` і `мій мама`. | `Мій тато` і `моя мама`. | Learners incorrectly associate `моя` with "my" for a female (mom) and `мій` for a male (dad). The possessive pronoun must agree with the **grammatical gender of the noun** it modifies (`тато` is masculine, `мама` is feminine), not the gender of the person. (Джерело: `ext-other_blogs-46`) |
+| Я працюю `вчитель`. | Я працюю `вчителем`. | When stating a profession with `працювати` (or being something), the noun for the profession must be in the **Instrumental case (Орудний відмінок)**. English uses the nominative ("I work as a teacher"). A Ukrainian school textbook explicitly models this: `Ким працює? (О. в.) ... учителем` (Джерело: `6-klas-ukrmova-betsa-2023_s0016`). |
+| Моє ім'я є Анна. | Мене звати Анна. | This is a direct translation of the English structure "My name is...". While `Моє ім'я Анна` is grammatically possible, the most common and natural way to introduce oneself is the structure `Мене звати...` ("They call me..."). This is the first form taught in Ukrainian textbooks (Джерело: `6-klas-ukrmova-betsa-2023_s0014`). |
+| `Привіт, Давид!` | `Привіт, Давиде!` | English does not have a vocative case for direct address. In Ukrainian, it is mandatory. Learners often forget to change the ending of a name when addressing someone directly. `Оксанко, ти знаєш...` is a clear example from a textbook (Джерело: `5-klas-ukrmova-uhor-2022-1_s0015`). |
+| Це його сестра. Її звати Ірина. Це **його** брат. | Це його сестра. Її звати Ірина. Це **її** брат. | Learners confuse the meaning of possessive pronouns. When talking about Irina's brother, English would use "her brother". The learner mistakenly uses *його* ("his") again, thinking about the brother's gender, not the owner's (Irina's). This requires drilling the concepts of "his" (`його`) vs. "her" (`її`). |
+| Моя сестра має 25 років. | Моїй сестрі 25 років. | Age is expressed using the dative case (`кому?`) + number + `років/рік/роки`, not the verb `мати` (to have) as in English and other European languages. This is a fundamental structural difference. <!-- VERIFY --> |
+
+## Деколонізаційні застереження (Decolonization Notes)
+Teaching Ukrainian must be done on its own terms, completely independent of Russian. The "My World" topic is an early opportunity to establish correct, decolonized linguistic habits.
+
+1.  **Ukrainian is Not "Russian with different letters":** The writer must NEVER use Russian as a point of comparison (e.g., "This is like the Russian word..."). This creates a false equivalency and hinders the development of authentic Ukrainian phonetics and intuition. The Ukrainian language has its own distinct history, with some words being borrowed by other languages, including Russian and Polish (Джерело: `ext-istoria_movy-10`). The goal is to build a "Ukrainian mental map" from zero.
+
+2.  **Pronunciation without Russian Interference:** Pronunciation of names and words must be based on Ukrainian phonology. For example, the name `Давид` is pronounced with a hard `д` at the end, not devoiced to `[Давіт]` as would happen in Russian. Emphasize listening to native Ukrainian audio, not relying on transliteration or comparison.
+
+3.  **Vocabulary Purity:** Use exclusively Ukrainian vocabulary. Avoid common Russianisms that have crept into Surzhyk (a mixed Russo-Ukrainian vernacular). For instance, use `Гаразд` or `Добре` for "okay," not the Russian `ладно`. Use `дякую` for "thank you," not `спасибі` (which, while Ukrainian, is often overused due to Russian influence and `дякую` is more common in many regions). Source `ext-imtgsh-151` discusses how Russian was used as a tool of occupation, making linguistic purity a crucial act of decolonization.
+
+4.  **Ukrainian Names:** Always use the standard Ukrainian forms of names (e.g., `Ганна`, `Олексій`, `Дмитро`, `Христина`) and not their Russified equivalents (`Анна`, `Алексей`, `Дмитрий`, `Кристина`). This reinforces Ukrainian identity and cultural norms from the very first lesson.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+This checkpoint should only test high-frequency, personally relevant vocabulary that has been introduced in A1.
+
+**Іменники (Nouns):**
+*   ***Сім'я / Родина*** (family) ★★★
+*   ***Мама (or мати), тато (or батько)*** (mom, dad) ★★★
+*   ***Брат, сестра*** (brother, sister) ★★★
+*   ***Дідусь, бабуся*** (grandfather, grandmother) ★★
+*   ***Чоловік, дружина*** (husband, wife) ★★
+*   ***Син, дочка (донька)*** (son, daughter) ★★
+*   ***Друг, подруга*** (friend m/f) ★★★
+*   ***Робота, школа, університет*** (work, school, university) ★★★
+*   ***Дім (будинок), квартира*** (house, apartment) ★★
+*   ***Місто, країна*** (city, country) ★★★
+*   ***Ім'я, прізвище*** (first name, last name) ★★★
+
+**Дієслова (Verbs):**
+*   ***бути*** (to be) ★★★
+*   ***звати*** (to be called) ★★★
+*   ***жити*** (to live) ★★★
+*   ***працювати*** (to work) ★★★
+*   ***вчитись / навчатись*** (to study) ★★★
+*   ***любити*** (to love, to like) ★★★
+*   ***мати*** (to have) ★★★
+
+**Займенники (Pronouns):**
+*   ***Я, ти, він, вона, воно, ми, ви, вони*** (I, you, he, she, it, we, you, they) ★★★
+*   ***Мій/моя/моє, твій/твоя/твоє, його, її, наш/наша/наше, ваш/ваша/ваше, їхній*** (my, your, his, her, our, your, their) ★★★
+
+**Прислівники (Adverbs):**
+*   ***тут, там*** (here, there) ★★
+*   ***добре*** (well) ★★
+
+## Приклади з підручників (Textbook Examples)
+The module should use activity formats that are common in Ukrainian primary and middle school textbooks. These provide authentic, pedagogically sound models.
+
+1.  **Structured Dialogue Completion (Source `6-klas-ukrmova-betsa-2023_s0014`)**
+    *   **Task:** Complete and practice a basic introductory dialogue.
+    *   **Format:**
+        > — Як тебе звуть?
+        > — Мене звуть … .
+        > — Як твоє прізвище?
+        > — Моє прізвище … .
+
+2.  **Photo Description Role-Play (Source `6-klas-ukrmova-betsa-2023_s0018`)**
+    *   **Task:** Use a family photo (real or provided) to ask and answer questions about family members.
+    *   **Format:**
+        > — Розкажи детальніше, хто це на фото.
+        > — Ось це моя мама. Її звуть Еріка Іштванівна. Вона працює лікаркою в лікарні. Праворуч від мами моя сестра Іветта. Вона студентка...
+
+3.  **Written Narrative Prompt (Source `6-klas-ukrmova-betsa-2023_s0018`)**
+    *   **Task:** Write a short, structured story based on previously practiced dialogues.
+    *   **Format:**
+        > Напишіть розповідь «Моя сім’я». Використайте матеріали діалогів §4–5.
+        > *(This directly links the written task to the preceding spoken practice).*
+
+4.  **Text Scramble / Structure Identification (Source `2-klas-ukrmova-kravcova-2019-1_s0119`)**
+    *   **Task:** Give learners the jumbled sentences of a short personal narrative. Their task is to reorder them into a logical Зачин (Introduction), Основна частина (Main Part), and Кінцівка (Conclusion).
+    *   **Format:**
+        > *[Кінцівка]* Він дуже веселий.
+        > *[Основна частина]* Його звати Сергій. Він працює інженером.
+        > *[Зачин]* Це мій друг.
+        > **Your task:** Put the sentences in the correct order to make a story.
+
+## Пов'язані статті (Related Articles)
+*   `pedagogy/a1/personal-pronouns`
+*   `pedagogy/a1/possessive-pronouns`
+*   `pedagogy/a1/verb-conjugation-present`
+*   `pedagogy/a1/instrumental-case`
+*   `pedagogy/a1/noun-gender`
+*   `pedagogy/a1/vocative-case`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -647,7 +618,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Планування (Planning)` (~300 words)
 - `## Мій тиждень (My Week)` (~300 words)
 - `## Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -705,7 +675,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -804,37 +774,33 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
-- P1 (~20 words): Brief scene-setter — Оля, Тарас, і Марія планують суботу в груповому чаті.
-- Dialogue 1 (~120 words): Weekend plan — Що ти будеш робити у суботу? / Зранку я буду прибирати квартиру. / А вдень? / Вдень я буду ходити в магазин. А ти? / Я буду відпочивати! Може, підемо в кафе ввечері? / Добре! О котрій? / О шостій. Добре? / Чудово! До зустрічі у суботу! [Labels: future + time + invitation]
-- P2 (~20 words): Brief scene-setter — Дмитро розповідає про свій завантажений тиждень.
-- Dialogue 2 (~120 words): Busy week — У тебе є плани на тиждень? / Так, багато! У понеділок я буду працювати допізна. У вівторок буду вчитися. У середу — зустріч з друзями. / А у четвер? / У четвер я буду готувати на вечірку. / А в п'ятницю? / В п'ятницю — вечірка! Ти будеш? / Звичайно буду! [Labels: days of week + future planning]
-- P3 (~50 words): Brief comprehension note — point out key patterns: буду + infinitive for all persons, days as fixed time anchors (у понеділок, у вівторок... у суботу, в неділю), ввечері/зранку/вдень as time-of-day modifiers. Ask: Що буде робити Дмитро у четвер?
+## Dialogues (~350 words total)
+- P1 (~60 words): Intro to the communicative setting. Explain that as we reach the end of the A1.8 phase, planning for the future (weekend, week, and graduation) becomes the primary social goal. Set up the context of a "Group Chat" where friends organize their leisure time.
+- P2 (~140 words): Dialogue 1 — Weekend Planning in a Group Chat. Speakers: Оля, Максим, Іра. Focus on future intentions: "У суботу я буду прибирати квартиру", "А я буду бігати в парку". Introduction of invitations: "Може, підемо в кіно?", "Ходімо!", "О котрій?".
+- P3 (~150 words): Dialogue 2 — The Weekly Grind. Speakers: Марія and Петро. Focus on a busy schedule: "У понеділок я буду працювати", "У вівторок буду вчитися", "У четвер буду готувати". Reinforce the "false friend" distinction between *тиждень* (week) and *неділя* (Sunday) in context.
 
-## Планування (~330 words total)
-- P1 (~80 words): Scheduling formula — introduce the core pattern: У + day + time + буду + infinitive. Explicit table of all seven days: у понеділок, у вівторок, у середу, у четвер, у п'ятницю, у суботу, в неділю (note: в before н). Add time-of-day adverbs: зранку, вдень, ввечері. Add clock-time: о дев'ятій, о третій, о шостій. Full combined example: У суботу ввечері я буду дивитися фільм.
-- P2 (~80 words): Invitation toolkit — explain three registers: Ходімо в кафе! (imperative, warm), Може, підемо в кіно? (soft suggestion with може), Давай зустрінемося о п'ятій! (collaborative давай + perfective). Checking availability: Ти будеш вільний / вільна у суботу? (adj gender agreement). Responses: Добре! Чудово! З задоволенням! vs. На жаль, не можу.
-- Exercise 1 (fill-in, ~50 words): Complete time expressions — У {понеділок|вівторок|середу} я буду працювати. / У суботу {зранку|ввечері|вдень} я буду прибирати квартиру. / {О|В|На} шостій ми будемо дивитися кіно. / У {неділю|суботу|п'ятницю} він буде відпочивати. / У п'ятницю {ввечері|зранку|вдень} буде вечірка. [5 items, focus: day + time + future]
-- Exercise 2 (matching, ~50 words): Invitations ↔ responses — Ходімо в кіно! → З задоволенням! / Може, підемо в кафе? → Добре! О котрій? / Ти будеш вільний у суботу? → На жаль, не можу. / Давай зустрінемося о п'ятій! → Чудово! До зустрічі! [4 pairs]
-- P3 (~70 words): Preposition note — contrast у/в before days: у понеділок, у вівторок, у середу, у четвер, у п'ятницю, у суботу — but в неділю (в before vowel). Recall from M37: the same у/в euphony rule applies to all prepositions. Two quick drills: fill in у or в before: _понеділок, _неділю, _середу, _п'ятницю.
+## Планування (Planning) (~330 words total)
+- P1 (~110 words): Grammatical breakdown of days of the week with the preposition *у/в* (temporal Accusative). Explain the non-negotiable ending change for feminine days: *у середу*, *у п'ятницю*, *у суботу*, versus masculine/neuter forms: *у понеділок*, *у вівторок*, *у четвер*, *в неділю*. Use the wiki tip to emphasize *на вихідних* for "on the weekend."
+- P2 (~110 words): Telling time for scheduling using the question "О котрій годині?". Explain the response pattern *о* + ordinal number in the Locative case: *о третій*, *о шостій*, *о дев'ятій*. Mention the phonetic variant *об* before vowels: *об одинадцятій*. Warn against English-like mappings (using *в* instead of *о*).
+- P3 (~110 words): Communicative chunks for invitations and responses. Introduce the patterns: "Ходімо в...!", "Може, підемо...?", and "Давай зустрінемося!". Provide natural responses for acceptance ("З задоволенням!", "Домовились!") and polite refusal ("На жаль, не можу", "Я зайнятий/зайнята").
+- <!-- INJECT_ACTIVITY: fill-in-days-time --> [fill-in, focus: combining days of the week, time prepositions, and future tense, 5 items]
+- <!-- INJECT_ACTIVITY: matching-invitations --> [matching, focus: pairing specific invitations with culturally natural responses, 4 pairs]
 
-## Мій тиждень (~330 words total)
-- P1 (~20 words): Introduce Тарас — he's planning his whole week, one day at a time.
-- P2 (~130 words): Тарас's model week — У понеділок я буду працювати. Після роботи буду вчити українську. У вівторок я буду обідати з другом у кафе. У середу ввечері я буду дивитися футбол. У четвер я буду готувати вечерю для родини. У п'ятницю я буду відпочивати — піду в кіно. У суботу зранку буду прибирати, а вдень гуляти в парку. В неділю я буду спати довго! [Each sentence = one day; italicize the буду + infinitive structure for visual clarity]
-- P3 (~60 words): Your turn — template prompt: У [день] о [час] я буду [дієслово]. Expansion prompts: Де? (у парку, в кафе, вдома) — З ким? (з другом, з сім'єю, сам/сама) — Що саме? (прибирати квартиру, готувати обід, дивитися фільм). Worked example: У суботу о десятій я буду гуляти в парку з другом.
-- Exercise 3 (fill-in, ~50 words): Complete the week plan with correct tense form — У вівторок я {буду вчити|вчив|вчу} українську. / У середу ми {будемо готувати|готували|готуємо} вечерю. / У четвер вона {буде працювати|працювала|працює} допізна. [3 items, focus: future vs. past vs. present tense contrast]
-- P4 (~70 words): Mini-writing task — plan your ideal weekend in 4–6 sentences using the model. Checklist: ✓ два дні (субота + неділя) ✓ час (зранку / вдень / ввечері або о котрій?) ✓ місце ✓ буду + infinitive. Sample answer: У суботу зранку я буду спати довго. Вдень я буду гуляти в парку. Ввечері ми будемо дивитися фільм. В неділю я буду готувати сніданок для родини.
+## Мій тиждень (My Week) (~320 words total)
+- P1 (~160 words): The Narrative Model: "Taras’s Busy Week". A cohesive story illustrating a full schedule. Taras describes his plans: "У понеділок я буду працювати, а потім буду вчити українську", "У середу я буду дивитися футбол", "У неділю я буду відпочивати". Demonstrate how to anchor activities to specific times and places using A1 vocabulary.
+- P2 (~160 words): Guided Writing Workshop. Instruct the learner to use the "My Week" template to create their own schedule. Provide a framework: "У [день] я буду [що робити]". Encourage adding layers of detail: "О котрій?" (at what time?), "Де?" (where?), "З ким?" (with whom?). Remind them to use "У мене є плани" instead of the calque "Я маю плани."
+- <!-- INJECT_ACTIVITY: fill-in-weekly-plan --> [fill-in, focus: choosing the correct future tense form (буду/будемо) and activity in context, 3 items]
 
-## Підсумок (~150 words total)
-- P1 (~150 words): Planning toolkit recap — bullet-format:
-  • Формула: У [день] о [час] я буду [інфінітив] — У суботу о третій я буду готувати обід.
-  • Час доби: зранку → вдень → ввечері
-  • Запрошення: Ходімо! / Може, підемо? / Давай зустрінемося!
-  • Відповіді: Добре! Чудово! З задоволенням! / На жаль, не можу.
-  • Дні тижня: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя (у/в!)
-  • Self-check questions: Що ти будеш робити у суботу? / О котрій? / Ти будеш вільний/вільна? / Ходімо в кафе ввечері?
+## Підсумок (~300 words total)
+- P1 (~100 words): Recap of the "Planning Toolkit." A concise summary of the module's grammar: the compound future construction (*бути* + infinitive) and the prepositions *у/в* for days and *о/об* for hours.
+- P2 (~100 words): Final Review of Days. List the days of the week one last time (понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя) to ensure the learner can differentiate between the masculine and feminine forms and their respective endings in temporal phrases.
+- P3 (~100 words): Self-Check: A bulleted list for the learner to verify their skills:
+    * Can you say "On Wednesday at six I will be cleaning"? (У середу о шостій я буду прибирати).
+    * Can you invite a friend to a cafe? (Може, підемо в кафе?).
+    * Can you politely decline an invitation? (На жаль, я не можу).
+    * Can you plan your ideal weekend (Saturday and Sunday)?
 
-Grand total: ~1140 words (skeleton framework) → target 1200–1320 words in prose build after dialogue and exercise text fills in fully.
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format

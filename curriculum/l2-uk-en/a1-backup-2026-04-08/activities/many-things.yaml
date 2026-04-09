@@ -1,0 +1,354 @@
+version: '1.0'
+module: many-things
+level: a1
+inline:
+- id: fill-in-plural
+  type: fill-in
+  instruction: Choose the correct plural form of each noun.
+  items:
+  - sentence: стіл → ____
+    answer: столи
+    options:
+    - столи
+    - стола
+    - столів
+  - sentence: книга → ____
+    answer: книги
+    options:
+    - книги
+    - книгу
+    - книг
+  - sentence: вікно → ____
+    answer: вікна
+    options:
+    - вікна
+    - вікну
+    - вікон
+  - sentence: стілець → ____
+    answer: стільці
+    options:
+    - стільці
+    - стільця
+    - стільців
+  - sentence: ручка → ____
+    answer: ручки
+    options:
+    - ручки
+    - ручку
+    - ручок
+  - sentence: зошит → ____
+    answer: зошити
+    options:
+    - зошити
+    - зошита
+    - зошитів
+  - sentence: лампа → ____
+    answer: лампи
+    options:
+    - лампи
+    - лампу
+    - ламп
+  - sentence: сумка → ____
+    answer: сумки
+    options:
+    - сумки
+    - сумку
+    - сумок
+  - sentence: крісло → ____
+    answer: крісла
+    options:
+    - крісла
+    - крісел
+    - кріслу
+  - sentence: дзеркало → ____
+    answer: дзеркала
+    options:
+    - дзеркала
+    - дзеркал
+    - дзеркалу
+- id: fill-in-adj-plural
+  type: fill-in
+  instruction: Complete each phrase with the correct plural adjective form.
+  items:
+  - sentence: ____ книги (новий → ?)
+    answer: нові
+    options:
+    - нові
+    - нова
+    - новий
+  - sentence: ____ столи (великий → ?)
+    answer: великі
+    options:
+    - великі
+    - велика
+    - великий
+  - sentence: ____ вікна (чистий → ?)
+    answer: чисті
+    options:
+    - чисті
+    - чисте
+    - чиста
+  - sentence: ____ стільці (старий → ?)
+    answer: старі
+    options:
+    - старі
+    - старий
+    - стара
+  - sentence: ____ ручки (червоний → ?)
+    answer: червоні
+    options:
+    - червоні
+    - червона
+    - червоний
+  - sentence: ____ зошити (синій → ?)
+    answer: сині
+    options:
+    - сині
+    - синій
+    - синя
+  - sentence: ____ олівці (чорний → ?)
+    answer: чорні
+    options:
+    - чорні
+    - чорний
+    - чорна
+  - sentence: ____ лампи (жовтий → ?)
+    answer: жовті
+    options:
+    - жовті
+    - жовтий
+    - жовта
+- id: quiz-plural-adj
+  type: quiz
+  instruction: Choose the correct word to complete each sentence.
+  items:
+  - question: Ці столи ____.
+    options:
+    - великі
+    - великий
+    - велика
+    correct: 0
+  - question: ____ книги нові.
+    options:
+    - ці
+    - цей
+    - ця
+    correct: 0
+  - question: Мої ручки ____.
+    options:
+    - сині
+    - синя
+    - синій
+    correct: 0
+  - question: ____ крісла червоні.
+    options:
+    - ті
+    - той
+    - та
+    correct: 0
+  - question: Ці вікна ____.
+    options:
+    - чисті
+    - чиста
+    - чисте
+    correct: 0
+  - question: ____ зошити нові.
+    options:
+    - мої
+    - мій
+    - моя
+    correct: 0
+  - question: Ті стільці ____.
+    options:
+    - старі
+    - старий
+    - стара
+    correct: 0
+  - question: Мої сумки ____.
+    options:
+    - великі
+    - великий
+    - велике
+    correct: 0
+- id: group-sort-singular-plural
+  type: group-sort
+  instruction: Sort the words into **однина** (singular) or **множина** (plural).
+  groups:
+  - label: однина (singular)
+    items:
+    - стіл
+    - книга
+    - вікно
+    - ручка
+    - лампа
+    - крісло
+  - label: множина (plural)
+    items:
+    - столи
+    - книги
+    - вікна
+    - ручки
+    - лампи
+    - крісла
+workbook:
+- type: match-up
+  instruction: Match each singular noun to its plural form.
+  pairs:
+  - left: стіл
+    right: столи
+  - left: книга
+    right: книги
+  - left: вікно
+    right: вікна
+  - left: стілець
+    right: стільці
+  - left: зошит
+    right: зошити
+  - left: дзеркало
+    right: дзеркала
+- type: observe
+  examples:
+  - великий стіл → великі столи
+  - велика книга → великі книги
+  - велике вікно → великі вікна
+  - старий олівець → старі олівці
+  - стара сумка → старі сумки
+  - старе крісло → старі крісла
+  prompt: 'In singular, adjectives change ending by gender: -ий (m), -а (f), -е (n).
+    What happens in the plural? How many different endings are there for plural adjectives?'
+- type: true-false
+  instruction: Read each statement. Is it true (правда) or false (неправда)?
+  items:
+  - statement: Столи у класі великі й нові.
+    correct: true
+    explanation: 'Олена confirms: ''Столи великі й нові.'''
+  - statement: Стільці у класі нові.
+    correct: false
+    explanation: 'Олена says the chairs are old: ''стільці — старі''.'
+  - statement: Вікна у класі чисті.
+    correct: true
+    explanation: 'Олена confirms: ''Вікна чисті.'''
+  - statement: Plural adjectives in Ukrainian always end in -і.
+    correct: true
+    explanation: 'All three genders share one plural ending: великі, нові, старі,
+      чисті.'
+  - statement: The plural of 'вікно' is 'вікні'.
+    correct: false
+    explanation: 'Neuter nouns take -а in the plural: вікно → вікна.'
+  - statement: The plural of 'стілець' is 'стільці'.
+    correct: true
+    explanation: 'Soft-stem masculine nouns take -і: стілець → стільці.'
+  - statement: '''Ці'' means ''those'' in Ukrainian.'
+    correct: false
+    explanation: '''Ці'' means ''these''. ''Ті'' means ''those''.'
+  - statement: The plural of 'ручка' is 'ручки'.
+    correct: true
+    explanation: 'Feminine nouns ending in -ка take -и in the plural: ручка → ручки.'
+- type: error-correction
+  instruction: Find the error in each sentence and correct it.
+  items:
+  - sentence: Ці столи великий.
+    error: великий
+    correction: великі
+    error_type: word
+    options:
+    - великі
+    - велика
+    - великого
+    explanation: Plural adjectives always end in -і. 'Великий' is masculine singular.
+  - sentence: Мої ручки синя.
+    error: синя
+    correction: сині
+    error_type: word
+    options:
+    - сині
+    - синій
+    - синього
+    explanation: Plural adjectives always end in -і. 'Синя' is feminine singular.
+  - sentence: Ті вікна чисте.
+    error: чисте
+    correction: чисті
+    error_type: word
+    options:
+    - чисті
+    - чистий
+    - чистого
+    explanation: Plural adjectives always end in -і. 'Чисте' is neuter singular.
+  - sentence: Ці стільці старий.
+    error: старий
+    correction: старі
+    error_type: word
+    options:
+    - старі
+    - стара
+    - старого
+    explanation: Plural adjectives always end in -і. 'Старий' is masculine singular.
+  - sentence: Мої зошити новий.
+    error: новий
+    correction: нові
+    error_type: word
+    options:
+    - нові
+    - нова
+    - нового
+    explanation: Plural adjectives always end in -і. 'Новий' is masculine singular.
+  - sentence: Ці книги червона.
+    error: червона
+    correction: червоні
+    error_type: word
+    options:
+    - червоні
+    - червоний
+    - червоного
+    explanation: Plural adjectives always end in -і. 'Червона' is feminine singular.
+- type: translate
+  instruction: Choose the correct Ukrainian translation.
+  items:
+  - source: These tables are big.
+    options:
+    - text: Ці столи великі.
+      correct: true
+    - text: Це стіл великий.
+      correct: false
+    - text: Ті столи великий.
+      correct: false
+  - source: My pens are blue.
+    options:
+    - text: Мої ручки сині.
+      correct: true
+    - text: Моя ручка синя.
+      correct: false
+    - text: Мої ручки синя.
+      correct: false
+  - source: Those chairs are old.
+    options:
+    - text: Ті стільці старі.
+      correct: true
+    - text: Ці стільці старі.
+      correct: false
+    - text: Ті стільці старий.
+      correct: false
+  - source: The windows are clean.
+    options:
+    - text: Вікна чисті.
+      correct: true
+    - text: Вікно чисте.
+      correct: false
+    - text: Вікна чистий.
+      correct: false
+  - source: These notebooks are new.
+    options:
+    - text: Ці зошити нові.
+      correct: true
+    - text: Цей зошит новий.
+      correct: false
+    - text: Ці зошити нова.
+      correct: false
+  - source: Those armchairs are red.
+    options:
+    - text: Ті крісла червоні.
+      correct: true
+    - text: Те крісло червоне.
+      correct: false
+    - text: Ці крісла червоні.
+      correct: false

@@ -12,8 +12,10 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -21,136 +23,123 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <TabItem label="Урок">
 
 ## Що ми зна́ємо? (What Do We Know?)
-Let's review the key patterns for navigating a Ukrainian city.
-Try answering these questions out loud:
-- **Де ти живе́ш?** (Where do you live?) — **У Ки́єві.** (In Kyiv.)
-- **Куди ти йдеш?** (Where are you going?) — **У магази́н.** (To the store.)
-- **Звідки ти?** (Where are you from?) — **Я з Кана́ди.** (I'm from Canada.)
-- **Як ти ї́деш?** (How do you travel?) — **Автобусом.** (By bus.)
-- **Де музе́й?** (Where is the museum?) — **Музей у це́нтрі.** (The museum is in the centre.)
-- Choose **і** or **й**: **Брат ___ сестра́.**
-- Choose **у** or **в**: **Я живу́ ___ Льво́ві.**
-This checkpoint brings together euphony, location, direction, transport, and origin into one connected practice.
+
+Navigating a new city is often your very first real test of survival in a completely new language environment. Before reaching this point in your studies, you could name a few isolated objects, describe who you are, or exchange basic daily greetings. Now, you have acquired the tools to confidently step out into the street, find what you need, and interact with the world around you. This module serves as a comprehensive checkpoint to review the essential skills you acquired throughout the "Places" section. 
+
+Moving from speaking in isolated words to building connected urban navigation phrases is an important step. You are no longer just pointing and saying **центр** (center) or **метро́** (subway); instead, you are constructing full ideas by saying **у це́нтрі** (in the center) and **на метро** (by subway). This review highlights the critical differences between simply being somewhere, actively going somewhere, and returning from somewhere. 
+
+Evaluate exactly what you know so far. Ask yourself the following questions to see if you are truly ready to navigate the busy streets of Ukraine:
+
+*   **Чи мо́жу я ви́брати між «у» та «в»?** (Can I choose between «у» and «в»?) — This tests your grasp of euphony rules for smooth pronunciation.
+*   **Чи зна́ю я, як сказа́ти, де я?** (Do I know how to say where I am?) — This checks if you can use the locative case to state your location.
+*   **Чи можу я назва́ти місця́ в мі́сті?** (Can I name places in the city?) — This ensures you recognize essential city vocabulary.
+*   **Чи можу я сказати, куди́ я йду?** (Can I say where I am going?) — This confirms you understand the accusative case for direction.
+*   **Чи можу я кори́стува́тися транспортом?** (Can I use transport?) — This checks your ability to say how you are traveling.
+*   **Чи можу я запита́ти доро́гу?** (Can I ask for directions?) — This ensures you can communicate with locals and follow a route.
+*   **Чи можу я сказати, зві́дки я?** (Can I say where I am from?) — This confirms you can use genitive chunks for origin.
+
+If you can answer these questions, you are ready to navigate a Ukrainian city.
+
+<Quiz client:only="react" questions={[{"question": "_____ ти живеш? — У Києві.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "_____ ти йдеш? — У магазин.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Звідки", "correct": false}]}, {"question": "_____ ви? — Ми з Канади.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": true}]}, {"question": "_____ музей? — У центрі.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "_____ їде автобус? — На вокзал.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Звідки", "correct": false}]}, {"question": "_____ ти їдеш? — З роботи.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": true}]}, {"question": "_____ аптека? — Направо.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "_____ вони? — Зі США.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": true}]}]} instruction={"Оберіть правильне запитання (Choose the correct question)"} />
+
 ## Чита́ння (Reading Practice)
-Read this short text about a tourist in Kyiv. Pay attention to how euphony choices, locations, directions, and transport naturally combine in a real scenario.
-<div class="dialogue">
 
-<div class="dialogue-line">**Мене зва́ти То́мас.** *(My name is Tomas.)* **Я з Канади.** *(I'm from Canada.)* **Зараз я в Києві.** *(Right now I'm in Kyiv.)*</div>
+Reading short, contextual narratives in Ukrainian helps solidify grammar patterns naturally without feeling like you are memorizing rules. The following reading practice follows a traveler named Марк who arrives in the capital city. He begins his journey at the main train station, known as **вокза́л** (train station), and needs to locate his accommodation, a **готе́ль** (hotel), which is situated right in the heart of the city. Finally, he navigates his way to one of the most famous historical landmarks in the capital, **Золоті́ воро́та** (Golden Gate). 
 
+Read the text below carefully. Pay close attention to how Mark uses prepositions like **у**, **в**, **на**, and **з** depending on whether he is describing his static location, his destination, or his origin.
 
-<div class="dialogue-line">**Сьогодні я гуля́ю по мі́сту.** *(Today I'm walking around the city.)* **Вранці я ї́ду на метро́ до ста́нції Хреща́тик.** *(In the morning I take the metro to Khreshchatyk station.)* **Метро в Києві ду́же зру́чне.** *(The metro in Kyiv is very convenient.)*</div>
+*   **Я за́раз у Ки́єві.** (I am currently in Kyiv.)
+*   **Я з По́льщі.** (I am from Poland.)
+*   **Мій готель у центрі.** (My hotel is in the center.)
+*   **Я йду пі́шки.** (I am walking on foot.)
+*   **Вокзал дале́ко.** (The train station is far.)
+*   **Я ї́ду на метро.** (I am going by subway.)
+*   **Скажі́ть, будь ла́ска, де музе́й?** (Tell me, please, where is the museum?)
+*   **Я йду напра́во.** (I am walking to the right.)
+*   **Тут пло́ща.** (Here is a square.)
+*   **Золоті ворота бли́зько.** (Golden Gate is near.)
+*   **Я вже бі́ля музе́ю.** (I am already near the museum.)
 
+Notice how Mark integrates all the fundamental A1.5 vocabulary and grammar in just a few straightforward sentences. He seamlessly uses **на метро** (by subway) for his mode of transport, **направо** (to the right) for simple directions, and **біля музею** (near the museum) to establish his exact location relative to another landmark. 
 
-<div class="dialogue-line">**Я виходжу зі станції.** *(I exit the station.)* **Іду напра́во.** *(I go right.)* **Попереду — Хрещатик, головна́ ву́лиця мі́ста.** *(Ahead is Khreshchatyk, the main street of the city.)* **Я йду пря́мо.** *(I walk straight.)* **Бачу краси́вий парк.** *(I see a beautiful park.)* **У парку є фонта́ни й лавки́.** *(In the park there are fountains and benches.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Потім я пита́ю перехо́жого:</span> *(Then I ask a passerby:)* **«Ви́бачте, де Націона́льний музей?»** *("Excuse me, where is the National Museum?")* **Він відповіда́є:** *(He answers:)* **«Музей на пло́щі. Іді́ть прямо, потім налі́во.»** *("The museum is on the square. Go straight, then left.")*</div>
-
-
-<div class="dialogue-line">**Я йду в музе́й.** *(I go to the museum.)* **Потім хо́чу ї́хати в Лавру.** *(Then I want to go to the Lavra.)* **Сідаю в авто́бус.** *(I get on a bus.)* **Їду до зупи́нки Арсена́льна.** *(I ride to Arsenalna stop.)* **Від зупинки до Лаври пі́шки — п'ять хвили́н.** *(From the stop to the Lavra on foot — five minutes.)*</div>
-
-
-<div class="dialogue-line">**Увечері я в готе́лі.** *(In the evening I'm at the hotel.)* **Телефоную в Кана́ду:** *(I call Canada:)* **«Я зараз у Києві! Хочу їхати у Львів!»** *("I'm in Kyiv now! I want to go to Lviv!")*</div>
-
-
-</div>
-Now check your understanding:
-1. **Звідки Томас?** (Where is Tomas from?) — **З Канади.** (From Canada.)
-2. **Куди він ї́де вранці?** (Where does he go in the morning?) — **На метро до станції Хрещатик.** (By metro to Khreshchatyk station.)
-3. **Де музей?** (Where is the museum?) — **На площі.** (On the square.)
-Notice the patterns at work: **з Канади** (where from), **у Києві** (where), **на метро** (transport), **зі станції** (euphony before **ст-**), **направо** and **прямо** (directions), **до Лаври** (direction), **в автобус** (onto transport).
-<Quiz client:only="react" questions={[{"question": "___ ти живеш? — У Києві.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "___ ти йдеш? — У магазин.", "options": [{"text": "Куди", "correct": true}, {"text": "Де", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "___ ви? — Ми з Канади.", "options": [{"text": "Звідки", "correct": true}, {"text": "Де", "correct": false}, {"text": "Куди", "correct": false}]}, {"question": "___ музей? — У центрі.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "___ їде автобус? — На вокзал.", "options": [{"text": "Куди", "correct": true}, {"text": "Де", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "___ ти їдеш? — З роботи.", "options": [{"text": "Звідки", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Де", "correct": false}]}, {"question": "___ аптека? — Направо.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Звідки", "correct": false}]}, {"question": "___ вони? — Зі США.", "options": [{"text": "Звідки", "correct": true}, {"text": "Де", "correct": false}, {"text": "Куди", "correct": false}]}]} instruction={"Оберіть правильне питальне слово (Choose the correct question word)"} />
-## Грама́тика (Grammar Summary)
-Here are the key patterns for navigating Ukrainian cities. Each pattern answers a different question.
-**Pattern 1: Euphony (M28)** — Ukrainian alternates certain sounds for smooth speech.
-- **у/в**: **Він у шко́лі.** (He's at school.) / **Я в о́фісі.** (I'm in the office.)
-- **і/й**: **Брат і сестра.** (Brother and sister.) / **Ольга й Андрі́й.** (Olha and Andriy.)
-- **з/із/зі**: **Я з Украї́ни.** (I'm from Ukraine.) / **Зі США.** (From the USA.)
-<Quiz client:only="react" questions={[{"question": "Брат ___ сестра.", "options": [{"text": "і", "correct": true}, {"text": "й", "correct": false}, {"text": "та", "correct": false}]}, {"question": "Вона живе ___ Львові.", "options": [{"text": "у", "correct": false}, {"text": "в", "correct": true}, {"text": "на", "correct": false}]}, {"question": "Я йду ___ школи.", "options": [{"text": "зі", "correct": true}, {"text": "з", "correct": false}, {"text": "із", "correct": false}]}, {"question": "Він ___ Києві.", "options": [{"text": "у", "correct": true}, {"text": "в", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Мама ___ тато.", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "та", "correct": false}]}, {"question": "Ми ___ України.", "options": [{"text": "з", "correct": true}, {"text": "із", "correct": false}, {"text": "зі", "correct": false}]}, {"question": "Я ___ кімнаті.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Вона ___ США.", "options": [{"text": "зі", "correct": true}, {"text": "з", "correct": false}, {"text": "із", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
-**Pattern 2: Де? → в/на + locative (M29)** — where something IS.
-- **У школі.** (At school.) **На робо́ті.** (At work.) **У центрі.** (In the centre.) **На площі.** (On the square.)
-**Pattern 3: Куди? → в/на + accusative (M31)** — where you're GOING.
-- **У шко́лу.** (To school.) **На робо́ту.** (To work.) **У Львів.** (To Lviv.) **На пло́щу.** (To the square.)
-Compare: **у школі** (at school — you're there) vs. **у школу** (to school — you're heading there). Same preposition, different case ending.
-**Pattern 4: Звідки? → з/із/зі + genitive (M34)** — where you're FROM.
-- **З України.** (From Ukraine.) **Зі США.** (From the USA.) **З робо́ти.** (From work.) **З Канади.** (From Canada.)
-**Pattern 5: Transport (M32)** — how you travel.
-- **Їхати автобусом.** (To go by bus.) **На метро до станції Хрещатик.** (By metro to Khreshchatyk station.)
 :::tip
-Transport hubs (**станція**, **вокзал**, **зупинка**) always take **на**: **на станції**, **на вокзалі**, **на зупинці** — never **в станції**.
+As you read Ukrainian texts, try your best not to translate word for word in your head. Instead, visualize the scene unfolding. Picture Mark exiting the train station, looking at a map, and walking towards the center. This visualization technique helps you link the Ukrainian words directly to real-world concepts.
 :::
-**Pattern 6: Directions (M33)** — imperative verbs and direction words.
-- **Ідіть прямо.** (Go straight.) **Направо.** (To the right.) **Наліво.** (To the left.) **Вийдіть тут.** (Exit here.)
-**Pattern 7: City places with prepositions (M30)** — each noun pairs with its own preposition.
-- **У музе́ї.** (In the museum.) **На вокзалі.** (At the train station.) **У парку.** (In the park.) **На площі.** (On the square.) **У готелі.** (In the hotel.) **У бібліоте́ці.** (In the library.)
-<GroupSort client:only="react" groups={{"Локація (Де?)": ["у школі", "на площі", "в центрі", "у готелі", "на вокзалі", "у музеї"], "Напрямок (Куди?)": ["на роботу", "у Львів", "у Канаду", "у школу", "на площу", "у магазин"], "Походження (Звідки?)": ["з України", "зі США", "з роботи", "з Києва", "з Канади", "зі школи"]}} instruction={"Розподіліть фрази за категоріями (Sort phrases by category)"} />
+
+## Грама́тика (Grammar Summary)
+
+The grammatical patterns from this phase rely on a few core principles. First, the Ukrainian language places a very high value on a smooth, flowing sound, a concept known as euphony. The rules of euphony determine whether we should use **у** or **в**, **і** or **й**, and **з**, **із**, or **зі**. The basic guiding principle is to avoid awkward clusters of consonants or vowels. 
+
+Compare the following pairs:
+*   **Він у Льво́ві** (He is in Lviv) versus **Вона́ в Оде́сі** (She is in Odesa). We use **у** between consonants, and **в** after a vowel.
+*   **Брат і сестра́** (Brother and sister) versus **Та́то й ма́ма** (Dad and mom). We use **і** between consonants, and **й** after a vowel.
+*   **Зі шко́ли** (From school) versus **З роботи** (From work). We use **зі** before difficult consonant clusters, but **з** before a single consonant.
+
+The most crucial grammatical concept in urban navigation is understanding the three main directional questions. The specific noun case you use depends entirely on the question you are answering:
+
+*   **Де?** (Where?) indicates a static location. It uses the Locative case. 
+    *   **В апте́ці** (In the pharmacy)
+    *   **В шко́лі** (In school)
+    *   **На робо́ті** (At work)
+*   **Куди?** (To where?) indicates the direction of movement. It uses the Accusative case.
+    *   **В апте́ку** (To the pharmacy)
+    *   **У шко́лу** (To school)
+    *   **На робо́ту** (To work)
+*   **Звідки?** (From where?) indicates an origin or starting point. It uses the Genitive case with the preposition **з** (or **із**/**зі**).
+    *   **З апте́ки** (From the pharmacy)
+    *   **З Украї́ни** (From Ukraine)
+    *   **З роботи** (From work)
+
+Notice the distinct contrast between **на роботі** (location) and **на роботу** (direction). Furthermore, the preposition **на** is generally used for open spaces, events, and abstract concepts, while **в** / **у** is strictly used for enclosed physical structures. This directional system also applies when matching city places with correct prepositions, taking transport like **авто́бусом** (by bus) or **на метро** (by subway), and following adverbs for directions such as **пря́мо** (straight), **направо** (to the right), and **налі́во** (to the left).
+
+<GroupSort client:only="react" groups={{"Локація (Де?)": ["у школі", "на площі", "в центрі"], "Напрямок (Куди?)": ["на роботу", "у Львів", "в Канаду"], "Походження (Звідки?)": ["з України", "зі США", "з роботи"]}} instruction={"Розподіліть фрази за категоріями (Sort the phrases by category)"} />
+<Quiz client:only="react" questions={[{"question": "Брат _____ сестра", "options": [{"text": "і", "correct": true}, {"text": "й", "correct": false}, {"text": "та", "correct": false}]}, {"question": "Вона живе _____ Львові", "options": [{"text": "у", "correct": true}, {"text": "в", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Я йду _____ школи", "options": [{"text": "зі", "correct": true}, {"text": "з", "correct": false}, {"text": "із", "correct": false}]}, {"question": "Він _____ Києві", "options": [{"text": "у", "correct": true}, {"text": "в", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Мама _____ тато", "options": [{"text": "й", "correct": true}, {"text": "і", "correct": false}, {"text": "та", "correct": false}]}, {"question": "Ми _____ України", "options": [{"text": "з", "correct": true}, {"text": "із", "correct": false}, {"text": "зі", "correct": false}]}, {"question": "Я _____ кімнаті", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "на", "correct": false}]}, {"question": "Вона _____ США", "options": [{"text": "зі", "correct": true}, {"text": "з", "correct": false}, {"text": "із", "correct": false}]}]} instruction={"Оберіть правильний варіант для милозвучності (Choose the correct option for euphony)"} />
+
 ## Діало́г (Connected Dialogue)
-Марко́ is visiting Kyiv for the first time. He stops a local, Окса́на, near a metro entrance to ask for help. Watch how these patterns appear in a real conversation.
+
+Imagine a very common, real-world scenario: a tourist from Canada arrives at a busy, crowded metro station in Kyiv. They need to find a specific museum first, and then head over to the main train station, the **вокзал**. When approaching a stranger on the street for help, it is absolutely vital to emphasize the polite register. Starting your request with **Ви́бачте** (Excuse me) and **Скажіть, будь ласка** (Tell me, please) shows cultural respect and instantly makes people much more willing to assist you. 
+
+Read the multi-turn connected dialogue below. Pay close attention to how the tourist combines phrases indicating origin, location, and direction into a single, cohesive conversation.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Вибачте! Ви місце́ва? *(Excuse me! Are you local?)*</div>
+<div class="dialogue-line"><span class="speaker">Тури́ст:</span> Вибачте, я з Кана́ди. Де тут музей? *(Excuse me, I am from Canada. Where is the museum here?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Місце́вий:</span> Музей у центрі. Ї́дьте на метро до ста́нції Хреща́тик. *(The museum is in the center. Go by subway to Khreshchatyk station.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, я з Ки́єва. Що шука́єте? *(Yes, I'm from Kyiv. What are you looking for?)*</div>
+<div class="dialogue-line"><span class="speaker">Турист:</span> А як діста́тися від метро? *(And how to get there from the subway?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Місцевий:</span> Ви́йдіть і йдіть направо. Музей на пло́щі. *(Exit and walk to the right. The museum is on the square.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Я з Канади. Я тут упе́рше. Де Національний музей? *(I'm from Canada. This is my first time here. Where is the National Museum?)*</div>
+<div class="dialogue-line"><span class="speaker">Турист:</span> Дякую! А по́тім я хо́чу ї́хати у Львів. Де вокзал? *(Thank you! And then I want to go to Lviv. Where is the train station?)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Музей у центрі, на ву́лиці Груше́вського. Ї́дьте на метро до станції Арсенальна. Потім пішки. *(The museum is in the centre, on Hrushevskyi Street. Take the metro to Arsenalna station. Then walk.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> А де станція метро? *(And where is the metro station?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Ось тут, за ро́гом. Ідіть прямо, потім направо. Там — вхід. *(Right here, around the corner. Go straight, then right. The entrance is there.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> До́бре! А пі́сля музею я хочу їхати у Львів. Де вокзал? *(OK! After the museum I want to go to Lviv. Where is the train station?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Центра́льний вокзал дале́ко. Їдьте на метро до станції Вокза́льна. *(The central station is far. Take the metro to Vokzalna station.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Скі́льки їхати? *(How long is the ride?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Хвилин два́дцять. Вокзал бі́ля станції. *(About twenty minutes. The station is right by the stop.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> А де тут кафе́? *(Where is a café around here?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Кафе на Хреща́тику. Це одна́ зупинка на метро. *(There's a café on Khreshchatyk. It's one metro stop.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марко:</span> Дякую! *(Thanks!)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Будь ла́ска! Га́рної по́дорожі! *(You're welcome! Have a good trip!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Місцевий:</span> Вокзал далеко. Їдьте на метро до станції Вокза́льна. *(The train station is far. Go by subway to Vokzalna station.)*</div>
 
 </div>
 
-Notice the patterns: **Де музей?** — locative: **у центрі**. Where to? — **у Львів** (accusative). Where from? — **з Канади**, **з Києва** (genitive). Transport — **на метро до станції**. Directions — **прямо**, **направо**. City places — **на площі**, **біля станції**, **за рогом**.
-Now try it yourself. Imagine you're video-calling a friend while walking through **Одеса** (Odesa). Describe what you see:
-- **Я зараз на Дерибасівській вулиці.** (I'm on Derybasivska Street now.)
-- **Іду до по́рту.** (I'm heading to the port.)
-- **Бачу Потьо́мкінські схо́ди.** (I see the Potemkin Stairs.)
-- **Потім хочу на пляж.** (Then I want to go to the beach.)
-- **Я з [your city].** (I'm from [your city].)
-Use at least five of the seven patterns from this module.
-<FillIn client:only="react" items={[{"sentence": "Вибачте, я ___. Де тут музей?", "answer": "з Канади", "options": ["з Канади", "у Канаді", "до Канади"]}, {"sentence": "Музей ___. Ідіть на метро.", "answer": "у центрі", "options": ["у центрі", "у центр", "з центру"]}, {"sentence": "А як дістатися ___?", "answer": "від метро", "options": ["від метро", "до метро", "на метро"]}, {"sentence": "Вийдіть і йдіть ___. Музей на площі.", "answer": "направо", "options": ["направо", "наліво", "прямо"]}, {"sentence": "Я хочу їхати ___. Де вокзал?", "answer": "у Львів", "options": ["у Львів", "у Львові", "зі Львова"]}, {"sentence": "Вокзал далеко, їдьте ___.", "answer": "на метро", "options": ["на метро", "у метро", "з метро"]}]} instruction={"Вставте правильну форму (Fill in the correct form)"} />
+This exchange perfectly demonstrates practical functional language in action. Notice the specific use of the word **дістатися** (to get to). While **йти** (to go on foot) and **їхати** (to go by vehicle) specify the exact method of transport, **дістатися** focuses purely on the goal of reaching the destination, making it the perfect word for asking directions. 
+
+You also see how prepositions shift based on the point of reference. The local uses **від метро** (from the subway), showing the starting point of the walking route, and **до станції** (to the station) to show the end point. 
+
+:::note
+To fully consolidate your urban vocabulary, try describing your own city or a city you love. Imagine video-calling a friend while walking through a coastal city like **Оде́са** (Odesa). You might show them the sights: **Дерибасівська ву́лиця** (Derybasivska street), the famous **Потьо́мкінські сходи** (Potemkin Stairs), a large **порт** (port), and a sunny **пляж** (beach). Practice describing exactly where you are and where you are going using these nouns!
+:::
+
+<FillIn client:only="react" items={[{"sentence": "Вибачте, я _____. Де тут музей?", "answer": "з Канади", "options": ["з Канади", "в Канаді", "в Канаду"]}, {"sentence": "Музей _____. Ідіть на метро.", "answer": "у центрі", "options": ["у центрі", "в центр", "з центру"]}, {"sentence": "А як дістатися _____?", "answer": "від метро", "options": ["від метро", "на метро", "в метро"]}, {"sentence": "Вийдіть і йдіть _____. Музей на площі.", "answer": "направо", "options": ["направо", "направі", "справа"]}, {"sentence": "Я хочу їхати _____. Де вокзал?", "answer": "у Львів", "options": ["у Львів", "у Львові", "зі Львова"]}, {"sentence": "Вокзал далеко, їдьте _____.", "answer": "на метро", "options": ["на метро", "в метро", "з метро"]}]} instruction={"Вставте правильні фрази в діалог (Complete the dialogue with the correct phrases)"} />
+
 ## Підсумок — Summary
-Here is a summary of the patterns you can now use in Ukrainian:
-- ✅ **Euphony (M28)** — You choose **у/в**, **і/й**, **з/із/зі** automatically based on surrounding sounds
-- ✅ **Location (M29)** — **Де?** → в/на + locative: **у школі**, **на роботі**, **в центрі**
-- ✅ **City vocabulary (M30)** — **вулиця**, **площа**, **парк**, **музей**, **вокзал**, **аптека**, **бібліотека**
-- ✅ **Direction (M31)** — **Куди?** → в/на + accusative: **у школу**, **у Львів**, **на площу**
-- ✅ **Transport (M32)** — **їхати автобусом**; **на метро до станції Хрещатик**
-- ✅ **Giving directions (M33)** — **ідіть прямо**, **направо**, **наліво**, **вийдіть**
-- ✅ **Origin (M34)** — **Звідки?** → з/із/зі + genitive: **з України**, **зі США**, **з Канади**
-Next, you will learn how to order food, buy things at a market, and use the accusative case for objects. You will say things like **Я хочу каву** (I want coffee), **Дайте хліб** (Give me bread), and **Скільки ко́шту́є?** (How much does it cost?).
+
+The following points summarize your A1.5 achievements. 
+
+**Я тепе́р можу...** (I can now...):
+*   Apply basic euphony rules. You know how to instinctively alternate between **у** and **в**, or **і** and **й**, to ensure your spoken Ukrainian maintains a natural, flowing rhythm.
+*   State your exact location. You can confidently answer the question **Де?** (Where?) using the locative case, such as saying **в готе́лі** (in the hotel) or **на площі** (on the square).
+*   Indicate your direction of travel. You can accurately answer the question **Куди?** (To where?) using the accusative case, such as stating you are going **у парк** (to the park).
+*   Use city transport options. You can explain how you are traveling from point A to point B, using forms like **автобусом** (by bus) or **на метро** (by subway).
+*   Give and follow street directions. You understand vital navigation commands like **направо** (to the right), **наліво** (to the left), and **прямо** (straight).
+*   State your country of origin. You can seamlessly answer the question **Звідки?** (From where?), telling people you are **з України** (from Ukraine) or from another specific country.
+
+You can now find your way to a shop, a museum, or a restaurant, but what happens when you finally walk inside the building? In the upcoming A1.6 module, "Food and Shopping," we will transition directly from navigating the outdoor streets to interacting within these indoor establishments. You will learn the specific language required for ordering food, buying groceries, and using the Accusative case to talk about direct objects. Get ready to proudly say **Я хочу ка́ву** (I want coffee)!
 
 </TabItem>
 <TabItem label="Словник">
@@ -159,88 +148,64 @@ Next, you will learn how to order food, buy things at a market, and use the accu
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **гуля́ти** | to walk around, to stroll | дієсл. |  |
-| **вра́нці** | in the morning | присл. |  |
-| **уве́чері** | in the evening | присл. |  |
-| **зру́чний** | convenient, comfortable | прикм. |  |
-| **виходити** | to exit, to go out | дієсл. |  |
-| **попе́реду** | ahead | присл. |  |
-| **пря́мо** | straight (ahead) | присл. |  |
+| **метро́** | subway | ім. | с. |
+| **пі́шки** | on foot | присл. |  |
 | **напра́во** | to the right | ім. | ж. |
 | **налі́во** | to the left | присл. |  |
-| **фонта́н** | fountain | ім. | ч. |
-| **ла́вка** | bench | ім. | ж. |
-| **перехо́жий** | passerby | ім. | ч. |
-| **пита́ти** | to ask | дієсл. |  |
-| **відповіда́ти** | to answer | дієсл. |  |
-| **пло́ща** | square (public) | ім. | ж. |
-| **Ла́вра** | Lavra (monastery complex) | ім. | ч. |
-| **сіда́ти** | to sit down, to get on (transport) | дієсл. |  |
-| **пі́шки** | on foot | присл. |  |
-| **хвили́на** | minute | ім. | ж. |
-| **готе́ль** | hotel | ім. | ч. |
-| **телефонува́ти** | to call (by phone) | дієсл. |  |
-| **місце́вий** | local | прикм. |  |
-| **шука́ти** | to look for, to search | дієсл. |  |
-| **упе́рше** | for the first time | присл. |  |
-| **вхід** | entrance | ім. | ч. |
-| **дале́ко** | far | присл. |  |
-| **центра́льний** | central, main | прикм. |  |
-| **головни́й** | main, principal | прикм. |  |
-| **пі́сля** | after | присл. |  |
-| **бі́ля** | near, by, next to | прийм. |  |
-| **ви́йдіть** | exit (imperative, formal) | дієсл. |  |
-| **ста́нція** | station | ім. | ж. |
-| **зупи́нка** | stop (bus/tram) | ім. | ж. |
-| **вокза́л** | train station | ім. | ч. |
-| **метро́** | metro, subway | ім. | с. |
-| **апте́ка** | pharmacy | ім. | ж. |
-| **бібліоте́ка** | library | ім. | ж. |
-| **порт** | port, harbour | ім. | ч. |
+| **пря́мо** | straight | присл. |  |
+| **пло́ща** | square | ім. | ж. |
+| **шко́ла** | school | ім. | ж. |
+| **робо́та** | work | ім. | ч. |
+| **Куди́** | To where? (direction) | присл. |  |
+| **Зві́дки** | From where? (origin) | присл. |  |
+| **Ви́бачте** | Excuse me | дієсл. |  |
+| **діста́тися** | to get to / to reach | дієсл. |  |
+| **ї́хати** | to go by vehicle | дієсл. |  |
+| **від** | from | прийм. |  |
+| **до** | to | ім. | с. |
+| **ву́лиця** | street | ім. | ж. |
+| **сходи** | stairs | ім. |  |
+| **порт** | port | ім. | ч. |
 | **пляж** | beach | ім. | ч. |
-| **кафе́** | café | ім. | с. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **гуляти по місту** | to walk around the city |
-| **за рогом** | around the corner |
-| **ідіть прямо** | go straight (imperative, formal) |
-| **Що шукаєте?** | What are you looking for? |
-| **Скільки їхати?** | How long is the ride? |
-| **Гарної подорожі!** | Have a good trip! |
-| **Ось тут.** | Right here. |
-| **Їдьте на метро до станції...** | Take the metro to ... station. |
+| **у центрі** | in the center |
+| **на метро** | by subway |
+| **Золоті ворота** | Golden Gate |
+| **Я йду пішки** | I am walking on foot |
+| **Скажіть, будь ласка** | Tell me, please |
+| **Я хочу каву** | I want coffee |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "гуля́ти", back: "to walk around, to stroll", subtitle: "дієсл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }, { front: "зру́чний", back: "convenient, comfortable", subtitle: "прикм." }, { front: "виходити", back: "to exit, to go out", subtitle: "дієсл." }, { front: "попе́реду", back: "ahead", subtitle: "присл." }, { front: "пря́мо", back: "straight (ahead)", subtitle: "присл." }, { front: "напра́во", back: "to the right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "to the left", subtitle: "присл." }, { front: "фонта́н", back: "fountain", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ла́вка", back: "bench", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "перехо́жий", back: "passerby", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пита́ти", back: "to ask", subtitle: "дієсл." }, { front: "відповіда́ти", back: "to answer", subtitle: "дієсл." }, { front: "пло́ща", back: "square (public)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Ла́вра", back: "Lavra (monastery complex)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сіда́ти", back: "to sit down, to get on (transport)", subtitle: "дієсл." }, { front: "пі́шки", back: "on foot", subtitle: "присл." }, { front: "хвили́на", back: "minute", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "телефонува́ти", back: "to call (by phone)", subtitle: "дієсл." }, { front: "місце́вий", back: "local", subtitle: "прикм." }, { front: "шука́ти", back: "to look for, to search", subtitle: "дієсл." }, { front: "упе́рше", back: "for the first time", subtitle: "присл." }, { front: "вхід", back: "entrance", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "центра́льний", back: "central, main", subtitle: "прикм." }, { front: "головни́й", back: "main, principal", subtitle: "прикм." }, { front: "пі́сля", back: "after", subtitle: "присл." }, { front: "бі́ля", back: "near, by, next to", subtitle: "прийм." }, { front: "ви́йдіть", back: "exit (imperative, formal)", subtitle: "дієсл." }, { front: "ста́нція", back: "station", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зупи́нка", back: "stop (bus/tram)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "метро́", back: "metro, subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "порт", back: "port, harbour", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пляж", back: "beach", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "метро́", back: "subway", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пі́шки", back: "on foot", subtitle: "присл." }, { front: "напра́во", back: "to the right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "to the left", subtitle: "присл." }, { front: "пря́мо", back: "straight", subtitle: "присл." }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Куди́", back: "To where? (direction)", subtitle: "присл." }, { front: "Зві́дки", back: "From where? (origin)", subtitle: "присл." }, { front: "Ви́бачте", back: "Excuse me", subtitle: "дієсл." }, { front: "діста́тися", back: "to get to / to reach", subtitle: "дієсл." }, { front: "ї́хати", back: "to go by vehicle", subtitle: "дієсл." }, { front: "від", back: "from", subtitle: "прийм." }, { front: "до", back: "to", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сходи", back: "stairs", subtitle: "ім." }, { front: "порт", back: "port", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пляж", back: "beach", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<TrueFalse client:only="react" items={[{"statement": "Томас із Канади.", "isTrue": true, "explanation": "Томас says 'Я з Канади.'"}, {"statement": "Вранці Томас їде на метро.", "isTrue": true, "explanation": "'Вранці я їду на метро до станції Хрещатик.'"}, {"statement": "Музей знаходиться за рогом від входу в метро.", "isTrue": false, "explanation": "Музей на площі. Треба їхати до станції Арсенальна, потім іти пішки."}, {"statement": "Вранці Томас іде пішки до Хрещатика.", "isTrue": false, "explanation": "Він їде на метро, не пішки."}, {"statement": "Увечері Томас у готелі.", "isTrue": true, "explanation": "'Увечері я у готелі.'"}, {"statement": "Томас хоче їхати у Харків.", "isTrue": false, "explanation": "Він хоче їхати у Львів: 'Хочу їхати у Львів!'"}, {"statement": "Зі станції метро треба іти направо.", "isTrue": true, "explanation": "'Виходжу зі станції. Іду направо.'"}, {"statement": "Від зупинки до Лаври треба їхати ще одну зупинку.", "isTrue": false, "explanation": "Від зупинки до Лаври пішки — п'ять хвилин."}]} instruction={"Правда чи ні? (True or false?)"} />
+<TrueFalse client:only="react" items={[{"statement": "Марк зараз у Польщі.", "isTrue": false, "explanation": "Він з Польщі, але зараз у Києві."}, {"statement": "Його готель у центрі.", "isTrue": true, "explanation": "Так, його готель у центрі міста."}, {"statement": "Марк іде на вокзал пішки.", "isTrue": false, "explanation": "Вокзал далеко, він їде на метро."}, {"statement": "Золоті ворота близько.", "isTrue": true, "explanation": "Так, Золоті ворота близько, він вже біля музею."}, {"statement": "Музей на площі.", "isTrue": true, "explanation": "Так, музей знаходиться на площі."}, {"statement": "Марк іде наліво до музею.", "isTrue": false, "explanation": "Він іде направо."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "музей", "right": "у музеї"}, {"left": "вокзал", "right": "на вокзалі"}, {"left": "площа", "right": "на площі"}, {"left": "парк", "right": "в парку"}, {"left": "готель", "right": "у готелі"}, {"left": "бібліотека", "right": "у бібліотеці"}, {"left": "станція", "right": "на станції"}, {"left": "вулиця", "right": "на вулиці"}]} instruction={"З'єднайте місце з правильною формою (Match the place with its locative form)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я живу в Київ.", "errorWord": "в Київ", "correctForm": "у Києві", "options": ["у Києві", "з Києва", "на Києві"], "explanation": "For location (Де?), use the Locative case: у Києві."}, {"sentence": "Вона йде на школі.", "errorWord": "на школі", "correctForm": "у школу", "options": ["у школу", "у школі", "зі школи"], "explanation": "For direction (Куди?), use the Accusative case: у школу."}, {"sentence": "Ми їдемо з автобусі.", "errorWord": "з автобусі", "correctForm": "на автобусі", "options": ["на автобусі", "в автобус", "автобусом"], "explanation": "For transport, use на + Locative: на автобусі."}, {"sentence": "Я з Канаді.", "errorWord": "з Канаді", "correctForm": "з Канади", "options": ["з Канади", "в Канаді", "в Канаду"], "explanation": "For origin (Звідки?), use з + Genitive: з Канади."}, {"sentence": "Музей в площі.", "errorWord": "в площі", "correctForm": "на площі", "options": ["на площі", "на площу", "з площі"], "explanation": "For open spaces like a square, use на: на площі."}, {"sentence": "Він працює в роботі.", "errorWord": "в роботі", "correctForm": "на роботі", "options": ["на роботі", "на роботу", "з роботи"], "explanation": "For abstract locations or events like work, use на: на роботі."}]} instruction={"Знайдіть і виправте помилку (Find and correct the mistake)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я живу у Канаду.", "errorWord": "Канаду", "correctForm": "Канаді", "options": [], "explanation": "Де? (location) → locative: у Канаді. Accusative (Канаду) answers Куди? — direction, not location."}, {"sentence": "Ми їдемо зі України.", "errorWord": "зі", "correctForm": "з", "options": [], "explanation": "Зі is used before consonant clusters. Україна starts with a vowel (У) → з України."}, {"sentence": "Автобус їде на вокзалі.", "errorWord": "вокзалі", "correctForm": "вокзал", "options": [], "explanation": "Куди? (direction) → accusative: на вокзал. Locative (вокзалі) answers Де? — static location, not motion."}, {"sentence": "Вона і Андрій у школі.", "errorWord": "і", "correctForm": "й", "options": [], "explanation": "After a vowel (Вона ends in а), use й. Й is the short form used between words when the preceding word ends in a vowel."}, {"sentence": "Він у Канада.", "errorWord": "Канада", "correctForm": "Канаді", "options": [], "explanation": "У + locative for location. The noun needs a locative ending: у Канаді (not the base form Канада)."}, {"sentence": "Музей на вулицю Грушевського.", "errorWord": "вулицю", "correctForm": "вулиці", "options": [], "explanation": "Де? (location) → locative: на вулиці. Accusative (вулицю) would mean you are going to the street."}]} instruction={"Знайдіть помилку і виправте (Find the error and correct it)"} />
+<MatchUp client:only="react" pairs={[{"left": "Де ти живеш?", "right": "У Києві."}, {"left": "Куди ти йдеш?", "right": "У магазин."}, {"left": "Звідки ти?", "right": "З Канади."}, {"left": "Де вокзал?", "right": "Прямо і направо."}, {"left": "Як дістатися?", "right": "Їдьте на метро."}, {"left": "Де аптека?", "right": "Близько, на площі."}]} instruction={"З'єднайте запитання та логічну відповідь (Match the question with the logical answer)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Він живе ___ Канаді.", "answer": "у", "options": ["у", "в", "на"]}, {"sentence": "Йди ___ магазин!", "answer": "у", "options": ["у", "в", "до"]}, {"sentence": "Звідки ти? — Я ___ Києва.", "answer": "з", "options": ["з", "до", "у"]}, {"sentence": "Університет ___ центрі міста.", "answer": "у", "options": ["у", "в", "на"]}, {"sentence": "Ми виходимо ___ школи.", "answer": "зі", "options": ["зі", "з", "від"]}, {"sentence": "Мама ___ тато вдома.", "answer": "й", "options": ["і", "й", "та"]}, {"sentence": "Олексій іде ___ бібліотеку.", "answer": "у", "options": ["у", "в", "до"]}, {"sentence": "Вони їдуть ___ метро до центру.", "answer": "на", "options": ["на", "у", "в"]}]} instruction={"Вставте правильний варіант (Fill in the correct option)"} />
+<Unjumble client:only="react" items={[{"words": "у / Я / Києві. / зараз", "answer": "Я зараз у Києві."}, {"words": "метро. / Ідіть / на", "answer": "Ідіть на метро."}, {"words": "Канади. / з / я / Вибачте,", "answer": "Вибачте, я з Канади."}, {"words": "площі. / Музей / на", "answer": "Музей на площі."}, {"words": "у / хочу / їхати / Я / Львів.", "answer": "Я хочу їхати у Львів."}, {"words": "тут / Де / музей?", "answer": "Де тут музей?"}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order)"} />
 
+<Order client:only="react" items={["— Вибачте, я з Канади. Де тут музей?", "— Музей у центрі. Ідіть на метро.", "— А як дістатися від метро?", "— Вийдіть і йдіть направо.", "— Дякую!"]} correct_order={[0, 1, 2, 3, 4]} instruction={"Розставте репліки діалогу в правильному порядку (Put the dialogue lines in the correct order)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- Synthesis of M28-M34 content
-  _No new material — review and integration of A1.5 phase._
-
-**Граматика — Grammar (МійКлас)**
-
-- [МійКлас: Чергування у–в, і–й, з–із–зі (правила милозвучності)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) (miyklas.com.ua)
-- [МійКлас: Діалог](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=11), стор. 11
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=223), стор. 223
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=19), стор. 19
+- [Ворон А. А. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-voron-2019.pdf#page=186), стор. 186
+- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 230
 
 **Статті — Articles**
 
@@ -251,12 +216,6 @@ Next, you will learn how to order food, buy things at a market, and use the accu
 - [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) (All 7 cases in one table)
 - [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) (Which preposition uses which case)
 - [Vocabulary: Around Town](https://www.ukrainianlessons.com/vocabulary-town/) (Navigation words)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
-- [Genitive Case (Родовий відмінок)](https://www.ukrainianlessons.com/genitive-case/)
 
 </TabItem>
 </Tabs>

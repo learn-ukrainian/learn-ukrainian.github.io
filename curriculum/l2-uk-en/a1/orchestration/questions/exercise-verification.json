@@ -1,27 +1,172 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 70,
+  "grounded_items": 44,
+  "ungrounded": [
+    {
+      "word": "стіл",
+      "exercise_type": "quiz",
+      "context": "_____ це? — Це стіл.",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "quiz",
+      "context": "_____ це? — Це мій студент.",
+      "role": "context"
+    },
+    {
+      "word": "йду",
+      "exercise_type": "match-up",
+      "context": "Я йду в парк.",
+      "role": "context"
+    },
+    {
+      "word": "працюю",
+      "exercise_type": "match-up",
+      "context": "Я працюю вранці.",
+      "role": "context"
+    },
+    {
+      "word": "хтось",
+      "exercise_type": "fill-in",
+      "context": "Хтось (Someone) знає. → ____ не знає.",
+      "role": "context"
+    },
+    {
+      "word": "завжди",
+      "exercise_type": "fill-in",
+      "context": "Він завжди (always) спить. → Він ____ не спить.",
+      "role": "context"
+    },
+    {
+      "word": "спить",
+      "exercise_type": "fill-in",
+      "context": "Він завжди (always) спить. → Він ____ не спить.",
+      "role": "context"
+    },
+    {
+      "word": "місто",
+      "exercise_type": "group-sort",
+      "context": "місто",
+      "role": "answer"
+    },
+    {
+      "word": "питання",
+      "exercise_type": "true-false",
+      "context": "Питання 'Хто це?' ми використовуємо для людей. (We use 'Хто ",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Питання 'Хто це?' ми використовуємо для людей. (We use 'Хто ",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Питання 'Хто це?' ми використовуємо для людей. (We use 'Хто ",
+      "role": "context"
+    },
+    {
+      "word": "людей",
+      "exercise_type": "true-false",
+      "context": "Питання 'Хто це?' ми використовуємо для людей. (We use 'Хто ",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'Де' означає напрямок руху. ('Де' means direction of m",
+      "role": "context"
+    },
+    {
+      "word": "де'",
+      "exercise_type": "true-false",
+      "context": "Слово 'Де' означає напрямок руху. ('Де' means direction of m",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Слово 'Де' означає напрямок руху. ('Де' means direction of m",
+      "role": "context"
+    },
+    {
+      "word": "напрямок",
+      "exercise_type": "true-false",
+      "context": "Слово 'Де' означає напрямок руху. ('Де' means direction of m",
+      "role": "context"
+    },
+    {
+      "word": "руху",
+      "exercise_type": "true-false",
+      "context": "Слово 'Де' означає напрямок руху. ('Де' means direction of m",
+      "role": "context"
+    },
+    {
+      "word": "куди'",
+      "exercise_type": "true-false",
+      "context": "Слово 'Куди' означає напрямок руху. ('Куди' means direction ",
+      "role": "context"
+    },
+    {
+      "word": "на",
+      "exercise_type": "true-false",
+      "context": "На питання 'Чому?' ми відповідаємо 'Тому що'. (We answer 'Чо",
+      "role": "context"
+    },
+    {
+      "word": "відповідаємо",
+      "exercise_type": "true-false",
+      "context": "На питання 'Чому?' ми відповідаємо 'Тому що'. (We answer 'Чо",
+      "role": "context"
+    },
+    {
+      "word": "що'",
+      "exercise_type": "true-false",
+      "context": "На питання 'Чому?' ми відповідаємо 'Тому що'. (We answer 'Чо",
+      "role": "context"
+    },
+    {
+      "word": "українській",
+      "exercise_type": "true-false",
+      "context": "В українській мові ми кажемо 'Я нічого знаю'. (In Ukrainian ",
+      "role": "context"
+    },
+    {
+      "word": "мові",
+      "exercise_type": "true-false",
+      "context": "В українській мові ми кажемо 'Я нічого знаю'. (In Ukrainian ",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "В українській мові ми кажемо 'Я нічого знаю'. (In Ukrainian ",
+      "role": "context"
+    },
+    {
+      "word": "знаю'",
+      "exercise_type": "true-false",
+      "context": "В українській мові ми кажемо 'Я нічого знаю'. (In Ukrainian ",
+      "role": "context"
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "error-correction",
+      "context": "Чому ти працюєш? — Тому я хочу працювати.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 12,
     "not_tested": [
-      "де",
       "жити",
-      "коли",
-      "куди",
-      "не",
       "ні",
-      "ніколи",
-      "ніхто",
-      "нічого",
-      "розуміти",
-      "тому",
-      "хто",
-      "чому",
-      "що",
-      "як"
+      "розуміти"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

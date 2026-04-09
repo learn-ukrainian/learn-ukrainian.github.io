@@ -3,55 +3,50 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: All 4 content_outline sections present with correct headings. Dialogue
-    1 covers Saturday errands with банк, пошта, аптека, бібліотека, кафе — matching
-    plan's dialogue_situations. Dialogue 2 covers cit
+  evidence: The module strictly follows the plan, successfully explaining the directional
+    Accusative and its contrast with the Locative. All required vocabulary is used,
+    but the recommended word `повертатися` was
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: 'All Ukrainian forms VESUM-verified. Accusative: школу, бібліотеку, аптеку,
-    пошту, банк, кафе, місто — all correct. Locative: школі, роботі, банку, парку,
-    магазині, бібліотеці — all correct. Conjugatio'
+  evidence: Excellent. The explanation of inanimate masculine/neuter stability vs
+    feminine shifting is accurate. The use of prepositions, euphony, and cases is
+    flawless.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'Excellent PPP flow: dialogues present the pattern in context (Presentation),
-    grammar section explains rules with the Grade 4 "бачу" helper (Practice framework),
-    exercises test understanding (Productio'
+  evidence: The rule presentation is very clear. The comparison table for static vs
+    dynamic states (Де/Куди) is an outstanding teaching tool. Incorporating the Grade
+    4 helper words ("бачу — кого? що?") is a great
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: 'All 6 required vocab items used naturally in prose: куди (dialogue +
-    section headers), йти (dialogues + examples), їхати (dialogue 2 + section 3),
-    школа→у школу (table + examples), робота→на роботу (d'
+  evidence: All required vocabulary is introduced naturally in context. The recommended
+    phrase `повертатися додому` was partially missed (`додому` is there, but not the
+    verb).
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: All 4 plan activity_hints mapped to markers. Placement is pedagogically
-    sound — each marker follows the section teaching the tested skill. Cannot evaluate
-    actual exercise content (generated separately
+  score: 10
+  evidence: All required exercise markers are present and logically distributed, matching
+    the plan's `activity_hints`.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'No motivational openers, no meta-commentary, no "Let us explore," no
-    gamification. Opens with concrete situation: "It''s Saturday morning. Оксана and
-    Степан stand outside their apartment building." The'
+  evidence: The tone is encouraging and focused. The narrative context for the dialogues
+    makes the grammar feel immediately practical.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All 4 H2 headings match the plan (Діалоги, Куди? Знахідний відмінок, Де
-    чи куди?, Підсумок). Clean markdown with proper dialogue formatting, tables, and
-    tip box. Word count 1376/1200 target — 15% over
+  evidence: The module is well-structured, comfortably exceeding the 1200-word target
+    at 1445 words. All headings match the plan exactly.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented entirely on its own terms — no comparisons to Russian.
-    Uses Ukrainian cities (Львів, Одеса) as natural examples. References Ukrainian
-    school pedagogy (Grade 4 textbook method). Nam
+  evidence: Spot on. The explicit instruction to say "в Україну" (and never "на")
+    is an excellent and culturally critical inclusion.
 - dimension: 9
-  name: Dialogue quality
-  score: 9
-  evidence: 'Dialogue 1: natural Saturday errand-splitting between two named friends,
-    multi-turn (8 lines), ends with a plan to meet at a café — feels real. Dialogue
-    2: weekend travel planning, introduces a third '
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural and correctly highlight the grammar points while
+    sounding like a real weekend conversation.
 findings: []

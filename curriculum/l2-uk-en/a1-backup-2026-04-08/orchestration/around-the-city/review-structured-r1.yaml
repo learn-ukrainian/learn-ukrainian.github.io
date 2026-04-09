@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present in correct order. Dialogue 1 (asking
+    directions) and Dialogue 2 (describing route) match plan exactly — same speakers,
+    same structures. "Де і куди разом" covers '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All 126 VESUM-verified words confirmed correct. Case usage throughout
+    is accurate: `у парку` (locative), `в магазин` (accusative), `автобусом` (instrumental),
+    `біля мого дому` (genitive). Imperative f'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: each section opens with a situation (dialogue/narrative),
+    extracts the pattern (table, examples), then points to practice (activity marker).
+    The Dialogue 1 explanation walks throug'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All `required` vocab used naturally: `пішки` (multiple contexts — Dialogue
+    2, Мій район, examples), `хвилина` (п''ять хвилин пішки — multiple times), `район`
+    (section title + У моєму районі), `центр` ('
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 activity markers matching all 4 plan activity_hints. Types match: fill-in
+    (directions), quiz (де/куди), fill-in (transport), match-up (navigation). The
+    inline self-check in Summary is well-designed '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no "magic of," no gamified language. The opening
+    is direct and practical: "Navigating a Ukrainian city means juggling two questions
+    at once." Dialogues have named speakers wit'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections present and ordered per plan: Діалоги → Де і куди разом
+    → Мій район → Підсумок. Clean markdown with proper div classes for dialogues,
+    tip/note blocks, table formatting. Word count 12'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms throughout. No "like Russian but..."
+    comparisons. City examples use Ukrainian cities (Lviv, Kyiv's Khreshchatyk). Street
+    names honor Ukrainian cultural figures (Фр
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Dialogue 1: natural stranger-on-street interaction with appropriate politeness
+    register (вибачте, formal imperatives). Multi-turn with escalation (library →
+    museum, walking → metro). Dialogue 2: two f'
+findings: []

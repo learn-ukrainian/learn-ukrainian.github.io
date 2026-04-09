@@ -6,8 +6,8 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: колір (color, m)"
+      "message": "Missing 2/10 required vocab: колір (color, m), якого кольору? (what color?)"
     }
   ],
-  "timestamp": "2026-03-30T12:01:30.212462+00:00"
+  "timestamp": "2026-04-09T00:39:07.071087+00:00"
 }

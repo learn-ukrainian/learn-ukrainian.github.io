@@ -1,0 +1,56 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Covers all requested sections and vocabulary. Incorporates pedagogical
+    points from textbooks perfectly, e.g., «Заболотний Grade 7 p.251 — план твору-опису»
+    is explicitly implemented in "Опис людини: я'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Good overall vocabulary usage, but contains grammatical case and agreement
+    errors: «ми називаємо таке обличчя бліде» instead of *блідим*, «колір... описується
+    теплим словом рум''яне» (gender mismatch),'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Exceptional. Explanations are deep, contextualized, and provide clear
+    syntactic models. E.g., providing three exact sentence models for describing character:
+    «Вона — людина чуйна», «За характером він '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Flawless integration of both required and recommended vocabulary. Words
+    are introduced naturally in the prose, e.g., «Якщо людина має дуже міцну будову
+    тіла... ми об'єктивно називаємо її словом кремез
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All markers are correctly placed after their teaching concepts, but an
+    extra, redundant `<!-- INJECT_ACTIVITY: group-sort -->` marker was erroneously
+    injected at the very end of the text.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and highly professional. Sentences like
+    «Розуміння цих лексичних нюансів дозволить вам вибирати ідеальне слово для кожної
+    ситуації» create excellent teacher-student rapp
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4696, comfortably exceeding the 4000-word target. Headers
+    exactly match the plan outline. No structural artifacts or dangling sentences.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Masterfully explains the cultural dimensions of language: «В українській
+    глибокій культурній традиції... зовнішність персонажа ніколи не існує просто сама
+    по собі... Вона завжди є своєрідним, дуже про'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'The wedding dialogue is natural, multi-turn, and perfectly illustrates
+    the plan''s adjective agreement requirement: «старший брат Михайло», «молодша
+    сестра Олена», «найдобріша жінка». Excellent use of '
+findings: []

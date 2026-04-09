@@ -3,50 +3,51 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: 'All sections and required vocabulary are present. Minor deviation: The
-    plan asked for the self-check to include "Name one Ukrainian dish and why it matters",
-    but the generated text asks for "...and on'
+  evidence: The module follows the plan almost perfectly, integrating the dialogues
+    and vocabulary seamlessly. However, it misses "**галушки**" in the list of iconic
+    Ukrainian foods specified in the `content_outl
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Contains a critical Russian calque ("Давай варити борщ") and a critical
-    grammatical case error ("піца" instead of "піцу" in an accusative context).
+  score: 10
+  evidence: Flawless. Zero Russianisms, Surzhyk, or calques. The module actively and
+    correctly warns learners about common Russianisms like `творог` and `кофе`.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: Excellent PPP execution. The explanation of "з + noun" as a memorized
-    chunk (explicitly telling learners they don't need to know the Instrumental grammar
-    yet) is perfect for A1 methodology.
+  evidence: Excellent pedagogical approach. The module introduces vocabulary organically
+    through natural dialogue, beautifully reinforces noun gender ("Це він", "Це вона"),
+    and perfectly handles the `з + noun` co
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items from the plan are integrated
-    naturally into the dialogues and categorical lists.
+  evidence: All required and recommended vocabulary items from the plan are fully
+    integrated into the contextual prose.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: The injected markers perfectly match the plan's requested activity types,
-    focus, and logical sequence.
+  evidence: All four required activity markers are present, matching the planned IDs,
+    and are placed logically after the learner has been exposed to the relevant vocabulary
+    and concepts.
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: 'Generally engaging, but contains some gamified/corporate phrasing: "These
-    five dishes are not just vocabulary — they are cultural identity" and "you have
-    a solid food and drink toolkit".'
+  score: 10
+  evidence: The tone is warm, culturally rich, and encouraging. Sentences like "The
+    most sacred and respected food on the table is хліб" create excellent cultural
+    immersion.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: Word count is 1543 words, which is ~28% over the target of 1200 words
-    (exceeding the >10% tolerance limit).
+  score: 10
+  evidence: Clean Markdown formatting. All sections are present and ordered exactly
+    as planned. The word count (1509 words) provides healthy, substantive coverage
+    well above the 1200-word target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Culturally accurate representation of Ukrainian dishes, proper use of
-    authentic textbook quotes, and a crucial clarification that "компот" is a drink,
-    not a thick stew.
+  evidence: Extremely high cultural accuracy. Mentions the UNESCO status of borshch,
+    the hospitality associated with bread, and authentic eating habits.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are natural, highly contextualized, and feature distinct speakers,
-    though slightly marred by the aforementioned case error.
+  score: 10
+  evidence: The dialogues between the grandmother and granddaughter are natural, purposeful,
+    and effectively model how a family discusses meals and ingredients in real life.
 findings: []

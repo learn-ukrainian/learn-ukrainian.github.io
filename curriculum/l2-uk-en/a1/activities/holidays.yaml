@@ -2,292 +2,236 @@ version: '1.0'
 module: holidays
 level: a1
 inline:
-- id: quiz-holiday-dates
+- id: quiz-holiday-match
   type: quiz
-  instruction: Коли це свято? (When is this holiday?)
+  instruction: Оберіть правильну дату (Choose the correct date)
   items:
-  - question: Коли Різдво в Україні?
+  - question: Коли Різдво?
     options:
     - 25 грудня
     - 7 січня
+    - 1 січня
     - 24 серпня
     correct: 0
   - question: Коли День Незалежності?
     options:
     - 24 серпня
-    - 25 грудня
+    - 28 червня
+    - 1 жовтня
     - 1 січня
     correct: 0
   - question: Коли Новий рік?
     options:
     - 1 січня
-    - 28 червня
-    - 24 серпня
-    correct: 0
-  - question: Великдень — це яка пора року?
-    options:
-    - весна
-    - зима
-    - літо
-    correct: 0
-  - question: Коли Вишиванковий день?
-    options:
-    - травень
-    - грудень
-    - серпень
+    - 25 грудня
+    - 7 січня
+    - 14 січня
     correct: 0
   - question: Коли День Конституції?
     options:
     - 28 червня
+    - 24 серпня
     - 1 жовтня
-    - 25 грудня
+    - 1 травня
     correct: 0
   - question: Коли День захисників і захисниць?
     options:
     - 1 жовтня
+    - 14 жовтня
+    - 24 серпня
     - 28 червня
+    correct: 0
+  - question: Коли Свята вечеря?
+    options:
+    - 24 грудня
+    - 25 грудня
+    - 7 січня
     - 1 січня
     correct: 0
-  - question: Скільки страв подають на Святвечір?
+  - question: Коли Вишиванковий день?
     options:
-    - Дванадцять
-    - Сім
-    - П'ять
+    - третій четвер травня
+    - 24 серпня
+    - 1 жовтня
+    - 28 червня
     correct: 0
-- id: quiz-holiday-traditions
+  - question: Коли Великдень?
+    options:
+    - навесні
+    - взимку
+    - влітку
+    - восени
+    correct: 0
+- id: quiz-holiday-clues
   type: quiz
-  instruction: Яке свято? (Which holiday?)
+  instruction: Яке це свято? Оберіть правильний варіант (Which holiday is this? Choose
+    the correct option)
   items:
-  - question: Кутя, колядки, Свята вечеря — це традиції якого свята?
-    options:
-    - Різдво
-    - Великдень
-    - День Незалежності
-    correct: 0
-  - question: Писанка і паска — це символи якого свята?
-    options:
-    - Великдень
-    - Різдво
-    - Новий рік
-    correct: 0
-  - question: Парад, салют і прапор — це символи якого свята?
-    options:
-    - День Незалежності
-    - Різдво
-    - Великдень
-    correct: 0
-  - question: «Христос воскрес!» — це привітання якого свята?
-    options:
-    - Великдень
-    - Різдво
-    - Новий рік
-    correct: 0
-  - question: Вишиванка і синьо-жовтий прапор — символи якого свята?
-    options:
-    - День Незалежності
-    - Великдень
-    - Різдво
-    correct: 0
-  - question: Дванадцять пісних страв — традиція якого свята?
+  - question: Кутя, колядки, дванадцять страв — це...
     options:
     - Різдво
     - Великдень
     - Новий рік
-    correct: 0
-  - question: «Слава Україні! Героям слава!» — привітання якого свята?
-    options:
     - День Незалежності
-    - Різдво
-    - Великдень
     correct: 0
-  - question: Освячений кошик із паскою несуть до церкви на якому святі?
+  - question: Писанка, паска, кошик — це...
     options:
     - Великдень
     - Різдво
     - Новий рік
+    - Вишиванковий день
+    correct: 0
+  - question: Парад, концерт, прапори, салют — це...
+    options:
+    - День Незалежності
+    - Новий рік
+    - Різдво
+    - День Конституції
+    correct: 0
+  - question: Ялинка, подарунки, 1 січня — це...
+    options:
+    - Новий рік
+    - Різдво
+    - День Незалежності
+    - Великдень
+    correct: 0
+  - question: Спеціальна вишита сорочка, третій четвер травня — це...
+    options:
+    - Вишиванковий день
+    - День Незалежності
+    - День Конституції
+    - Великдень
+    correct: 0
+  - question: Повага до військових, 1 жовтня — це...
+    options:
+    - День захисників і захисниць
+    - День Незалежності
+    - День Конституції
+    - Вишиванковий день
+    correct: 0
+  - question: Христос воскрес, святити кошик — це...
+    options:
+    - Великдень
+    - Різдво
+    - Новий рік
+    - День Незалежності
+    correct: 0
+  - question: Дідух, Свята вечеря, перша зірка — це...
+    options:
+    - Різдво
+    - Новий рік
+    - Великдень
+    - День Конституції
     correct: 0
 - id: group-sort-traditions
   type: group-sort
-  instruction: Розподіліть за святами (Sort by holiday)
+  instruction: Розподіліть слова за святами (Sort the words by holidays)
   groups:
   - label: Різдво
     items:
     - кутя
-    - колядки
-    - святвечір
+    - колядка
+    - дідух
     - Свята вечеря
-    - колядники
-    - дванадцять страв
   - label: Великдень
     items:
     - писанка
     - паска
     - кошик
-    - Христос воскрес!
-    - воістину воскрес!
-    - весна
   - label: День Незалежності
     items:
     - парад
-    - салют
-    - вишиванка
-    - прапор
-    - Слава Україні!
     - концерт
+    - салют
 - id: fill-in-greetings
   type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
+  instruction: Вставте правильне слово (Insert the correct word)
   items:
-  - sentence: З ___ Христовим!
+  - sentence: Сьогодні 25 грудня. З ___!
     answer: Різдвом
     options:
     - Різдвом
-    - Різдво
-    - Різдва
-  - sentence: З Новим ___!
-    answer: роком
-    options:
-    - роком
-    - рік
-    - році
-  - sentence: З Днем ___!
-    answer: Незалежності
-    options:
-    - Незалежності
-    - Незалежність
-    - Незалежному
-  - sentence: З ___ ! (Happy Easter)
+    - Великоднем
+    - Днем Незалежності
+  - sentence: Христос воскрес! З ___!
     answer: Великоднем
     options:
     - Великоднем
-    - Великдень
-    - Великодня
-  - sentence: Зі ___ ! (Happy holiday!)
-    answer: святом
+    - Різдвом
+    - Новим роком
+  - sentence: Сьогодні 1 січня. З ___ роком!
+    answer: Новим
     options:
-    - святом
-    - свято
-    - свята
-  - sentence: З ___ народження!
-    answer: днем
+    - Новим
+    - Різдвом
+    - Днем
+  - sentence: Сьогодні 24 серпня. З Днем ___!
+    answer: Незалежності
     options:
-    - днем
-    - день
-    - дня
-  - sentence: Христос ___!
-    answer: воскрес
+    - Незалежності
+    - Конституції
+    - Різдвом
+  - sentence: Сьогодні 28 червня. З Днем ___!
+    answer: Конституції
     options:
-    - воскрес
-    - воскресає
-    - воскресив
-  - sentence: Слава Україні! — ___ слава!
-    answer: Героям
+    - Конституції
+    - Незалежності
+    - Різдвом
+  - sentence: Сьогодні твоє свято! З днем ___!
+    answer: народження
     options:
-    - Героям
-    - Героїв
-    - Герої
+    - народження
+    - Незалежності
+    - Конституції
+  - sentence: 'Універсальне привітання: ___ святом!'
+    answer: Зі
+    options:
+    - Зі
+    - З
+    - На
+  - sentence: ___ щастя, здоров'я, миру!
+    answer: Бажаю
+    options:
+    - Бажаю
+    - Вітаю
+    - Співаю
 workbook:
-- type: match-up
-  instruction: З'єднайте свято з датою (Match the holiday with its date)
-  pairs:
-  - left: Різдво
-    right: 25 грудня
-  - left: Новий рік
-    right: 1 січня
-  - left: День Незалежності
-    right: 24 серпня
-  - left: День Конституції
-    right: 28 червня
-  - left: День захисників і захисниць
-    right: 1 жовтня
-  - left: Вишиванковий день
-    right: третій четвер травня
-  - left: Великдень
-    right: весна
-- type: true-false
+- id: tf-holidays
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Різдво в Україні святкують 25 грудня.
+  - statement: Різдво — це 25 грудня.
     correct: true
-    explanation: Так, з 2023 року офіційна дата Різдва — 25 грудня.
-  - statement: Кутя — це м'ясна страва на Святвечір.
+    explanation: Так, Різдво — 25 грудня.
+  - statement: Ми їмо паску на Різдво.
     correct: false
-    explanation: 'Ні, кутя — пісна страва: пшениця з медом, маком і горіхами.'
-  - statement: На Великдень говорять «З Великоднем Христовим!»
-    correct: false
-    explanation: Ні, на Великдень говорять «Христос воскрес!» — «Воістину воскрес!»
-  - statement: Писанка — це розписане великоднє яйце.
+    explanation: Ні, ми їмо паску на Великдень.
+  - statement: Кутя — це традиція на Різдво.
     correct: true
-    explanation: Так, писанка — унікальне українське народне мистецтво.
-  - statement: День Незалежності — 24 серпня.
-    correct: true
-    explanation: Так, 24 серпня 1991 року Україна проголосила незалежність.
-  - statement: На Вишиванковий день українці носять вишиванку.
-    correct: true
-    explanation: Так, вишиванка — символ української ідентичності та культури.
-  - statement: «Слава Україні!» — це тільки святкова фраза.
+    explanation: Так, це традиція на Святу вечерю.
+  - statement: Ми співаємо колядки на День Незалежності.
     correct: false
-    explanation: Ні, «Слава Україні!» використовують цілий рік — це офіційне військове
-      привітання.
-  - statement: На Святвечір традиційно подають тридцять страв.
-    correct: false
-    explanation: Ні, на Святвечір подають дванадцять страв — по одній за кожного апостола.
-- type: quiz
-  instruction: Дайте відповідь на запитання (Answer the question)
+    explanation: Ні, ми співаємо колядки на Різдво.
+  - statement: Великдень — це весна.
+    correct: true
+    explanation: Так, це свято навесні.
+  - statement: Вишиванковий день — це третій четвер травня.
+    correct: true
+    explanation: Так, ми одягаємо вишиванки у травні.
+- id: err-holidays
+  type: error-correction
+  instruction: Виправте помилку у привітанні (Correct the error in the greeting)
   items:
-  - question: Як Олена і Том вітають одне одного в діалозі на Різдво?
+  - sentence: З Новий рік!
+    error: Новий рік
+    correction: Новим роком
+    error_type: word
     options:
-    - З Різдвом Христовим!
-    - Христос воскрес!
-    - З Новим роком!
-    correct: 0
-  - question: Що Оксана і Марко роблять ввечері на День Незалежності?
-    options:
-    - Дивляться салют
-    - Їдять кутю
-    - Співають колядки
-    correct: 0
-  - question: Що означає слово «незалежність»?
-    options:
-    - Не залежати від іншої держави
-    - Державне свято
-    - Синьо-жовтий прапор
-    correct: 0
-  - question: Яка страва завжди перша на Свята вечеря?
-    options:
-    - Кутя
-    - Паска
-    - Борщ
-    correct: 0
-  - question: Що відповідають на «Христос воскрес!»?
-    options:
-    - Воістину воскрес!
-    - Слава Україні!
-    - З Різдвом!
-    correct: 0
-  - question: Де святкують День Незалежності вдень, згідно з діалогом?
-    options:
-    - На параді та концерті
-    - Вдома з родиною
-    - У церкві
-    correct: 0
-  - question: Хто такі «колядники»?
-    options:
-    - Люди, які ходять і співають колядки
-    - Традиційна різдвяна страва
-    - Різдвяний символ
-    correct: 0
-  - question: Що таке паска?
-    options:
-    - Великодній хліб
-    - Різдвяна страва
-    - Новорічна прикраса
-    correct: 0
-- type: error-correction
-  instruction: Виправте привітання — неправильний відмінок (Correct the greeting —
-    wrong case)
-  items:
-  - sentence: З Різдво Христовим!
+    - Новим роком
+    - Нового року
+    - Новий рік
+    explanation: З Новим роком!
+  - sentence: З Різдво!
     error: Різдво
     correction: Різдвом
     error_type: word
@@ -295,49 +239,184 @@ workbook:
     - Різдвом
     - Різдва
     - Різдві
-    explanation: 'Після «З» — орудний відмінок: Різдво → Різдвом.'
-  - sentence: З Новий роком!
-    error: Новий
-    correction: Новим
+    explanation: З Різдвом!
+  - sentence: З Днем Незалежність!
+    error: Незалежність
+    correction: Незалежності
     error_type: word
     options:
+    - Незалежності
+    - Незалежністю
+    - Незалежностя
+    explanation: З Днем Незалежності!
+  - sentence: Бажаю щастя, здоров'я, мир.
+    error: мир
+    correction: миру
+    error_type: word
+    options:
+    - миру
+    - миром
+    - мирі
+    explanation: Бажаю... миру.
+  - sentence: На Великдень ми їмо кутю.
+    error: кутю
+    correction: паску
+    error_type: word
+    options:
+    - паску
+    - ялинку
+    - колядку
+    explanation: На Великдень ми їмо паску.
+  - sentence: З святом!
+    error: З
+    correction: Зі
+    error_type: word
+    options:
+    - Зі
+    - Із
+    - За
+    explanation: Зі святом!
+- id: match-holiday-vocab
+  type: match-up
+  instruction: З'єднайте українські слова з перекладом (Match the Ukrainian words
+    with the translation)
+  pairs:
+  - left: кутя
+    right: sweet ritual porridge
+  - left: колядка
+    right: Christmas carol
+  - left: писанка
+    right: decorated egg
+  - left: паска
+    right: Easter bread
+  - left: салют
+    right: fireworks
+  - left: прапор
+    right: flag
+- id: translate-greetings
+  type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: Merry Christmas!
+    options:
+    - text: З Різдвом!
+      correct: true
+    - text: З Новим роком!
+      correct: false
+    - text: З Великоднем!
+      correct: false
+  - source: Happy New Year!
+    options:
+    - text: З Новим роком!
+      correct: true
+    - text: З Різдвом!
+      correct: false
+    - text: Зі святом!
+      correct: false
+  - source: Happy Independence Day!
+    options:
+    - text: З Днем Незалежності!
+      correct: true
+    - text: З Днем Конституції!
+      correct: false
+    - text: Слава Україні!
+      correct: false
+  - source: Christ is risen!
+    options:
+    - text: Христос воскрес!
+      correct: true
+    - text: Воістину воскрес!
+      correct: false
+    - text: З Великоднем!
+      correct: false
+  - source: Happy Holiday!
+    options:
+    - text: Зі святом!
+      correct: true
+    - text: З Різдвом!
+      correct: false
+    - text: Вітаю!
+      correct: false
+  - source: Glory to Ukraine!
+    options:
+    - text: Слава Україні!
+      correct: true
+    - text: Героям слава!
+      correct: false
+    - text: З Днем Незалежності!
+      correct: false
+- id: unjumble-holidays
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - роком!
+    - З
     - Новим
-    - Нового
-    - Нові
-    explanation: 'Прикметник теж в орудному відмінку: новий → новим.'
-  - sentence: З День Незалежності!
-    error: День
-    correction: Днем
-    error_type: word
-    options:
-    - Днем
-    - Дня
-    - Дні
-    explanation: 'Після «З» — орудний відмінок: день → днем.'
-  - sentence: З Великдень!
-    error: Великдень
-    correction: Великоднем
-    error_type: word
-    options:
-    - Великоднем
-    - Великодня
-    - Великодні
-    explanation: 'Після «З» — орудний відмінок: Великдень → Великоднем.'
-  - sentence: Зі свято!
-    error: свято
-    correction: святом
-    error_type: word
-    options:
-    - святом
-    - свята
-    - святі
-    explanation: 'Після «Зі» — орудний відмінок: свято → святом.'
-  - sentence: З день народження!
-    error: день
-    correction: днем
-    error_type: word
-    options:
-    - днем
-    - дня
-    - дні
-    explanation: 'Після «З» — орудний відмінок: день → днем.'
+    correct_order:
+    - З
+    - Новим
+    - роком!
+  - words:
+    - миру.
+    - Бажаю
+    - щастя,
+    - здоров'я,
+    correct_order:
+    - Бажаю
+    - щастя,
+    - здоров'я,
+    - миру.
+  - words:
+    - кутю.
+    - їмо
+    - і
+    - колядки
+    - співаємо
+    - Ми
+    correct_order:
+    - Ми
+    - співаємо
+    - колядки
+    - і
+    - їмо
+    - кутю.
+  - words:
+    - Незалежності.
+    - це
+    - Двадцять
+    - серпня
+    - четверте
+    - День
+    - —
+    correct_order:
+    - Двадцять
+    - четверте
+    - серпня
+    - —
+    - це
+    - День
+    - Незалежності.
+  - words:
+    - салют.
+    - дивимося
+    - Ми
+    - парад
+    - і
+    correct_order:
+    - Ми
+    - дивимося
+    - парад
+    - і
+    - салют.
+  - words:
+    - страв.
+    - Ми
+    - дванадцять
+    - їмо
+    correct_order:
+    - Ми
+    - їмо
+    - дванадцять
+    - страв.

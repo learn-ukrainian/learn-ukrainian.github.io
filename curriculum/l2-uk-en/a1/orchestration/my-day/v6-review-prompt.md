@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 25: My Day (A1, A1.4 [Time and Nature])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -135,130 +135,103 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги
 
-You already know how to tell time, name the days of the week, and describe the weather outside. Now it's time to put it all together — telling someone about your whole day. Below are two conversations. In the first, Olenka is writing a blog post about her day and reading it to her friend Marko. In the second, they discuss tomorrow. The past-tense and future forms here are frozen phrases — just memorize them as chunks for now. The full grammar comes later.
+Imagine you are recording a daily vlog or writing an entry in your personal diary. To tell a compelling story about your day, you need a structured narrative flow. A natural sequence helps your listener follow along from morning until night. In Ukrainian, you build this flow using specific time markers and sequence words.
 
-**(Як пройшо́в твій день? / How was your day?)**
+Observe how someone describes what they did today. Listen carefully to how they chain events together using past tense verbs.
 
-> — **Марко́:** Приві́т! Як пройшов твій день? *(Hi! How was your day?)*
-> — **Оле́нка:** До́бре! Я якра́з пишу́ про це в блог. Вра́нці я працюва́ла в о́фісі. *(Good! I'm just writing about it in my blog. In the morning I worked at the office.)*
-> — **Марко:** А **по́тім**? *(And then?)*
-> — **Оленка:** **Потім** обі́дала о пе́ршій. **Пі́сля обі́ду** гуля́ла у парку. *(Then I had lunch at one. After lunch I walked in the park.)*
-> — **Марко:** А вве́чері що роби́ла? *(And in the evening, what did you do?)*
-> — **Оленка:** Ввечері диви́лася фільм і чита́ла кни́гу. **Наре́шті** лягла́ спа́ти о двана́дцятій. *(In the evening I watched a film and read a book. Finally I went to bed at twelve.)*
-> — **Марко:** О дванадцятій? Пі́зно! *(At twelve? Late!)*
+> **Максим:** Привіт! Як пройшов твій день? *(Hi! How was your day?)*
+> **Андрій:** Добре! Вранці я працював. *(Good! In the morning I worked.)*
+> **Максим:** А потім? *(And then?)*
+> **Андрій:** Потім обідав о першій. Після обіду гуляв. *(Then I had lunch at one. After lunch I walked.)*
+> **Максим:** А ввечері? *(And in the evening?)*
+> **Андрій:** Ввечері дивився фільм і читав книгу. *(In the evening I watched a movie and read a book.)*
 
-The past forms — **працювала** *(worked)*, **обідала** *(had lunch)*, **гуляла** *(walked)*, **дивилася** *(watched)*, **читала** *(read)*, **лягла** *(went to bed)* — are chunks for now. Full past-tense grammar comes in M48–49.
+Notice how the timeline is anchored by specific markers like **вранці** (in the morning) and **після обіду** (in the afternoon — literally "after lunch"). The speaker uses past tense verbs ending in "-в", such as **працював** (worked) and **обідав** (had lunch). You do not need grammar rules for these yet; treat them as ready-made vocabulary chunks for storytelling.
 
-:::tip
-Notice the pattern: **sequence word + verb + time**. For example: **Потім обідала о першій.** The sequence word opens the sentence, the verb follows, and time closes it.
+When planning a schedule for the next day, the conversation shifts focus to future intentions. Notice how the speakers contrast different parts of the day, moving from the afternoon to the evening.
+
+> **Катя:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
+> **Тарас:** Вранці буду працювати. *(In the morning I will work.)*
+> **Катя:** А після обіду? *(And after lunch?)*
+> **Тарас:** Буду вивчати українську. А ввечері — гуляти. *(I will study Ukrainian. And in the evening — walk.)*
+
+You can express future intentions using the simple chunk **буду** (I will) followed immediately by an infinitive verb, such as **буду працювати** (I will work) or **буду вивчати** (I will study). This provides a direct way to talk about upcoming plans.
+
+## Мій типовий день
+
+Every daily narrative requires a temporal skeleton. In Ukrainian, the cycle of the day is divided into four primary periods, expressed as adverbs: **вранці** (in the morning), **вдень** (during the day), **ввечері** (in the evening), and **вночі** (at night). A crucial difference between English and Ukrainian is that these adverbs already contain the positional meaning. 
+
+:::note
+You absolutely do not need to add an extra preposition like "в" before adverbs of time; they stand entirely on their own as complete units.
 :::
 
-**(Що ти бу́деш роби́ти за́втра? / What will you do tomorrow?)**
+Your morning routine features actions that you perform on yourself. In Ukrainian, these self-directed actions use reflexive verbs ending in the particle **-ся**. When you describe your morning, you will use the logical sequence of **прокидатися** (to wake up), **вмиватися** (to wash oneself), and **одягатися** (to get dressed). The "-ся" suffix acts as a built-in "myself" marker, making it clear that the action is directed back at the subject rather than at an external object.
 
-> — **Оленка:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
-> — **Марко:** Вранці **бу́ду працюва́ти**. *(In the morning I will work.)*
-> — **Оленка:** А **після обіду**? *(And in the afternoon?)*
-> — **Марко:** **Після обіду** буду вивча́ти украї́нську. *(In the afternoon I will study Ukrainian.)*
-> — **Оленка:** А ввечері? *(And in the evening?)*
-> — **Марко:** Ввечері **буду** гуля́ти. А вночі́? **Нарешті буду** спати! *(In the evening I'll walk. And at night? Finally I'll sleep!)*
+A model text combines time markers, reflexive verbs, and the different parts of the day into a cohesive narrative.
 
-The future pattern **буду** *(I will)* + infinitive works like a chunk: **буду працювати** *(I will work)*, **буду вивчати** *(I will study)*, **буду гуляти** *(I will walk)*. Full future-tense grammar is in M46.
+**Мій типовий понеділок** (My typical Monday)
+*   **Я прокидаюся о сьомій.** (I wake up at seven.)
+*   **Спочатку вмиваюся і одягаюся.** (First I wash and get dressed.)
+*   **Потім снідаю.** (Then I have breakfast.)
+*   **О дев'ятій я працюю.** (At nine I work.)
+*   **О першій обідаю.** (At one I have lunch.)
+*   **Після обіду працюю до п'ятої.** (After lunch I work until five.)
+*   **Ввечері готую вечерю, читаю і дивлюся фільм.** (In the evening I prepare dinner, read, and watch a movie.)
+*   **О одинадцятій лягаю спати.** (At eleven I go to bed.)
 
-Same structure, two timelines — yesterday Olenka **працювала** *(worked)*, tomorrow Marko **буду працювати** *(will work)*. The sequence words stay the same either way.
+Notice the specific phrasing used at the very end of the day: **лягати спати** (to go to bed). 
 
-## Мій типовий день (My Typical Day)
+:::caution
+Do not confuse **лягати спати** (to go to bed) with the simple verb **спати** (to sleep). The phrase **лягати спати** describes the physical action of ending your day, whereas the verb **спати** describes the continuous state of being asleep, such as when you say **вночі я сплю** (at night I sleep).
+:::
 
-Below is a complete model day — a narrative using the present tense you already know from A1.3, combined with time expressions from M22 and the parts-of-day adverbs you'll master in this module. Read it through like a short story, then study how it's built.
+<!-- INJECT_ACTIVITY: match-activity-time -->
 
-> **Я прокида́юся о сьо́мій. Споча́тку вмива́юся і одяга́юся. Потім сні́даю о во́сьмій. О дев'я́тій почина́ю працювати. Вдень я працю́ю до пе́ршої. О першій обі́даю. Після обіду ще працюю до п'я́тої. Ввечері готу́ю вече́рю і відпочива́ю. О дев'ятій дивлю́ся фільм або́ чита́ю книгу. Нарешті о дванадцятій ляга́ю спати.**
+## Від ранку до вечора
 
-Every verb here is present tense — forms you already know from M16–M21. The sequence words **спочатку**, **потім**, and **нарешті** connect the actions into a story instead of a random list.
+To transform a rigid list of separate facts into a natural, flowing story, you need connective tissue. Sequence words are essential for guiding your listener through the timeline of your actions. The most important sequence adverbs are **спочатку** (first / at first), **потім** (then / later), and **нарешті** (finally). By placing these words at the beginning of your sentences, you create a logical progression: **Спочатку я снідаю. Потім я працюю.** (First I eat breakfast. Then I work.)
 
-Now let's look at the five parts-of-day adverbs that make this narrative possible:
+As your stories become longer, expand your flow to avoid sounding repetitive. If you use **потім** in every single sentence, your narrative will quickly feel monotonous. To add variety, introduce the phrase **після того** (after that) or **після цього** (after this). You can also use **також** (also) to add supplementary actions, or **а потім** (and then) to link actions. For example: **Я обідаю. Після того я також гуляю в парку.** (I have lunch. After that I also walk in the park.)
 
-- **вранці** (in the morning) — roughly before noon. *Вранці я снідаю.*
-- **вдень** (during the day) — the working hours, roughly 9 to 17. *Вдень я працюю.*
-- **після обіду** (in the afternoon) — literally "after lunch." *Після обіду я відпочиваю.*
-- **ввечері** (in the evening) — roughly 18 to 22. *Ввечері я читаю.*
-- **вночі** (at night) — roughly 22 to 6. *Вночі я сплю.*
+Food structures your daily routine, and Ukrainian handles mealtime verbs in a highly efficient way. Instead of using a verb plus a noun, Ukrainian features dedicated noun-verb pairs for every meal: **сніданок** (breakfast) pairs with the verb **снідати** (to have breakfast); **обід** (lunch) pairs with **обідати** (to have lunch); and **вечеря** (dinner) pairs with **вечеряти** (to have dinner). 
 
-Four of these are single adverbs — unchanging words. No case endings, no conjugation. Just place them at the start of a sentence: **Ввечері я читаю.** Compare this with clock time: **о сьомій** *(at seven)* uses a preposition and an ordinal number, while **вранці** *(in the morning)* is a single adverb — no preposition needed.
+:::tip
+Strictly avoid the direct English translation "I have breakfast." In Ukrainian, you do not possess a meal; you simply use the specific action verb to describe your eating.
+:::
 
-<!-- INJECT_ACTIVITY: fill-in-part-of-day -->
+Throughout your day, you will rely on a core set of daily activity verbs. Fortunately, many of the most common actions belong to the highly regular Group I verb category ending in "-ати". These include essential verbs like **відпочивати** (to rest), **читати** (to read), and **гуляти** (to walk). A quick review of the conjugation for the first and second person will help you comfortably use these in your dialogues.
 
-One more detail: **після обіду** is two words functioning together as a time marker. You can use it alone — **Після обіду я відпочиваю.** *(In the afternoon I rest.)* — or pair it with a clock time: **Після обіду, о тре́тій, я вчу українську.** *(In the afternoon, at three, I study Ukrainian.)*
-
-## Від ра́нку до ве́чора (From Morning to Evening)
-
-You've seen **потім** and **нарешті** in the dialogues. Here is the full set of sequence words that let you connect one event to the next, turning isolated sentences into a coherent story:
-
-- **спочатку** (first, to start with) — *Спочатку я снідаю.* *(First I have breakfast.)*
-- **потім** (then, next) — *Потім я йду на робо́ту.* *(Then I go to work.)*
-- **після того́** / **після цього́** (after that) — *Після того я відпочиваю.* *(After that I rest.)*
-- **нарешті** (finally) — *Нарешті я лягаю спати.* *(Finally I go to bed.)*
-- **та́ко́ж** (also) — *Я також читаю вранці.* *(I also read in the morning.)*
-- **а потім** (and then — with a light contrast) — *Я снідаю, а потім іду́ до о́фісу.* *(I have breakfast, and then I go to the office.)*
-
-A quick note: **спочатку** is a sequence marker — it means "first" in a chain of events. Don't confuse it with **на поча́тку** *(at the beginning of something)*. At A1, **після того** and **після цього** are interchangeable — use whichever feels natural.
-
-Now let's expand your daily activity verbs. You already know **сні́дати** *(to have breakfast)* from M20. Here are the other two meal verbs — together they form a natural triad:
-
-- **снідати** (to have breakfast) — review from M20
-- **обі́дати** (to have lunch) — new
-- **вече́ряти** (to have dinner) — new
-
-All three are Group I verbs, conjugated exactly like **чита́ти**: **я снідаю**, **ти сні́даєш**, **він/вона́ сні́дає**. The pattern is identical for **обідати** *(я обідаю)* and **вечеряти** *(я вече́ряю)*.
-
-Two more useful verbs: **відпочива́ти** *(to rest)* — also Group I: **я відпочиваю**, **ти відпочива́єш**. And the chunk **ляга́ти спати** *(to go to bed)* — treat it as one unit at A1.
-
-Combine any verb with a time expression and you have a sentence about your day:
-
-- **О першій я обідаю.** *(At one I have lunch.)*
-- **Після робо́ти я відпочиваю.** *(After work I rest.)*
-- **Ввечері я вечеряю о сьомій.** *(In the evening I have dinner at seven.)*
-- **О дванадцятій я лягаю спати.** *(At twelve I go to bed.)*
-
-<!-- INJECT_ACTIVITY: match-time-of-day -->
-
-Here's how all three tools — sequence words, time adverbs, and activity verbs — stack together in a natural chain: **Вранці я прокидаюся о сьомій. Спочатку снідаю. Потім іду на роботу. Після того обідаю о першій. Ввечері відпочиваю. Нарешті лягаю спати.** Any two sentences about your day can be connected with **потім** or **після того** — just pick one and keep going.
-
-## Підсумок — Summary
-
-Every sentence you've built in this module follows one formula:
-
-**[Sequence word] + [Time expression] + [Verb + object]**
-
-The pieces are interchangeable. Look at how they combine:
-
-- **О сьомій** [time] — **прокидаюся** [verb] → *At seven — I wake up.*
-- **Спочатку** [sequence] — **снідаю** [verb] → *First — I have breakfast.*
-- **Потім** [sequence] — **о дев'ятій** [time] — **іду на роботу** [verb + complement] → *Then — at nine — I go to work.*
-
-Time expressions and sequence words both sit at the start of the sentence. You can use one or both — **Потім о дев'ятій іду на роботу** works just as well as **О дев'ятій іду на роботу**.
-
-Here is a longer model day that weaves everything from this module together. Read it, then write your own version below:
-
-> **Мій типовий понеді́лок почина́ється о шо́стій. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю ка́ву і їм бутербро́д. О дев'ятій починаю працювати. Вдень я ду́же за́йнятий. О першій обідаю в кафе́. Після обіду ще працюю до шо́стої. Ввечері відпочиваю — готую вечерю і дивлюся серіа́л. Також читаю пе́ред сном. Нарешті о дванадцятій лягаю спати. Завтра — те са́ме!**
-
-*(My typical Monday starts at six. First I wash up and get dressed. Then I have breakfast — I drink coffee and eat a sandwich. At nine I start working. During the day I'm very busy. At one I have lunch at a café. After lunch I work until six. In the evening I rest — I cook dinner and watch a series. I also read before bed. Finally at twelve I go to bed. Tomorrow — the same!)*
+*   **Я відпочиваю, читаю, гуляю.** (I rest, read, walk.)
+*   **Ти відпочиваєш, читаєш, гуляєш.** (You rest, read, walk.)
 
 <!-- INJECT_ACTIVITY: fill-in-sequence -->
 
-Now it's your turn. Describe your own typical day using what you've learned:
+<!-- INJECT_ACTIVITY: fill-in-parts-of-day -->
 
-- Write about your typical Monday from morning to evening (5–8 sentences).
-- Use at least 3 time expressions (e.g., **о восьмій**, **після обіду**, **ввечері**).
-- Use at least 3 sequence words (**спочатку**, **потім**, **нарешті**).
-- Include at least 4 daily activity verbs (**прокидатися**, **снідати**, **обідати**, **відпочивати**, **лягати спати**).
-- Starter: **Мій типовий понеділок починається о ___. Спочатку я ___…**
+## Підсумок — Summary
 
-Try reading your text aloud. Does it flow from one event to the next? If two sentences feel disconnected, add **потім** or **після того** between them — that's all it takes to turn a list into a story.
+Telling a coherent story about your daily life requires combining three fundamental elements. The basic story formula is straightforward: combine a specific time marker (such as **о якій годині?** — at what hour?), a logical sequence word (like **спочатку** or **потім**), and a descriptive activity verb. When you layer these elements together, you construct detailed, descriptive statements that sound natural to native speakers. Consider this model of a structured "Super-Sentence" that blends all three components seamlessly: **Вранці о восьмій я спочатку снідаю, а потім працюю.** (In the morning at eight I first have breakfast, and then work.) This structure is the key to fluid communication and proves you can link individual concepts.
 
-**Deterministic word count: 1546 words** (calculated by pipeline, do NOT estimate manually)
+Before moving forward, take a moment to evaluate your command of these narrative tools. Review the following self-check questions to ensure you have internalized the core concepts.
 
+*   Can I confidently name the four primary parts of the day using their adverbial forms (**вранці**, **вдень**, **ввечері**, **вночі**)?
+*   Can I use three specific sequence words to properly order my actions (**спочатку**, **потім**, **нарешті**)?
+*   Do I remember to include the essential "-ся" particle for reflexive morning routines like **прокидатися** and **вмиватися**?
+
+**Final Narrative Task:**
+Your objective is to write a cohesive paragraph consisting of six sentences describing your typical Monday from morning until evening. You must incorporate at least three sequence words and mention three specific times of the day.
+
+*   **О сьомій прокидаюся.** (At seven I wake up.)
+*   **Спочатку снідаю.** (First I have breakfast.)
+*   **Потім працюю.** (Then I work.)
+*   **Після обіду відпочиваю.** (After lunch I rest.)
+*   **Ввечері читаю.** (In the evening I read.)
+*   **Нарешті лягаю спати.** (Finally I go to bed.)
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1201 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -346,8 +319,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -434,59 +407,15 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 120 words | Not found: 48 words
+Verified: 87 words | Not found: 4 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Вра — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Наре — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Споча — NOT IN VESUM
-  ✗ бутербро — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ втра — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ двана — NOT IN VESUM
-  ✗ дев'я — NOT IN VESUM
-  ✗ деш — NOT IN VESUM
-  ✗ дцятій — NOT IN VESUM
-  ✗ зно — NOT IN VESUM
-  ✗ йнятий — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ лася — NOT IN VESUM
-  ✗ лок — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нську — NOT IN VESUM
-  ✗ нці — NOT IN VESUM
-  ✗ п'я — NOT IN VESUM
-  ✗ понеді — NOT IN VESUM
-  ✗ поча — NOT IN VESUM
-  ✗ працюва — NOT IN VESUM
-  ✗ пройшо — NOT IN VESUM
-  ✗ ред — NOT IN VESUM
-  ✗ ршої — NOT IN VESUM
-  ✗ ршій — NOT IN VESUM
-  ✗ ряти — NOT IN VESUM
-  ✗ ряю — NOT IN VESUM
-  ✗ серіа — NOT IN VESUM
-  ✗ сля — NOT IN VESUM
-  ✗ стої — NOT IN VESUM
-  ✗ сьмій — NOT IN VESUM
-  ✗ сьо — NOT IN VESUM
-  ✗ тку — NOT IN VESUM
-  ✗ украї — NOT IN VESUM
-  ✗ фісу — NOT IN VESUM
-  ✗ фісі — NOT IN VESUM
-  ✗ чора — NOT IN VESUM
-  ✗ шті — NOT IN VESUM
-  ✗ юся — NOT IN VESUM
-  ✗ якра — NOT IN VESUM
-  ✗ ється — NOT IN VESUM
+  ✗ Андрій — NOT IN VESUM
+  ✗ Катя — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
+  ✗ ати — NOT IN VESUM
 
-All 120 other words are confirmed to exist in VESUM.
+All 87 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

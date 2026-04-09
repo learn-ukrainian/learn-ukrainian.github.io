@@ -2,371 +2,390 @@ version: '1.0'
 module: checkpoint-communication
 level: a1
 inline:
-- id: activity-1
-  type: true-false
-  instruction: Правда чи ні? (True or false?) Read the statements about the reading
-    dialogue.
-  items:
-  - statement: Олена телефонує Тарасу напередодні Різдва.
-    correct: true
-    explanation: Yes — 'Олена телефонує Тарасу напередодні Різдва' is the opening
-      sentence of the reading.
-  - statement: Тарас телефонує Олені першим.
-    correct: false
-    explanation: No — Olena calls Taras, not the other way around.
-  - statement: Олена просить Тараса принести кутю.
-    correct: true
-    explanation: Yes — Олена says 'Принеси кутю, будь ласка!'
-  - statement: Тарас не хоче прийти на свято.
-    correct: false
-    explanation: 'No — Тарас agrees: ''Добре, принесу!'''
-  - statement: Тарас має гарні колядки.
-    correct: true
-    explanation: Yes — Тарас says 'І я маю дуже гарні колядки!'
-  - statement: Олена знає, коли Тарас вільний.
-    correct: false
-    explanation: No — Олена says 'я не знаю, коли ти вільний.'
-- id: activity-2
+- id: vocative-imperative-practice
   type: fill-in
-  instruction: Вставте правильну форму кличного відмінка (Fill in the correct vocative
-    form)
+  instruction: Вставте правильні форми слів (Insert the correct forms)
   items:
-  - sentence: _____, принеси воду, будь ласка!
-    answer: Олено
+  - sentence: ____ (Оксана), читай цей текст, будь ласка!
+    answer: Оксано
     options:
-    - Олена
-    - Олено
-    - Олені
-  - sentence: _____, читай цей текст!
-    answer: Тарасе
-    options:
-    - Тараса
-    - Тарасу
-    - Тарасе
-  - sentence: _____, допоможіть нам!
-    answer: Учителю
-    options:
-    - Учитель
-    - Учителя
-    - Учителю
-  - sentence: _____, подивися сюди!
-    answer: Мамо
-    options:
-    - Мама
-    - Мамі
-    - Мамо
-  - sentence: _____, скажи мені правду!
-    answer: Друже
-    options:
-    - Друг
-    - Друга
-    - Друже
-  - sentence: _____, принеси колядки!
-    answer: Андрію
-    options:
-    - Андрій
-    - Андрія
-    - Андрію
-- id: activity-3
-  type: quiz
-  instruction: Оберіть правильне привітання (Choose the correct holiday greeting)
-  items:
-  - question: Як привітати з Різдвом? (How do you greet someone for Christmas?)
-    options:
-    - З Різдво!
-    - З Різдвом!
-    - З Різдві!
-    - На Різдво!
-    correct: 1
-  - question: Як привітати з Великоднем? (How do you greet for Easter?)
-    options:
-    - З Великодень!
-    - З Великодні!
-    - З Великоднем!
-    - На Великдень!
-    correct: 2
-  - question: Як привітати з Новим роком? (How do you greet for New Year?)
-    options:
-    - З Новий рік!
-    - З Нового року!
-    - З Новим роком!
-    - На Новий рік!
-    correct: 2
-  - question: Як привітати з днем народження? (How do you greet for a birthday?)
-    options:
-    - З день народження!
-    - З днем народження!
-    - З днем народженні!
-    - На день народження!
-    correct: 1
-  - question: Яке слово стоїть після 'З' у привітаннях? (What case follows 'З' in
-      greetings?)
-    options:
-    - Називний (Nominative)
-    - Родовий (Genitive)
-    - Орудний (Instrumental)
-    - Давальний (Dative)
-    correct: 2
-  - question: Яке правильне привітання? (Which greeting is correct?)
-    options:
-    - З ярмарок!
-    - З ярмарку!
-    - З ярмарком!
-    - На ярмарку!
-    correct: 2
-- id: activity-4
-  type: group-sort
-  instruction: Розподіліть слова за категоріями (Sort the words by grammar category)
-  groups:
-  - label: Кличний відмінок (Vocative)
-    items:
-    - Олено
-    - Тарасе
-    - мамо
-    - учителю
-    - друже
-    - Андрію
-  - label: Наказовий спосіб (Imperative)
-    items:
-    - читай
-    - пиши
-    - принеси
-    - постав
-    - перевір
-    - скажи
-  - label: Сполучник (Conjunction)
-    items:
-    - і
-    - а
-    - але
-    - бо
-    - що
-    - де
-workbook:
-- type: fill-in
-  instruction: Вставте правильні форми кличного відмінка та наказового способу (Fill
-    in the correct vocative and imperative forms)
-  items:
-  - sentence: _____ (Олена), _____ (читати) цей текст, будь ласка!
-    answer: Олено, читай
-    options:
-    - Олено, читай
-    - Олена, читати
-    - Олені, читаєш
-  - sentence: _____ (Тарас), _____ (принести) кутю!
-    answer: Тарасе, принеси
-    options:
-    - Тарасе, принеси
-    - Тараса, принести
-    - Тарасу, принесе
-  - sentence: _____ (мама), _____ (дати) мені книгу!
-    answer: Мамо, дай
-    options:
-    - Мамо, дай
-    - Мама, дає
-    - Мамі, дати
-  - sentence: _____ (Андрій), _____ (писати) своє ім'я!
-    answer: Андрію, пиши
-    options:
-    - Андрію, пиши
-    - Андрія, писати
-    - Андрієві, пише
-  - sentence: _____ (учитель), _____ (читати) вголос, будь ласка!
-    answer: Учителю, читайте
-    options:
-    - Учителю, читайте
-    - Учитель, читати
-    - Учителя, читає
-  - sentence: _____ (друг), _____ (дати) мені олівець!
-    answer: Друже, дай
-    options:
-    - Друже, дай
-    - Друга, дати
-    - Другу, дає
-  - sentence: _____ (Олена), _____ (писати) листа!
-    answer: Олено, пиши
-    options:
-    - Олено, пиши
-    - Олена, писати
-    - Олені, пише
-  - sentence: _____ (Тарас), _____ (принести) колядки!
-    answer: Тарасе, принеси
-    options:
-    - Тарасе, принеси
-    - Тараса, принести
-    - Тарасові, принесе
-- type: quiz
-  instruction: Оберіть правильний сполучник (Choose the correct conjunction)
-  items:
-  - question: Я не йду, _____ хворий.
-    options:
-    - і
-    - а
-    - бо
-    - що
-    correct: 2
-  - question: Олена йде, _____ Тарас залишається.
-    options:
-    - і
-    - а
-    - бо
-    - що
-    correct: 1
-  - question: Я хочу прийти, _____ я хворий.
-    options:
-    - і
-    - а
-    - але
-    - що
-    correct: 2
-  - question: Я маю свічки, _____ я не знаю, коли ти вільний.
-    options:
-    - бо
-    - але
-    - що
-    - де
-    correct: 1
-  - question: Принеси кутю, _____ я не вмію варити.
-    options:
-    - але
-    - а
-    - бо
-    - і
-    correct: 2
-  - question: Я маю квитки _____ напої.
-    options:
-    - але
-    - а
-    - бо
-    - і
-    correct: 3
-  - question: Тарас уважно слухає _____ усміхається.
-    options:
-    - бо
-    - але
-    - а
-    - і
-    correct: 3
-  - question: Ярмарок буде гарний, _____ ми добре підготувалися.
-    options:
-    - але
-    - а
-    - бо
-    - і
-    correct: 2
-- type: fill-in
-  instruction: 'Вставте правильний підрядний сполучник: що, де або коли (Fill in the
-    correct subordinating conjunction: що, де, or коли)'
-  items:
-  - sentence: Я знаю, _____ він тут.
-    answer: що
-    options:
-    - що
-    - де
-    - коли
-  - sentence: Скажи, _____ ти будеш двадцять четвертого.
-    answer: де
-    options:
-    - що
-    - де
-    - коли
-  - sentence: Я не знаю, _____ ти вільний.
-    answer: коли
-    options:
-    - що
-    - де
-    - коли
-  - sentence: Олена думає, _____ свято буде гарне.
-    answer: що
-    options:
-    - що
-    - де
-    - коли
-  - sentence: Тарас питає, _____ покласти плакати.
-    answer: де
-    options:
-    - що
-    - де
-    - коли
-  - sentence: Я не знаю, _____ ярмарок починається.
-    answer: коли
-    options:
-    - що
-    - де
-    - коли
-- type: match-up
-  instruction: З'єднайте свято з його формою орудного відмінка для привітань (Match
-    each holiday to its instrumental form used in greetings)
-  pairs:
-  - left: Різдво
-    right: Різдвом
-  - left: Великдень
-    right: Великоднем
-  - left: Новий рік
-    right: Новим роком
-  - left: день народження
-    right: днем народження
-  - left: ярмарок
-    right: ярмарком
-  - left: свято
-    right: святом
-- type: error-correction
-  instruction: Виправте помилку в реченні (Find and correct the error in the sentence)
-  items:
-  - sentence: Олено, принести воду, будь ласка!
-    error: принести
-    correction: принеси
-    error_type: word
+    - Оксано
+    - Оксана
+    - Оксані
+    - Оксану
+  - sentence: Тарасе, ____ (принести) стільці!
+    answer: принеси
     options:
     - принеси
     - принесіть
-    - приносить
-    explanation: Use the imperative 'принеси' (ти-form), not the infinitive 'принести'.
-  - sentence: Тарас, читай цей текст!
+    - принести
+    - принесу
+  - sentence: ____ (друг), скажи, коли ти будеш у школі.
+    answer: друже
+    options:
+    - друже
+    - друг
+    - другу
+    - другом
+  - sentence: Андрію, ____ (писати) лист!
+    answer: пиши
+    options:
+    - пиши
+    - пишіть
+    - писати
+    - пише
+  - sentence: ____ (Олена), дай мені квиток, будь ласка.
+    answer: Олено
+    options:
+    - Олено
+    - Олена
+    - Олені
+    - Олену
+  - sentence: Петре, ____ (робити) це швидко!
+    answer: роби
+    options:
+    - роби
+    - робіть
+    - робити
+    - робить
+  - sentence: ____ (матуся), прийди сюди!
+    answer: матусю
+    options:
+    - матусю
+    - матуся
+    - матусі
+    - матусею
+  - sentence: Діти, ____ (читати) текст!
+    answer: читайте
+    options:
+    - читайте
+    - читай
+    - читати
+    - читають
+- id: conjunctions-quiz
+  type: quiz
+  instruction: Оберіть правильний сполучник (Choose the correct conjunction)
+  items:
+  - question: Я не йду, ____ хворий.
+    options:
+    - і
+    - бо
+    - а
+    - що
+    correct: 1
+  - question: Мій чай гарячий, ____ твій холодний.
+    options:
+    - що
+    - бо
+    - а
+    - де
+    correct: 2
+  - question: Принеси плакати ____ квитки.
+    options:
+    - і
+    - але
+    - що
+    - бо
+    correct: 0
+  - question: Я хочу, ____ ми святкували разом.
+    options:
+    - а
+    - і
+    - бо
+    - щоб
+    correct: 3
+  - question: Я вільна, ____ я не знаю, де ми будемо.
+    options:
+    - що
+    - але
+    - і
+    - коли
+    correct: 1
+  - question: Скажи, ____ ти будеш у школі.
+    options:
+    - а
+    - і
+    - коли
+    - та
+    correct: 2
+  - question: Вона знає, ____ купити свічки.
+    options:
+    - бо
+    - але
+    - що
+    - де
+    correct: 3
+  - question: Нам потрібні стільці, ____ людей буде багато.
+    options:
+    - бо
+    - де
+    - і
+    - а
+    correct: 0
+- id: complex-sentences-fill-in
+  type: fill-in
+  instruction: Вставте правильне слово (Insert the correct word)
+  items:
+  - sentence: Я знаю, ____ він тут.
+    answer: що
+    options:
+    - що
+    - де
+    - коли
+  - sentence: Скажи, ____ ти прийдеш.
+    answer: коли
+    options:
+    - що
+    - де
+    - коли
+  - sentence: Вона не знає, ____ ми будемо.
+    answer: де
+    options:
+    - що
+    - де
+    - коли
+  - sentence: Я думаю, ____ ми можемо святкувати разом.
+    answer: що
+    options:
+    - що
+    - де
+    - коли
+  - sentence: Ти знаєш, ____ скоро Різдво?
+    answer: що
+    options:
+    - що
+    - де
+    - коли
+  - sentence: Я знаю, ____ купити гарні свічки.
+    answer: де
+    options:
+    - що
+    - де
+    - коли
+- id: holiday-greeting-match
+  type: quiz
+  instruction: Оберіть правильне привітання (Choose the correct greeting)
+  items:
+  - question: Merry Christmas!
+    options:
+    - З Різдвом!
+    - З Великоднем!
+    - З Новим роком!
+    - З днем народження!
+    correct: 0
+  - question: Happy Easter!
+    options:
+    - З Новим роком!
+    - З Великоднем!
+    - З Різдвом!
+    - Зі святом!
+    correct: 1
+  - question: Happy New Year!
+    options:
+    - З Різдвом!
+    - З Великоднем!
+    - З Новим роком!
+    - Навзаєм!
+    correct: 2
+  - question: Happy Birthday!
+    options:
+    - Зі святом!
+    - З днем народження!
+    - З Різдвом!
+    - Вас також!
+    correct: 1
+  - question: Happy Holiday! (Universal)
+    options:
+    - З Новим роком!
+    - З Великоднем!
+    - Зі святом!
+    - Навзаєм!
+    correct: 2
+  - question: How do you say 'Likewise / You too'?
+    options:
+    - Навзаєм!
+    - Зі святом!
+    - З Різдвом!
+    - З днем народження!
+    correct: 0
+  - question: You are invited to a Christmas dinner. What do you say?
+    options:
+    - З Великоднем!
+    - З Новим роком!
+    - З днем народження!
+    - З Різдвом!
+    correct: 3
+  - question: 'Someone says ''З Новим роком!''. Your reply:'
+    options:
+    - З Великоднем!
+    - Навзаєм!
+    - Зі святом!
+    - З днем народження!
+    correct: 1
+workbook:
+- id: wb-match-up-sentences
+  type: match-up
+  instruction: З'єднайте частини речення (Match the sentence halves)
+  pairs:
+  - left: Я не йду,
+    right: бо я хворий.
+  - left: Мій чай гарячий,
+    right: а твій холодний.
+  - left: Скажи,
+    right: коли ти будеш.
+  - left: Я знаю,
+    right: де купити квитки.
+  - left: Я вільна,
+    right: але не знаю де ми будемо.
+  - left: Принеси плакати
+    right: і стільці.
+- id: wb-unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  items:
+  - words:
+    - будь ласка.
+    - кутю,
+    - Принеси
+    correct_order:
+    - Принеси
+    - кутю,
+    - будь ласка.
+  - words:
+    - що
+    - ти тут.
+    - Я знаю,
+    correct_order:
+    - Я знаю,
+    - що
+    - ти тут.
+  - words:
+    - купити свічки.
+    - де
+    - Я знаю,
+    correct_order:
+    - Я знаю,
+    - де
+    - купити свічки.
+  - words:
+    - Тарасе,
+    - раніше!
+    - прийди
+    correct_order:
+    - Тарасе,
+    - прийди
+    - раніше!
+  - words:
+    - Нам
+    - стільці.
+    - потрібні
+    correct_order:
+    - Нам
+    - потрібні
+    - стільці.
+  - words:
+    - святкували разом.
+    - щоб ми
+    - Я хочу,
+    correct_order:
+    - Я хочу,
+    - щоб ми
+    - святкували разом.
+- id: wb-error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Оксана, читай цей текст!
+    error: Оксана
+    correction: Оксано
+    error_type: word
+    options:
+    - Оксано
+    - Оксані
+    - Оксану
+    explanation: Use the vocative case for names when addressing someone.
+  - sentence: Тарас, принеси стільці!
     error: Тарас
     correction: Тарасе
     error_type: word
     options:
     - Тарасе
+    - Тарасу
     - Тараса
-    - Тарасові
-    explanation: 'When calling someone directly, use the vocative case: Тарас → Тарасе.'
-  - sentence: Я хочу прийти, і я хворий.
-    error: і
-    correction: але
+    explanation: Use the vocative case for names when addressing someone.
+  - sentence: Андрій, пиши лист!
+    error: Андрій
+    correction: Андрію
     error_type: word
     options:
+    - Андрію
+    - Андріє
+    - Андрієм
+    explanation: Names ending in -й take -ю in the vocative case.
+  - sentence: Друг, дай мені квиток!
+    error: Друг
+    correction: Друже
+    error_type: word
+    options:
+    - Друже
+    - Другу
+    - Друга
+    explanation: The vocative of 'друг' is 'друже'.
+  - sentence: Діти, читай текст!
+    error: читай
+    correction: читайте
+    error_type: word
+    options:
+    - читайте
+    - читати
+    - читають
+    explanation: Use the plural imperative (читайте) for 'Діти' (Children).
+  - sentence: Матуся, прийди сюди!
+    error: Матуся
+    correction: Матусю
+    error_type: word
+    options:
+    - Матусю
+    - Матусе
+    - Матусі
+    explanation: Feminine names ending in -я take -ю in the vocative case.
+- id: wb-order-dialogue
+  type: order
+  instruction: Розставте речення в правильному порядку (Put the dialogue in the correct
+    order)
+  items:
+  - — Олено, привіт! Ти знаєш, що скоро Різдво?
+  - — Так, Тарасе! Я думаю, що ми можемо святкувати разом.
+  - — Добре! Скажи, коли ти вільна.
+  - — Я вільна двадцять четвертого.
+  - — Ходімо до мене! Принеси кутю, будь ласка.
+  - — Добре, принесу! З Різдвом!
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+- id: wb-group-sort-grammar
+  type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  groups:
+  - label: Сполучники (Conjunctions)
+    items:
+    - і
+    - а
     - але
     - бо
     - що
-    explanation: '''Але'' expresses contradiction (but). ''І'' simply adds — it cannot
-      express ''but I''m sick''.'
-  - sentence: З Різдво!
-    error: Різдво
-    correction: Різдвом
-    error_type: word
-    options:
-    - Різдвом
-    - Різдва
-    - Різдві
-    explanation: '''З'' requires the instrumental case in holiday greetings: Різдво
-      → Різдвом.'
-  - sentence: Мама, дайте мені воду!
-    error: дайте
-    correction: дай
-    error_type: word
-    options:
+    - коли
+    - де
+  - label: Дієслова (Verbs)
+    items:
+    - прийди
+    - принеси
+    - скажи
+    - читай
+    - роби
+    - пиши
     - дай
-    - дати
-    - дає
-    explanation: Use 'дай' (ти-form, informal) when addressing мама. 'Дайте' is the
-      formal/plural form.
-  - sentence: Олена, пиши листа!
-    error: Олена
-    correction: Олено
-    error_type: word
-    options:
-    - Олено
-    - Олені
-    - Олени
-    explanation: 'Direct address requires the vocative case: Олена → Олено (-а → -о).'

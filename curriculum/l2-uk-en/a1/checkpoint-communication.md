@@ -1,89 +1,87 @@
 ## Що ми зна́ємо? (What Do We Know?)
 
-Welcome to the communication checkpoint. This checkpoint brings together everything from modules 42 through 46. Let's see how these skills work together. Here are five questions to check your knowledge from this phase:
+This Checkpoint integrates the communication skills you have acquired in the previous five lessons. Language is a tool for connection, and in a real-world scenario, you do not just recite vocabulary; you use it to achieve a specific goal. In this module, you are helping your friends organize a lively school event. This task requires addressing people directly, giving clear orders or polite requests, and explaining your plans with logical reasons.
 
-1. Can I address a friend directly using the vocative case? (Like **Тарасе!** (Taras!))
-2. Can I make requests and give instructions using the imperative? (Like **Принеси!** (Bring!))
-3. Can I connect ideas using coordinating conjunctions? (**і** (and), **але** (but), **бо** (because))
-4. Can I build complex sentences? (using **що** (that), **де** (where), **коли** (when))
-5. Can I talk about holidays and greet people? (**З Різдво́м!** (Merry Christmas!))
+:::note
+**Checkpoint Modules**
+A Checkpoint module does not introduce new grammar rules. Instead, it tests your ability to combine what you already know into natural, flowing conversation.
+:::
 
-If you remember the patterns, you have the answers. For the vocative case, names change their endings: **Олена** (Olena) becomes **Олено**, **Тарас** (Taras) becomes **Тарасе**, and **Андрій** (Andriy) becomes **Андрію**. For the imperative mood, you form direct commands like **читай** / **читайте** (read) or **дай** / **дайте** (give). You connect your thoughts with **і** / **та** (and), **а** (and/but), **але** (but), and **бо** (because). You link dependent clauses with **що** (that), **де** (where), and **коли** (when), always remembering to add a comma before them. Finally, you greet people using **З** plus the instrumental case, like **З Різдвом!** (Merry Christmas!) or **З Вели́коднем!** (Happy Easter!).
-
-These five skills work together seamlessly. Read how Olena uses them naturally when calling her friend.
+Do you remember how to call a friend by name? You cannot just say their name in the basic dictionary form. You must adapt it using the vocative case, such as **Тара́се!** (Taras!) or **Оле́но!** (Olena!). Do you remember how to ask for help? You need the commanding forms of the imperative mood, such as **Дай!** (Give!) or **Принеси́!** (Bring!). Can you explain your reasons clearly? You need conjunctions to link your thoughts, such as **бо я не зна́ю...** (because I do not know...) or **тому́ що...** (because...). Finally, we integrate the cultural context of holiday greetings, such as **З Різдво́м!** (Merry Christmas!), to ensure your speech is authentic. These elements combine to build real, effective conversations.
 
 ## Чита́ння (Reading Practice)
 
-Read the text below. Notice how these communication tools appear together naturally.
+Observe how these essential communication tools work together in a single, natural flow. Imagine the scene: Olena is contacting her friend Taras to plan a community Christmas gathering at the school. They are organizing a small fair, and she needs to coordinate the details quickly. She needs him to arrive early, bring specific items, and she needs to explain the reasons behind her requests clearly. This short reading text demonstrates how the vocative case, the imperative mood, and linking conjunctions function simultaneously in real Ukrainian communication.
 
-> **Олена телефону́є Тара́су напередо́дні Різдва́.** (Olena calls Taras on the eve of Christmas.) Вона́ ра́дісно ка́же: (She happily says:) «**Тарасе**, прийди́ до мене́, бо ми святку́ємо ра́зом! (Taras, come to me, because we are celebrating together!) І я вже маю свічки́, але я не зна́ю, коли ти ві́льний. (And I already have candles, but I do not know when you are free.) Я ду́маю, що це бу́де ду́же га́рне свя́то. (I think that it will be a very beautiful holiday.) Принеси **кутю**, будь ла́ска!» (Bring kutia, please!)
-> Тарас ува́жно слу́хає. (Taras listens carefully.) Він усміха́ється і каже: (He smiles and says:) «Приві́т, **Олено**! (Hi, Olena!) До́бре, принесу́! (Good, I will bring it!) Скажи́, де ти бу́деш два́дцять четве́ртого. (Tell me where you will be on the twenty-fourth.) Ми мо́жемо співа́ти разом. (We can sing together.) І я маю дуже га́рні **колядки**! (And I have very beautiful carols!) **З Різдвом!**» (Merry Christmas!)
+Read the message below carefully. Pay attention to how Olena builds her message and connects her ideas using short, precise sentences.
+
+**Лист Оле́ни** (Olena's letter)
+
+* **Тарасе, приві́т!** (Taras, hello!)
+* **Прийди́ рані́ше, будь ла́ска.** (Come earlier, please.)
+* **Принеси пла́кати і квитки́.** (Bring the posters and tickets.)
+* **Я знаю, що ти ма́єш напо́ї.** (I know that you have the drinks.)
+* **Але́ нам потрі́бні стільці́, бо люде́й бу́де бага́то.** (But we need chairs, because there will be many people.)
+* **Я хо́чу, щоб ми святкува́ли Різдво́ ра́зом.** (I want us to celebrate Christmas together.)
+* **Скажи́, коли́ ти бу́деш у шко́лі.** (Tell me when you will be at school.)
+
+Notice the specific nouns she uses for the event: **плака́т** (poster), **квито́к** (ticket), **напі́й** (drink), and **стіле́ць** (chair). She begins with the vocative **Тарасе!** to capture his attention immediately. She relies on the imperative verb forms **прийди** (come), **принеси** (bring), and **скажи** (tell) to issue direct instructions. Finally, she structures her thoughts smoothly using the conjunctions **і** (and), **що** (that), **але** (but), **бо** (because), and **коли** (when). Every grammatical tool serves a clear purpose.
 
 ## Грама́тика (Grammar Summary)
 
-Use the vocative case whenever you call someone directly.
+In Ukraine, calling someone by their name in the basic Nominative case (like "Окса́на!") sounds like you are reading a list. For real communication, you must use the Vocative case. Review the three main patterns for A1 names. Feminine names ending in **-а** change to **-о**: **Оксана** becomes **Окса́но**, and **Оле́на** becomes **Олено**. Masculine names ending in a hard consonant or **-о** take **-е**: **Тара́с** becomes **Тарасе**, **Петро́** becomes **Пе́тре**, and **друг** (friend) becomes **дру́же** (notice the consonant change). Names with a soft ending or ending in **-й** change to **-ю**: **Андрі́й** becomes **Андрію**, and **мату́ся** (mommy) becomes **мату́сю**.
 
-| Називни́й (Nominative) | Кли́чний (Vocative) | English |
-|---|---|---|
-| **Олена** | **Олено!** | Olena! (-а → -о) |
-| **мама** | **мамо!** | Mom! (-а → -о) |
-| **Тарас** | **Тарасе!** | Taras! (hard consonant → -е) |
-| **друг** | **друже!** | Friend! (г → ж + е) |
-| **Андрій** | **Андрію!** | Andriy! (soft/й → -ю) |
-| **учитель** | **учителю!** | Teacher! (soft/й → -ю) |
+When you ask someone to do something, you rely on the Imperative mood. For informal situations speaking to one person (**ти**), use forms like **чита́й** (read), **пиши́** (write), and **роби́** (do). For formal or plural situations (**ви**), add the plural ending: **чита́йте** (read), **пиші́ть** (write), and **робі́ть** (do). Always add **будь ласка** (please) for politeness. Notice the difference between the informal **Дай!** (Give!) and the formal **Да́йте!** (Give!).
 
-Use the imperative to give instructions or make requests. The **ти** (you, informal) form is for a friend or child, and the **ви** (you, formal/plural) form is for an adult or group. The phrase **будь ласка** (please) softens any request.
+<!-- INJECT_ACTIVITY: vocative-imperative-practice -->
 
-| Дієсло́во (Verb) | ти (informal) | ви (formal/plural) |
-|---|---|---|
-| **читати** (to read) | **читай!** | **читайте!** |
-| **писати** (to write) | **пиши!** | **пишіть!** |
-| **дати** (to give) | **дай!** | **дайте!** |
-| **принести** (to bring) | **принеси!** | **принесіть!** |
+To make your speech flow naturally, you need coordinating conjunctions: **і** or **та** (and) for addition, **а** (and/but) for mild contrast, **але** (but) for strong contrast, and **бо** or **тому що** (because) for a reason. Use **а** when comparing two different things.
 
-<!-- INJECT_ACTIVITY: activity-1 -->
+* **Мій чай гаря́чий, а твій холо́дний.** (My tea is hot, and yours is cold.)
 
-Conjunctions connect your thoughts. Coordinating conjunctions link equal parts:
-- **і** / **та** (and — adds)
-- **а** (and/but — contrasts: **Олена йде, а Тарас залиша́ється.** - Olena goes, but Taras stays.)
-- **але** (but — contradicts: **Я хо́чу прийти́, але я хво́рий.** - I want to come, but I am sick.)
+<!-- INJECT_ACTIVITY: conjunctions-quiz -->
 
-Subordinating conjunctions link a dependent clause to a main clause, and always require a comma before them:
-- **бо** (because: **Принеси кутю, бо я не вмі́ю вари́ти.** - Bring kutia, because I don't know how to cook.)
-- **тому́ що** (because: **Я йду, тому́ що вже пі́зно.** - I am going, because it is already late.)
+You also need subordinating conjunctions to build complex sentences: **що** (that), **де** (where), and **коли** (when). 
 
-<!-- INJECT_ACTIVITY: activity-2 -->
+:::caution
+**The Mandatory Comma**
+In English, the comma before "because" or "that" is optional or stylistic. In Ukrainian, placing a comma before **що**, **де**, **коли**, and **бо** is a strict grammatical rule. Never skip it!
+:::
 
-Other subordinating conjunctions help build complex sentences:
-- **що** (**Я знаю, що ти тут.** - I know that you are here.)
-- **де** (**Скажи, де ти.** - Tell me where you are.)
-- **коли** (**Я не знаю, коли ти вільний.** - I don't know when you are free.)
+* **Я ду́маю, що...** (I think that...)
+* **Вона́ зна́є, де...** (She knows where...)
+* **Скажи, коли...** (Tell me when...)
 
-<!-- INJECT_ACTIVITY: activity-3 -->
-
-The holiday greeting formula uses **З** (with) plus a noun in the instrumental case. Just take the holiday name, put it in the instrumental (**Різдво** → **Різдвом**, **Великдень** → **Великоднем**), and add **З** before it. This formula works for every Ukrainian celebration: **З Різдвом!** (Merry Christmas!), **З Великоднем!** (Happy Easter!), **З Новим ро́ком!** (Happy New Year!), **З днем наро́дження!** (Happy Birthday!).
-
-<!-- INJECT_ACTIVITY: activity-4 -->
+<!-- INJECT_ACTIVITY: complex-sentences-fill-in -->
 
 ## Діало́г (Connected Dialogue)
 
-**Організатор готу́є шкільни́й я́рмарок.** (An organizer is preparing a school fair.) **Він розподіля́є завда́ння між волонте́рами.** (He distributes tasks among volunteers.)
+Now Taras and Olena are finalizing their plans for the holiday gathering. They need to confirm the time, the place, and exactly what items to bring. Listen to how they use all the grammar rules we just reviewed in a realistic, connected conversation.
 
-> — **Організатор:** **Олено**, принеси, будь ласка, пла́кати, бо стіл уже́ гото́вий. *(Olena, bring the posters, please, because the table is already ready.)*
-> — **Олена:** Добре, принесу! Скажи, де покла́сти їх. *(Good, I will bring them! Tell me where to put them.)*
-> — **Організатор:** Ось бі́ля вхо́ду. **Тарасе**, поста́в столи́, але споча́тку переві́р стільці́. *(Here near the entrance. Taras, place the tables, but first check the chairs.)*
-> — **Тарас:** Я вже знаю, де вони́. І я маю квитки́ та напо́ї — все гото́во. *(I already know where they are. And I have the tickets and drinks — everything is ready.)*
-> — **Організатор:** Чудо́во! Я думаю, що ярмарок буде га́рний, бо ми добре підготува́лися. *(Wonderful! I think that the fair will be beautiful, because we prepared well.)*
-> — **Волонтери:** Чудово, почина́ємо! *(Wonderful, let's begin!)*
+> **Тарас:** Олено, привіт! Ти зна́єш, що ско́ро Різдво? *(Olena, hello! Do you know that Christmas is soon?)*
+> **Олена:** Так, Тарасе! Я думаю, що ми мо́жемо святкува́ти разом. *(Yes, Taras! I think that we can celebrate together.)*
+> **Тарас:** До́бре! Скажи, коли ти ві́льна, бо я хочу запроси́ти дру́зів. *(Good! Tell me when you are free, because I want to invite friends.)*
+> **Олена:** Я вільна два́дцять четве́ртого. Але я не знаю, де ми бу́демо. *(I am free on the twenty-fourth. But I do not know where we will be.)*
+> **Тарас:** Ході́мо до мене́! Принеси кутю́, будь ласка. *(Let's go to my place! Bring kutia, please.)*
+> **Олена:** Добре, принесу́! І я знаю, де купи́ти га́рні свічки́. З Різдвом! *(Good, I will bring it! And I know where to buy beautiful candles. Merry Christmas!)*
 
+When Ukrainians celebrate holidays, they use a specific grammatical formula. The greeting always begins with the preposition **З** (With) followed by the holiday name in the Instrumental case. For example, you say **З Різдвом!** (Merry Christmas!), **З Вели́коднем!** (Happy Easter!), and **З Новим ро́ком!** (Happy New Year!). 
 
-Read through the dialogue again. Notice how the organizer and volunteers use the vocative to address each other, and the imperative to give clear instructions.
+:::tip
+**Responding to Greetings**
+If you forget the specific greeting for a holiday, the phrase **Навза́єм!** (Likewise!) or **Вас та́ко́ж!** (You too!) is your universal, safe response to almost any positive wish in Ukrainian.
+:::
+
+<!-- INJECT_ACTIVITY: holiday-greeting-match -->
 
 ## Підсумок — Summary
 
-Here are the communication skills you have practised in this module:
-- ✅ **Ти мо́жеш зверта́тися до люде́й на ім'я́:** (You can address people by name:) **Олено! Тарасе! Андрію!**
-- ✅ **Ти можеш проси́ти й дава́ти вказівки́:** (You can make requests and give instructions:) **Принеси! Читайте! Дай, будь ласка!**
-- ✅ **Ти можеш з'є́днувати думки́ сполу́чниками:** (You can connect ideas with conjunctions:) **і, а, але, бо**
-- ✅ **Ти можеш будува́ти складні речення:** (You can build complex sentences:) **Я знаю, що… Скажи, де… Я не знаю, коли…**
-- ✅ **Ти можеш говори́ти про украї́нські свя́та́ та віта́ти людей:** (You can talk about Ukrainian holidays and greet people:) **З Різдвом! З Великоднем!**
+You have reached the end of the A1.7 Communication phase. Review your capabilities:
+
+* You can address people correctly using the vocative case (**Олено! Тарасе!**).
+* You can give instructions and make requests using the imperative mood (**Читай! Дайте!**).
+* You can connect your ideas into longer sentences using conjunctions (**і, а, але, бо**).
+* You can build complex sentences with the words **що**, **де**, and **коли** (and you remember to use the mandatory comma!).
+* You know how to greet people for major Ukrainian holidays using the Instrumental case.
+
+You are now ready for A1.8, the final stage of this level, where we tackle the Past and Future tenses. These new tenses will unlock your ability to tell stories and plan your future in Ukrainian!

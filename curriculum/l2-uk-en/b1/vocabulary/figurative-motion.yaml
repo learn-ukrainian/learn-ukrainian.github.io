@@ -1,0 +1,271 @@
+vocabulary:
+- word: багатозначне слово
+  translation: polysemous word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: багатозна́чність
+  translation: polysemy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пряме значення
+  translation: literal meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переносне значення
+  translation: figurative meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фразеологі́зм
+  translation: phraseological unit / idiom
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́льки
+  translation: calques / loan translations
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дощ іде
+  translation: it's raining
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сніг іде
+  translation: it's snowing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іде зима
+  translation: winter is coming
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: час іде
+  translation: time passes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: роки йдуть
+  translation: years go by
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фільм іде
+  translation: a movie is showing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: урок іде
+  translation: a lesson is ongoing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: справи йдуть
+  translation: things are going (about progress)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мова йде про
+  translation: the topic is / it's about
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти́ся
+  translation: to be about (impersonal)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: йти на ризик
+  translation: to take a risk
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти на компроміс
+  translation: to compromise
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти назустріч
+  translation: to accommodate / meet halfway
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ви́йти
+  translation: to turn out / to result
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дійти до висновку
+  translation: to reach a conclusion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: обійти́ся
+  translation: to get by without
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: леті́ти
+  translation: to rush (e.g., to a meeting)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: новина облетіла
+  translation: the news spread / flew around
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: злеті́ти
+  translation: to soar / to skyrocket (e.g., prices)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вилетіти з роботи
+  translation: to get fired
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вилетіти з університету
+  translation: to get expelled
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пролеті́ти
+  translation: to fly by (about a pleasant period)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: думки пливуть
+  translation: thoughts drift
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: туман пливе
+  translation: fog drifts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: час біжить
+  translation: time runs / passes quickly
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вода біжить
+  translation: water flows / runs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мурашки біжать
+  translation: goosebumps
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дах їде
+  translation: to go crazy / to lose it (slang)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їхати на чомусь
+  translation: to be obsessed with something (slang)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нести відповідальність
+  translation: to bear responsibility
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: носити ім'я
+  translation: to bear a name
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вести переговори
+  translation: to conduct negotiations
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вести себе
+  translation: to behave
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вести блог
+  translation: to keep a blog
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: водити за ніс
+  translation: to deceive / to lead by the nose
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пасува́ти
+  translation: to suit / to match (regarding clothes)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ли́чити
+  translation: to suit / to look good on someone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: годинник іде
+  translation: the clock is working / ticking
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: годинник стоїть
+  translation: the clock has stopped / is not working
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,68 +1,51 @@
 # Build Summary: what-i-like (A1)
 
-Generated: 2026-04-07 17:06
+Generated: 2026-04-09 04:02
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-03-30 18:52:09 |
-| research | complete | 2026-03-30 18:53:01 |
-| skeleton | complete | 2026-03-30 18:54:22 |
-| pre-verify | complete | 2026-03-30 18:56:41 |
-| write | complete | 2026-03-30 18:58:17 |
-| exercises | complete | 2026-03-30 18:58:17 |
-| activities | complete | 2026-03-30 19:00:54 |
-| verify-exercises | complete | 2026-03-30 19:00:54 |
-| annotate | complete | 2026-03-30 19:00:54 |
-| vocab | complete | 2026-03-30 19:01:14 |
-| enrich | complete | 2026-03-30 19:01:15 |
-| verify | complete | 2026-03-30 19:01:15 |
-| review | complete | 2026-04-03 14:17:59 |
-| stress | complete | 2026-04-07 15:06:38 |
-| publish | complete | 2026-04-07 15:06:39 |
+| check | complete | 2026-04-09 01:46:34 |
+| research | complete | 2026-04-09 01:46:34 |
+| skeleton | complete | 2026-04-09 01:49:25 |
+| pre-verify | complete | 2026-04-09 01:55:14 |
+| write | complete | 2026-04-09 01:55:51 |
+| exercises | complete | 2026-04-09 01:55:51 |
+| activities | complete | 2026-04-09 01:56:57 |
+| verify-exercises | complete | 2026-04-09 01:56:57 |
+| annotate | complete | 2026-04-09 01:56:57 |
+| vocab | complete | 2026-04-09 02:01:22 |
+| enrich | complete | 2026-04-09 02:01:22 |
+| verify | complete | 2026-04-09 02:01:22 |
+| review | complete | 2026-04-09 02:02:44 |
+| stress | complete | 2026-04-09 02:02:45 |
+| publish | complete | 2026-04-09 02:02:47 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | what-i-like-review-r1.md |
-| 2 | what-i-like-review-r2.md |
-| 3 | what-i-like-review-r3.md |
-| 4 | what-i-like-review-r4.md |
-| 5 | what-i-like-review-r5.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | claude-tools (claude-sonnet-4-6) | 139s | ✅ |
-| skeleton | claude (claude-sonnet-4-6) | 81s | ✅ |
-| write | claude-tools (claude-opus-4-6) | 96s | ✅ |
-| activities | claude-tools (claude-sonnet-4-6) | 157s | ✅ |
-| vocab | claude (claude-sonnet-4-6) | 16s | ✅ |
-| review | claude-tools (claude-opus-4-6) | 193s | ✅ |
-| review | claude-tools (claude-opus-4-6) | 166s | ✅ |
-| review | gemini (auto) | 1s | ❌ |
-| review | claude-tools (claude-opus-4-6) | 226s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 146s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 9s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 362s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 349s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 171s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 37s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 66s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 259s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 82s | ✅ |
 
 ## Files
 
-- `.build.lock`
 - `exercise-verification.json`
+- `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
-- `research-quality.json`
 - `review-structured-r1.yaml`
-- `review-structured-r2.yaml`
-- `review-structured-r3.yaml`
-- `review-structured-r4.yaml`
-- `review-structured-r5.yaml`
-- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

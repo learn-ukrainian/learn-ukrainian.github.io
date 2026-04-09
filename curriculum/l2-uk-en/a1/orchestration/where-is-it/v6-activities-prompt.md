@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in -->`
-- `<!-- INJECT_ACTIVITY: quiz -->`
-- `<!-- INJECT_ACTIVITY: match-up -->`
-- `<!-- INJECT_ACTIVITY: quiz -->`
+- `<!-- INJECT_ACTIVITY: match-nom-loc -->`
+- `<!-- INJECT_ACTIVITY: quiz-loc-form -->`
+- `<!-- INJECT_ACTIVITY: quiz-v-na -->`
+- `<!-- INJECT_ACTIVITY: fill-in-de -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -85,93 +85,136 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Dialogues
 
-The question **Де?** (Where?) is one of the most important words you will use every day, and today we are going to learn how to answer it with real Ukrainian places using the locative case.
+Moving to a new city means asking questions about where things are. During your first week in a new neighborhood, you quickly learn to rely on local residents. A friendly neighbor is often the best guide for practical navigation. You need to know the location of essential services like an **аптека** (pharmacy) for medicine, a **пошта** (post office) for packages, and a **банк** (bank) for financial tasks. Knowing how to ask about these places and understanding the answers helps you settle into the rhythm of daily life.
 
-> **Маринка:** Привіт, Олеже! Скажи, будь ласка, **де** Олена? *(Hi, Oleh! Tell me please, where is Olena?)*
-> **Олег:** Привіт! Вона зараз **в школі**. *(Hi! She is currently at school.)*
-> **Маринка:** Зрозуміло. А Тарас? Він вдома? *(Understood. And Taras? Is he at home?)*
-> **Олег:** Ні, він **на роботі**. *(No, he is at work.)*
-> **Маринка:** А діти? Вони граються **на вулиці**? *(And the kids? Are they playing on the street?)*
-> **Олег:** Ні, вони **в парку**. *(No, they are in the park.)*
-> **Маринка:** А кішка? Я її не бачу. *(And the cat? I don't see her.)*
-> **Олег:** О, кішка спить **на дивані**! *(Oh, the cat is sleeping on the sofa!)*
+> **Сусід:** Привіт! Ти тут живеш? *(Hi! Do you live here?)*  
+> **Новий мешканець:** Так, я новий сусід. *(Yes, I am a new neighbor.)*  
+> **Сусід:** Дуже приємно! *(Very nice to meet you!)*  
+> **Новий мешканець:** Де Олена? Вона тут? *(Where is Olena? Is she here?)*  
+> **Сусід:** Ні, вона **в школі**. *(No, she is at school.)*  
+> **Новий мешканець:** А Тарас? *(And Taras?)*  
+> **Сусід:** Він **на роботі**. *(He is at work.)*  
+> **Новий мешканець:** А діти де? *(And where are the children?)*  
+> **Сусід:** Вони **в парку**. *(They are in the park.)*  
+> **Новий мешканець:** А кішка? *(And the cat?)*  
+> **Сусід:** Вона **на дивані**! *(She is on the sofa!)*
 
-Notice the clear pattern emerging here: the base dictionary word **школа** (school) becomes **в школі**, and the base word **робота** (work) becomes **на роботі**. The noun physically changed its ending to answer the question **Де?** (Where?).
+Notice the clear contrast between the small words **в** and **на** in the dialogue above. Both translate broadly to English "in" or "at", but they sound distinct in Ukrainian and carry different spatial meanings.
 
-> **Назар:** Привіт, Емілі! **Де** ти живеш зараз? *(Hi, Emily! Where do you live now?)*
-> **Емілі:** Я живу **в Києві**, **на вулиці** Хрещатик. *(I live in Kyiv, on Khreshchatyk street.)*
-> **Назар:** Чудово! А **де** ти працюєш? *(Wonderful! And where do you work?)*
-> **Емілі:** Я працюю **в офісі**, на другому поверсі. *(I work in an office, on the second floor.)*
-> **Назар:** А **де** ти навчаєшся? Ти студентка? *(And where do you study? Are you a student?)*
-> **Емілі:** Так. Я навчаюся в університеті, **в центрі** міста. *(Yes. I study at the university, in the city center.)*
+> **Сусід:** А де ти працюєш? *(And where do you work?)*  
+> **Новий мешканець:** Я працюю **в офісі**. *(I work in an office.)*  
+> **Сусід:** Це далеко? *(Is it far?)*  
+> **Новий мешканець:** Ні. Я живу **в Києві**, **на вулиці** Хрещатик. *(No. I live in Kyiv, on Khreshchatyk street.)*  
+> **Сусід:** Це дуже близько. *(That is very close.)*  
+> **Новий мешканець:** Так! Офіс **на другому поверсі**. *(Yes! The office is on the second floor.)*
 
-Both of these dialogues show the exact same grammatical structure: to answer the question **Де?**, you must use a preposition (either **в** or **на**) followed by a changed noun. In the next section, we will learn exactly how and why the noun changes its shape to show static location.
+Notice the hierarchy of location used in the second dialogue. When talking about a city, we use **в** (as in **в Києві**). When narrowing down to a street, we switch to **на** (as in **на вулиці**). Finally, for a specific room or building, we use **в** or **у** again. You can also see that the ends of the nouns change: the basic word **школа** becomes **в школі**, **парк** turns into **у парку**, and **робота** changes to **на роботі**. This predictable change is called the **Місцевий відмінок** (Locative case). 
 
-## Місцевий відмінок (The Locative Case)
+## Місцевий відмінок — The Locative Case
 
-Every Ukrainian noun belongs to one of seven **відмінки** (cases), which change the ending of the word depending on its grammatical role in the sentence. The locative case — known as **місцевий відмінок** or **М.в.** — is used specifically to show where something is located. It always answers the question **на кому?** (on who?) or **на чому?** (on what?) and **у кому? / у чому?** (in who? / in what?). Crucially, the locative case ALWAYS requires a preposition; it never stands alone in a sentence.
+The core function of the Locative case is to describe static location—where something is situated or where an action takes place without any movement toward a destination. It is the grammatical tool that specifically answers the question **Де?** (Where?). There is one crucial rule that makes this case unique among all Ukrainian grammatical cases: the Locative case *always* requires a preposition. You cannot use it on its own; it must be attached to **в**, **у**, or **на**.
 
-:::note
-**М. (на, у) — на/у кому? на/у чому?**
+Ukrainian primary school textbooks teach a very practical method to identify and form the Locative case. In Grade 4 (Захарійчук p.74), students learn the "helper question" method for the **Місцевий відмінок**. You memorize the helper questions: **на кому? у чому?** (on whom? in what?). By asking these questions, you naturally prompt the correct case ending for the noun.
+* стіл → **у чому?** → **у столі** (in the table)
+* стіл → **на чому?** → **на столі** (on the table)
+* місто → **у чому?** → **у місті** (in the city)
+
+Feminine and neuter nouns form the Locative case very consistently. The dominant ending for almost all of them is **-і**. You simply replace the final vowel of the base word.
+* школа → в школі (school)
+* робота → на роботі (work)
+* пошта → на пошті (at the post office)
+* вулиця → на вулиці (street)
+* місто → у місті (in the city)
+* вікно → на вікні (on the window)
+
+Some borrowed neuter nouns are indeclinable, meaning their endings never change regardless of the grammar rules. These are easy wins for learners: **кафе** always stays **кафе**, so you just say **в кафе** (in the café).
+
+Masculine nouns are slightly more complex because they split into two groups. Many standard masculine nouns take the same **-і** ending as feminine and neuter words.
+* офіс → в офісі (office)
+* театр → у театрі (in the theater)
+* стіл → на столі (on the table)
+
+However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
+* парк → у парку (park)
+* банк → у банку (bank)
+* сад → у саду (in the orchard)
+* магазин → у/в магазині (shop)
+
+<!-- INJECT_ACTIVITY: match-nom-loc -->
+
+<!-- INJECT_ACTIVITY: quiz-loc-form -->
+
+## В чи на? — В or На?
+
+The basic logic for choosing between **в** and **на** comes down to the physical space you are describing. **В** (or its phonetic twin **у**) is used for enclosed spaces—places that have walls, boundaries, or a clear "inside."
+* **в офісі** (in the office)
+* **у магазині** (in the store)
+* **в аптеці** (in the pharmacy)
+* **у лікарні** (in the hospital)
+
+Conversely, **на** is generally used for open spaces, flat surfaces, or when something is physically "atop" something else.
+* **на вулиці** (on the street)
+* **на площі** (on the square)
+* **на столі** (on the table)
+* **на дивані** (on the sofa)
+
+Beyond physical spaces, **на** is also used in a more abstract way for events and specific statuses. When you attend an activity or event, you are **на**. Furthermore, for the concept of being "at work," Ukrainian always uses **на**.
+* **на концерті** (at the concert)
+* **на уроці** (at the lesson)
+* **на футболі** (at the football game)
+* **на роботі** (at work)
+
+:::note 
+Remember that English uses "in the office," but Ukrainian separates the physical building (**в офісі**) from the abstract status of working (**на роботі**).
 :::
 
-The preposition **в / у** (in / at) is used for enclosed spaces — when you are physically inside a building, a room, or the borders of a city. Let's look at five model nouns changing from their base dictionary form (nominative) to the locative case:
-- **школа** (school) → **в школі** (in/at school)
-- **банк** (bank) → **у банку** (in/at the bank)
-- **магазин** (shop) → **у/в магазині** (in/at the shop)
-- **лікарня** (hospital) → **у лікарні** (in/at the hospital)
-- **місто** (city) → **у/в місті** (in the city)
+There are some conventional places that always use **на** regardless of whether they have walls or seem like an enclosed space. These must simply be learned as fixed phrases.
+* **на пошті** (at the post office)
+* **на вокзалі** (at the train station)
+* **на станції** (at the station)
 
-*Brief rule:* Use **в** before a vowel or to avoid awkward consonant clusters, and use **у** before a consonant. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**.
+The rule for countries and cities is very strict: always use **в** or **у**. It does not matter if a country is an island or a continent.
+* **в Україні** (in Ukraine)
+* **у Києві** (in Kyiv)
+* **у Львові** (in Lviv)
+* **в Одесі** (in Odesa)
 
-The preposition **на** (on / at) is used when something is on a surface, situated in an open area, or simply by pure convention for certain places. Here are five model nouns for this specific pattern:
-- **робота** (work) → **на роботі** (at work)
-- **вулиця** (street) → **на вулиці** (on the street)
-- **площа** (square) → **на площі** (on the square)
-- **урок** (lesson) → **на уроці** (at the lesson)
-- **море** (sea) → **на морі** (at the sea)
-
-*Emphasis:* Using **на** is not "wrong" or illogical — it is simply the specific preposition that a particular place travels with. You must learn the place and its preposition together as a single unit, just as English speakers say "at work" rather than "in work."
-
-You may have noticed that the noun endings change in predictable ways. Here are the three most common locative endings for familiar nouns. Masculine nouns usually take **-у** (like **у банку**, **у парку**, **на вокзалі**) or **-і** (like **в офісі**, **на уроці**). Feminine nouns almost everywhere take **-і** (like **в школі**, **на роботі**, **у лікарні**, **на вулиці**). Neuter nouns also take **-і** (like **у місті**, **на морі**). For practical advice right now: simply learn the twelve required vocabulary nouns as fixed phrases. The grammatical pattern will emerge naturally as you use them more often.
-
-<!-- INJECT_ACTIVITY: fill-in -->
-
-## В чи на? (В or На?)
-
-How do you choose between the prepositions? **В / у** signals an enclosed, bounded space where you are physically inside something. Think of our prototype examples from the introductory dialogues: **в школі** (inside the school building), **у банку** (inside the bank walls), **в магазині** (inside the shop), and **у лікарні** (inside the hospital). There is a very important special case: **в кафе** (in the café). The word **кафе** (café) is an indeclinable neuter noun because it is a borrowed foreign word ending in a vowel. The noun itself never changes its ending; only the preposition marks the location. Therefore, **в кафе** is always **в кафе**.
-
-The preposition **на** signals an open area, a surface, or — most importantly — a conventional cultural association. Prototype open spaces include **на вулиці** (on the street, outdoors), **на площі** (on the square), and **на морі** (at the sea). Then there are the tricky conventional ones: **на роботі** (at work — you are not inside a single "work" building, but rather at the concept of work), **на вокзалі** (at the train station — this is a linguistic convention, not pure spatial logic), and **на пошті** (at the post office — also conventional). As a reliable rule of thumb, when you are in doubt, learn each place with its preposition as a fixed, inseparable phrase.
-
-There is a strict and unbreakable rule for countries and cities — they always take **в / у**: **в Україні** (in Ukraine), **у Києві** (in Kyiv), **у Львові** (in Lviv), **в Одесі** (in Odesa), **у Харкові** (in Kharkiv). However, there is a special case for streets: you use **на** plus the street name, such as **на вулиці** Хрещатик (on Khreshchatyk street) or **на Майдані** Незалежності (on Independence Square).
-
-:::caution
-**Cultural Note:**
-НІКОЛИ не кажи «на Україні» — ЗАВЖДИ «**в Україні**». (NEVER say «на Україні» — ALWAYS «**в Україні**».)
-This is not just a simple grammar rule; it directly reflects Ukraine's recognition as a sovereign, independent state, not a regional borderland. Russian imperial usage deliberately promoted «на Україні» to diminish this status. Modern Ukrainian firmly and completely rejects it.
+:::caution Decolonization Note
+You will sometimes hear Russian speakers say "на Украине" (on Ukraine). This is historically incorrect and politically offensive. Using "на" implies that Ukraine is merely a geographic territory or a region of an empire, rather than a sovereign state. A country always takes "в/у". You must always say **в Україні**.
 :::
 
-<!-- INJECT_ACTIVITY: quiz -->
+<!-- INJECT_ACTIVITY: quiz-v-na -->
 
-Let's summarize the contrast to make it memorable. Use **в / у** for: school, bank, shop, hospital, café, city, and country. Use **на** for: street, square, station, post office, work, sea, and lesson. The pattern check is simple: if you can easily picture yourself being physically enclosed inside a space, it is usually **в**. If it is a flat surface, an open area, or an expression set by tradition, it is usually **на**. When unsure, look up the place and check whether it naturally pairs with **в** or **на**.
-
-<!-- INJECT_ACTIVITY: match-up -->
+<!-- INJECT_ACTIVITY: fill-in-de -->
 
 ## Підсумок — Summary
 
-Let's consolidate everything we have learned. The locative case (**місцевий відмінок**, **М.в.**) answers exactly one core question: **Де?** (Where?). It tells us where something IS right now, indicating a static location. It never stands alone in a sentence; it always needs the preposition **в / у** or **на** directly in front of it. You can always use the Grade 4 helper-word test: can you ask **на кому?** (on who?) or **на чому?** (on what?) before the noun? If the answer is yes, you are dealing with the locative case. Examples include answering (на/у чому?) with **на вулиці**, **у банку**, **в школі**, and **на роботі**. Every noun on today's vocabulary list has been shown in its locative form. Review them as pairs: **школа** / **в школі**, **банк** / **у банку**.
+The Locative case is your primary tool for expressing static location. Whenever you need to answer the question **Де?** (Where?), you will use this case. Here is a final recap of the logic:
 
-Here is a quick recap of **в / у** versus **на**. Use **в / у** for an enclosed space, a city, or a country (**в школі**, **у банку**, **в Україні**, **у Києві**). Use **на** for an open area, a surface, or by pure convention (**на вулиці**, **на роботі**, **на пошті**, **на вокзалі**). Remember the sovereign rule: it is **в Україні** — always, without any exception. Conventional forms like **на пошті** and **на вокзалі** must simply be learned as fixed phrases, just as learners of English memorize the phrase "at work" rather than trying to derive it from a spatial rule.
+* **Question:** Де? (Where?)
+* **Prepositions:**
+  * **В/У** is for enclosed spaces, countries, and cities.
+  * **На** is for open spaces, surfaces, events, and specific concepts like work.
+* **Endings:**
+  * **-і** is the most common ending for almost all nouns (feminine, neuter, and many masculine).
+  * **-у** is used for a specific group of masculine nouns like **банк** and **парк**.
+* **Key Phrases to remember:**
+  * Я **в Україні**. (I am in Ukraine.)
+  * Я **у Києві**. (I am in Kyiv.)
+  * Я **на роботі**. (I am at work.)
 
-To summarize the endings: most feminine nouns take **-і** in the locative (school → **в школі**, street → **на вулиці**). Most masculine nouns take **-у** or **-і** (bank → **у банку**, park → **у парку**, office → **в офісі**, lesson → **на уроці**). Neuter nouns generally take **-і** (city → **у місті**, sea → **на морі**). Indeclinable foreign nouns do not change their endings at all (café → **в кафе**). For now, practicing with these twelve vocabulary nouns is enough. The patterns will solidify as you get more reading and speaking practice.
+Now it is time to practice by applying these patterns to your own life. Answer the following questions about yourself, either aloud or in writing, using the Locative case:
 
-*   **Де ти зараз?** *(Where are you now?)* → Я зараз вдома / в кімнаті / **у кафе**.
-*   **Де ти працюєш?** *(Where do you work?)* → Я працюю **в офісі** / навчаюся в університеті.
-*   **Де живе твоя сім'я?** *(Where does your family live?)* → Вони живуть **у Києві** / у Лондоні / у маленькому **місті**.
-
-<!-- INJECT_ACTIVITY: quiz -->
+* **Де ви зараз?** (Where are you now?)
+  * Я **в**... / Я **на**...
+* **Де ви працюєте?** (Where do you work?)
+  * Я працюю **в**... / **на**...
+* **Де ви живете?** (Where do you live?)
+  * Я живу **в**... **на вулиці**...
+* **Де ваш телефон?** (Where is your phone?)
+  * Він **на**... / Він **у**...
 
 </module_content>
 
@@ -261,30 +304,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -304,28 +387,50 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-cases
-- **fill-in** — Який відмінок?: Fill in the correct case ending for a noun in context
+### Pattern: grammar-cases [§4.2.3.1, §4.2.3.2, §4.2.3.3]
+**Відмінки іменників** (Noun cases)
+- **fill-in** — Який відмінок?: Вставити іменник у правильній відмінковій формі / Fill in the correct case ending for a noun in context
   - Instruction: *Вставте іменник у правильній формі*
-- **quiz** — Визнач відмінок: Identify which case a highlighted noun is in
-- **group-sort** — Розподіли за відмінками: Sort noun forms by their case
-- **error-correction** — Знайди помилку у відмінку: Find wrong case ending and correct it
+- **quiz** — Визнач відмінок: Визначити, у якому відмінку стоїть виділений іменник / Identify which case a highlighted noun is in
+- **group-sort** — Розподіли за відмінками: Розподілити форми іменників за відмінками / Sort noun forms by their case
+- **error-correction** — Знайди помилку у відмінку: Знайти неправильне відмінкове закінчення та виправити / Find wrong case ending and correct it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Учні мають ПРОДУКУВАТИ форми, а не тільки розпізнавати. Обов'язково fill-in
+- ❌ translate: Англійська не має відмінків — переклад не тестує відмінювання
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -357,68 +462,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

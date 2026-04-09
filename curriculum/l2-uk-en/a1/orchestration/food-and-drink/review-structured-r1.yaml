@@ -3,47 +3,47 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: The plan explicitly lists "галушки" as an iconic cultural food to include,
-    but it is missing from the prose.
+  evidence: 'The plan explicitly stated: "The instrumental case ending (-ом, -ою)
+    is grammar for A2. For now: memorize the whole phrase." The writer ignored this
+    and wrote: "You simply memorize the ending **-ом** '
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: No linguistic errors found. Gender assignments (каша, f; м'ясо, n; борщ,
-    m) are accurate, and natural vocabulary ("зазвичай", "щоранку") is used.
+  evidence: All Ukrainian terminology and phrases are accurate. No Russianisms or
+    Surzhyk.
 - dimension: 3
   name: Pedagogical quality
-  score: 7
-  evidence: Exercises test concepts before they are taught. `fill-in-z-chunks` tests
-    "вода" and "м'ясо" right after the first dialogue, before the Food/Drinks sections
-    introduce them. `quiz-meals-dishes` asks abo
+  score: 8
+  evidence: The quiz activity is placed before the vocabulary it tests is introduced.
+    Teaching the instrumental endings here also violates the pedagogical staging designed
+    for A1.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: All required vocabulary is present naturally. From the recommended list,
-    "піца" is missing.
+  score: 10
+  evidence: All required and recommended words are included in appropriate contexts.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: Exercises match the plan's focus well, but suffer from the pedagogical
-    placement issues noted above.
+  score: 8
+  evidence: '`quiz-meals-dishes` is placed incorrectly. The other activities correspond
+    well to the provided instructions.'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Some meta-commentary is present ("A learner who knows борщ... is not just
-    vocabulary-trained — they carry a signal of respect"). This tells rather than
-    shows.
+  score: 9
+  evidence: 'Generally warm and culturally enriching, but contains gamified/corporate
+    phrasing in the summary: "You now possess the fundamental vocabulary...".'
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: A stray HTML comment `<!-- A2-word -->` was left in the prose after "компот".
+  score: 7
+  evidence: The text has an incomplete, dangling sentence at the very end ("If you
+    can answer these questions and name your favorite foods,"). There is also an English
+    grammar error ("which cooks stuff with").
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Excellent integration of UNESCO's recognition of Ukrainian borshch and
-    natural cultural context for salo and varanyky.
+  evidence: Accurate and culturally grounded explanations of borshch, salo, and hospitality.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogues are natural, multi-turn, and effectively use the target chunks
-    ("Кашу з молоком чи без? З молоком, звичайно!").
+  evidence: Dialogues are natural, demonstrate real situations, and incorporate the
+    target words logically.
 findings: []

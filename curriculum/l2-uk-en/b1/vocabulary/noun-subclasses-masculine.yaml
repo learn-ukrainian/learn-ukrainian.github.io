@@ -6,7 +6,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: бо́ндар
-  translation: cooper
+  translation: cooper (barrel maker)
   expression: false
   pos: ім.
   gender: ч.
@@ -18,7 +18,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: селяни́н
-  translation: villager
+  translation: peasant; villager
   expression: false
   pos: ім.
   gender: ч.
@@ -42,16 +42,46 @@ vocabulary:
   gender: ч.
   verified: true
 - word: то́кар
-  translation: turner
+  translation: turner; lathe operator
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: нульове закінчення
-  translation: zero ending
-  expression: true
+- word: тверда́ гру́па
+  translation: hard group (declension subtype)
+  expression: false
   pos: ''
   gender: ''
+  verified: false
+- word: м'яка́ гру́па
+  translation: soft group (declension subtype)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: словотво́рення
+  translation: word formation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нульове́ закі́нчення
+  translation: zero ending
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: іме́нник
+  translation: noun
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: відмі́на
   translation: declension class
@@ -59,24 +89,30 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: відмі́нювання
+  translation: declension
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: однина́
-  translation: singular
+  translation: singular number
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: множина́
-  translation: plural
+  translation: plural number
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: родовий відмінок
+- word: родо́ви́й відмі́нок
   translation: genitive case
-  expression: true
+  expression: false
   pos: ''
   gender: ''
-  verified: true
+  verified: false
 - word: похо́дження
   translation: origin
   expression: false
@@ -102,19 +138,19 @@ vocabulary:
   gender: ч.
   verified: true
 - word: школя́р
-  translation: student
+  translation: student; schoolchild
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: кобза́р
-  translation: kobza player
+  translation: kobza player (traditional musician)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: кия́нин
-  translation: Kyivan
+  translation: Kyivan; resident of Kyiv
   expression: false
   pos: ім.
   gender: ч.
@@ -125,20 +161,104 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: Доброго дня!
+  translation: Good day!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ласкаво просимо!
+  translation: Welcome!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як дісталися?
+  translation: How was your trip?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кия́нин
+  translation: Kyivan
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сільський голова
+  translation: village head
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сто́ляр
+  translation: carpenter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Дуже приємно познайомитися
+  translation: Very nice to meet you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякую на доброму слові
+  translation: Thanks for the kind word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: полтавча́нин
+  translation: Poltavian; resident of Poltava
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бджоля́р
+  translation: beekeeper
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: майстер своєї справи
+  translation: master of one's craft
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тесля́р
+  translation: carpenter; framer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: слю́сар
-  translation: locksmith
+  translation: locksmith; mechanic
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: пісня́р
-  translation: songwriter
+- word: ку́хар
+  translation: cook; chef
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: гусля́р
-  translation: psaltery player
+- word: сирова́р
+  translation: cheesemaker
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: брова́р
+  translation: brewer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коня́р
+  translation: horse breeder
   expression: false
   pos: ім.
   gender: ч.
@@ -149,32 +269,128 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: коса́р
+  translation: mower; reaper
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: друка́р
+  translation: printer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пісня́р
+  translation: songwriter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: казка́р
+  translation: storyteller
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́ля́р
+  translation: painter; artist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: працівни́к
+  translation: worker
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: боре́ць
+  translation: fighter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́шана гру́па
+  translation: mixed group (declension subtype)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: скляр
+  translation: glazier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: вугля́р
   translation: coal miner
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: сміття́р
-  translation: garbage collector
+- word: цегля́р
+  translation: brickmaker
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: різьбя́р
-  translation: carver
+- word: кра́ма́р
+  translation: shopkeeper
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: львів'я́нин
-  translation: Lvivian
+  translation: Lvivian; resident of Lviv
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: харків'я́нин
-  translation: Kharkivite
+  translation: resident of Kharkiv
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: галича́нин
+  translation: Galician; resident of Galicia
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: волиня́нин
+  translation: Volhynian; resident of Volhynia
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: подоля́нин
+  translation: Podolian; resident of Podillia
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: містяни́н
+  translation: city dweller
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хуторя́нин
+  translation: resident of a khutir (hamlet)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: заробітча́нин
+  translation: migrant worker
   expression: false
   pos: ім.
   gender: ч.
@@ -185,8 +401,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: тата́рин
-  translation: Tatar
+- word: вірме́нин
+  translation: Armenian
   expression: false
   pos: ім.
   gender: ч.
@@ -197,111 +413,69 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: грома́да
-  translation: community
+- word: тата́рин
+  translation: Tatar
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: полта́вець
-  translation: Poltava resident
+- word: осети́н
+  translation: Ossetian
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: одеси́т
-  translation: Odesa resident
+  translation: Odesan; resident of Odesa
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: друга відміна
-  translation: second declension
-  expression: true
+- word: полта́вець
+  translation: resident of Poltava
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: черні́гівець
+  translation: resident of Chernihiv
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́рінь сло́ва
+  translation: word root
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: називний відмінок
-  translation: nominative case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: знахідний відмінок
-  translation: accusative case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: орудний відмінок
+  verified: false
+- word: ору́дний відмі́нок
   translation: instrumental case
-  expression: true
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: ремесло́
-  translation: craft
+  verified: false
+- word: дава́льний відмі́нок
+  translation: dative case
   expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: прі́звище
-  translation: surname
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ко́бза
-  translation: kobza
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гу́слі
-  translation: psaltery
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: різьба́
-  translation: carving
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: істо́та
-  translation: animate noun
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: неісто́та
-  translation: inanimate noun
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Ласкаво просимо!
-  translation: Welcome!
-  expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: сільський голова
-  translation: village head
-  expression: true
+  verified: false
+- word: місце́вий відмі́нок
+  translation: locative case
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: пекти́
-  translation: to bake
+  verified: false
+- word: називни́й відмі́нок
+  translation: nominative case
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: лікува́ти
-  translation: to treat
+  verified: false
+- word: знахі́дний відмі́нок
+  translation: accusative case
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
+  verified: false

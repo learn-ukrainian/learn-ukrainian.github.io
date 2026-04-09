@@ -1,43 +1,57 @@
 ## Linguistic Scan
-No linguistic errors found. Word order over-generalizations in the text are pedagogical simplifications, not morphological or lexical Russianisms/Surzhyk. All verb conjugations, noun declensions, and vocabulary choices are correct standard Ukrainian.
+No linguistic errors found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: match-hobby-verbs -->`: Matches plan hint "Match the verb to the logical noun (hobbies)". Appears appropriately after the "Хо́бі і спорт" teaching block.
-- `<!-- INJECT_ACTIVITY: fill-in-prepositions -->`: Matches plan hint "Choose the correct preposition for the activity". Appears after the explanation of the "грати у/на" and "ходити в/на" patterns.
-- `<!-- INJECT_ACTIVITY: fill-in-frequency -->`: Matches plan hint "Complete the invitations and frequency sentences". Appears appropriately after the "Як часто?" frequency adverbs section.
-All 3 exercise markers from the plan are present, matching the required type/focus, and logically placed after the concepts are taught.
+- `<!-- INJECT_ACTIVITY: fill-in-invitations -->`: Placed immediately after `Діалоги`. This tests frequency items ("Я ніколи не", "двічі на тиждень") BEFORE they are taught in the `Як часто?` section.
+- `<!-- INJECT_ACTIVITY: match-up-hobbies -->`: Correctly placed after `Хобі і спорт`.
+- `<!-- INJECT_ACTIVITY: preposition-check -->`: Correctly placed after `Хобі і спорт`.
+- `<!-- INJECT_ACTIVITY: fill-in-frequency -->`: Correctly placed after `Як часто?`.
+- **Issue**: The plan only specifies 3 activity hints. The writer injected 4 markers. The first marker is premature and redundant.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | All sections from `content_outline` are present and follow the planned structure. |
-| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, or calques found. Gender and case endings (e.g., `на скрипці`, `в кіно`) are correct. |
-| 3. Pedagogical quality | 8/10 | Good PPP flow, but the explanation of word order for `ніколи / не` and numeric frequency expressions creates factually false absolute grammar rules ("inseparable" and "must go after the verb"). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary used naturally in context. |
-| 5. Exercise quality | 10/10 | 3 injection markers exactly match the plan's 3 activity hints and test what was just taught. |
-| 6. Engagement & tone | 10/10 | Natural conversational tone. Explains structures effectively without excessive fluff. |
-| 7. Structural integrity | 10/10 | Clean markdown, all headings and sections ordered correctly. |
-| 8. Cultural accuracy | 10/10 | Culturally appropriate conversational patterns (e.g., distinguishing between `Ходімо!` and `Давай!`). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, named speakers (`Вітя`, `Оленка`) with distinct, realistic exchanges. |
+| 1. Plan adherence | 8/10 | Missed the required vocabulary chunk `дивитися фільми / серіали (to watch movies/series)` replacing it with `готувати`. Failed to combine "weather" in the final synthesized examples. |
+| 2. Linguistic accuracy | 10/10 | All Ukrainian text is grammatically correct. Zero Russianisms, Surzhyk, or Calques. `у/в` and `на` rules are correctly applied. |
+| 3. Pedagogical quality | 10/10 | Excellent breakdown of `в` (buildings) vs `на` (events), and `грати у` (sports) vs `грати на` (instruments). Clear explanation of the double negative rule for `ніколи`. |
+| 4. Vocabulary coverage | 10/10 | All required words (`вихідні`, `спорт`, `футбол`, `кіно`, `часто`, `іноді`, `рідко`, `ходімо`) and recommended words (`завжди`, `зазвичай`, `ніколи`, `театр`, `концерт`, `музей`, `давай`, `раз`) are used naturally in context. |
+| 5. Exercise quality | 7/10 | Four markers were injected for three plan hints. The `fill-in-invitations` marker was placed prematurely before frequency adverbs were taught. |
+| 6. Engagement & tone | 8/10 | Used the forbidden gamified phrase "You now possess..." in the summary section. Otherwise, tone is encouraging and clear. |
+| 7. Structural integrity | 10/10 | Word count is exactly 1257 words (exceeds 1200 target). All H2 sections match the plan outline. Clean Markdown formatting. |
+| 8. Cultural accuracy | 10/10 | Decolonized approach. Accurate presentation of standard Ukrainian structures (`Ходімо`) vs informal (`Давай`). |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, use names, and model real communicative situations effectively ("Що ти робиш у вихідні?"). |
 
 ## Findings
+[Plan adherence] [Major]
+Location: `Хобі і спорт — Що ти любиш?` section, bulleted list of activities.
+Issue: The plan required introducing `дивитися фільми / серіали (to watch movies/series)`, but the writer substituted it with `готувати (to cook)`.
+Fix: Replace `готувати` with `дивитися фільми / серіали`.
 
-[Pedagogical quality] [critical]
-Location: Як часто? (How Often?) — `One special rule: **ніколи** always requires **не** directly before the verb. This is Ukrainian double negation — you saw it in M19. The two words are inseparable:`
-Issue: The text claims that "ніколи" and "не" are "inseparable". This is factually incorrect in Ukrainian linguistics. Other words can appear between them (e.g., "Я ніколи швидко не працюю" or "Ніколи я не працюю"). While acceptable as an A1 guideline, calling them "inseparable" is a false absolute rule.
-Fix: Change "The two words are inseparable:" to "They usually go together in this order:"
+[Plan adherence] [Major]
+Location: `Як часто? — Прислівники частоти` section, final bulleted examples.
+Issue: The plan requested to "Combine all A1.4 skills: time + day + weather + activities". The examples successfully combine time, day, and activities, but omit weather entirely.
+Fix: Update the bulleted examples to include time ("о п'ятій") and a weather condition ("Коли у п'ятницю йде дощ").
 
-[Pedagogical quality] [critical]
-Location: Як часто? (How Often?) — `Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These go **after the verb** — the opposite position from single-word adverbs:`
-Issue: The text creates a false grammar rule that numeric frequency expressions MUST go "after the verb". This is factually wrong; Ukrainian word order is flexible, and putting them before the verb ("Я двічі на тиждень граю у футбол") is perfectly natural and common.
-Fix: Change "These go **after the verb** — the opposite position from single-word adverbs:" to "These often go **after the verb** or at the end of the sentence:"
+[Exercise quality] [Major]
+Location: After the `Діалоги` section.
+Issue: The `<!-- INJECT_ACTIVITY: fill-in-invitations -->` marker is placed before the `Як часто?` section. The corresponding plan activity tests frequency adverbs ("ніколи", "двічі на тиждень"), meaning the learner would be tested on untaught concepts. Additionally, the plan only specifies 3 activities, but 4 markers were injected.
+Fix: Remove the premature `fill-in-invitations` marker. The remaining 3 markers perfectly match the 3 plan hints.
+
+[Engagement & tone] [Minor]
+Location: First sentence of the `Підсумок — Summary` section.
+Issue: The phrase "You now possess the essential tools..." uses corporate/gamified language explicitly forbidden by the review rubric.
+Fix: Replace with "You are now ready to discuss...".
 
 ## Verdict: REVISE
-The module is high-quality, conversational, and successfully introduces vocabulary and grammar patterns. However, two pedagogical simplifications cross the line into factually incorrect grammatical rules regarding absolute word order. These are critical errors that must be fixed before publishing.
+The module is linguistically flawless and features excellent pedagogical explanations for verbs of motion and prepositions. However, it requires minor revisions to align perfectly with the plan (adding missing vocabulary, integrating weather into examples, and removing a premature exercise marker) and fixing a single tone violation.
 
 <fixes>
-- find: "One special rule: **ніколи** always requires **не** directly before the verb. This is Ukrainian double negation — you saw it in M19. The two words are inseparable:"
-  replace: "One special rule: **ніколи** always requires **не** before the verb. This is Ukrainian double negation — you saw it in M19. They usually go together in this order:"
-- find: "Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These go **after the verb** — the opposite position from single-word adverbs:"
-  replace: "Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These often go **after the verb** or at the end of the sentence:"
+- find: "*(Sometimes I listen to music and draw.)*\n\n<!-- INJECT_ACTIVITY: fill-in-invitations -->\n\n## Хобі і спорт — Що ти любиш?"
+  replace: "*(Sometimes I listen to music and draw.)*\n\n## Хобі і спорт — Що ти любиш?"
+- find: "* **читати книги** (to read books)\n* **малювати вдома** (to draw at home)\n* **фотографувати** (to take photos)\n* **готувати** (to cook)"
+  replace: "* **читати книги** (to read books)\n* **малювати вдома** (to draw at home)\n* **фотографувати** (to take photos)\n* **дивитися фільми / серіали** (to watch movies/series)"
+- find: "* **У понеділок я завжди займаюся спортом.** (On Monday I always practice sports.)\n* **У п'ятницю ми часто ходимо в театр.** (On Friday we often go to the theater.)"
+  replace: "* **У понеділок о п'ятій я завжди займаюся спортом.** (On Monday at five I always practice sports.)\n* **Коли у п'ятницю йде дощ, ми часто ходимо в театр.** (When it rains on Friday, we often go to the theater.)"
+- find: "You now possess the essential tools to discuss your free time, hobbies, and weekend plans in Ukrainian."
+  replace: "You are now ready to discuss your free time, hobbies, and weekend plans in Ukrainian."
 </fixes>

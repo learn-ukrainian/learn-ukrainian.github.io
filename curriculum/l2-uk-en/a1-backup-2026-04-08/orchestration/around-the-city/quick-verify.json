@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "TOXIC",
+      "severity": "WARNING",
+      "message": "Latin characters mixed with Cyrillic: T"
+    }
+  ],
+  "timestamp": "2026-03-30T13:07:50.968547+00:00"
+}

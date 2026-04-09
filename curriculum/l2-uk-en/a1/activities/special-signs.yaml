@@ -2,317 +2,294 @@ version: '1.0'
 module: special-signs
 level: a1
 inline:
-- id: odd-one-out
+- id: odd-one-out-softening
   type: odd-one-out
-  instruction: 'Which letter CANNOT be followed by Ь (soft sign)? Only 8 consonants
-    take Ь: Д, Т, З, С, Ц, Л, Н, ДЗ. Find the odd one out.'
+  instruction: Which word does NOT have a soft sign (Ь)?
   items:
   - words:
-    - Д
-    - Т
-    - Ж
-    - Л
+    - день
+    - сіль
+    - риба
     correct: 2
-    explanation: Ж is a hushing consonant — Ь never follows Ж, Ш, Ч, or ДЖ. Д, Т,
-      and Л are all in the group of 8 that take Ь.
+    explanation: Риба does not have a soft sign.
   - words:
-    - Н
-    - Б
-    - С
-    - Ц
+    - батько
+    - м'ясо
+    - учитель
     correct: 1
-    explanation: Б is a labial consonant — Ь never follows Б, П, В, М, or Ф. Н, С,
-      and Ц are all in the group of 8 that take Ь.
+    explanation: М'ясо uses an apostrophe, not a soft sign.
   - words:
-    - Л
-    - М
-    - Т
-    - З
-    correct: 1
-    explanation: М is a labial consonant — Ь never follows it. Л, Т, and З are all
-      in the group of 8 that take Ь.
-  - words:
-    - Ц
-    - Х
-    - Д
-    - Н
-    correct: 1
-    explanation: Х is a back-tongue consonant — Ь never follows Х, К, Ґ, or Г. Ц,
-      Д, and Н are all in the group of 8 that take Ь.
-  - words:
-    - С
-    - Ш
-    - Л
-    - Н
-    correct: 1
-    explanation: Ш is a hushing consonant — Ь never follows it. С, Л, and Н are all
-      in the group of 8 that take Ь.
-  - words:
-    - З
-    - Т
-    - К
-    - Ц
+    - біль
+    - осінь
+    - дуб
     correct: 2
-    explanation: К is a back-tongue consonant — Ь never follows it. З, Т, and Ц are
-      all in the group of 8 that take Ь.
-- id: fill-in-soft-or-apostrophe
+    explanation: Дуб does not have a soft sign.
+  - words:
+    - п'ять
+    - мить
+    - мазь
+    correct: 0
+    explanation: П'ять uses an apostrophe, not a soft sign.
+  - words:
+    - коза
+    - маленький
+    - день
+    correct: 0
+    explanation: Коза does not have a soft sign.
+  - words:
+    - сіль
+    - батько
+    - гора
+    correct: 2
+    explanation: Гора does not have a soft sign.
+  title: Which word does NOT have a soft sign (Ь)?
+- id: fill-in-special-signs
   type: fill-in
-  instruction: 'Fill in the blank: does this word need Ь (soft sign) or '' (apostrophe)?
-    Choose the correct sign.'
+  instruction: Complete the word with the missing sign (Ь or ').
   items:
-  - sentence: сім___я (family)
-    answer: ''''
+  - sentence: Це наша сім_я.
+    answer: сім'я
     options:
-    - Ь
-    - ''''
-  - sentence: ден___ (day)
-    answer: Ь
+    - сім'я
+    - сімья
+    - сімя
+  - sentence: Тут є м_ясо.
+    answer: м'ясо
     options:
-    - Ь
-    - ''''
-  - sentence: п___ять (five)
-    answer: ''''
+    - м'ясо
+    - мьясо
+    - мясо
+  - sentence: Це мій комп_ютер.
+    answer: комп'ютер
     options:
-    - Ь
-    - ''''
-  - sentence: учител___ (teacher)
-    answer: Ь
+    - комп'ютер
+    - компьютер
+    - компутер
+  - sentence: Це батьк_о.
+    answer: батько
     options:
-    - Ь
-    - ''''
-  - sentence: м___ясо (meat)
-    answer: ''''
+    - батько
+    - бат'ко
+    - батко
+  - sentence: Там учител_.
+    answer: учитель
     options:
-    - Ь
-    - ''''
-  - sentence: дев___ять (nine)
-    answer: ''''
+    - учитель
+    - учител'
+    - учител
+  - sentence: Я маю п_ять.
+    answer: п'ять
     options:
-    - Ь
-    - ''''
-- id: group-sort-soft-apostrophe
+    - п'ять
+    - пьять
+    - пять
+  title: Complete the word with the missing sign (Ь or ').
+- id: group-sort-signs
   type: group-sort
-  instruction: 'Sort these 18 words into three groups: words that contain Ь (soft
-    sign), words that contain '' (apostrophe), and words that have neither.'
+  instruction: Sort the words into the correct category based on their special sign.
   groups:
-  - label: Has Ь (soft sign)
+  - label: Has a Soft Sign (Ь)
     items:
     - день
     - сіль
-    - учитель
-    - кінь
-    - осінь
     - батько
-  - label: Has ' (apostrophe)
+    - учитель
+    - осінь
+    - біль
+  - label: Has an Apostrophe (')
     items:
     - сім'я
     - м'ясо
     - п'ять
     - дев'ять
     - комп'ютер
-    - м'яч
-  - label: Neither
+    - м'який
+  - label: Has Neither
     items:
-    - гарно
     - риба
-    - гора
-    - кава
     - дуб
-    - мороз
-- id: match-voiced-voiceless
-  type: match-up
-  instruction: Match each voiced consonant (left) to its voiceless partner (right).
-    There are 8 pairs in Ukrainian.
-  pairs:
-  - left: Б
-    right: П
-  - left: Д
-    right: Т
-  - left: Г
-    right: Х
-  - left: Ґ
-    right: К
-  - left: З
-    right: С
-  - left: Ж
-    right: Ш
-  - left: ДЗ
-    right: Ц
-  - left: ДЖ
-    right: Ч
-- id: true-false-voicing
+    - коза
+    - дим
+    - гора
+    - ранок
+  title: Sort the words into the correct category based on their special sign.
+- id: true-false-devoicing
   type: true-false
-  instruction: True or false? Read each statement about Ukrainian voiced and voiceless
-    consonants.
+  instruction: Are these statements about Ukrainian pronunciation true or false?
   items:
-  - statement: Ukrainian «дуб» (oak) sounds like [дуп] at the end — the final Б loses
-      its voice.
-    correct: false
-    explanation: FALSE — Ukrainian does NOT devoice final consonants. «дуб» is pronounced
-      [дуб], not [дуп]. This is a defining feature of Ukrainian pronunciation.
-  - statement: «Г» and «Х» are a voiced-voiceless pair.
+  - statement: Voiced consonants mostly stay voiced at the end of a word in Ukrainian.
     correct: true
-    explanation: TRUE — Г is voiced (fricative), Х is its voiceless partner. Say Х,
-      then add voice — that is Г.
-  - statement: The consonants В, Л, М, Н, Й, Р (сонорні) each have a voiceless partner.
+    explanation: Ukrainian strictly forbids devoicing at the end of words.
+  - statement: The word 'легко' is pronounced with a hard, deep 'г' sound.
     correct: false
-    explanation: FALSE — Сонорні consonants have no voiceless partners. They sit completely
-      outside the 8 voiced/voiceless pairs.
-  - statement: «Ж» is the voiced partner of «Ш».
+    explanation: It is an exception and is pronounced as 'лехко'.
+  - statement: The letter Г makes a deep, breathy sound, while Ґ makes a hard 'g'
+      sound.
     correct: true
-    explanation: 'TRUE — Ж (voiced) and Ш (voiceless) are one of the 8 pairs. Compare:
-      жабка vs шапка.'
-  - statement: Ukrainian «мороз» (frost) sounds like [морос] at the word end.
+    explanation: This is the core difference between the two letters.
+  - statement: The words 'балка' and 'палка' sound exactly the same.
     correct: false
-    explanation: FALSE — Ukrainian keeps voiced consonants voiced at word end. «мороз»
-      is pronounced [мороз], not [морос]. Same rule as «дуб».
-  - statement: «Ґ» and «К» form a voiced-voiceless pair.
+    explanation: They sound different because 'б' is voiced and 'п' is voiceless.
+  - statement: If you say the letter Б while covering your ears, your vocal cords
+      should vibrate.
     correct: true
-    explanation: TRUE — Ґ (voiced stop) and К (voiceless stop) are partners. Say К,
-      add voice → Ґ. Both Г and Ґ are native Ukrainian sounds.
-- id: quiz-g-vs-gx
+    explanation: Б is a voiced consonant, so you will hear a vibration.
+  - statement: The word 'мороз' loses its vibration at the end and sounds like an
+      'с'.
+    correct: false
+    explanation: The 'з' must vibrate clearly at the end of the word.
+  title: Are these statements about Ukrainian pronunciation true or false?
+- id: quiz-g-vs-ge
   type: quiz
-  instruction: Choose the correct first letter — Г or Ґ — for each Ukrainian word.
+  instruction: 'Which letter completes the word correctly: Г or Ґ?'
   items:
-  - question: ___арно (beautifully, nicely)
-    options:
-    - Г — гарно
-    - Ґ — ґарно
-    correct: 0
   - question: ___анок (porch)
     options:
-    - Г — ганок
-    - Ґ — ґанок
-    correct: 1
+    - Ґ
+    - Г
+    - Х
+    - К
+    correct: 0
   - question: ___удзик (button)
     options:
-    - Г — гудзик
-    - Ґ — ґудзик
-    correct: 1
+    - Ґ
+    - Г
+    - Д
+    - З
+    correct: 0
+  - question: ___арно (nicely)
+    options:
+    - Г
+    - Ґ
+    - Х
+    - К
+    correct: 0
   - question: ___ора (mountain)
     options:
-    - Г — гора
-    - Ґ — ґора
+    - Г
+    - Ґ
+    - Х
+    - К
     correct: 0
   - question: ___олова (head)
     options:
-    - Г — голова
-    - Ґ — ґолова
+    - Г
+    - Ґ
+    - Х
+    - К
     correct: 0
-  - question: ___ава (crow)
+  - question: ле___ко (easily)
     options:
-    - Г — гава
-    - Ґ — ґава
-    correct: 1
+    - г
+    - ґ
+    - х
+    - к
+    correct: 0
+  title: 'Which letter completes the word correctly: Г or Ґ?'
+- id: match-up-voiced-voiceless
+  type: match-up
+  instruction: Match the voiced consonant with its voiceless partner.
+  pairs:
+  - left: Б (Voiced)
+    right: П (Voiceless)
+  - left: Д (Voiced)
+    right: Т (Voiceless)
+  - left: Г (Voiced)
+    right: Х (Voiceless)
+  - left: Ґ (Voiced)
+    right: К (Voiceless)
+  - left: З (Voiced)
+    right: С (Voiceless)
+  - left: Ж (Voiced)
+    right: Ш (Voiceless)
+  - left: ДЗ (Voiced)
+    right: Ц (Voiceless)
+  - left: ДЖ (Voiced)
+    right: Ч (Voiceless)
+  title: Match the voiced consonant with its voiceless partner.
 workbook:
 - type: match-up
-  instruction: Match each Ukrainian word to its English meaning.
+  instruction: Match the Ukrainian word with its English translation.
   pairs:
-  - left: сім'я
-    right: family
-  - left: день
-    right: day
-  - left: сіль
-    right: salt
-  - left: м'ясо
-    right: meat
-  - left: п'ять
-    right: five
-  - left: гарно
-    right: beautifully / nicely
-  - left: риба
-    right: fish
   - left: батько
     right: father
   - left: учитель
     right: teacher
-  - left: дев'ять
-    right: nine
-- type: true-false
-  instruction: True or false? Read each statement about the Ukrainian soft sign (Ь).
+  - left: сім'я
+    right: family
+  - left: м'ясо
+    right: meat
+  - left: п'ять
+    right: five
+  - left: день
+    right: day
+  - left: сіль
+    right: salt
+  - left: риба
+    right: fish
+  title: Match the Ukrainian word with its English translation.
+- type: count-syllables
+  instruction: 'Count the number of syllables in each word. (Hint: count the vowels!)'
   items:
-  - statement: The soft sign (Ь) has its own pronunciation — it makes a short 'y'
-      sound.
-    correct: false
-    explanation: FALSE — Ь has NO sound at all. Zero. Its only job is to soften the
-      consonant before it. It is silent.
-  - statement: You can write Ь after Ж in standard Ukrainian spelling.
-    correct: false
-    explanation: FALSE — Ж is a hushing consonant. Ь never follows Ж, Ш, Ч, or ДЖ
-      — ever.
-  - statement: The word «учитель» ends with a soft Л because of the Ь.
-    correct: true
-    explanation: TRUE — Ь after Л at the end signals softness. The Ь has no sound,
-      but it marks that Л is pronounced soft.
-  - statement: The letter Й is inherently soft and never needs Ь.
-    correct: true
-    explanation: TRUE — Й is always soft by nature. That is why «м'який» has an apostrophe
-      but NO soft sign — Й softens itself automatically.
-  - statement: Ь can appear after labial consonants Б, П, В, М, Ф in Ukrainian.
-    correct: false
-    explanation: FALSE — Labials never take Ь. They can only be partially softened
-      by following soft vowels (і, я, ю, є). Ь after a labial is always wrong.
-  - statement: The words «сіль» and «день» both contain Ь.
-    correct: true
-    explanation: TRUE — сіль has Ь after Л; день has Ь after Н. Both consonants (Л
-      and Н) are in the group of 8 that take Ь.
-- type: quiz
-  instruction: И vs І — these two vowels change the meaning completely. Choose the
-    correct Ukrainian word for each English meaning.
-  items:
-  - question: Which word means 'bull'?
-    options:
-    - бик
-    - бік
-    - дим
-    correct: 0
-  - question: Which word means 'house'?
-    options:
-    - дим
-    - дім
-    - риба
-    correct: 1
-  - question: Which word means 'cat'?
-    options:
-    - кит
-    - кіт
-    - гора
-    correct: 1
-  - question: Which word means 'whale'?
-    options:
-    - кіт
-    - кит
-    - дуб
-    correct: 1
-  - question: Which word means 'smoke'?
-    options:
-    - день
-    - дім
-    - дим
+  - word: сім'я
     correct: 2
-  - question: Which word means 'side' (not 'bull')?
-    options:
-    - бик
-    - бік
-    - кіт
+  - word: день
     correct: 1
-- type: group-sort
-  instruction: Sort these 12 words by the voicing of their first consonant. Is the
-    first sound voiced (like Б, Д, Г, З, Ж, Ґ) or voiceless (like П, Т, Х, С, Ш, К)?
-  groups:
-  - label: Voiced first consonant
-    items:
-    - день
-    - зуб
-    - гора
-    - дуб
-    - ґудзик
-    - жар
-  - label: Voiceless first consonant
-    items:
-    - сіль
-    - п'ять
-    - кіт
-    - коса
-    - шар
-    - казка
+  - word: комп'ютер
+    correct: 3
+  - word: учитель
+    correct: 3
+  - word: п'ять
+    correct: 1
+  - word: батько
+    correct: 2
+  title: 'Count the number of syllables in each word. (Hint: count the vowels!)'
+- type: divide-words
+  instruction: Divide the words into syllables by adding dashes (-).
+  items:
+  - word: батько
+    answer: бать-ко
+  - word: учитель
+    answer: у-чи-тель
+  - word: риба
+    answer: ри-ба
+  - word: гора
+    answer: го-ра
+  - word: робота
+    answer: ро-бо-та
+  - word: голова
+    answer: го-ло-ва
+  title: Divide the words into syllables by adding dashes (-).
+- type: observe
+  examples:
+  - балка (beam) — палка (stick)
+  - коза (goat) — коса (braid)
+  - бик (bull) — бік (side)
+  - дим (smoke) — дім (house)
+  prompt: What is the only difference in pronunciation between the words in each pair,
+    and how does it affect the meaning?
+- type: true-false
+  instruction: Are these statements about the soft sign and apostrophe true or false?
+  items:
+  - statement: The letter Й never needs a soft sign because it is inherently soft.
+    correct: true
+    explanation: Й is already a soft sound, so it never takes a soft sign.
+  - statement: The soft sign is only used at the very end of a word.
+    correct: false
+    explanation: It can also be used in the middle of a word, like in 'батько'.
+  - statement: The apostrophe is placed after labial consonants like Б, П, В, М, Ф.
+    correct: true
+    explanation: This is the core rule for using the apostrophe.
+  - statement: The apostrophe makes the preceding consonant soft.
+    correct: false
+    explanation: The apostrophe acts as a wall, keeping the preceding consonant hard.
+  - statement: A hard consonant and its soft counterpart are considered the exact
+      same sound in Ukrainian.
+    correct: false
+    explanation: They are completely different sounds and distinguish meaning, like
+      in 'брат' vs 'брать'.
+  - statement: The soft sign (Ь) represents a specific vowel sound.
+    correct: false
+    explanation: The soft sign has no sound of its own; it only modifies the preceding
+      consonant.
+  title: Are these statements about the soft sign and apostrophe true or false?

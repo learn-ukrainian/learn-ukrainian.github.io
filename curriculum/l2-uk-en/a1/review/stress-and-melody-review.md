@@ -1,49 +1,60 @@
 ## Linguistic Scan
-Errors found:
-1. "Читай разом" is a calque from the English pedagogical instruction "read together". In Ukrainian, "читати разом" implies reading aloud in chorus with someone else. The correct term for blending syllables into a single word is "читати цілим словом" (read the whole word).
+No Russianisms, Surzhyk, or Calques found. The terminology is accurate. However, there are two instances of incorrect syllable division (`ран-ок` and `ві-дпо-чи-нок`) which constitute critical phonetic errors.
 
 ## Exercise Check
-All activity markers match the `activity_hints` from the plan exactly. They are properly injected AFTER the relevant teaching sections:
-- `quiz-stress-syllable` and `match-stress-pairs` are placed after the "Наголос" section.
-- `quiz-sentence-type` and `fill-in-punctuation` are placed after the "Інтонація" section.
-There are 4 markers for the 4 hints, placed logically.
+- `<!-- INJECT_ACTIVITY: quiz-stress-position -->` (matches `quiz` for stress position)
+- `<!-- INJECT_ACTIVITY: match-stress-pairs -->` (matches `match-up` for stress pairs)
+- `<!-- INJECT_ACTIVITY: quiz-sentence-type -->` (matches `quiz` for sentence type)
+- `<!-- INJECT_ACTIVITY: fill-in-punctuation -->` (matches `fill-in` for punctuation)
+All four markers are present, correctly mapped to the plan's hints, and placed logically after their corresponding explanatory sections. No inline DSL exercises.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Excellent adherence to the plan, including overriding a linguistic mistake in the plan (the plan incorrectly stated "Як справи?" should have a rising yes/no intonation). DEDUCT: The text deviated from the plan's phonetic syllable division for reading practice `ві-дпо-чи-нок`, using the morphological division `від-по-чи-нок` instead. |
-| 2. Linguistic accuracy | 8/10 | Outstanding explanation of Ukrainian phonetics and intonation, but DEDUCT for a calque: "**Крок 3: Чита́й ра́зом** (Read together)" is a direct translation of the English instruction. |
-| 3. Pedagogical quality | 10/10 | Brilliant pacing and practical advice. The tip "Tap the table once for each syllable as you read... your hand knows the rhythm before your mouth does" is an exceptional pedagogical technique. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (наголос, замок, кава, вода, столиця, мука, ранок, метро, фотографія) are integrated naturally into the explanations and examples. |
-| 5. Exercise quality | 10/10 | Markers perfectly align with the plan's requirements and are strategically placed to test the concepts immediately after they are introduced. |
-| 6. Engagement & tone | 10/10 | The tone is highly engaging and culturally respectful. Highlighting that "Getting pronunciation right is not just grammar — it is an act of respect for the language" sets the perfect attitude for an A1 learner. |
-| 7. Structural integrity | 8/10 | All required headings are present. DEDUCT: The final word count (1791 words) is significantly above the target budget of 1200 words (>10% off). |
-| 8. Cultural accuracy | 10/10 | Flawless cultural context regarding the pronunciation of "Київ" vs its Russian counterpart, and accurate use of names (Кирилко, Соломійка). |
-| 9. Dialogue & conversation quality | 10/10 | Natural, multi-turn dialogues that practically model the intonation contours (statement ↘, question ↗, exclamation ↘↘) perfectly. |
+| 1. Plan adherence | 10/10 | The module strictly follows the plan outline, integrating all specific examples (`замок/замок`, `мука/мука`, intonation arrows, and `goroh.pp.ua` mention). |
+| 2. Linguistic accuracy | 8/10 | The syllable division for `ранок` (`ран-ок` instead of `ра-нок`) and `відпочинок` (`ві-дпо-чи-нок` instead of `від-по-чи-нок`) is incorrect. The text misclassifies "А у тебе?" as a yes/no question. |
+| 3. Pedagogical quality | 10/10 | Exceptional use of the "calling the turtle" technique (`черепаааха`) to explain stress. Very clear distinction between English vowel reduction and Ukrainian core vowels. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are introduced naturally in context with accurate stress patterns. |
+| 5. Exercise quality | 10/10 | 4 injected activity markers present, all matching the type and focus specified in the plan hints, evenly distributed after their respective sections. |
+| 6. Engagement & tone | 10/10 | Very natural teacher voice, encouraging but substantial. "Stress and melody are the physical heartbeat..." is a great opening for the summary. |
+| 7. Structural integrity | 10/10 | Clean markdown, perfect H2 header mapping, word count target cleanly exceeded (1571 > 1200 words). |
+| 8. Cultural accuracy | 10/10 | Factually correct, treats Ukrainian phonetics on its own terms, contrasting cleanly with French, Polish, and English. |
+| 9. Dialogue & conversation quality | 7/10 | The dialogue uses "Бариста" and "Клієнт" but employs informal register ("твоя", "у тебе"), which is inappropriate for a service encounter. Changing the characters to friends ("Оксана" and "Максим") fixes both the register mismatch and the context of the interaction. |
 
 ## Findings
+[2. Linguistic accuracy] [Critical]
+Location: `## Читаємо вголос (Reading Aloud)` — `**ран-ок** (morning)` and `**ві-дпо-чи-нок** (rest)`
+Issue: Incorrect syllable division. A single consonant between vowels belongs to the next syllable (`ра-нок`), and the prefix "від-" should not be split across syllables this way (`від-по-чи-нок`).
+Fix: Change `**ран-ок**` to `**ра-нок**` and `**ві-дпо-чи-нок**` to `**від-по-чи-нок**`.
 
-[Plan adherence] [minor]
-Location: `- **від-по-чи-нок** (rest/vacation) — stress on **чи**. Slow: від... по... чи... нок. Now together: **відпочи́нок**.`
-Issue: The plan explicitly provided the phonetic syllable division "ві-дпо-чи-нок" for reading practice. The text used the morphological division "від-по-чи-нок", which is less ideal for teaching blending.
-Fix: Update the hyphenation to match the plan's phonetic division.
+[2. Linguistic accuracy] [Critical]
+Location: `## Читаємо вголос (Reading Aloud)` — "The question **А у тебе?** is a yes/no question without a question word..."
+Issue: "А у тебе?" is not a yes/no question; it is an elliptical open question. Calling it a yes/no question is factually incorrect.
+Fix: Update the description to state it lacks a direct question word, rather than calling it a yes/no question.
 
-[Linguistic accuracy] [major]
-Location: `**Крок 3: Чита́й ра́зом** (Read together) — blend at natural speed, letting the stress land naturally.`
-Issue: "Читай разом" is a calque of the English pedagogical phrase "read together" (blend). In Ukrainian, "читати разом" means "to read together with someone". To instruct a learner to blend syllables, the standard term is "читати цілим словом" (read the whole word).
-Fix: Change to "**Крок 3: Чита́й ці́ле сло́во** (Read the whole word)".
-
-[Structural integrity] [minor]
-Location: Entire document
-Issue: The module word count (1791) is nearly 50% over the target budget of 1200 words.
-Fix: No automated find/replace is applied to prevent disrupting the excellent pedagogical flow; noted as a structural deviation.
+[9. Dialogue & conversation quality] [Major]
+Location: `## Читаємо вголос (Reading Aloud)` — The dialogue block.
+Issue: The dialogue employs informal pronouns ("твоя", "у тебе") between a Barista and a Client, which is a register mismatch for a service encounter. Furthermore, a client asking if the coffee belongs to the barista is logically strange.
+Fix: Change the speaker labels from "Бариста/Клієнт" to "Оксана/Максим" to match the informal register.
 
 ## Verdict: REVISE
-The module is phenomenally written, pedagogically exceptional, and corrects an actual linguistic error from the plan prompt. However, it contains one English calque ("Читай разом") and a minor syllable division deviation that must be patched before publishing.
+The module is exceptionally well-written pedagogically, but contains two critical linguistic/phonetic errors (syllable division and misclassifying an open question as a yes/no question) and a register mismatch in the dialogue that must be patched.
 
 <fixes>
-- find: "- **від-по-чи-нок** (rest/vacation) — stress on **чи**. Slow: від... по... чи... нок. Now together: **відпочи́нок**."
-  replace: "- **ві-дпо-чи-нок** (rest/vacation) — stress on **чи**. Slow: ві... дпо... чи... нок. Now together: **відпочи́нок**."
-- find: "**Крок 3: Чита́й ра́зом** (Read together) — blend at natural speed, letting the stress land naturally."
-  replace: "**Крок 3: Чита́й ці́ле сло́во** (Read the whole word) — blend at natural speed, letting the stress land naturally."
+- find: "**ві-дпо-чи-нок**"
+  replace: "**від-по-чи-нок**"
+- find: "**ран-ок**"
+  replace: "**ра-нок**"
+- find: "The question **А у тебе?** is a yes/no question without a question word, so it requires a sharp rising intonation (↗)."
+  replace: "The question **А у тебе?** lacks a direct question word, so it relies on a sharp rising intonation (↗) to signal the inquiry."
+- find: "> **Бариста:** Привіт! *(Hi!)*"
+  replace: "> **Оксана:** Привіт! *(Hi!)*"
+- find: "> **Клієнт:** Привіт! Як справи? *(Hi! How are you?)*"
+  replace: "> **Максим:** Привіт! Як справи? *(Hi! How are you?)*"
+- find: "> **Бариста:** Добре! А у тебе? *(Good! And you?)*"
+  replace: "> **Оксана:** Добре! А у тебе? *(Good! And you?)*"
+- find: "> **Клієнт:** Добре! Це твоя кава? *(Good! Is this your coffee?)*"
+  replace: "> **Максим:** Добре! Це твоя кава? *(Good! Is this your coffee?)*"
+- find: "> **Бариста:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*"
+  replace: "> **Оксана:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*"
 </fixes>

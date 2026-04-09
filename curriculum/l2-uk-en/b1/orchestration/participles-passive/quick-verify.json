@@ -1,0 +1,18 @@
+{
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/11 required vocab: ношений (worn/carried — with [с]→[ш] alternation)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 4"
+    }
+  ],
+  "timestamp": "2026-04-09T22:21:14.676970+00:00"
+}

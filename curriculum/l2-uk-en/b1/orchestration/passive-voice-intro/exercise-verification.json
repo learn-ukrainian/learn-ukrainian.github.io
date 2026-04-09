@@ -1,0 +1,448 @@
+{
+  "total_items": 263,
+  "grounded_items": 193,
+  "ungrounded": [
+    {
+      "word": "довга",
+      "exercise_type": "quiz",
+      "context": "Ця довга стаття дуже важко перекладається.",
+      "role": "context"
+    },
+    {
+      "word": "стаття",
+      "exercise_type": "quiz",
+      "context": "Ця довга стаття дуже важко перекладається.",
+      "role": "context"
+    },
+    {
+      "word": "старовинна",
+      "exercise_type": "quiz",
+      "context": "Ця старовинна вулиця називається Центральною.",
+      "role": "context"
+    },
+    {
+      "word": "центральною",
+      "exercise_type": "quiz",
+      "context": "Ця старовинна вулиця називається Центральною.",
+      "role": "context"
+    },
+    {
+      "word": "розробляє",
+      "exercise_type": "error-correction",
+      "context": "Новий проєкт зараз розробляє архітектор.",
+      "role": "answer"
+    },
+    {
+      "word": "складну",
+      "exercise_type": "error-correction",
+      "context": "Цю складну статтю читають студенти.",
+      "role": "answer"
+    },
+    {
+      "word": "щотижня",
+      "exercise_type": "error-correction",
+      "context": "Цей довгий звіт щотижня пишу я.",
+      "role": "answer"
+    },
+    {
+      "word": "пишу",
+      "exercise_type": "error-correction",
+      "context": "Цей довгий звіт щотижня пишу я.",
+      "role": "answer"
+    },
+    {
+      "word": "пишеться",
+      "exercise_type": "error-correction",
+      "context": "Цей довгий звіт щотижня пишеться мною.",
+      "role": "context"
+    },
+    {
+      "word": "вирішує",
+      "exercise_type": "error-correction",
+      "context": "Цю велику проблему швидко вирішує менеджер.",
+      "role": "answer"
+    },
+    {
+      "word": "менеджер",
+      "exercise_type": "error-correction",
+      "context": "Цю велику проблему швидко вирішує менеджер.",
+      "role": "answer"
+    },
+    {
+      "word": "велика",
+      "exercise_type": "error-correction",
+      "context": "Ця велика проблема швидко вирішується менеджером.",
+      "role": "context"
+    },
+    {
+      "word": "проблема",
+      "exercise_type": "error-correction",
+      "context": "Ця велика проблема швидко вирішується менеджером.",
+      "role": "context"
+    },
+    {
+      "word": "вирішується",
+      "exercise_type": "error-correction",
+      "context": "Ця велика проблема швидко вирішується менеджером.",
+      "role": "context"
+    },
+    {
+      "word": "менеджером",
+      "exercise_type": "error-correction",
+      "context": "Ця велика проблема швидко вирішується менеджером.",
+      "role": "context"
+    },
+    {
+      "word": "парламент",
+      "exercise_type": "error-correction",
+      "context": "Цей закон завжди приймає парламент.",
+      "role": "answer"
+    },
+    {
+      "word": "приймається",
+      "exercise_type": "error-correction",
+      "context": "Цей закон завжди приймається парламентом.",
+      "role": "context"
+    },
+    {
+      "word": "проєктує",
+      "exercise_type": "error-correction",
+      "context": "Сучасний театр проєктує наша команда.",
+      "role": "answer"
+    },
+    {
+      "word": "проєктується",
+      "exercise_type": "error-correction",
+      "context": "Сучасний театр проєктується нашою командою.",
+      "role": "context"
+    },
+    {
+      "word": "нашою",
+      "exercise_type": "error-correction",
+      "context": "Сучасний театр проєктується нашою командою.",
+      "role": "context"
+    },
+    {
+      "word": "командою",
+      "exercise_type": "error-correction",
+      "context": "Сучасний театр проєктується нашою командою.",
+      "role": "context"
+    },
+    {
+      "word": "багатоквартирний",
+      "exercise_type": "fill-in",
+      "context": "Цей великий багатоквартирний дім успішно ____.",
+      "role": "context"
+    },
+    {
+      "word": "вечірню",
+      "exercise_type": "fill-in",
+      "context": "Перші квитки на вечірню виставу вже ____.",
+      "role": "context"
+    },
+    {
+      "word": "виставу",
+      "exercise_type": "fill-in",
+      "context": "Перші квитки на вечірню виставу вже ____.",
+      "role": "context"
+    },
+    {
+      "word": "міську",
+      "exercise_type": "fill-in",
+      "context": "Унікальну міську експозицію ____ на основі старих архівів.",
+      "role": "context"
+    },
+    {
+      "word": "старих",
+      "exercise_type": "fill-in",
+      "context": "Унікальну міську експозицію ____ на основі старих архівів.",
+      "role": "context"
+    },
+    {
+      "word": "архівів",
+      "exercise_type": "fill-in",
+      "context": "Унікальну міську експозицію ____ на основі старих архівів.",
+      "role": "context"
+    },
+    {
+      "word": "необхідні",
+      "exercise_type": "fill-in",
+      "context": "Усі необхідні офіційні документи успішно ____.",
+      "role": "context"
+    },
+    {
+      "word": "відмінно",
+      "exercise_type": "unjumble",
+      "context": "відмінно.",
+      "role": "answer"
+    },
+    {
+      "word": "реконструйовано",
+      "exercise_type": "unjumble",
+      "context": "реконструйовано.",
+      "role": "answer"
+    },
+    {
+      "word": "перехідні",
+      "exercise_type": "group-sort",
+      "context": "Перехідні дієслова (можуть утворити пасив)",
+      "role": "context"
+    },
+    {
+      "word": "можуть",
+      "exercise_type": "group-sort",
+      "context": "Перехідні дієслова (можуть утворити пасив)",
+      "role": "context"
+    },
+    {
+      "word": "відкривати",
+      "exercise_type": "group-sort",
+      "context": "відкривати",
+      "role": "answer"
+    },
+    {
+      "word": "створювати",
+      "exercise_type": "group-sort",
+      "context": "створювати",
+      "role": "answer"
+    },
+    {
+      "word": "неперехідні",
+      "exercise_type": "group-sort",
+      "context": "Неперехідні дієслова (НЕ можуть утворити пасив)",
+      "role": "context"
+    },
+    {
+      "word": "сидіти",
+      "exercise_type": "group-sort",
+      "context": "сидіти",
+      "role": "answer"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "group-sort",
+      "context": "жити",
+      "role": "answer"
+    },
+    {
+      "word": "стояти",
+      "exercise_type": "group-sort",
+      "context": "стояти",
+      "role": "answer"
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "group-sort",
+      "context": "працювати",
+      "role": "answer"
+    },
+    {
+      "word": "прочитали",
+      "exercise_type": "match-up",
+      "context": "Студенти прочитали цікаву статтю.",
+      "role": "answer"
+    },
+    {
+      "word": "спроєктували",
+      "exercise_type": "match-up",
+      "context": "Архітектори спроєктували сучасний театр.",
+      "role": "answer"
+    },
+    {
+      "word": "депутати",
+      "exercise_type": "match-up",
+      "context": "Депутати ухвалили новий закон.",
+      "role": "answer"
+    },
+    {
+      "word": "ухвалили",
+      "exercise_type": "match-up",
+      "context": "Депутати ухвалили новий закон.",
+      "role": "answer"
+    },
+    {
+      "word": "опублікували",
+      "exercise_type": "match-up",
+      "context": "Журналісти опублікували свіжі новини.",
+      "role": "answer"
+    },
+    {
+      "word": "свіжі",
+      "exercise_type": "match-up",
+      "context": "Журналісти опублікували свіжі новини.",
+      "role": "answer"
+    },
+    {
+      "word": "секретар",
+      "exercise_type": "match-up",
+      "context": "Секретар надіслав усі документи.",
+      "role": "answer"
+    },
+    {
+      "word": "надіслав",
+      "exercise_type": "match-up",
+      "context": "Секретар надіслав усі документи.",
+      "role": "answer"
+    },
+    {
+      "word": "майстри",
+      "exercise_type": "match-up",
+      "context": "Майстри завершили складний ремонт.",
+      "role": "answer"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "В українській мові пасивний стан використовується значно час",
+      "role": "context"
+    },
+    {
+      "word": "значно",
+      "exercise_type": "true-false",
+      "context": "В українській мові пасивний стан використовується значно час",
+      "role": "context"
+    },
+    {
+      "word": "частіше",
+      "exercise_type": "true-false",
+      "context": "В українській мові пасивний стан використовується значно час",
+      "role": "context"
+    },
+    {
+      "word": "закінчень",
+      "exercise_type": "true-false",
+      "context": "Безособові форми на -но/-то є незмінними і ніколи не мають з",
+      "role": "context"
+    },
+    {
+      "word": "числа",
+      "exercise_type": "true-false",
+      "context": "Безособові форми на -но/-то є незмінними і ніколи не мають з",
+      "role": "context"
+    },
+    {
+      "word": "мною'",
+      "exercise_type": "true-false",
+      "context": "До безособових форм на -но/-то категорично заборонено додава",
+      "role": "context"
+    },
+    {
+      "word": "знаходитися'",
+      "exercise_type": "true-false",
+      "context": "Такі зворотні дієслова як 'знаходитися', 'вважатися' та 'наз",
+      "role": "context"
+    },
+    {
+      "word": "вважатися'",
+      "exercise_type": "true-false",
+      "context": "Такі зворотні дієслова як 'знаходитися', 'вважатися' та 'наз",
+      "role": "context"
+    },
+    {
+      "word": "називатися'",
+      "exercise_type": "true-false",
+      "context": "Такі зворотні дієслова як 'знаходитися', 'вважатися' та 'наз",
+      "role": "context"
+    },
+    {
+      "word": "мати",
+      "exercise_type": "true-false",
+      "context": "Перехідні дієслова — це дієслова, які не можуть мати прямого",
+      "role": "context"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "quiz",
+      "context": "Як найкраще сказати, що робітники закінчили будівництво цьог",
+      "role": "context"
+    },
+    {
+      "word": "дому",
+      "exercise_type": "quiz",
+      "context": "Як найкраще сказати, що робітники закінчили будівництво цьог",
+      "role": "context"
+    },
+    {
+      "word": "будівництва",
+      "exercise_type": "quiz",
+      "context": "Як правильно повідомити про результат будівництва школи, якщ",
+      "role": "context"
+    },
+    {
+      "word": "школи",
+      "exercise_type": "quiz",
+      "context": "Як правильно повідомити про результат будівництва школи, якщ",
+      "role": "context"
+    },
+    {
+      "word": "неважливий",
+      "exercise_type": "quiz",
+      "context": "Як правильно повідомити про результат будівництва школи, якщ",
+      "role": "context"
+    },
+    {
+      "word": "прикладом",
+      "exercise_type": "quiz",
+      "context": "Яке з цих речень є типовим прикладом небажаного 'канцеляриту",
+      "role": "context"
+    },
+    {
+      "word": "небажаного",
+      "exercise_type": "quiz",
+      "context": "Яке з цих речень є типовим прикладом небажаного 'канцеляриту",
+      "role": "context"
+    },
+    {
+      "word": "канцеляриту'",
+      "exercise_type": "quiz",
+      "context": "Яке з цих речень є типовим прикладом небажаного 'канцеляриту",
+      "role": "context"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть єдине граматично правильне використання форми на -но",
+      "role": "context"
+    },
+    {
+      "word": "єдине",
+      "exercise_type": "quiz",
+      "context": "Оберіть єдине граматично правильне використання форми на -но",
+      "role": "context"
+    },
+    {
+      "word": "правильне",
+      "exercise_type": "quiz",
+      "context": "Оберіть єдине граматично правильне використання форми на -но",
+      "role": "context"
+    },
+    {
+      "word": "неможливо",
+      "exercise_type": "quiz",
+      "context": "Яке з цих дієслів є НЕПЕРЕХІДНИМ (тобто від нього фізично не",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 26,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "будуватися",
+      "вважатися",
+      "видано",
+      "використовуватися",
+      "вироблятися",
+      "відмінок",
+      "дієслово",
+      "знаходитися",
+      "канцелярит",
+      "називатися",
+      "неперехідне",
+      "орудний",
+      "перехідне",
+      "природний",
+      "продаватися"
+    ]
+  },
+  "all_grounded": false
+}

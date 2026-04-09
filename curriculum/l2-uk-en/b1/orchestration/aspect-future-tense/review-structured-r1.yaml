@@ -1,0 +1,55 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Excellent. The writer integrated all four outline sections perfectly.
+    The textbook references (Литвінова, Заболотний) were smoothly woven into the prose
+    ("Як зазначає відомий шкільний підручник..."). '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Generally very strong, but contains a clear Russianism/calque: "Проблема
+    завжди ховається у дуже глибокому і фундаментальному логічному протиріччі". The
+    correct Ukrainian word for this concept is "суп'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb. The transition from English "will" to Ukrainian aspect choice
+    as a "philosophical choice" between process and result is an excellent framing.
+    The explanation of why *буду написати is grammatic
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Most vocabulary is naturally integrated, but the word "передбачення" (prediction)
+    from the `vocabulary_hints` is entirely missing from the text. I searched for
+    "передбач" and confirmed 0 occurrences.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: 'All 6 markers are present, but there is a critical logic error in placement:
+    `<!-- INJECT_ACTIVITY: group-sort -->` requires the learner to sort verbs into
+    "три конструкції", but the marker appears *b'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone is generally excellent, warm, and clear, but there is a slight
+    break in the persona with gamified/corporate phrasing: "Але тепер ви офіційно
+    переходите на рівень B1." The student knows they a'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is perfectly clean. All H2 headings match the plan exactly. Word
+    count is highly robust at 4750 words. No dangling tags.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach. Does not use Russian as a crutch or comparison point.
+    Emphasizes the uniqueness and precision of the Ukrainian aspect system.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are rich, realistic, and explicitly contrast the different aspects
+    (e.g., the mother wanting concrete results with perfective verbs vs the teenager
+    hiding behind the imperfective process).
+findings: []

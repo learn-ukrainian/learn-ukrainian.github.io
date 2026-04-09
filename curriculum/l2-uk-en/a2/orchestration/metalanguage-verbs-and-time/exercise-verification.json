@@ -1,0 +1,110 @@
+{
+  "total_items": 170,
+  "grounded_items": 154,
+  "ungrounded": [
+    {
+      "word": "минуле",
+      "exercise_type": "match-up",
+      "context": "описує реальні факти (минуле, теперішнє, майбутнє)",
+      "role": "context"
+    },
+    {
+      "word": "теперішнє",
+      "exercise_type": "match-up",
+      "context": "описує реальні факти (минуле, теперішнє, майбутнє)",
+      "role": "context"
+    },
+    {
+      "word": "майбутнє",
+      "exercise_type": "match-up",
+      "context": "описує реальні факти (минуле, теперішнє, майбутнє)",
+      "role": "context"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "group-sort",
+      "context": "купили",
+      "role": "answer"
+    },
+    {
+      "word": "купуємо",
+      "exercise_type": "group-sort",
+      "context": "купуємо",
+      "role": "answer"
+    },
+    {
+      "word": "купить",
+      "exercise_type": "group-sort",
+      "context": "купить",
+      "role": "answer"
+    },
+    {
+      "word": "позначають",
+      "exercise_type": "quiz",
+      "context": "Як у словнику позначають чоловічий рід?",
+      "role": "context"
+    },
+    {
+      "word": "однину",
+      "exercise_type": "fill-in",
+      "context": "Категорія, яка має однину та множину, це ____.",
+      "role": "context"
+    },
+    {
+      "word": "множину",
+      "exercise_type": "fill-in",
+      "context": "Категорія, яка має однину та множину, це ____.",
+      "role": "context"
+    },
+    {
+      "word": "закінченні",
+      "exercise_type": "fill-in",
+      "context": "Якщо дієслово має в закінченні «и» або «ї», це друга ____.",
+      "role": "context"
+    },
+    {
+      "word": "мовчимо",
+      "exercise_type": "group-sort",
+      "context": "мовчимо",
+      "role": "answer"
+    },
+    {
+      "word": "чотири",
+      "exercise_type": "true-false",
+      "context": "Українська мова має чотири часи.",
+      "role": "context"
+    },
+    {
+      "word": "читаю",
+      "exercise_type": "fill-in",
+      "context": "читаю",
+      "role": "answer"
+    },
+    {
+      "word": "вивчаємо",
+      "exercise_type": "fill-in",
+      "context": "вивчаємо",
+      "role": "answer"
+    },
+    {
+      "word": "слухаєте",
+      "exercise_type": "fill-in",
+      "context": "слухаєте",
+      "role": "answer"
+    },
+    {
+      "word": "цікавий",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ цікавий текст.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 13,
+    "not_tested": [
+      "словник"
+    ]
+  },
+  "all_grounded": false
+}

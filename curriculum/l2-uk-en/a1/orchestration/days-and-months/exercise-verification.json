@@ -1,38 +1,266 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 98,
+  "grounded_items": 56,
+  "ungrounded": [
+    {
+      "word": "ми",
+      "exercise_type": "match-up",
+      "context": "ми",
+      "role": "answer"
+    },
+    {
+      "word": "гуляємо",
+      "exercise_type": "fill-in",
+      "context": "Ми гуляємо _____.",
+      "role": "context"
+    },
+    {
+      "word": "холодно",
+      "exercise_type": "fill-in",
+      "context": "_____ холодно.",
+      "role": "context"
+    },
+    {
+      "word": "серпні",
+      "exercise_type": "fill-in",
+      "context": "у серпні",
+      "role": "answer"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "match-up",
+      "context": "вони",
+      "role": "answer"
+    },
+    {
+      "word": "відпочивають",
+      "exercise_type": "fill-in",
+      "context": "Вони відпочивають _____.",
+      "role": "context"
+    },
+    {
+      "word": "перший",
+      "exercise_type": "quiz",
+      "context": "Який перший день тижня в Україні?",
+      "role": "context"
+    },
+    {
+      "word": "україні",
+      "exercise_type": "quiz",
+      "context": "Який перший день тижня в Україні?",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "quiz",
+      "context": "Що означає слово «неділя»?",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "quiz",
+      "context": "Що означає слово «неділя»?",
+      "role": "context"
+    },
+    {
+      "word": "софії",
+      "exercise_type": "quiz",
+      "context": "Коли у Софії день народження?",
+      "role": "context"
+    },
+    {
+      "word": "походить",
+      "exercise_type": "quiz",
+      "context": "Який місяць походить від слова «листя» (leaves)?",
+      "role": "context"
+    },
+    {
+      "word": "від",
+      "exercise_type": "quiz",
+      "context": "Який місяць походить від слова «листя» (leaves)?",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "quiz",
+      "context": "Який місяць походить від слова «листя» (leaves)?",
+      "role": "context"
+    },
+    {
+      "word": "листя",
+      "exercise_type": "quiz",
+      "context": "Який місяць походить від слова «листя» (leaves)?",
+      "role": "context"
+    },
+    {
+      "word": "має",
+      "exercise_type": "quiz",
+      "context": "Який місяць має інше закінчення (не -і)?",
+      "role": "context"
+    },
+    {
+      "word": "інше",
+      "exercise_type": "quiz",
+      "context": "Який місяць має інше закінчення (не -і)?",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "quiz",
+      "context": "Який місяць має інше закінчення (не -і)?",
+      "role": "context"
+    },
+    {
+      "word": "які",
+      "exercise_type": "quiz",
+      "context": "Які дні ми називаємо «вихідні»?",
+      "role": "context"
+    },
+    {
+      "word": "називаємо",
+      "exercise_type": "quiz",
+      "context": "Які дні ми називаємо «вихідні»?",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після вівторка йде четвер.",
+      "role": "context"
+    },
+    {
+      "word": "вівторка",
+      "exercise_type": "true-false",
+      "context": "Після вівторка йде четвер.",
+      "role": "context"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "true-false",
+      "context": "Після вівторка йде четвер.",
+      "role": "context"
+    },
+    {
+      "word": "жарко",
+      "exercise_type": "true-false",
+      "context": "Взимку в Україні жарко.",
+      "role": "context"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)",
+      "role": "context"
+    },
+    {
+      "word": "він",
+      "exercise_type": "group-sort",
+      "context": "він",
+      "role": "answer"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "group-sort",
+      "context": "вона",
+      "role": "answer"
+    },
+    {
+      "word": "воно",
+      "exercise_type": "group-sort",
+      "context": "воно",
+      "role": "answer"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)",
+      "role": "context"
+    },
+    {
+      "word": "ви",
+      "exercise_type": "group-sort",
+      "context": "ви",
+      "role": "answer"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "quiz",
+      "context": "Олена — твоя подруга. Що ти запитаєш?",
+      "role": "context"
+    },
+    {
+      "word": "подруга",
+      "exercise_type": "quiz",
+      "context": "Олена — твоя подруга. Що ти запитаєш?",
+      "role": "context"
+    },
+    {
+      "word": "запитаєш",
+      "exercise_type": "quiz",
+      "context": "Олена — твоя подруга. Що ти запитаєш?",
+      "role": "context"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "quiz",
+      "context": "Марко — твій брат. Ти кажеш йому:",
+      "role": "context"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "quiz",
+      "context": "Марко — твій брат. Ти кажеш йому:",
+      "role": "context"
+    },
+    {
+      "word": "кажеш",
+      "exercise_type": "quiz",
+      "context": "Марко — твій брат. Ти кажеш йому:",
+      "role": "context"
+    },
+    {
+      "word": "йому",
+      "exercise_type": "quiz",
+      "context": "Марко — твій брат. Ти кажеш йому:",
+      "role": "context"
+    },
+    {
+      "word": "учитель",
+      "exercise_type": "quiz",
+      "context": "Учитель у школі. Ти запитаєш:",
+      "role": "context"
+    },
+    {
+      "word": "школі",
+      "exercise_type": "quiz",
+      "context": "Учитель у школі. Ти запитаєш:",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "quiz",
+      "context": "Твій друг Андрій. Ти кажеш йому:",
+      "role": "context"
+    },
+    {
+      "word": "директор",
+      "exercise_type": "quiz",
+      "context": "Директор в офісі. Ти запитаєш:",
+      "role": "context"
+    },
+    {
+      "word": "студентка",
+      "exercise_type": "quiz",
+      "context": "Софія — твоя студентка. Ти запитаєш:",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 26,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 25,
     "not_tested": [
-      "березень",
-      "вересень",
-      "весна",
-      "вівторок",
-      "грудень",
-      "день",
-      "жовтень",
-      "зима",
-      "квітень",
-      "липень",
-      "листопад",
-      "лютий",
-      "літо",
-      "народження",
-      "неділя",
-      "осінь",
-      "п'ятниця",
-      "понеділок",
-      "середа",
-      "серпень",
-      "субота",
-      "січень",
-      "тиждень",
-      "травень",
-      "червень",
-      "четвер"
+      "тиждень"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

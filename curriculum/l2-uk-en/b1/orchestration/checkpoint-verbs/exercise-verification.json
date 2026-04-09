@@ -1,0 +1,343 @@
+{
+  "total_items": 282,
+  "grounded_items": 231,
+  "ungrounded": [
+    {
+      "word": "уважно",
+      "exercise_type": "quiz",
+      "context": "Вона _____ цю відповідь, якби уважно слухала.",
+      "role": "context"
+    },
+    {
+      "word": "слухала",
+      "exercise_type": "quiz",
+      "context": "Вона _____ цю відповідь, якби уважно слухала.",
+      "role": "context"
+    },
+    {
+      "word": "закінчили",
+      "exercise_type": "quiz",
+      "context": "Якби не _____, ми б ніколи не закінчили проєкт вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "проєкт",
+      "exercise_type": "quiz",
+      "context": "Якби не _____, ми б ніколи не закінчили проєкт вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "вчасно",
+      "exercise_type": "quiz",
+      "context": "Якби не _____, ми б ніколи не закінчили проєкт вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "потужний",
+      "exercise_type": "quiz",
+      "context": "_____ ж то в мене був такий потужний комп'ютер!",
+      "role": "context"
+    },
+    {
+      "word": "немає",
+      "exercise_type": "quiz",
+      "context": "Я _____ тобі допомогти, але в мене немає часу.",
+      "role": "context"
+    },
+    {
+      "word": "відчиняйте",
+      "exercise_type": "fill-in",
+      "context": "відчиняйте",
+      "role": "answer"
+    },
+    {
+      "word": "надворі",
+      "exercise_type": "fill-in",
+      "context": "Не ____ вікно! Надворі холодно.",
+      "role": "context"
+    },
+    {
+      "word": "холодно",
+      "exercise_type": "fill-in",
+      "context": "Не ____ вікно! Надворі холодно.",
+      "role": "context"
+    },
+    {
+      "word": "показати",
+      "exercise_type": "fill-in",
+      "context": "____! Я хочу тобі щось показати.",
+      "role": "context"
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "fill-in",
+      "context": "____ за стіл і почнімо їсти.",
+      "role": "context"
+    },
+    {
+      "word": "їсти",
+      "exercise_type": "fill-in",
+      "context": "____ за стіл і почнімо їсти.",
+      "role": "context"
+    },
+    {
+      "word": "нашу",
+      "exercise_type": "fill-in",
+      "context": "Не ____ про нашу зустріч завтра.",
+      "role": "context"
+    },
+    {
+      "word": "зустріч",
+      "exercise_type": "unjumble",
+      "context": "зустріч!",
+      "role": "answer"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "fill-in",
+      "context": "____ хліб акуратно.",
+      "role": "context"
+    },
+    {
+      "word": "акуратно",
+      "exercise_type": "fill-in",
+      "context": "____ хліб акуратно.",
+      "role": "context"
+    },
+    {
+      "word": "читає",
+      "exercise_type": "group-sort",
+      "context": "хай читає",
+      "role": "answer"
+    },
+    {
+      "word": "прийшов",
+      "exercise_type": "error-correction",
+      "context": "Я дуже вибачаюся за те, що не прийшов вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "хлопці",
+      "exercise_type": "error-correction",
+      "context": "Хлопці, пішли в кіно сьогодні ввечері!",
+      "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "error-correction",
+      "context": "Хлопці, пішли в кіно сьогодні ввечері!",
+      "role": "context"
+    },
+    {
+      "word": "допоміг",
+      "exercise_type": "unjumble",
+      "context": "допоміг.",
+      "role": "answer"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "error-correction",
+      "context": "Він хотів б купити новий ноутбук.",
+      "role": "context"
+    },
+    {
+      "word": "ноутбук",
+      "exercise_type": "error-correction",
+      "context": "Він хотів б купити новий ноутбук.",
+      "role": "context"
+    },
+    {
+      "word": "збудований",
+      "exercise_type": "error-correction",
+      "context": "Дім був збудований нами минулого року.",
+      "role": "context"
+    },
+    {
+      "word": "року",
+      "exercise_type": "error-correction",
+      "context": "Дім був збудований нами минулого року.",
+      "role": "context"
+    },
+    {
+      "word": "рік",
+      "exercise_type": "error-correction",
+      "context": "Я вчуся українську мову вже другий рік.",
+      "role": "context"
+    },
+    {
+      "word": "хвилюється",
+      "exercise_type": "error-correction",
+      "context": "хвилюється",
+      "role": "answer"
+    },
+    {
+      "word": "хвилюєтся",
+      "exercise_type": "error-correction",
+      "context": "Вона хвилюєтся через новий проєкт.",
+      "role": "context"
+    },
+    {
+      "word": "швидше",
+      "exercise_type": "error-correction",
+      "context": "Давайте зробимо це швидше!",
+      "role": "context"
+    },
+    {
+      "word": "розбито",
+      "exercise_type": "match-up",
+      "context": "Завдання розбито на частини.",
+      "role": "context"
+    },
+    {
+      "word": "будує",
+      "exercise_type": "match-up",
+      "context": "Ця компанія активно будує новий дім.",
+      "role": "answer"
+    },
+    {
+      "word": "яку",
+      "exercise_type": "quiz",
+      "context": "Яку конструкцію використовує кандидат для звіту про завершен",
+      "role": "context"
+    },
+    {
+      "word": "свого",
+      "exercise_type": "quiz",
+      "context": "Який сполучник використовує кандидат для опису свого реально",
+      "role": "context"
+    },
+    {
+      "word": "реального",
+      "exercise_type": "quiz",
+      "context": "Який сполучник використовує кандидат для опису свого реально",
+      "role": "context"
+    },
+    {
+      "word": "плану",
+      "exercise_type": "quiz",
+      "context": "Який сполучник використовує кандидат для опису свого реально",
+      "role": "context"
+    },
+    {
+      "word": "вживає",
+      "exercise_type": "quiz",
+      "context": "Яке слово ввічливості правильно вживає кандидат?",
+      "role": "context"
+    },
+    {
+      "word": "граматичну",
+      "exercise_type": "quiz",
+      "context": "Яку граматичну роль виконують слова «тестування», «плануванн",
+      "role": "context"
+    },
+    {
+      "word": "роль",
+      "exercise_type": "quiz",
+      "context": "Яку граматичну роль виконують слова «тестування», «плануванн",
+      "role": "context"
+    },
+    {
+      "word": "виконують",
+      "exercise_type": "quiz",
+      "context": "Яку граматичну роль виконують слова «тестування», «плануванн",
+      "role": "context"
+    },
+    {
+      "word": "діалозі",
+      "exercise_type": "quiz",
+      "context": "Яку граматичну роль виконують слова «тестування», «плануванн",
+      "role": "context"
+    },
+    {
+      "word": "формулює",
+      "exercise_type": "quiz",
+      "context": "Як HR-менеджер формулює пряме прохання до кандидата?",
+      "role": "context"
+    },
+    {
+      "word": "пропонує",
+      "exercise_type": "quiz",
+      "context": "Як кандидат пропонує автоматизувати технічний звіт?",
+      "role": "context"
+    },
+    {
+      "word": "автоматизувати",
+      "exercise_type": "quiz",
+      "context": "Як кандидат пропонує автоматизувати технічний звіт?",
+      "role": "context"
+    },
+    {
+      "word": "літературною",
+      "exercise_type": "true-false",
+      "context": "Слово «вибачаюся» є літературною нормою української мови.",
+      "role": "context"
+    },
+    {
+      "word": "нормою",
+      "exercise_type": "true-false",
+      "context": "Слово «вибачаюся» є літературною нормою української мови.",
+      "role": "context"
+    },
+    {
+      "word": "заклику",
+      "exercise_type": "true-false",
+      "context": "Для заклику до спільної дії (let's do) вживається частка «да",
+      "role": "context"
+    },
+    {
+      "word": "вживається",
+      "exercise_type": "true-false",
+      "context": "Для заклику до спільної дії (let's do) вживається частка «да",
+      "role": "context"
+    },
+    {
+      "word": "вказують",
+      "exercise_type": "true-false",
+      "context": "Дієслова на -ся / -сь завжди вказують лише на власне зворотн",
+      "role": "context"
+    },
+    {
+      "word": "зворотну",
+      "exercise_type": "true-false",
+      "context": "Дієслова на -ся / -сь завжди вказують лише на власне зворотн",
+      "role": "context"
+    },
+    {
+      "word": "увесь",
+      "exercise_type": "unjumble",
+      "context": "Увесь",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 32,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "безафіксний",
+      "безособовий",
+      "видова",
+      "віддієслівний",
+      "відмінок",
+      "давальний",
+      "дієслово",
+      "зворотне",
+      "знахідний",
+      "канцелярит",
+      "милозвучність",
+      "нереальна",
+      "нереальний",
+      "нехай",
+      "пара",
+      "пасивний",
+      "перехідне",
+      "префіксальний",
+      "реальна",
+      "стан",
+      "суфіксальний",
+      "умова",
+      "формотворча",
+      "іменник"
+    ]
+  },
+  "all_grounded": false
+}

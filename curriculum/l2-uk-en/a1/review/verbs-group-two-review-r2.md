@@ -1,61 +1,51 @@
 ## Linguistic Scan
-No linguistic errors found. The grammar rules (sibilant rule, consonant alternations) are accurate, and no Russianisms or Surzhyk forms are present. Proper pedagogical distinctions are maintained throughout the module.
+Latin 'a' found inside the Cyrillic word `Особa` in the table header. This is a critical typographic error that affects text-to-speech (TTS) systems and learner dictionary lookups.
 
 ## Exercise Check
-All exercises are correctly placed and logically aligned with the plan's `activity_hints`:
-- `fill-in-conjugate` is injected after the `Друга дієвідміна` section, allowing practice of the newly introduced pattern.
-- `group-sort` and `quiz-correct-form` are properly placed after the `Група I чи II?` comparison, ensuring students have seen both paradigms before sorting.
-- `fill-in-sentences` concludes the module naturally.
+- `fill-in-conjugation-paradigm`: Matches Plan `fill-in` (focus: Conjugate: я говор...). Placed correctly after the conjugation paradigm is introduced.
+- `group-sort-verbs`: Matches Plan `group-sort` (focus: Sort verbs into Group I and II). Placed correctly after comparing Group I and II endings.
+- `quiz-verb-choice`: Matches Plan `quiz` (focus: Choose correct form). Placed correctly after the comparison table.
+- `fill-in-translation-context`: Matches Plan `fill-in` (focus: Complete with correct verb form). Placed correctly to test verb forms in context.
+All 4 expected markers are present, in logical locations, and test the just-taught material.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers almost all points. The generator wisely shifted the consonant mutation rule (я-form) into the `Друга дієвідміна` section instead of the comparative section. The plan dialogue requested `вчуся` but `вчу українську онлайн` was used instead, which is minor since `дивлюся` effectively covered the reflexive preview. |
-| 2. Linguistic accuracy | 10/10 | Completely accurate. The sibilant rule correctly identifies `-ать` (бачать, кричать), and the consonant shifts (роблю, ходжу, прошу, бачу) are properly demonstrated. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical simplification. Treating `дивлюся` as a single unit without explaining reflexives is great for A1. Comparing the vowels `-є-` and `-и-` makes the differences highly visible. |
-| 4. Vocabulary coverage | 9/10 | All required vocabulary is introduced smoothly. Missed the recommended `вчуся` as noted above, but successfully incorporated `дивлюся`, `трохи`, `добре`, and `увечері`. |
-| 5. Exercise quality | 10/10 | Markers are placed strategically after the exact content needed to solve them is introduced. |
-| 6. Engagement & tone | 8/10 | DEDUCT for minor gamified and meta-commentary phrasing: "Here is a reality check", "unlocks exactly the core", and "You have just learned the conjugation pattern". |
-| 7. Structural integrity | 10/10 | All headers are present, formatting is clean, and the word count is within the target range (1387 words for a 1200 target). |
-| 8. Cultural accuracy | 10/10 | Natural representation of everyday scenarios (learning languages, watching TV). The language café context is very culturally relevant. |
-| 9. Dialogue & conversation quality | 8/10 | DEDUCT for a disconnected flow in the second dialogue. Оксана talks about watching a series, Богдан says "Well done!", and then she randomly says "I ask a friend to help". The sequence needs to be logically reordered. |
+| 1. Plan adherence | 9/10 | Covers all major sections and follows the outline. However, it falsely claims the dialogue uses words it does not, deviating from the factual reality of the provided text. |
+| 2. Linguistic accuracy | 9/10 | Text is mostly perfect, but the table header `Особa` contains a Latin 'a' instead of a Cyrillic 'а', which breaks text processing. |
+| 3. Pedagogical quality | 8/10 | Strong PPP flow. However, the explanation "You can clearly see how Taras and Mykola use verb forms like бачиш (you see) and говоримо (we speak)" references words that literally do not appear in the preceding dialogue, which would severely confuse a learner. |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary is used in natural contexts. However, the recommended verb `любити` is missing entirely. |
+| 5. Exercise quality | 10/10 | All markers are placed logically, testing what was just taught, matching the plan's requirements exactly. |
+| 6. Engagement & tone | 9/10 | Encouraging teacher tone. The intro sentence "They are using action words to talk about physical activities and skills" is slightly robotic, but overall the tone is solid. |
+| 7. Structural integrity | 10/10 | Markdown is clean, all sections are present, and the word count (1361) comfortably exceeds the 1200 target. |
+| 8. Cultural accuracy | 10/10 | Good use of culturally appropriate names and contexts (Taras, Mykola). |
+| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural for A1 and effectively demonstrate the target grammar in action. |
 
 ## Findings
 
-[9. Dialogue & conversation quality] [Major]
-Location: Dialogue 2 (Оксана and Богдан)
-Issue: The conversational flow is illogical. Оксана says "Then I watch a series," Богдан praises her, and she suddenly replies "I ask a friend to help." The flow should naturally link studying words with asking for help, before concluding with relaxing and watching TV.
-Fix: Reorder the dialogue lines so Богдан asks if she studies alone, she mentions asking a friend for help, and *then* they talk about watching the series.
+[Dimension 3] [Critical]
+Location: `You can clearly see how **Тарас** and **Микола** use verb forms like **бачиш** (you see) and **говоримо** (we speak).`
+Issue: The text claims the dialogue uses the forms `бачиш` and `говоримо`, but neither form appears in the preceding dialogue (which actually uses `говориш`, `говорю`, `бачу`, and `вчуся`). Falsely referencing examples confuses learners who are trying to map the explanation to the text.
+Fix: Update the sentence to reference the verb forms that actually appear in the dialogue.
 
-[6. Engagement & tone] [Minor]
-Location: Section "Група I чи II?" & "Підсумок — Summary"
-Issue: The text contains gamified/meta-commentary language that feels artificial ("Here is a reality check...", "Mastering this group unlocks exactly...", "You have just learned the conjugation pattern...").
-Fix: Replace with neutral, encouraging language that shows rather than tells.
+[Dimension 2] [Major]
+Location: `| Особa | Group I (-ати) | Group II (-ити) |`
+Issue: The word `Особa` ends with a Latin 'a' character instead of a Cyrillic 'а'. This is a typographic mixup that breaks text-to-speech and dictionary lookups.
+Fix: Replace with the fully Cyrillic word `Особа`.
+
+[Dimension 4] [Minor]
+Location: `*   **Ви просите воду.** (You ask for water.)`
+Issue: The recommended vocabulary verb `любити` (to love) is not used anywhere in the module prose.
+Fix: Add an example sentence using `любити` to the list of core verb examples.
 
 ## Verdict: REVISE
-The module is linguistically sound and pedagogically robust, successfully simplifying complex verb groups for A1 learners. However, the disjointed logical flow in Dialogue 2 requires a revision to ensure natural conversation. The gamified tone in the concluding sections should also be smoothed out.
+The module is very strong structurally and linguistically. However, the factual hallucination about which words appear in the dialogue is a critical pedagogical flaw that must be fixed. The Latin character mixup and missing recommended vocabulary also require straightforward corrections.
 
 <fixes>
-- find: |
-    > <div class="dialogue-line"><span class="speaker">Оксана:</span> Я вчу нові слова. *(I'm studying new words.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Богдан:</span> А потім? *(And then?)*</div>
-    > <div class="dialogue-line"><span class="speaker">Оксана:</span> Потім дивлюся серіал. *(Then I watch a series.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Богдан:</span> Молодець! *(Well done!)*</div>
-    > <div class="dialogue-line"><span class="speaker">Оксана:</span> Я прошу друга допомогти. *(I ask a friend to help.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Богдан:</span> Він говорить дуже добре. *(He speaks very well.)*</div>
-  replace: |
-    > <div class="dialogue-line"><span class="speaker">Оксана:</span> Я вчу нові слова. *(I'm studying new words.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Богдан:</span> Сама? *(By yourself?)*</div>
-    > <div class="dialogue-line"><span class="speaker">Оксана:</span> Ні, я прошу друга допомогти. *(No, I ask a friend to help.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Богдан:</span> Він говорить дуже добре. *(He speaks very well.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Оксана:</span> А потім я дивлюся серіал. *(And then I watch a series.)*</div>
-    > <div class="dialogue-line"><span class="speaker">Богдан:</span> Молодець! *(Well done!)*</div>
-- find: |
-    Here is a reality check: most high-frequency Ukrainian verbs are actually Group I. But the verbs you need most right now — **говорити**, **робити**, **бачити**, **ходити** — are all Group II. Mastering this group unlocks exactly the core everyday action verbs.
-  replace: |
-    Many high-frequency Ukrainian verbs are Group I. But the verbs you need most for daily actions — **говорити**, **робити**, **бачити**, **ходити** — are all Group II. Knowing this pattern allows you to describe what you see, do, and say.
-- find: |
-    That is not a coincidence — these are among the highest-frequency action verbs in spoken Ukrainian. You have just learned the conjugation pattern for the verbs that carry most everyday conversation.
-  replace: |
-    These verbs are central to everyday spoken Ukrainian. Group II is the pattern for many essential action verbs.
+- find: "You can clearly see how **Тарас** and **Микола** use verb forms like **бачиш** (you see) and **говоримо** (we speak)."
+  replace: "You can clearly see how **Тарас** and **Микола** use verb forms like **бачу** (I see) and **говориш** (you speak)."
+- find: "| Особa | Group I (-ати) | Group II (-ити) |"
+  replace: "| Особа | Group I (-ати) | Group II (-ити) |"
+- find: "*   **Ви просите воду.** (You ask for water.)"
+  replace: "*   **Ви просите воду.** (You ask for water.)\n*   **Я люблю українську мову.** (I love the Ukrainian language.)"
 </fixes>

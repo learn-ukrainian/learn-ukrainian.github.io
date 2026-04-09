@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 23: Days and Months (A1, A1.4 [Time and Nature])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -140,161 +140,89 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги — Dialogues
 
-**Що ти ро́биш у понеді́лок?** Your friend wants to make plans for the week. How do you answer? You need the days of the week — and in Ukrainian, they carry stories inside their names. But first, listen to two conversations that show how Ukrainians talk about time.
+Time management and scheduling are essential parts of daily life. In Ukraine, planning revolves around the **тиждень** (week). For anyone accustomed to calendars starting on Sunday, a small mental adjustment is required. The Ukrainian week strictly begins on **понеділок** (Monday). Observe how two friends, Olena and Marko, coordinate their plans for the upcoming week. They use days as time markers to organize their activities.
 
-**(Планува́ння ти́жня / Planning the week)**
+> **Олена:** Привіт, Марку! Що ти робиш у понеділок? *(Hi Marko! What are you doing on Monday?)*
+> **Марко:** У понеділок я працюю. *(On Monday I am working.)*
+> **Олена:** А у вівторок? *(And on Tuesday?)*
+> **Марко:** У вівторок я вивчаю українську. *(On Tuesday I study Ukrainian.)*
+> **Олена:** А у суботу? *(And on Saturday?)*
+> **Марко:** У суботу гуляю. Неділя — вільний день! *(On Saturday I walk. Sunday is a free day!)*
 
-> — **Тара́с:** Що ти робиш у понеділок? *(What are you doing on Monday?)*
-> — **Оле́нка:** Я працю́ю. А у вівто́рок? *(I'm working. And on Tuesday?)*
-> — **Тарас:** У вівторок я вивча́ю украї́нську. *(On Tuesday I study Ukrainian.)*
-> — **Оленка:** А у субо́ту? *(And on Saturday?)*
-> — **Тарас:** У суботу гуля́ю з дру́зями. *(On Saturday I hang out with friends.)*
-> — **Оленка:** А в неді́лю? *(And on Sunday?)*
-> — **Тарас:** Неді́ля — ві́льний день! *(Sunday is a free day!)*
+Notice how Olena uses the question **Що ти робиш у...?** (What are you doing on...?) to ask about specific days. Marko responds using the exact same grammatical structure to state his plans. He also highlights a very important lifestyle concept: **неділя — вільний день** (Sunday is a free day). A **вільний день** (free day) is a day without professional obligations, which contrasts directly with a **робочий день** (work day). 
 
-Taras uses **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у суботу** (on Saturday), and **в неділю** (on Sunday) to talk about his schedule. Each day pairs with **у** or **в** — a small word that means "on" when paired with a day. The endings of the days change slightly in these chunks: **субо́та** becomes **суботу**, **неділя** becomes **неділю**. For now, treat each "у/в + day" combination as a fixed phrase to memorize whole.
+When discussing birthdays, the vocabulary naturally shifts from days of the week to months and seasons. Read how Andriy and Sofia discuss their birthdays.
 
-**(Ко́ли у тебе́ день наро́дження? / When is your birthday?)**
+> **Андрій:** Софіє, коли у тебе день народження? *(Sofia, when is your birthday?)*
+> **Софія:** У березні. *(In March.)*
+> **Андрій:** Якого числа? *(What date?)*
+> **Софія:** П'ятнадцятого березня. *(The fifteenth of March.)*
+> **Андрій:** Це весна? *(Is that spring?)*
+> **Софія:** Так, початок весни. *(Yes, the beginning of spring.)*
 
-> — **Марі́я:** Коли у тебе день народження? *(When is your birthday?)*
-> — **Андрі́й:** У бе́резні. *(In March.)*
-> — **Марія:** Яко́го чи́сла? *(What date?)*
-> — **Андрій:** П'ятна́дцятого бе́резня. А у тебе? *(The fifteenth of March. And yours?)*
-> — **Марія:** У мене́ в се́рпні. *(Mine is in August.)*
-> — **Андрій:** О, це лі́то! Тепло́ і со́нячно. *(Oh, that's summer! Warm and sunny.)*
+When Andriy wants to know the exact day, he asks **Якого числа?** (What date?). For now, treat both the question **Якого числа?** and the response **П'ятнадцятого березня** (The fifteenth of March) as fixed vocabulary chunks to memorize.
 
-Here you see the same pattern with months: **у березні** (in March), **в серпні** (in August). The phrase **день народження** (birthday, literally "day of birth") is a fixed expression — memorize it as one unit. Андрій also connects the month to a season: **се́рпень** (August) belongs to **літо** (summer).
+## Дні тижня — Days of the Week
 
-Notice how **у** or **в** keeps appearing before time words — **у понеділок**, **у вівторок**, **у березні**, **в серпні**. This is the core pattern of this module. Ukrainian uses **у/в** before days, months, and some seasons. You will see it again and again as we go deeper.
+To effectively plan a schedule, the seven days of the week are required. In order, they are: **понеділок** (Monday), **вівторок** (Tuesday), **середа** (Wednesday), **четвер** (Thursday), **п'ятниця** (Friday), **субота** (Saturday), and **неділя** (Sunday). There are two golden rules you must remember about the Ukrainian calendar. First, days of the week are never capitalized in Ukrainian unless they start a sentence. They are common nouns. Second, the week always starts on Monday. 
 
-## Дні тижня (Days of the Week)
+When you want to say that something happens "on" a specific day, you use the prepositions **у** or **в** followed by the day. The ending of the word might change depending on its gender. For masculine days, the form remains completely stable. You simply add the preposition: **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у четвер** (on Thursday). For feminine days ending in a vowel, the final vowel shifts to an -у or -ю sound. You simply memorize this pattern: **середа** → **у середу** (on Wednesday), **п'ятниця** → **у п'ятницю** (on Friday), **неділя** → **в неділю** (on Sunday). The same rule applies to Saturday: **субота** → **в суботу** (on Saturday).
 
-Ukrainian has seven days, and unlike English, they are always written in **lowercase** — no capital letters. English writes "Monday, Tuesday"; Ukrainian writes **понеділок, вівторок**. A capital letter appears only at the start of a sentence.
+Let us focus specifically on the word **неділя** (Sunday). For learners coming from other Slavic languages, this word can be a tricky false friend. In Russian, a similar-sounding word means "week." In Ukrainian, **неділя** only means Sunday. The etymology is fascinating and helps anchor its meaning: it comes from the phrase "не ділати," which translates to "not to work." Note that while **неділя** means Sunday in standard Ukrainian, in some regional dialects it can also mean "week." However, the standard word for "week" is always **тиждень**.
 
-Here are all seven, starting from the beginning of the Ukrainian week:
+To talk about your week broadly, you can group the days into two main categories. The days from Monday to Friday are called **робочі дні** (work days). The days of rest, Saturday and Sunday, are called **вихідні** (the weekend). In Ukrainian elementary schools, such as in the Grade 2 textbook by Vashulenko, students learn days of the week by creating a personal weekly schedule.
 
-- **понеділок** (Monday)
-- **вівторок** (Tuesday)
-- **середа́** (Wednesday)
-- **четве́р** (Thursday)
-- **п'я́тниця** (Friday)
-- **субота** (Saturday)
-- **неділя** (Sunday)
-
-Ukrainian calendars start the week on **понеділок**, not on Sunday as in some English-speaking countries. One important note: **неділя** means "Sunday," but the word for "week" is **ти́ждень**. In some dialects and older texts, **неділя** can mean "week," but in standard modern Ukrainian, a week is always a **тиждень**.
-
-These names are not random sounds — they tell a story. **Четвер** comes from **четве́ртий** (fourth) — it is the fourth day. **П'ятниця** comes from **п'ять** (five) — the fifth day. **Середа** means "middle" — it sits in the middle of the working week. **Субота** has ancient roots shared with the word "Sabbath," borrowed long ago through Greek. Knowing these connections makes the days easier to remember: four, five, middle — **четвер, п'ятниця, середа**.
+*   **У робочі дні я в офісі.** (On work days I am at the office.)
+*   **У вихідні я вдома.** (On the weekend I am at home.)
 
 <!-- INJECT_ACTIVITY: fill-in-days-order -->
 
-To say "on" a specific day, Ukrainian uses **у** or **в** followed by a special form of the day. Memorize each chunk as a whole phrase:
+## Місяці і пори року — Months and Seasons
 
-| Day | "On" that day |
-|-----|---------------|
-| понеділок | **у понеділок** |
-| вівторок | **у вівторок** |
-| середа | **у се́реду** |
-| четвер | **у четвер** |
-| п'ятниця | **у п'я́тницю** |
-| субота | **в суботу** |
-| неділя | **в неділю** |
+Just as the days form a week, the twelve months form a year. In Ukrainian schools, such as in the Grade 2 textbook by Vashulenko, months are introduced through seasonal stories and poems, connecting the vocabulary directly to the natural world. The twelve months organized by their respective season are listed below. All are written in lowercase letters.
 
-Some endings change: **середа** becomes **середу**, **п'ятниця** becomes **п'ятницю**, **субота** becomes **суботу**, **неділя** becomes **неділю**. Others stay the same: **понеділок, вівторок, четвер**. Do not try to figure out the grammar rule behind this yet — just memorize each chunk as a unit, the way a child learns "on Monday" without analyzing why "on" is there.
+*   **Зима** (Winter): **грудень** (December), **січень** (January), **лютий** (February).
+*   **Весна** (Spring): **березень** (March), **квітень** (April), **травень** (May).
+*   **Літо** (Summer): **червень** (June), **липень** (July), **серпень** (August).
+*   **Осінь** (Autumn): **вересень** (September), **жовтень** (October), **листопад** (November).
 
-Here are four sentences showing these chunks in action:
+The story of the Ukrainian months is deeply rooted in the natural world. While English and Russian use names derived from the ancient Latin calendar, Ukrainian has preserved its native Slavic system. The names describe exactly what is happening in nature. For example, **березень** (March) comes from the word for birch tree, as this is when birch sap begins to flow. **Квітень** (April) is related to flowers blooming. **Липень** (July) is named after the linden tree. **Вересень** (September) is tied to the blooming of heather. Perhaps the most obvious is **листопад** (November), which literally means "leaf fall."
 
-- **Я навча́юся у вівторок і в четвер.** — I study on Tuesday and Thursday.
-- **Та́то працю́є у понеділок.** — Dad works on Monday.
-- **У п'ятницю ми ди́вимося фільм.** — On Friday we watch a movie.
-- **В суботу я сплю до́вго.** — On Saturday I sleep late.
+When you want to say that something happens "in" a specific month, you again use the prepositions **у** or **в**. However, months require a different grammatical ending than days. You must add the ending **-і** to the base word. Often, the final fleeting vowel **-е-** in the month's name drops out. Here is the pattern you need to learn: **січень** → **у січні** (in January), **березень** → **у березні** (in March), **квітень** → **у квітні** (in April), **жовтень** → **у жовтні** (in October). The exception is **лютий**, which takes a different ending: **у лютому** (in February).
 
-## Мі́сяці і по́ри ро́ку (Months and Seasons)
+Finally, you also need to know how to say "in" a specific season. When acting as an adverb to answer the question "when?", the seasons take irregular forms that you simply must memorize as fixed vocabulary items: **взимку** (in winter), **навесні** (in spring), **влітку** (in summer), **восени** (in autumn). Compare these to the base nouns: **зима**, **весна**, **літо**, **осінь**.
 
-Ukrainian organizes the year into four seasons, and each season holds three months. The seasons are:
+<!-- INJECT_ACTIVITY: match-up-months-seasons -->
 
-- **Зима́** (winter) — сніг і хо́лод (snow and cold)
-- **Весна́** (spring) — кві́ти і тепло (flowers and warmth)
-- **Літо** (summer) — со́нце і мо́ре (sun and sea)
-- **О́сінь** (autumn) — ли́стя і дощ (leaves and rain)
-
-Now the twelve months, grouped by season — all **lowercase**, just like days:
-
-| Зима (winter) | Весна (spring) | Літо (summer) | Осінь (autumn) |
-|---|---|---|---|
-| **гру́день** (Dec) | **бе́резень** (Mar) | **че́рвень** (Jun) | **ве́ресень** (Sep) |
-| **сі́чень** (Jan) | **кві́тень** (Apr) | **ли́пень** (Jul) | **жо́втень** (Oct) |
-| **лю́тий** (Feb) | **тра́вень** (May) | **серпень** (Aug) | **листопа́д** (Nov) |
-
-Ukrainian month names come from nature — not from Roman gods like "January" or "March" in English. **Березень** (March) comes from **бере́за** (birch tree) — birch sap flows in early spring. **Липень** (July) comes from **ли́па** (linden tree) — linden blossoms fill the air in July. **Листопад** (November) literally means "leaves fall" — **листя** (leaves) + **па́дати** (to fall). This is a Ukrainian linguistic fingerprint: the calendar is a nature calendar. All twelve months are masculine gender.
-
-<!-- INJECT_ACTIVITY: match-months-seasons -->
-
-To say "in" a specific month, Ukrainian uses **у/в** with a changed form of the month name. Here are all twelve:
-
-- **у січні** (in January), **у лю́тому** (in February), **в березні** (in March)
-- **у квітні** (in April), **у травні** (in May), **в че́рвні** (in June)
-- **в ли́пні** (in July), **в серпні** (in August), **у ве́ресні** (in September)
-- **в жо́втні** (in October), **в листопа́ді** (in November), **в грудні** (in December)
-
-Notice that **лютий** becomes **у лютому** — it follows a different pattern from the other months because **лютий** is originally an adjective (meaning "fierce" — fierce frosts!), not a noun like the rest.
-
-For seasons, Ukrainian uses special frozen forms that cannot be broken apart. Memorize these four chunks:
-
-- **взи́мку** (in winter)
-- **навесні́** (in spring)
-- **влі́тку** (in summer)
-- **восени́** (in autumn)
-
-These are adverbs — single words, not "у + season." They look different from the season names, so just learn each one by heart.
-
-Two model sentences putting this together:
-
-- **Мій день народження в жовтні.** — My birthday is in October.
-- **Влітку я ї́жджу на море.** — In summer I go to the sea.
-
-And four more mixing months and seasons:
-
-- **У грудні хо́лодно — це зима.** — In December it's cold — it's winter.
-- **Навесні кві́тнуть дере́ва.** — In spring, trees bloom.
-- **В серпні ми відпочива́ємо.** — In August we rest.
-- **Восени почина́ється шко́ла.** — In autumn, school begins.
-
-<!-- INJECT_ACTIVITY: fill-in-chunks -->
+<!-- INJECT_ACTIVITY: fill-in-day-month-chunks -->
 
 ## Підсумок — Summary
 
-Here is everything organized for quick reference and self-testing.
+To help organize the calendar vocabulary, here is a consolidated reference table mapping the base noun, which answers the question **Що?** (What?), to the time expression, which answers the question **Коли?** (When?).
 
-**Дні тижня** (Days of the week):
+| Що? (What?) | Коли? (When?) |
+| :--- | :--- |
+| **понеділок** | **у понеділок** |
+| **середа** | **у середу** |
+| **січень** | **у січні** |
+| **зима** | **взимку** |
 
-- понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя
-- Chunks: **у понеділок, у вівторок, у середу, у четвер, у п'ятницю, в суботу, в неділю**
+Learning this vocabulary is a vital step in thinking like a Ukrainian. By using native Slavic names like **березень** instead of Latin-based alternatives, and by structuring your week to begin on **понеділок**, you are aligning yourself with the cultural rhythms of Ukraine. Remember to practice the soft endings on months like **січень** and **вересень** to make your pronunciation sound natural and authentic. The soft sign **ь** indicates that the preceding consonant is soft.
 
-**Місяці** (Months):
+Answer the following questions based on today's actual date and your own life. Speak the answers out loud to practice forming the complete phrases.
 
-- січень, лютий, березень, квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень
-- Chunks: **у січні, у лютому, в березні, у квітні, у травні, в червні, в липні, в серпні, у вересні, в жовтні, в листопаді, в грудні**
+*   Який сьогодні день тижня? (Сьогодні ...)
+*   Який зараз місяць? (Зараз ...)
+*   Яка зараз пора року? (Зараз ...)
+*   Коли у тебе день народження? (Мій день народження у ...)
+*   Що ти робиш у суботу? (У суботу я ...)
 
-**Пори року** (Seasons):
-
-- зима, весна, літо, осінь
-- Chunks: **взимку, навесні, влітку, восени**
-
-Test yourself — answer these questions in Ukrainian:
-
-- **Яки́й сього́дні день?** — What day is today?
-- **Який за́раз мі́сяць?** — What month is it now?
-- **Яка зараз пора року?** — What season is it now?
-- **Коли у тебе день народження?** — When is your birthday?
-- **Що ти робиш у суботу?** — What do you do on Saturday?
-
-Try answering out loud. Use the chunks you learned: **У мене день народження в ...** (My birthday is in ...), **У суботу я ...** (On Saturday I ...). The goal is not to construct these from grammar rules — the goal is to reach for the whole chunk automatically, just as a native speaker does.
-
-**Deterministic word count: 1455 words** (calculated by pipeline, do NOT estimate manually)
-
+Mastering these basic questions provides the confidence to schedule meetings, talk about the past, and make plans for the future in Ukrainian.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1286 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -382,8 +310,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -470,61 +398,15 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 109 words | Not found: 69 words
+Verified: 89 words | Not found: 4 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Андрі — NOT IN VESUM
   ✗ Андрій — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Марія — NOT IN VESUM
-  ✗ Неді — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ П'ятна — NOT IN VESUM
-  ✗ Планува — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ вго — NOT IN VESUM
-  ✗ вень — NOT IN VESUM
-  ✗ взи — NOT IN VESUM
-  ✗ вимося — NOT IN VESUM
-  ✗ влі — NOT IN VESUM
-  ✗ втень — NOT IN VESUM
-  ✗ втні — NOT IN VESUM
-  ✗ вівто — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ дження — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дцятого — NOT IN VESUM
-  ✗ ждень — NOT IN VESUM
-  ✗ жджу — NOT IN VESUM
-  ✗ жня — NOT IN VESUM
-  ✗ зями — NOT IN VESUM
-  ✗ кві — NOT IN VESUM
-  ✗ листопа — NOT IN VESUM
-  ✗ лод — NOT IN VESUM
-  ✗ лодно — NOT IN VESUM
-  ✗ лок — NOT IN VESUM
-  ✗ льний — NOT IN VESUM
-  ✗ мку — NOT IN VESUM
-  ✗ наро — NOT IN VESUM
-  ✗ неді — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ ння — NOT IN VESUM
-  ✗ нську — NOT IN VESUM
-  ✗ нце — NOT IN VESUM
-  ✗ нячно — NOT IN VESUM
-  ✗ п'я — NOT IN VESUM
-  ✗ понеді — NOT IN VESUM
-  ✗ рвень — NOT IN VESUM
-  ✗ рвні — NOT IN VESUM
-  ✗ реду — NOT IN VESUM
-  ✗ резень — NOT IN VESUM
-  ✗ резня — NOT IN VESUM
-  ✗ резні — NOT IN VESUM
-  ✗ ресень — NOT IN VESUM
-  ✗ ресні — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ Софія — NOT IN VESUM
+  ✗ Софіє — NOT IN VESUM
 
-All 109 other words are confirmed to exist in VESUM.
+All 89 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

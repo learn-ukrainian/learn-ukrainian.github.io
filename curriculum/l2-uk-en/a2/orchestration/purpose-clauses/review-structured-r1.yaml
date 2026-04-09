@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all grammar points perfectly (same subject, different subject,
+    reported speech without backshifting, and the difference between *що*, *щоб*,
+    and *тому що*). Word target is successfully exceeded
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent grammar explanations, but contains two linguistic errors: a
+    calque ("не бути мокрою") and a Russianism ("поїсти гаряче").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding PPP flow. The contrast section between "Він сказав, що я прийшов"
+    (fact) and "Він сказав, щоб я прийшов" (request) is brilliant for A2 learners.
+    It provides 3-6 clear examples per grammati
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (*щоб, мета, сказати, відповісти, пояснити, запитати,
+    повідомлення, зрозуміти, непряма мова, додати*) is used naturally throughout the
+    prose and dialogues.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The placeholder markers perfectly match the four types specified in the
+    plan (fill-in, quiz, match-up, unjumble) and are placed perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging and explains tricky concepts (like the
+    "past tense" acting as subjunctive) in an empathetic and natural teaching voice.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module is properly structured with standard markdown, contains all
+    headers from the outline, and has no stray artifacts or meta-commentary. Word
+    count is well above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Situations and references are culturally appropriate and natural (buying
+    bread, communicating via messengers, calling grandma).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are natural and engaging. The multi-turn conversation between
+    Mom and Son synthesizing *що* and *щоб* is an excellent piece of realistic communication
+    that naturally weaves in the target
+findings: []

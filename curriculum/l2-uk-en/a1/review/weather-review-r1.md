@@ -2,57 +2,49 @@
 No linguistic errors found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-weather-season -->` — **Premature placement.** Placed right after sky conditions, but the plan's season fill-in requires precipitation verbs ("іде дощ", "іде сніг"), which are taught in the *following* paragraph.
-- `<!-- INJECT_ACTIVITY: fill-in-weather-for-season -->` — Correctly placed.
-- `<!-- INJECT_ACTIVITY: match-weather-context -->` — Correctly placed.
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue-weather -->` — Correctly placed.
-- **Count Issue:** The plan specifies 3 activity hints, but 4 markers were generated. The first marker is redundant and prematurely placed.
+- `<!-- INJECT_ACTIVITY: fill-in-weather-dialogue -->` matches the plan focus ("Complete the dialogue about the weather") and is appropriately placed after the dialogue and weather expression sections.
+- `<!-- INJECT_ACTIVITY: match-up-weather-season -->` matches the plan focus ("Match the weather phrase to its logical context or season") and is placed after the seasons section.
+- `<!-- INJECT_ACTIVITY: fill-in-season-weather -->` matches the plan focus ("Choose the logical weather for the season") and is placed at the end of the seasons section.
+All markers correspond correctly to the plan's `activity_hints`. There are enough activities present.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers all major points, but missed using "вчора" in context despite it being in the plan and summary list. Generated an extra, unprompted exercise marker. |
-| 2. Linguistic accuracy | 9/10 | Excellent overall, but breaks the parallel structure of state adverbs with "восени — дощ" (noun) in the first section. |
-| 3. Pedagogical quality | 9/10 | Superb use of textbook references (Avramenko, Zabolotny). Minor sequencing flaw with placing an activity marker before the required vocabulary is taught. |
-| 4. Vocabulary coverage | 9/10 | All vocabulary is beautifully contextualized, except "вчора" which only appears in the summary list without being demonstrated in the prose. |
-| 5. Exercise quality | 8/10 | 4 markers for 3 hints. The first marker `fill-in-weather-season` is placed before precipitation verbs are introduced, making it impossible for the learner to solve at that point in the reading. |
-| 6. Engagement & tone | 10/10 | Very natural tone, avoiding gamified cliches. The anecdote about "Can rain really walk?" from Avramenko is a fantastic pedagogical hook. |
-| 7. Structural integrity | 9/10 | Clean structure, but the extra activity marker creates an imbalance. |
-| 8. Cultural accuracy | 10/10 | Uses Celsius properly and explains real-world conversational habits ("drop градусів"). |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are highly contextual. "Так, але не дуже холодно!" is a slightly unnatural fragment as a response to "do you like snow?", requiring a small tweak. |
+| 1. Plan adherence | 10/10 | Every plan point is covered with specific examples, correct section pacing, and textbook references (Заболотний Grade 8, p.126) integrated naturally. Word count (1332) exceeds the 1200 target. |
+| 2. Linguistic accuracy | 10/10 | All Ukrainian phrases are correct. Excellent use of impersonal adverbs without dummy pronouns. |
+| 3. Pedagogical quality | 7/10 | DEDUCT for a critical grammar error: claiming that the adverbs **тепло** and **холодно** act as "nouns" in the phrase **На вулиці тепло**. They are still impersonal adverbs here. REWARD for the clear explanation of how precipitation is personified as "walking". |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words from the plan are introduced naturally in context. |
+| 5. Exercise quality | 10/10 | Three exercise markers match the plan's hints and are placed chronologically after the concept is taught. |
+| 6. Engagement & tone | 9/10 | DEDUCT for slight corporate phrasing in the Summary: "You now have a complete toolkit for describing the environment around you." REWARD for generally encouraging teacher tone. |
+| 7. Structural integrity | 8/10 | DEDUCT for a dangling/incomplete sentence in the summary: "If you can answer these questions confidently using adverbs like **тепло** or phrases like **іде дощ**,  This vocabulary..." |
+| 8. Cultural accuracy | 10/10 | Accurate explanation of Ukrainian temperature using the Celsius scale and native preferences for phrases like **іде дощ** over **дощить**. |
+| 9. Dialogue & conversation quality | 10/10 | Natural multi-turn conversations featuring named speakers (Іванко, Галя) with culturally appropriate responses. |
 
 ## Findings
 
-[5. Exercise quality] [Major]
-Location: Section "Яка погода?", right after the paragraph ending with "завтра (tomorrow) plus буде signals the future."
-Issue: The marker `<!-- INJECT_ACTIVITY: fill-in-weather-season -->` is placed before precipitation verbs ("іде дощ", "іде сніг") are taught. The plan's season fill-in requires these verbs. This also results in 4 markers for 3 planned activities.
-Fix: Remove the premature `<!-- INJECT_ACTIVITY: fill-in-weather-season -->` marker. The later marker `fill-in-weather-for-season` correctly tests this concept.
+[Pedagogical quality] [Critical]
+Location: Погода і пори року (Weather and Seasons), paragraph 6 ("You can also use the adverbs тепло and холодно as nouns...")
+Issue: The text incorrectly states that "тепло" and "холодно" function as nouns in the phrase "На вулиці тепло". They are impersonal adverbs (state words), exactly as explained earlier in the module. "Холодно" does not even have a noun form identical to the adverb (the noun is "холод"). This teaches a wrong grammar rule and directly contradicts the module's own earlier explanation.
+Fix: Change the explanation to say these adverbs can be paired with location phrases.
 
-[2. Linguistic accuracy] [Major]
-Location: Section "Діалоги", paragraph starting with "Notice the season adverbs:"
-Issue: The text says "pair each with the weather you just heard: взимку — холодно, влітку — тепло, восени — дощ". Combining an adverb (холодно/тепло) and a noun (дощ) breaks the parallel structure of the state adverbs being taught. Furthermore, the dialogue did not actually mention autumn rain.
-Fix: Change "восени — дощ" to "восени — прохолодно" to maintain the adverbial pattern, and remove "you just heard".
+[Structural integrity] [Major]
+Location: Підсумок — Summary, paragraph 3 ("If you can answer these questions confidently...")
+Issue: The sentence contains a dangling/incomplete dependent clause ("If you can answer these questions confidently using adverbs like тепло or phrases like іде дощ, ") that abruptly runs into an independent sentence, making it grammatically broken.
+Fix: Remove the incomplete clause.
 
-[4. Vocabulary coverage] [Minor]
-Location: Section "Яка погода?", paragraph discussing time adverbs.
-Issue: The word "вчора" (yesterday) is required by the plan and appears in the summary list, but it is not used in context in the prose.
-Fix: Update the explanation of "сьогодні" and "завтра" to include "вчора" and "було" as simple time chunks.
-
-[9. Dialogue & conversation quality] [Minor]
-Location: Section "Погода і пори року", third dialogue. Галя's line: "Так, але не дуже холодно! (Yes, but not too cold!)"
-Issue: As a response to "do you like snow?", "but not too cold" is grammatically incomplete in Ukrainian and sounds slightly unnatural. It should specify "when it's not too cold".
-Fix: Change to "Так, але коли не дуже холодно! (Yes, but when it's not too cold!)".
+[Engagement & tone] [Minor]
+Location: Підсумок — Summary, paragraph 1
+Issue: The phrase "You now have a complete toolkit for describing the environment" borders on gamified/corporate language.
+Fix: Simplify to a more natural teacher summary.
 
 ## Verdict: REVISE
-The module is beautifully written with excellent cultural and textbook integration. However, the premature exercise marker, the missing context for "вчора", and a couple of minor linguistic polish items require a revision pass before shipping.
+The module covers the plan beautifully and features excellent natural Ukrainian, but a critical pedagogical error in grammatical classification ("adverbs as nouns") and a broken sentence require an immediate fix.
 
 <fixes>
-- find: "Now pair each with the weather you just heard: **взимку** — **холодно**, **влітку** — **тепло**, **восени** — **дощ**."
-  replace: "Now pair each with the weather: **взимку** — **холодно**, **влітку** — **тепло**, **восени** — **прохолодно**."
-- find: "You can toggle between today and tomorrow using time adverbs: **Сьогодні хмарно. Завтра буде сонячно.** Notice **буде** appears again — it's a simple future marker used as a chunk here, not a full verb lesson yet. **Сьогодні** (today) states the present; **завтра** (tomorrow) plus **буде** signals the future."
-  replace: "You can toggle between days using time adverbs: **Вчора було хмарно. Сьогодні ясно. Завтра буде сонячно.** Notice **було** (was) and **буде** (will be) — they work as simple time chunks. **Вчора** (yesterday) states the past, **сьогодні** (today) the present, and **завтра** (tomorrow) the future."
-- find: "<!-- INJECT_ACTIVITY: fill-in-weather-season -->"
-  replace: ""
-- find: "<div class=\"dialogue-line\"><span class=\"speaker\">Галя:</span> Так, але не дуже холодно! *(Yes, but not too cold!)*</div>"
-  replace: "<div class=\"dialogue-line\"><span class=\"speaker\">Галя:</span> Так, але коли не дуже холодно! *(Yes, but when it's not too cold!)*</div>"
+- find: 'You can also use the adverbs **тепло** and **холодно** as nouns in certain contexts to refer to the abstract concept of warmth or cold. For example, **На вулиці тепло** means "It is warm outside" (literally "on the street").'
+  replace: 'You can also pair these adverbs with location phrases to describe the environment. For example, **На вулиці тепло** means "It is warm outside" (literally "on the street").'
+- find: 'If you can answer these questions confidently using adverbs like **тепло** or phrases like **іде дощ**,  This vocabulary will allow you to plan your days'
+  replace: 'This vocabulary will allow you to plan your days'
+- find: 'You now have a complete toolkit for describing the environment around you.'
+  replace: 'You can now describe the environment around you in Ukrainian.'
 </fixes>

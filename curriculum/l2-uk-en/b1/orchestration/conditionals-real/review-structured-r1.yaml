@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module follows the plan exceptionally well, covering all theoretical
+    points, textbook quotes (e.g., Nestor), and dialogues. However, it missed the
+    specific plan example "Коли будеш у Львові, завіт
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The Ukrainian is highly natural, but the writer used the calque "знаходитися"
+    to refer to physical location ("пряме запитання «Де знаходиться аптека?»"). Correct
+    usage requires omitting the verb or us
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Rules are explained clearly with contextualized examples.
+    The explanation of English "would" vs Ukrainian "б/би" is pedagogically outstanding
+    and directly addresses learner struggl
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 13/14 required words and 9/10 recommended words were naturally integrated
+    into the prose and dialogues. `завітати` was the only omission.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are beautifully paced, placed immediately after the relevant
+    theory. The writer added two extra markers to ensure every single sub-skill (formation,
+    conditionals, conversation) is tes
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging, and professional. The "залежні вихідні" (Dependent
+    Weekend) strategy is a fantastic, creative addition that encourages active learner
+    production.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4286 (safely above the 4000 target). Markdown is clean,
+    headers perfectly match the plan, and there are no stray artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The grammar is presented firmly on its own terms, emphasizing internal
+    Ukrainian logic like "милозвучність".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are extremely natural, highly contextualized (Carpathians trip,
+    language school), and showcase the contrast between real conditionals and polite
+    requests effortlessly.
+findings: []

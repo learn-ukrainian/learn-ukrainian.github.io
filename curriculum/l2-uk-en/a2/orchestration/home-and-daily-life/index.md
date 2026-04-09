@@ -1,6 +1,6 @@
 # Build Summary: home-and-daily-life (A2)
 
-Generated: 2026-04-08 04:37
+Generated: 2026-04-09 01:57
 
 ## Pipeline Phases
 
@@ -20,6 +20,7 @@ Generated: 2026-04-08 04:37
 | review | complete | 2026-04-08 02:37:27 |
 | stress | complete | 2026-04-08 02:37:27 |
 | publish | complete | 2026-04-08 02:37:28 |
+| pre-verify | complete | 2026-04-08 23:57:44 |
 
 ## Reviews
 
@@ -33,6 +34,7 @@ Generated: 2026-04-08 04:37
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (auto) | 600s | ❌ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 585s | ✅ |
 | skeleton | gemini (auto) | 141s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 543s | ✅ |
 | vocab | gemini (auto) | 149s | ✅ |
@@ -47,12 +49,14 @@ Generated: 2026-04-08 04:37
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
 - `chunk-04.md`
 - `chunk-05.md`
 - `exercise-verification.json`
+- `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`

@@ -1,42 +1,36 @@
 vocabulary:
-- word: ма́ма
-  translation: mother, mom
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: та́то
-  translation: father, dad
+- word: синку́
+  translation: son (vocative)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: сестра́
-  translation: sister
+- word: до́чко
+  translation: daughter (vocative)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: сино́к
-  translation: son (diminutive)
+- word: коза́к
+  translation: Cossack
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: дочка́
-  translation: daughter
+- word: вчи́тель
+  translation: teacher
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
 - word: бабу́ся
-  translation: grandmother, grandma
+  translation: grandmother
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: діду́сь
-  translation: grandfather, grandpa
+  translation: grandfather
   expression: false
   pos: ім.
   gender: ч.
@@ -47,44 +41,38 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: пан
-  translation: Mr., sir
+  translation: Mr. / sir
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: па́ні
-  translation: Mrs., Ms., ma'am
+  translation: Mrs. / Ms.
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: вчи́тель
-  translation: teacher (male)
+- word: ма́ма
+  translation: mother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: та́то
+  translation: father / dad
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: коза́к
-  translation: Cossack
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кличний відмінок
-  translation: vocative case (the case of direct address)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: називний відмінок
-  translation: nominative case (the subject case)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: відмі́нок
-  translation: grammatical case
+- word: приві́т
+  translation: hi
   expression: false
   pos: ім.
   gender: ч.
@@ -95,44 +83,98 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: на столі
+  translation: on the table
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: ключі́
   translation: keys
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: кише́ня
-  translation: pocket
+- word: у кишені
+  translation: in the pocket
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: будьте обережні
+  translation: be careful
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до побачення
+  translation: goodbye
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий ранок
+  translation: Good morning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий вечір
+  translation: Good evening
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: На добраніч
+  translation: Good night
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Смачного
+  translation: Bon appetit / enjoy your meal
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хочу їсти
+  translation: I want to eat
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: маши́на
+  translation: car
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: Ходи сюди!
-  translation: Come here!
+- word: ка́зка
+  translation: fairy tale
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пита́ння
+  translation: question
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: маю рацію
+  translation: to be right / to have a point
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Радий бачити!
-  translation: Glad to see you! (said by male)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Рада бачити!
-  translation: Glad to see you! (said by female)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Будьте обережні!
-  translation: Be careful! (plural/formal)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Вибачте!
-  translation: Excuse me! Sorry! (formal/plural)
+- word: ходи сюди
+  translation: come here
   expression: true
   pos: ''
   gender: ''

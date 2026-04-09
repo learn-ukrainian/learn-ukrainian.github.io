@@ -1,50 +1,44 @@
 vocabulary:
-- word: гуля́ти
-  translation: to walk around, to stroll
+- word: метро́
+  translation: subway
   expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: с.
   verified: true
-- word: гуляти по місту
-  translation: to walk around the city
+- word: у центрі
+  translation: in the center
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: вра́нці
-  translation: in the morning
+- word: на метро
+  translation: by subway
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Золоті ворота
+  translation: Golden Gate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пі́шки
+  translation: on foot
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: уве́чері
-  translation: in the evening
-  expression: false
-  pos: присл.
+- word: Я йду пішки
+  translation: I am walking on foot
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: зру́чний
-  translation: convenient, comfortable
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: виходити
-  translation: to exit, to go out
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: попе́реду
-  translation: ahead
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: пря́мо
-  translation: straight (ahead)
-  expression: false
-  pos: присл.
+- word: Скажіть, будь ласка
+  translation: Tell me, please
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: напра́во
@@ -59,188 +53,86 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: фонта́н
-  translation: fountain
+- word: пря́мо
+  translation: straight
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ла́вка
-  translation: bench
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: перехо́жий
-  translation: passerby
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пита́ти
-  translation: to ask
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: відповіда́ти
-  translation: to answer
-  expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
 - word: пло́ща
-  translation: square (public)
+  translation: square
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: Ла́вра
-  translation: Lavra (monastery complex)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сіда́ти
-  translation: to sit down, to get on (transport)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пі́шки
-  translation: on foot
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: хвили́на
-  translation: minute
+- word: шко́ла
+  translation: school
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: готе́ль
-  translation: hotel
+- word: робо́та
+  translation: work
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: телефонува́ти
-  translation: to call (by phone)
+- word: Куди́
+  translation: To where? (direction)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Зві́дки
+  translation: From where? (origin)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Ви́бачте
+  translation: Excuse me
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: місце́вий
-  translation: local
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: шука́ти
-  translation: to look for, to search
+- word: діста́тися
+  translation: to get to / to reach
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: упе́рше
-  translation: for the first time
+- word: ї́хати
+  translation: to go by vehicle
   expression: false
-  pos: присл.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: вхід
-  translation: entrance
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: дале́ко
-  translation: far
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: центра́льний
-  translation: central, main
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: головни́й
-  translation: main, principal
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: пі́сля
-  translation: after
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: бі́ля
-  translation: near, by, next to
+- word: від
+  translation: from
   expression: false
   pos: прийм.
   gender: ''
   verified: true
-- word: за рогом
-  translation: around the corner
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ідіть прямо
-  translation: go straight (imperative, formal)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ви́йдіть
-  translation: exit (imperative, formal)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ста́нція
-  translation: station
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зупи́нка
-  translation: stop (bus/tram)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вокза́л
-  translation: train station
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: метро́
-  translation: metro, subway
+- word: до
+  translation: to
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: апте́ка
-  translation: pharmacy
+- word: ву́лиця
+  translation: street
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: бібліоте́ка
-  translation: library
+- word: сходи
+  translation: stairs
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ''
   verified: true
 - word: порт
-  translation: port, harbour
+  translation: port
   expression: false
   pos: ім.
   gender: ч.
@@ -251,38 +143,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: кафе́
-  translation: café
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: Що шукаєте?
-  translation: What are you looking for?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Скільки їхати?
-  translation: How long is the ride?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Гарної подорожі!
-  translation: Have a good trip!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Ось тут.
-  translation: Right here.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Їдьте на метро до станції...
-  translation: Take the metro to ... station.
+- word: Я хочу каву
+  translation: I want coffee
   expression: true
   pos: ''
   gender: ''

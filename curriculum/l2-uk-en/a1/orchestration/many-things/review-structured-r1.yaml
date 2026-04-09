@@ -2,56 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 content_outline sections present with correct structure. Dialogue
-    1 matches plan almost verbatim (Що тут є? Столи, стільці і вікна...). Dialogue
-    2 captures the supply-shopping scenario. Большако
+  score: 10
+  evidence: Perfectly covers all 4 sections from the outline, integrates all required
+    and recommended vocabulary, and successfully implements the textbook references
+    (Большакова, Вашуленко). Word count is excelle
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: 'All 110 Ukrainian word forms VESUM-verified. Plural formations correct:
-    стіл→столи, книга→книги, вікно→вікна, стілець→стільці, олівець→олівці all confirmed.
-    Adjective plural rule (always -і) is correc'
+  evidence: Flawless. Pluralization rules for nouns and adjectives are accurate. Demonstratives
+    and possessives are used correctly. Verified against VESUM.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Excellent PPP flow: dialogues present plurals in context (Presentation),
-    tables + explanations systematize the patterns (Practice setup), self-check +
-    writing prompt provide Practice/Production. Each '
+  score: 10
+  evidence: Excellent PPP flow. Introduces plurals through a natural dialogue, clearly
+    breaks down the rules by gender, provides the consonant guideline, and finishes
+    with the simplified adjective rule.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 8 required vocab items used naturally in prose: столи (Dialogue 1),
-    книги (Section 2 table), вікна (Dialogue 1 + tables), стільці (Dialogue 1), ці/ті/мої
-    (Section 3 examples), які (Dialogue 1). Al'
+  evidence: All required words (столи, книги, вікна, стільці, ці, ті, мої, які) and
+    recommended words are introduced naturally within the context of classrooms and
+    shopping.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 markers for 4 plan hints — count matches. Placement is logical: fill-in
-    after noun teaching, fill-in after adjective teaching, group-sort in summary.
-    Markers are spread evenly (one per section). Min'
+  score: 8
+  evidence: 'Deducting points for the clustering of three activity markers back-to-back,
+    and for a logical error in the self-check exercise where the prompt gives away
+    the answer (`Перекладіть: «Ці сині зошити»`).'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no gamified language, no "Let us explore..."
-    meta-commentary. Direct, specific instruction: "Notice what just happened" is
-    genuine pedagogical pointing, not filler. Dialogues '
+  score: 8
+  evidence: Generally warm and encouraging. Deducting points for mild instances of
+    generic enthusiasm and empty filler (e.g., "beautifully transforms into вікна",
+    "creates a rhythmic, melodic sound").
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All 4 H2 sections from plan present in correct order. Clean markdown throughout.
-    No duplicate summaries, no meta-commentary sections, no stray tags. Word count
-    1459 vs 1200 target — 22% above, well wi
+  score: 9
+  evidence: Clean markdown and excellent organization, but the prose contains one
+    redundant, repetitive sentence that restates an example just given in the preceding
+    line.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Ukrainian presented entirely on its own terms. No "like Russian but..."
-    or "similar to English..." comparisons. Grammar terminology uses Ukrainian categories
-    (однина/множина, not "singular/plural" as '
+  evidence: Natural references to Ukrainian Grade 2 and Grade 3 textbooks, aligning
+    with the project's authentic, decolonized pedagogical goals.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Two multi-turn dialogues with named speakers (Олена, Іван). Real situation:
-    setting up a classroom, counting supplies. Natural exchanges — not interrogation-style.
-    Dialogue 2 has genuine back-and-fort'
+  score: 10
+  evidence: Dialogues are natural, conversational, and highly contextualized (setting
+    up a classroom, buying supplies in a store).
 findings: []

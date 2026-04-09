@@ -1,128 +1,134 @@
-## Ра́нок (Morning)
+## Ра́нок: Поча́ток дня у Ки́єві
 
-Сьома ра́нку. Ти **проки́нувся** (woke up, masc.) — або́ **проки́нулася** (woke up, fem.) — у **готе́лі** (hotel) в Ки́єві. Ти **відчини́в/відчини́ла** (opened) вікно́. **Надво́рі** (outside) тепло́ і со́нячно — бли́зько двадцяти́ гра́дусів. **До́брого ранку!** Час **сні́дати** (to have breakfast). Ти одяга́єшся і йдеш у кафе́ на пе́ршому по́версі.
+You love to **подорожува́ти** (travel). This is the culmination of all your hard work. You are living a day in a Ukrainian city. The past tense forms immediately root us in the reality of completed actions. 
 
-Notice the past tense forms: **прокинувся** for masculine, **прокинулася** for feminine. This is how Ukrainian marks gender in the past tense — a pattern you learned in M48. Throughout this module, you'll see both forms separated by a slash. Pick the one that fits you.
+**Ти проки́нувся в готе́лі.** (You woke up in a hotel, masculine).
+Or for feminine: **Ти проки́нулася в готелі.** (You woke up in a hotel).
 
-> — **Ти:** Доброго ранку! *(Good morning!)*
-> — **Офіціа́нт:** Доброго ранку! Що бажа́єте? *(Good morning! What would you like?)*
-> — **Ти:** Будь ла́ска, ка́ву з молоко́м і **круаса́н** (croissant). *(A coffee with milk and a croissant, please.)*
-> — **Офіціант:** Звича́йно. Щось іще́? *(Of course. Anything else?)*
-> — **Ти:** Дякую, це все. **Скі́льки ко́шту́є?** *(Thanks, that's all. How much does it cost?)*
-> — **Офіціант:** Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*
-> — **Ти:** Ось, будь ласка. *(Here you go.)*
-> — **Офіціант:** Дякую! **Смачно́го!** *(Thanks! Enjoy your meal!)*
+You look out the window of your **готе́ль** (hotel) and check the weather to start planning your day.
+- **До́брого ра́нку!** (Good morning!)
+- **Яка сього́дні пого́да?** (What is the weather today?)
+- **Сьогодні те́пло і со́нячно.** (Today it is warm and sunny.)
 
+Down in the cafe, you use your survival skills. **Ти сні́даєш у кафе́.** (You eat breakfast in a cafe).
 
-Everything here is review: greetings from M01, café ordering from M28, food from M36, numbers from M10, and **будь ласка** — the polite formula from M43. The phrase **смачного** literally means "of tasty" — it's the standard Ukrainian way to say "bon appétit."
-
-Пі́сля сніда́нку ти **виходиш** (go out) із готе́лю. **То́бі потрі́бна** (you need) зеле́на **лі́нія** (line) метро́ — ста́нція Хреща́тик. Ти **купу́єш** (buy) оди́н **квито́к** (ticket). Transport vocabulary from M34, colors from M22 — all coming together now.
-
-> — **Ти:** Ви́бачте, де тут метро? *(Excuse me, where is the metro here?)*
-> — **Перехо́жий:** Іді́ть пря́мо, по́тім **ліво́руч** (to the left). *(Go straight, then left.)*
-> — **Ти:** Дякую! *(Thanks!)*
-> — **Перехожий:** Будь ласка, га́рного дня! *(You're welcome, have a good day!)*
-
-
-Directions from M31, polite phrases from M43 — short and natural.
-
-**Зра́нку** (in the morning) ти **сні́дав/сні́дала** (had breakfast) у кафе, потім **ї́хав/ї́хала** (rode) на метро. У́се до́бре! Ти вже в це́нтрі Ки́єва. **Хрещатик** — головна́ ву́лиця мі́ста. Тут га́рні магази́ни, кафе і парки. Notice how the narration switches between tenses: **зранку ти снідав** (past — what already happened) and **ти вже в центрі** (present — where you are now). Ukrainian does this naturally when recapping events.
-
-<!-- INJECT_ACTIVITY: quiz-a1-review -->
-
-## День (Daytime)
-
-Ти **гуля́єш** (stroll) по Хреща́тику. Яка га́рна вулиця! Ти **ба́чиш** (see) вели́кий магази́н — і захо́диш. На сті́нах — **виши́ва́нки** (embroidered shirts). Виши́ва́нка — це і тради́ція, і суча́сна мо́да. Елеме́нти ви́шивки сього́дні но́сять не ті́льки в Украї́ні. Га́рний **сувені́р** (souvenir)!
-
-> — **Ти:** Скільки коштує **ця** (this) вишиванка? *(How much does this vyshyvanka cost?)*
-> — **Продаве́ць:** Ти́сяча дві́сті гривень. *(One thousand two hundred hryvnias.)*
-> — **Ти:** О, до́рого! А **ця**? *(Oh, expensive! And this one?)*
-> — **Продавець:** Ця — вісімсо́т. *(This one is eight hundred.)*
-> — **Ти:** Добре, я **беру́** (I'll take it)! *(Alright, I'll take it!)*
-> — **Продавець:** Будь ласка. Чудо́вий ви́бір! *(Here you go. Wonderful choice!)*
-
-
-The demonstrative pronoun **ця** (this, feminine) points to a specific item — review from M12. The seller says **чудовий вибір** (wonderful choice) — a phrase you'll hear in real Ukrainian shops. Notice the register: this is casual, friendly **розмо́вний** (colloquial) Ukrainian.
-
-Ти виходиш із магази́ну з паке́том. На годи́ннику — **двана́дцята** (twelve o'clock). Час **обі́дати** (to have lunch)! Time-telling from M26 helps you plan the day naturally.
-
-You walk into a café nearby і **зустріча́єш** (meet) Олену.
-
-> — **Оле́на:** Приві́т! Зві́дки ти? *(Hi! Where are you from?)*
-> — **Ти:** Я з Кана́ди. А ти? *(I'm from Canada. And you?)*
-> — **Олена:** Я з Ха́ркова. Ме́не зва́ти Олена. *(I'm from Kharkiv. My name is Olena.)*
-> — **Ти:** Ду́же приє́мно! *(Very nice to meet you!)*
-> — **Олена:** **Ході́мо** (let's go) обідати! *(Let's have lunch!)*
-> — **Ти:** Із задово́ленням! *(With pleasure!)*
-> — **Олена:** Що **замовля́єш** (are you ordering)? *(What are you ordering?)*
-> — **Ти:** Борщ і варе́ники. Тут дуже сма́чно! *(Borshch and varenyky. It's very tasty here!)*
-> — **Олена:** Я теж борщ! *(I'll have borshch too!)*
-> — **Ти:** Смачно! *(Delicious!)*
-> — **Олена:** Ти добре гово́риш украї́нською! *(You speak Ukrainian well!)*
-> — **Ти:** Дякую! Я вивча́ю вже три місяці́. *(Thanks! I've been learning for three months.)*
-
-
-This dialogue packs in: introductions (M06), the imperative **ходімо** (M43), food ordering (M36), and a genuine compliment. The verb **замовля́ти** (to order food) is the correct Ukrainian word — never use the Russian-influenced *заказа́ти* for ordering at a restaurant.
-
-**Вдень** (during the day) ти **познайо́мився/познайо́милася** (got acquainted) з Оле́ною і **пообі́дав/пообі́дала** (had lunch) у кафе. Гарний день! The verb **познайо́митися** (to get acquainted) is a preview of A2 vocabulary — you'll use it a lot at the next level.
-
-<!-- INJECT_ACTIVITY: match-situation-phrase -->
-
-## Ве́чір (Evening)
-
-After lunch, you and Olena walk through the city together. Evening is approaching — time to make plans.
-
-> — **Олена:** Що **бу́демо роби́ти** (will we do) вве́чері? *(What are we going to do this evening?)*
-> — **Ти:** Ходімо в кіно́! Є гарний украї́нський **фільм** (film). *(Let's go to the cinema! There's a good Ukrainian film.)*
-> — **Олена:** О котрі́й? *(At what time?)*
-> — **Ти:** О сьо́мій. *(At seven.)*
-> — **Олена:** Чудо́во! Де **зустрі́немося** (will we meet)? *(Great! Where shall we meet?)*
-> — **Ти:** Бі́ля **кінотеа́тру** (cinema) о шо́стій п'ятдеся́т. *(Near the cinema at six fifty.)*
-
-
-The future tense **будемо робити** (we will do) — the analytical form you learned in M50. And **ходімо** appears again — this imperative for suggestions is one of the most useful words in spoken Ukrainian.
-
-Ви сидите́ в кінотеа́трі. **Фільм** почина́ється. Ти не все розумі́єш, але́ бага́то слів вже знайо́мі: **роди́на** (family), **мі́сто** (city), **Украї́на**. Це приємно! After sixty-four modules, Ukrainian on screen is no longer just noise — you catch real words, real phrases. Ukrainian cinema is vibrant and growing. Remember this feeling.
-
-> — **Олена:** Ну, як фільм? *(So, how was the film?)*
-> — **Ти:** Дуже ціка́во! *(Very interesting!)*
-> — **Олена:** (сміє́ться) Ходімо в рестора́н! *((laughs) Let's go to a restaurant!)*
-> — **Ти:** Добре! Де тут ресторан? *(Sure! Where's a restaurant here?)*
-> — **Олена:** Он там, за ро́гом. *(Over there, around the corner.)*
-> — **Ти:** Ідемо́! *(Let's go!)*
-
-
-Short, punchy, completely natural — this is how two friends talk after a movie. **За рогом** (around the corner) — a useful location phrase from M31.
-
-**Ввечері** (in the evening) в готелі ти ду́маєш про свій день. **Сьогодні був чудовий день!** Зранку я снідав/снідала у кафе і їхав/їхала на метро. Потім я гуля́в/гуля́ла по Хрещатику і купи́в/купи́ла **сувенір**. Вдень я познайомився/познайомилася з Оленою і пообідав/пообідала. Ввечері ми ходи́ли в кіно і ресторан. **За́втра я бу́ду ї́здити по Ки́єву.** Я хо́чу поба́чити **Лавру** (Lavra — the famous Kyiv monastery)!
-
-This paragraph is the grammatical heart of the module. Three tenses appear naturally: **past** (зранку я снідав, я гуляв, ми ходили), **present** (я ду́маю, я хочу), and **future** (завтра я буду їздити). Masculine and feminine pairs throughout — pick your set. You are already combining all three tenses the way native speakers do: telling what happened, feeling something now, planning for tomorrow.
+> **Ти:** Будь ла́ска, ка́ву з молоко́м і круаса́н. *(Please, coffee with milk and a croissant.)*
+> **Бариста:** Смачно́го! *(Enjoy your meal!)*
+> **Ти:** Скі́льки ко́шту́є? *(How much does it cost?)*
+> **Бариста:** Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*
+> **Ти:** Дякую! До поба́чення! *(Thank you! Goodbye!)*
 
 :::tip
-**Зверни́ ува́гу** (pay attention): in that reflection paragraph, three tenses work together. **Мину́лий час** (past): я снідав, я гуляв. **Тепе́рішній час** (present): я думаю, я хочу. **Майбу́тній час** (future): я буду їздити. You're already using all three naturally. Це А1!
+The question **Скільки коштує?** (How much does it cost?) is arguably your most important A1 survival tool. Memorize it well—you will use it every single day for everything from ordering a quick snack to purchasing train tickets.
 :::
 
+You step outside and need to find the city center.
+
+> **Ти:** Ви́бачте, як діста́тися до Хреща́тика? *(Excuse me, how to get to Khreshchatyk?)*
+> **Перехо́жий:** Ї́дьте на метро́, ста́нція Хреща́тик. *(Go by metro, Khreshchatyk station.)*
+
+You listen for the imperative **їдьте** (go/drive) to follow instructions. At the station, you handle the purchase. **Ти купу́єш квито́к.** (You buy a ticket).
+**Оди́н квиток, будь ласка.** (One ticket, please). 
+Knowing how to use polite imperatives and direct requests makes navigating transit systems surprisingly manageable.
+
+Underground, you navigate visually. **В метро ти ди́вишся на ка́рту.** (In the metro you look at a map). You use an impersonal chunk to state a need:
+**То́бі потрі́бна зеле́на лі́нія.** (You need the green line).
+You are connecting different moments in time using your grammar skills.
+**Зра́нку я сні́дав.** (In the morning I ate breakfast).
+**За́раз я ї́ду в метро.** (Now I am riding the metro).
+This shift from the past to the present shows you are narrating your own life. 
+
+## День: Прогу́лянка та нові́ дру́зі
+
+You emerge from the underground into the bright sunlight. **Ти гуля́єш по Хреща́тику.** (You are walking along Khreshchatyk). 
+**Яка га́рна ву́лиця!** (What a beautiful street!). 
+You see the sweeping architecture and point out landmarks.
+- **Ця буді́вля — ме́рія.** (This building is the city hall.)
+- **Цей магази́н — ЦУМ.** (This store is TSUM.)
+
+Using demonstratives like **цей** (this, masculine) and **ця** (this, feminine) instantly makes your speech more precise. You can evaluate the entire scene around you. 
+
+You spot a vibrant shop. **Ти ба́чиш вели́кий магазин.** (You see a large store). **Ти захо́диш і купуєш сувені́ри.** (You enter and buy souvenirs).
+
+> **Ти:** Скільки коштує ця виши́ва́нка? *(How much does this vyshyvanka cost?)*
+> **Продаве́ць:** Ти́сяча дві́сті гривень. *(One thousand two hundred hryvnias.)*
+> **Ти:** До́рого! А ця? *(Expensive! And this one?)*
+> **Продавець:** Ця — вісімсо́т. *(This one is eight hundred.)*
+> **Ти:** До́бре, я беру́! *(Good, I'll take it!)*
+
+:::note
+In Ukrainian, we simply say **сувені́р** (souvenir). Do not say "пам'ятний сувенір" (memorable souvenir) as you might in English, because the word itself already implies that it is a memory of a place.
+:::
+
+In a quiet place, you strike up a conversation. **В кафе ти зустріча́єш Оле́ну.** (In a cafe you meet Olena).
+
+> **Оле́на:** Приві́т! Ти зві́дки? *(Hi! Where are you from?)*
+> **Ти:** Я з Кана́ди. *(I am from Canada.)*
+> **Олена:** Що ти тут ро́биш? *(What are you doing here?)*
+> **Ти:** Я вивча́ю украї́нську! *(I am studying Ukrainian!)*
+
+You seamlessly use present tense verbs to explain your current state. You have moved past basic drills and are forming genuine connections with locals. Olena smiles at your impressive progress.
+
+> **Олена:** Як ціка́во! Ході́мо обі́дати! *(How interesting! Let's go have lunch!)*
+
+You use the imperative **Ходімо** (Let's go) to accept the invitation. You settle at a table and order a warm meal. **Ти замовля́єш борщ і варе́ники.** (You order borscht and varenyky). **Олена замовля́є сала́т.** (Olena orders a salad).
+
+> **Ти:** Сма́чно! *(Tasty!)*
+> **Олена:** Ти добре гово́риш украї́нською! *(You speak Ukrainian well!)*
+> **Ти:** Дякую! *(Thank you!)*
+
+<!-- INJECT_ACTIVITY: match-survival-phrases -->
+
+## Ве́чір: Кіно́ та рефле́ксія
+
+The day is winding down, but the city is still alive. You switch to the compound future tense to make plans.
+
+> **Ти:** Що бу́демо роби́ти вве́чері? *(What will we do in the evening?)*
+> **Олена:** Ходімо в кіно! *(Let's go to the cinema!)*
+> **Ти:** Добре! О котрі́й? *(Good! At what time?)*
+> **Олена:** О сьо́мій. *(At seven.)*
+
+You use the critical structure of **о** plus the locative case to pinpoint the exact hour for your evening entertainment.
+
+You are sitting in the dark theater, listening to the actors. **Ви ди́витеся украї́нський фільм.** (You watch a Ukrainian film). At this stage, integrated communication and getting the gist are much more important than grammatical perfection.
+- **Ти не все розумі́єш.** (You do not understand everything.)
+- **Але́ бага́то!** (But a lot!)
+
+You use linking words to describe the sequence of events to yourself later. **Споча́тку ми купи́ли квитки́.** (First we bought tickets). **По́тім ми диви́лися фільм.** (Then we watched a film).
+
+The movie ends, and you step back onto the street. **Пі́сля кіно ви йдете́ в рестора́н.** (After the cinema you go to a restaurant). You reflect on the hours you have spent together. You express your feelings clearly using past and present forms. **Я ду́же задово́лений.** (I am very satisfied, masculine). **Я дуже задово́лена.** (I am very satisfied, feminine). It feels incredible to navigate an entire evening exclusively in Ukrainian.
+
+Back in your room, you summarize your day. **Ввечері в готелі ти ду́маєш про свій день.** (In the evening in the hotel you think about your day).
+- **Сьогодні був чудо́вий день!** (Today was a wonderful day!)
+- **Зранку я снідав у кафе.** (In the morning I ate breakfast in a cafe. — or **сні́дала** for feminine)
+- **Потім я гуля́в по мі́сту.** (Then I walked around the city. — or **гуля́ла**)
+- **Я познайо́мився з Оле́ною.** (I got acquainted with Olena. — or **познайо́милася**)
+- **Ввечері ми ходи́ли в кіно і ресторан.** (In the evening we went to the cinema and a restaurant.)
+
+Looking ahead, you make a plan:
+- **За́втра я бу́ду ї́здити по Ки́єву.** (Tomorrow I will ride around Kyiv.)
+- **Я хо́чу поба́чити Лавру!** (I want to see the Lavra!)
+
 <!-- INJECT_ACTIVITY: order-day-events -->
-
-## Підсумок: ти гото́вий/гото́ва! (You're Ready!)
-
-Fifty-five modules. Hundreds of words. And today — a whole day in Kyiv, entirely in Ukrainian. Here is everything you can now do:
-
-- **Привіта́тися й познайомитися** (greet and introduce yourself) — «Привіт! Мене звати Адам. Я з Канади.» (A1.1)
-- **Описа́ти люди́ну, сім'ю́, ре́чі** (describe people, family, things) — «Моя́ ма́ма висо́ка і до́бра. У мене є сестра́.» (A1.2)
-- **Розпові́сти́ про ді́ї та зви́чки** (talk about actions and habits) — «Я люблю́ чита́ти. Щодня́ я ходжу́ в парк.» (A1.3)
-- **Говори́ти про час і пого́ду** (talk about time and weather) — «Сьогодні вівто́рок, дванадцята годи́на. Надворі хо́лодно.» (A1.4)
-- **Орієнтува́тися в мі́сті** (navigate a city) — «Ї́дьте на метро, станція Хрещатик.» (A1.5)
-- **Замовляти ї́жу, робити поку́пки** (order food, shop) — «Будь ласка, борщ і каву. Скільки коштує?» (A1.6)
-- **Зверта́тися вві́чливо** (address people politely) — «Вибачте, допоможі́ть, будь ласка.» (A1.7)
-- **Розповіда́ти про мину́ле, робити пла́ни** (talk about the past, make plans) — «Учо́ра я був у кіно. Завтра буду вдо́ма. Допоможіть! Ви́кличте швидку́!» (A1.8)
-
-At **A2**, you'll discover **відмі́нки** (cases — how words change form depending on their role in a sentence), **вид дієслова́** (verb aspect — perfective and imperfective), the **синтети́чний майбутній час** (synthetic future: **прочита́ю**, **скажу́** instead of **буду читати**), and more complex sentences. The grammar deepens — but the foundation is solid. **Святку́й!** (Celebrate!) Ти ви́вчив/ви́вчила А1. **Віта́ю!** (Congratulations!) Ти вже мо́жеш жи́ти в украї́нському місті. Це тільки **поча́ток** (beginning)!
-
-**Переві́р себе́** (check yourself): can you describe your day in a Ukrainian city in ten or more sentences? Use past, present, and future tense. Start like this: «Сьогодні вра́нці я прокинувся/прокинулася…» If you can — ти **готовий/готова** (ready) до А2. **Впере́д!** (Forward!)
-
 <!-- INJECT_ACTIVITY: fill-in-tenses -->
 
-Дякуємо, що ти вивча́єш украї́нську. Ця мо́ва — жива́, краси́ва і важли́ва. Вона́ звучи́ть у пісня́х, у книжка́х, на ву́лицях Києва, Льво́ва, Харкова. Тепе́р вона тро́хи твоя́ теж. **До зу́стрічі на А2!** (See you at A2!)
+## Підсумок: Ти гото́вий до А2!
 
-Хрещатик, метро, борщ, вишиванка, **Ла́вра** — за цей мо́дуль ти **прові́в/провела́** (spent) ці́лий день у Києві. Ці слова́ бі́льше не про́сто слова — це твій до́свід. Україна — це не тільки мова. Це культу́ра, лю́ди, міста. Ти тільки почина́єш **відкрива́ти** (to discover) для себе цю краї́ну. А попе́реду — ще так багато ціка́вого.
+Take a moment to realize how far you have come. You can now greet people, introduce yourself, and proudly say where you are from (A1.1). You can describe your friends, your family, and everyday objects (A1.2). You talk easily about your daily habits, your likes, and your actions (A1.3). You know how to tell the time, discuss the weather, and name the days and months (A1.4). You can successfully navigate a major city, give directions, and use public transport (A1.5). You can order food in a restaurant, shop in a market, and handle money (A1.6). You know how to address people politely, give basic instructions, and connect ideas (A1.7). And finally, you can confidently talk about what happened in the past, handle emergencies, and make plans for the future (A1.8).
+
+**Віта́ю! Ти ви́вчив рі́вень А1.** (Congratulations! You learned the A1 level). Or for feminine: **Ти ви́вчила рівень А1.** (You learned the A1 level). You should be incredibly proud. But the journey continues! In A2, you will unlock the true engine of the language: **відмі́нки** (cases), which change word endings to show their role in a sentence. You will explore **доко́наний і недоко́наний вид** (perfective and imperfective aspect) to distinguish between ongoing and completed actions. You will learn the elegant synthetic future tense, like saying **прочита́ю** (I will read) instead of just using **буду чита́ти**. You will master subordinate clauses to build complex thoughts. **Це ті́льки початок!** (This is only the **початок** — beginning!). You can now truly live in a Ukrainian city.
+
+Before you turn the page, test yourself with these real-world questions:
+- Can you describe YOUR day in a Ukrainian city in 10 or more sentences?
+- Can you walk into a cafe and order a full meal without using any English?
+- Can you ask a stranger for directions to the metro and understand their answer?
+
+If you can do these things, you are **готовий** (ready). You have built a solid, unbreakable foundation. Celebrate this incredible milestone. 
+
+:::tip
+Celebrate your progress! The phrase **Ти вже мо́жеш жи́ти в украї́нському мі́сті** (You can already live in a Ukrainian city) is not an exaggeration. The A1 level gives you all the fundamental building blocks to survive, connect, and thrive.
+:::
+
+**До зу́стрічі на рі́вні А2!** (See you at the A2 level!)
+
+<!-- INJECT_ACTIVITY: a1-grammar-quiz -->

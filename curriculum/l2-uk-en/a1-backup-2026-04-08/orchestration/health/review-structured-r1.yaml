@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Flawlessly adhered to the `content_outline`. The writer effectively bypassed
+    errors in the plan, such as correcting the claim that `нежить` is feminine (plan
+    had `нежиті (for runny nose, f)`), and ins
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Almost perfect, but uses the rare/non-standard adjective form `болячий`
+    ("болячий зуб") instead of the standard `болючий`. The writer's correction of
+    the Russianism "від кашлю/нежиті" to "проти кашлю/
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional. The note explaining that `рука` and `нога` encompass the
+    whole limb is a brilliant pedagogical insight for English speakers. Furthermore,
+    the writer correctly ignored the plan's instructi
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items are naturally embedded into
+    the dialogues and phrases without reading like a dictionary.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers match the plan's hints perfectly and are positioned precisely
+    after the concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Professional, direct, and authoritative. The writer avoids fluff and focuses
+    purely on high-signal explanations and cultural norms.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Headers exactly match the plan's `content_outline`. The deterministic
+    word count is safely within bounds.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The writer explicitly catches a Russianism/calque ("від нежиті" -> "проти
+    нежитю") and explains why `проти` is the authentic Ukrainian pattern. This is
+    elite decolonized teaching.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The two dialogues are highly realistic, capturing exact exchanges a learner
+    would have in a Ukrainian pharmacy or clinic without sounding robotic.
+findings: []

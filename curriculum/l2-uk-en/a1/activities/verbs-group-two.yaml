@@ -2,343 +2,441 @@ version: '1.0'
 module: verbs-group-two
 level: a1
 inline:
-- id: fill-in-conjugate
+- id: fill-in-conjugation-paradigm
   type: fill-in
-  instruction: Fill in the correct form of the verb in brackets.
+  instruction: Complete the **дієвідмінювання** (conjugation) pattern for Group II
+    verbs
   items:
-  - sentence: Я _____ українською. (говорити)
+  - sentence: я _____ (говорити)
     answer: говорю
-    options:
-    - говорю
-    - говориш
-    - говорить
-  - sentence: Ти _____ дуже добре! (говорити)
+  - sentence: ти _____ (говорити)
     answer: говориш
-    options:
-    - говорю
-    - говориш
-    - говорить
-  - sentence: Він _____ трохи. (говорити)
+  - sentence: він/вона _____ (говорити)
     answer: говорить
-    options:
-    - говорю
-    - говориш
-    - говорить
-  - sentence: Ми _____ українською. (говорити)
+  - sentence: ми _____ (говорити)
     answer: говоримо
-    options:
-    - говоримо
-    - говорите
-    - говорять
-  - sentence: Ви _____ добре. (говорити)
+  - sentence: ви _____ (говорити)
     answer: говорите
-    options:
-    - говоримо
-    - говорите
-    - говорять
-  - sentence: Вони _____ добре. (говорити)
+  - sentence: вони _____ (говорити)
     answer: говорять
-    options:
-    - говоримо
-    - говорите
-    - говорять
-  - sentence: Я _____ фільм увечері. (бачити)
+  - sentence: я _____ (бачити)
     answer: бачу
-    options:
-    - бачу
-    - бачиш
-    - бачить
-  - sentence: Ти _____ нові слова. (вчити)
-    answer: вчиш
-    options:
-    - вчу
-    - вчиш
-    - вчить
-  - sentence: Вона _____ добре. (робити)
-    answer: робить
-    options:
-    - роблю
-    - робиш
-    - робить
-  - sentence: Вони _____ онлайн. (вчити)
-    answer: вчать
-    options:
-    - вчимо
-    - вчите
-    - вчать
-- id: group-sort
+  - sentence: вони _____ (бачити)
+    answer: бачать
+  - sentence: я _____ (робити)
+    answer: роблю
+  - sentence: я _____ (ходити)
+    answer: ходжу
+- id: group-sort-verbs
   type: group-sort
-  instruction: Sort these verbs into **Group I** (infinitive ends in **-ати**) or
-    **Group II** (infinitive ends in **-ити**).
+  instruction: Sort the verbs into Group I (**-ати**) and Group II (**-ити**)
   groups:
-  - label: Group I (-ати)
+  - label: Group I
     items:
     - читати
     - слухати
-    - писати
-    - знати
-    - чекати
-    - питати
-  - label: Group II (-ити)
+  - label: Group II
     items:
     - говорити
     - бачити
     - робити
     - вчити
-    - ходити
     - просити
-- id: quiz-correct-form
+    - ходити
+    - дивитися
+    - вчитися
+- id: quiz-verb-choice
   type: quiz
-  instruction: Choose the correct form of the verb.
+  instruction: Choose the correct verb form for the **займенник** (pronoun)
   items:
-  - question: Ти _____ це? (бачити)
+  - question: Ти _____ це?
     options:
     - бачу
     - бачиш
     - бачить
     correct: 1
-  - question: Він _____ добре. (робити)
-    options:
-    - роблю
-    - робиш
-    - робить
-    correct: 2
-  - question: Я _____ онлайн. (ходити)
-    options:
-    - ходжу
-    - ходиш
-    - ходить
-    correct: 0
-  - question: Ми _____ українською. (говорити)
-    options:
-    - говорю
-    - говоримо
-    - говорять
-    correct: 1
-  - question: Вони _____ допомоги. (просити)
-    options:
-    - просять
-    - просить
-    - просимо
-    correct: 0
-  - question: Ви _____ добре. (вчити)
-    options:
-    - вчить
-    - вчу
-    - вчите
-    correct: 2
-  - question: Вона _____ серіал увечері. (бачити)
-    options:
-    - бачу
-    - бачиш
-    - бачить
-    correct: 2
-  - question: Я _____ друга допомагати. (просити)
-    options:
-    - прошу
-    - просиш
-    - просить
-    correct: 0
-- id: fill-in-sentences
-  type: fill-in
-  instruction: Complete each sentence with the correct form of the verb in brackets.
-  items:
-  - sentence: Вона _____ українською. (говорити)
-    answer: говорить
+  - question: Вона добре _____.
     options:
     - говорю
     - говориш
     - говорить
-  - sentence: Ти _____ це слово? (бачити)
-    answer: бачиш
-    options:
-    - бачу
-    - бачиш
-    - бачить
-  - sentence: Я _____ добре. (робити)
-    answer: роблю
-    options:
-    - роблю
-    - робиш
-    - робить
-  - sentence: Ми _____ онлайн. (вчити)
-    answer: вчимо
+    correct: 2
+  - question: Ми _____ нові слова.
     options:
     - вчу
+    - вчить
     - вчимо
-    - вчать
-  - sentence: Вони _____ трохи. (говорити)
-    answer: говорять
+    correct: 2
+  - question: Вони _____ у парк.
     options:
-    - говоримо
-    - говорите
-    - говорять
-  - sentence: Він _____ увечері. (ходити)
-    answer: ходить
-    options:
-    - ходжу
-    - ходиш
+    - ходять
     - ходить
+    - ходимо
+    correct: 0
+  - question: Що ви _____?
+    options:
+    - роблять
+    - робите
+    - робиш
+    correct: 1
+  - question: Я _____ фільм.
+    options:
+    - дивлюся
+    - дивишся
+    - дивляться
+    correct: 0
+  - question: Ти _____ воду?
+    options:
+    - просять
+    - просить
+    - просиш
+    correct: 2
+  - question: Він _____ українською.
+    options:
+    - говориш
+    - говорить
+    - говорять
+    correct: 1
+- id: fill-in-translation-context
+  type: fill-in
+  instruction: Complete the sentences with the correct form of the verb in brackets
+  items:
+  - sentence: Вона _____ українською. (говорити)
+    answer: говорить
+  - sentence: Я _____ нові слова. (вчити)
+    answer: вчу
+  - sentence: Ми _____ у парк. (ходити)
+    answer: ходимо
+  - sentence: Що ти _____ увечері? (робити)
+    answer: робиш
+  - sentence: Вони _____ фільм. (бачити)
+    answer: бачать
+  - sentence: Ви _____ воду. (просити)
+    answer: просите
 workbook:
-- type: match-up
-  instruction: Match each personal pronoun to the correct form of **говорити** (to
-    speak).
+- id: workbook-stress-quiz
+  type: quiz
+  instruction: Choose the word with the correct **наголос** (stress)
+  items:
+  - question: to do/make
+    options:
+    - ро́бити
+    - роби́ти
+    - робити́
+    correct: 1
+  - question: to speak
+    options:
+    - гово́рити
+    - говори́ти
+    - говорити́
+    correct: 1
+  - question: to see
+    options:
+    - ба́чити
+    - бачи́ти
+    - бачити́
+    correct: 0
+  - question: to go/walk
+    options:
+    - хо́дити
+    - ходи́ти
+    - ходити́
+    correct: 0
+  - question: to ask
+    options:
+    - про́сити
+    - проси́ти
+    - просити́
+    correct: 1
+  - question: to watch
+    options:
+    - ди́витися
+    - диви́тися
+    - дивити́ся
+    correct: 1
+- id: workbook-stress-odd-one-out
+  type: odd-one-out
+  instruction: Choose the word with a different stress pattern
+  items:
+  - words:
+    - роби́ти
+    - проси́ти
+    - говори́ти
+    - ба́чити
+    correct: 3
+    explanation: ба́чити has stress on the root (first syllable), while the others
+      have stress on the -и́ти suffix.
+  - words:
+    - говорю́
+    - роблю́
+    - прошу́
+    - ба́чу
+    correct: 3
+    explanation: ба́чу has stress on the root, while the others have stress on the
+      ending (-ю́/-у́).
+  - words:
+    - говори́ш
+    - ро́биш
+    - ба́чиш
+    - про́сиш
+    correct: 0
+    explanation: говори́ш has stress on the ending, while the others have stress on
+      the root.
+  - words:
+    - ро́бить
+    - ба́чить
+    - про́сить
+    - говори́ть
+    correct: 3
+    explanation: говори́ть has stress on the ending, while the others have stress
+      on the root.
+  - words:
+    - ро́бимо
+    - ба́чимо
+    - про́симо
+    - говори́мо
+    correct: 3
+    explanation: говори́мо has stress on the ending, while the others have stress
+      on the root.
+  - words:
+    - ро́блять
+    - ба́чать
+    - про́сять
+    - говоря́ть
+    correct: 3
+    explanation: говоря́ть has stress on the ending, while the others have stress
+      on the root.
+- id: workbook-verb-match-up
+  type: match-up
+  instruction: Match the **займенник** (pronoun) with the correct verb form
   pairs:
   - left: я
-    right: говорю
+    right: бачу
   - left: ти
     right: говориш
-  - left: він / вона
-    right: говорить
+  - left: він
+    right: вчить
   - left: ми
-    right: говоримо
+    right: робимо
   - left: ви
-    right: говорите
+    right: просите
   - left: вони
-    right: говорять
-- type: error-correction
-  instruction: Each sentence has a wrongly conjugated verb. Find it and correct it.
+    right: ходять
+- id: workbook-error-correction
+  type: error-correction
+  instruction: Find and correct the wrong verb form
   items:
-  - sentence: Я робить добре.
-    error: робить
-    correction: роблю
+  - sentence: Я бачять, що ти добре говориш.
+    error: бачять
+    correction: бачу
     error_type: word
     options:
-    - роблю
-    - робиш
+    - бачу
+    - бачимо
+    - бачить
+    explanation: The pronoun is Я, so the verb must be бачу.
+  - sentence: Ми вчить нові слова.
+    error: вчить
+    correction: вчимо
+    error_type: word
+    options:
+    - вчу
+    - вчить
+    - вчимо
+    explanation: The pronoun is Ми, so the verb must be вчимо.
+  - sentence: Вони робить це добре.
+    error: робить
+    correction: роблять
+    error_type: word
+    options:
+    - роблять
     - робимо
-    explanation: 'Я = 1st person singular → роблю. Note the consonant change: б →
-      бл.'
-  - sentence: Ти говорю трохи.
+    - роблю
+    explanation: The pronoun is Вони, so the verb must be роблять.
+  - sentence: Ти говорю українською.
     error: говорю
     correction: говориш
     error_type: word
     options:
-    - говоримо
     - говориш
+    - говорить
     - говорять
-    explanation: Ти = 2nd person singular → говориш.
-  - sentence: Він прошу друга допомагати.
-    error: прошу
-    correction: просить
+    explanation: The pronoun is Ти, so the verb must be говориш.
+  - sentence: Я ходжу, а він ходять.
+    error: ходять
+    correction: ходить
     error_type: word
     options:
-    - просить
-    - просиш
-    - просять
-    explanation: Він = 3rd person singular → просить.
-  - sentence: Ми бачить фільм увечері.
-    error: бачить
-    correction: бачимо
-    error_type: word
-    options:
-    - бачимо
-    - бачите
-    - бачать
-    explanation: Ми = 1st person plural → бачимо.
-  - sentence: Ви ходжу онлайн.
-    error: ходжу
-    correction: ходите
-    error_type: word
-    options:
-    - ходите
-    - ходять
+    - ходить
+    - ходиш
     - ходимо
-    explanation: Ви = 2nd person plural → ходите.
-  - sentence: Вони вчить нові слова.
-    error: вчить
-    correction: вчать
+    explanation: The pronoun is він, so the verb must be ходить.
+  - sentence: Ви просиш воду.
+    error: просиш
+    correction: просите
     error_type: word
     options:
-    - вчать
-    - вчимо
-    - вчите
-    explanation: Вони = 3rd person plural → вчать. The stem ends in ч (a sibilant),
-      so the ending is -ать.
-- type: true-false
-  instruction: True or false? Read each statement about Ukrainian verb groups.
+    - просите
+    - просимо
+    - просять
+    explanation: The pronoun is Ви, so the verb must be просите.
+- id: workbook-pronoun-fill-in
+  type: fill-in
+  instruction: Choose the correct **займенник** (pronoun) based on the verb ending
   items:
-  - statement: The **ти**-form of a Group II verb ends in **-єш** (e.g., говорієш).
-    correct: false
-    explanation: Group II ти-forms end in -иш (говориш). The -єш ending belongs to
-      Group I (читаєш).
-  - statement: '**Говорити** is a Group II verb.'
-    correct: true
-    explanation: Yes — говорити ends in -ити, and its ти-form is говориш (ending in
-      -иш).
-  - statement: The **вони**-form of **бачити** is бачять.
-    correct: false
-    explanation: 'It is бачать — the stem ends in ч (a sibilant: ч/ш/ж/щ), so the
-      вони-form takes -ать, not -ять.'
-  - statement: The **я**-form of **робити** is роблю.
-    correct: true
-    explanation: 'Yes — б changes to бл in the я-form: роб → робл → роблю.'
-  - statement: Group I verbs have infinitives ending in **-ати** (e.g., читати, слухати).
-    correct: true
-    explanation: Correct — читати, слухати, писати all end in -ати and belong to Group
-      I.
-  - statement: Consonant changes (б→бл, д→дж, с→ш) happen in ALL forms of Group II
-      verbs.
-    correct: false
-    explanation: These changes happen ONLY in the я-form. Every other form (ти, він,
-      ми, ви, вони) follows the regular pattern.
-- type: translate
-  instruction: Choose the correct Ukrainian translation.
+  - sentence: _____ ходимо у парк.
+    answer: ми
+    options:
+    - ми
+    - ви
+    - вони
+  - sentence: _____ добре говорите.
+    answer: ви
+    options:
+    - ти
+    - ви
+    - ми
+  - sentence: _____ роблять це увечері.
+    answer: вони
+    options:
+    - він
+    - ми
+    - вони
+  - sentence: _____ вчу нові слова.
+    answer: я
+    options:
+    - я
+    - ти
+    - він
+  - sentence: _____ дивишся фільм?
+    answer: ти
+    options:
+    - ти
+    - ви
+    - вона
+  - sentence: _____ просить воду.
+    answer: вона
+    options:
+    - я
+    - ми
+    - вона
+- id: workbook-pronoun-sort
+  type: group-sort
+  instruction: Sort the **займенники** (pronouns) into singular and plural
+  groups:
+  - label: Singular (Однина)
+    items:
+    - я
+    - ти
+    - він
+    - вона
+  - label: Plural (Множина)
+    items:
+    - ми
+    - ви
+    - вони
+- id: workbook-ty-vs-vy
+  type: quiz
+  instruction: Choose between the informal **ти** and polite **Ви** based on the verb
+    form
   items:
-  - source: I speak Ukrainian.
+  - question: 'Тарас: ''Миколо, що _____ робиш?'''
     options:
-    - text: Я говорю українською.
-      correct: true
-    - text: Я говориш українською.
-      correct: false
-    - text: Я говорить українською.
-      correct: false
-  - source: You (singular) see well.
+    - ти
+    - Ви
+    - він
+    correct: 0
+  - question: _____ добре говорите українською!
     options:
-    - text: Ти бачиш добре.
-      correct: true
-    - text: Ти бачу добре.
-      correct: false
-    - text: Ти бачить добре.
-      correct: false
-  - source: She is doing well.
+    - ти
+    - Ви
+    - вони
+    correct: 1
+  - question: _____ бачиш це?
     options:
-    - text: Вона робить добре.
-      correct: true
-    - text: Вона роблю добре.
-      correct: false
-    - text: Вона робиш добре.
-      correct: false
-  - source: We study online.
+    - ти
+    - Ви
+    - я
+    correct: 0
+  - question: Що _____ просите?
     options:
-    - text: Ми вчимо онлайн.
-      correct: true
-    - text: Ми вчать онлайн.
-      correct: false
-    - text: Ми вчиш онлайн.
-      correct: false
-  - source: They speak a little.
+    - ти
+    - Ви
+    - ми
+    correct: 1
+  - question: _____ ходиш у парк?
     options:
-    - text: Вони говорять трохи.
-      correct: true
-    - text: Вони говорить трохи.
-      correct: false
-    - text: Вони говорите трохи.
-      correct: false
-  - source: I ask a friend to help.
+    - ти
+    - Ви
+    - вона
+    correct: 0
+  - question: _____ вчите нові слова?
     options:
-    - text: Я прошу друга допомагати.
+    - ти
+    - Ви
+    - він
+    correct: 1
+- id: workbook-reading-true-false
+  type: true-false
+  instruction: True or False? Check your understanding of the dialogue between Taras
+    and Mykola.
+  items:
+  - statement: Тарас і Микола говорять українською.
+    correct: true
+    explanation: 'Тарас asks: ''Ти говориш українською?'' and Микола says ''Так, я
+      говорю трохи.'''
+  - statement: Микола добре говорить українською.
+    correct: true
+    explanation: 'Тарас says: ''Я бачу, що ти добре говориш!'''
+  - statement: Тарас дивиться фільм увечері.
+    correct: false
+    explanation: Тарас studies new words ('Я вчу нові слова').
+  - statement: Микола вчить нові слова увечері.
+    correct: false
+    explanation: Микола watches a movie ('Я дивлюся фільм').
+  - statement: Дієслово 'вчити' - це Група II.
+    correct: true
+    explanation: The infinitive ends in -ити and it conjugates with -иш, -ить, etc.
+  - statement: Дієслово 'читати' - це Група II.
+    correct: false
+    explanation: The infinitive ends in -ати, it is Group I.
+- id: workbook-translation
+  type: translate
+  instruction: Choose the correct Ukrainian translation
+  items:
+  - source: I am watching a movie.
+    options:
+    - text: Я дивлюся фільм.
       correct: true
-    - text: Я просить друга допомагати.
+    - text: Я бачу фільм.
       correct: false
-    - text: Я просиш друга допомагати.
+  - source: She speaks well.
+    options:
+    - text: Вона добре говорить.
+      correct: true
+    - text: Вона добре говориш.
       correct: false
-- type: observe
-  examples:
-  - робити → я роблю (б → бл)
-  - ходити → я ходжу (д → дж)
-  - просити → я прошу (с → ш)
-  - бачити → я бачу (ч stays ч — no change)
-  prompt: Look at the **я**-forms above. Three verbs change their stem consonant;
-    one does not. Which consonant does NOT change? What do the three changing consonants
-    (б, д, с) have in common — and why might ч behave differently?
+  - source: They walk to the park.
+    options:
+    - text: Вони ходять у парк.
+      correct: true
+    - text: Вони ходить у парк.
+      correct: false
+  - source: What are you doing? (informal)
+    options:
+    - text: Що ти робиш?
+      correct: true
+    - text: Що ви робите?
+      correct: false
+  - source: We see it.
+    options:
+    - text: Ми бачимо це.
+      correct: true
+    - text: Ми дивимося це.
+      correct: false
+  - source: You ask for water. (plural/polite)
+    options:
+    - text: Ви просите воду.
+      correct: true
+    - text: Ти просиш воду.
+      correct: false

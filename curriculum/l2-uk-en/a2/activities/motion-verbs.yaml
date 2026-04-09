@@ -1,0 +1,309 @@
+version: '1.0'
+module: motion-verbs
+level: a2
+workbook:
+- id: group-sort-motion-type
+  type: group-sort
+  instruction: 'Розподіліть дієслова: односпрямований (зараз) чи багатоспрямований
+    (регулярно) рух?'
+  groups:
+  - label: Односпрямований (зараз)
+    items:
+    - іти
+    - їхати
+    - летіти
+    - йду
+  - label: Багатоспрямований (регулярно)
+    items:
+    - ходити
+    - їздити
+    - літати
+    - ходжу
+- id: fill-in-motion-verbs
+  type: fill-in
+  instruction: Оберіть правильне дієслово руху за контекстом
+  items:
+  - sentence: Куди ти зараз ____?
+    answer: ідеш
+    options:
+    - ідеш
+    - ходиш
+    - їдеш
+    - їздиш
+  - sentence: Ми часто ____ у цей парк.
+    answer: ходимо
+    options:
+    - йдемо
+    - їдемо
+    - ходимо
+    - їздимо
+  - sentence: Де Олена? Вона зараз ____ до Києва.
+    answer: летить
+    options:
+    - їде
+    - летить
+    - літає
+    - їздить
+  - sentence: Він ____ у справах дуже рідко.
+    answer: літає
+    options:
+    - летить
+    - іде
+    - літає
+    - ходить
+  - sentence: Вони ____ на роботу автобусом щодня.
+    answer: їздять
+    options:
+    - їдуть
+    - ідуть
+    - їздять
+    - ходять
+  - sentence: Подивись! Ми вже ____ додому.
+    answer: їдемо
+    options:
+    - їздимо
+    - їдемо
+    - йдемо
+    - ходимо
+  - sentence: Вчора Марко ____ у кіно.
+    answer: ходив
+    options:
+    - ішов
+    - їхав
+    - ходив
+    - їздив
+  - sentence: Вона уже ____ додому.
+    answer: пішла
+    options:
+    - ішла
+    - ходила
+    - пішла
+    - полетіла
+- id: quiz-conjugation-models
+  type: quiz
+  instruction: Оберіть правильну форму дієслова (казати, пити, боротися)
+  items:
+  - question: Що ти зараз (казати)?
+    options:
+    - кажеш
+    - казаєш
+    - кажиш
+    - кажуєш
+    correct: 0
+  - question: Зазвичай зранку я (пити) чорну каву.
+    options:
+    - пию
+    - п'ю
+    - п'є
+    - пйю
+    correct: 1
+  - question: Ми щодня (боротися) за свободу.
+    options:
+    - боромося
+    - боремось
+    - боремося
+    - борються
+    correct: 2
+  - question: Завтра я (сказати) всю правду.
+    options:
+    - сказу
+    - скаже
+    - сказаю
+    - скажу
+    correct: 3
+  - question: Вони мужньо (боротися) з проблемами.
+    options:
+    - боряться
+    - боротяться
+    - борються
+    - бороться
+    correct: 2
+  - question: Вона часто (пити) зелений чай.
+    options:
+    - пиє
+    - п'є
+    - піє
+    - п'єш
+    correct: 1
+  - question: Ви (казати) неправду!
+    options:
+    - кажете
+    - казаєте
+    - кажите
+    - кажуте
+    correct: 0
+  - question: Ти мужньо (боротися).
+    options:
+    - боришся
+    - борешся
+    - борошся
+    - борюшся
+    correct: 1
+- id: match-up-directions
+  type: match-up
+  instruction: З'єднайте дієслово з правильним прийменником та місцем
+  pairs:
+  - left: іду до
+    right: школи
+  - left: їду на
+    right: роботу
+  - left: лечу в
+    right: Україну
+  - left: йду з
+    right: роботи
+  - left: їду від
+    right: лікаря
+  - left: лечу з
+    right: України
+  - left: йду через
+    right: парк
+  - left: гуляю по
+    right: місту
+- id: unjumble-directions
+  type: unjumble
+  instruction: Складіть правильні речення про напрямок руху
+  items:
+  - words:
+    - до
+    - Я
+    - школи.
+    - йду
+    correct_order:
+    - Я
+    - йду
+    - до
+    - школи.
+  - words:
+    - їдемо
+    - на
+    - Ми
+    - роботу.
+    correct_order:
+    - Ми
+    - їдемо
+    - на
+    - роботу.
+  - words:
+    - в
+    - летить
+    - Україну.
+    - Літак
+    correct_order:
+    - Літак
+    - летить
+    - в
+    - Україну.
+  - words:
+    - йдуть
+    - зі
+    - школи.
+    - Діти
+    correct_order:
+    - Діти
+    - йдуть
+    - зі
+    - школи.
+  - words:
+    - лікаря.
+    - від
+    - їдуть
+    - Вони
+    correct_order:
+    - Вони
+    - їдуть
+    - від
+    - лікаря.
+  - words:
+    - місту.
+    - гуляємо
+    - по
+    - Ми
+    correct_order:
+    - Ми
+    - гуляємо
+    - по
+    - місту.
+- id: error-correction-motion
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в реченні
+  items:
+  - sentence: Я їзджу на роботу автобусом.
+    error: їзджу
+    correction: їжджу
+    error_type: word
+    options:
+    - їжджу
+    - їзжу
+    - їздю
+    - їзджу
+    explanation: Чергування зд -> ждж у першій особі (я).
+  - sentence: Мій брат їде на Україну.
+    error: на
+    correction: в
+    error_type: word
+    options:
+    - в
+    - до
+    - з
+    - у
+    explanation: З країнами ми завжди використовуємо прийменник «в» або «у».
+  - sentence: Вони боряться за свої права.
+    error: боряться
+    correction: борються
+    error_type: word
+    options:
+    - борються
+    - боріться
+    - бореться
+    - борять
+    explanation: Правильне закінчення для «вони» — борються.
+  - sentence: Завтра я кажу тобі всю правду.
+    error: кажу
+    correction: скажу
+    error_type: word
+    options:
+    - скажу
+    - сказаю
+    - розкажу
+    - кажу
+    explanation: Для майбутнього завершеного часу потрібен доконаний вид (сказати).
+  - sentence: Ми гуляємо по містом.
+    error: містом
+    correction: місту
+    error_type: word
+    options:
+    - місту
+    - міста
+    - місті
+    - містом
+    explanation: Прийменник «по» вимагає місцевого відмінка (по чому? по місту).
+  - sentence: Діти йдуть з школа.
+    error: школа
+    correction: школи
+    error_type: word
+    options:
+    - школи
+    - школу
+    - школою
+    - школі
+    explanation: Прийменник «з» вимагає родового відмінка (з чого? зі школи).
+  - sentence: Ти часто літиш літаком?
+    error: літиш
+    correction: літаєш
+    error_type: word
+    options:
+    - літаєш
+    - летиш
+    - літаш
+    - літають
+    explanation: Для регулярної дії потрібне дієслово багатоспрямованого руху (літати).
+  - sentence: Я ходжу до парк.
+    error: парк
+    correction: парку
+    error_type: word
+    options:
+    - парку
+    - парка
+    - парком
+    - парку
+    explanation: Прийменник «до» вимагає родового відмінка (до чого? до парку).

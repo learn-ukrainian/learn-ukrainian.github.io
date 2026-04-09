@@ -1,0 +1,271 @@
+vocabulary:
+- word: початкова форма
+  translation: base form (nominative singular masculine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зна́чно
+  translation: considerably / significantly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: де́що
+  translation: somewhat
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вищий ступінь
+  translation: comparative degree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: якісний прикметник
+  translation: qualitative adjective
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відносний прикметник
+  translation: relative adjective
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: більш
+  translation: more
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: менш
+  translation: less
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: набага́то
+  translation: much / significantly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ступені порівняння
+  translation: degrees of comparison
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: найвищий ступінь
+  translation: superlative degree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сильні́ший
+  translation: stronger
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: розумні́ший
+  translation: smarter
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ціка́віший
+  translation: more interesting
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: холодні́ший
+  translation: colder
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моло́дший
+  translation: younger
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: старший
+  translation: older
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ши́рший
+  translation: wider
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: то́нший
+  translation: thinner
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: доро́жчий
+  translation: more expensive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ва́жчий
+  translation: heavier / more difficult
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ву́жчий
+  translation: narrower
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бли́жчий
+  translation: closer
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ни́жчий
+  translation: lower
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ви́щий
+  translation: higher / taller
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: то́вщий
+  translation: thicker
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ле́гший
+  translation: lighter / easy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: до́вший
+  translation: longer
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: від
+  translation: than / from (comparative preposition)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: тро́хи
+  translation: a bit
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чим..., тим...
+  translation: the..., the...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: що..., то...
+  translation: the..., the...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: найрозумні́ший
+  translation: the smartest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найсильні́ший
+  translation: the strongest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: абсолютна ознака
+  translation: absolute quality
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підсилювальний префікс
+  translation: intensifying prefix
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: емоційний суфікс
+  translation: emotional suffix
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: масті тварин
+  translation: animal coats / colors
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Свій хліб смачніший за чужий
+  translation: One's own bread is tastier than someone else's
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що темніша ніч, то ясніші зорі
+  translation: The darker the night, the brighter the stars
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: старша розумом, а не віком
+  translation: older in mind, not in age
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: коротший за заячий хвіст
+  translation: shorter than a hare's tail
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якнайкра́щий
+  translation: the best possible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: щонайшви́дший
+  translation: the fastest possible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

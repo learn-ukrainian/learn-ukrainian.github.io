@@ -2,56 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 content_outline sections present and ordered correctly. Dialogue
-    1 matches plan verbatim (ordering borshch, bread, coffee). Dialogue 2 covers paying
-    (рахунок, карткою, compliment). "Як замовити"
+  score: 8
+  evidence: 'The module covers almost all points, but missed two details from the
+    plan: the phrase "Скільки коштує?" was omitted from Section 2 (only appearing
+    in the Summary), and the distinction between a casual'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: All Ukrainian verified against VESUM (95/95 content words confirmed).
-    Accusative paradigm correctly explained and exemplified. "замовляти" confirmed
-    correct by Антоненко-Давидович (not *заказати*). On
+  score: 10
+  evidence: Excellent. Proper noun declension ("Іванко" as vocative), correct phrasing
+    ("З вас сто двадцять гривень"), and explicit warning against the calque "заказати".
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'Excellent PPP flow: dialogues present situation → ordering patterns extract
-    rules with 2+ examples each → activities practice. Accusative is grounded in M37
-    prerequisite ("the same endings you learned'
+  evidence: Great presentation of the PPP flow. The explanation of the accusative
+    inanimate case ending rule ("only the main noun changes its ending") is crystal
+    clear.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 7 required vocab used naturally in context: кафе (throughout), меню
-    (dialogue + section), рахунок (dialogue 2 + culture), замовляти (section title
-    "Як замовити"), офіціант (dialogue speaker), смач'
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally in context.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 activity markers matching all 4 plan hints. Types varied: 2× fill-in,
-    1× quiz, 1× match-up. Inline self-check after dialogues is pedagogically sound
-    (tests comprehension of what was just read). Self'
+  score: 8
+  evidence: The exercises themselves match the plan, but `match-up-functions` tests
+    concepts before they are taught, violating pedagogical flow.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'No motivational openers, no meta-commentary, no gamified language. Opens
-    with a concrete scene (Ростик and Іванка walking into a Lviv café). Cultural enrichment
-    is specific and earned: post-Euromaidan'
+  evidence: Warm and culturally insightful. The mention of Ukraine's high rate of
+    contactless payment adds great real-world value.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All 4 H2 headings match plan section names exactly. No duplicate sections,
-    no meta-commentary, no stray tags. Word count 1211/1200 target — in range. Clean
-    markdown throughout.
+  evidence: Clean markdown, perfect section headings. Word count is 1402, well above
+    the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Decolonized — Ukrainian presented on its own terms, no Russian comparisons.
-    Кафе/ресторан/кав'ярня distinction is accurate. Tipping culture (10%, not obligatory,
-    often cash) is correct. Рахунок etique
+  evidence: Spot on regarding Lviv coffee culture, tipping etiquette, and modern payment
+    habits in Ukraine.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: 'Two multi-turn dialogues with named speakers (Ростик, Іванка, Офіціант).
-    Natural flow: greeting → recommendation → ordering → waiting → paying → complimenting
-    → farewell. Not transactional — Ростик as'
+  evidence: Very natural, multi-turn exchange. Uses realistic phrases like "одну хвилинку"
+    and "Карткою чи готівкою?".
 findings: []

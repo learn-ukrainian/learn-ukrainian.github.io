@@ -1,76 +1,32 @@
-## Діалоги (~330 words total)
+## Діалоги (~330 words)
+- P1 (~30 words): Introduction to the social contexts where instructions and requests are vital, setting the scene for two different registers of speech.
+- P2 (~100 words): Dialogue 1 — In the classroom. A teacher gives instructions to students: «Відкрийте підручники, будь ласка. Читайте текст. Пишіть три речення. Запитуйте, якщо є питання.» Focus on the plural/formal forms.
+- P3 (~50 words): Analysis of the classroom dialogue, highlighting the relationship between the teacher and students and the use of plural verbs for a group.
+- P4 (~100 words): Dialogue 2 — Between friends. Two friends discuss going to a café: «Слухай, ходімо! Подивись, яка погода. Дай мені меню. Скажи, що ти хочеш.» Focus on informal singular forms.
+- P5 (~50 words): Analysis of the informal dialogue, noting how the tone differs from the classroom setting despite the grammatical goal remaining the same.
 
-- P1 (~20 words): Scene-setting sentence — classroom, teacher addresses students, morning Ukrainian lesson begins.
-- Dialogue 1 (~120 words): 8-turn classroom exchange — Вчителька (teacher) and Учні (students):
-  - Вчителька: Відкрийте підручники, будь ласка. Читайте текст на сторінці двадцять три.
-  - Учень: Вибачте, яку сторінку?
-  - Вчителька: Сторінку двадцять три. Читайте тихо, одна хвилина.
-  - Вчителька: Добре. Тепер пишіть. Напишіть три речення про текст.
-  - Учениця: Можна запитати?
-  - Вчителька: Так, запитуйте!
-  - Учениця: Що означає це слово?
-  - Вчителька: Подивіться у словник. Відкрийте його.
-  Focus: classroom imperatives відкрийте, читайте, пишіть, напишіть, запитуйте, подивіться.
-- P2 (~15 words): Brief scene-break — now after school, two friends walking to a café.
-- Dialogue 2 (~120 words): 8-turn friends exchange — Oles and Daryna:
-  - Олесь: Слухай, ходімо в кафе! Подивись, яка гарна погода!
-  - Дарина: Добре! Іди, я зараз.
-  - Олесь: Сідай тут, це гарне місце.
-  - Дарина: Дай мені меню, будь ласка.
-  - Олесь: Ось, дивись. Скажи, що ти хочеш?
-  - Дарина: Я хочу каву і тістечко.
-  - Олесь: Добре. Гей, офіціанте, принесіть, будь ласка, каву і тістечко!
-  - Дарина: Дякую, Олесю!
-  Focus: informal imperatives слухай, подивись, іди, сідай, дай, дивись, скажи.
-- P3 (~55 words): Short comprehension note — point out which imperatives were ти-forms (слухай, іди, сідай, дай, скажи) vs. ви-forms used for the group/formal (відкрийте, читайте, пишіть). Highlight будь ласка appearing in both dialogues. Ask learner: which words were commands and which were polite requests?
+## Наказовий спосіб (~330 words)
+- P1 (~90 words): Defining the "Наказовий спосіб" (Imperative Mood) using Ukrainian Grade 5 terminology. Explain its primary functions: commands, requests, invitations, and warnings.
+- P2 (~80 words): Register awareness: Choosing between "ти" (informal singular) and "ви" (formal or plural). Explain that this choice mirrors the pronouns the learner already knows from earlier modules.
+- P3 (~90 words): Politeness and "Будь ласка." Explain the cultural nuance that while the imperative is direct, adding "будь ласка" (please) transforms a command into a standard polite request. Contrast "Дай!" with "Дай, будь ласка."
+- P4 (~70 words): Using names and titles to soften requests. Examples of addressing peers (Олено, читай) versus formal address (Пане Іване, читайте) using the vocative hint.
+- <!-- INJECT_ACTIVITY: group-sort-imperative-register --> [group-sort, Sort: ти-forms vs ви-forms (читай vs читайте, дай vs дайте, скажи vs скажіть), 10 items]
 
-## Наказовий спосіб (~330 words total)
+## Як утворити? (~330 words)
+- P1 (~80 words): Formation of the "ти" form for Group I verbs ending in -ати. Explain the stem extraction and adding -й: читати → читай, слухати → слухай, співати → співай.
+- P2 (~80 words): Formation of the "ти" form for Group II verbs ending in -ити. Explain the drop of the ending and the result: говорити → говори, ходити → ходи, сидіти → сиди. Mention the role of stress.
+- P3 (~80 words): Common irregular and short imperatives that every A1 learner needs. Examples: дати → дай, сказати → скажи, їсти → їж, іти → іди, відкрити → відкрий.
+- P4 (~90 words): Formation of the "ви" form for all verbs. The universal rule: take the "ти" form and add -те. Examples: читай + те = читайте, говори + те = говоріть (note the vowel shift for stress), дай + те = дайте.
+- <!-- INJECT_ACTIVITY: fill-in-imperative-formation --> [fill-in, Form imperative: читати → читай / читайте, писати → пиши / пишіть, 10 items]
+- <!-- INJECT_ACTIVITY: quiz-polite-choice --> [quiz, Choose correct: ___, будь ласка! (дай / даєш / дати) for context, 8 items]
 
-- P1 (~80 words): Introduce the term наказовий спосіб (imperative mood) — used for commands (Читай!), requests (Дай, будь ласка.), instructions (Напишіть три речення.), and invitations (Ходімо в кафе!). Explain two forms covered here: ти-form (one person, informal — your friend, sibling) and ви-form (formal — teacher, stranger — or plural — whole class). Give a minimal pair: Дай! (to a friend) vs. Дайте! (to a teacher or group).
-- P2 (~80 words): Politeness mechanism — будь ласка transforms any imperative into a polite request. Four examples showing the same verb escalating: Дай! → Дай, будь ласка. → Дайте, будь ласка. → Пане Іване, дайте, будь ласка. Clarify that Ukrainian imperatives without будь ласка are NOT rude — they are how teachers, coaches, and parents speak naturally. Tone and name add warmth: Оленко, прочитай, будь ласка.
-- P3 (~80 words): Contrast with English expectations — English speakers sometimes feel Ukrainian commands sound blunt. Explain: in Ukrainian classrooms, Читайте! and Пишіть! are normal, professional instruction. Робіть вправу! is what Заболотний's textbook looks like on every page. Adding будь ласка is for extra politeness, not basic courtesy. Give three authentic classroom examples from dialogue 1 that sounded natural without будь ласка: Читайте текст. Напишіть три речення. Запитуйте!
-- P4 (~90 words): The two contexts where you MUST use ви-form: (1) speaking to one adult you address formally (your teacher, a stranger, a doctor — Скажіть, будь ласка, де зупинка?) and (2) speaking to more than one person regardless of age (Діти, сідайте! — Children, sit down!). Give three real-life scenario examples: telling your whole family to sit down (Сідайте!), asking a shop assistant (Покажіть, будь ласка.), telling friends to come (Ходімо!).
-
-## Як утворити? (~330 words total)
-
-- P1 (~70 words): Explain the two-step formation principle — find the stem from the present tense 3rd person plural (вони читають → читай-), then add the imperative ending. Two ending patterns: -й (after vowel stem: читай, слухай, давай) and -и/-і (after consonant stem: пиши, говори, неси). Keep it simple at A1 — just these two patterns. One sentence summary: якщо основа закінчується на голосний → -й; якщо на приголосний → -и.
-- P2 (~90 words): Ти-forms in detail with 8 high-frequency verbs:
-  - читати (читають → читай) — read
-  - слухати (слухають → слухай) — listen
-  - писати (пишуть → пиши) — write
-  - говорити (говорять → говори) — speak
-  - дивитися (дивляться → дивись) — look/watch
-  - ходити (ходять → ходи) — walk/go
-  - іти (ідуть → іди) — go
-  - сісти (сядуть → сядь) — sit down
-  Show the vowel-stem group (читай, слухай) and consonant-stem group (пиши, говори, дивись) side by side. Note: іди and сядь are irregular but essential — learn them as vocabulary.
-- P3 (~90 words): Ви-forms — add -те or -іть to the ти-form. Rule of thumb: if ти-form ends in -й → add -те (читай → читайте, слухай → слухайте, давай → давайте); if ти-form ends in -и → add -іть (пиши → пишіть, говори → говоріть, ходи → ходіть, дивись → дивіться). Special cases with soft sign from Авраменко/Заболотний: будь → будьте, глянь → гляньте. Full parallel list: читай/читайте, пиши/пишіть, дивись/дивіться, сядь/сядьте, іди/ідіть.
-- Exercise 1 (~20 words label): Fill-in activity — complete the imperative table: infinitive given → fill ти-form and ви-form. 10 items using читати, писати, слухати, говорити, дивитися, ходити, іти, відкрити, показати, запитати.
-- P4 (~60 words): Irregular high-priority imperatives — four verbs that don't follow the stem pattern and must be memorized: дати → дай/дайте (give), сказати → скажи/скажіть (say/tell), їсти → їж/їжте (eat), взяти → візьми/візьміть (take). These four appear constantly in daily speech. Memory hook: all four are one-syllable ти-forms — дай, скажи, їж, візьми.
-- Exercise 2 (~20 words label): Quiz — choose the correct form: ___, будь ласка! with options (дай / даєш / дати), (скажіть / скажете / сказати), etc. 8 items.
-
-## Підсумок (~330 words total)
-
-- P1 (~30 words): Brief framing — here are the essential imperatives you now know. You can give instructions in the classroom, café, and gym. Two forms: ти for friends, ви for teachers and groups.
-- Table (~120 words): Consolidation reference table — 10 verbs with infinitive, ти-form, ви-form, and English meaning:
-  | Інфінітив | Ти | Ви | Значення |
-  | читати | читай | читайте | read |
-  | писати | пиши | пишіть | write |
-  | слухати | слухай | слухайте | listen |
-  | дивитися | дивись | дивіться | look/watch |
-  | говорити | говори | говоріть | speak |
-  | іти | іди | ідіть | go |
-  | дати | дай | дайте | give |
-  | сказати | скажи | скажіть | say/tell |
-  | сісти | сядь | сядьте | sit down |
-  | відкрити | відкрий | відкрийте | open |
-- P2 (~60 words): Будь ласка reminder — three ready-made polite phrases to memorize as chunks: Скажіть, будь ласка (Excuse me, could you tell me…), Дайте, будь ласка (Could you give me…), Покажіть, будь ласка (Could you show me…). These work in shops, at school, at the doctor's. Chunk-learning tip: learn the whole phrase, not just the verb.
-- Exercise 3 (~20 words label): Group-sort activity — sort 10 imperative forms into two columns: ти-forms vs. ви-forms. Items: читай, читайте, дай, дайте, пиши, пишіть, скажи, скажіть, сядь, сядьте.
-- Exercise 4 (~20 words label): Fill-in context exercise — complete the mini-dialogues with the correct form (ти or ви): Олено, ___ книжку! vs. Пане Іване, ___ книжку! (дай/дайте), etc. 6 items with both informal and formal context cues.
-- Self-check (~80 words): Three self-check questions in bullet format:
-  - Як сказати «Please read» своєму вчителеві? → Читайте, будь ласка.
-  - Як сказати «Listen!» другові? → Слухай!
-  - Як сказати «Give me, please» у магазині незнайомцю? → Дайте, будь ласка.
-  Plus one production prompt: Look around where you are right now. Give three instructions to an imaginary friend using imperatives you learned. Write them down: ___! ___! ___!
+## Підсумок — Summary (~330 words)
+- P1 (~150 words): Comprehensive table of essential imperatives for daily life. List verbs: читати, писати, слухати, дивитися, говорити, іти, дати, сказати, сісти, відкрити. Provide the "ти" form, "ви" form, and English meaning for each.
+- P2 (~180 words): Self-check and practical application. 
+    - Q: How do you ask a friend to "look"? (A: Дивись!) 
+    - Q: How do you ask a group of people to "listen"? (A: Слухайте!)
+    - Q: What word makes any command polite? (A: Будь ласка.)
+    - Q: How do you say "Please say" to a boss? (A: Скажіть, будь ласка.)
+- <!-- INJECT_ACTIVITY: fill-in-contextual-names --> [fill-in, Complete: Олено, ___ книжку! Пане Іване, ___ книжку! (дай/дайте), 6 items]
 
 Grand total: ~1320 words

@@ -1,84 +1,112 @@
 ## Linguistic Scan
-- "нудьгується" in "розробникам ніколи не нудьгується" is an unattested impersonal reflexive form (0 occurrences in GRAC). Standard Ukrainian requires active voice here: "розробники не нудьгують".
+Errors found:
+1. **Russianism/Calque:** The construction "давайте + дієслово" (e.g., "Давайте розглянемо", "Давайте згадаємо") is used 6 times, which contradicts the module's own teaching just paragraphs later that this is a "російська калька".
+2. **Orthography:** The loanword "оффер" (double "ф") is an English/Russian spelling convention. Ukrainian orthography rarely doubles consonants in loanwords. It should be "офер" or "пропозиція".
+3. **Calque:** The phrase "бути тобою" ("Якби я був тобою") is a literal translation of the English "if I were you". Natural Ukrainian uses "бути на твоєму місці".
+4. **Grammar error:** The rule for omitting the soft sign in the imperative missed the sonorant «р» (e.g., *повір*, *перевір*), which was explicitly required by the plan ("after ж, ч, ш, р, в, п").
+5. **Non-standard word:** "канцелярсько" is not standard; "канцелярит" or "по-канцелярському" should be used.
+6. **Non-standard word:** "калькову форму" should be "кальковану форму" (or simply "кальку").
 
 ## Exercise Check
-- **CRITICAL ISSUE**: The generated text contains 12 specific, granular `INJECT_ACTIVITY` markers that directly contradict the plan. The plan requires exactly 6 integrated Phase-3 review activities (1 quiz, 1 fill-in, 1 error-correction, 1 match-up, 1 group-sort, 1 reading-comprehension). The generated markers focus on single topics rather than synthesizing all of Phase 3, which breaks the checkpoint pedagogy.
+- Marker `quiz-identify-conditional-and-real-unreal-conditions-in-sentences` placed after Section 1. Matches hint: `quiz`.
+- Marker `fill-in-verb-forms` placed after Section 2. Matches hint: `fill-in`.
+- Marker `group-sort-categories` placed after Section 3. Matches hint: `group-sort`.
+- Marker `error-correction-fix-reflexive-passive-aspect-conditional-errors-in-a-paragraph` placed after Section 4. Matches hint: `error-correction`.
+- Marker `match-up-match-active-sentences-to-their-passive-or-conditional-transformations` placed after Section 5. Matches hint: `match-up`.
+- Marker `reading-comprehension-it-interview` placed after Section 6. Matches hint: `reading-comprehension`.
+Total: 6 markers. Placements are logical and follow the taught concepts. All match the plan's `activity_hints`. The inline transformation and identification exercises in Section 5 are well-constructed and accurately test grammar integration rather than simple content recall.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | Word count is massively over budget (4867 vs 4000). The writer generated 12 isolated activity markers instead of the 6 integrated markers specified in `activity_hints`. |
-| 2. Linguistic accuracy | 8/10 | Used the non-standard and unattested impersonal form "нудьгується" ("розробникам ніколи не нудьгується") instead of the standard active "розробники не нудьгують". All other grammar is highly accurate. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical examples contrasting 'якщо' and 'якби' in a business context. Highlights active voice preference clearly ("Дім був збудований нами" → marked as an error). |
-| 4. Vocabulary coverage | 8/10 | Failed to include the required vocabulary term "видова пара" and recommended term "перехідне дієслово" anywhere in the prose. |
-| 5. Exercise quality | 4/10 | Hallucinated 12 activity markers with completely different focuses instead of following the 6 integrated activity hints provided in the plan. |
-| 6. Engagement & tone | 6/10 | Heavy meta-commentary at the end of the module ("Уважно проаналізуймо цей діалог, адже він є чудовим прикладом «соціальних шахів»", "Ми з вами разом пройшли величезний шлях", "Тепер настав час рухатися далі!"). |
-| 7. Structural integrity | 8/10 | Structurally sound, but word count is significantly over the 10% tolerance limit. |
-| 8. Cultural accuracy | 10/10 | Correctly targets Russian calques ("пішли" for let's go) and explains them cleanly. Uses appropriate cultural contexts (IT office, train station). |
-| 9. Dialogue & conversation quality | 10/10 | The dialogues (train station frustration, HR interview) are natural, well-contextualized, and integrate the review grammar points seamlessly. |
+| 1. Plan adherence | 8/10 | Missed the required vocabulary word "видова пара". Missed the mini-dialogue exercise in Section 1. Missed explicitly listing the comprehension questions in Section 6. |
+| 2. Linguistic accuracy | 7/10 | Used the calque "давайте + verb" 6 times, directly contradicting its own teaching. Used misspelled loanword "оффер". Included the English calque "бути тобою". Used non-standard forms "канцелярсько" and "калькову". Missed the letter "р" in the soft sign phonetic rule. |
+| 3. Pedagogical quality | 9/10 | Excellent integration of review materials. Good contrasts between rules (real vs. unreal conditional, direct vs. polite imperative). Missed explicitly guiding the student to answer the comprehension questions in Section 6. |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary covered EXCEPT "видова пара". Recommended vocabulary integrated seamlessly. |
+| 5. Exercise quality | 10/10 | 6 activity markers correctly placed after their respective grammar sections, perfectly matching the `activity_hints` in the plan. |
+| 6. Engagement & tone | 10/10 | Very engaging, encouraging teacher persona. Explains *why* grammar works the way it does ("Ця струнка і логічна система...", "Це фонетичне правило робить українську мову..."). |
+| 7. Structural integrity | 10/10 | All H2 headings present and match the outline. Clean markdown format. Word count (4388) exceeds target. |
+| 8. Cultural accuracy | 10/10 | Explicit focus on decolonizing language (actively teaching against "Пішли" and "вибачаюся"). Accurate references to Ukrainian euphony. |
+| 9. Dialogue & conversation quality | 10/10 | The IT interview dialogue is very natural, incorporates the grammar points organically, and models professional Ukrainian correctly. |
 
 ## Findings
+[DIMENSION 2] [CRITICAL]
+Location: Throughout the text (e.g., "Давайте дуже детально згадаємо матеріал", "Давайте розглянемо три типові приклади")
+Issue: The Russianism/calque "давайте + дієслово" is used 6 times, which fundamentally contradicts the module's own pedagogical point that this construction is a "російська калька".
+Fix: Replace with the 1st person plural imperative ("Згадаймо", "Розгляньмо", "Розберімо").
 
-[Dimension 2] [SEVERITY: critical]
-Location: "Комплексні вправи: дієслівна фаза" (Проте розробникам ніколи не нудьгується *(they are never bored)* в офісі...)
-Issue: "Нудьгується" is a non-standard and practically unattested impersonal reflexive form (0.00 IPM in GRAC). Should use standard active form.
-Fix: Change "розробникам ніколи не нудьгується" to "розробники ніколи не нудьгують".
+[DIMENSION 2] [CRITICAL]
+Location: "А тепер гіпотетичне запитання: якби (if) ви отримали (received) цей оффер (offer) прямо сьогодні"
+Issue: "оффер" with a double 'ф' is a misspelling based on Russian conventions. According to Ukrainian orthography, foreign words rarely double consonants. It should be "офер" or "пропозиція".
+Fix: Replace "цей оффер" with "цю пропозицію".
 
-[Dimension 4] [SEVERITY: major]
-Location: Throughout text.
-Issue: Missing required vocabulary word "видова пара" and recommended word "перехідне дієслово".
-Fix: Inject these terms into the relevant pedagogical sections (Наказовий спосіб / Пасивний стан).
+[DIMENSION 2] [CRITICAL]
+Location: "«Якби я був (were) тобою зараз, я б негайно погодився (would agree) на цю чудову пропозицію». Я фізично не є тобою,"
+Issue: "Бути тобою" is a direct English calque ("if I were you"). Natural Ukrainian uses "бути на твоєму місці".
+Fix: Replace with "Якби я був на твоєму місці зараз... Я фізично не на твоєму місці,".
 
-[Dimension 5] [SEVERITY: critical]
-Location: Throughout text (12 INJECT_ACTIVITY markers).
-Issue: The writer ignored the 6 integrated `activity_hints` from the plan and injected 12 hallucinated activity markers spread throughout the text.
-Fix: Remove all 12 generated markers and inject the 6 correct markers from the plan at the appropriate review sections.
+[DIMENSION 2] [CRITICAL]
+Location: "Після звуків «б», «п», «в», «м», «ф» та шиплячих «ж», «ч», «ш» м'який знак ніколи не ставиться."
+Issue: The phonetics rule misses the sonorant «р» (as in *повір*, *перевір*), which was explicitly required by the plan's list: "after ж, ч, ш, р, в, п".
+Fix: Add "сонорного «р»" to the list of consonants.
 
-[Dimension 6] [SEVERITY: major]
-Location: End of "Діалог-синтез та перехід до Фази 4" (Уважно проаналізуймо цей діалог, адже він є чудовим прикладом «соціальних шахів»...)
-Issue: Four paragraphs of heavy meta-commentary, generic enthusiasm, and congratulatory filler, which also pushes the word count far over budget.
-Fix: Delete the meta-commentary paragraphs and replace the transition paragraph with a concise summary.
+[DIMENSION 2] [MAJOR]
+Location: "Штучні пасивні конструкції часто звучать занадто канцелярсько."
+Issue: "канцелярсько" is not a standard Ukrainian word; should be "як типовий канцелярит" or "по-канцелярському".
+Fix: Replace with "звучать як типовий канцелярит."
+
+[DIMENSION 2] [MAJOR]
+Location: "а не типову калькову форму «вибачаюся»."
+Issue: "калькову" is non-standard; the adjective is "кальковану".
+Fix: Replace with "кальковану форму".
+
+[DIMENSION 1] [MAJOR]
+Location: Section "Огляд умовного способу"
+Issue: The plan explicitly required: "Integrated exercise: dialogue with mixed real/unreal conditionals." This was missing from Section 1.
+Fix: Insert the mini-dialogue at the end of the section.
+
+[DIMENSION 1] [MAJOR]
+Location: Section "Огляд віддієслівних іменників та творення дієслів"
+Issue: The plan required the vocabulary word "видова пара" (aspectual pair), but it was not used anywhere in the text.
+Fix: Insert a sentence introducing the term "видова пара" when discussing perfective/imperfective verbs.
+
+[DIMENSION 1] [MAJOR]
+Location: Section "Діалог-синтез та перехід до Фази 4"
+Issue: The explicit comprehension questions required by the plan were omitted. Only the answers/analysis were provided.
+Fix: Insert the comprehension questions immediately before the grammatical breakdown of the dialogue.
 
 ## Verdict: REVISE
-The module requires revision due to critical exercise marker hallucinations, missing required vocabulary, one non-standard linguistic form ("нудьгується"), and heavy meta-commentary that severely bloats the word count.
+The text has excellent pedagogical flow, tone, and word count. However, it contains multiple critical linguistic errors—most notably, using the "давайте + дієслово" calque 6 times while simultaneously dedicating a paragraph to teaching the student NOT to use it! It also misstates a phonetic orthography rule by missing the letter "р" and uses calques like "бути тобою". Plan adherence also missed a few required elements. Applying the fixes will resolve all issues and make the module PASS.
 
 <fixes>
-- find: 'Проте розробникам ніколи не нудьгується *(they are never bored)* в офісі, адже щодня з''являються нові складні виклики.'
-  replace: 'Проте розробники ніколи не нудьгують *(they are never bored)* в офісі, адже щодня з''являються нові складні виклики.'
-- find: 'Вибір правильного **виду** *(aspect)* у наказовому способі має критичне значення для точної передачі вашої думки. **Доконаний вид** *(perfective aspect)* завжди використовується'
-  replace: 'Вибір правильного **виду** *(aspect)* у наказовому способі має критичне значення для точної передачі вашої думки. Кожна **видова пара** *(aspectual pair)* розрізняється за метою: **доконаний вид** *(perfective aspect)* завжди використовується'
-- find: 'Другий спосіб — це використання спеціальних безособових форм на **-но** або **-то**, що фокусується виключно на **результаті** *(result)* та беззаперечному факті завершення дії.'
-  replace: 'Другий спосіб — це використання спеціальних безособових форм на **-но** або **-то**, які утворюються, якщо ми маємо **перехідне дієслово** *(transitive verb)*. Цей спосіб фокусується виключно на **результаті** *(result)* та беззаперечному факті завершення дії.'
-- find: '<!-- INJECT_ACTIVITY: match-up, Match 10 sentence halves: 5 "якщо" clauses with their logical results and 5 "якби" clauses with theirs. Focus on forcing the correct mood/tense selection. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: fill-in, Learners must choose between "би" and "б" in 10 sentences and provide the correct past tense verb form to complete the conditional structure. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: group-sort, Sort 12 imperative forms into three categories: 2nd Person Singular, 2nd Person Plural, and 1st Person Plural (Inclusive). Include tricky forms like "сядьте" and "глянь". -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: fill-in, Choose the correct aspect (pf/ipf) for 10 situations (e.g., "You are teaching a child to wash hands every day"). -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: match-up, Match 10 verbs with their corresponding verbal nouns. Include both -ння/ття and zero-suffix types (e.g., плавати - плавання, виходити - вихід). 10 items. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: quiz, Identify the word-formation method for 12 words (Prefixal, Suffixal, or Mixed). Example: "написати" (Prefixal), "заземлити" (Mixed). 12 items. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: error-correction, Fix 8 sentences with typical errors: using -ся instead of -сь after a vowel, using "вибачаюся" instead of "вибачте", and awkward passive structures like "*Книга читається мною". 8 items. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: quiz, Identify the category of reflexive verb in 12 sentences. Is it a reciprocal action (we met) or an impersonal feeling (I feel like sleeping)? 12 items. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: reading-comprehension, Based on the IT company text, answer 8 grammar-focused questions. "Why is ''якби'' used in sentence 4?" "What is the base verb for the noun ''тестування''?" 8 items. -->'
-  replace: "<!-- INJECT_ACTIVITY: quiz, Identify grammar structures in context: умовний/наказовий/зворотний/пасивний/віддієслівний -->\n\n<!-- INJECT_ACTIVITY: match-up, Match sentence pairs: active↔passive, real↔unreal conditional, verb↔verbal noun -->"
-- find: '<!-- INJECT_ACTIVITY: match-up, Match 10 active sentences with their passive -но/-то equivalents. Focus on high-frequency verbs: купити, зробити, написати, відкрити, забути. 10 items. -->'
-  replace: ''
-- find: '<!-- INJECT_ACTIVITY: fill-in, A 10-gap text where the learner must choose the single best verb form from the entire Phase 3 repertoire to fit the context. This tests synthesis of all prior sections. 10 items. -->'
-  replace: "<!-- INJECT_ACTIVITY: fill-in, Complete a mixed text with correct Phase 3 verb forms (conditional, imperative, reflexive, passive) -->\n\n<!-- INJECT_ACTIVITY: error-correction, Fix errors across all Phase 3 topics: *Пішли (→ Ходімо), wrong conditional, spelling, Russianisms -->\n\n<!-- INJECT_ACTIVITY: group-sort, Sort verbs/constructions by Phase 3 category: умовний/наказовий/зворотний/пасивний/словотвір -->"
-- find: '<!-- INJECT_ACTIVITY: reading-comprehension, Read the job interview dialogue and answer grammar-focused questions testing your understanding of Phase 3 topics like conditionals, imperatives, passives, and reflexives. 8 items. -->'
-  replace: "<!-- INJECT_ACTIVITY: reading-comprehension, Read a daily-life dialogue and answer grammar-focused questions about all Phase 3 topics -->"
-- find: 'Уважно проаналізуймо цей діалог, адже він є чудовим прикладом «соціальних шахів» *(social chess)* у сучасній українській мові. Вибір правильної граматичної форми дієслова тут має величезне стратегічне значення для обох співрозмовників. Зверніть увагу, як професійний HR-менеджер використовує умовний спосіб для підкресленої, елегантної ввічливості: «Чи не могли б ви розповісти?». Це одразу створює комфортну атмосферу для спілкування. Але коли доходить до конкретних технічних завдань, менеджер перемикається на прямий наказовий спосіб: «Напишіть, будь ласка, цей алгоритм». Це дозволяє йому м'яко, але впевнено контролювати весь процес інтерв'ю.'
-  replace: ''
-- find: 'З іншого боку, наш кандидат також чудово грає в цю лінгвістичну гру. Він свідомо використовує нереальну умову («Якби я не любив програмування, я б не подавався»), щоб яскраво продемонструвати свою глибоку мотивацію. Крім того, наприкінці розмови кандидат свідомо обирає взаємне зворотне дієслово «зустрінемося». Цей тонкий вибір показує його як чудового командного гравця, налаштованого на рівноправну співпрацю *(equal collaboration)*, а не як ізольованого спеціаліста. Нарешті, пасивні конструкції та віддієслівні іменники («тестування проводиться», «завдання виконано», «підписання контракту») додають цій розмові необхідного корпоративного та об'єктивного тону.'
-  replace: ''
-- find: 'Ми з вами разом пройшли величезний шлях упродовж останніх тижнів навчання. Вся Фаза 3 була детально присвячена тому, **як** саме відбуваються різноманітні події навколо нас. Ви навчилися віддавати чіткі накази, ставити логічні умови, мріяти про неможливе, описувати складні абстрактні процеси за допомогою віддієслівних іменників та філігранно працювати з пасивними і зворотними конструкціями. Фактично, ви повністю опанували всю внутрішню механіку сучасного українського дієслова.'
-  replace: ''
-- find: 'Тепер настав час рухатися далі! Ми плавно переходимо до Фази 4, яку можна сміливо назвати «**Всесвітом руху**» *(The Motion Universe)*. Якщо всі наші попередні граматичні модулі фокусувалися на відносно «статичних» *(static)* діях та незмінних станах, то наступні десять модулів будуть присвячені виключно тому, **куди** і **як** ми фізично переміщуємося в просторі. Ми почнемо з детального вивчення просторових прийменників, а потім особисто познайомимося з фундаментальними дієсловами руху: **йти** *(to walk, to go on foot)* та **їхати** *(to ride, to go by vehicle)*. Ви дізнаєтеся, як одна маленька приставка може кардинально змінити напрямок вашої подорожі, і навчитеся вільно орієнтуватися в українському динамічному просторі.'
-  replace: 'Фаза 4 розпочнеться з теми «Всесвіт руху» *(The Motion Universe)*. Якщо попередні модулі стосувалися статичних дій, наступні розглядатимуть, **куди** і **як** ми переміщуємося. Ви вивчите просторові прийменники, базові дієслова руху (**йти**, **їхати**) та префіксальну систему, що визначає напрямок.'
+- find: "Давайте дуже детально згадаємо матеріал"
+  replace: "Згадаймо дуже детально матеріал"
+- find: "Давайте розглянемо три типові приклади з повсякденного спілкування."
+  replace: "Розгляньмо три типові приклади з повсякденного спілкування."
+- find: "Давайте розглянемо конкретні приклади в різних життєвих контекстах."
+  replace: "Розгляньмо конкретні приклади в різних життєвих контекстах."
+- find: "Давайте розглянемо таке дерево на прикладі"
+  replace: "Розгляньмо таке дерево на прикладі"
+- find: "Давайте згадаємо п'ять основних категорій цих слів."
+  replace: "Згадаймо п'ять основних категорій цих слів."
+- find: "Давайте розберемо цей діалог із граматичного погляду."
+  replace: "Тепер перевірте себе. Спробуйте знайти відповіді на ці запитання щодо тексту вище:\n1. Знайдіть усі форми умовного способу. Які з них реальні, які ні?\n2. Визначте вид кожного дієслова наказового способу.\n3. Які зворотні дієслова вжито? До якої категорії вони належать?\n4. Знайдіть конструкцію на **-но** / **-то**. Як би ви перетворили її на активну?\n\nРозберімо цей діалог із граматичного погляду."
+- find: "**якби** *(if)* ви **отримали** *(received)* цей **оффер** *(offer)* прямо сьогодні"
+  replace: "**якби** *(if)* ви **отримали** *(received)* цю **пропозицію** *(offer)* прямо сьогодні"
+- find: "Якби я отримав цей оффер, я б спочатку обов'язково"
+  replace: "Якби я отримав цю пропозицію, я б спочатку обов'язково"
+- find: "«Якби ви отримали цей оффер, з чого б почали?»?"
+  replace: "«Якби ви отримали цю пропозицію, з чого б почали?»?"
+- find: "«Якби я **був** *(were)* тобою зараз, я б негайно **погодився** *(would agree)* на цю чудову пропозицію». Я фізично не є тобою,"
+  replace: "«Якби я **був** *(were)* на твоєму місці зараз, я б негайно **погодився** *(would agree)* на цю чудову пропозицію». Я фізично не на твоєму місці,"
+- find: "якщо основа закінчується на губні приголосні або на шиплячі звуки. Після звуків «б», «п», «в», «м», «ф» та шиплячих «ж», «ч», «ш» м'який знак ніколи не ставиться."
+  replace: "якщо основа закінчується на губні, шиплячі звуки або «р». Після звуків «б», «п», «в», «м», «ф», сонорного «р» та шиплячих «ж», «ч», «ш» м'який знак ніколи не ставиться."
+- find: "Штучні пасивні конструкції часто звучать занадто канцелярсько."
+  replace: "Штучні пасивні конструкції часто звучать як типовий канцелярит."
+- find: "а не типову калькову форму «вибачаюся»."
+  replace: "а не типову кальковану форму «вибачаюся»."
+- find: "Інший важливий етап контролю — це правильний вибір між доконаним та недоконаним видом дієслова."
+  replace: "Інший важливий етап контролю — це правильний вибір між доконаним та недоконаним видом дієслова. Разом вони утворюють так звану **видову пару** *(aspectual pair)*."
+- find: "Чітке розрізнення «якщо» та «якби» — це надійний маркер вашого глибокого розуміння української граматики."
+  replace: "Чітке розрізнення «якщо» та «якби» — це надійний маркер вашого глибокого розуміння української граматики.\n\nПрочитайте цей короткий діалог і зверніть увагу на зміну умов:\n— **Якщо** завтра буде сонце, поїдемо на пляж.\n— **Якби** я мав відпустку, поїхав би на цілий тиждень!\n— Ну, **якщо** візьмеш вихідні, може, встигнемо."
 </fixes>

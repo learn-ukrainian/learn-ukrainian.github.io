@@ -1,7 +1,6 @@
 <correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
+CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
-- FIX: Missing section heading: 'Dialogues'
 - FIX: Missing section heading: 'Summary'
 </correction_directive>
 

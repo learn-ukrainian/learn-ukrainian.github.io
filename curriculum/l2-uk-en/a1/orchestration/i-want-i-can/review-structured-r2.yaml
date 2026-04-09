@@ -2,47 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'DEDUCT for: The required/recommended vocabulary word "порекомендувати"
-    was omitted and replaced with "порадити" in Dialogue 2.'
+  score: 10
+  evidence: Flawless execution of the plan. All dialogues are present exactly as requested
+    (e.g., "Я хочу гуляти. А ти?"), and the distinction between +noun and +infinitive
+    is thoroughly explained.
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'DEDUCT for: The text lists the regular Group I plural ending as "**-е́мо**"
-    with an explicit stress mark, which incorrectly implies it is universally end-stressed.'
+  score: 10
+  evidence: Exceptional. Consonant shifts (т→ч, г→ж, с→ш) are accurately described.
+    The explanation of unstressed 'о' in `хотіти` ("make the first vowel a clear,
+    open Ukrainian о") is a brilliant phonetic detail.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'REWARD for: Exceptional PPP flow, citing Grade 3 poetry to explain deep
-    desire, and clear comparative tables.'
+  evidence: The progression from concrete dialogue to grammatical breakdown is excellent.
+    The contrasting of the three modals (desire vs. ability vs. obligation) creates
+    a solid mental framework for the learner.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'DEDUCT for: Missing "порекомендувати" as noted above. All other required
-    words are used naturally.'
+  score: 10
+  evidence: All required and recommended words (`хотіти`, `могти`, `мусити`, `кава`,
+    `їсти`, `шкода`, `допомогти`, `борщ`, `порекомендувати`, `треба`) are naturally
+    integrated into the prose and examples.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: 'REWARD for: Perfect placement of all planned activity markers matching
-    the required scope and count.'
+  score: 9
+  evidence: All markers are present and match the plan, but `quiz-verb-patterns` is
+    placed before the learner sees the contrast between the irregular `могти` and
+    regular `мусити`.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'REWARD for: Using Антоненко-Давидович style guidelines, creating realistic
-    cafe and weekend scenarios, and avoiding generic filler.'
+  evidence: The tone is professional, encouraging, and clear. Phrases like "Breaking
+    down the key phrases..." and "Observe how beautifully they work together" guide
+    the learner without feeling patronizing.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'DEDUCT for: Word count outside target range. The deterministic word count
-    is 1587, which is >30% over the planned 1200 word target.'
+  score: 10
+  evidence: All sections are present and properly formatted. Word count is 1577 (well
+    above the 1200 target).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'REWARD for: Teaching the critical stylistic distinction between ''мусити''
-    (genuine compulsion) and ''мати'' (ordinary duty).'
+  evidence: High cultural accuracy. The explicit phonetic comparison to other Slavic
+    languages (preventing vowel reduction) is excellent decolonized pedagogy.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'DEDUCT for: Minor formatting artifact in Dialogue 2 where speaker "Денис"
-    is given two consecutive separate dialogue lines instead of combining his speech.'
+  score: 10
+  evidence: Dialogues are highly natural and contextualized ("Що ви можете порекомендувати?").
 findings: []

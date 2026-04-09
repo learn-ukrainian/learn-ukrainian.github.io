@@ -43,7 +43,6 @@ _RUSSICISMS = {
     # Moved to phrase-level check below.
     # "самий": "найкращий or найбільший",
     "дом": "дім (house)",
-    "собака": "пес / собака is accepted but пес is preferred",
     "зеркало": "дзеркало (mirror)",
     "ковёр": "килим (carpet)",
     "мяч": "м'яч (ball) — needs apostrophe",

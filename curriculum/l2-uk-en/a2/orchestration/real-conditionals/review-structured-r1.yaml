@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers the outline well, but missed one consolidation point from A2.7
+    in Section 3. The plan required "означальне (який, де)", but the text only reviewed
+    "тому що, бо", "хоча", "щоб", and "якщо".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contains a Russian calque ("погано себе почуває" instead of "погано почувається"),
+    an invalid verb form ("польємо" instead of "поллємо" confirmed by VESUM), and
+    states a factually false grammar rule (
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The example "Якщо ти маєш вільний час, треба поспішити на поїзд" creates
+    a logical contradiction (if you have free time, you do not need to hurry). This
+    confuses learners trying to deduce meaning from
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items are naturally integrated
+    into the text (e.g., "погода", "вільний", "порада", "поспішити", "парасолька",
+    "відпустка").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four required markers are present, evenly spread, and directly test
+    what was just taught (verb forms, logic matching, aspect, and recognizing if/if-only).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very strong encouraging teacher persona ("Залиште ці нереальні мрії для
+    поетів"). Great practical examples using familiar contexts like dacha gardening
+    and commuting.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is robust (2568 words, well over the 2000 target). Clean formatting,
+    proper headers.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural use of dacha context and the pervasive conversational particle
+    "то".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening dialogue in Section 2 is a highly natural, multi-turn negotiation
+    between a husband and wife, perfectly modeling the grammar in a practical context.
+findings: []

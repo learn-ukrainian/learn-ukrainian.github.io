@@ -1,33 +1,176 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 64,
+  "grounded_items": 38,
+  "ungrounded": [
+    {
+      "word": "снідаю",
+      "exercise_type": "unjumble",
+      "context": "снідаю",
+      "role": "answer"
+    },
+    {
+      "word": "він",
+      "exercise_type": "unjumble",
+      "context": "Він",
+      "role": "answer"
+    },
+    {
+      "word": "працює",
+      "exercise_type": "unjumble",
+      "context": "працює",
+      "role": "answer"
+    },
+    {
+      "word": "ми",
+      "exercise_type": "unjumble",
+      "context": "Ми",
+      "role": "answer"
+    },
+    {
+      "word": "обідаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми обідаємо _____.",
+      "role": "context"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "fill-in",
+      "context": "Вона вечеряє _____.",
+      "role": "context"
+    },
+    {
+      "word": "вечеряє",
+      "exercise_type": "fill-in",
+      "context": "Вона вечеряє _____.",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "fill-in",
+      "context": "Вони відпочивають _____.",
+      "role": "context"
+    },
+    {
+      "word": "відпочивають",
+      "exercise_type": "fill-in",
+      "context": "Вони відпочивають _____.",
+      "role": "context"
+    },
+    {
+      "word": "запитання",
+      "exercise_type": "true-false",
+      "context": "На запитання «Котра година?» ми відповідаємо «О п'ятій».",
+      "role": "context"
+    },
+    {
+      "word": "відповідаємо",
+      "exercise_type": "true-false",
+      "context": "На запитання «Котра година?» ми відповідаємо «О п'ятій».",
+      "role": "context"
+    },
+    {
+      "word": "вдень",
+      "exercise_type": "true-false",
+      "context": "12:00 вдень — це опівдні.",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "true-false",
+      "context": "12:00 вдень — це опівдні.",
+      "role": "context"
+    },
+    {
+      "word": "дев'яту",
+      "exercise_type": "true-false",
+      "context": "8:30 — це пів на дев'яту.",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «в десятій» замість «о десятій».",
+      "role": "context"
+    },
+    {
+      "word": "замість",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «в десятій» замість «о десятій».",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Для часу ми використовуємо слова: перша, друга, третя.",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "true-false",
+      "context": "Для часу ми використовуємо слова: перша, друга, третя.",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Для часу ми використовуємо слова: перша, друга, третя.",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Для часу ми використовуємо слова: перша, друга, третя.",
+      "role": "context"
+    },
+    {
+      "word": "шосту",
+      "exercise_type": "group-sort",
+      "context": "Чверть на шосту",
+      "role": "answer"
+    },
+    {
+      "word": "вечеряємо",
+      "exercise_type": "unjumble",
+      "context": "вечеряємо",
+      "role": "answer"
+    },
+    {
+      "word": "п'ять",
+      "exercise_type": "error-correction",
+      "context": "Зараз п'ять годин.",
+      "role": "context"
+    },
+    {
+      "word": "другої",
+      "exercise_type": "error-correction",
+      "context": "Зараз пів другої.",
+      "role": "context"
+    },
+    {
+      "word": "чверті",
+      "exercise_type": "error-correction",
+      "context": "Зараз без чверті три.",
+      "role": "context"
+    },
+    {
+      "word": "три",
+      "exercise_type": "error-correction",
+      "context": "Зараз без чверті три.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 21,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 14,
     "not_tested": [
       "вечір",
-      "восьма",
-      "година",
-      "дванадцята",
-      "дев'ята",
       "день",
       "десята",
-      "друга",
-      "котра",
       "ніч",
       "одинадцята",
-      "опівдні",
-      "п'ята",
-      "перша",
-      "пів",
       "ранок",
-      "сьома",
-      "третя",
-      "чверть",
-      "четверта",
       "шоста"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

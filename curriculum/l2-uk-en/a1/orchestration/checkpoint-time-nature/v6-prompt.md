@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -236,375 +237,344 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Batch 1 — Core time & days vocabulary (14/14):**
-- Confirmed: година (noun), котра (adj), ранку (←ранок, noun), вечора (←вечір, noun), понеділок (noun), вівторок (noun), середа (noun), четвер (noun), п'ятниця (noun), субота (noun), неділя (noun), січень (noun), лютий (adj/noun), березень (noun)
-
-**Batch 2 — Months & seasons (14/14):**
-- Confirmed: квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень (all nouns); взимку (adv), навесні (adv), влітку (adv), восени (adv), зима (noun)
-
-**Batch 3 — Weather & frequency adverbs (14/14):**
-- Confirmed: весна, літо, осінь (nouns); холодно, тепло, сонячно (adv); дощ, сніг (nouns); завжди, часто, іноді, рідко, ніколи, спочатку (all adv)
-
-**Batch 4 — Sequence, verbs & dialogue words (14/14):**
-- Confirmed: потім, нарешті (adv); працюю (←працювати), вивчаю (←вивчати), гуляю (←гуляти), ходжу (←ходити), подобається (←подобатися) (all verbs); погода, парк, кіно, тиждень, план (nouns); чудово (adv), ходімо (←ходити, imperative)
-
-**Not found: NONE — 56/56 words confirmed ✅**
-
-> ⚠️ Note on лютий: confirmed as adjective lemma (VESUM tags it adj). This is expected — the month name лютий functions as a substantivized adjective in Ukrainian, fully standard.
-
----
-
-## Textbook Excerpts
-
-### Section: Що ми знаємо? / Граматика — Час (Котра година?)
-> "Прочитай і запам'ятай, як правильно запитувати про час українською мовою. **Котра година? — Третя. О котрій годині? — О п'ятій. З котрої години? — З восьмої. До котрої години? — До десятої.**"
-> Source: Ponomarova, Grade 4, tier 2 (p. 84)
-
-This is the **exact pattern** in the plan (ordinal chunks for time). Confirmed as native Ukrainian pedagogy.
-
-### Section: Граматика — Дні тижня / Місяці / Пори року
-> "Скільки місяців має рік? Скільки днів має тиждень? Який за порядком лічби день тижня вівторок? …календар [показує]: 2015 ВЕРЕСЕНЬ 2 Середа / 3 Четвер"
-> Source: Захаріюк, Grade 4, tier 2 (p. 110)
-
-Day names and month names as ordinal/calendar concepts confirmed at Grade 4 level.
-
-### Section: Граматика — Погода (іде дощ / іде сніг)
-> "**Іде зима**, а кожуха нема. Плаче жовтень холодними сльозами."  
-> Source: Захаріюк, Grade 4, tier 2 (p. 41)
-
-> "Йде зима, красуня мила…" (Вірш Віри Паронової)
-> Source: Vashulenko, Grade 2, tier 2 (p. 60)
-
-Construction **іде/йде + noun** (зима/дощ/сніг) confirmed as native Ukrainian across multiple grade-levels. Not a calque — fully natural.
-
-### Section: Читання / Діалог — Розклад тижня
-> "Розкажіть про свій звичний **розпорядок дня**, уживаючи дієслова у формі теперішнього часу. Зразок: 7:00 — прокидаюсь, роблю зарядку, чищу зуби… 7:30 — снідаю. 8:00 — вигулюю свого домашнього дракона…"
-> Source: Litvinova, Grade 7, tier 1 (p. 49)
-
-The reading section's concept (person describes weekly schedule using present tense verbs) is standard textbook pedagogy from Grade 7 down.
-
-### Section: Що ми знаємо? — Хобі
-> "**Хобі — це захоплення, улюблене заняття у вільний час.** [Дискусія:] Чи кожна людина повинна мати хобі?"
-> Source: **Большакова**, Grade 2, tier 2 (p. 56)
-
-The M26 hobbies topic is explicitly taught with this exact framing in priority author Большакова, Grade 2.
-
-### Section: Підсумок — Checkpoint structure
-> "Повторюю і застосовую вивчене" [section heading in Grade 4 table of contents]
-> Source: Ponomarova, Grade 4, tier 2 (p. 160)
-
-> "Підсумовуємо й узагальнюємо" [section heading]
-> Source: Litvinova, Grade 5, tier 1
-
-Ukrainian textbooks use checkpoint/summary sections at the end of thematic blocks — the plan's Підсумок section follows this pedagogical tradition.
-
----
+- Confirmed: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя, січень, лютий, березень, квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень, зима, весна, літо, осінь, взимку, навесні, влітку, восени, холодно, тепло, сонячно, дощ, сніг, спочатку, потім, нарешті, завжди, часто, іноді, рідко, ніколи, година, котра.
+- Not found: None. All planned vocabulary items are valid lemmas or forms in VESUM.
 
 ## Grammar Rules
-
-- **У/В preposition alternation**: Правопис §23 — Full rule confirmed. Key principle: use **у** before consonants (including after commas/pauses before consonants), use **в** between vowels or after vowels before most consonants.
-
-  > ⚠️ **FLAG for writer:** The plan example reads "у понеділок, **в суботу**" — but after a comma (pause) before consonant **с**, Правопис §23 rule 1(5) requires **у**: correct form is "у понеділок, **у суботу**." Verify this in the Grammar Summary section. Similarly: "**у** середу," "**у** четвер," "**у** п'ятницю," "**у** неділю" (all start with consonants). "**В** суботу" is only correct if immediately preceded by a vowel-ending word, e.g., "я **в** суботу."
-
-- **Ordinal numerals for clock time**: Confirmed by Grade 4 Ponomarova (p. 84) and Grade 6 Litvinova (p. 246). Pattern: Котра година? — П'ята (NOM ordinal). О котрій? — О п'ятій (LOC ordinal). All ordinal time expressions use ordinal numerals, not cardinal.
-
-- **Accusative for days** (у понеділок): Days of week take preposition **у/в** + Accusative for "on Monday." Confirmed by textbook examples.
-
-- **Locative for months** (у січні, в серпні): Months take **у/в** + Locative. Confirmed standard.
-
-- **Adverbial forms for seasons**: взимку, навесні, влітку, восени — these are **frozen adverbial forms** (not preposition + case), confirmed in VESUM as adv. Do NOT write "у зимі" — incorrect.
-
----
+- U-V Alternation: Правопис §23 — Use 'у' before 'в', 'ф', and clusters like 'льв', 'зв', 'св', 'дв' (e.g., *у вівторок*, *у п'ятницю*). Use 'в' between vowels (*вона в Одесі*).
+- I-Y Alternation: Правопис §24 — Use 'і' between consonants (*він іде*) and at the beginning of sentences. Use 'й' between a vowel and a consonant (*вона йде*).
+- Time Interrogatives: Правопис §107 (Ordinal numerals) — Hours are expressed using ordinal numerals in the feminine form (matching *година*): *котра година?*, *о п'ятій годині*.
+- Capitalization: Days of the week and months are not capitalized in Ukrainian (unlike English), unless they start a sentence.
 
 ## Calque Warnings
-
-- **іде дощ / іде сніг**: ✅ NATURAL UKRAINIAN — confirmed by multiple textbooks (Вашуленко, Захаріюк). Not a calque. "Іде/йде" with precipitation nouns is standard native Ukrainian.
-
-- **ходімо** (imperative 1st pl.): ✅ NATURAL UKRAINIAN — Антоненко-Давидович explicitly champions this form: *"Українська класика й народне мовлення знають наказовий спосіб 1-ї особи множини, що надає фразі динамічності, заклику."* Use **ходімо**, **підімо** freely — do NOT substitute with Russian-influenced "давайте підемо" constructions.
-
-- **спочатку / потім / нарешті**: ✅ NATURAL UKRAINIAN — no calque issues. These are all native adverbs confirmed in VESUM and found in textbooks. Note: do not use "по-перше, по-друге" (calque from Russian) as substitutes for sequence adverbs at A1.
-
----
+- котра година: OK — This is the standard Ukrainian interrogative. Avoid Russianism "скільки годин" for "what time is it".
+- о котрій: OK — Correct prepositional phrase for "at what time". Avoid "в скільки".
+- іде дощ: OK — Idiomatic and natural Ukrainian. "Йде дощ" is also correct depending on the preceding sound (I-Y alternation).
+- приймати участь: CALQUE — Avoid in hobbies/plans. Use **брати участь**.
 
 ## CEFR Check
-
-| Word | PULS Level | Assessment |
-|------|-----------|------------|
-| година | **A1** | ✅ On target |
-| погода | **A1** | ✅ On target |
-| завжди | **A1** | ✅ On target |
-| часто | **A1** | ✅ On target |
-| іноді | **A1** | ✅ On target |
-| ніколи | **A1** | ✅ On target |
-| спочатку | **A1** | ✅ On target |
-| нарешті | **A2** | ⚠️ One level above — acceptable in checkpoint |
-| сонячно | **A2** | ⚠️ One level above — acceptable for weather topic |
-| рідко | **A2** | ⚠️ One level above — acceptable in checkpoint |
-
-> **Note on A2 words:** нарешті, сонячно, рідко are all one level above A1. For a **Checkpoint module** (M27) that consolidates and reviews A1.4 content, slight vocabulary extension is pedagogically appropriate and expected. These are passive-recognition words at A1, active at A2. No action needed.
+- понеділок: A1 — OK (Found in Grade 2 and Grade 5 primary textbooks).
+- січень: A1 — OK (Basic calendar vocabulary).
+- зима: A1 — OK (Core seasonal vocabulary).
+- холодно: A1 — OK (Found in Grade 2 weather descriptions).
+- часто: A1 — OK (Core frequency adverb).
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Checkpoint: Time and Nature
-**Module:** checkpoint-time-nature | **Phase:** A1.4 [Time and Nature]
-**Textbook grades searched:** 3, 4, 5
+# Knowledge Packet: Checkpoint: Time and Nature
+**Module:** checkpoint-time-nature | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/checkpoint-time-nature.md
+
+# Педагогіка A1: Checkpoint Time Nature
+
+
+
+## Методичний підхід (Methodological Approach)
+
+На рівні А1, особливо в контрольних модулях (checkpoints), педагогічний підхід має бути зосереджений на активізації та інтеграції вже вивченого матеріалу в нових, але простих комунікативних ситуаціях. Теми "Час" і "Природа" є ідеальними для цього, оскільки вони дозволяють закріпити базову лексику та граматику в природному, щоденному контексті.
+
+Основний принцип, закладений в українських підручниках для молодших класів, — це комунікативна діяльність (мовлення) через діалог та прості висловлювання (Source 7: `6-klas-ukrmova-betsa-2023_s0014`). Навчання — це не просто запам'ятовування слів, а їх використання для спілкування. Тому ядром checkpoint-модуля мають стати прості діалоги та короткі монологи-описи.
+
+**Ключові елементи підходу:**
+
+1.  **Контекстуалізація:** Вся лексика та граматика вводяться через знайомі учню ситуації: "Яка сьогодні погода?", "Коли ти йдеш у парк?", "Яка твоя улюблена пора року?". Це робить матеріал релевантним і легшим для запам'ятовування (Source 31: `ext-ulp_youtube-60`).
+
+2.  **Від простого до складного:** Починаємо з окремих слів (погода, день тижня), переходимо до словосполучень (`сонячний день`), потім до простих речень (`Сьогодні сонячний день.`), і нарешті до мікродіалогів (Source 15: `6-klas-ukrmova-betsa-2023_s0018`).
+
+3.  **Візуалізація та групування:** Лексику на теми "Природа" (пори року, погода) та "Час" (дні тижня, місяці) слід подавати у вигляді схем, таблиць або малюнків. Це допомагає структурувати інформацію та задіяти візуальну пам'ять, що є стандартною практикою в українських школах (Source 12: `5-klas-ukrmova-golub-2022_s0150`).
+
+4.  **Інтеграція навичок:** Модуль повинен рівномірно розвивати всі чотири види мовленнєвої діяльності: аудіювання (слухання прогнозу погоди), говоріння (діалог про плани на вихідні), читання (короткий опис природи) та письмо (написання кількох речень про улюблену пору року) (Джерело: `6-klas-ukrmova-betsa-2023_s0014`).
+
+5.  **Ігровий елемент:** Для підлітків та дорослих ігрові елементи, такі як розгадування загадок про пори року або складання "неправильних речень" (`Сніг іде влітку.`), можуть бути ефективним способом закріплення матеріалу без стресу (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0054`).
+
+## Послідовність введення (Introduction Sequence)
+
+Послідовність введення матеріалу в межах цього модуля має бути логічною, спираючись на принцип "від загального до конкретного" та від більш частотного до менш частотного.
+
+**Step 1: Пори року та погода (Seasons and Weather)**
+- **Що:** Вводяться 4 пори року: `весна́`, `лі́то`, `о́сінь`, `зима́`.
+- **Як:** Кожна пора року асоціюється з 1-2 базовими характеристиками погоди: `влі́тку спеко́тно`, `взи́мку хо́лодно`, `восени́ йде дощ`, `навесні́ тепло́`.
+- **Чому:** Це найбільш загальні та універсальні поняття, які легко проілюструвати. Вони створюють макро-контекст для подальшого вивчення місяців та активностей.
+
+**Step 2: Місяці та дні тижня (Months and Days of the Week)**
+- **Що:** Вводяться назви місяців, згруповані за порами року. Потім вводяться дні тижня.
+- **Як:** Через питання `Який зараз місяць?`, `Який сьогодні день?`. Дні тижня вводяться з фразами `сьогодні`, `вчора`, `завтра`.
+- **Чому:** Це конкретизує поняття часу. Дні тижня є високочастотною лексикою, необхідною для планування та розповіді про рутину.
+
+**Step 3: Базове визначення часу (Basic Time-Telling)**
+- **Що:** Фрази для визначення часу на рівні годин: `Котра́ годи́на?` — `Пе́рша годи́на.`, `Дру́га годи́на.`
+- **Як:** Використовуються тільки повні години. Вводиться конструкція `О котрі́й годи́ні?` для питань про час події (`О дру́гій годи́ні.`).
+- **Чому:** Це дозволяє говорити про щоденний розклад (`Я снідаю о восьмій годині.`), що є однією з ключових комунікативних тем А1. Хвилини та складніші конструкції вводяться на А2.
+
+**Step 4: Лексика природи (Nature Vocabulary)**
+- **Що:** Конкретні іменники: `со́нце`, `не́бо`, `де́рево`, `кві́тка`, `трава́`, `рі́чка`, `ліс`.
+- **Як:** Через прості описові речення з уже відомими прикметниками: `Не́бо си́нє.`, `Трава́ зеле́на.`.
+- **Чому:** Ці іменники є базовими та часто вживаними. Вони дозволяють перейти від загальних описів погоди до більш деталізованих описів місця.
+
+**Step 5: Інтеграція через дієслова дії (Integration via Action Verbs)**
+- **Що:** Поєднання нової лексики з дієсловами: `гуля́ти`, `світи́ти`, `іти́ (про дощ/сніг)`, `ба́чити`.
+- **Як:** Через створення речень, що описують типові сцени: `Со́нце сві́тить.`, `Я гуля́ю в па́рку.`, `Я ба́чу рі́чку.`.
+- **Чому:** Це активізує лексику, перетворюючи її з пасивного знання на інструмент для висловлювання думки та опису подій (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0054`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+Англомовні учні часто роблять передбачувані помилки, пов'язані з інтерференцією рідної мови.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я працюю **в** понеділок.` | `Я працюю **у** понеді́лок.` | Англійське "on Monday" змушує шукати один еквівалент. Учні часто вивчають прийменник `в` і використовують його всюди. Важливо з самого початку пояснити, що `в` та `у` є взаємозамінними варіантами одного прийменника, вибір якого залежить від милозвучності (евфонії). Показати приклади чергування: `у вівторок` (після голосного), `в середу` (після приголосного). |
+| `Сьогодні є сонячно.` | `Сьогодні сонячно.` | Прямий переклад англійської структури "Today **is** sunny". Учням слід пояснити, що в українській мові дієслово-зв'язка `є` в теперішньому часі для опису стану (прислівник або прикметник у короткій формі) зазвичай опускається. (Джерело: загальні принципи українського синтаксису). |
+| `Коли є твій день народження?` | `Коли твій день народження?` | Аналогічно попередньому пункту, калька з англійського "When **is** your birthday?". Слід наголосити на відсутності `є` в таких питальних конструкціях. |
+| `Він любить **зима**.` | `Він любить **зиму**.` | Помилка у відмінку. Англійська мова не має відмінків для іменників, тому учні схильні використовувати називний відмінок (`зима`) після дієслів. Необхідно тренувати вживання знахідного відмінка (Accusative case) після перехідних дієслів, як `любити`, `бачити`. (Джерело: `ext-other_blogs-46`). |
+| `чита́ння` | `чита́ння` (з наголосом на **а**) | Помилковий наголос є найпоширенішою проблемою. У слові `читання` англомовні учні часто ставлять наголос на перший склад за аналогією з англійськими словами. Важливо з самого початку тренувати правильний наголос за допомогою аудіо та словника наголосів. (Джерело: `5-klas-ukrmova-zabolotnyi-2023_s0238`). |
+| `Я бачу **дерево** в ліс.` | `Я бачу дерево **в лісі**.` | Помилка у вживанні місцевого відмінка (Locative case) для позначення місця. Учень використовує називний (`ліс`) замість місцевого (`в лісі`). Правило `в/у + [іменник у місцевому відмінку]` для відповіді на питання `де?` має бути чітко пояснене і відпрацьоване. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**Це обов'язковий розділ.** Навчання української мови з нуля — це можливість сформувати чисте, не спотворене російським впливом сприйняття.
+
+1.  **Фонетика "И" та "І":** Категорично заборонено пояснювати українську літеру **`и`** через російську **`ы`**. Це фонетично некоректно і закладає хибну вимову. Українська `и` — це неогублений голосний переднього ряду високого підняття, але нижче за `і`. Російська `ы` — голосний середнього ряду високого підняття. Найкращий спосіб — дати аудіо-приклад пари `ми - мило` і показати, що звук `и` схожий на англійський у слові "b**i**t", але трохи глибший. Звук **`і`** завжди пом'якшує попередній приголосний, на відміну від російської `и`.
+
+2.  **Лексичні "фальшиві друзі":** Активно наголошувати на відмінностях у словах, що звучать подібно до російських, але мають інше значення.
+    *   `неді́ля` — це "Sunday" українською, а не "week" (рос. `неделя`). "Week" українською — `ти́ждень`.
+    *   `годи́на` — це "hour" або "o'clock" (`перша година`), а не "year" (рос. `год`). "Year" українською — `рік`.
+    *   `ро́ки` (Plural of `рік`) — "years", не плутати з російським `руки` (hands).
+
+3.  **Історичний контекст:** Пояснюючи етимологію слів (навіть на простому рівні), слід уникати наративу "це слово прийшло з російської". Більшість базової лексики має спільне праслов'янське коріння. Українська мова розвивалася паралельно, а не походить від російської (Джерело: `ext-imtgsh-151`).
+
+4.  **Культурний контекст:** Обговорюючи свята, пов'язані з порами року (Різдво, Великдень), слід представляти саме українські традиції (`колядки`, `кутя`, `писанки`), а не узагальнені "східнослов'янські" чи російські аналоги (Джерело: `5-klas-ukrmova-uhor-2022-1_s0015`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+На цьому етапі лексика має бути високочастотною, конкретною та легкою для вимови. Наголос позначено.
+
+**Іменники (Nouns):**
+*   ★★★ `пого́да`, `час`, `день`, `ти́ждень`, `мі́сяць`, `рік`, `ра́нок`, `ве́чір`, `ніч`
+*   ★★★ `пори́ ро́ку`: `весна́`, `лі́то`, `о́сінь`, `зима́`
+*   ★★★ `дні ти́жня`: `понеді́лок`, `вівто́рок`, `середа́`, `четве́р`, `п'я́тниця`, `субо́та`, `неді́ля`
+*   ★★★ `приро́да`: `со́нце`, `не́бо`, `дощ`, `сніг`, `де́рево`, `кві́тка`, `трава́`, `ліс`, `парк`, `рі́чка`
+*   ★★ `мі́сяці`: `сі́чень`, `лю́тий`, `бе́резень`, `кві́тень`, `тра́вень`, `че́рвень`, `ли́пень`, `се́рпень`, `ве́ресень`, `жо́втень`, `листопа́д`, `гру́день`
+*   ★★ `твари́ни`: `кіт`, `соба́ка`, `птах`
+
+**Дієслова (Verbs):**
+*   ★★★ `бу́ти`, `ма́ти`, `хоті́ти`, `люби́ти`, `ба́чити`
+*   ★★★ `іти́` (іде́ дощ, іде́ сніг), `гуля́ти`, `світи́ти` (со́нце сві́тить)
+*   ★★ `почина́тися`, `закінчуватися`, `відпочива́ти`
+
+**Прикметники (Adjectives):**
+*   ★★★ `га́рний`, `пога́ний`, `те́плий`, `холо́дний`, `со́нячний`, `хма́рний`
+*   ★★★ `кольори́`: `зеле́ний`, `си́ній`, `бі́лий`, `чо́рний`, `жо́втий`, `черво́ний`
+*   ★★ `улю́блений`, `нови́й`
+
+**Прислівники (Adverbs):**
+*   ★★★ `сьогодн́і`, `за́втра`, `вчо́ра`
+*   ★★★ `вра́нці`, `вдень`, `вве́чері`, `вночі́`
+*   ★★★ `влі́тку`, `взи́мку`, `навесні́`, `восени́`
+*   ★★ `за́вжди`, `і́ноді`, `ніко́ли`, `ду́же`, `добре`
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Побудова діалогу (Dialogue Construction)**
+- **Завдання:** "Складіть і запишіть короткий діалог про ваші плани на вихідні. Використовуйте назви днів тижня та слова, що описують погоду." (За мотивами Source 15: `6-klas-ukrmova-betsa-2023_s0018`).
+- **Приклад:**
+  > — Приві́т, Окса́но!
+  > — Приві́т, Андрі́ю!
+  > — Яка́ пого́да бу́де в субо́ту?
+  > — Ду́маю, бу́де со́нячно і тепло́.
+  > — Чудо́во! Хо́чеш гуля́ти в па́рку?
+  > — Так, хочу́! О дру́гій годи́ні.
+
+**2. Категоризація слів (Word Categorization)**
+- **Завдання:** "Розподіліть слова у три стовпчики: Пори року, Погода, Дні тижня." (За мотивами Source 39: `2-klas-ukrmova-bolshakova-2019-2_s0054`).
+- **Слова:** `літо, вівторок, дощ, зима, п'ятниця, сніг, осінь, неділя, сонце, весна, середа`.
+- **Очікуваний результат:**
+  > | Пори року | Погода | Дні тижня |
+  > | :--- | :--- | :--- |
+  > | літо | дощ | вівторок |
+  > | зима | сніг | п'ятниця |
+  > | осінь | сонце | неділя |
+  > | весна | | середа |
+
+**3. Читання та відповіді на питання (Reading and Answering Questions)**
+- **Завдання:** "Прочитайте текст і дайте відповіді на питання." (За мотивами Source 14: `5-klas-ukrmova-uhor-2022-1_s0015`).
+- **Текст:**
+  > Це літо. Влітку дуже тепло і сонячно. Небо синє, трава зелена. Діти люблять гуляти в парку і їсти морозиво.
+- **Питання:**
+  > 1. Яка це пора року?
+  > 2. Яка погода влітку?
+  > 3. Що люблять робити діти?
+
+**4. Трансформація речень (Sentence Transformation)**
+- **Завдання:** "Складіть правильне і 'неправильне' речення з парами слів." (За мотивами Source 39: `2-klas-ukrmova-bolshakova-2019-2_s0054`, "Редагуємо").
+- **Пари слів:** `сніг – літо`, `квіти – зима`.
+- **Очікуваний результат:**
+  > *Правильно:* Сніг іде взимку.
+  > *Неправильно:* Сніг іде влітку.
+  > *Правильно:* Квіти ростуть навесні і влітку.
+  > *Неправильно:* Квіти ростуть взимку.
+
+## Пов'язані статті (Related Articles)
+- [pedagogy/a1/nouns-gender-and-number](./nouns-gender-and-number.md)
+- [pedagogy/a1/present-tense-verbs](./present-tense-verbs.md)
+- [pedagogy/a1/accusative-case](./accusative-case.md)
+- [pedagogy/a1/locative-case](./locative-case.md)
+- [pedagogy/a1/adjectives-basic-agreement](./adjectives-basic-agreement.md)
 
 ---
 
-## Що ми знаємо? (What Do We Know?)
+### Вікі: pedagogy/a1/checkpoint-first-contact.md
 
-## Читання (Reading Practice)
-
-> **Source:** ponomarova, Grade 3
-> **Section:** Сторінка 85
-> **Score:** 0.25
->
-> 85
-> 9. Чи хотілося б тобі потрапити на шоу фонтанів? А може 
-> ти там уже побував/побувала? Напиши про це текст
-> (3–4 речення).
-> 9
-> Зразок: читати — читання.
-> 10. Утвори іменники від поданих дієслів за зразком. 
-> Із двома з утворених іменників склади і запиши 
-> речення.
-> 1
-> Змагатися, полювати, сміятися, бігати, плавати, 
-> співати.
-> 1. Чому фонтан працює з середини квітня до кінця 
-> жовтня?
-> 2. Чому світломузичне шоу фонтанів відбувається 
-> ввечері?
-> ÂÈÇÍÀ×ÀÞ Ð²Ä ²ÌÅÍÍÈÊ²Â
-> ÂÈÇÍÀ×ÀÞ Ð²Ä ²ÌÅÍÍÈÊ²Â
-> 1. Прочитай слова в колонках.
-> автобус 
->  
-> вулиця 
->  
-> місто
-> океан  
->  
-> річка 
->  
-> озеро
-> лимон  
->  
-> грушка 
->  
-> яблуко
-> ведмідь 
->  
-> сорока 
->  
-> кошеня  
->  Проведи дослідження!
-> 1. Визнач, у якій колонці іменники можна замінити
-> словом  він.
-> 2. У  якій  колонці  іменники  можна  замінити  словом  воно?
-> 3.
-
-## Граматика (Grammar Summary)
-
-> **Source:** , Grade 4
-> **Section:** Сторінка 117
-> **Score:** 0.50
->
-> •  Складіть текст-розповідь за малюнком і словосполученнями. 
-> Запишіть. Підкресліть словосполучення, яким позначено час.
-> Правильно вимовляємо, пишемо, відповідаємо на 
-> питання о котр ій год ині? котра година?
-> Прокинувся о сьомій годині ранку. Чекатиму об оди­
-> надцятій годині. На сімнадцяту годину прийду. Чверть 
-> на третю розпочнемо. О пів на д ев’яту продзвенів 
-> дзвінок (пів до дев ’ятої). За чверть хвилин дванадця­
-> та година буде (чверть хвилин до дванадцятої). 
-> Десять хвилин на п ’ятнадцяту годину розпочнеться 
-> нарада. О чотирнадцятій годині п ’ятнадцять хвилин 
-> пролунав сигнал.
-> •  Спишіть словесні формули на означення часу. Підкресліть 
-> числівники.
-> СШ ш А
-> уЬ
-> 268.
-
-> **Source:** , Grade 4
-> **Section:** Сторінка 110
-> **Score:** 0.25
->
-> ЧИСЛІВНИК
-> -  
->  
->  
->  
->  - 
->   
->  
->  
->  
-> ....
-> ^\Ґ| Ч ислівник як частина мови
-> 254. Прочитайте запитання.
-> Скільки місяців має рік? Скільки днів має тиждень? 
-> Який за порядком лічби день тижня вівторок? Котра на 
-> малюнку за порядком лічби лялька в рожевій сукні, 
-> котра — у блакитній, а котре — яблуко? Які числа ви бачи­
-> те на листках календаря?
-> 2015
-> ВЕРЕСЕНЬ
-> 2
-> Середа
-> 2015
-> ВЕРЕСЕНЬ
-> З
-> Четвер
-> •  Запишіть відповіді на запитання. Підкресліть слова, що відпо­
-> відають на питання скільки? котрий? котра? котре? Які зі слів 
-> позначають кількість предметів, а які — порядок їх під час 
-> лічби?
-> Слова, що означають кількість предметів або їх 
-> порядок під час лічби, називаються числівниками.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 193
-> **Score:** 0.50
->
-> 193
-> Відомості із синтаксису й пунктуації. Словосполучення
-> 08.00
-> 08.15
-> 08.30
-> 08.45
-> 2. Усно назвіть час усіма можливими способами .
-> 3. Доповніть і  розіграйте діалог про розклад дзвінків .
-> — Коли починається перший урок?
-> — О …
-> — А закінчується?
-> — …
-> 4. Об’єднайтесь у  групи й  підготуйте діалоги для різних ситуацій з  вико-
-> ристанням позначення часу (зустріч із друзями, відвідування спортивної 
-> секції, перегляд улюбленого серіалу…) . Розіграйте ситуації перед класом . 
-> Жартувати й  фантазувати можна і  варто!
-> Вправа 313
-> Виправте помилки .
-
-## Діалог (Connected Dialogue)
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 231
-> **Score:** 0.50
->
-> 231
-> І. Як добре, що Бог придумав осінь! Чудова пора, аби зазир-
-> нути всередину себе, поділитися теплом та усмішкою з рідни-
-> ми! Природа виграє яскравими барвами, сонце по-особливому 
-> лоскоче носа промінчиками, дощ дражниться — бо важко 
-> передбачити, коли він буде, а коли — ні. Прохолода осінніх 
-> ранків дарує бадьорість на весь день. Повітря густішає, небо 
-> стає ще більш бездонним (Слава Світова).
-> ІІ. Лише восени, як ніколи, цінуєш розмову з друзями, яких 
-> не бачив ціле літо, і за чашкою гарячого чаю вкотре перекону-
-> єшся, що три місяці без сміху улюбленого приятеля — це таки 
-> дуже багато… Осінь — найтаємничіша пора, яка будить 
-> у людях різні відчуття, спонукає на звершення несподіваних 
-> вчинків, змушує багато про що задуматися… (І. Меліка).
-> ІІІ.
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 32
-> **Score:** 0.33
->
-> 29
-> 58.	 Доберіть антоніми до обох слів у словосполученнях і запишіть 
-> утворені словосполучення. 
-> ЗРАЗОК. Веселий ранок – сумний вечір. 
-> Теплий день, минуле літо, добрий друг, гарний початок, 
-> перша перемога, корисний холод.
-> 59.	 І. Прочитайте текст, визначте його тип мовлення. Що нового ви 
-> дізна­лися? 
-> ПРО КОРИСТЬ ХОЛОДУ
-> Холод – це не завжди погано. Він має і корисні власти-
-> вості. Саме морозна, холодна погода змушує організм по-
-> силювати свій імунітет. Холод пришвидшує циркулювання 
-> крові. Також за морозів кількість більш насиченого кис-
-> нем повітря значно збільшується, що допомагає покращити 
-> активність мозку. А зимові прогулянки поліпшують тонус 
-> м’язів. Однак від холоду треба й захищатися: одягати шарф 
-> і шапку, коли виходите на мороз (З інтернет-джерел).
-> ІІ. Виконайте завдання.
-> 1.
-
-## Підсумок — Summary
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 3
-> **Score:** 0.25
->
-> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . . . 86
-> ФРАЗЕОЛОГІЯ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
-> Фразеологізми . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 88
-> Різновиди фразеологічних одиниць . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 96
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 4
-> **Score:** 0.50
->
-> 4
-> Зміст
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . 102
-> ФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ . . . . . . . . . 103
-> Фонетика. Звуки мовлення . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 104
-> Транскрипція  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 107
-> Голосні та приголосні звуки . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 110
-> Голосні наголошені й  ненаголошені  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
-> Особливості вимови ненаголошених  голосних . . . . . . . . . . . . . . .
-
-## Grammar Reference
+# Педагогіка A1: Checkpoint First Contact
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Співвідношення звуків і букв
-> **Source:** МійКлас — [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
+The Ukrainian pedagogical approach to teaching initial introductions is fundamentally communicative and context-driven. Even from the first lesson, the goal is to enable a learner to participate in a simple, formulaic dialogue (`діалог`). The core concepts of **ім'я** (first name), **прізвище** (surname), and **по батькові** (patronymic) are introduced as functional chunks of language needed to complete a real-world task, such as introducing oneself or filling out a simple form (Джерело: `4-klas-ukrayinska-mova-varzatska-2021-1_s0159`, `6-klas-ukrmova-zabolotnyi-2020_s0032`).
 
-### Теорія:
+Ukrainian textbooks for early grades (1-2) establish this pattern by immediately presenting model dialogues. They use a "question-and-answer" format that is easy to memorize and adapt (Джерело: `5-klas-ukrmova-uhor-2022-1_s0107`, `6-klas-ukrmova-betsa-2023_s0014`). For example, the structure `— Як тебе звуть? — Мене звуть ... .` is presented as a fixed pair to be practiced with a partner (`Розіграйте діалог із сусідом / сусідкою за партою`) (Джерело: `6-klas-ukrmova-betsa-2023_s0014`).
 
-*www.ua.pistacja.tv*  
- 
-Як ти вже знаєш, в українській мові є  38  **звуків** і 33  **літери** для передачі цих звуків на письмі.
-Чому така різниця між кількістю звуків і букв?
-Деякі букви \(я, ю, є\) позначають **два** звуки у певних позиціях.
+Key methodological principles are:
+1.  **Dialogue First:** The primary mode of instruction is the dialogue or poly-dialogue (`полілог`), where students learn by playing roles in a given situation (`Ситуація`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `5-klas-ukrmova-avramenko-2022_s0011`). This makes the language immediately useful.
+2.  **Structural Repetition:** Core phrases like `Мене звати...` and `Моє прізвище...` are drilled through repetition, not grammatical analysis at first. The focus is on automaticity. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`).
+3.  **Immediate Introduction of Capitalization:** From the outset, learners are shown that names, patronymics, and surnames are proper nouns written with a capital letter (`пишуть з великої літери`) (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0070`, `2-klas-ukrmova-bolshakova-2019-2_s0023`). This is treated as a fundamental orthographic rule, not an advanced topic.
+4.  **Implicit Grammar:** The accusative case in `Мене звати...` and the vocative case in direct address (`Оксано!`) are introduced implicitly through model phrases. Formal grammatical explanation is delayed until the learner is comfortable with the functional use of the phrases (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `6-klas-ukrmova-litvinova-2023_s0148`).
 
-Букви ї, щ завжди позначають **два** звуки.
- 
-Буквосполучення дж, дз інколи позначають **два** звуки, а інколи — **один**.
- 
-В українській мові розрізняють тверді приголосні звуки \(22\) й м'які приголосні \(10\), голосні звуки \(6\).
+## Послідовність введення (Introduction Sequence)
 
-### Іменник. Рід іменників. Паралельні родові форми
-> **Source:** МійКлас — [Іменник. Рід іменників. Паралельні родові форми](https://www.miyklas.com.ua/p/ukrainska-mova/10-klas/morfologichna-norma-373940/imennik-rid-imennikiv-paralelni-rodovi-formi-imennika-374830)
+The introduction of "first contact" language should follow a logical progression from simple to complex, mirroring the approach in Ukrainian native-speaker textbooks.
 
-### Тео
+1.  **Step 1: Foundational Phrases & Pronouns.** Start with greetings (`Добрий день!`) and the core construction `Мене звати...` (My name is...). This immediately introduces the personal pronoun in the accusative case (`мене`) in a fixed, unanalyzed chunk (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). Contrast `Як тебе звати?` (informal 'you') with `Як вас звати?` (formal/plural 'you').
 
-... (truncated for context window)
+2.  **Step 2: Adding the Surname.** Introduce the concept of `прізвище` (surname) with the parallel construction `Моє прізвище...` (My surname is...). Practice this in a simple dialogue format (Джерело: `6-klas-ukrmova-betsa-2023_s0014`, `5-klas-ukrmova-uhor-2022-1_s0107`). At this stage, learners practice asking and answering both questions in a sequence.
+
+3.  **Step 3: The Vocative Case (Кличний відмінок) for Direct Address.** This is a critical element of natural Ukrainian speech and must be introduced early. Instead of just saying a name, learners must be taught to use the vocative form to call someone.
+    *   For feminine names ending in `-а`, it changes to `-о`: `Анна → Анно!`, `Оксана → Оксано!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   For masculine names ending in a consonant, it changes to `-е`: `Тарас → Тарасе!`, `Павло → Павле!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   Introduce formal address with `пан/пані`: `пане Іваненку`, `пані Оксано` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`). This immediately elevates the learner's politeness and authenticity.
+
+4.  **Step 4: Introducing the Patronymic (По батькові).** Explain that `по батькові` is a name derived from one's father's name and is used in formal or respectful situations. Show the full formal structure: `Прізвище, Ім’я, По батькові` (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`). Explain the common suffixes: `-ович` (masculine) and `-івна` (feminine) (Джерело: `6-klas-ukrmova-betsa-2023_s0016`). The goal at A1 is recognition, not productive use. Learners should understand what it is when they see it on a form or hear it in a formal introduction.
+
+5.  **Step 5: Contextual Application.** Embed these skills in practical scenarios like booking a table (`Скажіть будь ласка ваше прізвище`) or making a doctor's appointment (`ваше прізвище ім'я і номер телефону будь ласка`) (Джерело: `ext-ulp_youtube-120`, `ext-ulp_youtube-58`). This reinforces the utility of the language.
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers often make predictable errors when learning to introduce themselves. The curriculum should proactively address these.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я звати Анна.` | `Мене звати Анна.` | This is a direct translation of "I am called Anna." English speakers must learn the fixed Ukrainian construction which uses the accusative pronoun `мене` (me). (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`) |
+| `Привіт, Марія.` | `Привіт, Маріє!` | Forgetting the vocative case (`Кличний відмінок`) in direct address. It sounds unnatural and blunt to a native speaker. The ending must change (`-ія` -> `-іє`, `-а` -> `-о`, consonant -> `-е`). (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`) |
+| `Моє ім'я є Тарас.` | `Моє ім'я — Тарас.` or `Мене звати Тарас.` | Overuse of the verb `бути` (`є`) where it's typically omitted in the present tense for identity statements. The dash (`—`) is the correct punctuation, or the `Мене звати` structure should be used. <!-- VERIFY --> |
+| `Прізвище моє Ковальчук.` | `Моє прізвище — Ковальчук.` | Unnatural word order based on English. While grammatically possible, the standard, neutral response is `Моє прізвище...` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). |
+| "What is your middle name?" (asking about `по батькові`) | "Як вас по батькові?" | Equating the patronymic with an Anglo-American "middle name." A middle name is a second personal name; a patronymic is a grammatical and cultural construct derived from the father's name. This distinction is crucial. (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`) |
+| `Пан Шевченко...` (when ordering should be name first) | `Пан Тарас...` | In many formal contexts, the correct address is `пан/пані` + First Name. However, in official documents, it is always Last Name first (`прізвище, ім'я`) (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0278`, `9-klas-ukrajinska-mova-avramenko-2017_s0211`). The brief should clarify the context. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian from a decolonized perspective is non-negotiable. This is especially important in foundational topics where Russian-centric habits can form.
+
+1.  **Teach Ukrainian on Its Own Terms:** Never introduce Ukrainian letters or sounds as "like the Russian X." Learners must build a clean Ukrainian phonetic and orthographic foundation from zero. Russian has different letters (e.g., `ы`, `э`) and different pronunciations for shared letters (e.g., `и`, `г`). Using Russian as a reference point pollutes the learning process from day one.
+2.  **Patronymics are East Slavic, Not Russian:** Explicitly state that patronymics (`по батькові`) are a feature of Ukrainian, Belarusian, and Russian cultures. Frame it as a shared heritage, not a Russian import. Highlight the distinct Ukrainian suffixes (`-ович`, `-івна`) as seen in textbooks (Джерело: `6-klas-ukrmova-betsa-2023_s0016`).
+3.  **Correct Transliteration:** Emphasize the official Ukrainian transliteration system (and the common informal one) which differs from Russian. Key examples: `Г` is `H`, not `G`; `И` is `Y`, not `I`; `І` is `I`. This prevents learners from writing Ukrainian names with Russian spelling conventions.
+4.  **Surname Origins:** When discussing surnames, highlight authentic Ukrainian origins related to professions (`Коваль`, `Бондар`, `Гончар`), features, or Cossack history, not just those shared with Russian (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0025`, `3-klas-ukrainska-mova-vashulenko-2020-2_s0158`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is the absolute essential minimum for the "First Contact" module.
+
+*   **Іменники (Nouns):**
+    *   ім'я ★★★ (first name)
+    *   прізвище ★★★ (surname)
+    *   по батькові ★★ (patronymic)
+    *   учень / учениця ★★★ (student m/f)
+    *   вчитель / вчителька ★★★ (teacher m/f)
+    *   друг / подруга ★★ (friend m/f)
+    *   пан / пані / панно ★★★ (Mr. / Mrs. / Miss)
+    *   номер (телефону) ★★ (phone number)
+*   **Дієслова (Verbs):**
+    *   звати ★★★ (to be called)
+    *   бути ★★★ (to be - often omitted in present)
+    *   знати ★★ (to know)
+    *   жити ★ (to live)
+*   **Займенники (Pronouns):**
+    *   я, ти, він, вона, ми, ви, вони ★★★ (Nominative: I, you, he, she, etc.)
+    *   мене, тебе, його, її, нас, вас, їх ★★★ (Accusative: me, you, him, her, etc.)
+    *   мій/моя/моє, твій/твоя/твоє ★★★ (my, your)
+*   **Ключові фрази (Key Phrases):**
+    *   Добрий день. / Привіт. ★★★
+    *   Як тебе/вас звати? ★★★
+    *   Мене звати... ★★★
+    *   Як твоє/ваше прізвище? ★★★
+    *   Моє прізвище... ★★★
+    *   Дуже приємно. / Радий (рада) знайомству. ★★
+    *   Так / Ні ★★★
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises are models for the content writer, demonstrating the native Ukrainian pedagogical methodology.
+
+1.  **Basic Dialogue Completion (from Source `6-klas-ukrmova-betsa-2023_s0014`)**
+    *   **Task:** Побудуйте діалог за зразком. Запишіть. Розіграйте діалог із сусідом / сусідкою за партою.
+    *   **Model:**
+        > — Як тебе звуть?
+        > — Мене звуть … .
+        > — Як твоє прізвище?
+        > — Моє прізвище … .
+    *   **Pedagogical Value:** This simple, repetitive task builds automaticity for the most fundamental introductory exchange. It encourages active, paired practice.
+
+2.  **Identifying Name Components (from Source `5-klas-ukrmova-uhor-2022-1_s0107`)**
+    *   **Task:** Уточніть, де ім’я, де по батькові, де прізвище.
+    *   **Model:**
+        > — Франко — це ім’я?
+        > — Ні, це прізвище. Його звати Іван Якович.
+    *   **Pedagogical Value:** This exercise moves from simple production to comprehension and analysis. It teaches learners to differentiate between the three components of a full formal name and introduces the structure `Його звати...`.
+
+3.  **Table Fill-in (from Source `2-klas-ukrmova-bolshakova-2019-2_s0023`)**
+    *   **Task:** Заповни таблицю за зразком.
+    *   **Input:** `Григоренко Святослав Андрійович, Телюк Наталія Григорівна, Шевченко Тарас Григорович.`
+    *   **Table Structure:**
+| Прізвище | Ім’я | По батькові |
+| :--- | :--- | :--- |
+| Бондар | Лариса | Вікторівна |
+    *   **Pedagogical Value:** This is a classic exercise for reinforcing the structure and order of formal Ukrainian names and practicing reading/writing them correctly.
+
+4.  **Contextual Role-Play (from Source `6-klas-ukrmova-zabolotnyi-2020_s0032`)**
+    *   **Task:** Складіть діалог (6–8 реплік) в офіційно-діловому стилі... Ви прийшли записатися до бібліотеки. Повідомте мету свого візиту, а також на прохання бібліотекарки – своє прізвище та ім’я, дату народження, місце проживання (для оформлення картки читача).
+    *   **Pedagogical Value:** This places the language skill in a highly realistic, official context (`офіційно-діловий стиль`). It moves beyond simple introductions to a multi-turn conversation where personal information is requested and provided for a clear purpose. This demonstrates the practical value of what has been learned.
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/alphabet`
+- `pedagogy/a1/greetings-and-farewells`
+- `grammar/nouns/vocative-case`
+- `grammar/pronouns/personal-pronouns`
+- `culture/names-and-address`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -618,7 +588,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Граматика (Grammar Summary)` (~200 words)
 - `## Діалог (Connected Dialogue)` (~300 words)
 - `## Підсумок — Summary` (~250 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -673,7 +642,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -772,78 +741,41 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Що ми знаємо? (~220 words total)
+## Що ми знаємо? (What Do We Know?) (~220 words total)
+- P1 (~50 words): [Welcome to the A1.4 Checkpoint. This section reviews everything from Modules 22 to 26: telling time, using the calendar, describing weather, and narrating your daily routine.]
+- P2 (~120 words): [Self-check questions. Ask the learner to reflect on their skills: "Can you ask 'What time is it?' (Котра година?)? Can you say 'at 5 o'clock' (о п'ятій годині)? Do you remember all seven days of the week starting from 'понеділок'? Can you describe the current weather using words like 'сонячно' or 'іде дощ'?"]
+- P3 (~50 words): [Motivation and context. Remind the learner that these tools are essential for social life—making plans with friends, understanding schedules, and simply talking about the world around them.]
 
-- P1 (~30 words): Framing paragraph: "Це підсумковий модуль A1.4. Ти вивчив(ла) час, календар, погоду, розпорядок дня і хобі. Перевіримо, що ти вже вмієш!"
-- P2 (~190 words): Self-check list — 5 skill checkpoints, each with a prompt question + model answer:
-  1. M22 — "Котра зараз година?" → "Зараз третя година дня."
-  2. M23 — "Коли у тебе зустріч?" → "У середу, о пів на другу."
-  3. M24 — "Яка сьогодні погода?" → "Хмарно й іде дощ."
-  4. M25 — "Що ти робиш зранку?" → "Спочатку снідаю, потім іду на роботу."
-  5. M26 — "Як часто ти займаєшся спортом?" → "Іноді — у вівторок і четвер."
+## Читання (Reading Practice) (~280 words total)
+- P1 (~30 words): [Introduction to the reading passage. A short narrative about a typical week in Ukraine.]
+- P2 (~150 words): [Reading Text: "Мій робочий тиждень". A 10-sentence story. Example sentences: "Сьогодні понеділок. Вранці я прокидаюся о сьомій годині. Потім я снідаю і йду на роботу. У середу ввечері я часто гуляю в парку. Зараз весна, тому на вулиці тепло і сонячно. У суботу я не працюю. Взимку я люблю дивитися кіно, а влітку ходжу на річку."]
+- P3 (~100 words): [Linguistic breakdown of the text. Explain the choice of prepositions for days (у понеділок - Accusative) versus the lack of preposition for seasons (влітку - Adverb). Point out the sequence words "спочатку" and "потім" used to order the day's events.]
 
----
+## Граматика (Grammar Summary) (~220 words total)
+- P1 (~80 words): [Summary of Time. Differentiate between "Котра година?" (What time is it?) and "О котрій годині?" (At what time?). Reiterate the use of feminine ordinal numbers: перша, друга, п'ята.]
+- P2 (~70 words): [Summary of Calendar and Seasons. Remind the learner about the case endings: Accusative for days (у п'ятницю) and Locative for months (у січні). Contrast the four season adverbs: взимку, навесні, влітку, восени.]
+- P3 (~70 words): [Summary of Weather and Frequency. Review impersonal weather constructions like "холодно" or "іде сніг". Recap frequency adverbs: від "завжди" (always) до "ніколи" (never).]
+- <!-- INJECT_ACTIVITY: fill-in-mixed-review --> [fill-in, focus on mixed review of time/days/weather chunks, 6 items]
 
-## Читання (~280 words total)
+## Діалог (Connected Dialogue) (~350 words total)
+- P1 (~50 words): [Scenario setup. Two friends, Олена and Марко, are planning a weekend trip to a nearby city. They need to check the weather and agree on a meeting time.]
+- P2 (~150 words): [The Dialogue: "Плани на вихідні". A multi-turn exchange. Marko: "Яка погода завтра?" Olena: "У суботу буде тепло і сонячно." Marko: "Чудово! О котрій поїдемо?" Olena: "О дев'ятій ранку. Потім підемо в музей." Marko: "Добре. А в неділю?" Olena: "В неділю іноді йде дощ, тому будемо вдома."]
+- P3 (~150 words): [Deep dive into dialogue chunks. Explain the usage of "Ходімо" (Let's go) as an invitation. Highlight the use of "ранку" (of the morning) after the time. Reinforce the decolonization point: "неділя" is Sunday, while a week is "тиждень".]
+- <!-- INJECT_ACTIVITY: match-up-logical-logic --> [match-up, focus on logical Q&A pairs for time/weather/plans, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-routine-sequence --> [fill-in, focus on paragraph completion for daily routine and sequence, 7 items]
 
-- P1 (~30 words): Reading instruction: "Прочитай текст. Знайди в тексті: час, дні тижня, пори року, погоду, хобі."
-- Reading block (~180 words): Continuous Ukrainian text, 10 sentences, first person, covering one full week. Specific vocabulary targets:
-  - Time chunks: "з дев'ятої до п'ятої", "о сьомій ранку", "о пів на восьму"
-  - Days: "у понеділок", "у середу", "в суботу"
-  - Seasons: "взимку", "навесні"
-  - Weather: "тепло і сонячно", "іде сніг"
-  - Frequency: "завжди", "іноді", "рідко"
-  - Sequence: "спочатку", "потім", "нарешті"
-  - Example opening: "Мій тиждень починається рано. У понеділок я прокидаюся о сьомій ранку..."
-- P2 (~30 words): Two short comprehension nudges (not quiz format): "Яку пору року згадує автор? Коли він/вона займається хобі?"
-- Exercise: fill-in activity 3 — "Заповни розповідь про свій день" (7 items: {Спочатку|Потім|Нарешті}, {Після обіду|Вранці|Вночі}, з дев'ятої {до|і|по} п'ятої, etc.) — placed here to reinforce sequence words just seen in text.
+## Підсумок — Summary (~250 words total)
+- P1 (~250 words): [Follow the plan exactly. "You have reached the end of the Time and Nature phase! Here is what you can now do in Ukrainian:
+  - Tell time using hours (Котра година? Перша, друга...).
+  - Use time expressions for appointments (О котрій? О п'ятій...).
+  - Navigate the calendar: name all 7 days and 12 months with correct prepositions (у вівторок, у березні).
+  - Use seasonal adverbs (взимку, навесні...).
+  - Describe the weather and state of the environment (тепло, сонячно, іде дощ).
+  - Sequence your actions using 'спочатку', 'потім', and 'нарешті'.
+  - Describe your lifestyle with frequency words (завжди, часто, іноді).
+  Next, we move to A1.5, where you will learn to navigate the city, give directions, and use transport."]
 
----
-
-## Граматика (~220 words total)
-
-- P1 (~20 words): Brief framing: "Ось сім мовних шаблонів з A1.4. Вивчи їх — і ти можеш говорити про будь-який день."
-- P2 (~30 words): Pattern 1 — Time: "Котра година? → Третя година. / О котрій? → О третій." Two-question contrast, 2 examples: "Зустріч о першій. Фільм о дев'ятій вечора."
-- P3 (~30 words): Pattern 2 — Days of week (accusative chunk): "у + accusative → у понеділок, в суботу, у неділю." Note the в/у alternation rule reminder (from M28 preview: "це фонетичне правило — будь ласка, запам'ятай форми зараз").
-- P4 (~30 words): Pattern 3 — Months (locative chunk): "у + locative → у січні, в лютому, у березні, в серпні, у жовтні." Pattern: у/в + month ending -і.
-- P5 (~30 words): Pattern 4 — Seasons (adverbial forms): "взимку, навесні, влітку, восени." Contrast: these four don't use "у" — they are adverbs. Example: "Влітку тепло. Взимку холодно."
-- P6 (~30 words): Pattern 5 — Weather impersonals: "Тепло. / Холодно. / Сонячно. / Хмарно. / Іде дощ. / Іде сніг." Note "іде" (не "йде дощ" — правильно: іде).
-- P7 (~30 words): Patterns 6 & 7 combined — Sequence + Frequency: "спочатку → потім → нарешті" (time order); "завжди / часто / іноді / рідко / ніколи" (frequency scale low→high).
-- Exercise: fill-in activity 1 — "Оберіть правильний варіант" (6 items covering time chunks, day/month prepositions, weather: Зустріч {о п'ятій|в п'ятій|у п'ята} годині; Ми йдемо в кіно {у суботу|в суботі|на суботу}, etc.)
-
----
-
-## Діалог (~330 words total)
-
-- P1 (~40 words): Context setup: Оля телефонує другові Дмитру. Вони планують поїздку на вихідних — парк, кіно, зустріч. Зверни увагу: в одному діалозі — час, день, погода, хобі, запрошення.
-- Dialogue block (~230 words): 14–16 turns, two speakers (Оля / Дмитро). Specific structure:
-  - Turn 1–2: Weather check — "Яка завтра погода?" / "Тепло і сонячно, без дощу!"
-  - Turn 3–4: Day proposal — "Чудово! Ходімо в парк у суботу?" / "Добре! Я завжди гуляю в суботу."
-  - Turn 5–6: Time arrangement — "О котрій зустрінемося?" / "О десятій ранку біля метро."
-  - Turn 7–8: Season remark — "Люблю весну. Навесні так гарно!" / "Я теж! Взимку сидиш вдома..."
-  - Turn 9–10: Evening plan — "А потім підемо в кіно?" / "О котрій починається фільм?"
-  - Turn 11–12: Time response — "О п'ятій тридцять." / "Добре, я часто ходжу в кіно ввечері."
-  - Turn 13–14: Frequency exchange — "Як часто ти дивишся фільми?" / "Іноді — раз на тиждень."
-  - Turn 15–16: Closing — "Чудово! До суботи!" / "До зустрічі!"
-- P2 (~60 words): Post-dialogue language note box — 4 bullets identifying structures used: (1) погодний запит: "Яка погода?"; (2) запрошення: "Ходімо + куди"; (3) час зустрічі: "О котрій? → О десятій."; (4) частотні слова: завжди, іноді, часто — підкреслені в тексті вище.
-- Exercise: match-up activity — "З'єднай запитання з відповідями" (8 pairs: Котра година? ↔ Десята тридцять; Яка погода? ↔ Тепло і сонячно; Коли твій день народження? ↔ У жовтні; Що ти робиш у суботу? ↔ Граю у футбол; О котрій зустріч? ↔ О першій; Як часто ти читаєш? ↔ Кожен день ввечері; Ходімо в парк! ↔ Добре, о котрій?; Що ти будеш робити завтра? ↔ Буду працювати.)
-
----
-
-## Підсумок (~275 words total)
-
-- P1 (~50 words): Achievement header: "Ти завершив(ла) фазу A1.4 — Час і природа. Це значний крок! Подивися, що ти тепер вмієш." (Motivational but grounded — references the actual skills below, not generic praise.)
-- P2 (~130 words): Six-item achievement checklist in full sentences (not bullets — prose list with connectors):
-  1. Ти вмієш сказати час — "Котра година?" і "О котрій?" — і правильно вжити ordinal chunks: "о третій", "о пів на дев'яту".
-  2. Ти знаєш усі дні тижня і вживаєш їх з прийменником: "у понеділок", "в суботу".
-  3. Ти називаєш місяці і пори року: "у листопаді", "взимку", "навесні".
-  4. Ти описуєш погоду: "Тепло і сонячно", "Іде дощ", "Хмарно".
-  5. Ти розповідаєш про свій день зі словами "спочатку", "потім", "нарешті".
-  6. Ти говориш про хобі і частоту: "Я часто читаю", "Іноді ходжу в кіно", "Рідко дивлюся телевізор".
-- P3 (~50 words): Natural transition bridge to M28: "Наступний модуль — A1.5: Місто і транспорт. Ти навчишся запитувати дорогу, називати місця в місті, купувати квиток. Але спочатку — маленький урок про красу української мови: евфонія (M28). Чому ми кажемо 'у парку', але 'в кіно'? Дізнаєшся незабаром."
-- P4 (~45 words): Encouragement close grounded in cultural context: "Мова — це не тільки граматика. Коли ти кажеш 'навесні', 'взимку', 'іде дощ' — ти думаєш по-українськи. Саме так говорять в Україні щодня. Продовжуй — у тебе виходить!"
-
-Grand total: ~1325 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format

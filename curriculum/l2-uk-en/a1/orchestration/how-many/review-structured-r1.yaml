@@ -2,56 +2,46 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: '**Covered:** All 4 content_outline sections present with correct headings.
-    Numbers 1–20 ✓, tens/hundreds ✓, prices ✓, age formula ✓, phone numbers ✓. Vashulenko
-    and Голуб textbook references integrate'
+  score: 9
+  evidence: Covers almost all points perfectly, including dialogues and outline. Missed
+    the recommended vocabulary word `копійка`.
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: All Ukrainian forms VESUM-verified. Number forms correct (двісті, триста,
-    п'ятсот). Gender agreement correct (одне тістечко — neuter, одна гривня — feminine).
-    Case forms correct (п'ять гривень — genit
+  score: 10
+  evidence: All Ukrainian text is grammatically correct and uses natural phrasing.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Excellent PPP flow: dialogues introduce numbers in situation (bakery,
-    age), then systematic teaching, then summary practice. 5+ examples per number
-    group. Counting rhyme is excellent authentic pedagog'
+  score: 8
+  evidence: The rule for currency endings based on final digits fails to explicitly
+    exclude the teens (11-14) which behave differently ("For amounts ending in one...
+    For amounts ending in two, three, or four...")
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: 'All 8 required vocabulary groups present and used in context: один–десять
-    ✓, двадцять/тридцять/сорок ✓, сто/тисяча ✓, скільки ✓, коштує ✓, гривня ✓, рік/роки/років
-    ✓. All 6 recommended items present: '
+  score: 9
+  evidence: All required vocabulary is present. Missed one recommended word (`копійка`).
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 4 markers matching all 4 plan activity_hints by type and focus. Each marker
-    placed after relevant teaching. Age quiz tests language (dative pronoun + number
-    + рік/роки/років pattern), not content reca
+  score: 10
+  evidence: Markers are placed correctly and logically test the immediately preceding
+    content.
 - dimension: 6
   name: Engagement & tone
   score: 9
-  evidence: 'No LLM filler detected. No "Let us explore," no "incredibly," no motivational
-    openers. Concrete throughout: real bakery prices (15₴, 45₴, 200₴), real phone
-    number format, the Вознюк counting rhyme. Na'
+  evidence: Good, encouraging teacher tone. Opens with a slightly abstract hook ("invisible
+    architecture") but transitions quickly into practical scenarios.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 headings match plan exactly: Діалоги ✓, Числа 1-20 ✓, Десятки
-    і сотні ✓, Підсумок ✓. Word count 1338 > 1200 target ✓. Clean markdown, no stray
-    tags, no duplicate sections. Activity markers pr'
+  evidence: All required H2 headings are present. Word count is 1530 (well above the
+    1200 target).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Decolonized — "сім" explicitly contrasted with Russian ghost form "сем"
-    without framing Ukrainian as derivative. Etymology of сорок presented from Ukrainian
-    textbook (Голуб), grounded in Ukrainian tra
+  evidence: Accurate and real Ukrainian context used (prices in hryvnia, traditional
+    bakery, standard phone number grouping).
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: 'Bakery dialogue is natural: multi-turn, named speakers (Покупець/Пекар),
-    escalating complexity (торт → хліб → три булочки → одне тістечко), ends with natural
-    farewell. Age dialogue has named teen spea'
+  score: 10
+  evidence: Dialogues flow naturally and perfectly incorporate the targeted numbers
+    and phrases in realistic contexts.
 findings: []

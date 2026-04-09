@@ -1,21 +1,14 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
+  "total_items": 47,
+  "grounded_items": 47,
   "ungrounded": [],
   "vocab_coverage": {
     "plan_vocab_total": 10,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 7,
     "not_tested": [
-      "борщ",
-      "допомогти",
       "кава",
-      "могти",
-      "мусити",
-      "порекомендувати",
       "треба",
-      "хотіти",
-      "шкода",
-      "їсти"
+      "шкода"
     ]
   },
   "all_grounded": true

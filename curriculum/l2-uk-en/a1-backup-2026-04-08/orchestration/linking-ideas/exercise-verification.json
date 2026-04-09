@@ -1,0 +1,22 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 10,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "або",
+      "але",
+      "бо",
+      "та",
+      "також",
+      "теж",
+      "тому",
+      "чи",
+      "чому",
+      "що"
+    ]
+  },
+  "all_grounded": true
+}

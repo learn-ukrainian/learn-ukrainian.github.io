@@ -1,71 +1,67 @@
 ## Linguistic Scan
-- "гра́ти ... роль" -> This is a Russian calque ("играть роль"). In Ukrainian, the correct phrasing for figurative significance is "відіграва́ти роль".
-- "допомі́жне́ слово" -> Typographical error: double acute accent on the letter 'е'.
-- "Бі́льшість українських дієслів існують" -> Stylistic flaw: "більшість" referring to inanimate nouns typically requires a singular verb ("існує"), not plural.
+Found a few linguistic and stylistic errors:
+- **Calque:** `перевірочне запитання` is a calque from Russian "проверочный". The correct standard Ukrainian term is `перевірне запитання`.
+- **Colloquialism / Calque:** `співбесідою на роботу` is a colloquial calque from "собеседование на работу". Standard Ukrainian is simply `співбесідою` or `співбесідою щодо працевлаштування`.
+- **Pleonasm:** `Англомовні мовці` is slightly redundant ("English-speaking speakers"). Better to use `Англомовні студенти`.
+- **Anglicism:** Using `гендерну ідентичність` to describe the grammatical gender of a subject in a sentence is an English-centric concept transfer. In grammar, we refer strictly to `рід` (grammatical gender) or `стать` (biological sex).
+
+*(Note: The text contains manual stress marks throughout the prose. Per the guidelines, this is ignored for scoring, but typically the pipeline handles prose stress automatically.)*
 
 ## Exercise Check
-- All `<!-- INJECT_ACTIVITY -->` markers are properly placed at the end of the relevant theoretical sections.
-- The six injected markers correctly match the types and focus specified in the plan's `activity_hints`.
-- No issues identified with exercise layout or flow.
+- `<!-- INJECT_ACTIVITY: group-sort -->` — matches `group-sort` (I vs II дієвідміна). Placed correctly after Section 1.
+- `<!-- INJECT_ACTIVITY: fill-in-tense-forms -->` — matches `fill-in` (tense forms). Placed correctly after Section 2.
+- `<!-- INJECT_ACTIVITY: quiz-aspect-id -->` — matches `quiz` (aspect identification). Placed correctly after Section 3.
+- `<!-- INJECT_ACTIVITY: match-up-aspect-pairs -->` — matches `match-up` (aspectual pairs). Placed correctly after Section 3.
+- `<!-- INJECT_ACTIVITY: error-correction-aspect -->` — matches `error-correction`. Placed correctly after Section 4.
+- `<!-- INJECT_ACTIVITY: open-writing-yesterday -->` — matches `open-writing`. Placed correctly after Section 4.
+All 6 plan activities are represented, logically spaced, and properly placed after their respective teaching concepts.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed the "Змішаний спосіб: кидати → кинути" point from section 3. The "Самоперевірка" in the conclusion substituted the plan's practical tasks (e.g., "Провідміняйте дієслово бачити", "Утворіть форми минулого часу дієслова нести") with theoretical recall questions. |
-| 2. Linguistic accuracy | 8/10 | Used the calque "гра́ти ... роль" instead of "відіграва́ти роль". Typographical error with a double acute "допомі́жне́". Grammatical mismatch in "Бі́льшість українських дієслів існують" (should be singular 'існує'). |
-| 3. Pedagogical quality | 9/10 | Excellent pedagogical flow for aspect (process vs result). Provides clear context and breaks down complex morphophonemic rules. |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary is present. The terms are correctly bolded, given context, and translated. |
-| 5. Exercise quality | 10/10 | Exercise markers are placed strategically after concepts, testing what was just taught. All 6 planned activities are present. |
-| 6. Engagement & tone | 8/10 | Contains some "telling instead of showing" and generic enthusiasm, e.g., "Саме тут вид українського дієслова розкрива́є свою спра́вжню стилісти́чну ма́гію." |
-| 7. Structural integrity | 10/10 | Clean markdown, precise section headers, and the word count is aligned with the target. |
-| 8. Cultural accuracy | 10/10 | Contexts and examples feel authentic to Ukraine (e.g., Kyiv cafe, university exams). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, effectively demonstrating tense/aspect switching without sounding robotic. |
+| 1. Plan adherence | 10/10 | Every point covered. Ex: the distinction of 1st vs 2nd conjugation, the past tense suffixes, the aspectual pairs (префіксальний, суфіксальний, суплетивні) are all present exactly as planned. |
+| 2. Linguistic accuracy | 9/10 | Generally excellent, but deducted slightly for a few calques and pleonasms ("перевірочне", "співбесідою на роботу", "Англомовні мовці"). |
+| 3. Pedagogical quality | 10/10 | Outstanding PPP flow. The writer expertly links the dialogue back to the grammar concepts: "Згадайте, як Олексій описував своє літо: «Я працював...» Оскільки Олексій — чоловік..." This is textbook-perfect pedagogy. |
+| 4. Vocabulary coverage | 10/10 | All required metalanguage terms from the plan are introduced naturally, bolded, and translated (напр., *дієвідмінювання (conjugation)*, *доконаний вид (perfective aspect)*). |
+| 5. Exercise quality | 10/10 | All 6 injected markers exactly match the plan's type and focus. Placements perfectly follow the conceptual explanations. |
+| 6. Engagement & tone | 10/10 | Natural and encouraging without sounding corporate. The "narrative transformation" example in Section 4 is a brilliant, engaging way to demonstrate aspect. |
+| 7. Structural integrity | 10/10 | The module is well-structured with all H2 headers matching the plan. Word count is 4687, safely exceeding the 4000 target. |
+| 8. Cultural accuracy | 10/10 | Excellent decolonized note: "Відпадіння цього кінцевого приголосного звука є ключовою історичною та морфологічною відмінністю від російської мови, де ця літера неухильно зберігається." |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly natural, context-rich, and perfectly illustrate the grammar points (e.g., the coffee shop catch-up and the exam worry scenario). |
 
 ## Findings
 [2. Linguistic accuracy] [Critical]
-Location: "Ваш стари́й знайо́мий, вид дієслова, знову буде гра́ти свою найголовні́шу, виріша́льну роль."
-Issue: "грати роль" is a calque of Russian "играть роль" in this figurative context.
-Fix: Change to "відігравати роль".
+Location: "поста́вте переві́рочне запитання" and "Перевірочне запитання тут звучить так:"
+Issue: "Перевірочне" is a Russian calque (проверочное). The correct pedagogical term in Ukrainian is "перевірне".
+Fix: Replace "перевірочне" with "перевірне".
 
 [2. Linguistic accuracy] [Major]
-Location: "допомі́жне́ слово"
-Issue: Double acute accent typo on the word "допоміжне".
-Fix: Remove the second acute accent.
+Location: "перед важливим і́спитом або складною співбе́сідою на роботу."
+Issue: "Співбесіда на роботу" is a colloquial calque from Russian. Standard phrasing is just "співбесідою" or "співбесідою щодо роботи".
+Fix: Replace "співбе́сідою на роботу" with "співбе́сідою".
 
 [2. Linguistic accuracy] [Minor]
-Location: "Бі́льшість українських дієслів існують па́рами."
-Issue: "Більшість" with inanimate subjects should take a singular verb ("існує").
-Fix: Change "існують" to "існує".
+Location: "Англомо́вні мо́вці часто намага́ються механі́чно перенести́"
+Issue: "Англомовні мовці" is a pleonasm (English-speaking speakers).
+Fix: Replace "Англомо́вні мо́вці" with "Англомо́вні студе́нти".
 
-[1. Plan adherence] [Major]
-Location: "Спро́буйте абсолютно самостійно дати правильні та то́чні ві́дповіді на ці чоти́ри ключові́ запитання, перш ніж читати наші підка́зки. По-пе́рше: як дуже швидко відрізни́ти пе́ршу дієвідмі́ну..."
-Issue: The writer ignored the practical tasks for the self-check specified in the plan (e.g., "Провідміняйте дієслово бачити") and replaced them with theoretical recall questions.
-Fix: Replace the theoretical questions with the practical tasks from the plan.
-
-[1. Plan adherence] [Major]
-Location: "Слово «да́ти» стає «дава́ти» *(to give/to be giving)*. І́ноді видові пари утворюються від абсолютно різних ко́ренів."
-Issue: The plan point "Змішаний: кидати → кинути (суфікс + зміна кореня)." was completely skipped.
-Fix: Insert the mixed method example into the text.
-
-[6. Engagement & tone] [Minor]
-Location: "Саме тут вид українського дієслова розкрива́є свою спра́вжню стилісти́чну ма́гію."
-Issue: Use of generic "magic of" phrasing, which violates the tone guidelines.
-Fix: Change to a more academic phrasing like "демонструє свої стилістичні можливості".
+[2. Linguistic accuracy] [Minor]
+Location: "дієслово в минулому часі — це своєрі́дне дзе́ркало суб'єкта, яке́ відобража́є його ге́ндерну іденти́чність."
+Issue: Using "gender identity" to explain grammatical gender agreement is an unnatural anglicism. The Ukrainian term is "рід".
+Fix: Replace "ге́ндерну іденти́чність" with "рід".
 
 ## Verdict: REVISE
-The module is excellently structured but has a critical calque ("грати роль") and misses two major plan points (the mixed aspectual pair formation and the practical self-check exercises). The tone and typos also need minor polish. A REVISE is necessary to apply the fixes.
+The text is exceptionally strong, rich, and pedagogically sound. However, the presence of a few calques (like "перевірочне") constitutes a critical linguistic error in a curriculum, requiring a REVISE verdict to apply deterministic fixes.
 
 <fixes>
-- find: "буде гра́ти свою найголовні́шу, виріша́льну роль."
-  replace: "буде відіграва́ти свою найголовні́шу, виріша́льну роль."
-- find: "допомі́жне́ слово"
-  replace: "допомі́жне слово"
-- find: "Бі́льшість українських дієслів існують па́рами."
-  replace: "Бі́льшість українських дієслів існує па́рами."
-- find: "Слово «да́ти» стає «дава́ти» *(to give/to be giving)*. І́ноді видові пари утворюються від абсолютно різних ко́ренів."
-  replace: "Слово «да́ти» стає «дава́ти» *(to give/to be giving)*. Існує також змішаний спосіб, де поєднуються суфікс і зміна кореня: «кидати» перетворюється на «кинути». І́ноді видові пари утворюються від абсолютно різних ко́ренів."
-- find: "По-пе́рше: як дуже швидко відрізни́ти пе́ршу **дієвідмі́ну** *(conjugation)* від другої? Ві́дповідь надзвичайно проста: завжди уважно диві́ться на **тематичний голосний** *(thematic vowel)* у самих закінченнях. Перша дієвідміна активно використо́вує літери «е» або «є» («пиш**е**ш», «чита́**є**ш»), а друга дієвідміна завжди жо́рстко вимагає «и» або «ї» («роб**и**ш», «сто**ї**ш»). По-дру́ге: як саме граматично утво́рюється минулий час виключно для чоловічого роду? Вам потрібно взяти чисту **основу інфінітива** *(infinitive stem)* і просто додати до неї один специфічний **суфікс** *(suffix)* «-в» (наприклад: «чита-ти» миттєво стає «чита-в»). По-тре́тє: чому відо́ме дієслово «зробити» абсолютно ніколи не має теперішнього часу? Тому що це конкре́тне слово належить до доконаного виду, який фокусу́ється виключно на фіна́льному, фіксо́ваному результаті. Ви фізично ніяк не можете мати повністю завершений результат прямо зараз, перебува́ючи всередині самого процесу дії. І по-четве́рте: коли ми обов'язково використовуємо закінчення «-ться», а коли пишемо «-шся»? Завжди орієнту́йтеся на шкільне́ запитання: якщо ви пита́єте «що роби**ть**?», то смі́ли́во пиші́ть «усміхає**ться**» з м'яким знаком. Якщо ваше пряме питання звучить як «що роби**ш**?», тоді пишіть «усміхає**шся**» повністю без нього."
-  replace: "1. Провідміняйте дієслово «бачити» в теперішньому часі (я бачу, ти бачиш, він бачить, ми бачимо, ви бачите, вони бачать). 2. Утворіть форми минулого часу дієслова «нести» для всіх родів (ніс, несла, несло, несли). 3. Визначте вид дієслів: гуляв (недок.), побачив (док.), шукала (недок.), знайшла (док.), працювали (недок.). 4. Перекажіть свій вчорашній день, свідомо чергуючи доконаний і недоконаний вид, щоб показати тло і послідовні події."
-- find: "Саме тут вид українського дієслова розкрива́є свою спра́вжню стилісти́чну ма́гію."
-  replace: "Саме тут вид українського дієслова демонструє свої стилістичні можливості."
+- find: "поста́вте переві́рочне запитання:"
+  replace: "поста́вте переві́рне запитання:"
+- find: "Перевірочне запитання тут звучить так:"
+  replace: "Переві́рне запитання тут звучить так:"
+- find: "Англомо́вні мо́вці часто намага́ються"
+  replace: "Англомо́вні студе́нти часто намага́ються"
+- find: "яке́ відобража́є його ге́ндерну іденти́чність."
+  replace: "яке́ відобража́є його рід."
+- find: "або складною співбе́сідою на роботу."
+  replace: "або складною співбе́сідою."
 </fixes>

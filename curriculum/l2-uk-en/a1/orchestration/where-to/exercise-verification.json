@@ -1,29 +1,52 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 58,
+  "grounded_items": 52,
+  "ungrounded": [
+    {
+      "word": "ви",
+      "exercise_type": "quiz",
+      "context": "____ ви йдете? — Ми йдемо у ресторан.",
+      "role": "context"
+    },
+    {
+      "word": "йдете",
+      "exercise_type": "quiz",
+      "context": "____ ви йдете? — Ми йдемо у ресторан.",
+      "role": "context"
+    },
+    {
+      "word": "пошті",
+      "exercise_type": "match-up",
+      "context": "на пошті",
+      "role": "answer"
+    },
+    {
+      "word": "бібліотеці",
+      "exercise_type": "match-up",
+      "context": "у бібліотеці",
+      "role": "answer"
+    },
+    {
+      "word": "або",
+      "exercise_type": "true-false",
+      "context": "For inanimate masculine nouns like «банк» або «парк», the Ac",
+      "role": "context"
+    },
+    {
+      "word": "ресторані",
+      "exercise_type": "error-correction",
+      "context": "Куди вони? Вони в ресторані.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "банк",
-      "бібліотека",
-      "бібліотеку",
-      "додому",
       "йти",
-      "куди",
-      "магазин",
-      "на",
-      "одеса",
-      "одесу",
       "повертатися",
-      "ресторан",
-      "робота",
-      "роботу",
-      "школа",
-      "школу",
       "їхати"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

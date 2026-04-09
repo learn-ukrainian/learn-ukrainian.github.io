@@ -1,70 +1,101 @@
 ## Linguistic Scan
-Found 3 linguistic errors:
-1. **Surzhyk / Grammar:** "два нижніх" is a Russian-influenced declension with numerals. In Ukrainian, with inanimate nouns and numerals 2, 3, and 4, the modifying adjective takes the nominative/accusative plural: "два нижні".
-2. **Calque:** "підстаканниками" is a direct Russianism. The correct Ukrainian word is "підсклянниками".
-3. **Grammar:** "надзвичайно звивистішою" incorrectly combines the adverb "надзвичайно" (extremely), which requires a positive degree, with a comparative adjective. It should be "надзвичайно звивистою".
+- `включіть постіль у вартість` — Calque/literal translation of "include bedding in the price". Natural Ukrainian uses "додайте постіль" or simply "з постіллю".
+- `знаходяться` — Common stylistic calque from Russian "находиться". Better: "розташовані" або "містяться".
+- `на відому гору Говерла` — Grammatical declension error. Appositions with common nouns (гора, річка) decline: "на гору Говерлу".
+- No Russianisms found. `відправлятися` vs `відходити` is explicitly and correctly taught as a decolonization point.
 
 ## Exercise Check
-All 6 `<!-- INJECT_ACTIVITY: ... -->` markers from the plan are present. They match the `activity_hints` exactly in focus and item counts. They are correctly placed at the end of the sections teaching the relevant material. No issues found with exercise integration.
+- `<!-- INJECT_ACTIVITY: group-sort-transport-categories -->` — Correctly placed after Section 1.
+- `<!-- INJECT_ACTIVITY: error-correction-travel-calques -->` — Correctly placed after Section 2.
+- `<!-- INJECT_ACTIVITY: quiz-motion-prefixes-context -->` — **Issue:** Placed at the end of Section 2, BEFORE the actual prefix meanings (`ви-`, `від-`, `про-`, `пере-`, etc.) are systematically taught in Section 3 and 5. Must be moved after Section 3.
+- `<!-- INJECT_ACTIVITY: match-up-focus-matching-landmarks-with-their-respective-cities-and-regions -->` — Correctly placed after Section 3.
+- `<!-- INJECT_ACTIVITY: fill-in-focus-completing-navigation-dialogues-with-motion-verbs-and-spatial-prepositions -->` — Correctly placed after Section 4.
+- `<!-- INJECT_ACTIVITY: free-write-trip-report -->` — Correctly placed after Section 5.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 5 sections precisely as outlined. Includes transport vocab, instrumental case geography examples (подорожувати Україною, їхати Закарпаттям, мандрувати Карпатами), dialogues for stations/airports, and direction-giving. |
-| 2. Linguistic accuracy | 7/10 | Contains a direct Russian calque ("підстаканниками"), a Surzhyk declension ("два нижніх"), and a grammatical impossibility ("надзвичайно звивистішою"). |
-| 3. Pedagogical quality | 9/10 | Excellent contextualization of motion verbs in real-world travel scenarios. The distinction between "приїжджати" and "відходити/виїжджати" to replace the Russian "відправлятися" is taught extremely well. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary is naturally integrated into the prose (e.g., квиток, маршрут, пересадка, розклад руху, перон, зупинка, дістатися). |
-| 5. Exercise quality | 10/10 | Activity markers exactly match the plan's hints and are placed logically after the concept is taught. |
-| 6. Engagement & tone | 7/10 | Suffers from meta-commentary and telling instead of showing in several places: "Вітаємо у фінальному етапі...", "Цей модуль створений для того...", and "Як ви вже, мабуть, дуже добре помітили у цьому чудовому тексті". |
-| 7. Structural integrity | 8/10 | Markdown is clean and well-structured, but the word count is 5217, which is >10% over the 4000 target. |
-| 8. Cultural accuracy | 8/10 | The text claims one can "спуститися до Дніпра до монументальної Києво-Печерської Лаври". The Lavra is explicitly known for being on the high Pechersk hills, not down by the river. One does not "go down" to the Dnipro to reach it. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues for ticket purchasing and airport check-in are realistic, structured well, and culturally appropriate, though slightly marred by the "два нижніх" error. |
+| 1. Plan adherence | 5/10 | The text completely omitted the "Planning a two-week road trip" dialogue with the traveling couple ("Спочатку поїдемо до Львова..."). It also missed specific landmarks (`Софійський собор`, `Чернігів`, `Ужгород`) and the specific model narrative sequence in Section 3 ("Зайшли до готелю", "Обійшли центр", "Підійшли до водоспаду Пробій"). |
+| 2. Linguistic accuracy | 7/10 | Found a grammatical apposition error: "на відому гору Говерла". Found stylistic calques: "знаходяться" (розташовані) and "включіть постіль у вартість" (додайте постіль). |
+| 3. Pedagogical quality | 9/10 | Good PPP flow. Explanations of "орудний відмінок без прийменника" for geography are excellent and naturally integrated. |
+| 4. Vocabulary coverage | 7/10 | Required word `зворотний квиток` missing (used `туди й назад` instead). Recommended words `хостел`, `провулок`, `навпроти` are missing. |
+| 5. Exercise quality | 7/10 | The `quiz-motion-prefixes-context` is placed at the end of Section 2, which breaks pedagogical sequencing because it tests prefixes before they are taught in Section 3. |
+| 6. Engagement & tone | 9/10 | The tone is warm and encouraging. Good use of conversational transitions ("Давайте детально подивимося..."). |
+| 7. Structural integrity | 10/10 | Clean markdown. Word count is 5253 words, well above the 4000-word target. |
+| 8. Cultural accuracy | 10/10 | Excellent decolonization notes on transport vocabulary (`відходити/виїжджати` instead of `відправлятися`). Authentic geographical routing. |
+| 9. Dialogue & conversation quality | 8/10 | The ticket purchase and airport dialogues are natural and communicative, though the absence of the required planning dialogue impacts the score. |
 
 ## Findings
-[1] [Linguistic accuracy] [Critical]
-Location: Section 2: "Продайте два нижніх у купе, будь ласка."
-Issue: Russian-influenced declension. Adjectives modifying inanimate nouns after numerals 2, 3, 4 must take the nominative/accusative plural (два нижні), not the genitive plural.
-Fix: Change to "Продайте два нижні в купе, будь ласка."
+[1. Plan adherence] [Critical]
+Location: Section 1 (or anywhere in the text)
+Issue: The mandatory dialogue situation "Planning a two-week road trip across Ukraine" featuring a traveling couple ("Спочатку поїдемо до Львова...") is completely missing.
+Fix: Insert the full planning dialogue at the end of Section 1.
 
-[2] [Linguistic accuracy] [Critical]
-Location: Section 3: "п'ють традиційний чай у склянках із металевими підстаканниками і мовчки"
-Issue: "Підстаканник" is a direct Russian calque. The Ukrainian word is "підсклянник".
-Fix: Change to "п'ють традиційний чай у склянках із металевими підсклянниками і мовчки"
+[1. Plan adherence] [Major]
+Location: Section 3 (Маршрут: від Києва до Карпат)
+Issue: Missing the specific narrative sequence ("Зайшли до готелю", "Обійшли центр", "Підійшли до водоспаду Пробій") and specific landmarks (`Софійський собор`, `Чернігів`, `Кам'янець-Подільський`, `Ужгород`).
+Fix: Integrate the missing landmarks into the geographical descriptions and append the missing narrative actions to the arrival in Yaremche.
 
-[3] [Linguistic accuracy] [Critical]
-Location: Section 3: "Дорога стає дедалі вужчою та надзвичайно звивистішою, а мальовничі"
-Issue: "Надзвичайно" (extremely) is an absolute adverb and cannot modify a comparative adjective ("звивистішою"). It must modify the positive degree.
-Fix: Change to "Дорога стає дедалі вужчою та надзвичайно звивистою, а мальовничі"
+[4. Vocabulary coverage] [Major]
+Location: Section 2 & 4
+Issue: Missing plan vocabulary: `зворотний квиток`, `хостел`, `провулок`, `навпроти`.
+Fix: Replace `туди й назад` with `зворотний квиток`, add `хостел` to the booking sentence, and add `провулок`/`навпроти` to the city navigation vocabulary.
 
-[4] [Cultural accuracy] [Critical]
-Location: Section 3: "або ж спуститися (to go down) до Дніпра до монументальної Києво-Печерської Лаври."
-Issue: Geographical inaccuracy. One does not go "down to the Dnipro" to reach the Lavra; it is located high on the right-bank hills above the river.
-Fix: Change to "або ж спуститися (to go down) до Дніпра, а потім відвідати монументальну Києво-Печерську Лавру."
+[2. Linguistic accuracy] [Major]
+Location: Section 2 (На вокзалі та в аеропорту)
+Issue: Literal translation calque: "обов'язково включіть постіль у вартість".
+Fix: Change to "обов'язково додайте постіль".
 
-[5] [Engagement & tone] [Major]
-Location: Section 1: "Вітаємо у фінальному етапі вивчення дієслів руху, який можна назвати справжньою комунікативною кульмінацією вашого навчання! [..] Головна тема нашого спілкування"
-Issue: Excessive meta-commentary and telling instead of showing at the very beginning of the module ("Цей модуль створений для того...").
-Fix: Delete the introductory meta-commentary paragraph entirely.
+[2. Linguistic accuracy] [Major]
+Location: Section 3 (Маршрут: від Києва до Карпат)
+Issue: Stylistic calque: "Також там знаходяться легендарні та популярні Потьомкінські сходи."
+Fix: Change "знаходяться" to "розташовані".
 
-[6] [Engagement & tone] [Major]
-Location: Section 5: "Як ви вже, мабуть, дуже добре помітили у цьому чудовому тексті, для вільного створення дійсно цікавої, багатої та логічно зв'язної історії одного лише знання правильних дієслів абсолютно недостатньо."
-Issue: Meta-commentary referencing "цей чудовий текст" breaks the fourth wall awkwardly and feels overly self-congratulatory.
-Fix: Delete the meta-commentary clause to make the instruction direct.
+[2. Linguistic accuracy] [Critical]
+Location: Section 3 (Маршрут: від Києва до Карпат)
+Issue: Grammatical declension error in apposition: "на відому гору Говерла". Common nouns require proper nouns to decline in this structure.
+Fix: Change to "на відому гору Говерлу".
+
+[5. Exercise quality] [Major]
+Location: End of Section 2
+Issue: `quiz-motion-prefixes-context` is placed prematurely, testing material taught in Section 3.
+Fix: Relocate the injection marker to the end of Section 3.
 
 ## Verdict: REVISE
-The module is incredibly rich, beautifully contextualized, and successfully synthesizes the motion verb universe into a compelling travel narrative. However, it contains several critical linguistic errors (Surzhyk numerals, calques, comparative grammar mistakes) and a geographical factual error regarding the Kyiv Pechersk Lavra. It requires strict revision before it can pass.
+The text is well-written and exceeds the word target, but it fails to include a mandated dialogue and several specific narrative sequences from the plan. It also contains a grammatical error (`гору Говерла`) and a premature exercise placement. Fixes are provided below to restore the missing plan requirements and correct the linguistic flaws.
 
 <fixes>
-- find: "Продайте два нижніх у купе, будь ласка."
-  replace: "Продайте два нижні в купе, будь ласка."
-- find: "п'ють традиційний чай у склянках із металевими підстаканниками і мовчки"
-  replace: "п'ють традиційний чай у склянках із металевими підсклянниками і мовчки"
-- find: "Дорога стає дедалі вужчою та надзвичайно звивистішою, а мальовничі"
-  replace: "Дорога стає дедалі вужчою та надзвичайно звивистою, а мальовничі"
-- find: "або ж спуститися (to go down) до Дніпра до монументальної Києво-Печерської Лаври."
-  replace: "або ж спуститися (to go down) до Дніпра, а потім відвідати монументальну Києво-Печерську Лавру."
-- find: "Вітаємо у фінальному етапі вивчення дієслів руху, який можна назвати справжньою комунікативною кульмінацією вашого навчання! У попередніх модулях ви ретельно досліджували, як різні префікси кардинально змінюють значення базових дієслів переміщення. Ви чудово навчилися відрізняти рух всередину від руху назовні, наближення до об'єкта від віддалення від нього, а також розумієте різницю між цілеспрямованою та регулярною дією. Тепер настав ідеальний час об'єднати всі ці граматичні знання в єдину систему і активно застосувати їх на практиці. Цей модуль створений для того, щоб ви могли перетворити суху граматику на реальні ситуації з повсякденного життя, з якими стикається кожен турист. Головна тема нашого спілкування"
-  replace: "Головна тема нашого спілкування"
-- find: "Як ви вже, мабуть, дуже добре помітили у цьому чудовому тексті, для вільного створення дійсно цікавої, багатої та логічно зв'язної історії одного лише знання правильних дієслів абсолютно недостатньо."
-  replace: "Для вільного створення дійсно цікавої, багатої та логічно зв'язної історії одного лише знання правильних дієслів абсолютно недостатньо."
+- find: "значно легшою та набагато приємнішою."
+  replace: |
+    значно легшою та набагато приємнішою.
+    
+    Давайте послухаємо, як пара мандрівників планує свою велику двотижневу подорож Україною:
+    
+    > — **Олена:** У нас є цілих два тижні! Який у нас буде точний маршрут?
+    > — **Максим:** **Спочатку поїдемо до Львова** *(First we will go to Lviv)*. Ми давно хотіли там погуляти.
+    > — **Олена:** Чудова ідея. **Потім заїдемо в Карпати** *(Then we will drop by the Carpathians)* на кілька днів. Я хочу в гори.
+    > — **Максим:** Добре. З Карпат ми **доїдемо до Одеси за два дні** *(will reach Odesa in two days)*, щоб побачити море.
+    > — **Олена:** А як ми повернемося додому?
+    > — **Максим:** З Одеси ми **перелетимо до Харкова** *(will fly over to Kharkiv)*, а звідти вже поїдемо назад.
+    > — **Олена:** Ідеальний план! Я вже зараз почну бронювати готелі.
+- find: "бронювати *(to book)* необхідні квитки та затишне житло через інтернет."
+  replace: "бронювати *(to book)* необхідні квитки, дорогий готель або молодіжний **хостел** *(hostel)* через інтернет."
+- find: "чи ви хочете одразу купити туди й назад *(round trip)*?"
+  replace: "чи ви хочете одразу купити **зворотний квиток** *(return ticket)*?"
+- find: "обов'язково включіть постіль у вартість. Скільки коштує"
+  replace: "обов'язково додайте постіль. Скільки коштує"
+- find: "<!-- INJECT_ACTIVITY: error-correction-travel-calques -->\n<!-- INJECT_ACTIVITY: quiz-motion-prefixes-context -->"
+  replace: "<!-- INJECT_ACTIVITY: error-correction-travel-calques -->"
+- find: "<!-- INJECT_ACTIVITY: match-up-focus-matching-landmarks-with-their-respective-cities-and-regions -->"
+  replace: "<!-- INJECT_ACTIVITY: match-up-focus-matching-landmarks-with-their-respective-cities-and-regions -->\n<!-- INJECT_ACTIVITY: quiz-motion-prefixes-context -->"
+- find: "Звідси ми вже пішки з великою радістю пішли прямо до нашого дерев'яного готелю. Наша довга транзитна подорож завершилася успішно."
+  replace: "Ми швидко **зайшли до готелю** *(went into the hotel)*, щоб залишити речі, і відразу **вийшли на прогулянку** *(went out for a walk)*. Ми із задоволенням **обійшли центр містечка** *(walked around the town center)* та зблизька **підійшли до водоспаду Пробій** *(walked up to the Probiy waterfall)*. Наша довга подорож завершилася успішно."
+- find: "А дуже відома Києво-Печерська Лавра яскраво сяє своїми золотими куполами на зелених схилах могутнього Дніпра."
+  replace: "А дуже відома Києво-Печерська Лавра яскраво сяє своїми золотими куполами на зелених схилах Дніпра. Не менш вражаючим є і величний **Софійський собор**."
+- find: "Також там знаходяться легендарні та популярні Потьомкінські сходи."
+  replace: "Також там розташовані легендарні та популярні Потьомкінські сходи."
+- find: "найвищу точку України — відому гору Говерла."
+  replace: "найвищу точку України — відому гору Говерлу. Ви також можете поїхати до інших історичних міст, таких як стародавній **Чернігів**, середньовічний **Кам'янець-Подільський** з його фортецею або європейський **Ужгород** на Закарпатті."
+- find: "це місце традиційно називається **на перехресті** *(at the intersection)*. Для"
+  replace: "це місце традиційно називається **на перехресті** *(at the intersection)*. Якщо вам потрібна дуже маленька вулиця, ви шукаєте **провулок** *(lane / alley)*. А якщо ваш готель стоїть через дорогу від парку, ви скажете, що він розташований **навпроти** *(opposite)*. Для"
 </fixes>

@@ -2,56 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 content_outline sections present with correct headings. Both dialogue
-    situations from plan are covered (hobby-sharing in Dialogue 1, подобається in
-    Dialogue 2). All required vocabulary used in p
+  score: 8
+  evidence: 'The text misses two specific plan points: 1) "Pronunciation: the stress
+    in infinitives varies" expected in the "Я люблю..." section, and 2) "Note: люблю
+    changes by person... full conjugation in M17 (G'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'All Ukrainian words VESUM-verified (69/69 + 6 proper nouns). No Russianisms,
-    surzhyk, or calques found via `search_style_guide`. Case forms correct (Анно =
-    vocative, готуєш = 2nd person). **Deduction:'
+  score: 10
+  evidence: No linguistic errors found. Ukrainian phrasing is natural, grammatically
+    correct, and free of Russianisms or calques.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: 'Strong PPP flow: dialogues present pattern naturally → explicit rules
-    with 4+ examples per point → practice markers. Infinitive introduced through "люблю
-    + verb" frame (matching Большакова Grade 1 pat'
+  score: 10
+  evidence: Excellent PPP flow. Grammar concepts are introduced logically with clear,
+    contextualized examples. The explanation of when to use `люблю` vs `подобається`
+    is highly effective.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All 8 required words used naturally in prose contexts (not as bare lists).
-    All 5 recommended words included. New verbs introduced inside the "Я люблю..."
-    frame — contextual, not listed. Additional use
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally within the prose.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: 4 distinct activity types matching all plan hints. Marker placement after
-    teaching sections is correct. **Deduction:** Duplicate `fill-in-infinitive-picture`
-    marker — same activity ID appears twice (a
+  score: 10
+  evidence: All activity markers are present, correctly match the plan's `activity_hints`,
+    and are logically placed after the relevant teaching sections.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: No motivational openers, no meta-commentary, no gamified language. Opening
-    sets a concrete scene ("cozy language café in Kyiv... two cups of tea steaming").
-    Dialogues feel natural — Анна and Віктор sh
+  evidence: The tone is encouraging, clear, and avoids forbidden corporate or generic
+    filler language. Dialogues feel like real classroom interactions.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 plan sections present as H2 headings in correct order (Діалоги,
-    Я люблю, Мені подобається, Підсумок). Word count 1488 — above 1200 target. Clean
-    markdown, no stray tags or formatting artifacts. '
+  evidence: All required H2 headings are present. Word count (1386) comfortably exceeds
+    the 1200 target. No markdown artifacts.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms — no "like Russian but..." framing.
-    Culturally appropriate examples (борщ, вареники, Київ). The грати в/на distinction
-    is a genuinely Ukrainian pattern taught corr
+  evidence: Culturally appropriate references (borscht, Kyiv language exchange) are
+    included smoothly without feeling forced.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogue 1 is excellent — natural multi-turn exchange between named speakers,
-    real hobby-sharing situation, culturally appropriate responses ("Смачно!"). Dialogue
-    2 also good — natural topic shift, va
+  score: 10
+  evidence: Dialogues use named speakers, feature natural conversational turns, and
+    clearly demonstrate the grammar patterns in action.
 findings: []

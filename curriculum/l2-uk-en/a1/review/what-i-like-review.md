@@ -1,47 +1,60 @@
 ## Linguistic Scan
-No linguistic errors found. The 32 words missing from VESUM are simply artifacts of standard tokenization splitting words at acute stress marks (e.g., `готува́ти` split into `готува` and `ти`), proper nouns (`Анна`, `Віктор`, `Літвінова`), and perfectly valid Ukrainian forms. 
+No linguistic errors found.
 
 ## Exercise Check
-- **Inventory:** All 4 requested activities are present as injection markers (`fill-in-infinitive-picture`, `match-infinitives-meanings`, `quiz-structure-choice`, `fill-in-negative`).
-- **Placement:** Excellent pacing. The infinitive exercises immediately follow the explanation of `люблю` + infinitive. The structure choice and negative exercises correctly appear after both forms have been introduced.
-- **Logic:** The markers directly align with the plan's `activity_hints` in both type and pedagogical focus.
+All activity markers are present, logically placed after their corresponding teaching sections, and exactly match the required types and focuses defined in the plan's `activity_hints`. 
+
+- `<!-- INJECT_ACTIVITY: match-up-infinitives -->` correctly placed after introducing infinitives.
+- `<!-- INJECT_ACTIVITY: fill-in-hobbies -->` correctly placed after giving hobbies vocabulary.
+- `<!-- INJECT_ACTIVITY: quiz-like-choice -->` correctly placed after explaining the difference between the two structures.
+- `<!-- INJECT_ACTIVITY: fill-in-negatives -->` correctly placed after introducing the negative particle.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers all outline points, required vocabulary, and grammar flawlessly. However, deducting 1 point because the total word count (1397) exceeds the plan's target (1200) by over 16%. |
-| 2. Linguistic accuracy | 10/10 | Ukrainian text is highly natural, cases are correct, and there are no Russianisms or Surzhyk. |
-| 3. Pedagogical quality | 7/10 | DEDUCT: The module teaches a false linguistic rule by claiming `люблю` *cannot* be used for nouns ("It's a thing, not an activity — so подобається, not люблю."). While avoiding the accusative case here is good pacing, framing it as a hard rule is a critical error. DEDUCT: States "Every Ukrainian infinitive ends in -ти" and immediately introduces the reflexive verb `дивитися` (which ends in -ся), creating direct confusion. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words are integrated naturally in context. |
-| 5. Exercise quality | 10/10 | Markers perfectly match the activity hints and are logically placed after the corresponding teaching sections. |
-| 6. Engagement & tone | 9/10 | The tone is encouraging and conversational, though phrases like "Now let's add more hobby verbs to your vocabulary" lean slightly toward textbook-robotic. |
-| 7. Structural integrity | 9/10 | Clean Markdown and excellent formatting. Deducting 1 point because the word budget exceeded the +10% threshold. |
-| 8. Cultural accuracy | 10/10 | Authentic cultural references are woven in naturally (Kyiv, borshch, varenyky). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly natural, feature appropriate conversational fillers ("Правда?", "Смачно!"), and use named speakers with distinct exchanges. |
+| 1. Plan adherence | 8/10 | The text misses two specific plan points: 1) "Pronunciation: the stress in infinitives varies" expected in the "Я люблю..." section, and 2) "Note: люблю changes by person... full conjugation in M17 (Group II)" expected in the "Мені подобається..." section. All other plan elements are perfectly covered. |
+| 2. Linguistic accuracy | 10/10 | No linguistic errors found. Ukrainian phrasing is natural, grammatically correct, and free of Russianisms or calques. |
+| 3. Pedagogical quality | 10/10 | Excellent PPP flow. Grammar concepts are introduced logically with clear, contextualized examples. The explanation of when to use `люблю` vs `подобається` is highly effective. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are introduced naturally within the prose. |
+| 5. Exercise quality | 10/10 | All activity markers are present, correctly match the plan's `activity_hints`, and are logically placed after the relevant teaching sections. |
+| 6. Engagement & tone | 10/10 | The tone is encouraging, clear, and avoids forbidden corporate or generic filler language. Dialogues feel like real classroom interactions. |
+| 7. Structural integrity | 10/10 | All required H2 headings are present. Word count (1386) comfortably exceeds the 1200 target. No markdown artifacts. |
+| 8. Cultural accuracy | 10/10 | Culturally appropriate references (borscht, Kyiv language exchange) are included smoothly without feeling forced. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues use named speakers, feature natural conversational turns, and clearly demonstrate the grammar patterns in action. |
 
 ## Findings
-[Pedagogical quality] [critical]
-Location: Section "Підсумок — Summary" (`(It's a thing, not an activity — so **подобається**, not **люблю**.)`)
-Issue: The text claims that `люблю` cannot be used for things. This is factually incorrect; in Ukrainian, `любити` is commonly and naturally used with nouns (e.g., "Я люблю каву", "Я люблю тебе"). The curriculum only avoids it at A1 to defer teaching the accusative case. Teaching this pedagogical shortcut as a hard linguistic rule will confuse learners later.
-Fix: Soften the language to reflect that we are focusing on this distinction *for this module*, rather than stating it as a firm language constraint.
+[1. Plan adherence] [MAJOR]
+Location: `## Я люблю... (I Like...)` section.
+Issue: The plan point "Pronunciation: the stress in infinitives varies — learn each one." was omitted when explaining the `-ти` suffix.
+Fix: Add a sentence noting that infinitive stress varies and should be learned per word.
 
-[Pedagogical quality] [major]
-Location: Section "Я люблю... (I Like...)" (`Every Ukrainian infinitive ends in **-ти**. This is one of the most reliable patterns in the language — when you see **-ти** at the end of a word...`)
-Issue: The text explicitly states that infinitives end in `-ти` and tells the learner to look at the "end of a word." However, it immediately lists the reflexive verb `дивитися`, which ends in `-ся`. This directly contradicts the explanation and will confuse learners.
-Fix: Clarify that infinitives end in `-ти` (or `-тися` for reflexive verbs) and adjust the phrasing around the suffix.
+[1. Plan adherence] [MAJOR]
+Location: `## Мені подобається... (I Like...)` section.
+Issue: The plan point "Note: люблю changes by person (я люблю, ти любиш) — full conjugation in M17 (Group II)." was omitted when explaining question forms.
+Fix: Insert a brief note about the change from `люблю` to `любиш` and reference Module 17 for full conjugation.
 
 ## Verdict: REVISE
-The module is beautifully written, but it contains a critical pedagogical error (falsely restricting the usage of `люблю` to activities only) and a major contradiction in how it explains the infinitive suffix before introducing reflexive verbs. The applied fixes correct these issues without rewriting the content.
+The module is of excellent quality, highly readable, and pedagogically sound. However, it missed two specific minor pedagogical notes mandated by the plan regarding pronunciation stress and referencing a future module for conjugation. These need to be added to fully satisfy plan adherence.
 
 <fixes>
-- find: "it is the form that always ends in the suffix **-ти**."
-  replace: "it is the form marked by the suffix **-ти**."
-- find: "Every Ukrainian infinitive ends in **-ти**. This is one of the most reliable patterns in the language — when you see **-ти** at the end of a word, you are looking at a verb in its base form."
-  replace: "Most Ukrainian infinitives end in **-ти** (or **-тися** for reflexive verbs). This is one of the most reliable patterns in the language — when you see this suffix, you are looking at a verb in its base form."
-- find: "Ukrainian has two ways to say \"I like,\" and each one works with different things. Here is the key distinction:"
-  replace: "In this module, we will practice two common ways to say \"I like\", focusing on this simple distinction:"
-- find: "(It's a thing, not an activity — so **подобається**, not **люблю**.)"
-  replace: "(In this module, we use **подобається** for things and **люблю** for activities.)"
-- find: "(It's an activity — so **люблю** + infinitive.)"
-  replace: "(It's an activity — so we use **люблю** + infinitive.)"
+- find: |
+    *   **слухати** (to listen)
+
+    The most important rule to remember for this pattern is that the ending **-ти** never changes when it follows **Я люблю**.
+  replace: |
+    *   **слухати** (to listen)
+
+    One important note on pronunciation: the stress in Ukrainian infinitives varies from word to word, so you must learn the stress pattern for each new verb. Grammatically, the most important rule to remember for this pattern is that the ending **-ти** never changes when it follows **Я люблю**.
+- find: |
+    *   **Ти любиш читати?** (Do you like to read?)
+    *   **Тобі подобається цей фільм?** (Do you like this film?)
+
+    If the answer is no, you apply the negative particle just as we did before.
+  replace: |
+    *   **Ти любиш читати?** (Do you like to read?)
+    *   **Тобі подобається цей фільм?** (Do you like this film?)
+
+    Notice how the verb **люблю** changes to **любиш** when asking "you." We will cover the full conjugation for this verb group in Module 17 (Group II).
+
+    If the answer is no, you apply the negative particle just as we did before.
 </fixes>

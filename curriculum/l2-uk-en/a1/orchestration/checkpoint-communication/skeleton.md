@@ -1,35 +1,39 @@
 ## Що ми знаємо? (~220 words total)
-- P1 (~60 words): Intro framing this as a checkpoint, not a test — a chance to see how far you've come. Pose five self-check questions as a numbered checklist, one per M42–M46 skill. Examples: "Можу звернутися до друга — Тарасе! Можу дати прохання — Принеси! Можу з'єднати думки — бо, але."
-- P2 (~80 words): Brief answer key for each question, showing the pattern learned. Vocative: Олена→Олено, Тарас→Тарасе, Андрій→Андрію. Imperative: читати→читай/читайте, дати→дай/дайте. Conjunctions: і/та (addition), а (contrast), але (but), бо (reason). Subordinators: що, де, коли + comma. Holiday greeting: З Різдвом!, З Великоднем!
-- P3 (~80 words): Encouragement paragraph — if you can tick each box, you have the full A1.7 communication toolkit. Emphasises the achievement: you can now address real people by name, tell them what to do, explain why, and build longer thoughts. These five tools together make you sound like someone who actually speaks Ukrainian, not someone reading from a phrasebook.
+- P1 (~100 words): Welcome the student to the A1.7 Checkpoint. Explain that this module is a "Communication Hub" where we integrate the social skills learned in M42–M46. Introduce the "Mission": You are helping friends organize a school event, which requires addressing people, giving clear orders, and explaining plans.
+- P2 (~120 words): A series of rhetorical self-check questions to activate prior knowledge. Ask the learner if they remember how to call a friend (Тарасе! Олено!), how to ask for help (Дай! Принеси!), and how to explain reasons (бо я не знаю..., тому що...). Mention the cultural context of holiday greetings (З Різдвом!).
 
-## Читання (~280 words total)
-- P1 (~30 words): Short reading setup — read the text below; notice how all five A1.7 tools appear naturally together in one situation.
-- Reading text (~200 words): Олена телефонує Тарасу напередодні Різдва. Uses: vocative (Тарасе!), imperative (Прийди до мене! Принеси кутю, будь ласка!), coordinating conjunctions (бо ми святкуємо разом, і я вже маю свічки, але не знаю, скільки людей прийде), subordinating conjunctions (Я думаю, що це буде гарне свято. Скажи, де ти будеш двадцять четвертого. Я не знаю, коли ти вільний.), holiday vocabulary (Різдво, кутя, колядки, З Різдвом!). Two paragraphs of running prose (not bullet points), ~100 words each — Олена's invitation in paragraph one, Тарас's response accepting and asking questions in paragraph two.
-- P2 (~50 words): Two comprehension prompts in Ukrainian to check understanding: Що просить Олена? Коли Тарас вільний? Learners answer in a single sentence — this previews the activity that follows.
-- Exercise 1 — fill-in (vocative + imperative): 8 items. Pattern: ___(Олена), ___(принести) плакати! / ___(Тарас), ___(написати) список! Learner writes the correct vocative and ти-imperative in each blank.
+## Читання (~270 words total)
+- P1 (~100 words): Introduction to the reading text. Set the scene: Olena is calling her friend Taras to plan a community Christmas gathering at the school. This text will demonstrate how all communication tools (vocative, imperative, conjunctions) work together in a single flow.
+- P2 (~170 words): The Reading Text: "Лист або дзвінок Олени". Olena writes/speaks to Taras. Key sentences: "Тарасе, привіт! Прийди раніше, будь ласка. Принеси плакати і квитки. Я знаю, що ти маєш напої, але нам потрібні стільці, бо людей буде багато. Я хочу, щоб ми святкували Різдво разом. Скажи, коли ти будеш у школі." Includes vocabulary: плакат (poster), квиток (ticket), напій (drink), стілець (chair).
 
-## Граматика (~220 words total)
-- P1 (~50 words): Mini-table: Vocative endings. Three rows — -а stem → -о (Олена→Олено, мама→мамо), hard consonant stem → -е (Тарас→Тарасе, друг→друже), soft/й stem → -ю (Андрій→Андрію, учитель→учителю). One sentence of usage note: use vocative whenever you call someone directly.
-- P2 (~50 words): Mini-table: Imperative. Two columns — ти form and ви form. Rows: читати→читай/читайте, писати→пиши/пишіть, дати→дай/дайте, принести→принеси/принесіть. Usage note: ти = friend/child, ви = adult/polite. будь ласка softens any request.
-- P3 (~60 words): Two-row summary of conjunctions. Coordinating: і/та (and — adds), а (and/but — contrasts: Олена йде, а Тарас залишається), але (but — contradicts: Я хочу прийти, але я хворий), бо (because: Принеси кутю, бо я не вмію варити). Subordinating: що (Я знаю, що ти тут.), де (Скажи, де ти.), коли (Я не знаю, коли ти вільний.) — comma before all three.
-- Exercise 2 — quiz (choose the conjunction): 8 items. Pattern: Я не йду, ___ хворий. (і / а / але / бо) / Він сказав, ___ прийде. (що / де / коли / але). One correct answer per item.
-- P4 (~60 words): Holiday greeting formula: З + noun in instrumental case. З Різдвом! З Великоднем! З Новим роком! З днем народження! One sentence explaining the pattern: take the holiday name, put it in instrumental (Різдво→Різдвом, Великдень→Великоднем), add З before it. This formula works for every Ukrainian celebration.
-- Exercise 3 — fill-in (subordinating conjunctions): 6 items. Pattern: Я знаю, ___ він тут. / Скажи, ___ ти прийдеш. / Я не розумію, ___ вона плаче. Learner writes що, де, or коли.
+## Граматика (~240 words total)
+- P1 (~60 words): Vocative Case Recap. Review the three main patterns for A1 names: -а becomes -о (Оксано, Олено), hard consonants add -е (Петре, Тарасе, друже), and soft/й endings change to -ю (Андрію, матусю). Emphasize that in Ukraine, calling someone by their name in the Nominative (Оксана!) sounds like a command or a list, whereas the Vocative is for real communication.
+- P2 (~60 words): Imperative Mood Recap. Review forms for "ти" (читай, пиши, роби) and "ви" (читайте, пишіть, робіть). Remind learners to add "будь ласка" (please) for politeness. Contrast the informal "Дай" with the formal "Дайте".
+- <!-- INJECT_ACTIVITY: vocative-imperative-practice --> [fill-in, focus: Vocative + Imperative forms in a school fair context, 8 items]
+- P3 (~60 words): Conjunctions & Linking. Review the coordinating conjunctions: і/та (addition), а (mild contrast/and), але (strong contrast/but), and бо/тому що (reason/because). Explain when to use "а" (e.g., Мій чай гарячий, а твій холодний).
+- <!-- INJECT_ACTIVITY: conjunctions-quiz --> [quiz, focus: Choosing the correct conjunction (і / а / але / бо), 8 items]
+- P4 (~60 words): Complex Sentences with що, де, коли. Review how these words link a main clause to a sub-clause. CRITICAL: Reiterate the rule about the mandatory comma before these conjunctions in Ukrainian. Examples: "Я думаю, що..." (I think that...), "Вона знає, де..." (She knows where...), "Скажи, коли..." (Tell [me] when...).
+- <!-- INJECT_ACTIVITY: complex-sentences-fill-in --> [fill-in, focus: Completing sentences with що, де, or коли, 6 items]
 
-## Діалог (~220 words total)
-- Setup (~20 words): Context sentence: Організатор готує шкільний ярмарок. Він/вона розподіляє завдання між волонтерами.
-- Dialogue (~160 words): Six exchanges. Turn 1: Організатор addresses Олена by vocative + imperative: — Олено, принеси, будь ласка, плакати, бо стіл уже готовий. Turn 2: Олена confirms + asks where: — Добре, принесу! Скажи, де покласти їх. Turn 3: Організатор answers with де + addresses Тарас: — Ось біля входу. Тарасе, постав столи, але спочатку перевір, чи є стільці. Turn 4: Тарас: — Я вже знаю, де вони. І я маю квитки та напої — все готово. Turn 5: Організатор: — Чудово! Я думаю, що ярмарок буде гарний, бо ми добре підготувалися. Turn 6: Both volunteers: — З ярмарком! / З успіхом!
-- P1 (~40 words): Post-dialogue note — circle every vocative, imperative, conjunction, and subordinating clause you see. Count: you should find at least 2 vocatives, 3 imperatives, 3 coordinating conjunctions, and 3 subordinating clauses. This is what natural A1.7 Ukrainian looks like in action.
-- Exercise 4 — quiz (holiday match): 8 items. Match greeting to occasion: З Різдвом! → image/label of Різдво; З Великоднем! → Великдень; З Новим роком! → Новий рік; З днем народження! → birthday; etc. Tests holiday vocabulary from M46 in context.
+## Діалог (~240 words total)
+- P1 (~60 words): Context for the dialogue. Taras and Olena are finalizing their plans for the holiday gathering. They need to confirm the time, place, and what to bring.
+- P2 (~120 words): The Dialogue: "Різдвяні плани". 
+    — Олено, привіт! Ти знаєш, що скоро Різдво?
+    — Так, Тарасе! Я думаю, що ми можемо святкувати разом.
+    — Добре! Скажи, коли ти вільна, бо я хочу запросити друзів.
+    — Я вільна двадцять четвертого. Але я не знаю, де ми будемо.
+    — Ходімо до мене! Принеси кутю, будь ласка.
+    — Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом!
+- P3 (~60 words): A brief cultural note on holiday greetings. Explain the formula "З + Instrumental case" (З Різдвом, З Великоднем, З Новим роком). Mention that responding with "Навзаєм!" (Likewise!) or "Вас також!" (You too!) is standard.
+- <!-- INJECT_ACTIVITY: holiday-greeting-match --> [quiz, focus: Matching the specific greeting to the holiday (e.g., З Різдвом! -> 7 січня), 8 items]
 
-## Підсумок (~150 words total)
-- P1 (~150 words): Achievement list — bulleted, not prose, as the plan specifies:
-  - ✅ Ти можеш звертатися до людей по імені: Олено! Тарасе! Андрію!
-  - ✅ Ти можеш попросити когось щось зробити: Принеси! Напиши! Дайте, будь ласка!
-  - ✅ Ти можеш з'єднувати думки: і, а, але, бо — чотири різні зв'язки.
-  - ✅ Ти можеш будувати складні речення: Я знаю, що… Скажи, де… Я не знаю, коли…
-  - ✅ Ти можеш говорити про українські свята та вітати людей: З Різдвом! З Великоднем!
-  - 👉 Далі: A1.8 — минулий і майбутній час, і фінальний випускний модуль A1.
+## Підсумок (~150 words)
+- P1 (~150 words): Achievement checklist for phase A1.7 Communication.
+    - You can address people correctly using the vocative case (Олено! Тарасе!).
+    - You can give instructions and make requests using the imperative mood (Читай! Дайте!).
+    - You can connect your ideas into longer sentences using conjunctions (і, а, але, бо).
+    - You can build complex sentences with the words що, де, коли (and you remember the comma!).
+    - You know how to greet people for major Ukrainian holidays using the Instrumental case.
+    Next: A1.8 — The final stage of A1, where we tackle the Past and Future tenses!
 
-Grand total: ~1090 words
+Grand total: ~1120 words

@@ -1,84 +1,105 @@
 ## Що ми зна́ємо? (What Do We Know?)
-You have been learning Ukrainian verbs for six modules now — from saying what you like, through conjugating two verb groups, to describing your entire morning. **Я читаю** (I read), **він хо́че спати** (he wants to sleep), **вона прокидається** (she wakes up) — these are all patterns you have practiced. Before moving to the next phase, take a moment to check what you remember. This is not a test. It is a mirror: look at each skill below and honestly mark whether you feel confident.
-Ask yourself these six questions:
-- **(M15) Can you say what you like?** Try it now: **Я люблю́ каву** (I love coffee). **Мені подо́бається музика** (I like music). If these feel natural, you are ready.
-- **(M16) Can you conjugate Group I verbs?** Say aloud: **я читаю** (I read), **ти читаєш** (you read), **він читає** (he reads). Do the endings come easily?
-- **(M17) Can you conjugate Group II verbs?** Try: **я говорю** (I speak), **ти говориш** (you speak), **він говорить** (he speaks). These endings are different — do you remember why?
-- **(M18) Can you use modal verbs?** Build a sentence: **Я хо́чу їсти** (I want to eat). **Вона мо́же допомогти** (She can help). **Він му́сить працюва́ти** (He must work). Modal + infinitive — always.
-- **(M19) Can you ask all seven question words?** List them: **Хто? Що? Де? Куди́? Ко́ли? Чо́му? Як?** (Who? What? Where? Where to? When? Why? How?)
-- **(M20) Can you describe your morning?** Say: **Я прокида́юся, вмива́юся, снідаю** (I wake up, wash up, eat breakfast). Reflexive verbs and sequence — your daily routine in Ukrainian.
-If most of these feel solid, you are in great shape. If some feel shaky, pay extra attention to those patterns as we review them below.
+
+Learning a new language is a step-by-step process of building communication skills. In our very first modules, we laid the foundation by learning how to name objects around us, identify people, and use basic adjectives. In the A1.3 phase, we started bringing those objects and people to life by adding actions. We moved from simply stating what we like in Module 15 to describing our entire morning routines in Module 20. 
+
+This checkpoint is a moment to pause, reflect, and consolidate everything we have built so far. Before we move forward to learning about time and nature in the next phase, we need to make sure these action blocks are solid. Can you comfortably describe what you do, what you want, and what you must do? 
+
+Take a moment to read through this structured self-check list. Do not just read the English translation; look closely at the Ukrainian examples and see if you understand exactly how the words are formed.
+*   Can you say what you like? For example, **мені́ подо́бається ка́ва** (I like coffee) or **я люблю́ чита́ти** (I love to read).
+*   Can you conjugate a Group I verb for all persons? Think about the verb **читати** (to read): **я чита́ю** (I read), **ти чита́єш** (you read), **вони́ чита́ють** (they read).
+*   Can you conjugate a Group II verb? Take the verb **говори́ти** (to speak): **я говорю́** (I speak), **ти гово́риш** (you speak), **вони гово́рять** (they speak).
+*   Can you express a need, ability, or desire using modal verbs? For example, **я му́шу йти** (I must go), **я хо́чу спа́ти** (I want to sleep), or **я мо́жу допомогти́** (I can help).
+*   Can you ask basic questions using the seven core question words? For example, **де о́фіс?** (where is the office?) or **коли́ ти працю́єш?** (when do you work?).
+*   Can you describe your morning using reflexive verbs? For example, **я прокида́юся** (I wake up) and **я вмива́юся** (I wash my face).
+
+If these patterns feel familiar, you are ready to see them in action.
+
 ## Чита́ння (Reading Practice)
-Every word in the following text comes from modules M15–M20. Nothing is new. Read it aloud — focus on smooth pronunciation and recognizing the grammar patterns you have learned.
-**Тарас розповіда́є про свій день:**
-> Ме́не зва́ти Тарас. Я прокидаюся о сьо́мій годи́ні. Споча́тку вмиваюся і чи́щу зу́би. По́тім снідаю — я люблю каву і бутербро́ди. Я працю́ю в о́фісі. Моя́ робо́та почина́ється о дев'я́тій. Я мо́жу чита́ти докуме́нти і відповіда́ти на листи́. Уве́чері я хочу відпочива́ти. Я слу́хаю му́зику або́ дивлю́ся фільм. Я му́шу ляга́ти спати о деся́тій — за́втра зно́ву ра́но встава́ти.
-Here is what Taras said: His name is Taras. He wakes up at seven. First he washes up and brushes his teeth. Then he eats breakfast — he loves coffee and sandwiches. He works in an office. His work starts at nine. He can read documents and reply to letters. In the evening he wants to rest. He listens to music or watches a film. He must go to sleep at ten — tomorrow he has to get up early again.
-Now think about these questions — answer them aloud or in your head:
-- **Що Тарас ро́бить вра́нці?** (What does Taras do in the morning?) Look back at the text: **прокидаюся, вмиваюся, чищу зуби, снідаю** — four actions in sequence.
-- **О котрі́й він почина́є працювати?** (What time does he start work?) The text says **о дев'ятій** (at nine) — an ordinal time expression you saw in M20.
-- **Що він хоче роби́ти увечері?** (What does he want to do in the evening?) **Хоче відпочивати** — modal **хочу** + infinitive **відпочивати**, exactly the pattern from M18.
-Notice how many grammar patterns appear naturally in this short text: reflexive verbs (**прокидаюся, вмиваюся**), Group I verbs (**читаю, слухаю, починається**), Group II (**люблю, дивлюся**), modals (**можу, хочу, мушу**), and sequence words (**спочатку, потім, увечері**). Everything connects.
+
+Reading connected text is the best way to see how grammar works in the real world. Meet Pavlo. He is a designer from Kyiv. In the short text below, Pavlo describes his typical day. This narrative combines every verb group, modal verb, and sequence word you have studied so far into a single, cohesive story. As you read, pay attention to the endings of the verbs and how Pavlo connects his actions from morning until night. Read the text aloud to practice your pronunciation and rhythm.
+
+**Мій звича́йний день** (My Typical Day)
+*   **Я прокидаюся о сьо́мій.** (I wake up at seven.)
+*   **Споча́тку я вмиваюся, а по́тім сні́даю.** (First I wash my face, and then I eat breakfast.)
+*   **Я ду́же люблю ка́ву.** (I really love coffee.)
+*   **О дев'я́тій я вже працю́ю.** (At nine I am already working.)
+*   **Я диза́йнер. Я бага́то ду́маю і малю́ю.** (I am a designer. I think and draw a lot.)
+*   **Уде́нь я можу гуля́ти в парку.** (In the afternoon I can walk in the park.)
+*   **Уве́чері я мушу вчи́ти англі́йську, але́ я хочу диви́тися фільм.** (In the evening I must study English, but I want to watch a movie.)
+*   **Одина́дцята ве́чора — я вже сплю.** (Eleven in the evening — I am already sleeping.)
+
+We can analyze the lexical choices in Pavlo's story. Notice how he uses sequence markers to organize his timeline. The word **спочатку** (first/at first) sets the starting point of a sequence, while **потім** (then/after that) introduces the next action. You can also use **тоді́** (then) in similar contexts. These small words anchor the verbs and turn a list of separate sentences into a flowing story. 
+
+Also, look at how Pavlo expresses his preferences. He says **я дуже люблю каву** (I really love coffee) to state a general fact about his tastes. However, when talking about his immediate desire in the evening, he uses the modal verb **хоті́ти** (to want): **я хочу дивитися фільм** (I want to watch a movie). Understanding the difference between a general preference (**люби́ти**) and a specific desire (**хотіти**) gives your Ukrainian much more precision.
+
+<!-- INJECT_ACTIVITY: fill-in-describe-day -->
+
 ## Грама́тика (Grammar Summary)
-Ukrainian verbs change form depending on who performs the action. Two main conjugation patterns — **дієвідміна** (conjugation group) — cover nearly every verb you know. Modal verbs always pair with an infinitive ending in **-ти**. Reflexive verbs add **-ся** to show the action returns to the doer. And seven question words let you ask about anything.
-Here are the two conjugation groups side by side:
-| | **І дієвідміна (Group I)** — читати | **ІІ дієвідміна (Group II)** — говори́ти |
-|---|---|---|
-| я | читаю | говорю |
-| ти | читаєш | говориш |
-| він/вона | читає | говорить |
-| ми | чита́ємо | гово́римо |
-| ви | чита́єте | гово́рите |
-| вони́ | чита́ють | гово́рять |
-The quickest way to tell them apart: look at the **вони** form. Group I ends in **-уть** or **-ють** (читають), Group II ends in **-ать** or **-ять** (говорять). When you hear a new verb, check its third-person plural — that tells you the group.
-:::tip
-**Хотіти** (to want) belongs to Group I, even though it ends in **-іти**. Its forms are: **хочу, хо́чеш, хоче, хо́чемо, хо́чете, хо́чуть**. The **-уть** ending confirms it.
-:::
-Modal verbs — **хотіти** (to want), **могти** (to be able), **мусити** (to have to) — always connect to an infinitive with **-ти**:
-- **Я хочу читати** (I want to read)
-- **Ти мо́жеш говорити** (You can speak)
-- **Він мусить працювати** (He must work)
-- **Я не хочу спати** (I don't want to sleep) — negation is simply **не** before the modal
-Reflexive verbs add **-ся** after the personal ending. The **-ся** means the action is directed back at the person doing it:
-- **прокидаюся** (I wake up — I wake myself)
-- **вмиваюся** (I wash up — I wash myself)
-- **одягаюся** (I get dressed — I dress myself)
-- **називаюся** (I am called — I call myself)
-The pattern is always: conjugated verb + **ся** appended directly to the ending.
-**Питання та заперечення (Questions and Negation)**
-- Seven question words: **хто, що, де, куди, коли, чому, як**.
-- Negation is **не** before the verb. Ukrainian also uses double negation: **ніхто не знає** (nobody knows).
-<!-- INJECT_ACTIVITY: group-sort-verb-groups -->
+
+The core grammar patterns make these actions possible. Ukrainian verbs fall into two main conjugation groups, which we identify by their endings in the present tense. All verbs start with the infinitive ending **-ти** (for example: **читати**, **говорити**, **хотіти**).
+
+Group I verbs typically have an infinitive ending in **-а́ти** or **-яти**. Their present tense endings follow this pattern: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. In the third-person plural ("they" form), they always end in **-уть** or **-ють**.
+*   **зна́ти** (to know) → **вони зна́ють** (they know)
+*   **працюва́ти** (to work) → **вони працю́ють** (they work)
+*   **ду́мати** (to think) → **вони ду́мають** (they think)
+
+Group II verbs usually have an infinitive ending in **-ити** or **-іти́**. Their present tense endings follow this pattern: **-ю** (or **-у**), **-иш**, **-ить**, **-имо**, **-ите**, **-ять** (or **-ать**). In the third-person plural, they end in **-ать** or **-ять**.
+*   **говорити** (to speak) → **вони говорять** (they speak)
+*   **роби́ти** (to do/make) → **вони ро́блять** (they do/make)
+*   **ба́чити** (to see) → **вони ба́чать** (they see)
+
+Notice the stem change in the first person singular for some Group II verbs, like **бачити**: we say **я ба́чу** (I see), not "бачю".
+
+Next, we have the modal verbs, which act as helpers to express ability, obligation, or desire. The big three are **хотіти** (to want), **могти́** (to be able to/can), and **му́сити** (must/to have to). The usage pattern is simple and strict: you conjugate the modal verb to match the subject, and the action verb that follows remains in the infinitive (unchanged).
+*   **Я хочу говорити.** (I want to speak.)
+*   **Він мо́же працювати.** (He can work.)
+*   **Ми му́симо йти.** (We must go.)
+
+To have a real conversation, you need to know how to ask questions and negate statements. We learned the seven core question words: **Хто** (Who), **Що** (What), **Де** (Where), **Куди́** (Where to), **Коли** (When), **Чо́му** (Why), and **Як** (How). When you want to ask a question, remember an important naturalness rule: in Ukrainian, we say **ста́вити пита́ння** (to ask a question), never the direct translation "задава́ти".
+
+For negation, simply place the particle **не** (not) directly before the verb: **я не зна́ю** (I do not know). Ukrainian also uses double negation, which is perfectly grammatical and required when using negative pronouns. If you use a word like **ніхто́** (nobody) or **ні́чого** (nothing), you must still use **не** before the verb: **я нічого не знаю** (I know nothing).
+
+Finally, we covered reflexive verbs, which describe actions you perform on yourself. These verbs add the suffix **-ся** to the end of the conjugated form.
+*   **прокидатися** (to wake up)
+*   **вмива́тися** (to wash oneself)
+*   **одяга́тися** (to get dressed)
+
+Pay attention to a crucial phonetic rule regarding this suffix. The suffix **-ся** can reduce to **-сь** when the verb ending finishes with a vowel (**голосни́й**). Compare the full form **я вмиваюся** (I wash myself) with the shortened, but very common, form **я вмива́юсь**. However, after a consonant (**при́голосний**), you must always use the full **-ся**, as in **ти вмива́єшся** (you wash yourself).
+
+<!-- INJECT_ACTIVITY: group-sort-verbs -->
 <!-- INJECT_ACTIVITY: quiz-mixed-conjugation -->
+
 ## Діало́г (Connected Dialogue)
-Оля meets Макси́м in the park on a Saturday morning. This conversation uses ALL the A1.3 skills together — both verb groups, modals, questions, negation, reflexives, and sequence words. Read it aloud, taking both roles.
-> — **Оля:** Приві́т, Макси́ме! Що ти тут ро́биш? *(Hi, Maksyme! What are you doing here?)*
-> — **Максим:** Привіт, Олю! Я гуля́ю. А ти? *(Hi, Olyu! I'm walking. And you?)*
-> — **Оля:** Я теж хочу гуля́ти. Мо́жна ра́зом? *(I also want to walk. Can we go together?)*
-> — **Максим:** Звича́йно! Ти ча́сто тут гуля́єш? *(Of course! Do you walk here often?)*
-> — **Оля:** Так, зазвича́й вранці. Я прокидаюся рано. *(Yes, usually in the morning. I wake up early.)*
-> — **Максим:** А я мушу вставати рано че́рез робо́ту. *(And I have to get up early because of work.)*
-> — **Оля:** Де ти працю́єш? *(Where do you work?)*
-> — **Максим:** Я працюю в ліка́рні. Я лі́кар. А ти? *(I work in a hospital. I'm a doctor. And you?)*
-> — **Оля:** Я вчи́телька. Я виклада́ю матема́тику. *(I'm a teacher. I teach math.)*
-> — **Максим:** Ціка́во! Тобі́ подобається робота? *(Interesting! Do you like your job?)*
-> — **Оля:** Так, ду́же! Я люблю говорити з ді́тьми. *(Yes, very much! I love talking with children.)*
-> — **Максим:** А що ти робиш вранці? *(And what do you do in the morning?)*
-> — **Оля:** Я прокидаюся о шо́стій, вмиваюся, снідаю. Потім ї́ду на роботу. *(I wake up at six, wash up, eat breakfast. Then I go to work.)*
-> — **Максим:** Коли ти почина́єш? *(When do you start?)*
-> — **Оля:** О во́сьмій. Мушу бути там вча́сно! *(At eight. I must be there on time!)*
-> — **Максим:** А що ти робиш увечері? *(And what do you do in the evening?)*
-> — **Оля:** Увечері я не хочу працювати. Я хочу відпочивати. Я читаю або слухаю музику. А ти? *(In the evening I don't want to work. I want to rest. I read or listen to music. And you?)*
-> — **Максим:** Я теж не люблю працювати увечері. Я люблю читати! *(I also don't like to work in the evening. I love to read!)*
-Both verb groups appear naturally here. Group I: **гуляю, люблю, читаю, слухаю, працюю, почина́ю, викладаю**. Group II: **говорю**. Modals always attach to an infinitive: **мушу бути, мушу вставати, хочу гуляти, хочу відпочивати**. Question words drive the conversation: **що** (what), **де** (where), **коли** (when). Negation is used naturally: **не хочу, не люблю**. And reflexive verbs anchor the morning routine: **прокидаюся, вмиваюся**.
+
+These pieces work together in a natural setting. The context is a meeting between two friends, Olena and Viktor. Olena is busy with her tasks, but Viktor wants to hang out. This scenario forces the speakers to use questions to gather information, modal verbs to express their desires and limitations, and negation to turn down proposals. This is a classic example of the **розмо́вний** (conversational) register, exactly how people speak in real life.
+
+> **Ві́ктор:** Приві́т! Що ти ро́биш? *(Hi! What are you doing?)*
+> **Оле́на:** Я за́раз працюю, але дуже хочу каву. *(I am working right now, but I really want coffee.)*
+> **Віктор:** Ти мо́жеш гуляти зараз? *(Can you go for a walk right now?)*
+> **Олена:** Не можу, мушу працювати. Коли ти ві́льний? *(I cannot, I must work. When are you free?)*
+> **Віктор:** Я вільний о шо́стій. Де ми зустріча́ємося? *(I am free at six. Where are we meeting?)*
+> **Олена:** У це́нтрі. До зу́стрічі! *(In the center. See you!)*
+
+Several pedagogical mechanics are at play in this conversation. 
+
+First, notice the difference between location and direction. Viktor asks **де ми зустрічаємося?** (where are we meeting?). The word **де** (where) asks about a static location. If he were asking about a destination they were walking towards, he would use **куди** (where to).
+
+Second, look at Olena's refusal. When Viktor asks if she can go for a walk, she doesn't just say **ні** (no). She says **не можу** (I cannot). In Ukrainian, repeating the negated verb is much more natural and polite than a blunt negative word. It shows that you are engaged in the conversation and providing a specific reason for your answer.
+
+Third, notice how Viktor states the time: **о шостій** (at six). When talking about hours on the clock, Ukrainian uses the preposition **о** (or **об** before a vowel) followed by the ordinal number. 
+
+:::tip
+If you ever need to interrupt or clarify something in a dialogue like this, remember to use the polite phrase **у мене́ є питання** (I have a question). This is the natural Ukrainian way to ask for clarification, rather than translating "I have a question" word-for-word from English.
+:::
+
 <!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
+
 ## Підсумок — Summary
-You have completed A1.3: Actions. This is a major milestone. You can now do six things in Ukrainian that are core to any conversation: describe actions, express wants and obligations, ask questions, use reflexive verbs, build a daily routine, and combine all of these in connected speech.
-Here is everything you can do, with examples:
-- **Дієслова І групи** (Group I verbs) — **Я читаю книгу** (I read a book). **Вони слу́хають музику** (They listen to music).
-- **Дієслова ІІ групи** (Group II verbs) — **Ти говориш добре** (You speak well). **Вона вчить украї́нську** (She studies Ukrainian).
-- **Модальні дієслова** (Modal verbs) — **Я хочу спати** (I want to sleep). **Він може допомогти** (He can help). **Ми му́симо працювати** (We must work).
-- **Питальні слова** (Question words) — **Хто це?** (Who is this?) **Що ти робиш?** (What are you doing?) **Де ти живе́ш?** (Where do you live?) **Куди ти йдеш?** (Where are you going?) **Коли починається?** (When does it start?) **Чому ти мовчи́ш?** (Why are you silent?) **Як ти почу́ваєшся?** (How do you feel?)
-- **Заперечення** (Negation) — **Я не хочу їсти** (I don't want to eat). **Ніхто не знає** (Nobody knows) — double negation is standard in Ukrainian.
-- **Зворотні дієслова** (Reflexive verbs) — **Я прокидаюся, вмиваюся, одягаюся** (I wake up, wash up, get dressed).
-**Наступний крок (Next Step):** A1.4 — Time and Nature. You will learn to talk about time, days of the week, and the weather.
-<!-- INJECT_ACTIVITY: fill-in-describe-your-day -->
+
+You have officially reached the end of the A1.3 phase. Take a deep breath and look at the achievement checklist. You have completed A1.3 [Actions]! 
+
+You are no longer limited to just naming objects or saying what you like. You can now conjugate the most common verbs in both Group I and Group II, allowing you to speak about yourself, the person you are talking to, and other people in your life. You can express your desires using **хотіти**, your abilities using **могти**, and your obligations using **мусити**. You can ask about anything using the seven core question words, and you can negate statements confidently. Most importantly, you can describe your daily life from morning to night using reflexive verbs and sequence words.
+
+This is a massive step forward in your ability to communicate. You have mastered the "What" — the actions that make up daily life. Now, we need to add precision to those actions. 
+
+In the next phase, A1.4 [Time and Nature], we will focus on the "When" and the "Where" in much greater detail. You will learn how to read the clock and talk about specific times using **годи́ни** (hours). You will learn the **дні ти́жня** (days of the week) to schedule meetings and make plans with friends. We will also learn how to describe the world around us by talking about the **пого́да** (weather). You have the actions; now we will build the stage where those actions take place. Keep practicing your verbs, and get ready for the next level!

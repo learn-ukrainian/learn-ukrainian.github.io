@@ -7,137 +7,173 @@ pipeline: v6
 build_status: draft
 ---
 
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги (Dialogues)
+## Діало́ги — Dialogues
 
-The question **Де?** (Where?) is one of the most important words you will use every day, and today we are going to learn how to answer it with real Ukrainian places using the locative case.
+Moving to a new city means asking questions about where things are. During your first week in a new neighborhood, you quickly learn to rely on local residents. A friendly neighbor is often the best guide for practical navigation. You need to know the location of essential services like an **апте́ка** (pharmacy) for medicine, a **по́шта** (post office) for packages, and a **банк** (bank) for financial tasks. Knowing how to ask about these places and understanding the answers helps you settle into the rhythm of daily life.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Мари́нка:</span> Приві́т, Оле́же! Скажи́, будь ла́ска, **де** Оле́на? *(Hi, Oleh! Tell me please, where is Olena?)*</div>
+<div class="dialogue-line"><span class="speaker">Сусі́д:</span> Приві́т! Ти тут живе́ш? *(Hi! Do you live here?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Но́вий ме́шканець:</span> Так, я новий сусід. *(Yes, I am a new neighbor.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оле́г:</span> Привіт! Вона́ за́раз **у шко́лі**. *(Hi! She is currently at school.)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Ду́же приє́мно! *(Very nice to meet you!)*</div>
 
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> Де Оле́на? Вона́ тут? *(Where is Olena? Is she here?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Маринка:</span> Зрозумі́ло. А Тара́с? Він вдо́ма? *(Understood. And Taras? Is he at home?)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Ні, вона **в шко́лі**. *(No, she is at school.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> А Тара́с? *(And Taras?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> Ні, він **на робо́ті**. *(No, he is at work.)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Він **на робо́ті**. *(He is at work.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> А ді́ти де? *(And where are the children?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Маринка:</span> А ді́ти? Вони́ гра́ються **на ву́лиці**? *(And the kids? Are they playing on the street?)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Вони́ **в парку**. *(They are in the park.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> А кі́шка? *(And the cat?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> Ні, вони **в парку**. *(No, they are in the park.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Маринка:</span> А кі́шка? Я її не ба́чу. *(And the cat? I don't see her.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> О, кішка спить **на дива́ні**! *(Oh, the cat is sleeping on the sofa!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Вона **на дива́ні**! *(She is on the sofa!)*</div>
 
 </div>
 
-Notice the clear pattern emerging here: the base dictionary word **шко́ла** (school) becomes **в школі**, and the base word **робо́та** (work) becomes **на роботі**. The noun changed its ending to answer the question **Де?** (Where?).
+Notice the clear contrast between the small words **в** and **на** in the dialogue above. Both translate broadly to English "in" or "at", but they sound distinct in Ukrainian and carry different spatial meanings.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Наза́р:</span> Привіт, Емі́лі! **Де** ти живе́ш зараз? *(Hi, Emily! Where do you live now?)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> А де ти працю́єш? *(And where do you work?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> Я працю́ю **в о́фісі**. *(I work in an office.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Емілі:</span> Я живу́ **в Ки́єві**, **на вулиці** Хреща́тик. *(I live in Kyiv, on Khreshchatyk street.)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Це дале́ко? *(Is it far?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> Ні. Я живу́ **в Ки́єві**, **на ву́лиці** Хреща́тик. *(No. I live in Kyiv, on Khreshchatyk street.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Назар:</span> Чудо́во! А **де** ти працю́єш? *(Wonderful! And where do you work?)*</div>
+<div class="dialogue-line"><span class="speaker">Сусід:</span> Це дуже бли́зько. *(That is very close.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Емілі:</span> Я працю́ю **в о́фісі**, на дру́гому по́версі. *(I work in an office, on the second floor.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Назар:</span> А **де** ти навча́єшся? Ти студе́нтка? *(And where do you study? Are you a student?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Емілі:</span> Так. Я навча́юся в університе́ті, **в це́нтрі** мі́ста. *(Yes. I study at the university, in the city center.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Новий мешканець:</span> Так! О́фіс **на дру́гому по́версі**. *(Yes! The office is on the second floor.)*</div>
 
 </div>
 
-Both of these dialogues show the exact same grammatical structure: to answer the question **Де?**, you must use a preposition (either **в** or **на**) followed by a changed noun. So how exactly does the noun change? And when do you use **в** versus **на**?
+Notice the hierarchy of location used in the second dialogue. When talking about a city, we use **в** (as in **в Києві**). When narrowing down to a street, we switch to **на** (as in **на вулиці**). Finally, for a specific room or building, we use **в** or **у** again. You can also see that the ends of the nouns change: the basic word **шко́ла** becomes **в школі**, **парк** turns into **у парку**, and **робо́та** changes to **на роботі**. This predictable change is called the **Місце́вий відмі́нок** (Locative case). 
 
-## Місце́вий відмі́нок (The Locative Case)
+## Місцевий відмінок — The Locative Case
 
-Every Ukrainian noun belongs to one of seven **відмі́нки** (cases), which change the ending of the word depending on its grammatical role in the sentence. The locative case — known as **місцевий відмінок** or **М.в.** — is used specifically to show where something is located. It always answers the question **на ко́му?** (on who?) or **на чому́?** (on what?) and **у кому? / у чому?** (in who? / in what?). Crucially, the locative case ALWAYS requires a preposition; it never stands alone in a sentence.
+The core function of the Locative case is to describe static location—where something is situated or where an action takes place without any movement toward a destination. It is the grammatical tool that specifically answers the question **Де?** (Where?). There is one crucial rule that makes this case unique among all Ukrainian grammatical cases: the Locative case *always* requires a preposition. You cannot use it on its own; it must be attached to **в**, **у**, or **на**.
 
-:::note
-**М. (на, у) — на/у кому? на/у чому?**
+Ukrainian primary school textbooks teach a very practical method to identify and form the Locative case. In Grade 4 (Захарійчук p.74), students learn the "helper question" method for the **Місцевий відмінок**. You memorize the helper questions: **на/у ко́му? на/у чому́?** (on/in whom? on/in what?). By asking these questions, you naturally prompt the correct case ending for the noun.
+* стіл → **у чому?** → **у столі́** (in the desk)
+* стіл → **на чому?** → **на столі** (on the table)
+* мі́сто → **у чому?** → **у мі́сті** (in the city)
+
+Feminine and neuter nouns form the Locative case very consistently. The dominant ending for almost all of them is **-і**. You simply replace the final vowel of the base word.
+* школа → в школі (at school)
+* робота → на роботі (at work)
+* пошта → на по́шті (at the post office)
+* ву́лиця → на вулиці (on the street)
+* місто → у місті (in the city)
+* вікно́ → на вікні́ (on the window)
+
+Some borrowed neuter nouns are indeclinable, meaning their endings never change regardless of the grammar rules. These are easy wins for learners: **кафе́** always stays **кафе**, so you just say **в кафе** (in the café).
+
+Masculine nouns are slightly more complex because they split into two groups. Many standard masculine nouns take the same **-і** ending as feminine and neuter words.
+* офіс → в офісі (in the office)
+* теа́тр → у теа́трі (in the theater)
+* стіл → на столі (on the table)
+
+However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
+* парк → у парку (in the park)
+* банк → у ба́нку (at the bank)
+* сад → у саду́ (in the orchard)
+* магази́н → у/в магази́ні (in the shop)
+
+<MatchUp client:only="react" pairs={[{"left": "школа", "right": "в школі"}, {"left": "лікарня", "right": "у лікарні"}, {"left": "місто", "right": "у місті"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "парк", "right": "у парку"}, {"left": "банк", "right": "у банку"}, {"left": "вікно", "right": "на вікні"}, {"left": "кафе", "right": "в кафе"}]} instruction={"З'єднайте називний і місцевий відмінки (Match nominative and locative cases)"} />
+
+<Quiz client:only="react" questions={[{"question": "Де Тарас? Він працює _____.", "options": [{"text": "на офісі", "correct": false}, {"text": "в офісі", "correct": true}, {"text": "в офісу", "correct": false}]}, {"question": "Де діти? Вони _____.", "options": [{"text": "на парку", "correct": false}, {"text": "у паркі", "correct": false}, {"text": "у парку", "correct": true}]}, {"question": "Де ви живете? Я живу _____.", "options": [{"text": "у місті", "correct": true}, {"text": "на місті", "correct": false}, {"text": "у місту", "correct": false}]}, {"question": "Де аптека? Вона _____.", "options": [{"text": "у площі", "correct": false}, {"text": "на площі", "correct": true}, {"text": "на площа", "correct": false}]}, {"question": "Де Олег? Він _____.", "options": [{"text": "на робота", "correct": false}, {"text": "у роботі", "correct": false}, {"text": "на роботі", "correct": true}]}, {"question": "Де мій телефон? Він _____.", "options": [{"text": "на дивані", "correct": true}, {"text": "у дивані", "correct": false}, {"text": "на дивану", "correct": false}]}]} instruction={"Де це? Оберіть правильну форму (Where is it? Choose the correct form)"} />
+
+## В чи на? — В or На?
+
+The basic logic for choosing between **в** and **на** comes down to the physical space you are describing. **В** (or its phonetic twin **у**) is used for enclosed spaces—places that have walls, boundaries, or a clear "inside."
+* **в офісі** (in the office)
+* **у магазині** (in the store)
+* **в апте́ці** (in the pharmacy)
+* **у ліка́рні** (in the hospital)
+
+Conversely, **на** is generally used for open spaces, flat surfaces, or when something is physically "atop" something else.
+* **на вулиці** (on the street)
+* **на пло́щі** (on the square)
+* **на столі** (on the table)
+* **на дивані** (on the sofa)
+
+Beyond physical spaces, **на** is also used in a more abstract way for events and specific statuses. When you attend an activity or event, you are **на**. Furthermore, for the concept of being "at work," Ukrainian always uses **на**.
+* **на конце́рті** (at the concert)
+* **на уроці** (at the lesson)
+* **на футбо́лі** (at the football game)
+* **на роботі** (at work)
+
+:::note 
+Remember that English uses "in the office," but Ukrainian separates the physical building (**в офісі**) from the abstract status of working (**на роботі**).
 :::
 
-The preposition **в / у** (in / at) is used for enclosed spaces — when you are physically inside a building, a room, or the borders of a city. Let's look at five model nouns changing from their base dictionary form (nominative) to the locative case:
-- **школа** (school) → **в школі** (in/at school)
-- **банк** (bank) → **у ба́нку** (in/at the bank)
-- **магази́н** (shop) → **у/в магази́ні** (in/at the shop)
-- **ліка́рня** (hospital) → **у ліка́рні** (in/at the hospital)
-- **мі́сто** (city) → **у/в мі́сті** (in the city)
+There are some conventional places that always use **на** regardless of whether they have walls or seem like an enclosed space. These must simply be learned as fixed phrases.
+* **на пошті** (at the post office)
+* **на вокза́лі** (at the train station)
+* **на ста́нції** (at the station)
 
-*Brief rule:* Use **в** after a vowel or before a vowel, and use **у** between consonants or to avoid awkward consonant clusters. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**.
+The rule for countries and cities is very strict: always use **в** or **у**. It does not matter if a country is an island or a continent.
+* **в Украї́ні** (in Ukraine)
+* **у Києві** (in Kyiv)
+* **у Льво́ві** (in Lviv)
+* **в Оде́сі** (in Odesa)
 
-The preposition **на** (on / at) is used when something is on a surface, situated in an open area, or simply by pure convention for certain places. Here are five model nouns for this specific pattern:
-- **робота** (work) → **на роботі** (at work)
-- **ву́лиця** (street) → **на вулиці** (on the street)
-- **пло́ща** (square) → **на пло́щі** (on the square)
-- **уро́к** (lesson) → **на уроці** (at the lesson)
-- **мо́ре** (sea) → **на мо́рі** (at the sea)
-
-*Emphasis:* Using **на** is not "wrong" or illogical — it is simply the specific preposition that a particular place travels with. You must learn the place and its preposition together as a single unit, just as English speakers say "at work" rather than "in work."
-
-You may have noticed that the noun endings change in predictable ways. Here are the three most common locative endings for familiar nouns. Masculine nouns usually take **-у** (like **у банку**, **у парку**) or **-і** (like **в офісі**, **на уроці**, **на вокза́лі**). Feminine nouns almost everywhere take **-і** (like **в школі**, **на роботі**, **у лікарні**, **на вулиці**). Neuter nouns also take **-і** (like **у місті**, **на морі**). For practical advice right now: simply learn the twelve required vocabulary nouns as fixed phrases. The grammatical pattern will emerge naturally as you use them more often.
-
-<FillIn client:only="react" items={[{"sentence": "Де Олена? — Вона зараз _____.", "answer": "в школі", "options": ["в школі", "школа", "школи", "школою"]}, {"sentence": "Де тато? — Він _____.", "answer": "у банку", "options": ["у банку", "банк", "банку", "банком"]}, {"sentence": "Де діти? — Вони граються _____.", "answer": "у парку", "options": ["у парку", "парк", "паркові", "парком"]}, {"sentence": "Де мама? — Вона _____.", "answer": "у лікарні", "options": ["у лікарні", "лікарня", "лікарнею", "лікарню"]}, {"sentence": "Де ви живете? — Ми живемо _____.", "answer": "у місті", "options": ["у місті", "місто", "міста", "містом"]}, {"sentence": "Де він купує хліб? — Він _____.", "answer": "у магазині", "options": ["у магазині", "магазин", "магазину", "магазином"]}, {"sentence": "Де Тарас? — Він _____.", "answer": "на роботі", "options": ["на роботі", "робота", "роботи", "роботою"]}, {"sentence": "Де Емілі та Назар? — Вони _____.", "answer": "на вулиці", "options": ["на вулиці", "вулиця", "вулицею", "вулицю"]}]} instruction={"Вставте правильну форму (Fill in the correct locative form)"} />
-
-## В чи на? (В or На?)
-
-How do you choose between the prepositions? **В / у** signals an enclosed, bounded space where you are physically inside something. Think of our prototype examples from the introductory dialogues: **в школі** (inside the school building), **у банку** (inside the bank walls), **в магазині** (inside the shop), and **у лікарні** (inside the hospital). There is a very important special case: **в кафе́** (in the café). The word **кафе** (café) is an indeclinable neuter noun because it is a borrowed foreign word ending in a vowel. The noun itself never changes its ending; only the preposition marks the location. Therefore, it is always **в кафе** (or **у кафе**), never changing its ending.
-
-The preposition **на** signals an open area, a surface, or — most importantly — a conventional cultural association. Prototype open spaces include **на вулиці** (on the street, outdoors), **на пло́щі** (on the square), and **на морі** (at the sea). It is also used for events, like **на конце́рті** (at the concert). Then there are the tricky conventional ones: **на роботі** (at work — you are not inside a single "work" building, but rather at the concept of work), **на вокзалі** (at the train station — this is a linguistic convention, not pure spatial logic), and **на по́шті** (at the post office — also conventional). As a reliable rule of thumb, when you are in doubt, learn each place with its preposition as a fixed, inseparable phrase.
-
-There is a strict and unbreakable rule for countries and cities — they always take **в / у**: **в Украї́ні** (in Ukraine), **у Києві** (in Kyiv), **у Льво́ві** (in Lviv), **в Оде́сі** (in Odesa), **у Харко́ві** (in Kharkiv). However, there is a special case for streets: you use **на** plus the street name, such as **на вулиці** Хрещатик (on Khreshchatyk street) or **на Майда́ні** Незале́жності (on Independence Square).
-
-:::caution
-**Cultural Note:**
-НІКОЛИ не кажи́ «на Україні» — ЗА́ВЖДИ́ «**в Україні**». (NEVER say «на Україні» — ALWAYS «**в Україні**».)
-This is not just a simple grammar rule; it directly reflects Ukraine's recognition as a sovereign, independent state, not a regional borderland. Russian imperial usage deliberately promoted «на Україні» to diminish this status. Modern Ukrainian firmly and completely rejects it.
+:::caution Decolonization Note
+You will sometimes hear Russian speakers say "на Украине" (on Ukraine). This is historically incorrect and politically offensive. Using "на" implies that Ukraine is merely a geographic territory or a region of an empire, rather than a sovereign state. A country always takes "в/у". You must always say **в Україні**.
 :::
 
-<Quiz client:only="react" questions={[{"question": "_____ школі", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ роботі", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ вулиці", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ банку", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ вокзалі", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ пошті", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ місті", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ площі", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ кафе", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ магазині", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}]} instruction={"В/у чи на? Оберіть правильний прийменник (В/у or на? Choose the correct preposition)"} />
+<Quiz client:only="react" questions={[{"question": "_____ вулиці", "options": [{"text": "в / у", "correct": false}, {"text": "на", "correct": true}, {"text": "з", "correct": false}]}, {"question": "_____ банку", "options": [{"text": "в / у", "correct": true}, {"text": "на", "correct": false}, {"text": "з", "correct": false}]}, {"question": "_____ роботі", "options": [{"text": "в / у", "correct": false}, {"text": "на", "correct": true}, {"text": "з", "correct": false}]}, {"question": "_____ парку", "options": [{"text": "в / у", "correct": true}, {"text": "на", "correct": false}, {"text": "з", "correct": false}]}, {"question": "_____ школі", "options": [{"text": "в / у", "correct": true}, {"text": "на", "correct": false}, {"text": "з", "correct": false}]}, {"question": "_____ концерті", "options": [{"text": "в / у", "correct": false}, {"text": "на", "correct": true}, {"text": "з", "correct": false}]}, {"question": "_____ Києві", "options": [{"text": "в / у", "correct": true}, {"text": "на", "correct": false}, {"text": "з", "correct": false}]}, {"question": "_____ магазині", "options": [{"text": "в / у", "correct": true}, {"text": "на", "correct": false}, {"text": "з", "correct": false}]}, {"question": "_____ вокзалі", "options": [{"text": "в / у", "correct": false}, {"text": "на", "correct": true}, {"text": "з", "correct": false}]}, {"question": "_____ Україні", "options": [{"text": "в / у", "correct": true}, {"text": "на", "correct": false}, {"text": "з", "correct": false}]}]} instruction={"В чи на? Оберіть правильний прийменник (В or на? Choose the correct preposition)"} />
 
-Let's summarize the contrast to make it memorable. Use **в / у** for: school, bank, shop, hospital, café, city, and country. Use **на** for: street, square, station, post office, work, sea, and lesson. The pattern check is simple: if you can easily picture yourself being physically enclosed inside a space, it is usually **в**. If it is a flat surface, an open area, or an expression set by tradition, it is usually **на**. When unsure, look up the place and check whether it naturally pairs with **в** or **на**.
-
-<MatchUp client:only="react" pairs={[{"left": "школа", "right": "в школі"}, {"left": "банк", "right": "у банку"}, {"left": "робота", "right": "на роботі"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "магазин", "right": "у магазині"}, {"left": "лікарня", "right": "у лікарні"}, {"left": "місто", "right": "у місті"}, {"left": "парк", "right": "у парку"}]} instruction={"З'єднайте іменник з формою місцевого відмінку (Match the noun to its locative form)"} />
+<FillIn client:only="react" items={[{"sentence": "Олена _____.", "answer": "в школі", "options": ["в школі", "на школі", "в школу"]}, {"sentence": "Тарас _____.", "answer": "на роботі", "options": ["в роботі", "на роботі", "на роботу"]}, {"sentence": "Ми живемо _____.", "answer": "у місті", "options": ["у місті", "на місті", "у місто"]}, {"sentence": "Я зараз _____.", "answer": "у банку", "options": ["у банку", "на банку", "в банкі"]}, {"sentence": "Лікар _____.", "answer": "у лікарні", "options": ["в лікарні", "на лікарні", "у лікарню"]}, {"sentence": "Концерт _____.", "answer": "на площі", "options": ["у площі", "на площі", "на площу"]}, {"sentence": "Сусід _____.", "answer": "у магазині", "options": ["у магазині", "на магазині", "у магазин"]}, {"sentence": "Твій телефон _____.", "answer": "на столі", "options": ["у столі", "на столі", "на стіл"]}]} instruction={"Дайте відповідь на запитання «Де?» (Answer the question «Where?»)"} />
 
 ## Підсумок — Summary
 
-Let's consolidate everything we have learned. The locative case (**місцевий відмінок**, **М.в.**) answers exactly one core question: **Де?** (Where?). It tells us where something IS right now, indicating a static location. It never stands alone in a sentence; it always needs the preposition **в / у** or **на** directly in front of it. You can always use the Grade 4 helper-word test: can you ask **на кому?** (on who?) or **на чому?** (on what?) before the noun? If the answer is yes, you are dealing with the locative case. Examples include answering (на/у чому?) with **на вулиці**, **у банку**, **в школі**, and **на роботі**. Every noun on today's vocabulary list has been shown in its locative form. Review them as pairs: **школа** / **в школі**, **банк** / **у банку**.
+The Locative case is your primary tool for expressing static location. Whenever you need to answer the question **Де?** (Where?), you will use this case. Here is a final recap of the logic:
 
-Here is a quick recap of **в / у** versus **на**. Use **в / у** for an enclosed space, a city, or a country (**в школі**, **у банку**, **в Україні**, **у Києві**). Use **на** for an open area, a surface, or by pure convention (**на вулиці**, **на роботі**, **на пошті**, **на вокзалі**). Remember the sovereign rule: it is **в Україні** — always, without any exception. Conventional forms like **на пошті** and **на вокзалі** must simply be learned as fixed phrases, just as learners of English memorize the phrase "at work" rather than trying to derive it from a spatial rule.
+* **Question:** Де? (Where?)
+* **Prepositions:**
+  * **В/У** is for enclosed spaces, countries, and cities.
+  * **На** is for open spaces, surfaces, events, and specific concepts like work.
+* **Endings:**
+  * **-і** is the most common ending for almost all nouns (feminine, neuter, and many masculine).
+  * **-у** is used for a specific group of masculine nouns like **банк** and **парк**.
+* **Key Phrases to remember:**
+  * Я **в Україні**. (I am in Ukraine.)
+  * Я **у Києві**. (I am in Kyiv.)
+  * Я **на роботі**. (I am at work.)
 
-To summarize the endings: most feminine nouns take **-і** in the locative (school → **в школі**, street → **на вулиці**). Most masculine nouns take **-у** or **-і** (bank → **у банку**, park → **у парку**, office → **в офісі**, lesson → **на уроці**). Neuter nouns generally take **-і** (city → **у місті**, sea → **на морі**). Indeclinable foreign nouns do not change their endings at all (café → **в кафе**). For now, practicing with these twelve vocabulary nouns is enough. The patterns will solidify as you get more reading and speaking practice.
+Now it is time to practice by applying these patterns to your own life. Answer the following questions about yourself, either aloud or in writing, using the Locative case:
 
-*   **Де ти зараз?** *(Where are you now?)* → Я зараз вдома / в кімна́ті / **у кафе**.
-*   **Де ти працюєш?** *(Where do you work?)* → Я працюю **в офісі** / навчаюся в університеті.
-*   **Де живе́ твоя́ сім'я́?** *(Where does your family live?)* → Вони живу́ть **у Києві** / у Ло́ндоні / у мале́нькому **місті**.
-
-<Quiz client:only="react" questions={[{"question": "Він читає книгу _____. (in the park)", "options": [{"text": "у парку", "correct": true}, {"text": "парк", "correct": false}, {"text": "паркові", "correct": false}, {"text": "парком", "correct": false}]}, {"question": "Вона навчається _____. (at school)", "options": [{"text": "школа", "correct": false}, {"text": "школою", "correct": false}, {"text": "в школі", "correct": true}, {"text": "школи", "correct": false}]}, {"question": "Я їм _____. (at the café)", "options": [{"text": "кафе", "correct": false}, {"text": "до кафе", "correct": false}, {"text": "в кафе", "correct": true}, {"text": "на кафе", "correct": false}]}, {"question": "Поїзд зупиняється _____. (at the train station)", "options": [{"text": "вокзал", "correct": false}, {"text": "у вокзалі", "correct": false}, {"text": "на вокзалі", "correct": true}, {"text": "вокзалом", "correct": false}]}, {"question": "Листи отримують _____. (at the post office)", "options": [{"text": "пошту", "correct": false}, {"text": "поштою", "correct": false}, {"text": "у пошті", "correct": false}, {"text": "на пошті", "correct": true}]}, {"question": "Ми живемо _____. (in the city)", "options": [{"text": "місто", "correct": false}, {"text": "у місті", "correct": true}, {"text": "на місті", "correct": false}, {"text": "міста", "correct": false}]}]} instruction={"Де це? Оберіть правильну форму (Where is it? Choose the correct locative form)"} />
+* **Де ви за́раз?** (Where are you now?)
+  * Я **в**... / Я **на**...
+* **Де ви працю́єте?** (Where do you work?)
+  * Я працюю **в**... / **на**...
+* **Де ви живете́?** (Where do you live?)
+  * Я живу **в**... **на вулиці**...
+* **Де ваш телефо́н?** (Where is your phone?)
+  * Він **на**... / Він **у**...
 
 </TabItem>
 <TabItem label="Словник">
@@ -146,106 +182,78 @@ To summarize the endings: most feminine nouns take **-і** in the locative (scho
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
+| **ліка́рня** | hospital | ім. | ж. |
+| **кафе́** | café | ім. | с. |
+| **пло́ща** | square | ім. | ж. |
+| **вокза́л** | train station | ім. | ч. |
+| **по́шта** | post office | ім. | ж. |
 | **шко́ла** | school | ім. | ж. |
 | **робо́та** | work | ім. | ч. |
 | **магази́н** | shop | ім. | ч. |
 | **ву́лиця** | street | ім. | ж. |
 | **мі́сто** | city | ім. | с. |
-| **ліка́рня** | hospital | ім. | ж. |
-| **кафе́** | café (indeclinable) | ім. | с. |
-| **пло́ща** | square (public space) | ім. | ж. |
-| **вокза́л** | train station | ім. | ч. |
-| **по́шта** | post office | ім. | ж. |
+| **апте́ка** | pharmacy | ім. | ж. |
 | **о́фіс** | office | ім. | ч. |
-| **університе́т** | university | ім. | ч. |
-| **уро́к** | lesson | ім. |  |
-| **мо́ре** | sea | ім. | ч. |
+| **теа́тр** | theater | ім. | ч. |
+| **сад** | orchard | ім. | ч. |
 | **дива́н** | sofa | ім. | ч. |
-| **кімна́та** | room | ім. | ж. |
-| **центр** | center, downtown | ім. | ч. |
-| **пове́рх** | floor, storey | ім. | ч. |
-| **відмі́нок** | grammatical case | ім. | ч. |
-| **вдо́ма** | at home | присл. |  |
-| **за́раз** | now, currently | присл. |  |
-| **жи́ти** | to live | дієсл. |  |
-| **працюва́ти** | to work | дієсл. |  |
-| **навча́тися** | to study, to learn | дієсл. |  |
-| **гра́тися** | to play | дієсл. |  |
-| **спа́ти** | to sleep | дієсл. |  |
-| **зрозумі́ло** | understood, I see | присл. |  |
-| **чудо́во** | wonderful, great | присл. |  |
+| **вікно́** | window | ім. | с. |
+| **конце́рт** | concert | ім. | ч. |
+| **уро́к** | lesson | ім. |  |
+| **футбо́л** | football game | ім. | ч. |
+| **ста́нція** | station | ім. | ж. |
+| **Украї́на** | Ukraine | ім. | ж. |
+| **Ки́їв** | Kyiv | ім. |  |
+| **сусі́д** | neighbor | ім. | ч. |
+| **нови́й** | new | прикм. |  |
+| **ме́шканець** | resident | ім. | ч. |
+| **дале́ко** | far | присл. |  |
+| **бли́зько** | close | присл. |  |
+| **дру́гий** | second | прикм. |  |
+| **пове́рх** | floor | ім. | ч. |
+| **за́раз** | now | присл. |  |
+| **телефо́н** | phone | ім. | ч. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **в школі** | at/in school (locative) |
-| **на роботі** | at work (locative) |
-| **у банку** | at/in the bank (locative) |
-| **у/в магазині** | in/at the shop (locative) |
-| **на вулиці** | on the street (locative) |
-| **у/в місті** | in the city (locative) |
-| **у/в парку** | in the park (locative) |
-| **у лікарні** | in/at the hospital (locative) |
-| **в кафе** | in/at the café (locative — never changes) |
-| **на площі** | on the square (locative) |
-| **на вокзалі** | at the train station (locative) |
-| **на пошті** | at the post office (locative) |
-| **в офісі** | in the office (locative) |
-| **в університеті** | at the university (locative) |
-| **на уроці** | at the lesson (locative) |
-| **на морі** | at the sea (locative) |
-| **на дивані** | on the sofa (locative) |
-| **в кімнаті** | in the room (locative) |
-| **у центрі** | in the center (locative) |
-| **на другому поверсі** | on the second floor (locative) |
-| **місцевий відмінок** | locative case |
-| **в Україні** | in Ukraine (locative — always в, never на) |
-| **у Києві** | in Kyiv (locative) |
-| **у Львові** | in Lviv (locative) |
-| **в Одесі** | in Odesa (locative) |
-| **у Харкові** | in Kharkiv (locative) |
-| **на Майдані Незалежності** | on Independence Square (locative) |
-| **Де ти зараз?** | Where are you now? |
-| **Де ти живеш?** | Where do you live? |
-| **Де ти працюєш?** | Where do you work? |
-| **Де ти навчаєшся?** | Where do you study? |
-| **Скажи, будь ласка** | Tell me please |
+| **Дуже приємно!** | Very nice to meet you! |
+| **в Україні** | in Ukraine |
+| **на роботі** | at work |
+| **на другому поверсі** | on the second floor |
+| **Де ви зараз?** | Where are you now? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "магази́н", back: "shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "café (indeclinable)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пло́ща", back: "square (public space)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "уро́к", back: "lesson", subtitle: "ім." }, { front: "мо́ре", back: "sea", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дива́н", back: "sofa", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "центр", back: "center, downtown", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пове́рх", back: "floor, storey", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "відмі́нок", back: "grammatical case", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "за́раз", back: "now, currently", subtitle: "присл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "навча́тися", back: "to study, to learn", subtitle: "дієсл." }, { front: "гра́тися", back: "to play", subtitle: "дієсл." }, { front: "спа́ти", back: "to sleep", subtitle: "дієсл." }, { front: "зрозумі́ло", back: "understood, I see", subtitle: "присл." }, { front: "чудо́во", back: "wonderful, great", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кафе́", back: "café", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́шта", back: "post office", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "магази́н", back: "shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сад", back: "orchard", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дива́н", back: "sofa", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "конце́рт", back: "concert", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "уро́к", back: "lesson", subtitle: "ім." }, { front: "футбо́л", back: "football game", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ста́нція", back: "station", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Украї́на", back: "Ukraine", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "сусі́д", back: "neighbor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "ме́шканець", back: "resident", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дале́ко", back: "far", subtitle: "присл." }, { front: "бли́зько", back: "close", subtitle: "присл." }, { front: "дру́гий", back: "second", subtitle: "прикм." }, { front: "пове́рх", back: "floor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "_____ школі (school)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ роботі (work)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ вокзалі (train station)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ банку (bank)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ площі (square)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ кафе (café)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ пошті (post office)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}, {"question": "_____ магазині (shop)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ лікарні (hospital)", "options": [{"text": "в/у", "correct": true}, {"text": "на", "correct": false}]}, {"question": "_____ вулиці (street)", "options": [{"text": "в/у", "correct": false}, {"text": "на", "correct": true}]}]} instruction={"В/у чи на? Оберіть правильний прийменник для кожного місця (В/у or на? Choose the correct preposition for each place)"} />
+<GroupSort client:only="react" groups={{"Він на... (відкриті простори, події)": ["вулиці", "площі", "роботі", "концерті", "вокзалі", "пошті"], "Він у / в... (закриті простори, міста)": ["школі", "банку", "парку", "лікарні", "місті", "Києві", "офісі", "магазині"]}} instruction={"Розподіліть слова за прийменником (Sort the words by preposition)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Де Олена? — Олена _____.", "answer": "в школі", "options": ["в школі", "школа", "школи", "школою"]}, {"sentence": "Де Тарас? — Тарас _____.", "answer": "на роботі", "options": ["на роботі", "робота", "роботи", "роботою"]}, {"sentence": "Де Марія? — Марія _____.", "answer": "у лікарні", "options": ["у лікарні", "лікарня", "лікарнею", "лікарню"]}, {"sentence": "Де діти? — Діти _____.", "answer": "у парку", "options": ["у парку", "парк", "паркові", "парком"]}, {"sentence": "Де ти? — Я _____.", "answer": "у магазині", "options": ["у магазині", "магазин", "магазину", "магазином"]}, {"sentence": "Де кіт? — Кіт _____.", "answer": "на вулиці", "options": ["на вулиці", "вулиця", "вулицею", "вулицю"]}, {"sentence": "Де Назар? — Назар _____.", "answer": "у банку", "options": ["у банку", "банк", "банком", "банків"]}, {"sentence": "Де Емілі? — Емілі _____.", "answer": "у місті", "options": ["у місті", "місто", "міста", "містом"]}]} instruction={"Відповідайте на питання Де? (Answer the question Де? — Where?)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я працюю на офісі.", "errorWord": "на офісі", "correctForm": "в офісі", "options": [], "explanation": "Офіс — це закрите приміщення (будівля), тому ми використовуємо прийменник «в» або «у»."}, {"sentence": "Вона живе в вулиці Хрещатик.", "errorWord": "в вулиці", "correctForm": "на вулиці", "options": [], "explanation": "Зі словом «вулиця» (відкритий простір) ми завжди використовуємо прийменник «на»."}, {"sentence": "Діти зараз у паркі.", "errorWord": "паркі", "correctForm": "парку", "options": [], "explanation": "Слово «парк» має закінчення -у в місцевому відмінку (у парку)."}, {"sentence": "Тарас зараз у роботі.", "errorWord": "у роботі", "correctForm": "на роботі", "options": [], "explanation": "Для статусу (бути на роботі) українська мова завжди використовує прийменник «на»."}, {"sentence": "Мій телефон в столі.", "errorWord": "в столі", "correctForm": "на столі", "options": [], "explanation": "Стіл — це пласка поверхня. Якщо річ знаходиться зверху, ми кажемо «на столі»."}, {"sentence": "Олена зараз на Україні.", "errorWord": "на Україні", "correctForm": "в Україні", "options": [], "explanation": "Для країн завжди використовується прийменник «в» або «у»."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "школа", "right": "в школі"}, {"left": "банк", "right": "у банку"}, {"left": "робота", "right": "на роботі"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "магазин", "right": "у магазині"}, {"left": "лікарня", "right": "у лікарні"}, {"left": "місто", "right": "у місті"}, {"left": "площа", "right": "на площі"}]} instruction={"З'єднайте іменник у називному відмінку з формою місцевого відмінку (Match nominative to locative form)"} />
+<TrueFalse client:only="react" items={[{"statement": "Слово «робота» використовує прийменник «на» (на роботі).", "isTrue": true, "explanation": "Так, для слова «робота» ми завжди використовуємо «на»."}, {"statement": "Для країн та міст ми часто використовуємо прийменник «на» (на Києві).", "isTrue": false, "explanation": "Ні, країни та міста завжди використовують «в/у» (в Україні, у Києві)."}, {"statement": "Слово «кафе» не змінює закінчення (в кафе).", "isTrue": true, "explanation": "Слово «кафе» — невідмінюване, тому воно завжди має форму «кафе»."}, {"statement": "Закриті приміщення (наприклад, магазин, аптека) зазвичай використовують «на».", "isTrue": false, "explanation": "Закриті приміщення використовують «в/у» (у магазині, в аптеці)."}, {"statement": "Правильно казати «на пошті» і «на вокзалі».", "isTrue": true, "explanation": "Так, це традиційні фрази, які завжди використовуються з «на»."}, {"statement": "Всі слова чоловічого роду мають закінчення -і в місцевому відмінку.", "isTrue": false, "explanation": "Ні, багато слів (парк, банк, сад) мають закінчення -у (у парку, у банку)."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Quiz client:only="react" questions={[{"question": "Він читає книгу _____. (in the park)", "options": [{"text": "у парку", "correct": true}, {"text": "парк", "correct": false}, {"text": "паркові", "correct": false}, {"text": "парком", "correct": false}]}, {"question": "Вона їсть _____. (at the café)", "options": [{"text": "кафе", "correct": false}, {"text": "до кафе", "correct": false}, {"text": "в кафе", "correct": true}, {"text": "на кафе", "correct": false}]}, {"question": "Поїзд зупиняється _____. (at the train station)", "options": [{"text": "вокзал", "correct": false}, {"text": "вокзалу", "correct": false}, {"text": "на вокзалі", "correct": true}, {"text": "у вокзалі", "correct": false}]}, {"question": "Я отримую листи _____. (at the post office)", "options": [{"text": "пошту", "correct": false}, {"text": "поштою", "correct": false}, {"text": "у пошті", "correct": false}, {"text": "на пошті", "correct": true}]}, {"question": "Ми живемо _____. (in the city)", "options": [{"text": "місто", "correct": false}, {"text": "у місті", "correct": true}, {"text": "на місті", "correct": false}, {"text": "міста", "correct": false}]}, {"question": "Вона стоїть _____. (on the square)", "options": [{"text": "площа", "correct": false}, {"text": "площею", "correct": false}, {"text": "у площі", "correct": false}, {"text": "на площі", "correct": true}]}]} instruction={"Де це? Оберіть правильну форму місцевого відмінку (Where is it? Choose the correct locative form)"} />
-
-<GroupSort client:only="react" groups={{"в / у": ["школа", "банк", "магазин", "лікарня", "місто", "кафе"], "на": ["робота", "вулиця", "площа", "вокзал", "пошта", "урок"]}} instruction={"Розподіліть місця за прийменником (Sort the places by their preposition — в/у or на)"} />
-
-<TrueFalse client:only="react" items={[{"statement": "«На Україні» — це правильна форма.", "isTrue": false, "explanation": "Неправильно. Правильно: «в Україні». Ukraine is a sovereign state — always «в Україні», never «на Україні»."}, {"statement": "Слово «кафе» змінює закінчення у місцевому відмінку (наприклад, «в кафі»).", "isTrue": false, "explanation": "Неправильно. «Кафе» is an indeclinable noun — it never changes its ending. The correct form is always «в кафе»."}, {"statement": "Місцевий відмінок відповідає на питання «Де?».", "isTrue": true, "explanation": "Правильно. The locative case (М.в.) always answers the question «Де?» (Where?)."}, {"statement": "Місцевий відмінок може стояти в реченні без прийменника.", "isTrue": false, "explanation": "Неправильно. The locative case ALWAYS requires a preposition (в/у or на). It never stands alone in a sentence."}, {"statement": "Прийменник «на» вживається тільки з відкритими просторами.", "isTrue": false, "explanation": "Не зовсім. «На» is also used by convention: «на роботі», «на вокзалі», «на пошті» — these are set phrases, not always open spaces."}, {"statement": "Міста та країни завжди вживаються з прийменником «в/у».", "isTrue": true, "explanation": "Правильно. Cities and countries always use «в/у»: «в Україні», «у Києві», «у Харкові», «в Одесі»."}, {"statement": "Іменники жіночого роду у місцевому відмінку зазвичай мають закінчення «-і».", "isTrue": true, "explanation": "Правильно. Feminine nouns usually take «-і» in the locative: школа → в школі, вулиця → на вулиці, лікарня → у лікарні."}]} instruction={"Правда чи ні? (True or false?)"} />
-
+<Unjumble client:only="react" items={[{"words": "працюю / Я / офісі. / в", "answer": "Я працюю в офісі."}, {"words": "живе / Вона / Львові. / у", "answer": "Вона живе у Львові."}, {"words": "діти? / Де / зараз", "answer": "Де зараз діти?"}, {"words": "на / роботі. / Ми / зараз", "answer": "Ми зараз на роботі."}, {"words": "на / Кішка / дивані. / лежить", "answer": "Кішка лежить на дивані."}, {"words": "в / парку. / Вони / зараз", "answer": "Вони зараз в парку."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
 **Джерела — References**
 
-- [Захарійчук Grade 4, p.74](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html)
-  _Case system table: М.в. = на/у кому? на/у чому?_
 - [ULP Season 1, Episode 17](https://www.ukrainianlessons.com/episode17/)
   _Locative case for places — where things are._
 
-**Граматика — Grammar (МійКлас)**
+## Підручники (Textbooks)
 
-- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
-- [МійКлас: Кличний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=113), стор. 113
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=63), стор. 63
+- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=35), стор. 35
+- [Кравцова Н. М. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-kravcova-2019-1.pdf#page=74), стор. 74
+- [Вашуленко М. С. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-vashulenko-2019-1.pdf#page=60), стор. 60
 
 **Статті — Articles**
 
@@ -260,12 +268,6 @@ To summarize the endings: most feminine nouns take **-і** in the locative (scho
 **Відео — Videos**
 
 - [The Locative Case in the Ukrainian language](https://www.youtube.com/watch?v=kQof_vYOdm8) (Speak Ukrainian)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Nominative Case (Називний відмінок)](https://www.ukrainianlessons.com/nominativecase/)
-- [Locative Case (Місцевий відмінок)](https://www.ukrainianlessons.com/locative-case/)
 
 </TabItem>
 </Tabs>

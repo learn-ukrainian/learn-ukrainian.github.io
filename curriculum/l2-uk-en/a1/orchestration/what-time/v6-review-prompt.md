@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 22: What Time? (A1, A1.4 [Time and Nature])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -122,156 +122,86 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги
 
-Ukrainian splits time into two questions. **Котра́ годи́на?** (what time is it?) asks about *right now*. **О котрі́й?** (at what time?) asks about *when something happens*. Both questions appear in the dialogues below — spot them as you read.
+In Ukrainian, we talk about time using two main questions. We use one to ask for the current time, and another to schedule an event. A typical telephone conversation between colleagues illustrates how these questions function when people coordinate their schedules and find a time to meet.
 
-### Діало́г 1 — Зу́стріч (A Meeting)
+> **Марина:** Привіт, Олексію! **Котра година**? *(Hi, Oleksiy! What time is it?)*
+> **Олексій:** Привіт! **Десята**. *(Hi! Ten o'clock.)*
+> **Марина:** **О котрій** ти **працюєш**? *(At what time do you work?)*
+> **Олексій:** **О дев'ятій**. А ти? *(At nine. And you?)*
+> **Марина:** Я працюю **о десятій**. *(I work at ten.)*
+> **Олексій:** **Добре**, **тоді** **о першій**? *(Good, then at one?)*
+> **Марина:** Так! *(Yes!)*
 
-> — **Мари́на:** А́лло, Олексі́ю! Котра година? *(Hello, Oleksiy! What time is it?)*
-> — **Олексі́й:** Деся́та. *(Ten o'clock.)*
-> — **Марина:** О котрій ти зазвича́й працю́єш? *(What time do you usually work?)*
-> — **Олексій:** О дев'я́тій. А ти? *(At nine. And you?)*
-> — **Марина:** Я працю́ю о деся́тій. *(I work at ten.)*
-> — **Олексій:** Зрозумі́ло. *(Got it.)*
-> — **Марина:** Мо́же, зустрі́немося о пе́ршій? *(Maybe we meet at one?)*
-> — **Олексій:** Зачека́й хвили́нку... Так, підхо́дить! *(Wait a moment... Yes, that works!)*
-> — **Марина:** До́бре, тоді́ о першій! *(Good, then at one!)*
+The specific communicative functions of these questions show a clear division. The phrase **котра година** identifies the current time on the clock, much like asking for a name in an ordered sequence. Marina wants to know the exact hour right now. On the other hand, the question **о котрій** asks for a specific point on a timeline. Speakers use this when scheduling an event or an action. You should contrast the English phrases "At what time?" versus "What time is it?". While English uses the noun "time" for both concepts, Ukrainian relies on two distinct structures to differentiate between identifying the current moment and setting an appointment.
 
-Марина needs to find a gap in both schedules. She uses **Котра година?** to check the current time, then **О котрій ти працюєш?** to ask about Олексі́й's schedule. The final agreement — **тоді о першій** — is a chunk you'll use constantly: *тоді* (then) + the meeting time.
+A discussion about daily schedules between two university students shows how time phrases work with familiar verbs. This scenario integrates verbs from your previous vocabulary, such as **снідати** (to eat breakfast), **обідати** (to eat lunch), **вечеряти** (to eat dinner), and **відпочивати** (to rest), directly with these new time chunks.
 
-### Діалог 2 — Ро́зклад дня (Daily Schedule)
+> **Студент А:** **Коли** ти снідаєш? *(When do you eat breakfast?)*
+> **Студент Б:** **О восьмій ранку**. *(At eight in the morning.)*
+> **Студент А:** А обідаєш? *(And eat lunch?)*
+> **Студент Б:** **О першій**. Вечеряю **о сьомій**. *(At one. I eat dinner at seven.)*
 
-> — **Олексій:** Ко́ли ти сні́даєш? *(When do you eat breakfast?)*
-> — **Марина:** О во́сьмій ра́нку. *(At eight in the morning.)*
-> — **Олексій:** А обі́даєш? *(And lunch?)*
-> — **Марина:** О першій дня. *(At one in the afternoon.)*
-> — **Олексій:** О котрій вече́ряєш? *(What time do you eat dinner?)*
-> — **Марина:** О сьо́мій. А ти? *(At seven. And you?)*
-> — **Олексій:** Я вече́ряю о восьмій ве́чора. *(I eat dinner at eight in the evening.)*
+Here, the students use the question word **коли** (when) interchangeably with scheduling questions. The answers form neat, fixed chunks that specify exactly when each routine action takes place during the day.
 
-Here the verbs **сні́дати** (to eat breakfast), **обі́дати** (to eat lunch), and **вече́ряти** (to eat dinner) connect directly with time expressions. These verbs appeared in A1.3 — now you're combining them with specific hours. Notice the time-of-day words after each hour: **ранку** (morning), **дня** (afternoon), **вечора** (evening). These remove ambiguity, just like "AM" and "PM" in English.
+## Котра година?
 
-Two patterns emerged from both dialogues. First: **Котра година?** gets a bare ordinal answer — **Десята.** Second: **О котрій?** gets **о** plus a shifted form — **О десятій.** The same hour appears in two shapes: *десята* vs. *о десятій*. The ending flips from **-а** to **-ій**. The next sections break down exactly how each form works.
+When you want to know the current time, the standard and natural question to ask a Ukrainian speaker is **Котра година?**. The word **котра** means "which" specifically for an ordered sequence, and it is a feminine word. We use this instead of **яка** (what kind of) or **скільки** (how much). You are literally asking "Which hour is it?" in a sequence of twenty-four hours. You must avoid the common errors **який зараз час** (what kind of time is it now) or **скільки годин** (how many hours), as these do not sound natural to a native speaker.
 
-## Котра година? (What Time Is It?)
+To answer this question for the full hours from one to twelve, we use feminine ordinal numbers. Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook, because the word **година** (hour) is feminine, the numbers must agree with it. You simply list the hour as the "first," "second," or "third" hour. Here are the core forms: **перша** (1:00), **друга** (2:00), **третя** (3:00), **четверта** (4:00), **п'ята** (5:00), **шоста** (6:00), **сьома** (7:00), **восьма** (8:00), **дев'ята** (9:00), **десята** (10:00), **одинадцята** (11:00), and **дванадцята** (12:00). You must contrast these sequence words with regular cardinal numbers like **один** (one) or **два** (two), which are never used to state the hour.
 
-The question **Котра година?** literally asks "which hour?" The word **котра** (which) is feminine because **година** (hour) is a feminine noun. The answer is a feminine ordinal number — just the number, nothing else. Where English says "It is ten o'clock," Ukrainian says **Десята** — "The tenth [hour]." One word is enough.
+Telling half-hours in Ukrainian relies on a specific structural pattern using the word **пів** (half). We use the phrase **пів на** (half towards) followed by the ordinal number for the next hour. The ordinal number takes the accusative case, ending in a "у" or "ю" sound. You must focus on the mental concept of moving "half towards the next hour". For example, 1:30 is **пів на другу** (literally "half to the second"), 6:30 is **пів на сьому** (half to the seventh), and 11:30 is **пів на дванадцяту** (half to the twelfth). You should remember that saying something like "пів восьмої" is a direct mistake.
 
-- **Котра за́раз година? — Дев'я́та.** *(What time is it now? — Nine o'clock.)*
+For now, you only need to recognize quarters, using the word **чверть** (quarter). You will hear **чверть на** (a quarter past) and **за чверть** (a quarter to). For example, 2:15 is **чверть на третю** (a quarter onto the third) and 2:45 is **за чверть третя** (in a quarter, the third). You must warn against using the word "без" (without) for time, which is a common Russianism and incorrect in standard Ukrainian.
 
-Here are all twelve hours as feminine ordinals. Learn them the way you learn months — as a set of twelve labels, not as grammar:
+<!-- INJECT_ACTIVITY: quiz-clock-matching -->
+<!-- INJECT_ACTIVITY: match-up-digits -->
 
-| | | |
-|---|---|---|
-| **пе́рша** (1:00) | **дру́га** (2:00) | **тре́тя** (3:00) |
-| **четве́рта** (4:00) | **п'ята́** (5:00) | **шо́ста** (6:00) |
-| **сьома** (7:00) | **во́сьма** (8:00) | **дев'ята** (9:00) |
-| **десята** (10:00) | **одина́дцята** (11:00) | **двана́дцята** (12:00) |
+## О котрій?
 
-You are not learning the cardinal number "ten" here — you are learning the word **десята**, which means "10 o'clock." Think of each as a label for a point on the clock. A quick pronunciation note: **одинадцята** has five syllables (о-ди-над-ця-та), so take your time with it.
+When you need to talk about scheduling an event, you ask **О котрій годині?**. This introduces the preposition **о** or **об** (at). The rule for choosing between them is simple: use **об** before vowels to make the pronunciation smooth, like in the phrase **об одинадцятій**, and use **о** before consonants. You must explicitly forbid using the prepositions "в" or "у" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid.
 
-<!-- INJECT_ACTIVITY: match-up-times -->
+The answers to this scheduling question are locative time chunks. You should learn to treat these as fixed vocabulary units right now. They combine the preposition with the locative case ending for the hour. The complete list of chunks is: **о першій**, **о другій**, **о третій**, **о четвертій**, **о п'ятій**, **о шостій**, **о сьомій**, **о восьмій**, **о дев'ятій**, **о десятій**, **об одинадцятій**, and **о дванадцятій**. Memorizing these phrases as whole pieces will make speaking about your daily plans much easier and much more natural in conversation without needing to think about complex grammar rules.
 
-### Пів на... (Half Past)
+To be more precise, you can refine your time expressions with time of day words. The base words are **ранок** (morning, m), **день** (day, m), **вечір** (evening, m), and **ніч** (night, f). Ukrainian uses their genitive forms as markers to specify the part of the day: **ранку** (of the morning), **дня** (of the day or afternoon), **вечора** (of the evening), and **ночі** (of the night). You add these directly after the hour chunk. For examples, you can say **о сьомій ранку** (at 7 AM), **о третій дня** (at 3 PM), or **о десятій вечора** (at 10 PM). This is how speakers distinguish morning and afternoon clearly.
 
-The half-hour pattern is **пів на** + the *next* hour. The logic: you are halfway *toward* the next hour.
+There are also special time markers for noon and midnight. You can learn **опівдні** (at noon) and **опівночі** (at midnight) as single-word vocabulary chunks. When talking about the middle of the day, you have a choice: you can use the full phrase **о дванадцятій дня** (at twelve of the day), or you can simply use the single word **опівдні** to mean exactly the same thing. You will also frequently hear the words **зараз** (now) and **скоро** (soon) when people discuss their immediate plans or describe events that are happening very shortly.
 
-- **Пів на дру́гу** = 1:30 (halfway to the second hour)
-- **Пів на во́сьму** = 7:30 (halfway to the eighth hour)
-- **Пів на дев'я́ту** = 8:30 — from Захарійчук Grade 4: *О пів на дев'яту продзвені́в дзвіно́к* (At 8:30 the bell rang)
-
-At A1, full hours and **пів на** are the core skill. Practice:
-
-- **Зараз пів на тре́тю.** *(It's 2:30 now.)*
-
-### Чверть (Quarter Hours) — Recognition Only
-
-From Ponomarova Grade 4: *Сьома година п'ятна́дцять хвили́н, або́ чверть на восьму* (7:15, or a quarter past seven). And *за чверть восьма* = 7:45 (a quarter to eight). Two forms exist: **чверть на** (quarter past — looking forward to the next hour) and **за чверть** (quarter to — counting down). You don't need to produce these yet — just recognize them when you hear them.
-
-<!-- INJECT_ACTIVITY: quiz-clock-faces -->
-
-## О котрій? (At What Time?)
-
-The scheduling question is **О котрій годи́ні?** — "At what time?" The preposition **о** (or **об** before a vowel) transforms the bare ordinal into a when-it-happens expression. Compare the two questions side by side:
-
-- **Котра година? — Десята.** *(What time is it? — Ten.)*
-- **О котрій зустріч? — О десятій.** *(At what time is the meeting? — At ten.)*
-
-Two questions, two forms of the same hour. Here is the complete set of **о** + hour forms. Memorize these as ready-made phrases — not as grammar:
-
-| | |
-|---|---|
-| **о першій** (at 1:00) | **о сьомій** (at 7:00) |
-| **о дру́гій** (at 2:00) | **о восьмій** (at 8:00) |
-| **о тре́тій** (at 3:00) | **о дев'ятій** (at 9:00) |
-| **о четве́ртій** (at 4:00) | **о десятій** (at 10:00) |
-| **о п'я́тій** (at 5:00) | **об одина́дцятій** (at 11:00) |
-| **о шо́стій** (at 6:00) | **о двана́дцятій** (at 12:00) |
-
-One detail: **об одинадцятій** uses **об** instead of **о** because *одинадцятій* starts with a vowel. From Захарійчук Grade 4: *Чека́тиму об одинадцятій годині.* All other hours use **о**. The pattern shortcut: if the answer to **Котра?** is *десята*, the answer to **О котрій?** is *о десятій* — the ending **-а** flips to **-ій**. Spot the pattern, don't memorize a rule.
-
-<!-- INJECT_ACTIVITY: fill-in-o-kotrij -->
-
-### Ранку, дня, вечора, но́чі (Time of Day)
-
-After the hour, add a time-of-day word to remove ambiguity — just like "AM" and "PM" in English. There are four words:
-
-- **ранку** — in the morning
-- **дня** — in the afternoon
-- **вечора** — in the evening
-- **ночі** — at night
-
-From Захарійчук Grade 4: *Проки́нувся о сьомій годині ранку.* (He woke up at seven in the morning.) Here is the full picture:
-
-- **О сьомій ранку** — 7 AM
-- **О третій дня** — 3 PM
-- **О десятій вечора** — 10 PM
-- **О другій ночі** — 2 AM
-
-Two special words stand alone without **о**: **опі́вдні** (at noon) and **опі́вночі** (at midnight). You simply say *Зустрінемося опівдні* — no preposition needed.
-
-The words **ранку**, **дня**, **вечора**, **ночі** are fixed phrases here. You don't need to know why they look the way they do — just attach them after the hour. This is how Ukrainian children learn time: phrase first, grammar later. Think of each combination as a single unit: *о восьмій ранку* is one chunk, not three separate words.
-
+<!-- INJECT_ACTIVITY: fill-in-o-kotrii -->
 <!-- INJECT_ACTIVITY: quiz-time-of-day -->
 
 ## Підсумок — Summary
 
-Two questions, two answer shapes:
+This summary table helps you contrast the question structures and the correct answer structures for telling time.
 
-**Котра година?** → answer with a bare ordinal:
-- **Десята. Сьома. Пів на третю.**
+| Question | Ukrainian Answer | English Meaning |
+| :--- | :--- | :--- |
+| **Котра година?** | **Десята.** | What time? — Ten o'clock. |
+| **О котрій годині?** | **О десятій.** | At what time? — At ten. |
+| **Котра година?** | **Пів на другу.** | What time? — 1:30. |
+| **О котрій годині?** | **О пів на другу.** | At what time? — At 1:30. |
 
-**О котрій?** → answer with **о** + the shifted form:
-- **О десятій. О сьомій. О пів на третю.**
+Remember the common pitfalls: there is no "без" for minutes, there is no "в" for scheduling hours, and you must never use basic cardinal numbers to identify the hour.
 
-The shift at a glance:
+Use this self-check checklist to verify your understanding of the material before you move on to the next module. Read each point carefully and try to answer out loud.
 
-| Котра година? | О котрій? |
-|---|---|
-| **перша** | **о першій** |
-| **дев'ята** | **о дев'ятій** |
-| **одинадцята** | **об одинадцятій** |
+*   Can you say what time it is right now? Answer the question: **Котра зараз година?**
+*   Can you state exactly what time you wake up in the morning? Try to answer: **О котрій ти прокидаєшся?**
+*   Can you say the phrase "half past four" in Ukrainian? Ensure you use the correct pattern: **Пів на п'яту.**
+*   Do you know when you must use the preposition **об** instead of the standard **о**? You use it before vowels for smoother pronunciation.
 
-One anchor: whenever you see **о котрій**, the answer ends in **-ій**.
+For your final writing task, you should create a simple three-sentence schedule describing your own typical day. This will help you practice combining verbs with the time chunks you have just learned. Review the use of ordinal forms and prepositions as you write.
 
-Here is your complete time vocabulary from this module, grouped by type. Hours: **перша**, **друга**, **третя**, **четверта**, **п'ята**, **шоста**, **сьома**, **восьма**, **дев'ята**, **десята**, **одинадцята**, **дванадцята**. Half hour: **пів на** + the next hour. Time of day: **ранку** (morning), **дня** (afternoon), **вечора** (evening), **ночі** (night). The four nouns behind them: **ра́нок** (morning), **день** (day), **ве́чір** (evening), **ніч** (night). Special: **опівдні** (at noon), **опівночі** (at midnight). Questions: **Котра година?** and **О котрій годині?** — your scheduling toolkit.
+Here is a model example to guide you:
+*   **Я прокидаюся о сьомій ранку.** (I wake up at seven in the morning.)
+*   **Я обідаю о першій дня.** (I eat lunch at one in the afternoon.)
+*   **Я вечеряю о восьмій вечора.** (I eat dinner at eight in the evening.)
 
-Test yourself — answer each question out loud in Ukrainian before reading the model answer:
-
-- **Котра година зараз?** → Look at your clock. Say the time: e.g., *Зараз третя.*
-- **О котрій ти прокида́єшся?** → e.g., *Я прокида́юся о сьомій ранку.*
-- **О котрій ти обідаєш?** → e.g., *Я обі́даю о першій дня.*
-- **О котрій ти ляга́єш спа́ти?** → e.g., *Я ляга́ю спати о десятій вечора.*
-- **Як сказа́ти 8:30?** → *Пів на дев'яту.*
-
-Aim to answer all five without scrolling back. If you hesitate on any hour form, review the table in section 2.
-
-You can now say *what time* something happens. The next step is *what day* and *what month*. In Module 23, you'll combine time with days: **У понеді́лок о дев'ятій ранку** — the full coordinate of a plan. Ukrainian scheduling vocabulary builds one layer at a time.
-
-**Deterministic word count: 1471 words** (calculated by pipeline, do NOT estimate manually)
-
+Try writing three similar sentences using your own daily routine and time expressions!
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1450 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -359,8 +289,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -447,61 +377,13 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 78 words | Not found: 57 words
+Verified: 82 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Дев'я — NOT IN VESUM
-  ✗ Деся — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Захарійчук — NOT IN VESUM
-  ✗ Зачека — NOT IN VESUM
-  ✗ Зрозумі — NOT IN VESUM
-  ✗ Олексі — NOT IN VESUM
   ✗ Олексій — NOT IN VESUM
-  ✗ Проки — NOT IN VESUM
-  ✗ вдні — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ годи — NOT IN VESUM
-  ✗ гій — NOT IN VESUM
-  ✗ двана — NOT IN VESUM
-  ✗ дев'я — NOT IN VESUM
-  ✗ деся — NOT IN VESUM
-  ✗ дзвіно — NOT IN VESUM
-  ✗ дить — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дцята — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ дцятій — NOT IN VESUM
-  ✗ зазвича — NOT IN VESUM
-  ✗ зклад — NOT IN VESUM
-  ✗ зустрі — NOT IN VESUM
-  ✗ лло — NOT IN VESUM
-  ✗ лок — NOT IN VESUM
-  ✗ немося — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нувся — NOT IN VESUM
-  ✗ одина — NOT IN VESUM
-  ✗ опі — NOT IN VESUM
-  ✗ п'я — NOT IN VESUM
-  ✗ п'ятна — NOT IN VESUM
-  ✗ понеді — NOT IN VESUM
-  ✗ продзвені — NOT IN VESUM
-  ✗ підхо — NOT IN VESUM
-  ✗ рта — NOT IN VESUM
-  ✗ ртій — NOT IN VESUM
-  ✗ рша — NOT IN VESUM
-  ✗ ршій — NOT IN VESUM
-  ✗ ряти — NOT IN VESUM
-  ✗ ряю — NOT IN VESUM
-  ✗ ряєш — NOT IN VESUM
-  ✗ сказа — NOT IN VESUM
-  ✗ сьма — NOT IN VESUM
-  ✗ сьму — NOT IN VESUM
-  ✗ сьмій — NOT IN VESUM
-  ✗ сьо — NOT IN VESUM
+  ✗ Олексію — NOT IN VESUM
 
-All 78 other words are confirmed to exist in VESUM.
+All 82 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

@@ -1,120 +1,99 @@
 ## Linguistic Scan
-Linguistic errors found:
-- **Calque**: "приймати закінчення" is a direct calque of the Russian grammar phrase "принимать окончание". In Ukrainian grammar, words "мають закінчення" or "набувають закінчення".
-- **Grammar/Case Agreement**: "найважливіший граматичного контексту" is completely broken (combining a Nominative/Accusative adjective with a Genitive noun).
-- **Phonetics**: The text refers to the palatalization marker `'` as an "апостроф" (Знак апострофа біля транскрипції [з']). This is factually incorrect. In Ukrainian phonetics, this is "знак м'якшення" (або скісна риска). An apostrophe in Ukrainian signifies the *absence* of palatalization, making this a highly confusing error for learners.
+Found several linguistic and stylistic issues:
+1. **Calque / Unnatural Phrasing:** The dialogue line "Ваша ручка продається прямо тут" is a calque of an English passive construction ("Your pen is sold right here"). Natural Ukrainian prefers active or locative phrasing ("Такі ручки лежать ось тут").
+2. **Unnatural Register:** A customer in a modern Lviv bookshop addressing the shop assistant as "чоловіче" is archaic and awkward. "Пане" is the standard form of address, or a specific name if they are acquainted.
+3. **Minor Grammar Error:** "по два запасних обличчя" — with the numeral *два*, neuter nouns take the nominative plural, and adjectives should agree ("запасні обличчя").
 
 ## Exercise Check
-All 5 placeholder markers are present and logically distributed:
-- `fill-in` (Кличний відмінок) is correctly placed inside the II declension Vocative section.
-- `fill-in` (Давальний/місцевий) is correctly placed inside the I declension Dative/Locative section.
-- `quiz` (identify palatalization type) is correctly placed after the word family examples.
-- `match-up` is correctly placed right after the quiz.
-- `error-correction` is correctly placed after the Proper Names section.
-The IDs and focuses perfectly match the `activity_hints` defined in the plan. No issues found.
+**Issues found:**
+- `<!-- INJECT_ACTIVITY: quiz-palatalization-type -->` is placed prematurely. It is located at the end of Section 2, but the quiz explicitly asks learners to distinguish between the 1st palatalization and the 2nd palatalization. At the end of Section 2, learners have only been introduced to the 1st palatalization. This is a pedagogical error. The marker must be moved to appear after Section 3.
+- All other exercise markers correctly match the `activity_hints` from the plan and are placed logically after the relevant concepts are taught.
+- The total number of markers matches the plan.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | The module missed the explicit M08 bridge about vowel vs consonant alternations ("Всі ці зміни не є випадковими винятками. Це прояв..."). The opening dialogue completely ignored the plan's setting (bookseller/customer at a Lviv bookshop) and target vocabulary, instead featuring a generic chat between Oleg and Mark ("— Приві́т, Оле́же! — Привіт, Марку!"). The mandatory preview of the next module on verb alternations is missing from the end. |
-| 2. Linguistic accuracy | 6/10 | Contains a critical grammatical case mismatch: "Розгля́немо найважли́ві́ший грамати́чного конте́ксту". Contains a critical phonetic error calling the palatalization mark an apostrophe ("Знак апо́стро́фа бі́ля транскри́пції [з'], [ц'], [с']"). Uses the calque "приймати закінчення" 6 times. |
-| 3. Pedagogical quality | 7/10 | Contains a dangerously false grammatical generalization: "якщо ви зверта́єтеся до когось... і закінчується на задньоязиковий звук [г], [к] або [х], ви зобов'я́зані дода́ти закінчення -е." This incorrectly teaches learners to apply `-е` to diminutive suffixes like `-ик/-ок` (resulting in *хлопчиче instead of хлопчику). |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary is integrated smoothly and naturally into the prose. |
-| 5. Exercise quality | 10/10 | The exercise markers directly test the taught concepts. They are spread throughout the module effectively and match the plan hints exactly. |
-| 6. Engagement & tone | 9/10 | The text is engaging, uses great examples (like explaining the tongue movement for [і]), and avoids gamified language. Good references to textbook structure. |
-| 7. Structural integrity | 8/10 | Contains a redundant artifact: "У місцевому відмінку другої відміни маємо такі приклади: другої відміни:". Markdown structure is otherwise clean. |
-| 8. Cultural accuracy | 10/10 | Excellent inclusion of proper names, Ukrainian geographic references, and everyday address forms. |
-| 9. Dialogue & conversation quality | 5/10 | The opening dialogue is a missed opportunity. It ignores the assigned roles and the specific consonant alternations it was supposed to showcase (рука/у руці, вухо/у вусі). |
+| 1. Plan adherence | 7/10 | Missed the rare `[с] -> [ш]` alternation. Missed the `Пенелопа — Пенелопі` example for foreign names resisting alternation. Missed the specific vocative examples `Марічко! Ігоре! Тарасе!`. All other points were covered perfectly. |
+| 2. Linguistic accuracy | 7/10 | Contains a false grammatical claim that choosing the `-у` ending in the locative case (e.g., "на порогу") is a free stylistic choice used "to avoid complex sound changes". Also contains a minor grammatical error ("два запасних обличчя") and a calqued passive construction. |
+| 3. Pedagogical quality | 6/10 | A critical pedagogical trap: teaching learners that the locative `-у` ending is a "stylistic choice" to bypass palatalization rules will cause them to apply it incorrectly to words that strictly require `-і`. Additionally, a quiz testing a concept was placed before the concept was taught. |
+| 4. Vocabulary coverage | 10/10 | Required and recommended vocabulary from the plan is naturally integrated into the text. |
+| 5. Exercise quality | 8/10 | Good correlation with the plan's hints, but the placement of the first quiz was pedagogically flawed. |
+| 6. Engagement & tone | 8/10 | Generally warm and encouraging, but suffers slightly from generic "journey" filler text ("Наша сьогоднішня захоплива подорож у глибокий світ фонетичних змін...", "Ми пройшли довгий і дуже цікавий шлях..."). |
+| 7. Structural integrity | 10/10 | Clean Markdown structure. Word count is 4834, comfortably exceeding the 4000-word target. |
+| 8. Cultural accuracy | 10/10 | Accurate and respectful cultural framing of the vocative case as a marker of authentic Ukrainian identity vs. a calque. |
+| 9. Dialogue & conversation quality | 7/10 | The dialogue contains unnatural forms of address ("чоловіче" used by a customer) and stilted translated phrasing ("Ваша ручка продається"). |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: Opening dialogue ("— Приві́т, Оле́же! — Привіт, Марку! Яка га́рна кни́жка!...")
-Issue: Ignored the plan's assigned setting (Lviv bookseller/customer) and the required target vocabulary (книга-у книжці, рука-у руці, друг-друже, вухо-у вусі).
-Fix: Rewrite the dialogue and the transition paragraph to match the plan.
 
-[1. Plan adherence] [major]
-Location: "Всі ці зміни не є випадковими винятками. Це прояв одного з найважливіших фонетичних законів..."
-Issue: Missed the plan requirement to explicitly bridge from M08 (Vowels vs Consonants).
-Fix: Add a sentence referencing M08 and where vowel/consonant alternations occur.
+[Plan Adherence] [Major]
+Location: "Чергування [ц'] -> [ч] та інші"
+Issue: The module missed the plan requirement to mention the rare `[с] -> [ш]` (колесо — на колішні) alternation.
+Fix: Insert this rare alternation alongside the `[з] -> [ж]` example.
 
-[1. Plan adherence] [minor]
-Location: End of module ("4. Поставте у давальний відмінок: Ольга, книга, рука.")
-Issue: Missing the "Preview of next module" plan point.
-Fix: Add a sentence previewing the next module on verb alternations.
+[Plan Adherence] [Major]
+Location: "Чергування у власних назвах і географічних іменах"
+Issue: The text missed the required plan examples of foreign names resisting alternation (`Пенелопа — Пенелопі`) and specific vocative examples for non-velar names (`Марічко! Ігоре! Тарасе!`).
+Fix: Insert these specific examples into the corresponding paragraphs.
 
-[2. Linguistic accuracy] [critical]
-Location: "Розгля́немо найважли́ві́ший грамати́чного конте́ксту, де перша палаталізація ді́є..."
-Issue: Broken case agreement (Nom/Acc adjective with Genitive noun).
-Fix: Change to "найважливіший граматичний контекст".
+[Pedagogical Quality / Linguistic Accuracy] [Critical]
+Location: "Чергування у відмінюванні іменників II відміни" (Paragraph starting "Проте сучасна розмовна мова...")
+Issue: The text falsely claims that using `-у` in the locative singular of 2nd declension nouns is a "direct variant" and a "stylistic choice" to "avoid complex sound changes" (using "на порогу" as an example). This is grammatically incorrect; the choice between `-у` and `-і` is a fixed norm depending on the specific word and semantics, not a speaker's stylistic preference to avoid palatalization. 
+Fix: Rewrite the paragraph to explain that `-у` is a fixed grammatical norm for specific words (like "у снігу"), not a stylistic workaround, and affirm that "на порозі" remains the standard literary form for "поріг".
 
-[2. Linguistic accuracy] [critical]
-Location: "Знак апо́стро́фа бі́ля транскри́пції [з'], [ц'], [с'] означа́є,"
-Issue: Calling the palatalization marker an apostrophe is factually incorrect and confusing in Ukrainian phonetics.
-Fix: Change to "Знак м'якшення біля транскрипції...".
+[Exercise Quality / Pedagogical Quality] [Major]
+Location: End of Section "Перша палаталізація: [г/к/х] -> [ж/ч/ш]"
+Issue: The marker `<!-- INJECT_ACTIVITY: quiz-palatalization-type -->` tests the difference between the 1st and 2nd palatalization, but it is placed before the 2nd palatalization is taught.
+Fix: Move this marker to the end of the "Друга палаталізація" section.
 
-[2. Linguistic accuracy] [major]
-Location: "традиці́йно приймають закінчення -у." (and 5 other instances)
-Issue: "Приймати закінчення" is a Russian calque ("принимать окончание").
-Fix: Replace with "мають закінчення" or "набувають закінчення".
+[Dialogue Quality / Linguistic Accuracy] [Major]
+Location: Dialogue in "Перша палаталізація: [г/к/х] -> [ж/ч/ш]"
+Issue: The customer unnaturally addresses the bookseller as "чоловіче" and the bookseller uses a calqued passive construction "Ваша ручка продається прямо тут".
+Fix: Change "чоловіче" to "Олеже" (to maintain a vocative alternation example while being natural) and rephrase the passive sentence.
 
-[3. Pedagogical quality] [critical]
-Location: "і закінчується на задньоязиковий звук [г], [к] або [х], ви зобов'я́зані дода́ти закінчення -е."
-Issue: False generalization. Nouns ending in diminutive suffixes -ик, -ок take -у without alternation (хлопчику, синку).
-Fix: Add an exception clause for suffixes -ик/-ок.
+[Linguistic Accuracy] [Minor]
+Location: "Що таке чергування приголосних?"
+Issue: Incorrect adjective agreement with numeral ("по два «запасних обличчя»").
+Fix: Change to "по два «запасні обличчя»".
 
-[7. Structural integrity] [major]
-Location: "У місцевому відмінку другої відміни маємо такі приклади: другої відміни:"
-Issue: Redundant text artifact.
-Fix: Delete the trailing "другої відміни:".
+[Engagement & Tone] [Minor]
+Location: "Підсумок: таблиця чергувань"
+Issue: Use of generic filler/journey language ("Ми пройшли довгий і дуже цікавий шлях...", "Наша сьогоднішня захоплива подорож...").
+Fix: Replace with direct, functional transitions.
 
 ## Verdict: REVISE
-The module covers the grammar well and hits its word target, but it contains critical linguistic and pedagogical errors (broken case agreement, wrong phonetic terminology, false generalization about Vocative endings) and missed key parts of the plan outline (dialogue setting, M08 bridge). Needs immediate revision.
+The module exceeds word count targets and covers the vast majority of the plan excellently. However, the critical pedagogical trap regarding the locative `-у` ending, the misplaced quiz, and the missing plan examples necessitate a revision cycle. 
 
 <fixes>
-- find: |
-    — Приві́т, Оле́же!
-    — Привіт, Марку! Яка га́рна кни́жка!
-    — Дякую, я купи́в її вчо́ра у нові́й книга́рні.
-    — А я шука́ю підру́чник з істо́рії. За́втра ми з дру́зями йдемо́ до бібліоте́ки.
-    — У бібліоте́ці на дру́гому по́версі є чудо́вий відділ. Я покажу́ тобі́, як туди́ пройти́, коли́ ми бу́демо на мі́сці.
+- find: "Це старе фонетичне правило найкраще видно у давньому слові **«князь»** *(prince)*."
+  replace: "Існує також дуже рідкісне чергування **[с]** на **[ш]**, яке зберігається лише у фіксованих формах, наприклад: **«колесо»** *(wheel)* — **«на колішні»** *(on the wheel)*. Інше старе фонетичне правило (перехід **[з]** на **[ж]**) найкраще видно у давньому слові **«князь»** *(prince)*."
 
-    У цьому́ коро́ткому діало́зі ви мо́жете помі́тити кі́лька незви́чних грамати́чних форм. Чо́му ім'я́ «Оле́г» перетвори́лося на «Олеже»? Чому сло́во «кни́га» зміни́лося на «книжка» та «кни́жечка»? Чому за́мість очі́куваного «у бібліотекі» ми чу́ємо «у бібліотеці», а замість «на поверхі» — «на поверсі»?
-  replace: |
-    **Книгар:** Приві́т, дру́же! Ласка́во про́симо до на́шої льві́вської книга́рні.
-    **Покупець:** До́брий день! Яка у вас га́рна кни́жка в руці́!
-    **Книгар:** Дя́кую! А що шука́єте ви?
-    **Покупець:** Яку́сь ка́зку... Пам'ята́ю, там був ведмі́дь із сере́жкою у ву́сі.
-    **Книгар:** А, зна́ю! Подиві́ться он там, у тій кни́жці на дру́гому по́версі!
+- find: "яскраво демонструючи силу та красу українського граматичного чергування."
+  replace: "яскраво демонструючи силу та красу українського граматичного чергування. Проте деякі іноземні імена не підкоряються цим правилам і зберігають твердий приголосний: наприклад, **«Пенелопа»** *(Penelope)* у давальному відмінку буде **«Пенелопі»** *(to Penelope)* без жодного чергування."
 
-    У цьому́ коро́ткому діало́зі ви мо́жете помі́тити кі́лька незви́чних грамати́чних форм. Чо́му сло́во «друг» перетвори́лося на «дру́же»? Чому замість очікуваного «у рукі» та «у вухі» ми чуємо «у руці» та «у вусі»? Чому «книга» стала «книжкою», а замість «на поверхі» — «на поверсі»?
-- find: |
-    Всі ці зміни не є випадковими винятками. Це прояв одного з найважливіших фонетичних законів української мови. В українській мові приголосні звуки часто і регулярно змінюються під час творення нових слів або під час зміни їхньої граматичної форми (відмінювання).
-  replace: |
-    Всі ці зміни не є випадковими винятками. Як ви вже знаєте з модуля про чергування голосних (M08), звуки систематично змінюються у формах слів: голосні чергуються всередині кореня, а приголосні — наприкінці. Це прояв одного з найважливіших фонетичних законів української мови. В українській мові приголосні звуки часто і регулярно змінюються під час творення нових слів або під час зміни їхньої граматичної форми (відмінювання).
-- find: |
-    4. Поставте у давальний відмінок: Ольга, книга, рука.
-  replace: |
-    4. Поставте у давальний відмінок: Ольга, книга, рука.
+- find: "відразу ж недвозначно демонструє вашу глибоку персональну повагу до співрозмовника."
+  replace: "відразу ж недвозначно демонструє вашу глибоку персональну повагу до співрозмовника. Це стосується й інших імен: ми завжди кажемо **«Марічко!»**, **«Ігоре!»**, **«Тарасе!»** у звертаннях."
 
-    У наступному модулі ми розглянемо чергування приголосних у дієсловах — ті самі приголосні будуть чергуватися, але за іншими правилами та з іншими тригерами.
-- find: "Розгля́немо найважли́ві́ший грамати́чного конте́ксту, де"
-  replace: "Розгля́немо найважли́ві́ший грамати́чний конте́кст, де"
-- find: "Знак апо́стро́фа бі́ля транскри́пції [з'], [ц'], [с'] означа́є,"
-  replace: "Знак м'я́кшення бі́ля транскри́пції [з'], [ц'], [с'] означа́є,"
-- find: "традиці́йно приймають закінчення -у."
-  replace: "традиці́йно ма́ють закінчення -у."
-- find: "у місцевому відмінку прийма́є закінчення -у:"
-  replace: "у місцевому відмінку ма́є закінчення -у:"
-- find: "якщо слово приймає закінчення -і,"
-  replace: "якщо слово ма́є закінчення -і,"
-- find: "Якщо слово приймає закінчення -у,"
-  replace: "Якщо слово ма́є закінчення -у,"
-- find: "мі́шаної групи приймають закінчення -у"
-  replace: "мі́шаної групи ма́ють закінчення -у"
-- find: "не мають цього чергування і приймають закінчення -ю:"
-  replace: "не мають цього чергування і набува́ють закінчення -ю:"
-- find: "і закінчується на задньоязиковий звук [г], [к] або [х], ви зобов'я́зані дода́ти закінчення -е."
-  replace: "і закінчується на задньоязиковий звук [г], [к] або [х] (крім слів із суфіксами -ик, -ок), ви зазвича́й додаєте́ закінчення -е."
-- find: "У місцевому відмінку другої відміни маємо такі приклади: другої відміни:"
-  replace: "У місцевому відмінку другої відміни маємо такі приклади:"
+- find: "Проте сучасна розмовна мова часто прагне до спрощення та уникнення складних звукових змін. Тому паралельно існує інший, більш прямий варіант: ми можемо просто додати закінчення «-у» до оригінальної основи. У цьому випадку жодного чергування не відбувається взагалі, і ми кажемо **«на порогу»** *(on the threshold)*. Обидві форми є правильними в сучасній мові, але авторитетні літературні джерела та шкільні підручники зазвичай надають перевагу формам із закінченням «-і» та чергуванням. Ваш вибір залежить від стилю мовлення, але важливо легко впізнавати обидва варіанти під час читання українських текстів."
+  replace: "Проте варто пам'ятати, що деякі іменники чоловічого роду можуть мати закінчення **«-у»** у місцевому відмінку (наприклад, **«у снігу»**, **«на шляху»**). Перед цим закінченням чергування ніколи не відбувається. Зверніть увагу: це не ваш особистий стилістичний вибір для уникнення чергувань, а фіксована граматична норма для конкретних слів. Для слова «поріг» стандартною літературною формою залишається **«на порозі»**."
+
+- find: "Дуже дякую вам, чоловіче! А де я можу знайти гарну сувенірну ручку? Я люблю тримати її у руці, коли читаю. *(Thank you very much, man! And where can I find a nice souvenir pen? I like to hold it in my hand when I read.)*"
+  replace: "Дуже дякую вам, Олеже! А де я можу знайти гарну сувенірну ручку? Я люблю тримати її у руці, коли читаю. *(Thank you very much, Oleh! And where can I find a nice souvenir pen? I like to hold it in my hand when I read.)*"
+
+- find: "Ваша ручка продається прямо тут. А для аудіокниг у нас є навушники, які добре тримаються у вусі. Бажаєте подивитися? *(Your pen is sold right here. And for audiobooks we have headphones that hold well in the ear. Do you want to look?)*"
+  replace: "Такі ручки лежать ось тут. А для аудіокниг у нас є навушники, які добре тримаються у вусі. Бажаєте подивитися? *(Such pens lie right here. And for audiobooks we have headphones that hold well in the ear. Do you want to look?)*"
+
+- find: "кожен із них має по два «запасних обличчя»"
+  replace: "кожен із них має по два «запасні обличчя»"
+
+- find: "<!-- INJECT_ACTIVITY: quiz-palatalization-type -->\n"
+  replace: ""
+
+- find: "<!-- INJECT_ACTIVITY: match-up-forms -->"
+  replace: "<!-- INJECT_ACTIVITY: match-up-forms -->\n<!-- INJECT_ACTIVITY: quiz-palatalization-type -->"
+
+- find: "Ми пройшли довгий і дуже цікавий шлях вивчення фонетичних змін, які роблять українську мову такою мелодійною. Тепер час зібрати всі ці теоретичні знання в одну зрозумілу та зручну систему."
+  replace: "Щоб полегшити запам'ятовування, ми зібрали всі правила фонетичних чергувань в одну зручну таблицю."
+
+- find: "Наша сьогоднішня захоплива подорож у глибокий світ фонетичних змін охопила лише одну половину цієї великої та цікавої граматичної теми."
+  replace: "Сьогодні ми розглянули правила чергування приголосних лише для іменників."
 </fixes>

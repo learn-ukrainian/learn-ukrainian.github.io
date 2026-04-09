@@ -1,55 +1,36 @@
 ## Linguistic Scan
-Errors found:
-- **Calque**: "Давай варити борщ" is a grammatical calque of the Russian imperative ("давай варить"). The correct Ukrainian 1st person plural imperative uses the "-мо" suffix (e.g., "Зварімо борщ").
-- **Case error**: "Зазвичай суп, омлет або піца" used in response to "Що ти їси на вечерю?" requires the accusative case for the direct object. "Піца" must be "піцу".
+No linguistic errors found. The text correctly identifies "творог" and "кофе" as Russianisms and warns the learner against using them. The Ukrainian sentences and vocabulary items are grammatically and naturally correct.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-z-chunks -->` (Matches plan: fill-in, 'з + noun', 6 items) — placed correctly after the chunk pattern explanation.
-- `<!-- INJECT_ACTIVITY: match-food-drink -->` (Matches plan: match-up, 10 items) — placed correctly after the Reading Practice.
-- `<!-- INJECT_ACTIVITY: group-sort-food-drinks -->` (Matches plan: group-sort, 10 items) — placed correctly.
-- `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->` (Matches plan: quiz, 6 items) — placed correctly in the summary section.
-*All markers match the plan's `activity_hints` in type and are spaced appropriately.*
+- `<!-- INJECT_ACTIVITY: match-up-food-vocab -->`: Placed correctly at the end of the Їжа (Food) section. Matches the plan's 10-item match-up activity.
+- `<!-- INJECT_ACTIVITY: group-sort-food-drinks -->`: Placed logically after the Напої (Drinks) section. Matches the plan's 10-item categorization activity.
+- `<!-- INJECT_ACTIVITY: fill-in-chunks -->`: Placed correctly after the explanation of the `з + noun` chunk pattern in the Напої section.
+- `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->`: Placed appropriately at the end of the Напої section, directly testing the comprehensive knowledge of meals and dishes covered thus far.
+All exercise markers are accounted for, match the planned activities, and are placed effectively.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | All sections and required vocabulary are present. Minor deviation: The plan asked for the self-check to include "Name one Ukrainian dish and why it matters", but the generated text asks for "...and one ingredient it contains". |
-| 2. Linguistic accuracy | 7/10 | Contains a critical Russian calque ("Давай варити борщ") and a critical grammatical case error ("піца" instead of "піцу" in an accusative context). |
-| 3. Pedagogical quality | 10/10 | Excellent PPP execution. The explanation of "з + noun" as a memorized chunk (explicitly telling learners they don't need to know the Instrumental grammar yet) is perfect for A1 methodology. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are integrated naturally into the dialogues and categorical lists. |
-| 5. Exercise quality | 10/10 | The injected markers perfectly match the plan's requested activity types, focus, and logical sequence. |
-| 6. Engagement & tone | 8/10 | Generally engaging, but contains some gamified/corporate phrasing: "These five dishes are not just vocabulary — they are cultural identity" and "you have a solid food and drink toolkit". |
-| 7. Structural integrity | 8/10 | Word count is 1543 words, which is ~28% over the target of 1200 words (exceeding the >10% tolerance limit). |
-| 8. Cultural accuracy | 10/10 | Culturally accurate representation of Ukrainian dishes, proper use of authentic textbook quotes, and a crucial clarification that "компот" is a drink, not a thick stew. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural, highly contextualized, and feature distinct speakers, though slightly marred by the aforementioned case error. |
+| 1. Plan adherence | 9/10 | The module follows the plan almost perfectly, integrating the dialogues and vocabulary seamlessly. However, it misses "**галушки**" in the list of iconic Ukrainian foods specified in the `content_outline` ("борщ, вареники, сало, галушки, деруни"). |
+| 2. Linguistic accuracy | 10/10 | Flawless. Zero Russianisms, Surzhyk, or calques. The module actively and correctly warns learners about common Russianisms like `творог` and `кофе`. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical approach. The module introduces vocabulary organically through natural dialogue, beautifully reinforces noun gender ("Це він", "Це вона"), and perfectly handles the `з + noun` construction as an accessible lexical chunk for A1 learners rather than bogging them down with instrumental case grammar. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are fully integrated into the contextual prose. |
+| 5. Exercise quality | 10/10 | All four required activity markers are present, matching the planned IDs, and are placed logically after the learner has been exposed to the relevant vocabulary and concepts. |
+| 6. Engagement & tone | 10/10 | The tone is warm, culturally rich, and encouraging. Sentences like "The most sacred and respected food on the table is хліб" create excellent cultural immersion. |
+| 7. Structural integrity | 10/10 | Clean Markdown formatting. All sections are present and ordered exactly as planned. The word count (1509 words) provides healthy, substantive coverage well above the 1200-word target. |
+| 8. Cultural accuracy | 10/10 | Extremely high cultural accuracy. Mentions the UNESCO status of borshch, the hospitality associated with bread, and authentic eating habits. |
+| 9. Dialogue & conversation quality | 10/10 | The dialogues between the grandmother and granddaughter are natural, purposeful, and effectively model how a family discusses meals and ingredients in real life. |
 
 ## Findings
-[Linguistic accuracy] [critical]
-Location: Їжа (Food) — Final dialogue
-Issue: "Давай варити борщ" is a Russian grammatical calque. The proper Ukrainian 1st person plural imperative uses the "-мо" suffix.
-Fix: Replace "Давай варити борщ." with "Зварімо борщ."
-
-[Linguistic accuracy] [critical]
-Location: Діалоги (Dialogues) — Second dialogue
-Issue: The noun "піца" is in the Nominative case, but it functions as the direct object of the elided verb "їм" (answering "Що ти їси на вечерю?"). Like "курку або рибу", it must be in the Accusative case ("піцу").
-Fix: Replace "Зазвичай суп, омлет або піца." with "Зазвичай суп, омлет або піцу."
-
-[Structural integrity] [major]
-Location: Entire module
-Issue: The generated deterministic word count (1543 words) exceeds the plan's target (1200 words) by over 28%, violating the 10% tolerance rule.
-Fix: No automated fix provided (requires manual structural edits), but noted for future conciseness.
-
-[Engagement & tone] [minor]
-Location: Підсумок — Self-check
-Issue: The phrase "you have a solid food and drink toolkit in Ukrainian" is slightly gamified and feels like "telling instead of showing."
-Fix: No automated fix provided.
+[1. Plan adherence] [major]
+Location: "A highly traditional and culturally significant ingredient is **сало** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Finally, **деруни** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream."
+Issue: The `content_outline` specifies "галушки (dumplings)" as an iconic Ukrainian food to be included, but it was omitted from the final prose.
+Fix: Add a sentence introducing "**галушки**" before discussing "**деруни**".
 
 ## Verdict: REVISE
-The module is highly pedagogical, culturally rich, and effectively executes the PPP flow to introduce grammar chunks exactly as prescribed for the A1 level. However, the presence of a Russian imperative calque and a direct object case error requires a REVISE to ensure learners memorize accurate Ukrainian forms from the start.
+The module is of exceptionally high quality, teaching the target vocabulary effectively within a rich, authentic cultural context. The dialogues are charming and pedagogically sound. However, one specific cultural food item ("галушки") explicitly requested in the plan outline was missed. Applying this single quick fix will make the module perfectly aligned with the plan and ready to publish.
 
 <fixes>
-- find: "Давай варити борщ."
-  replace: "Зварімо борщ."
-- find: "Зазвичай суп, омлет або піца."
-  replace: "Зазвичай суп, омлет або піцу."
+- find: "A highly traditional and culturally significant ingredient is **сало** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Finally, **деруни** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream."
+  replace: "A highly traditional and culturally significant ingredient is **сало** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Another classic is **галушки** (dumplings), which are soft, thick dough dumplings. Finally, **деруни** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream."
 </fixes>

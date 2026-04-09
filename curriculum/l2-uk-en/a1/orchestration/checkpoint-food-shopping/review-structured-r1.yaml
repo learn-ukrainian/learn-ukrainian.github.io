@@ -2,56 +2,47 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 5 content_outline sections present with correct headings. Self-check
-    covers M36-M40 as specified. Reading follows plan''s Anna scenario (market → café
-    → meets friend → introduces brother). Grammar '
+  score: 10
+  evidence: All sections are present and follow the outline perfectly. Word count
+    (1255) exceeds the 1000-word target.
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All Ukrainian forms verified against VESUM. Accusative paradigm correctly
-    presented for all four subcategories. Vocatives correct (Олено, Анно, Дмитре,
-    Михайле). No Russianisms, surzhyk, calques, or p
+  score: 8
+  evidence: Grammar and vocabulary are correct, but deduct for calling a cafe worker
+    a "Продавець" (Seller) instead of "Офіціант" in the Читання section.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Strong PPP flow: self-check → reading → grammar summary → connected dialogue
-    → summary. Grammar presented with examples, not bare lists (e.g., Pattern 2 shows
-    борщ→борщ, кава→каву with full example se'
+  score: 10
+  evidence: Excellent breakdown of grammar rules vs. vocabulary chunks. "Скільки коштує?"
+    and accusative forms are explained clearly for A1 learners.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All plan vocabulary present: їжа, напої, meals (сніданок, обід, вечеря),
-    accusative forms, café phrases (Мені..., Рахунок, Можна карткою?), market phrases
-    (Скільки коштує/коштують, Дайте кілограм), з+'
+  evidence: Required vocabulary (food, drinks, money, cafe phrases) is present and
+    naturally contextualized.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: 4 activity markers matching all 4 plan activity_hints. Markers placed
-    after relevant teaching sections. Plan activities have varied correct-answer positions
-    (not all index 0). Distractors are plausibl
+  evidence: 4 markers are present, matching the planned types and focus.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers or meta-commentary. Direct, teacher-like tone:
-    "Go through each checkpoint honestly — if something feels shaky, that''s useful
-    information." Reading section is a realistic scena'
+  score: 10
+  evidence: Practical, encouraging tone with useful warnings (e.g., "Do not translate
+    the English phrase 'I will have...'").
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'All H2 headings present and ordered correctly. Word count 1265 vs 1000
-    target ✓. Clean markdown structure with dialogue divs. **Deductions:** (1) Truncated
-    sentence "If yes, " is a structural defect. '
+  score: 10
+  evidence: Clean markdown, appropriate use of Docusaurus callouts, and clean section
+    headers.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. No "like Russian" comparisons. Market
-    and café scenarios are culturally authentic Ukrainian settings. Гривня as currency.
-    Борщ зі сметаною, вареники, каша — authe
+  evidence: Authentic interactions and realistic prices in hryvnia for the market
+    and cafe.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: Reading section dialogue is natural with named speakers. **But the Connected
-    Dialogue has two significant logic errors:** (1) Дмитро says "Ти знаєш мого брата
-    Дмитра?" — introducing a brother with his
+  score: 6
+  evidence: The writer copied transition notes from the plan ("Потім іду на ринок",
+    "Потім у кафе") directly into the spoken dialogue quotes of the character in the
+    Діалог section.
 findings: []

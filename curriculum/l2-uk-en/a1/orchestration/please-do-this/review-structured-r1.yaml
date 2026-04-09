@@ -3,55 +3,47 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: All four content_outline sections covered with correct topics. Both dialogues
-    from plan implemented faithfully (classroom ви-forms, café ти-forms). All required
-    vocabulary (читати, писати, слухати, ди
+  evidence: Covers all required points, but the recommended vocabulary word `показати`
+    is missing from the prose entirely.
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All 30+ imperative forms verified against VESUM — every one confirmed.
-    Formation rules are correct for A1 simplification level. Soft-sign rule after
-    д cited to Авраменко Grade 7, confirmed by RAG. The
+  score: 8
+  evidence: 'Contains two common calques: `Добрий ранок` (should be "Доброго ранку")
+    and `Відкрий двері` (should be "Відчини двері").'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Excellent PPP flow: dialogues present imperatives in context → rules
-    explain the pattern → exercises practice. Multiple examples per point (8 ти-forms,
-    full ви-form derivation table, 4 irregular verbs'
+  score: 6
+  evidence: The rules for forming the imperative for Group I and II verbs are factually
+    inaccurate and contradict the examples provided. "писати" does not form "пиши"
+    by simply removing "-ти" and adding "-й". Ref
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All 8 required verbs appear naturally in dialogues AND formation tables.
-    All 7 recommended words (відкрити, сісти, показати, запитати, підручник, сторінка,
-    речення) appear in context — not as bare lis
+  score: 9
+  evidence: All required vocabulary is used naturally, but the recommended word `показати`
+    was omitted.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: All 4 plan activity hints matched with correctly-named markers. Placement
-    is logical — formation exercises after teaching, cumulative exercises in summary.
-    The fill-in-context exercise (Олено, ___ кни
+  evidence: All exercises map perfectly to the plan and are placed correctly after
+    the corresponding concepts.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no meta-commentary, no gamified language. Dialogues
-    are specific and culturally grounded. The ти/ви switch mid-dialogue (Олесь to
-    waiter: принесіть) is a natural, clever teach'
+  score: 10
+  evidence: Tone is warm and encouraging, using natural classroom and daily-life situations
+    without generic filler.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'Four H2 sections match plan exactly: Діалоги → Наказовий спосіб → Як
-    утворити? → Підсумок. Clean markdown. Word count 1263 ≥ 1200 target. No stray
-    tags or formatting artifacts. :::tip block correctly '
+  evidence: Word count is 1525 (exceeds 1200 target). All headers and sections are
+    correctly structured.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Decolonized: ходімо presented as "uniquely Ukrainian" with Russian lacking
-    this form — not "like Russian but with -мо." The textbook reference to Заболотний
-    and Авраменко grounds this in Ukrainian ped'
+  evidence: Uses appropriate and natural Ukrainian settings, names, and communicative
+    norms.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: 'Two multi-turn dialogues with named speakers (Вчителька/Учень/Учениця;
-    Олесь/Дарина). Natural situations: classroom instruction, café with friends. Register
-    contrast demonstrated organically (ти betwe'
+  evidence: Dialogues are natural, correctly formatted, and effectively demonstrate
+    the difference in register (ти vs ви).
 findings: []

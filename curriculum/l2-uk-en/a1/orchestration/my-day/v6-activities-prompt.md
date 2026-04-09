@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,9 +27,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-part-of-day -->`
-- `<!-- INJECT_ACTIVITY: match-time-of-day -->`
+- `<!-- INJECT_ACTIVITY: match-activity-time -->`
 - `<!-- INJECT_ACTIVITY: fill-in-sequence -->`
+- `<!-- INJECT_ACTIVITY: fill-in-parts-of-day -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -103,126 +103,100 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги
 
-You already know how to tell time, name the days of the week, and describe the weather outside. Now it's time to put it all together — telling someone about your whole day. Below are two conversations: one about yesterday, one about tomorrow. The past-tense and future forms here are frozen phrases — just memorize them as chunks for now. The full grammar comes later.
+Imagine you are recording a daily vlog or writing an entry in your personal diary. To tell a compelling story about your day, you need a structured narrative flow. A natural sequence helps your listener follow along from morning until night. In Ukrainian, you build this flow using specific time markers and sequence words.
 
-**(Як пройшов твій день? / How was your day?)**
+Observe how someone describes what they did today. Listen carefully to how they chain events together using past tense verbs.
 
-> **Марко:** Привіт! Як пройшов твій день? *(Hi! How was your day?)*
-> **Оленка:** Добре! Вранці я працювала в офісі. *(Good! In the morning I worked at the office.)*
-> **Марко:** А **потім**? *(And then?)*
-> **Оленка:** **Потім** обідала о першій. **Після обіду** гуляла у парку. *(Then I had lunch at one. After lunch I walked in the park.)*
-> **Марко:** А ввечері що робила? *(And in the evening, what did you do?)*
-> **Оленка:** Ввечері дивилася фільм і читала книгу. **Нарешті** лягла спати о дванадцятій. *(In the evening I watched a film and read a book. Finally I went to bed at twelve.)*
-> **Марко:** О дванадцятій? Пізно! *(At twelve? Late!)*
+> **Максим:** Привіт! Як пройшов твій день? *(Hi! How was your day?)*
+> **Андрій:** Добре! Вранці я працював. *(Good! In the morning I worked.)*
+> **Максим:** А потім? *(And then?)*
+> **Андрій:** Потім обідав о першій. Після обіду гуляв. *(Then I had lunch at one. After lunch I walked.)*
+> **Максим:** А ввечері? *(And in the evening?)*
+> **Андрій:** Ввечері дивився фільм і читав книгу. *(In the evening I watched a movie and read a book.)*
 
-The past forms — **працювала** *(worked)*, **обідала** *(had lunch)*, **гуляла** *(walked)*, **дивилася** *(watched)*, **читала** *(read)*, **лягла** *(went to bed)* — are chunks for now. Full past-tense grammar comes in M48–49.
+Notice how the timeline is anchored by specific markers like **вранці** (in the morning) and **після обіду** (in the afternoon — literally "after lunch"). The speaker uses past tense verbs ending in "-в", such as **працював** (worked) and **обідав** (had lunch). You do not need grammar rules for these yet; treat them as ready-made vocabulary chunks for storytelling.
 
-:::tip
-Notice the pattern: **sequence word + verb + time**. For example: **Потім обідала о першій.** The sequence word opens the sentence, the verb follows, and time closes it.
+When planning a schedule for the next day, the conversation shifts focus to future intentions. Notice how the speakers contrast different parts of the day, moving from the afternoon to the evening.
+
+> **Катя:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
+> **Тарас:** Вранці буду працювати. *(In the morning I will work.)*
+> **Катя:** А після обіду? *(And after lunch?)*
+> **Тарас:** Буду вивчати українську. А ввечері — гуляти. *(I will study Ukrainian. And in the evening — walk.)*
+
+You can express future intentions using the simple chunk **буду** (I will) followed immediately by an infinitive verb, such as **буду працювати** (I will work) or **буду вивчати** (I will study). This provides a direct way to talk about upcoming plans.
+
+## Мій типовий день
+
+Every daily narrative requires a temporal skeleton. In Ukrainian, the cycle of the day is divided into four primary periods, expressed as adverbs: **вранці** (in the morning), **вдень** (during the day), **ввечері** (in the evening), and **вночі** (at night). A crucial difference between English and Ukrainian is that these adverbs already contain the positional meaning. 
+
+:::note
+You absolutely do not need to add an extra preposition like "в" before adverbs of time; they stand entirely on their own as complete units.
 :::
 
-**(Що ти будеш робити завтра? / What will you do tomorrow?)**
+Your morning routine features actions that you perform on yourself. In Ukrainian, these self-directed actions use reflexive verbs ending in the particle **-ся**. When you describe your morning, you will use the logical sequence of **прокидатися** (to wake up), **вмиватися** (to wash oneself), and **одягатися** (to get dressed). The "-ся" suffix acts as a built-in "myself" marker, making it clear that the action is directed back at the subject rather than at an external object.
 
-> **Оленка:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
-> **Марко:** Вранці **буду працювати**. *(In the morning I will work.)*
-> **Оленка:** А **після обіду**? *(And in the afternoon?)*
-> **Марко:** **Після обіду** буду вивчати українську. *(In the afternoon I will study Ukrainian.)*
-> **Оленка:** А ввечері? *(And in the evening?)*
-> **Марко:** Ввечері **буду** гуляти. А вночі? **Нарешті буду** спати! *(In the evening I'll walk. And at night? Finally I'll sleep!)*
+A model text combines time markers, reflexive verbs, and the different parts of the day into a cohesive narrative.
 
-The future pattern **буду** *(I will)* + infinitive works like a chunk: **буду працювати** *(I will work)*, **буду вивчати** *(I will study)*, **буду гуляти** *(I will walk)*. Full future-tense grammar is in M46.
+**Мій типовий понеділок** (My typical Monday)
+*   **Я прокидаюся о сьомій.** (I wake up at seven.)
+*   **Спочатку вмиваюся і одягаюся.** (First I wash and get dressed.)
+*   **Потім снідаю.** (Then I have breakfast.)
+*   **О дев'ятій я працюю.** (At nine I work.)
+*   **О першій обідаю.** (At one I have lunch.)
+*   **Після обіду працюю до п'ятої.** (After lunch I work until five.)
+*   **Ввечері готую вечерю, читаю і дивлюся фільм.** (In the evening I prepare dinner, read, and watch a movie.)
+*   **О одинадцятій лягаю спати.** (At eleven I go to bed.)
 
-Same structure, two timelines — yesterday Olenka **працювала** *(worked)*, tomorrow Marko **буду працювати** *(will work)*. The sequence words stay the same either way.
+Notice the specific phrasing used at the very end of the day: **лягати спати** (to go to bed). 
 
-## Мій типовий день (My Typical Day)
+:::caution
+Do not confuse **лягати спати** (to go to bed) with the simple verb **спати** (to sleep). The phrase **лягати спати** describes the physical action of ending your day, whereas the verb **спати** describes the continuous state of being asleep, such as when you say **вночі я сплю** (at night I sleep).
+:::
 
-Below is a complete model day — a narrative using the present tense you already know from A1.3, combined with time expressions from M22 and the parts-of-day adverbs you'll master in this module. Read it through like a short story, then study how it's built.
+<!-- INJECT_ACTIVITY: match-activity-time -->
 
-> **Я прокидаюся о сьомій. Спочатку вмиваюся і одягаюся. Потім снідаю о восьмій. О дев'ятій починаю працювати. Вдень я працюю до першої. О першій обідаю. Після обіду ще працюю до п'ятої. Ввечері готую вечерю і відпочиваю. О дев'ятій дивлюся фільм або читаю книгу. Нарешті о дванадцятій лягаю спати.**
+## Від ранку до вечора
 
-Every verb here is present tense — forms you already know from M16–M21. The sequence words **спочатку**, **потім**, **після обіду**, **нарешті** connect the actions into a story instead of a random list.
+To transform a rigid list of separate facts into a natural, flowing story, you need connective tissue. Sequence words are essential for guiding your listener through the timeline of your actions. The most important sequence adverbs are **спочатку** (first / at first), **потім** (then / later), and **нарешті** (finally). By placing these words at the beginning of your sentences, you create a logical progression: **Спочатку я снідаю. Потім я працюю.** (First I eat breakfast. Then I work.)
 
-Now let's look at the five parts-of-day adverbs that make this narrative possible:
+As your stories become longer, expand your flow to avoid sounding repetitive. If you use **потім** in every single sentence, your narrative will quickly feel monotonous. To add variety, introduce the phrase **після того** (after that) or **після цього** (after this). You can also use **також** (also) to add supplementary actions, or **а потім** (and then) to link actions. For example: **Я обідаю. Після того я також гуляю в парку.** (I have lunch. After that I also walk in the park.)
 
-- **вранці** (in the morning) — roughly before noon. *Вранці я снідаю.*
-- **вдень** (during the day) — the working hours, roughly 9 to 17. *Вдень я працюю.*
-- **після обіду** (in the afternoon) — literally "after lunch." *Після обіду я відпочиваю.*
-- **ввечері** (in the evening) — roughly 18 to 22. *Ввечері я читаю.*
-- **вночі** (at night) — roughly 22 to 6. *Вночі я сплю.*
+Food structures your daily routine, and Ukrainian handles mealtime verbs in a highly efficient way. Instead of using a verb plus a noun, Ukrainian features dedicated noun-verb pairs for every meal: **сніданок** (breakfast) pairs with the verb **снідати** (to have breakfast); **обід** (lunch) pairs with **обідати** (to have lunch); and **вечеря** (dinner) pairs with **вечеряти** (to have dinner). 
 
-These are adverbs — unchanging words. No case endings, no conjugation. Just place them at the start of a sentence: **Ввечері я читаю.** Compare this with clock time: **о сьомій** *(at seven)* uses a preposition and an ordinal number, while **вранці** *(in the morning)* is a single adverb — no preposition needed.
+:::tip
+Strictly avoid the direct English translation "I have breakfast." In Ukrainian, you do not possess a meal; you simply use the specific action verb to describe your eating.
+:::
 
-<!-- INJECT_ACTIVITY: fill-in-part-of-day -->
+Throughout your day, you will rely on a core set of daily activity verbs. Fortunately, many of the most common actions belong to the highly regular Group I verb category ending in "-ати". These include essential verbs like **відпочивати** (to rest), **читати** (to read), and **гуляти** (to walk). A quick review of the conjugation for the first and second person will help you comfortably use these in your dialogues.
 
-One more detail: **після обіду** is two words functioning together as a time marker. You can use it alone — **Після обіду я відпочиваю.** *(In the afternoon I rest.)* — or pair it with a clock time: **Після обіду, о третій, я вчу українську.** *(In the afternoon, at three, I study Ukrainian.)*
-
-## Від ранку до вечора (From Morning to Evening)
-
-You've seen **потім** and **нарешті** in the dialogues. Here is the full set of sequence words that let you connect one event to the next, turning isolated sentences into a coherent story:
-
-- **спочатку** (first, to start with) — *Спочатку я снідаю.* *(First I have breakfast.)*
-- **потім** (then, next) — *Потім я йду на роботу.* *(Then I go to work.)*
-- **після того** / **після цього** (after that) — *Після того я відпочиваю.* *(After that I rest.)*
-- **нарешті** (finally) — *Нарешті я лягаю спати.* *(Finally I go to bed.)*
-- **також** (also) — *Я також читаю вранці.* *(I also read in the morning.)*
-- **а потім** (and then — with a light contrast) — *Я снідаю, а потім іду до офісу.* *(I have breakfast, and then I go to the office.)*
-
-A quick note: **спочатку** is a sequence marker — it means "first" in a chain of events. Don't confuse it with **на початку** *(at the beginning of something)*. At A1, **після того** and **після цього** are interchangeable — use whichever feels natural.
-
-Now let's expand your daily activity verbs. You already know **снідати** *(to have breakfast)* from M20. Here are the other two meal verbs — together they form a natural triad:
-
-- **снідати** (to have breakfast) — review from M20
-- **обідати** (to have lunch) — new
-- **вечеряти** (to have dinner) — new
-
-All three are Group I verbs ending in **-ати**, conjugated exactly like **читати**: **я снідаю**, **ти снідаєш**, **він/вона снідає**. The pattern is identical for **обідати** *(я обідаю)* and **вечеряти** *(я вечеряю)*.
-
-Two more useful verbs: **відпочивати** *(to rest)* — also Group I: **я відпочиваю**, **ти відпочиваєш**. And the chunk **лягати спати** *(to go to bed)* — treat it as one unit at A1. Full reflexive verb grammar comes in M38.
-
-Combine any verb with a time expression and you have a sentence about your day:
-
-- **О першій я обідаю.** *(At one I have lunch.)*
-- **Після роботи я відпочиваю.** *(After work I rest.)*
-- **Ввечері я вечеряю о сьомій.** *(In the evening I have dinner at seven.)*
-- **О дванадцятій я лягаю спати.** *(At twelve I go to bed.)*
-
-<!-- INJECT_ACTIVITY: match-time-of-day -->
-
-Here's how all three tools — sequence words, time adverbs, and activity verbs — stack together in a natural chain: **Вранці я прокидаюся о сьомій. Спочатку снідаю. Потім іду на роботу. Після того обідаю о першій. Ввечері відпочиваю. Нарешті лягаю спати.** Any two sentences about your day can be connected with **потім** or **після того** — just pick one and keep going.
-
-## Підсумок — Summary
-
-Every sentence you've built in this module follows one formula:
-
-**[Time expression] + [Sequence word] + [Verb + object]**
-
-The pieces are interchangeable. Look at how they combine:
-
-- **О сьомій** [time] — **прокидаюся** [verb] → *At seven — I wake up.*
-- **Спочатку** [sequence] — **снідаю** [verb] → *First — I have breakfast.*
-- **Потім** [sequence] — **о дев'ятій** [time] — **іду на роботу** [verb + complement] → *Then — at nine — I go to work.*
-
-Time expressions and sequence words both sit at the start of the sentence. You can use one or both — **Потім о дев'ятій іду на роботу** works just as well as **О дев'ятій іду на роботу**.
-
-Here is a longer model day that weaves everything from this module together. Read it, then write your own version below:
-
-> **Мій типовий понеділок починається о шостій. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю каву і їм бутерброд. О дев'ятій починаю працювати. Вдень я дуже зайнятий. О першій обідаю в кафе. Після обіду ще працюю до шостої. Ввечері відпочиваю — готую вечерю і дивлюся серіал. Також читаю перед сном. Нарешті о дванадцятій лягаю спати. Завтра — те саме!**
-
-*(My typical Monday starts at six. First I wash up and get dressed. Then I have breakfast — I drink coffee and eat a sandwich. At nine I start working. During the day I'm very busy. At one I have lunch at a café. After lunch I work until six. In the evening I rest — I cook dinner and watch a series. I also read before bed. Finally at twelve I go to bed. Tomorrow — the same!)*
+*   **Я відпочиваю, читаю, гуляю.** (I rest, read, walk.)
+*   **Ти відпочиваєш, читаєш, гуляєш.** (You rest, read, walk.)
 
 <!-- INJECT_ACTIVITY: fill-in-sequence -->
 
-Now it's your turn. Describe your own typical day using what you've learned:
+<!-- INJECT_ACTIVITY: fill-in-parts-of-day -->
 
-- Write about your typical Monday from morning to evening (5–8 sentences).
-- Use at least 3 time expressions (e.g., **о восьмій**, **після обіду**, **ввечері**).
-- Use at least 3 sequence words (**спочатку**, **потім**, **нарешті**).
-- Include at least 4 daily activity verbs (**прокидатися**, **снідати**, **обідати**, **відпочивати**, **лягати спати**).
-- Starter: **Мій типовий понеділок починається о ___. Спочатку я ___…**
+## Підсумок — Summary
 
-Try reading your text aloud. Does it flow from one event to the next? If two sentences feel disconnected, add **потім** or **після того** between them — that's all it takes to turn a list into a story.
+Telling a coherent story about your daily life requires combining three fundamental elements. The basic story formula is straightforward: combine a specific time marker (such as **о якій годині?** — at what hour?), a logical sequence word (like **спочатку** or **потім**), and a descriptive activity verb. When you layer these elements together, you construct detailed, descriptive statements that sound natural to native speakers. Consider this model of a structured "Super-Sentence" that blends all three components seamlessly: **Вранці о восьмій я спочатку снідаю, а потім працюю.** (In the morning at eight I first have breakfast, and then work.) This structure is the key to fluid communication and proves you can link individual concepts.
+
+Before moving forward, take a moment to evaluate your command of these narrative tools. Review the following self-check questions to ensure you have internalized the core concepts.
+
+*   Can I confidently name the four primary parts of the day using their adverbial forms (**вранці**, **вдень**, **ввечері**, **вночі**)?
+*   Can I use three specific sequence words to properly order my actions (**спочатку**, **потім**, **нарешті**)?
+*   Do I remember to include the essential "-ся" particle for reflexive morning routines like **прокидатися** and **вмиватися**?
+
+**Final Narrative Task:**
+Your objective is to write a cohesive paragraph consisting of six sentences describing your typical Monday from morning until evening. You must incorporate at least three sequence words and mention three specific times of the day.
+
+*   **О сьомій прокидаюся.** (At seven I wake up.)
+*   **Спочатку снідаю.** (First I have breakfast.)
+*   **Потім працюю.** (Then I work.)
+*   **Після обіду відпочиваю.** (After lunch I rest.)
+*   **Ввечері читаю.** (In the evening I read.)
+*   **Нарешті лягаю спати.** (Finally I go to bed.)
 
 </module_content>
 
@@ -312,30 +286,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -355,21 +369,51 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: grammar-possession [§4.2.1.4, §4.2.2]
+**Присвійність** (Possession)
+- **fill-in** — У мене є...: Структура «У мене/тебе/нього є...» — як українська виражає володіння / Structure «У мене/тебе/нього є...» — how Ukrainian expresses possession
+  - Instruction: *Вставте правильне слово*
+- **fill-in** — Мій, твій, наш...: Обрати присвійний займенник, що узгоджується з родом та числом іменника / Choose possessive pronoun matching noun gender and number
+  - Instruction: *Вставте правильну форму*
+- **match-up** — Чий? Чия? Чиє?: Зіставити присвійний займенник з іменником за родом / Match possessive pronoun to noun by gender
+  - Instruction: *З'єднайте*
+- **quiz** — У кого є?: Визначити, хто має щось, за контекстом речення / Determine who has something based on sentence context
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: «У мене є» — унікальна українська структура. Переклад з англ. «I have» маскує різницю
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -401,68 +445,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

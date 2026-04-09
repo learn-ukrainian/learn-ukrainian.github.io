@@ -6,25 +6,49 @@ vocabulary:
   gender: с.
   verified: true
 - word: прі́звище
-  translation: surname, last name
+  translation: surname
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: чита́ти
-  translation: to read
+- word: лі́тера
+  translation: letter
   expression: false
-  pos: дієсл.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апо́стро́ф
+  translation: apostrophe
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: м'яки́й знак
+  translation: soft sign
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: на́голос
+  translation: stress
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
-- word: молоко́
-  translation: milk
-  expression: false
-  pos: ім.
-  gender: с.
+- word: Мене звати...
+  translation: My name is...
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: зупи́нка
-  translation: stop (bus/tram stop)
+- word: Я з...
+  translation: I am from...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вчи́телька
+  translation: teacher (female)
   expression: false
   pos: ім.
   gender: ж.
@@ -35,38 +59,14 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: роди́на
-  translation: family (extended family)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ру́ки
-  translation: hands
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: студе́нт
-  translation: student (male)
+- word: чолові́к
+  translation: husband
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: студе́нтка
-  translation: student (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лі́кар
-  translation: doctor (male)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лі́карка
-  translation: doctor (female)
+- word: дружи́на
+  translation: wife
   expression: false
   pos: ім.
   gender: ж.
@@ -77,147 +77,75 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: програмі́ст
-  translation: programmer
+- word: студе́нт
+  translation: student
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: вчи́тель
-  translation: teacher (male)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вчи́телька
-  translation: teacher (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сестра́
-  translation: sister
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: бабу́ся
-  translation: grandmother
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: діду́сь
-  translation: grandfather
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: старший
-  translation: older, elder
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: моло́дша
-  translation: younger (female)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: теж
-  translation: also, too
+- word: тут
+  translation: here
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: село́
-  translation: village
+- word: лі́карка
+  translation: doctor (female)
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: Добрий день!
-  translation: Good day! (formal greeting)
+- word: архіте́ктор
+  translation: architect
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: У мене є...
+  translation: I have...
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Мене звати ___.
-  translation: My name is ___.
+- word: па́не
+  translation: Mr. (respectful address)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́ні
+  translation: Ms. / Mrs. (respectful address)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Рада знайомству
+  translation: Glad to meet you
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Його звати ___.
-  translation: His name is ___.
-  expression: true
-  pos: ''
+- word: Навза́єм
+  translation: Mutually / Likewise
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
-- word: Її звати ___.
-  translation: Her name is ___.
-  expression: true
-  pos: ''
-  gender: ''
+- word: За́чи́н
+  translation: Introduction / Opening
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
-- word: Я з ___.
-  translation: I am from ___.
-  expression: true
+- word: Основна части́на
+  translation: Main part
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: У мене є ___.
-  translation: I have ___.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У тебе є ___?
-  translation: Do you have ___?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: І мені приємно.
-  translation: Nice to meet you too.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: До зустрічі!
-  translation: See you! (until we meet again)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Справді?
-  translation: Really?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Цікаво!
-  translation: Interesting!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я дуже люблю свою родину.
-  translation: I love my family very much.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Це — ___.
-  translation: This is ___.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я — ___.
-  translation: I am ___. (with identifying dash)
-  expression: true
-  pos: ''
-  gender: ''
+  verified: false
+- word: Кінці́вка
+  translation: Conclusion / Ending
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true

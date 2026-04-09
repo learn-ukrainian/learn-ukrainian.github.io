@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module strictly follows the outline and word budgets. The word count
+    is 4767 words (well above the 4000-word target). All grammatical concepts are
+    covered completely.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a few persistent calques and Surzhyk-adjacent phrasing: "знаходиться"
+    (instead of перебуває/стоїть), "слідкувати" (instead of стежити), "розділові коми"
+    (pleonasm), "грає роль" (instead of ві'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The PPP methodology shines here. Theoretical rules are deeply contextualized
+    with comparisons (e.g., contrasting "одиничний дієприкметник" with a full "зворот").
+    The section analyzing the dangling par
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary items from the plan are utilized and correctly
+    provided with their English translations in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The injected activity placeholders reflect the intended design and are
+    evenly distributed.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is professional and engaging. Openers like "Ви щойно уважно прочитали
+    цей новинний діалог" work as an excellent bridge between the intro dialogue and
+    the grammar analysis.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan exactly. Paragraph transitions are smooth
+    and there are no formatting artifacts or broken tags.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Incorporates Zakarpattya geography and St. Sophia of Kyiv. Provides a
+    stern warning regarding the use of "-вш"/"-ш" suffixes ("читавший", "зробивший")
+    to ensure learners speak culturally pure Ukrainia
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The news report interview is slightly transactional by the nature of the
+    medium (reporter interviewing a rescuer), but perfectly appropriate for the B1
+    journalistic register being taught.
+findings: []

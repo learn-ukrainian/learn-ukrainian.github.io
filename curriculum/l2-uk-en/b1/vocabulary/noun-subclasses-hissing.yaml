@@ -18,7 +18,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: неісто́та
-  translation: inanimate
+  translation: inanimate being
   expression: false
   pos: ім.
   gender: ж.
@@ -72,10 +72,40 @@ vocabulary:
   gender: ч.
   verified: true
 - word: това́риш
-  translation: companion
+  translation: companion/comrade
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: мішана група
+  translation: mixed group
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шипля́чий
+  translation: hissing
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: закі́нчення
+  translation: ending
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: орудний відмінок
+  translation: instrumental case
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: однина́
   translation: singular number
@@ -119,6 +149,48 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: кущ
+  translation: bush
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ключ
+  translation: key
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: меч
+  translation: sword
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ви́граш
+  translation: winning
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: во́гнище
+  translation: bonfire
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кла́дови́ще
+  translation: cemetery
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: схо́вище
+  translation: shelter
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: екскурсово́д
   translation: guide
   expression: false
@@ -131,32 +203,44 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: во́гнище
-  translation: bonfire
-  expression: false
-  pos: ім.
-  gender: с.
+- word: називний відмінок
+  translation: nominative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: родовий відмінок
+  translation: genitive case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: давальний відмінок
+  translation: dative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: знахідний відмінок
+  translation: accusative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: місцевий відмінок
+  translation: locative case
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: ківш
-  translation: ladle / scoop
+  translation: ladle
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: меч
-  translation: sword
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: маса́ж
-  translation: massage
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: воя́ж
-  translation: voyage / trip
+- word: кіш
+  translation: Cossack camp
   expression: false
   pos: ім.
   gender: ч.

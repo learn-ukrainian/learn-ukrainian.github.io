@@ -1,0 +1,260 @@
+{
+  "total_items": 156,
+  "grounded_items": 116,
+  "ungrounded": [
+    {
+      "word": "тепліша",
+      "exercise_type": "fill-in",
+      "context": "тепліша",
+      "role": "answer"
+    },
+    {
+      "word": "погода",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні погода ____, ніж була вчора.",
+      "role": "context"
+    },
+    {
+      "word": "вчора",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні погода ____, ніж була вчора.",
+      "role": "context"
+    },
+    {
+      "word": "найцікавіша",
+      "exercise_type": "fill-in",
+      "context": "найцікавіша",
+      "role": "answer"
+    },
+    {
+      "word": "усіх",
+      "exercise_type": "fill-in",
+      "context": "Ця книжка ____ з усіх, що я читав.",
+      "role": "context"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "fill-in",
+      "context": "Ця книжка ____ з усіх, що я читав.",
+      "role": "context"
+    },
+    {
+      "word": "гірші",
+      "exercise_type": "fill-in",
+      "context": "гірші",
+      "role": "answer"
+    },
+    {
+      "word": "тесту",
+      "exercise_type": "fill-in",
+      "context": "Її результати тесту ____ від моїх.",
+      "role": "context"
+    },
+    {
+      "word": "моїх",
+      "exercise_type": "fill-in",
+      "context": "Її результати тесту ____ від моїх.",
+      "role": "context"
+    },
+    {
+      "word": "порівняти",
+      "exercise_type": "quiz",
+      "context": "Як правильно порівняти два міста?",
+      "role": "context"
+    },
+    {
+      "word": "використано",
+      "exercise_type": "quiz",
+      "context": "Який ступінь порівняння використано у слові «щонайкращого»?",
+      "role": "context"
+    },
+    {
+      "word": "слові",
+      "exercise_type": "quiz",
+      "context": "Який ступінь порівняння використано у слові «щонайкращого»?",
+      "role": "context"
+    },
+    {
+      "word": "префіксів",
+      "exercise_type": "match-up",
+      "context": "Творення нових слів за допомогою суфіксів, префіксів тощо",
+      "role": "context"
+    },
+    {
+      "word": "тощо",
+      "exercise_type": "match-up",
+      "context": "Творення нових слів за допомогою суфіксів, префіксів тощо",
+      "role": "context"
+    },
+    {
+      "word": "жіночого",
+      "exercise_type": "match-up",
+      "context": "Слова жіночого роду на позначення професій (наприклад, лікар",
+      "role": "context"
+    },
+    {
+      "word": "роду",
+      "exercise_type": "match-up",
+      "context": "Слова жіночого роду на позначення професій (наприклад, лікар",
+      "role": "context"
+    },
+    {
+      "word": "утворює",
+      "exercise_type": "match-up",
+      "context": "Утворює іменники процесу від дієслів (наприклад, читання)",
+      "role": "context"
+    },
+    {
+      "word": "процесу",
+      "exercise_type": "match-up",
+      "context": "Утворює іменники процесу від дієслів (наприклад, читання)",
+      "role": "context"
+    },
+    {
+      "word": "хороша",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже хороша лікар.",
+      "role": "context"
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "error-correction",
+      "context": "Це дуже гарний дерев'янний стіл.",
+      "role": "context"
+    },
+    {
+      "word": "постійний",
+      "exercise_type": "error-correction",
+      "context": "Він постійний покупач у нашому магазині.",
+      "role": "context"
+    },
+    {
+      "word": "нашому",
+      "exercise_type": "error-correction",
+      "context": "Він постійний покупач у нашому магазині.",
+      "role": "context"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "error-correction",
+      "context": "Ми купили новий склянний посуд.",
+      "role": "context"
+    },
+    {
+      "word": "склянний",
+      "exercise_type": "error-correction",
+      "context": "Ми купили новий склянний посуд.",
+      "role": "context"
+    },
+    {
+      "word": "посуд",
+      "exercise_type": "error-correction",
+      "context": "Ми купили новий склянний посуд.",
+      "role": "context"
+    },
+    {
+      "word": "відомий",
+      "exercise_type": "error-correction",
+      "context": "Мій брат — відомий читальник фантастики.",
+      "role": "context"
+    },
+    {
+      "word": "фантастики",
+      "exercise_type": "error-correction",
+      "context": "Мій брат — відомий читальник фантастики.",
+      "role": "context"
+    },
+    {
+      "word": "був",
+      "exercise_type": "error-correction",
+      "context": "Це був справжній осіній день.",
+      "role": "context"
+    },
+    {
+      "word": "справжній",
+      "exercise_type": "error-correction",
+      "context": "Це був справжній осіній день.",
+      "role": "context"
+    },
+    {
+      "word": "осіній",
+      "exercise_type": "error-correction",
+      "context": "Це був справжній осіній день.",
+      "role": "context"
+    },
+    {
+      "word": "написано",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів написано ПРАВИЛЬНО?",
+      "role": "context"
+    },
+    {
+      "word": "правильний",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний варіант: «Ця книжка...»",
+      "role": "context"
+    },
+    {
+      "word": "фемінітив",
+      "exercise_type": "quiz",
+      "context": "Який фемінітив утворено ПРАВИЛЬНО?",
+      "role": "context"
+    },
+    {
+      "word": "утворено",
+      "exercise_type": "quiz",
+      "context": "Який фемінітив утворено ПРАВИЛЬНО?",
+      "role": "context"
+    },
+    {
+      "word": "зробив",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «Він зробив це...»",
+      "role": "context"
+    },
+    {
+      "word": "знайдіть",
+      "exercise_type": "quiz",
+      "context": "Знайдіть помилку в утворенні ступеня порівняння:",
+      "role": "context"
+    },
+    {
+      "word": "утворенні",
+      "exercise_type": "quiz",
+      "context": "Знайдіть помилку в утворенні ступеня порівняння:",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово правильно поєднується зі словом «рахунок»?",
+      "role": "context"
+    },
+    {
+      "word": "поєднується",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово правильно поєднується зі словом «рахунок»?",
+      "role": "context"
+    },
+    {
+      "word": "віддієслівний",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає процес (віддієслівний іменник)?",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 7,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "аналіз",
+      "діагностика",
+      "комплексний",
+      "повторення",
+      "помилок",
+      "рубрика",
+      "самооцінка"
+    ]
+  },
+  "all_grounded": false
+}

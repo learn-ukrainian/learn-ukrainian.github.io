@@ -1,32 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Підсумок — Summary'
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -59,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-30% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -248,360 +231,368 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (13/13 plan vocabulary words found):**
-- ✅ автобус (noun)
-- ✅ метро (noun — indeclinable, 14 matches)
-- ✅ таксі — ⚠️ **FLAG**: VESUM returned lemma "така(noun)" — likely matching "такса" (fee/dachshund), not "таксі" (taxi). Таксі is a standard indeclinable borrowing but verify independently at goroh.pp.ua. Functionally safe to use; stress: та́ксі.
-- ✅ потяг (noun)
-- ✅ квиток (noun)
-- ✅ зупинка (noun)
-- ✅ трамвай (noun)
-- ✅ маршрутка (noun)
-- ✅ літак (noun)
-- ✅ направо (adv)
-- ✅ наліво (adv)
-- ✅ прямо (adv)
-- ✅ дістатися (verb)
-
-**Additional section words confirmed:**
-- ✅ тролейбус (noun)
-- ✅ відправлення (noun)
-- ✅ вокзал (noun)
-- ✅ гривня (noun)
-- ✅ рейс (noun)
-- ✅ пасажир (noun)
-
-**Not found:** none — all words exist in VESUM.
-
----
-
-## Textbook Excerpts
-
-### Section: Транспорт (Transport Types)
-> «У містах багато високих будинків. […] Вулицями міст їздять тролейбуси, трамваї, автобуси, маршрутні таксі. […] метро, площа, вулиця, парк»
-> Source: Большакова, Grade 1 (Буквар, 2018), p. 16 — ✅ All core city transport types appear in Grade 1 Ukrainian primers. Maршрутні таксі is the full form; маршрутка is its colloquial short form.
-
-### Section: Діалоги — Buying a Ticket
-> «— Скажіть, будь ласка, чи є сьогодні автобус на Моринці? […] — О котрій годині найближчий рейс? — О десятій. […] — Я можу придбати квиток на цей рейс? — Авжеж. Є ще вільні місця. — Тоді продайте мені, будь ласка, два квитки на цей рейс.»
-> Source: Кравцова, Grade 3 (Українська мова, 2020), p. 83 — ✅ Exact match for the plan's ticket-buying dialogue pattern. Confirms "О котрій?" for time + "квиток" + station/bus context.
-
-### Section: Корисні фрази (travel language)
-> «Щодня вінничани та гості міста слухають фрази: "Обережно, двері зачиняються!", "Розраховуйтесь, будь ласка, за проїзд" чи "Поступайтесь місцем старшому."»
-> Source: Літвінова, Grade 5 (Українська мова, 2022), p. 208 — ✅ Confirms authentic public transport announcements and etiquette phrases.
-
-### Section: Підсумок — correct Ukrainian forms
-> «ПРАВИЛЬНО: виходити з автобуса / оплатити проїзд | НЕПРАВИЛЬНО: сходити з автобуса / оплатити за проїзд»
-> Source: Заболотний, Grade 9 (Українська мова, 2017), p. 75 — ✅ Critical naturalness rules directly confirmed.
-
-### Section: Potjah/Train dialogue
-> «— Наш поїзд оголосили! Ходімо швидше! […] — Який у нас вагон? — 7-й.» + railway ticket context, "О котрій відправлення?"
-> Source: Літвінова, Grade 6 (Українська мова, 2023), p. 247 — ✅ Confirms train station dialogue register and "відправлення" for departure.
-
----
+- Confirmed: автобус, метро, таксі, потяг, квиток, зупинка, трамвай, маршрутка, літак, направо, наліво, прямо, дістатися
+- Not found: none
 
 ## Grammar Rules
-
-- **Instrumental for transport (їхати автобусом / трамваєм)**: This is taught as a **lexical chunk** in the plan — correct A1 approach. Правопис §57 covers noun declension endings; instrumental singular of 2nd declension masculine nouns takes **-ом/-ем**. автобус → автобусом ✅; трамвай → трамваєм ✅ (soft stem, -єм).
-- **Indeclinable nouns (метро, таксі)**: Правопис §53 — foreign-origin nouns ending in a vowel are indeclinable neuter nouns in Ukrainian. на метро / на таксі (prepositional "на" + unchanged form) ✅
-- **Preposition до for directional movement**: Антоненко-Давидович §"У(в)–до" confirms: movement *toward* a city/place → **до** (Як дістатися **до** вокзалу? ✅). Movement/location *inside* → у/в.
-- **Правопис query for орудний відмінок** returned §16 (consonant alternations) — not the declension table. Instrumental case endings are in §57. No rule violation found in the plan content.
-
----
+- Instrumental for transport: Textbook (Grade 5, Uhor, p. 59) — Їхати/летіти + Instrumental (автобусом, потягом, літаком).
+- Locative with 'на' for transport: Textbook (Grade 5, Uhor, p. 59) — Їхати на + Locative (на метро, на таксі).
+- Indeclinable nouns: Pravopys § 103 — Nouns of foreign origin like 'метро', 'таксі' are indeclinable in all cases.
 
 ## Calque Warnings
-
-- **«Як дістатися до вокзалу?»** → ✅ **OK** — natural Ukrainian. Антоненко-Давидович confirms «до» is correct for directional movement toward a destination. Not a calque.
-
-- **«В один бік чи туди й назад?»** → ✅ **OK** — natural Ukrainian phrasing for one-way/round-trip. «Туди й назад» is idiomatic. No calque detected.
-
-- **«На здоров'я!»** as a response to «Дякую!» → ⚠️ **POTENTIAL ISSUE**: Антоненко-Давидович has no entry confirming this as a standard thanks-response. «На здоров'я!» in standard Ukrainian is used as a **toast** (when drinking) or a **response to sneezing** — not typically as "you're welcome." This usage may be a Polonism common in western Ukraine. **Recommended alternative: «Будь ласка!»** or **«Прошу!»** for a standard thanks-response. Flag for native speaker check. <!-- VERIFY -->
-
-- **«О котрій відправлення?»** → ✅ **OK** — confirmed in Grade 6 Litvinova textbook. Natural Ukrainian at the train station.
-
-- **«Один квиток до Львова»** → ✅ **OK** — «до» + city name confirmed as correct (movement toward destination per Антоненко-Давидович). Not «у Львів» for the ticket destination context.
-
----
+- відправляється (автобус/потяг): Calque — Use 'відбуває', 'виїжджає' (bus) or 'рушає' (train). (Source: Grade 10, Karaman, p. 188).
+- туди й назад: OK — Commonly used for round-trip tickets in textbooks (Source: Grade 3, Ponomarova, p. 104).
+- скільки коштує: OK — Standard question for price in textbooks (Source: Grade 3, Ponomarova, p. 104).
+- на здоров'я: OK/Contextual — Used as a polite response to 'дякую' (as in plan), though 'будь ласка' or 'прошу' are also common.
 
 ## CEFR Check
-
-- **автобус**: A1 ✅ — on target
-- **квиток**: A1 ✅ — on target
-- **зупинка**: A1 ✅ — on target
-- **маршрутка**: A1 ✅ — on target
-- **трамвай**: A1 ✅ — on target
-- **літак**: A1 ✅ — on target
-- **потяг**: ⚠️ **A2** per PULS — one level above target. Note: PULS also lists **поїзд** at A1. However, «потяг» is the more authentically Ukrainian term (поїзд is a Soviet-era Russianism). Since this module is A1.5 and teaches transport as functional vocabulary, **потяг is pedagogically preferable** and acceptable as a taught chunk — flag for awareness but do not substitute поїзд.
-- **дістатися**: ⚠️ **Not in PULS directly** (closest matches: B1–B2 verbs). As an analyzed verb it is above A1. However, the plan teaches «Як дістатися до...?» as a **formulaic phrase** (lexical chunk), which is standard A1 functional language pedagogy — ✅ acceptable approach, do not decompose grammatically at this level.
-- **тролейбус**: Not checked in PULS but confirmed in Grade 1 Bolshakova alongside автобус/трамвай — A1 appropriate.
+- автобус: A1 — Found in Grade 1 textbooks (Bolshakova).
+- метро: A1 — Found in Grade 5 textbooks (Uhor) as basic transport.
+- квиток: A1 — Found in Grade 3 textbooks (Ponomarova).
+- зупинка: A1 — Found in Grade 7 textbooks in practical city contexts.
+- літак: A1 — Found in Grade 1 textbooks (Bolshakova).
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Transport
-**Module:** transport | **Phase:** A1.5 [Places]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: Transport
+**Module:** transport | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/transport.md
+
+# Педагогіка A1: Transport
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The topic of transport is foundational for A1 learners, as it connects directly to daily life, movement, and navigating a new environment. The approach in Ukrainian elementary textbooks is practical and context-driven, which should be mirrored in the curriculum.
+
+1.  **Start with the Familiar and Concrete:** Introduce transport within a simple, relatable narrative. For example, the Grade 1 textbook by Большакова introduces the concept via a story about a new school bus, describing its color and features (`Фіолетовий, красивий. Зручно їхати в ньому. Сидіння м’які.`) (Source 13). This grounds the vocabulary in a tangible experience.
+
+2.  **Personification and Storytelling:** Younger learners respond well to stories where vehicles have personalities. A Grade 3 text tells a story of a `маленьке жовте таксі` that dreams of being a tram (Source 5). This makes the vocabulary (`таксі`, `трамвай`, `автобус`, `зупинка`) memorable and less abstract. This narrative approach can be adapted for adults by using simple dialogues about choosing a mode of transport.
+
+3.  **Categorize Functionally:** Initially, group transport types by their environment. Ukrainian teaching materials implicitly distinguish between city transport (`громадський транспорт` like `метро, автобуси, тролейбуси, трамваї`), inter-city transport (`поїзди, електрички, автобуси`), and private transport (`машина, велосипед`) (Source 1). This functional grouping helps learners choose the right word for the right context.
+
+4.  **Integrate with Verbs of Motion Early:** The topic of transport is inseparable from verbs of motion. The distinction between going on foot (`іти`) and by vehicle (`їхати`) must be established immediately (Source 7). This distinction is a core feature of Slavic languages and is a crucial pedagogical milestone.
+
+5.  **Focus on Practical Dialogues:** The goal is communication. Structure lessons around practical tasks: asking for directions to a station (Source 6, 20), buying a ticket (Source 17), or taking a taxi (Source 9). These scenarios provide a natural context for introducing grammar and vocabulary.
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction of transport-related language must be carefully sequenced to build from simple nouns to complex grammatical structures.
+
+1.  **Core Nouns:** Begin with the most frequent modes of transport in a city context.
+    *   **Set 1 (High Frequency):** `автобус`, `машина` (or `авто`), `таксі`, `метро`. These are often international words and easy to recognize.
+    *   **Set 2 (Medium Frequency):** `поїзд` (or `потяг`), `трамвай`, `літак`, `велосипед`.
+    *   Introduce associated locations: `зупинка` (bus/tram stop), `вокзал` (station), `аеропорт` (airport). (Source 1, 6, 9)
+
+2.  **The `іти` vs. `їхати` Distinction:** This is the most critical grammatical step.
+    *   Introduce `їхати` as the universal verb for "to go by transport."
+    *   Contrast it with `іти` for "to go on foot."
+    *   Provide simple, clear examples: `Я їду на роботу` (I go to work by transport) vs. `Я іду в магазин` (I am walking to the store). (Source 7)
+
+3.  **Instrumental Case for "By Transport":** Once `їхати` is established, introduce the instrumental case to specify the mode.
+    *   **Masculine:** `автобусом`, `поїздом`, `трамваєм`, `тролейбусом` (ending in `-ом`). (Source 2, 41)
+    *   **Feminine:** `машиною`, `маршруткою` (ending in `-ою`). (Source 2)
+    *   Model sentence: `Як ти їдеш на роботу? — Я їду автобусом.`
+
+4.  **Preposition `на` for Indeclinable Nouns:** For non-declining nouns like `метро` and `таксі`, teach the prepositional construction `їхати на...`.
+    *   `їхати на метро`
+    *   `їхати на таксі`
+    *   This contrasts with the preposition-less instrumental for declinable nouns. (Source 41, 42)
+
+5.  **Practical Phrases and Verbs:** Introduce vocabulary needed for real-world interactions.
+    *   **Asking for/buying tickets:** `квиток`, `купити квиток`, `придбати квиток`, `один квиток до...` (Source 17, 28)
+    *   **Navigating stations:** `автовокзал` (bus station), `залізничний вокзал` (railway station), `станція метро` (metro station). (Source 6, 20)
+    *   **Departure/Arrival:** Use simple verbs like `їхати`, and introduce perfective pairs later. Start with phrases like `О котрій годині автобус?` (At what time is the bus?).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers often encounter predictable difficulties with Ukrainian transport vocabulary and grammar due to structural differences.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Я іду на роботу автобусом.` | `Я **їду** на роботу автобусом.` | English "go" doesn't distinguish between foot and vehicle. In Ukrainian, `іти` is for walking, `їхати` is for transport. This is a fundamental error to correct early (Source 7). |
+| `Я їду *автобус*.` | `Я їду **автобусом**.` | Ukrainian uses the instrumental case to mean "by means of." The nominative form is incorrect. This is a direct transfer of English structure "I go (by) bus" (Source 2). |
+| `Я їду *на автобусом*.` | `Я їду **автобусом**.` | Learners often over-apply the `на` from phrases like `їхати на метро` and incorrectly add it before the instrumental case. The preposition is not used with the instrumental of means (Source 41). |
+| `Ми їдемо в *метрі*.` | `Ми їдемо в/на **метро**.` | `Метро` is an indeclinable noun of foreign origin. Its form never changes, regardless of case (Source 24, 33). The same applies to `таксі`, `кафе`, `кіно`. |
+| `На зупинці немає *автобусу*.` | `На зупинці немає **автобуса**.` | This is a subtle genitive case error. While `-у` is used for some masculine nouns in the genitive, `автобус` takes `-а`. This is a common point of confusion (Source 11). |
+| `Поїзд *відправляється* о 8-й.` | `Поїзд **рушає** о 8-й.` / `Автобус **відбуває** о 8-й.` | The verb `відправлятися` is a direct calque from Russian `отправляться`. Native Ukrainian uses `рушати` (for trains, people starting a journey), `вирушати` (to set off), or `відбувати`/`виїжджати` (for scheduled transport like buses) (Source 30). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to present it as a distinct language, not a "dialect" or "version" of Russian. The topic of transport is surprisingly prone to Russianisms.
+
+1.  **The Verb of Departure:** The most critical point is the verb for "to depart" or "to leave." **Do not teach `відправлятися`**. It is a pervasive Russianism (`отправляться`) that has crept into colloquial speech but is incorrect in standard Ukrainian. Emphasize the correct native verbs (Source 30):
+    *   `Поїзд **рушає**.` (The train is departing/moving off.)
+    *   `Ми **вирушаємо** в дорогу.` (We are setting off on a trip.)
+    *   `Автобус **відбуває** (or **виїжджає**) з Києва.` (The bus departs from Kyiv.)
+    This is not just a grammatical preference; it is a clear marker of authentic, modern Ukrainian vs. Surzhyk or Russian-influenced language.
+
+2.  **Avoid Russian Phonetic Analogies:** Never explain Ukrainian sounds by comparing them to Russian. For instance, do not say "Ukrainian `и` is like Russian `ы`." Teach the Ukrainian phonetic system on its own terms, using audio examples and articulatory descriptions relevant to an English speaker.
+
+3.  **Shared Vocabulary:** Words like `машина`, `вокзал`, and `поїзд` have cognates in Russian. Frame them as part of a shared Slavic heritage or as international borrowings (like `вокзал` from English "Vauxhall"), not as Russian loans. The default assumption should be independent development or shared roots, not a one-way influence from Russian to Ukrainian.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for the A1 level.
+
+#### Іменники (Nouns)
+
+*   `автобус` ★★★
+*   `машина` / `авто` ★★★
+*   `таксі` ★★★ (indeclinable)
+*   `метро` ★★★ (indeclinable)
+*   `поїзд` / `потяг` ★★★
+*   `трамвай` ★★
+*   `літак` ★★
+*   `велосипед` ★★
+*   `зупинка` ★★★ (bus/tram stop)
+*   `вокзал` ★★ (station)
+*   `квиток` ★★ (ticket)
+*   `аеропорт` ★ (airport)
+*   `маршрутка` ★ (minibus-taxi)
+*   `водій` ★ (driver)
+
+#### Дієслова (Verbs)
+
+*   `їхати` ★★★ (to go by transport)
+*   `іти` ★★★ (to go on foot)
+*   `чекати (на)` ★★ (to wait for) - e.g., `чекати на автобус` (Source 7)
+*   `купити` / `купувати` ★★ (to buy)
+*   `сісти (на)` ★ (to get on/take) - e.g., `сісти на маршрутку` (Source 29)
+*   `рушати` ★ (to depart, start moving) (Source 30)
+*   `вирушати` ★ (to set off) (Source 30)
+
+#### Фрази (Phrases)
+
+*   `Як доїхати до...?` ★★★ (How to get to...?) (Source 29)
+*   `Мені треба на вулицю...` ★★★ (I need to go to... street) (Source 9)
+*   `Де (найближча) зупинка?` ★★★ (Where is the (nearest) stop?)
+*   `О котрій годині...?` ★★ (At what time...?) (Source 17)
+*   `Скільки коштує квиток?` ★★ (How much is the ticket?)
+*   `Заплатити за проїзд` ★ (To pay the fare) (Source 15)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises from Ukrainian textbooks demonstrate effective, level-appropriate ways to teach the topic.
+
+1.  **Simple Narrative Context (Grade 1)**
+    This exercise introduces vocabulary in a simple, descriptive story.
+    *   **Text:** `Щоранку cтаренький шкільний автобус возив нас до школи. А в середу приїхав новий автобус. Фіолетовий, красивий. Зручно їхати в ньому. Сидіння м’які. Вікна широкі. [...] А в суботу ми поїхали в музей транспорту.`
+    *   **Task:** `Добери заголовок до тексту.` (Choose a title for the text.)
+    *   **Source:** Большакова, 1 клас (Source 13)
+    *   **Pedagogical Value:** Associates transport (`автобус`) with daily routine (`до школи`) and adjectives (`новий`, `красивий`), making it concrete.
+
+2.  **Functional Dialogue (Grade 3)**
+    This models a real-world transaction at a bus station.
+    *   **Dialogue Snippet:**
+        `— Скажіть, будь ласка, чи є сьогодні автобус на Моринці?`
+        `— Так, звичайно, є.`
+        `— О котрій годині найближчий рейс?`
+        `— О десятій.`
+        `— Я можу придбати квиток на цей рейс?`
+        `— Авжеж. Є ще вільні місця.`
+        `— Тоді продайте мені, будь ласка, два квитки на цей рейс.`
+    *   **Source:** Кравцова, 3 клас (Source 17)
+    *   **Pedagogical Value:** Provides a complete, polite conversational script for a common task (buying a ticket), using essential phrases.
+
+3.  **Sentence Construction (Grade 5)**
+    This exercise forces learners to correctly combine nouns, verbs, and prepositions.
+    *   **Task:** `Складіть речення із поданими словами.` (Create sentences with the given words.)
+        *   `Поїзд — їхати — Закарпаття — на`
+        *   `Автобус — їхати — у Полтаву`
+        *   `Машина — їхати — у Харків`
+    *   **Source:** Угор, 5 клас (Source 18)
+    *   **Pedagogical Value:** A simple but powerful drill for practicing sentence structure and the use of the verb `їхати` with destinations.
+
+4.  **Active Production (Grade 5)**
+    This task encourages learners to use the topic vocabulary and grammar actively to create their own content.
+    *   **Task:** `Сформулюйте 5 правил поведінки в громадському транспорті, використовуючи спонукальні неокличні речення.` (Formulate 5 rules of behavior on public transport, using imperative non-exclamatory sentences.)
+    *   **Example given:** `Заходячи в громадський транспорт, знімайте рюкзаки й великі торбинки з плечей.`
+    *   **Source:** Літвінова, 5 клас (Source 16)
+    *   **Pedagogical Value:** Moves from passive recognition to active use, requiring the imperative mood and vocabulary related to `громадський транспорт`.
+
+## Пов'язані статті (Related Articles)
+
+*   `pedagogy/a1/verbs-of-motion`
+*   `pedagogy/a1/instrumental-case`
+*   `pedagogy/a1/giving-directions`
+*   `grammar/indeclinable-nouns`
+*   `grammar/verbs-prefixed-motion`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 247
-> **Score:** 0.33
->
-> § 52. Правильне вживання числівниківна позначення дат і часу   
-> 247
-> — Наш поїзд оголосили! Ходімо швидше! І  на табло 
-> вже є!
-> — Не поспішай, ми встигаємо. Зараз 07.05.
-> — Який у  нас вагон?
-> — 7-й.
-> 2. Попросіть у дорослих або знайдіть у мережі «Інтернет» залізнич-
-> ний квиток, дайте відповідь на запитання: у  якому вагоні їдуть ман-
-> дрівники, коли вони приїжджають у  пункт призначення, яка вартість 
-> квитка, чи сплачено за послуги (білизна, чай).
-> Вправа 501
-> 1. Прочитайте електронного листа.
-> 17:25
-> 93%
-> Привіт, сестричко!
-> Ми з батьками визначилися з датою приїзду 
-> та  взяли квитки. Вирушаємо 26.06 о 13.55, на місці 
-> будемо 27.06 о 9.10. Час заселення в готель — 14.00, 
-> тому нам доведеться почекати, але це не страшно.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 208
-> **Score:** 0.50
->
-> 208
-> Відомості із синтаксису й пунктуації.  Види речень за емоційним забарвленням
-> Вправа 339
-> 1.	 Прочитайте новину.
-> ДОЇХАЛИ КОМФОРТНО?  
-> ПОДЯКУЙТЕ ЕКІПАЖУ!
-> «Марафон взаємоввічливості» оголосила Вінницька тран-
-> спортна компанія. Тепер пасажири й  пасажирки можуть 
-> віддячити за  чемність у  трамваї, тролейбусі та  автобусі, 
-> проголосувавши за  найвідповідальніший екіпаж міського 
-> громадського транспорту. Якщо їдете у вінницькому тран-
-> спорті, знайдіть плакат із  номером екіпажу й  відскануйте 
-> QR-код. Далі виконайте три прості дії: натисніть на  зна-
-> чок голосування, оберіть номер екіпажу, який сподобався, 
-> і  клацніть на  кнопку «голосувати».
-
-## Транспорт (Transport Types)
-
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 146
-> **Score:** 0.50
->
-> 146
-> Завмерли трамваї, тролейбуси стали,
-> автомобілі загальмували...
-> Не їде ніхто, не йде, не біжить —
-> рух зупинився навколо умить.
->  
->  
->  
->  
->  
->  
->     Оксана Сенатович
-> трамва’й
-> троле’йбус
-> 2. Як, на вашу думку, птахи могли зупинити рух на вулицях 
-> міста?
-> 310. 1. Розгляньте малюнки. Прочитайте і спишіть речення.
-> Вранці Андрійко збирається до школи. Він одягається, 
-> взувається.
-> Вранці Андрійко збирає братика до дитячого садка. Він 
-> одягає та взуває малюка.
-> дисциплі’на
-> гардеро’ б
-> 2. Які дієслова називають дії Андрійка, спрямовані на нього 
-> самого? Які дієслова означають дії Андрійка, спрямовані 
-> на іншу особу (братика)? Зробіть висновок, якого змісту 
-> надає дієсловам -ся.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 208
-> **Score:** 0.50
->
-> 208
-> Відомості із синтаксису й пунктуації.  Види речень за емоційним забарвленням
-> Вправа 339
-> 1.	 Прочитайте новину.
-> ДОЇХАЛИ КОМФОРТНО?  
-> ПОДЯКУЙТЕ ЕКІПАЖУ!
-> «Марафон взаємоввічливості» оголосила Вінницька тран-
-> спортна компанія. Тепер пасажири й  пасажирки можуть 
-> віддячити за  чемність у  трамваї, тролейбусі та  автобусі, 
-> проголосувавши за  найвідповідальніший екіпаж міського 
-> громадського транспорту. Якщо їдете у вінницькому тран-
-> спорті, знайдіть плакат із  номером екіпажу й  відскануйте 
-> QR-код. Далі виконайте три прості дії: натисніть на  зна-
-> чок голосування, оберіть номер екіпажу, який сподобався, 
-> і  клацніть на  кнопку «голосувати».
-
-## Корисні фрази (Useful Phrases)
-
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 198
-> **Score:** 0.33
->
-> 198
-> Коли гучномовець оголосив пасажирці її чергу пред’являти 
-> квиток, вона все ще палала від обурення. І от уявіть собі збен-
-> теження жінки, коли та, потягнувшись у сумочку за квит-
-> ком, виявила там свій непочатий пакунок. Отже, вона їла 
-> тістечка того чоловіка…
-> Подумай про відчуття жінки до моменту істини («От гру-
-> біян і нахаба!») і після («Який сором! А він ще так люб’язно 
-> поділився зі мною тим останнім тістечком!»).
-> У чому ж суть? Дуже просто: нам не треба так поспішно 
-> судити, навішувати ярлики, бути категоричними, оцінюючи 
-> інших, — зрештою, як і самих себе. Маючи обмежену інфор-
-> мацію, важко побачити всю картину, урахувати всі факти 
-> (за кн. «Сім звичок високоефективних підлітків»).
->  
-> ІІ   До слова, позначеного зірочкою, доберіть синоніми.
-
-## Підсумок — Summary
-
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 146
-> **Score:** 0.50
->
-> 146
-> Завмерли трамваї, тролейбуси стали,
-> автомобілі загальмували...
-> Не їде ніхто, не йде, не біжить —
-> рух зупинився навколо умить.
->  
->  
->  
->  
->  
->  
->     Оксана Сенатович
-> трамва’й
-> троле’йбус
-> 2. Як, на вашу думку, птахи могли зупинити рух на вулицях 
-> міста?
-> 310. 1. Розгляньте малюнки. Прочитайте і спишіть речення.
-> Вранці Андрійко збирається до школи. Він одягається, 
-> взувається.
-> Вранці Андрійко збирає братика до дитячого садка. Він 
-> одягає та взуває малюка.
-> дисциплі’на
-> гардеро’ б
-> 2. Які дієслова називають дії Андрійка, спрямовані на нього 
-> самого? Які дієслова означають дії Андрійка, спрямовані 
-> на іншу особу (братика)? Зробіть висновок, якого змісту 
-> надає дієсловам -ся.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 208
-> **Score:** 0.50
->
-> 208
-> Відомості із синтаксису й пунктуації.  Види речень за емоційним забарвленням
-> Вправа 339
-> 1.	 Прочитайте новину.
-> ДОЇХАЛИ КОМФОРТНО?  
-> ПОДЯКУЙТЕ ЕКІПАЖУ!
-> «Марафон взаємоввічливості» оголосила Вінницька тран-
-> спортна компанія. Тепер пасажири й  пасажирки можуть 
-> віддячити за  чемність у  трамваї, тролейбусі та  автобусі, 
-> проголосувавши за  найвідповідальніший екіпаж міського 
-> громадського транспорту. Якщо їдете у вінницькому тран-
-> спорті, знайдіть плакат із  номером екіпажу й  відскануйте 
-> QR-код. Далі виконайте три прості дії: натисніть на  зна-
-> чок голосування, оберіть номер екіпажу, який сподобався, 
-> і  клацніть на  кнопку «голосувати».
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 148
-> **Score:** 0.33
->
-> 148
-> ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ
->  ÏÅÐÅÂ²ÐßªÌÎ
-> 1. Розгадайте зашифровані назви тварин. Яких із них згадано 
-> в першій частині повісті «Тореадори з Васюківки»?
->      
-> 2. Найдорожчу ціну за вхід у метро юні «будівельники» встанови-
-> ли для
->  
-> А своїх родичів 
->  
-> В учительки математики
->  
-> Б далеких сусідів  
-> Г туристів із міста 
-> 3. Ява й Павлуша врятувалися від Контрибуції 
->  
-> А у ставку     Б на дереві     В на городі     Г у лісі
->  ÀÍÀË²ÇÓªÌÎ
-> 4. Яке враження справила на вас перша частина повісті В. Нестай-
-> ка? Що запам’яталося найбільше? 
-> 5. Розкажіть, як завершився намір друзів вирити метро під сви-
-> нарником. Як на цю витівку відреагував дід Варава та чи 
-> зробили хлопці правильні висновки?
-> 6.
-
-## Grammar Reference
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 85
-> **Score:** 0.33
->
-> Запишіть, дотримуючись правил уживання великої букви та лапок. Йогурт (в)олошкове (п)оле, (с)пасо-(п)реображенський (с)обор 
-> (Чернігів), (д)омініканський (с)обор (Львів), (м)узей історії Ки-
-> єва, (к)омета (г)аллея, вебсайт (ш)коляр, (з)ахідне (п)оділля,
-> (д)ень (п)сихолога, автомобіль (т)есла, станція метро (п)окров-
-> ська, (ф)ранцузька (р)еспубліка, (г)алактика (с)пляча (к)расуня, 
-> вулиця (с)ічових (с)трільців, (к)ерченська (п)ротока. 225 
-> 226 
-> 227 
-> 228
-> 229
-> 230
-> 231
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
-  
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьо
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-... (truncated for context window)
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
+
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
+
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -614,7 +605,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Транспорт (Transport Types)` (~300 words)
 - `## Корисні фрази (Useful Phrases)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -671,7 +661,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -772,52 +762,42 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
+## Діалоги — Dialogues (~330 words total)
+- P1 (~50 words): Intro to transport in Ukraine. Setting the scene at Boryspil airport (Бориспіль) and the need to get into Kyiv. Mentioning the variety of choices: bus, train, taxi, or metro.
+- Dialogue 1 (~100 words): Getting from the airport to the city. [Приїжджий: Вибачте, як дістатися до вокзалу? Друг: Їдьте автобусом номер сім. Зупинка ось там. Приїжджий: А можна на метро? Друг: Так, але спочатку треба їхати автобусом до станції метро «Харківська».]
+- P2 (~40 words): Language focus on the first dialogue. Explaining the phrase "Як дістатися до..." (How to get to...) + Genitive case (вокзалу, станції). Highlighting the polite response "На здоров'я!"
+- Dialogue 2 (~100 words): Buying a train ticket at the station. [Пасажир: Добрий день! Один квиток до Львова, будь ласка. Касир: В один бік чи туди й назад? Пасажир: Туди й назад на завтра. Касир: Є потяг о дев'ятій ранку. П'ятсот гривень. Пасажир: Дякую. О котрій годині він рушає? Касир: О дев'ятій рівно.]
+- P3 (~40 words): Cultural and linguistic notes on ticket buying. The distinction between "в один бік" (one way) and "туди й назад" (round trip). Integration of time (о дев'ятій) and numbers (п'ятсот).
+- <!-- INJECT_ACTIVITY: fill-in-ticket-buying --> [fill-in, focus: Buying a ticket: Один ___ до ___, будь ласка, 6 items]
 
-- P1 (~25 words): Scene-setting intro — Оля зустрічає друга Марка в аеропорту Бориспіль. Він приїхав до Києва вперше і не знає, як дістатися до готелю.
-- Dialogue 1 (~100 words): Multi-turn exchange — Марко asks «Як мені дістатися до центру?»; Оля offers three options: «Можна їхати автобусом — номер сімдесят один, можна потягом — "Експрес", або на таксі». Марко asks «А метро є?»; Оля explains «Метро нема в аеропорту. Але в центрі є. Поїдьте потягом, а потім на метро». Марко: «Добре. Де квиток?» / «Ось там, у касі».
-- P2 (~20 words): Brief note — two patterns appear in the dialogue: їхати автобусом / потягом (instrumental) vs. їхати на метро / на таксі (на + noun). Learners will study both below.
-- Dialogue 2 (~100 words): Ticket window exchange — Марко at the kiosk: «Один квиток до центру, будь ласка». Каса: «На автобус чи на потяг?» / «На потяг». / «Гаразд. Сто двадцять гривень». / «О котрій відправлення?» / «О дев'ятій двадцять». / «Дякую!» / «Будь ласка. Приємної поїздки!». Combines квиток, гривні (M11), time expression (M22).
-- P3 (~85 words): Post-dialogue note — highlight two new questions learners just heard: «О котрій відправлення?» (What time does it depart?) and «Приємної поїздки!» (Have a good trip! — fixed phrase, not analysed further). Recap which transport words appeared: автобус, потяг, метро, таксі — and flag their genders. These genders matter for the instrumental pattern in the next section.
+## Транспорт — Transport Types (~330 words total)
+- P1 (~80 words): Introduction to city transport (громадський транспорт). Listing the "big four": автобус (bus), тролейбус (trolleybus), трамвай (tram), and метро (metro). Explaining that "метро" and "таксі" are indeclinable (незмінювані) nouns of foreign origin.
+- P2 (~70 words): Intercity and private transport. Introducing "потяг/поїзд" (train) and "літак" (plane). Mentioning "маршрутка" (the ubiquitous Ukrainian minibus) and "машина" (car). Essential locations: вокзал (station), аеропорт (airport), зупинка (stop).
+- P3 (~90 words): Grammar of "By Transport" — Part 1. The Instrumental case for declinable nouns. Explain the "by means of" pattern without a preposition: їхати автобусом (by bus), потягом (by train), трамваєм (by tram), тролейбусом (by trolleybus). Contrast with "іти пішки" (to go on foot).
+- P4 (~90 words): Grammar of "By Transport" — Part 2. The "на + Locative" pattern for indeclinable and specific nouns. Explain: їхати на метро (by metro), на таксі (by taxi), на машині (by car). Warning: do not mix the patterns (no "на автобусом"). Mention that "на автобусі" is possible but "автобусом" is more idiomatic for "by bus."
+- <!-- INJECT_ACTIVITY: quiz-transport-patterns --> [quiz, focus: Автобусом or на метро? Choose the right pattern, 6 items]
+- <!-- INJECT_ACTIVITY: quiz-match-situation --> [quiz, focus: Which transport? Match situation to transport type, 8 items]
 
----
+## Корисні фрази — Useful Phrases (~330 words total)
+- P1 (~80 words): Finding your way. Essential questions at the station: "Де зупинка автобуса?", "Де найближча станція метро?". Vocabulary for finding the right line/number: "Який автобус їде в центр?", "Номер п'ять."
+- P2 (~80 words): On-board communication. How to ask about your stop: "Яка це зупинка?" (What stop is this?), "Вибачте, ви виходите?" (Excuse me, are you getting off? — the standard way to pass in a crowded bus). Use of "Мені виходити тут."
+- P3 (~80 words): Directions and movement. Revisiting movement from M31: прямо (straight), направо (right), наліво (left). Combining with transport: "Поїдьте прямо, а потім поверніть направо на зупинці."
+- P4 (~90 words): Vocabulary of departure. Decolonization note: avoid "відправлятися." Use "рушати" (for trains starting to move), "відбувати" (for scheduled buses), and "виїжджати" (to leave/depart). Examples: "Потяг рушає о восьмій," "Автобус виїжджає з автовокзалу."
+- <!-- INJECT_ACTIVITY: fill-in-directions --> [fill-in, focus: Ask for directions: Як дістатися до __?, 6 items]
 
-## Транспорт (~330 words total)
-
-- P1 (~100 words): City transport vocabulary with gender labels — автобус (bus, m), тролейбус (trolleybus, m), трамвай (tram, m), маршрутка (minibus, f). Each given with a short real-world cue: «автобус і тролейбус є у більшості міст; трамвай є у Києві, Львові, Вінниці; маршрутка — невеликий мікроавтобус, дуже поширений в Україні». Stress marked: авто́бус, тролейбус, трамва́й, маршру́тка.
-- P2 (~60 words): Indeclinable nouns — метро (metro, n) and таксі (taxi, n). Key point: these words never change form — метро is always метро, таксі is always таксі. No instrumental form possible, so they use a different pattern (на + the word). Contrast: потяг (train, m) and літак (plane, m) — these DO change.
-- P3 (~90 words): Pattern 1 — їхати + instrumental chunk. Presented as a fixed chunk to memorise with each masculine noun: їхати авто́бусом, їхати тролейбусом, їхати трамваєм, їхати поїздом / поїздом (note: потяг → потягом). Table of 5 forms. Framed explicitly as a CHUNK, not grammar: «Learn each transport with its form — don't analyse the ending at this stage».
-- P4 (~80 words): Pattern 2 — їхати на + noun (for indeclinables and машина). Examples: їхати на метро, їхати на таксі, їхати на машині. Note: метро and таксі use на because they don't change form. машина adds на for a different reason — but at A1 treat all three as chunks. «Which pattern? Learn it WITH the word: потяг → потягом; метро → на метро».
-- Exercise: Quiz — "Автобусом or на метро?" — 6 items. Learner chooses the correct pattern for: трамвай, таксі, тролейбус, метро, потяг, маршрутка.
-
----
-
-## Корисні фрази (~330 words total)
-
-- P1 (~110 words): At the stop / station — six phrases presented in a realistic street scenario. Марко needs to find the bus stop: «Вибачте, де зупинка автобуса?» — «Ось там, навпроти». Then at the ticket window: «Один квиток, будь ласка» / «Скільки коштує квиток?» / «Коли наступний потяг до Львова?» Each phrase given in Ukrainian with English gloss. Vocabulary spotlighted: зупи́нка (stop, f), кви́ток (ticket, m), ка́са (ticket window, f), відправле́ння (departure, n).
-- Exercise: Fill-in — "Buy a ticket" — 6 items: Один ___ до Харкова, будь ласка. / Скільки ___ квиток? / Коли ___ потяг? etc. (fills: квиток, коштує, наступний).
-- P2 (~110 words): On the vehicle / navigating — five phrases for during the journey. «Яка це зупинка?» (What stop is this?), «Мені виходити тут?» (Do I get off here?), «Вибачте, як дістатися до вокзалу?» (Excuse me, how do I get to the station?), «Їдьте прямо» (Go straight), «Поверніть направо / наліво» (Turn right / left). Real-world note: on Kyiv metro, stop names are announced — learners can listen for «Наступна станція — Хрещатик». Vocabulary: прямо (straight), напра́во (right), налі́во (left), діста́тися (to get to — imperfective, used in questions).
-- Exercise: Fill-in — "Ask for directions" — 6 items: Як дістатися до ___? (fills: метро, вокзалу, центру, готелю, аеропорту, зупинки).
-- P3 (~110 words): Putting it together — short narration: Марко gets off the train at Kyiv Central (Київ-Пасажирський). He asks a passer-by: «Вибачте, як дістатися до метро?» / «Прямо, потім направо. П'ять хвилин». He buys a metro token: «Один жетон, будь ласка. Скільки коштує?» / «Вісімнадцять гривень». Он enters: «Яка це станція?» / «Вокзальна». He smiles — he did it! Vocabulary recycled: жетон (metro token, m), станція (station, f).
-
----
-
-## Підсумок (~330 words total)
-
-- P1 (~80 words): Recap paragraph — Transport in Ukrainian cities is rich: автобус, тролейбус, трамвай, маршрутка in most cities; метро in Kyiv, Kharkiv, Dnipro. Intercity: потяг (trains are popular — Укрзалізниця connects all major cities), літак (for longer distances). Reinforce: two words never change — метро and таксі — so they always take «на».
-- P2 (~100 words): Pattern summary — explicit side-by-side comparison. Left column (їхати + instrumental): автобусом, тролейбусом, трамваєм, маршруткою, потягом. Right column (їхати на + noun): на метро, на таксі, на машині. Rule of thumb presented as a mnemonic: «If the word ends in -с, -й, -г, -а → it changes → use the -ом/-ею form. If the word sounds the same in all contexts (метро, таксі) → use на».
-- P3 (~150 words): Self-check — bulleted Q&A list (not prose):
-  - Як сказати «by bus»? → автобусом
-  - Як сказати «by metro»? → на метро
-  - Як запитати про зупинку? → Де зупинка автобуса?
-  - Як купити квиток? → Один квиток до ___, будь ласка.
-  - Як запитати ціну? → Скільки коштує квиток?
-  - Як запитати час відправлення? → О котрій відправлення?
-  - Як запитати, як дістатися? → Як дістатися до ___?
-  - Як сказати «turn right»? → Поверніть направо.
-  - Challenge: How does Марко get from Boryspil airport to his hotel using two types of transport? Write 2 sentences using їхати.
-- Exercise (activities from plan, placed at section end):
-  - Quiz — "Which transport?" — 8 items: Match situation to transport (e.g., «Потрібно перетнути місто швидко і дешево» → метро; «Немає квитка, швидко треба» → таксі).
+## Підсумок — Summary (~330 words total)
+- P1 (~150 words): Recap of transport communication. We have learned to name the main types of transport (автобус, потяг, таксі, метро) and how to say we are traveling by them using two patterns: the instrumental case (автобусом) and the "на" construction (на метро). We also covered the basics of buying a ticket and asking for the schedule using "о котрій годині" and the verb "рушати."
+- P2 (~180 words): Self-check Q&A.
+    - Q: How do you say "I am going to work by bus"?
+    - A: Я їду на роботу автобусом.
+    - Q: How do you ask "Where is the train station?"
+    - A: Де залізничний вокзал?
+    - Q: How do you buy a train ticket to Lviv (round trip)?
+    - A: Один квиток до Львова туди й назад, будь ласка.
+    - Q: How do you ask "What stop is this?"
+    - A: Яка це зупинка?
+    - Q: How do you say "Go straight and then left"?
+    - A: Ідіть прямо, а потім наліво.
 
 Grand total: ~1320 words
 </skeleton>

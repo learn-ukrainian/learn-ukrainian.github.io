@@ -23,6 +23,30 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: приві́т
+  translation: hi (informal)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: як справи
+  translation: how are you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до́бре
+  translation: fine, good
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: great, wonderful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: ма́ма
   translation: mother
   expression: false
@@ -34,6 +58,18 @@ vocabulary:
   expression: false
   pos: ім.
   gender: с.
+  verified: true
+- word: норма́льно
+  translation: okay
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: та́то
+  translation: father
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: о́ко
   translation: eye
@@ -53,42 +89,6 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: приві́т
-  translation: hi (informal greeting)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Як справи?
-  translation: How are you?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: до́бре
-  translation: fine, good
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: чудо́во
-  translation: great, wonderful
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: норма́льно
-  translation: okay, so-so
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: та́то
-  translation: father
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: сон
   translation: dream
   expression: false
@@ -96,7 +96,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: абе́тка
-  translation: Ukrainian alphabet
+  translation: alphabet
   expression: false
   pos: ім.
   gender: ж.
@@ -107,20 +107,14 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: м'яки́й знак
-  translation: soft sign (the letter Ь)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: тверді
-  translation: hard (consonants)
+- word: тверди́й
+  translation: hard (consonant)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: м'які́
-  translation: soft (consonants)
+- word: м'яки́й
+  translation: soft (consonant)
   expression: false
   pos: прикм.
   gender: ''
@@ -131,32 +125,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: дякую
-  translation: thank you
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ра́да
-  translation: glad (feminine)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ра́дий
-  translation: glad (masculine)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: Рада тебе бачити
-  translation: Glad to see you (feminine speaker)
+- word: Рада тебе бачити!
+  translation: Glad to see you! (female speaker)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: радий тебе бачити
-  translation: Glad to see you (masculine speaker)
+- word: Радий тебе бачити!
+  translation: Glad to see you! (male speaker)
   expression: true
   pos: ''
   gender: ''
@@ -166,28 +142,4 @@ vocabulary:
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: ґа́нок
-  translation: porch
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: щу́ка
-  translation: pike (the fish)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сіль
-  translation: salt
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: підсумок
-  translation: summary
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true

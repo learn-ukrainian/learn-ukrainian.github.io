@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -313,370 +313,317 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-- **Confirmed (12/12):** друг, подруга, брат, сестра, пан, пані, синку, дочко, козак, вчитель, бабуся, дідусь
-
-⚠️ **One plan metadata error found:**
-- **синку** — VESUM lemma is **синок** (noun), NOT **син**. The plan says "синку (son — vocative, from **син**)" — this is incorrect. The vocative of **син** is **сину**. **синку** is the vocative of **синок** (affectionate diminutive). Plan annotation must be corrected to: "синку (son — vocative, from синок)".
-
-- Not found: none
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги (Dialogues) — грeetings, vocative in natural context
-> «Доброго ранку! Добрий день! Привіт! Радий бачити тебе.» / «Як ся маєш? Як ваші справи?»
-> Source: Заболотний, Grade 5 (2023); Авраменко, Grade 6 (2023)
-
-> Авраменко Grade 6 explicitly models dialogue-in-situations: «знайомство з однолітками в таборі відпочинку», with formulas: **Привіт! Вітаю! Доброго ранку!** and **Як ся маєш? Як ваші справи?** — both confirmed as natural Ukrainian etiquette formulas.
-> Source: Авраменко, Grade 6, tier 1
-
-### Section: Кличний відмінок (The Vocative Case)
-> «Іменники в українській мові мають сім відмінків, на відміну від інших слов'янських мов. Сьомий відмінок — кличний, його використовують, звертаючись до людей, рідше — до тварин.»
-> Source: Авраменко, Grade 9, tier 2
-
-> «Кличний відмінок іменника є засобом вираження звертання до певної особи чи предмета. Форму кличного відмінка мають усі іменники I, II, III відмін у формі однини.»
-> Source: Глазова, Grade 10, tier 2
-
-### Section: Закінчення кличного (Vocative Endings)
-> **Feminine (I declension, hard group):** «Закінчення **-о**: мамо, Миколо, старосто.» | **Soft/mixed group:** «Закінчення **-е (-є)**: судде, земле, **Маріє**; закінчення **-ю** для пестливих імен: бабусю, Настусю, Катрусю. Але: Насте, Катре.»
-> Source: Литвинова, Grade 6 (2023), tier 1
-
-> **Masculine (II declension, hard group):** «Закінчення **-е** для безсуфіксних іменників: Петре, студенте, **пане**, **друже**. Але: **тату**, сину, діду.» | **Soft group:** «Закінчення **-ю** для більшості іменників: лікарю, **вчителю**, добродію, Ігорю.» | **Suffix -к/-ик/-ок:** «Закінчення **-у**: **синку**, батьку.»
-> Source: Литвинова, Grade 6 (2023), tier 1
-
-> **Consonant alternations in vocative (confirmed):**
-> «[г] — [ж]: **друг — друже**, ворог — вороже; [к] — [ч]: чоловік — чоловіче, **козак — козаче**; [х] — [ш]: пастух — пастуше.»
-> Source: Глазова, Grade 10 (2018), tier 2; also Заболотний, Grade 5 (2023) tier 1
-
-> **мамо, дочко** (pестливі without diminutive suffix keep -о not -ю) vs **матусю, доню** (diminutive suffix → -ю)
-> Source: Заболотний, Grade 10 (2018), §45
-
-### Section: Підсумок — Summary
-> «Пане Євгене; пані Оксано; панно Ганно; Тамаро Іванівно; Іване Вікторовичу.» — official address forms in vocative from Grade 8 context table.
-> Source: Заболотний, Grade 8 (2025), tier 1
-
----
+- Confirmed: друг, подруга, брат, сестра, пан, пані, синку, дочко, козак, вчитель, бабуся, дідусь, друже, козаче, Маріє, Олено, Тарасе, Андрію, мамо, тату, вчителю, бабусю, дідусю
+- Not found: []
 
 ## Grammar Rules
-
-- **Vocative endings — consonant alternations:** Правопис §18 — «к, м'який ц, ч → -цьк-/-цтв-; г, ж, з → -зьк-» (same phonological alternations г→ж, к→ч confirmed here). The vocative-specific declension tables are confirmed via textbooks (Авраменко Gr.9, Литвинова Gr.6, Глазова Gr.10) rather than a single Правопис paragraph.
-  - **Rule confirmed:** г→ж before -е (друг→друже); к→ч before -е (козак→козаче); ц'→ч before -е (хлопець→хлопче); х→ш before -е (пастух→пастуше).
-  - **Exception confirmed:** Foreign names and nouns with suffixes -ик/-к do NOT alternate: Джеку, Жаку, **синку** (suffix -к → ending -у, no alternation).
-
-- **тато→тату:** Confirmed as exceptional -у ending alongside сину, діду — explicitly listed in Литвинова Grade 6 §31 table (hard group exceptions).
-
-- **Марія→Маріє (not Маріо):** Confirmed — «Закінчення -є, якщо кінцевий приголосний основи м'який: Марія [йа] — Маріє» (Авраменко Grade 9).
-
----
+- Кличний відмінок іменників: Правопис § 87, 98 (confirmed via Grade 6 & 10 textbooks) — Іменники I відміни твердої групи мають закінчення -о (мамо, Олено), м’якої — -е/-є (воле, Маріє) або -ю (пестливі: бабусю). Іменники II відміни твердої групи мають закінчення -е (брате, друже, пане, Тарасе), але іменники із суфіксами -к-, -ок-, -ик- та деякі інші мають -у (синку, тату, діду). М’яка група II відміни має -ю (Андрію, вчителю, дідусю).
 
 ## Calque Warnings
-
-- **«як справи»** — Антоненко-Давидович discusses "справа" vs "діло" semantics but does **NOT** flag «як справи?» as a calque. The greeting formula is natural Ukrainian. ✅ OK
-- **«будьте обережні»** — No calque found. Natural Ukrainian imperative + predicate adjective. ✅ OK
-- **«ходи сюди»** — No calque found. Standard Ukrainian imperative movement expression. ✅ OK
-
----
+- Як справи?: OK — Common standard greeting, though alternatives like "Як ся маєш?" exist, "Як справи?" is widely accepted and verified in usage contexts.
+- Ходи сюди: OK — Standard imperative form of "ходити" (to come/walk).
+- Будьте обережні: OK — Standard Ukrainian expression for "be careful".
 
 ## CEFR Check
-
-- **друг:** A1 — ✅ on target
-- **брат:** A1 — ✅ on target
-- **сестра:** A1 — ✅ on target
-- **подруга:** A1 — ✅ on target
-- **вчитель:** A1 — ✅ on target
-- **бабуся:** A2 — ⚠️ one level above A1. Acceptable as a culturally central family term introduced early; flag for awareness. Writers should treat it as lexical exception, not grammar teaching vocab.
-- **козак:** B1 — ⚠️ **above A1 target**. Used in the plan only as a grammar example to demonstrate the к→ч alternation (козак→козаче). Pedagogically justified as a **cultural anchor word** for the alternation rule, but should NOT appear in core vocabulary list or be tested in activities. Keep as illustrative example only, explicitly labelled as cultural bonus vocabulary.
+- друг: A1 — OK
+- брат: A1 — OK
+- сестра: A1 — OK
+- вчитель: A1 — OK
+- бабуся: A1 — OK
+- дідусь: A1 — OK
+- пан/пані: A1 — OK (Essential for polite address)
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Hey, Friend!
-**Module:** hey-friend | **Phase:** A1.7 [Communication]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: Hey, Friend!
+**Module:** hey-friend | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/hey-friend.md
+
+# Педагогіка A1: Hey Friend
+
+
+
+## Методичний підхід (Methodological Approach)
+
+Навчання звертань до співрозмовника є фундаментальним комунікативним актом на рівні A1. Українська мова має для цього спеціальний інструмент — **Кличний відмінок (Vocative Case)**, що є однією з її виразних рис (Джерело: `6-klas-ukrmova-golub-2023_s0073`). Підхід до його введення має бути комунікативним і контекстуальним, а не суто граматичним.
+
+На початковому етапі учні не повинні зазубрювати відмінкові таблиці. Натомість, вони мають засвоювати найпоширеніші форми звертань через діалоги, короткі листи та рольові ігри. Педагогічна практика в українських школах полягає у введенні звертань через функцію: як покликати друга, як привітатися з учителем, як написати лист мамі (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0129`).
+
+Ключова ідея — показати контраст між неформальним та формальним спілкуванням. Наприклад, у подкасті Ukrainian Lessons (Джерело: `ext-ulp_youtube-233`) наочно демонструється різниця між неформальним листом до подруги (`Привіт, моя люба Інно... Обіймаю міцно, Аня`) та формальним листом до лікаря (`Шановний Сергію Васильовичу... З повагою, Анна Огойко`). Цей функціональний поділ (лист другові vs. лист посадовій особі) є ідеальною основою для введення різних форм кличного відмінка та відповідної лексики (`ти` vs. `ви`, `привіт` vs. `добрий день`).
+
+Лише після того, як учні засвоїли декілька високочастотних моделей у контексті, можна вводити сам термін "Кличний відмінок" і пояснювати найпростіші правила його утворення.
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Крок 1: Неформальне звертання на ім'я.** Починати слід з найпростішої та найчастотнішої ситуації: привітання з другом. У діалогах вводяться фрази `Привіт, [Ім'я]!` та `Бувай, [Ім'я]!`. На цьому етапі вводяться 2-3 найпростіші моделі кличного відмінка без пояснення правил:
+    *   Жіночі імена на `-а` → `-о`: *Анна → Анно, Оксана → Оксано* (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0019`).
+    *   Чоловічі імена з твердим приголосним → `-е`: *Іван → Іване, Богдан → Богдане* (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0259`).
+
+2.  **Крок 2: Звертання до членів родини.** Вводяться пестливі та стандартні форми звертань до рідних, оскільки вони є високочастотними і часто винятковими.
+    *   `мама → мамо` (тверда група)
+    *   `тато → тату` (виняток, закінчення `-у`) (Джерело: `6-klas-ukrmova-litvinova-2023_s0166`)
+    *   `бабуся → бабусю` (пестлива форма) (Джерело: `6-klas-ukrmova-avramenko-2023_s0113`)
+    *   `дідусь → дідусю` (м'яка група)
+
+3.  **Крок 3: Введення поняття "Кличний відмінок".** Після засвоєння кількох моделей, вводиться сам термін: "В українській мові, коли ми кличемо когось, ми використовуємо спеціальний **кличний відмінок**". Наголошується, що він не має питання (Джерело: `6-klas-ukrmova-golub-2023_s0073`).
+
+4.  **Крок 4: Формальне звертання.** Вводиться контраст `ти/ви`. Пояснюється, що до незнайомих людей, старших за віком, вчителів та на роботі звертаються на "ви". Вводяться слова-маркери формальності: `Добрий день`, `До побачення`, `Шановний/Шановна`.
+    *   Вводиться конструкція **`пан/пані + Ім'я`**, де обидва слова стоять у кличному відмінку: `пане Іване`, `пані Оксано` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   Для A1 достатньо конструкції "титул + ім'я". Звертання на ім'я та по батькові (`Сергію Васильовичу`) можна показати рецептивно (для розуміння), але не вимагати активного вживання (Джерело: `ext-ulp_youtube-233`).
+
+5.  **Крок 5: Розширення правил (найпростіші випадки).**
+    *   Чоловічі імена на м'який приголосний `-й` → `-ю`: *Андрій → Андрію, Сергій → Сергію* (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0222`).
+    *   Жіночі імена на `-я` → `-є`: *Марія → Маріє, Юлія → Юліє* (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0019`).
+    *   Пестливі жіночі імена на `-я` → `-ю`: *Галя → Галю, Наталя → Наталю* (Джерело: `10-klas-ukrajinska-mova-zabolotnij-2018_s0222`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+Для англомовних учнів, у мові яких кличний відмінок відсутній, головна складність полягає у самій необхідності змінювати ім'я при звертанні.
+
+| ❌ Помилково (Неправильно)                                  | ✅ Правильно                                                  | Чому виникає помилка                                                                                                                                                             |
+| ----------------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Привіт, Анна!`                                             | `Привіт, Анно!`                                              | **Вживання називного відмінка замість кличного.** Це найпоширеніша помилка, прямий перенос з англійської, де форма імені не змінюється при звертанні. (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0019`) |
+| `Це для тебе, Іван.`                                        | `Це для тебе, Іване.`                                        | **Вживання називного замість кличного для чоловічих імен.** Учень не очікує, що чоловіче ім'я, яке закінчується на приголосний, потребує додавання голосної. (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0259`) |
+| `Де ти, Марію?`                                             | `Де ти, Маріє?`                                              | **Плутанина між закінченнями `-ю` та `-є` для жіночих імен.** Учні можуть гіперкоректно застосовувати закінчення `-ю` (яке чули у `бабусю`) до всіх імен на `-я`. (Джерело: `10-klas-ukrmova-zabolotnyi-2018_s0222`) |
+| `Добрий день, пан Коваленко.`                               | `Добрий день, пане Коваленку.` (або `пане Коваленко`)      | **Невживання кличного відмінка для титулів.** Учень може вважати, що `пан` — це незмінне слово, як англійське "Mr.". Важливо пояснити, що `пан` теж відмінюється. (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`) |
+| `Шановний Олег, ...`                                        | `Шановний Олегу, ...`                                        | **Плутанина між двома формами імені Олег.** Учні можуть почути розмовну форму `Олеже` і застосовувати її в офіційному листуванні, або просто вжити називний відмінок. (Джерело: `10-klas-ukrmova-zabolotnyi-2018_s0224`, `6-klas-ukrmova-litvinova-2023_s0166`) |
+| `Привіт, мій друг!`                                         | `Привіт, мій друже!`                                         | **Чергування приголосних.** Учень не очікує, що `г` в слові `друг` зміниться на `ж`. На рівні А1 це правило варто давати як виняток, а не як загальне правило чергування. (Джерело: `10-klas-ukrmova-glazova-2018_s0289`) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+1.  **Кличний відмінок — маркер української ідентичності.** Слід наголосити, що кличний відмінок є живою та невід'ємною частиною сучасної української мови, яка вирізняє її з-поміж інших східнослов'янських мов. У сучасній стандартній російській мові він практично зник, зберігшись лише в архаїчних формах. У радянські часи його вживання в українській мові не заохочувалося (Джерело: `ext-ulp_youtube-234`: "It was not encouraged as [it] doesn't exist in Russian"). Тому активне і правильне використання кличного відмінка — це не просто граматична норма, а й акт утвердження мовної ідентичності.
+
+2.  **Ніколи не порівнювати з російською.** Навчання має відбуватися виключно на основі українського матеріалу. Неприпустимі пояснення на кшталт: "це як у російській, але...". Фонетична та граматична системи української мови мають вибудовуватися у свідомості учня з нуля, на власній основі.
+
+3.  **Традиція звертання `пан/пані`.** Вживання слів `пан`, `пані`, `панно` є відновленою європейською традицією в українській мові, яка була витіснена радянським `товариш`. Варто пояснити учням, що `пан/пані` є сучасною, шанобливою та єдиною прийнятною формою звертання в офіційних та формальних ситуаціях (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`, `8-klas-ukrmova-zabolotnyi-2025_s0211`).
+
+4.  **Ім'я по батькові.** Хоча формальне звертання на ім'я та по батькові все ще поширене, особливо серед старшого покоління, варто зазначити, що в сучасному бізнес-середовищі та серед молоді поширюється європейська модель `пан/пані + ім'я` або `пан/пані + прізвище`. На рівні А1 достатньо навчити учнів розуміти звертання по батькові, але активно вживати конструкцію `пане/пані + Ім'я`.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+| Частина мови   | Рівень володіння | Слова та фрази                                                                                                |
+| -------------- | ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Іменники**   | ★★★ (Essential)  | *Анна, Іван, Оксана, Андрій, Марія, мама, тато, друг, подруга, пан, пані, Україна.*                               |
+|                | ★★ (Useful)      | *Сергій, Юлія, Наталя, бабуся, дідусь, вчитель, лікар, Петро, хлопець, дівчина.*                                |
+|                | ★ (Can wait)     | *Директор, професор, колега, сусідка, панна, добродій, добродійка.*                                             |
+| **Привітання** | ★★★ (Essential)  | *Привіт! Добрий день! Бувай! До побачення!*                                                                    |
+| **Фрази**      | ★★★ (Essential)  | *Як (у тебе/у вас) справи? Дякую. Будь ласка. Пробач(те).*                                                    |
+| **Прикметники**| ★★ (Useful)      | *дорогий/дорога, любий/люба* (у звертанні `любий друже`).                                                      |
+|                | ★ (Can wait)     | *шановний/шановна, вельмишановний/вельмишановна.*                                                              |
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Вправа "Утвори звертання" (за мотивами Джерела `3-klas-ukrainska-mova-ponomarova-2020-1_s0129`)**
+    *   **Завдання:** Допоможи роботу записати, як правильно звертатися до цих людей.
+    *   **Слова:** `мама`, `друг`, `Сергійко`, `сусідка`, `Іван`, `Марія`.
+    *   **Зразок:** `тато → тату`
+    *   **Очікувана відповідь:** `мамо`, `друже`, `Сергійку`, `сусідко`, `Іване`, `Маріє`.
+
+2.  **Вправа "Лист другові" (за мотивами Джерела `ext-ulp_youtube-233`, `5-klas-ukrmova-uhor-2022-1_s0021`)**
+    *   **Завдання:** Прочитайте два листи. Який з них формальний, а який ні? Чому? Вставте правильні форми звертань.
+    *   **Лист 1:** `(Привіт, _____)! Як справи? У мене все добре. Чекаю нашої зустрічі. Обіймаю, _____` (Імена: `Оксана`, `Іван`)
+    *   **Лист 2:** `(Добрий день, _____)! Пишу вам щодо нашої зустрічі. Пропоную зустрітися у вівторок. (З повагою, _____)` (Імена та титули: `пан директор`, `Олена Петрівна`)
+    *   **Очікувана відповідь:** Лист 1: `Привіт, Оксано!`, `Іван`. Лист 2: `Добрий день, пане директоре!`, `З повагою, Олена Петрівна`.
+
+3.  **Вправа "Діалог у класі" (за мотивами Джерела `8-klas-ukrmova-zabolotnyi-2025_s0211`)**
+    *   **Завдання:** Складіть короткі діалоги за зразком, використовуючи правильну форму звертання.
+    *   **Зразок:**
+        > — (Андрій), ти виконав домашнє завдання?
+        > — Так, (пані вчителька), я виконав.
+    *   **Очікувана відповідь:**
+        > — Андрію, ти виконав домашнє завдання?
+        > — Так, пані вчителько, я виконав.
+    *   **Пари для діалогів:** `(Марія)` і `(пан лікар)`, `(Петро)` і `(друг)`.
+
+4.  **Вправа "Виправ помилки" (Common L2 Errors)**
+    *   **Завдання:** Знайди та виправ помилки у звертаннях.
+    *   1. `Добрий день, пані Марія!`
+    *   2. `Іван, іди-но сюди!`
+    *   3. `Як справи, тато?`
+    *   4. `Пробачте, пан, ви не підкажете дорогу?`
+    *   **Очікувана відповідь:** 1. `пані Маріє`, 2. `Іване`, 3. `тату`, 4. `пане`.
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/introducing-yourself`
+- `pedagogy/a1/family-members`
+- `grammar/nouns/vocative-case`
+- `culture/etiquette/formal-vs-informal`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 122
-> **Score:** 0.33
->
-> Твій друг Артем 
-> — Привіт, Артеме! Лікарі готують мене до операції. Я думаю, що вона 
-> пройде успішно, адже коли думки з добром, то й добро з людиною. Згадую 
-> Психологічна  повість  Оксани  Радушинської  «Метелики  в  крижаних  панцирах»
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 221
-> **Score:** 0.50
->
-> 218
-> Доброго ранку! Добрий день! Привіт! Радий бачити тебе. 
-> * * *
-> До побачення! На все добре! Гарного дня! Бувайте здорові! До зу-
-> стрічі!
-> Бажаю успіхів! Хай щастить! Рада була зустрітися.
-> * * *
-> Вибачте. Пробачте. Прошу вибачити (пробачити).
-> Даруйте. Перепрошую. Вибачте, що турбую.
-> * * *
-> Дякую. Щиро дякую. Я тобі дуже вдячний. Будь ласка. Нема 
-> за що.
-> 528.	І. ПОПРАЦЮЙТЕ В ПАРАХ. Уявіть, що хтось із вас опинився в 
-> чужому місті і йому необхідно з’ясувати, де розміщено стадіон (цирк чи 
-> театр). А хтось із вас живе в цьому місті. Складіть і розіграйте за осо-
-> бами діалог (5–6 реплік), можливий у цій ситуації. Уживайте слова 
-> ввічливості.
-> ІІ.
-
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 250
-> **Score:** 0.50
->
-> 246
-> 246
-> – Якщо хтось не виконує твоїх забаганок, це ще не означає,
-> що йому не можна довіряти! – розвів руками дідусь. – І ти по-
-> винен знати, що не кожне бажання можна виконати.
-> * * *
-> – Добридень! – привіталася Наталка з дідусем. – Яка ж гар-
-> на у вас крамничка!
-> – Добридень! Радий, що тобі подобається! Щось тобі запропо-
-> нувати?
-> – Знаєте, я шукаю подарунок для подруги. Щось не дуже 
-> дороге, але таке, що запам’ятається.
-> – А яка твоя подруга?
-> – Дуже хороша людина. Добра, спокійна, завжди допоможе,
-> коли що.
-> За А. Шевердіною
-> ІІ. Знайдіть у першому діалозі дієслова, які передають гарячковість головного ге-
-> роя, його категоричність, нетерпимість. Чи легко, на вашу думку, знаходити спіль-
-> ну мову з такими людьми? 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> І. Розгляньте світлини.
-
-## Кличний відмінок (The Vocative Case)
-
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 141
-> **Score:** 0.50
->
-> § 28. Кличний відмінок  
-> 141
-> Добродійко, 
-> добродійка; 
-> добродій, 
-> добродію; 
-> пан 
-> Євген, пане Євгене; пані Оксано, пані Оксана; панно 
-> Ганно, панна Ганна; шановна громада, шановна гро-
-> мадо; Тамара Іванівна, Тамаро Іванівно; Іване Вікторо-
-> вичу, Іван Вікторович.
-> 2. Яку форму ви оберете, звертаючись до особи?
-> 3. Випишіть форми звертань.
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 178
-> **Score:** 0.25
->
-> Аля і Недопопелюшка 
-> подавали майстру інструменти. Недоладько дуже зрадів, коли побачив, що дівчатка живі та здорові. – А ми прийшли визволяти тебе, – звернувся він до Алі. Аля обернулася і впізнала багатьох знайомих недоладян. Потім знову 
-> перевела погляд на Недоладька й раптом щось згадала. Дівчинка побігла 
-> на кухню, знайшла в каміні кілька холодних вуглинок, міцно затисла їх у 
-> кулаці. Тремтячою рукою дівчинка торкнулася Недоладькового підборід-
-> дя... І сталося диво! Перед Алею стояв стрункий, гарний хлопець. Його 
-> неважко було пізнати, бо на обличчі світилися щирі очі та добра й лагідна 
-> усмішка. Аля вся сяяла від задоволення. Хтось торкнувся її руки, і дівчин-
-
-## Закінчення кличного (Vocative Endings)
-
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 151
-> **Score:** 0.33
->
-> § 30. Відмінювання іменників І відміни   
-> 151
-> 2. Поясніть відмінності в закінченнях іменників.
-> 3. Поміркуйте, у яких лексичних відношеннях перебувають слова в кож-
-> ній групі (до крапки з комою).
-> Іменники І  відміни в  кличному відмінку мають такі 
-> закінчення:
-> Тверда група
-> М’яка та мішана групи
-> Закінчення -о: мамо, Ми-
-> коло, старосто.
-> Запам’ятайте! Закінчення 
-> -о в  кличному відмінку 
-> мають усі жіночі імена по 
-> батькові: Олексіївно, Сер-
-> гіївно, Петрівно
-> • Закінчення -е (-є): 
-> судде, земле, Маріє, 
-> круче, душе;
-> • закінчення -ю для пе-
-> стливих імен і  назв: 
-> бабусю, Настусю, Ка-
-> трусю.
-> Але: Насте, Катре
-> Вправа 305
-> Поставте імена у  форму кличного відмінка. Запишіть їх.
-> Панна Яна, пані суддя, голова зборів, колега Микола, 
-> подруга Оксана, Інна Миколаївна, Стефанія Григорівна.
-> Вправа 306
-> 1.
-
-## Підсумок — Summary
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 119
-> **Score:** 0.50
->
-> — промовила 
-> металевим голосом Олена Кожедуб. (...)
-> — Ти не можеш мені заборонити — там будуть усі наші. — Можу, ще й як можу! Ти неповнолітній, тому я можу заборонити 
-> все, що вважаю недоцільним. Я — твоя мати, і ти зобов’язаний слухатися 
-> мене, бо допоки не подорослішаєш, рішення за тебе прийматиму тільки я!
-
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 151
-> **Score:** 0.33
->
-> § 30. Відмінювання іменників І відміни   
-> 151
-> 2. Поясніть відмінності в закінченнях іменників.
-> 3. Поміркуйте, у яких лексичних відношеннях перебувають слова в кож-
-> ній групі (до крапки з комою).
-> Іменники І  відміни в  кличному відмінку мають такі 
-> закінчення:
-> Тверда група
-> М’яка та мішана групи
-> Закінчення -о: мамо, Ми-
-> коло, старосто.
-> Запам’ятайте! Закінчення 
-> -о в  кличному відмінку 
-> мають усі жіночі імена по 
-> батькові: Олексіївно, Сер-
-> гіївно, Петрівно
-> • Закінчення -е (-є): 
-> судде, земле, Маріє, 
-> круче, душе;
-> • закінчення -ю для пе-
-> стливих імен і  назв: 
-> бабусю, Настусю, Ка-
-> трусю.
-> Але: Насте, Катре
-> Вправа 305
-> Поставте імена у  форму кличного відмінка. Запишіть їх.
-> Панна Яна, пані суддя, голова зборів, колега Микола, 
-> подруга Оксана, Інна Миколаївна, Стефанія Григорівна.
-> Вправа 306
-> 1.
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 243
-> **Score:** 0.50
->
-> Усе 
-> збігалося!.. Хряснули вхідні двері – то прийшла мама. Вона дуже 
-> повільно роздягалася в передпокої, зайшла на кухню й зне-
-> можено сіла край стола.
-
-## Grammar Reference
-
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 141
-> **Score:** 0.33
->
-> § 28. Кличний відмінок  
-> 141
-> Добродійко, 
-> добродійка; 
-> добродій, 
-> добродію; 
-> пан 
-> Євген, пане Євгене; пані Оксано, пані Оксана; панно 
-> Ганно, панна Ганна; шановна громада, шановна гро-
-> мадо; Тамара Іванівна, Тамаро Іванівно; Іване Вікторо-
-> вичу, Іван Вікторович.
-> 2. Яку форму ви оберете, звертаючись до особи?
-> 3. Випишіть форми звертань.
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 120
-> **Score:** 0.50
->
-> 120
-> Iменник
-> Розгляньте зразки відмінювання чоловічого та жіночого імен по 
-> батькові. Провідміняйте усно ім’я та по батькові: Антон Андрійович, Марія 
-> Андріївна.
-> Н.
-> Р.
-> Д.
-> Зн.
-> Ор.
-> М.
-> Кл.
-> Іванович                 
-> Івановича
-> Івановичу, Івановичеві
-> Івановича
-> Івановичем
-> на Івановичу, Івановичеві
-> Івановичу
-> Іванівна
-> Іванівни
-> Іванівні
-> Іванівну
-> Іванівною
-> на Іванівні
-> Іванівно
-> У кличному відмінку чоловічі імена по батькові мають закінчен-
-> ня у – Іванович
-> у
-> у, Андрійовичу.
->  
->  Поміркуйте. Дідуся звуть Григорій Васильович, його онука – Олександр 
-> Дмитрович. Як звуть (ім’я та по батькові) батька онука?
-> Прочитайте речення, утворюючи від поданих у дужках імен імена по 
-> батькові.
-> 1. Іван (Лука) був людиною м’якої, навіть ніжної вдачі
-> (Г. Тютюнник). 2.
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Приголосні м'які й тверді, дзвінкі й глухі
-> **Source:** МійКлас — [Приголосні м'які й тверді, дзвінкі й глухі](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
-Приголосні звуки – це звуки, що творяться за допомогою голосу й шуму або лише шуму. При їх вимові струмінь видихуваного повітря натрапляє на різні перепони органів мовлення
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-... (truncated for context window)
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
+
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
+
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -689,7 +636,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Кличний відмінок (The Vocative Case)` (~300 words)
 - `## Закінчення кличного (Vocative Endings)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -745,7 +691,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -846,44 +792,45 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
+## Діалоги — Dialogues (~330 words total)
+- P1 (~60 words): [Introduction to the scene — setting the context of a birthday party in Ukraine, explaining that calling people across a room requires a specific grammatical shift.]
+- P2 (~100 words): [Dialogue 1: Meeting a friend. Interaction between Іменинник, Олена, and Тарас. Examples: "Олено, привіт!", "Дякую, Тарасе!", "Андрію, ходи сюди!". Focus on natural greeting flow.]
+- P3 (~100 words): [Dialogue 2: Family interactions at the party. Examples: "Мамо, де мій телефон?", "На столі, синку.", "Бабусю, ми йдемо!", "Добре, Андрію!". Focus on high-frequency family vocative forms.]
+- P4 (~70 words): [Observations on the dialogues: pointing out that "Олена" became "Олено" and "Тарас" became "Тарасе", and asking the student if they noticed the pattern of direct address.]
+- <!-- INJECT_ACTIVITY: dialogue-flow-practice --> [fill-in, focus on completing dialogue phrases with vocative forms (e.g., — {Олено}, привіт!), 6 items]
 
-- D1 (~120 words): Dialogue 1 — Meeting a friend at a party. Іменинник calls across the room: "Олено, привіт! Як справи?" Олена responds: "Добре, дякую, Тарасе! А в тебе?" He introduces his brother: "Андрію, ходи сюди! Це Олена. Олено, це Андрій." 6-8 turns, naturally paced. Vocative forms highlighted in bold: Олено (← Олена), Тарасе (← Тарас), Андрію (← Андрій).
-- D2 (~120 words): Dialogue 2 — At home before going out. Teen calls parents: "Мамо, де мій телефон?" "На столі, синку." "Тату, а де ключі?" "У кишені, дочко." Grandmother at the door: "Бабусю, ми йдемо!" "Добре, будьте обережні!" 6-8 turns. Family vocatives highlighted: мамо, тату, синку, дочко, бабусю.
-- P1 (~45 words): Brief setup sentence before each dialogue — Party context: Тарасу 18 років, усі друзі на вечірці, він кличе людей через кімнату. Home context: родина збирається, кожен зайнятий своїм. Sets the situation so learners read with purpose.
-- P2 (~45 words): Post-dialogue note: "Notice how every name CHANGED. Олена became Олено. Тарас became Тарасе. This is кличний відмінок — the calling case. The next two sections explain the pattern."
+## Кличний відмінок — The Vocative Case (~330 words total)
+- P1 (~80 words): [Defining the "Vocative Case" (кличний відмінок). Explaining that Ukrainian has seven cases, and this one is unique because it is used strictly for calling or addressing someone, unlike English where the name remains static.]
+- P2 (~80 words): [The Grade 4 helper word "Кл.(!)". Explain the mnemonic device used in Ukrainian schools where the exclamation mark reminds learners that they are "shouting" or "calling," triggering the ending change.]
+- P3 (~90 words): [Nominative vs. Vocative contrast. Example: "Олена прийшла" (Talking ABOUT Olena - Nominative) vs. "Олено, ходи сюди!" (Talking TO Olena - Vocative). Explain that using the nominative to address someone is a common L2 error that sounds like saying "Hey, him!" instead of "Hey, you!".]
+- P4 (~80 words): [Decolonization and Identity note: Explain that the vocative case is a living marker of Ukrainian linguistic identity that distinguishes it from Russian (where it has mostly disappeared). Using it correctly is an act of speaking authentic, decolonized Ukrainian.]
 
-## Кличний відмінок (~330 words total)
+## Закінчення кличного — Vocative Endings (~340 words total)
+- P1 (~80 words): [Feminine Nouns in -а. Explain the shift -а → -о. Examples: Олена → Олено, мама → мамо, сестра → сестро, Оксана → Оксано. Mention names ending in -ка: Наталка → Наталко.]
+- P2 (~70 words): [Feminine Nouns in -я/ -ія. Explain the shift -ія → -іє (Марія → Маріє) and the shift for soft/diminutive endings -ся → -сю (бабуся → бабусю, Галя → Галю, Наталя → Наталю).]
+- P3 (~70 words): [Masculine Hard Consonants. Explain the shift to -е. Examples: Тарас → Тарасе, Іван → Іване, брат → брате, пан → пане. Explain that a vowel is added to the consonant ending.]
+- P4 (~60 words): [Masculine Soft/-й Endings. Explain the shift to -ю. Examples: Андрій → Андрію, дідусь → дідусю, вчитель → вчителю, Сергій → Сергію.]
+- P5 (~60 words): [Special Cases and Alternations. Explain the irregular -у for "тато → тату" and "син → синку". Briefly introduce the consonant change for "друг → друже" (г → ж) and "козак → козаче" (к → ч).]
+- <!-- INJECT_ACTIVITY: vocative-form-practice --> [fill-in, focus on writing the vocative form from a nominative prompt (e.g., Іван → {Іване}), 10 items]
+- <!-- INJECT_ACTIVITY: vocative-choice-quiz --> [quiz, focus on choosing the correct vocative form in a sentence context (e.g., ___, привіт! [Олено/Олена/Оленю]), 8 items]
+- <!-- INJECT_ACTIVITY: ending-sorting-activity --> [group-sort, sorting names and nouns into -о (feminine), -е (masculine hard), and -ю (soft) categories, 10 items]
 
-- P1 (~90 words): Introduction to the concept — Ukrainian has 7 cases, and one of them, кличний відмінок, exists specifically for direct address. In English you just use the name: "Olena, come here!" In Ukrainian the name's ending changes: Олена → Олено, ходи сюди! This is not poetic or old-fashioned — it is everyday, mandatory speech. Grade 4 grammar shorthand: Кл. (!) — the exclamation mark is the memory hook, you're calling someone.
-- P2 (~80 words): The two-sentence contrast — Олена прийшла. (Olena arrived — nominative, talking ABOUT her, she is the subject.) vs. Олено, ходи сюди! (Olena, come here! — vocative, talking TO her, she is being addressed.) Using nominative for address in Ukrainian sounds unnatural — it is the equivalent of saying "Hey, him!" instead of "Hey, you!" Learners must understand this is not optional.
-- P3 (~80 words): Cultural grounding — Vocative is alive and vibrant in Ukrainian today. In texts, songs, and conversation: "Слухай, Тарасе!", "Вибачте, пане!", "Дякую, мамо!" — these are phrases from real life. The vocative is also what distinguishes Ukrainian from languages that lost it. It gives every address a personal, direct warmth. This is one of the ways Ukrainian encodes human relationship into grammar.
-- P4 (~80 words): Connection to the dialogues — Return to D1 and D2, now with grammar lens. Point out each vocative pair: Олена→Олено, Тарас→Тарасе, Андрій→Андрію, мама→мамо, тато→тату, бабуся→бабусю, синок→синку, дочка→дочко. Learners now see the dialogues are not random — each speaker naturally used the correct form without thinking. That automatic use is the goal.
+## Підсумок — Summary (~300 words total)
+- P1 (~100 words): [Quick recap of the main patterns: -а becomes -о, hard consonants add -е, soft consonants/-й add -ю. Emphasize that vocative is essential for natural-sounding Ukrainian conversation.]
+- P2 (~120 words): [Reference Table:
+| Nominative | Vocative | Pattern |
+| :--- | :--- | :--- |
+| Олена | Олено | -а → -о |
+| Марія | Маріє | -ія → -іє |
+| Тарас | Тарасе | hard + -е |
+| Андрій | Андрію | soft + -ю |
+| тато | тату | special |]
+- P3 (~80 words): [Self-check checklist: 
+- Can you call your mom (мама)? 
+- Can you greet your friend Taras? 
+- Do you know the difference between "Марія прийшла" and "Маріє, ходи сюди!"?]
 
-## Закінчення кличного (~330 words total)
-
-- P1 (~80 words): Feminine pattern — nouns and names ending in -а. Hard group: -а → -о. Examples: Олена → Олено, мама → мамо, сестра → сестро, Оксана → Оксано, подруга → подруго. Names ending in -ка: Наталка → Наталко, Ірка → Ірко. Names ending in -ина/-іна (long): Катерина → Катерино, Тетяна → Тетяно. Easy rule: if the name ends in -а and the stem is hard, drop the -а and add -о.
-- P2 (~70 words): Feminine exceptions — soft and mixed groups. Names ending in -ія: NOT -іо, but -іє: Марія → Маріє, Софія → Софіє. Names with diminutive/affectionate suffix -уся/-юся: бабуся → бабусю, Настуся → Настусю. Note from Litvinova Grade 6: Насте, Катре also exist but бабусю, Настусю are the standard affectionate forms learners will use. Patronymics ending in -івна follow -о: Іванівна → Іванівно.
-- P3 (~80 words): Masculine hard pattern — hard consonant stem → add -е. Examples: Тарас → Тарасе, Іван → Іване, брат → брате, пан → пане. Patronymics ending in -ович → -овичу (from Zabohotnyi Grade 6: Іванович → Івановичу). Full name address as modeled in Litvinova Grade 6: пан Євген → пане Євгене, Тамара Іванівна → Тамаро Іванівно, Іван Вікторович → Іване Вікторовичу.
-- P4 (~60 words): Masculine soft pattern — soft consonant or -й ending → add -ю. Examples: Андрій → Андрію, дідусь → дідусю, вчитель → вчителю. Special case тато → тату: exceptional -у ending, must memorize. Consonant alternation for г and к: друг → друже (г → ж), козак → козаче (к → ч). Only two alternations, both follow Ukrainian phonetic softening rules.
-- Exercise 1 (~40 words): Fill-in activity — Write the vocative form: Олена → ___, Тарас → ___, мама → ___, Іван → ___, сестра → ___, Андрій → ___, подруга → ___, брат → ___, Марія → ___, бабуся → ___. 10 items, covers all patterns from both paragraphs.
-
-## Підсумок (~330 words total)
-
-- P1 (~60 words): Recap sentence — Кличний відмінок is the Ukrainian case of direct address. Every time you speak TO someone — not about them — the name or noun changes its ending. There are four main patterns to know at A1 level, and most names fall neatly into one of them.
-- Table (~120 words): Vocative quick-reference table — 6 rows:
-  | Pattern | Nominative → Vocative | Приклади |
-  | Feminine -а (hard) | -а → -о | Олена → Олено, мама → мамо, сестра → сестро |
-  | Feminine -ія | -ія → -іє | Марія → Маріє, Софія → Софіє |
-  | Feminine -уся | -уся → -усю | бабуся → бабусю |
-  | Masculine hard | + -е | Тарас → Тарасе, брат → брате, пан → пане |
-  | Masculine -й/soft | + -ю | Андрій → Андрію, вчитель → вчителю, тато → тату |
-  | Special г/к | г→ж, к→ч + -е | друг → друже, козак → козаче |
-- P2 (~50 words): Self-check — Can you call your family? Fill in: мама → ___, тато → ___, брат → ___, сестра → ___, бабуся → ___, дідусь → ___. And your own name or a friend's name — what does it become in vocative? (Answers: мамо, тату, брате, сестро, бабусю, дідусю.)
-- Exercise 2 (~50 words): Quiz activity — Choose correct vocative in context (8 items matching activity_hints): "Олено/Олена/Оленю, привіт!", "Як справи, Тарасе/Тарас/Тарасу?", "Дякую, мамо/мама/маме!", "Ходи сюди, Іване/Іван/Івану!", "Будь обережний, синку/синок/синке!", "Що ти робиш, брате/брат/брату?", "Добрий день, пане/пан/пану!", "Привіт, Андрію/Андрій/Андріє!"
-- Exercise 3 (~50 words): Group-sort activity — Sort 10 vocative forms by ending: -о (feminine): Олено, мамо, сестро | -е (masculine hard): Тарасе, Іване, брате, пане | -ю (masculine soft): Андрію, дідусю, вчителю. Reinforces the three dominant patterns at a glance.
-
-Grand total: ~1320 words
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format

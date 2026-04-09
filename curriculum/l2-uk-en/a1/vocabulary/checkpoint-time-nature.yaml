@@ -1,60 +1,12 @@
 vocabulary:
-- word: Котра зараз година?
-  translation: What time is it now?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: годи́на
-  translation: hour; o'clock
+  translation: hour / o'clock
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: зу́стріч
-  translation: meeting
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: за́раз
-  translation: now
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ра́нку
-  translation: in the morning (time of day)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ве́чора
-  translation: in the evening (time of day)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пів на другу
-  translation: half past one
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пів на восьму
-  translation: half past seven
-  expression: true
-  pos: ''
-  gender: ''
   verified: true
 - word: понеді́лок
   translation: Monday
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вівто́рок
-  translation: Tuesday
   expression: false
   pos: ім.
   gender: ч.
@@ -65,11 +17,11 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: четве́р
-  translation: Thursday
+- word: п'я́тниця
+  translation: Friday
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
 - word: субо́та
   translation: Saturday
@@ -83,148 +35,28 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: у неділю
-  translation: on Sunday
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: вве́чері
-  translation: in the evening
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зра́нку
-  translation: in the morning
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: сі́чень
-  translation: January
+- word: ти́ждень
+  translation: week
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: бе́резень
-  translation: March
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: се́рпень
-  translation: August
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: жо́втень
-  translation: October
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: листопа́д
-  translation: November
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: у березні
-  translation: in March
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: у жовтні
-  translation: in October
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: взи́мку
-  translation: in winter
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: навесні́
-  translation: in spring
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: влі́тку
-  translation: in summer
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: восени́
-  translation: in autumn
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: весна́
-  translation: spring
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пого́да
-  translation: weather
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: тепло́
-  translation: it's warm; warm
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: хо́лодно
-  translation: it's cold; cold
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: со́нячно
-  translation: it's sunny; sunny
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: хма́рно
-  translation: it's cloudy; cloudy
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: без дощу
-  translation: without rain; no rain
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: розпорядок дня
-  translation: daily routine
+- word: робочий тиждень
+  translation: work week
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: сні́дати
-  translation: to have breakfast
+  translation: to eat breakfast
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: вече́ряти
-  translation: to have dinner
-  expression: false
-  pos: дієсл.
+- word: йти на роботу
+  translation: to go to work
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: працюва́ти
@@ -233,38 +65,32 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: вивча́ти
-  translation: to study; to learn
+- word: відпочива́ти
+  translation: to rest
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: гуля́ти
-  translation: to walk; to go for a walk
+- word: вдо́ма
+  translation: at home
   expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ходи́ти
-  translation: to go (on foot); to walk
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: диви́тися
-  translation: to watch; to look
-  expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
 - word: споча́тку
-  translation: first; at first
+  translation: first / initially
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: по́тім
-  translation: then; afterwards
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally
   expression: false
   pos: присл.
   gender: ''
@@ -287,68 +113,92 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: рі́дко
-  translation: rarely; seldom
+- word: со́нячно
+  translation: sunny
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: займатися спортом
-  translation: to exercise; to do sport
+- word: тепло́
+  translation: warm
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хо́лодно
+  translation: cold
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: гарна погода
+  translation: beautiful weather
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: ти́ждень
-  translation: week
+- word: взи́мку
+  translation: in winter
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: влі́тку
+  translation: in summer
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: навесні́
+  translation: in spring
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: восени́
+  translation: in autumn
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зу́стріч
+  translation: meeting
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Ходімо!
+  translation: Let's go!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́нок
+  translation: morning
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ве́чір
+  translation: evening
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: кіно́
-  translation: cinema; movie
+  translation: movies / cinema
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: метро́
-  translation: metro; subway
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: квито́к
-  translation: ticket
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Ходімо в парк!
-  translation: Let's go to the park!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: До суботи!
-  translation: See you Saturday!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У тебе виходить!
-  translation: You're doing great! / You've got it!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: евфоні́я
-  translation: euphony (vowel alternation in Ukrainian)
+- word: рі́чка
+  translation: river
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: мо́ва
-  translation: language
+- word: ву́лиця
+  translation: street / outside
   expression: false
   pos: ім.
   gender: ж.

@@ -1,0 +1,13 @@
+{
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 3/20 required vocab: {'word': 'розмовний стиль', 'pos': 'noun phrase', 'translation': 'conversational style (where складений is common)'}, {'word': 'писемний стиль', 'pos': 'noun phrase', 'translation': 'written style (where синтетичний is common)'}, {'word': 'передбачення', 'pos': 'noun:n', 'translation': 'prediction, forecast'}"
+    }
+  ],
+  "timestamp": "2026-04-09T01:03:20.859382+00:00"
+}

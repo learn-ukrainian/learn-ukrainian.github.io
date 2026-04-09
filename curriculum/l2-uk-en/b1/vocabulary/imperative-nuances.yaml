@@ -1,4 +1,64 @@
 vocabulary:
+- word: проха́ння
+  translation: request
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нака́з
+  translation: command
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пора́да
+  translation: advice
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спонука́ння
+  translation: encouragement
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: м'який знак
+  translation: soft sign
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ти з'їси ці лини?
+  translation: Where will you eat these tench fish? (mnemonic for soft sign)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ході́мо
+  translation: let's go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: робі́мо
+  translation: let's do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́жмо
+  translation: let's eat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пи́ймо
+  translation: let's drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: хай
   translation: let (particle for 3rd person commands)
   expression: false
@@ -6,206 +66,200 @@ vocabulary:
   gender: ''
   verified: true
 - word: неха́й
-  translation: let (slightly more formal variant of хай)
+  translation: let (formal/literary variant of хай)
   expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: до́звіл
+  translation: permission
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Хай буде так
+  translation: Let it be so
+  expression: true
   pos: ''
   gender: ''
-  verified: false
-- word: будь ла́ска
+  verified: true
+- word: побажа́ння
+  translation: wish / greeting
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Хай щастить!
+  translation: May you have good luck!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Нехай живе вільна Україна!
+  translation: Long live free Ukraine!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Хай Бог помагає
+  translation: May God help you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: опосередкований наказ
+  translation: indirect command
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: скоромо́вка
+  translation: tongue twister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хай собі
+  translation: let them be / no matter (expressing concession or indifference)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́ступка
+  translation: concession
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: запере́чення
+  translation: negation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: будь ласка
   translation: please
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: прошу́
-  translation: I request / please
+- word: прошу
+  translation: I request / please (formal)
   expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чи не могли б ви
+  translation: could you / would you mind
+  expression: true
   pos: ''
   gender: ''
-  verified: false
-- word: дава́й / дава́йте
+  verified: true
+- word: давай / давайте
   translation: let's (invitation to joint action)
-  expression: false
+  expression: true
   pos: ''
   gender: ''
-  verified: false
-- word: до́звіл
-  translation: permission
+  verified: true
+- word: обгово́римо
+  translation: let's discuss (future perfective used as invitation)
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
-- word: спонука́ння
-  translation: encouragement / prompting to action
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: запере́чення
-  translation: negation
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: м'яки́й знак
-  translation: soft sign
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ході́мо
-  translation: let's go (correct Ukrainian form)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
+  verified: true
 - word: обговорі́мо
-  translation: let's discuss
+  translation: let's discuss (standard inclusive imperative)
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
+- word: режисе́р
+  translation: director
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: реце́пт
   translation: recipe
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: інстру́кція
   translation: instruction manual
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: нарі́зати
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нарізати
   translation: to cut up
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
 - word: дода́ти
   translation: to add
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
 - word: переміша́ти
-  translation: to mix / stir
+  translation: to mix, stir
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
-- word: вимика́ти
+  verified: true
+- word: вимикати
   translation: to turn off
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
 - word: шанува́ти
-  translation: to honor
+  translation: to honor / to respect
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
+- word: шану́ймося
+  translation: let us respect each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: єдна́тися
   translation: to unite
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
+- word: єдна́ймося
+  translation: let us unite
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: берегти́
+  translation: to protect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бережі́мо
+  translation: let us protect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: трима́йся
+  translation: hold on / stay strong
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: трима́ймося
-  translation: let's hold on / stay strong
-  expression: true
-  pos: ''
+  translation: let's hold on / let's stay strong
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: проха́ння
-  translation: request
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: нака́з
-  translation: command
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: пора́да
-  translation: advice
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: побажа́ння
-  translation: wish / wishes
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: непрями́й нака́з
-  translation: indirect command
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: застере́ження
-  translation: warning
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: чи не могли́ б ви
-  translation: could you possibly
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: неха́й щасти́ть
-  translation: good luck / may you have luck
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: будьмо
-  translation: let's be / cheers
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: паради́гма
-  translation: paradigm
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: скоромо́вка
-  translation: tongue twister
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: дру́га осо́ба однини́
-  translation: second person singular
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: пе́рша осо́ба множини́
-  translation: first person plural
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: дру́га осо́ба множини́
-  translation: second person plural
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: тре́тя осо́ба
-  translation: third person
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false

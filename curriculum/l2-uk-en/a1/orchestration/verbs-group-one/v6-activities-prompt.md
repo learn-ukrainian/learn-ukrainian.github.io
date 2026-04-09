@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-conjugation -->`
-- `<!-- INJECT_ACTIVITY: quiz-verb-forms -->`
-- `<!-- INJECT_ACTIVITY: match-person-to-form -->`
-- `<!-- INJECT_ACTIVITY: fill-in-context -->`
+- `<!-- INJECT_ACTIVITY: match-up-person-verb -->`
+- `<!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->`
+- `<!-- INJECT_ACTIVITY: quiz-subject-verb-agreement -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-sentence -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,117 +87,94 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Юля is in the kitchen. Something smells amazing. Сашко walks in and can't resist asking questions.
+Up to this point, you have learned how to name objects, describe their qualities, and express basic states of being. However, in Ukrainian, we do not just exist in the world; we actively participate in it. We do things. Action is the engine of any language, and verbs are the parts of speech that express these actions. Setting the scene in a shared kitchen, we can see how daily life unfolds through verbs like **читати** (to read) and **готувати** (to cook). By paying close attention to the endings of these action words, you will discover how Ukrainian clearly indicates exactly who is performing the action without needing complex sentence structures.
 
-> **Сашко:** Що ти робиш, Юле? *(What are you doing, Yulia?)*
-> **Юля:** Я готую вечерю. А ти що робиш? *(I'm cooking dinner. And what are you doing?)*
-> **Сашко:** Я читаю. *(I'm reading.)*
-> **Юля:** Що читаєш? *(What are you reading?)*
-> **Сашко:** Я читаю книгу. А де Олена? *(I'm reading a book. And where's Olena?)*
-> **Юля:** Вона слухає музику. *(She's listening to music.)*
-> **Сашко:** Вона завжди слухає музику! *(She always listens to music!)*
-> **Юля:** Так, але вона знає багато пісень! *(Yes, but she knows many songs!)*
+> **Сашко:** Привіт! Що ти робиш? *(Hi! What are you doing?)*
+> **Юля:** Я готую вечерю. А ти? *(I am cooking dinner. And you?)*
+> **Сашко:** Я не готую. Я читаю. *(I am not cooking. I am reading.)*
+> **Юля:** А що робить Олена? *(And what is Olena doing?)*
+> **Сашко:** Вона слухає музику. *(She is listening to music.)*
+> **Юля:** Добре. *(Good.)*
 
-:::tip
-Помітив/-ла? Three different persons appeared in that exchange: **я готую** (I cook), **ти читаєш** (you read), **вона слухає** (she listens). Those endings — **-ю**, **-єш**, **-є** — are Group I conjugation. That's the pattern you're learning today.
-:::
+Take a moment to analyze the verb endings in that kitchen conversation. Notice how the ends of the action words shift depending on exactly who is speaking or who is being spoken about. When Yulia talks about herself, she says **готую** (I cook). When Sashko asks Yulia a direct question about her actions, he uses the form **робиш** (you do). When they both discuss Olena, who is a third person not directly addressed, Sashko says **слухає** (she listens). The central question **«Що ти робиш?»** (What are you doing?) acts as your universal key to unlocking present tense conversations and discovering what people are engaged in right now.
 
-Here's a second situation — two people meet after work.
+> **Максим:** Де ти працюєш? *(Where do you work?)*
+> **Анна:** Я працюю в офісі. А ти? *(I work in an office. And you?)*
+> **Максим:** Я не працюю, я навчаюся. *(I do not work, I am studying.)*
+> **Анна:** Ти знаєш українську? *(Do you know Ukrainian?)*
+> **Максим:** Так, я вивчаю! *(Yes, I am learning!)*
 
-> **Андрій:** Де ти працюєш? *(Where do you work?)*
-> **Марина:** Я працюю в офісі. А ти? *(I work in an office. And you?)*
-> **Андрій:** Я не працюю — я навчаюся. Я студент. *(I don't work — I study. I'm a student.)*
-> **Марина:** Ти вивчаєш українську? *(Are you studying Ukrainian?)*
-> **Андрій:** Так, я вивчаю! *(Yes, I'm studying it!)*
-> **Марина:** Добре! Я теж вивчаю. *(Great! I'm studying too.)*
-> **Андрій:** Ти гуляєш увечері? *(Do you walk in the evening?)*
-> **Марина:** Так, я гуляю в парку. *(Yes, I walk in the park.)*
-
-Count the verbs that appeared across both dialogues: **готувати** (to cook), **читати** (to read), **слухати** (to listen), **знати** (to know), **працювати** (to work), **вивчати** (to study), **гуляти** (to walk). Seven verbs — and they all follow the same ending pattern. The verb **робити** (to do) also appeared in **Що ти робиш?** — but that one belongs to a different group. You'll learn it properly in M17. For now, just remember the question as a fixed phrase: **Що ти робиш?** means "What are you doing?"
+<!-- INJECT_ACTIVITY: match-up-person-verb -->
 
 ## Перша дієвідміна (Group I Verbs)
 
-All seven verbs from the dialogues belong to Group I — the largest verb group in Ukrainian. How do you recognize a Group I verb? Look at its infinitive, the dictionary form. Group I infinitives end in **-ати** (**читати**, **слухати**, **гуляти**, **знати**), **-увати** (**готувати**, **працювати**), or **-яти** (**вивчати**, **малювати** — to draw). To conjugate any of these verbs in the present tense, you remove **-ти** from the infinitive and add person endings.
+Ukrainian verbs are organized into two main families, which grammarians call conjugations. We will focus entirely on **Перша дієвідміна** (First Conjugation) or Group I verbs. You can usually identify these verbs in their dictionary form, known as the infinitive, because they typically end with the marker **-ати** or sometimes **-увати**. However, the absolute most reliable method to prove a verb belongs to Group I is the "They Test". If the form for **вони** (they) ends in **-уть** or **-ють**, then the verb firmly belongs to the First Conjugation. For instance, **вони читають** (they read) proves that the verb is a Group I action word.
 
-Here is the anchor example. Take **читати** (to read) — remove **-ти**, get the stem **чита-**, and add endings:
+The conjugation table below demonstrates the complete present tense pattern for the verb **читати** (to read). To conjugate the verb, you drop the final **-ти** from the infinitive and attach specific personal endings to the remaining stem.
 
-| Особа (Person) | Однина (Singular) | Множина (Plural) |
-|---|---|---|
-| 1-ша (я / ми) | я **читаю** | ми **читаємо** |
-| 2-га (ти / ви) | ти **читаєш** | ви **читаєте** |
-| 3-тя (він, вона / вони) | він/вона **читає** | вони **читають** |
+| Особа (Person) | Займенник (Pronoun) | Форма дієслова (Verb Form) |
+| :--- | :--- | :--- |
+| 1-ша однини | **я** (I) | **читаю** (I read) |
+| 2-га однини | **ти** (you) | **читаєш** (you read) |
+| 3-тя однини | **він / вона / воно** (he / she / it) | **читає** (he / she / it reads) |
+| 1-ша множини | **ми** (we) | **читаємо** (we read) |
+| 2-га множини | **ви** (you plural/formal) | **читаєте** (you read) |
+| 3-тя множини | **вони** (they) | **читають** (they read) |
 
-This table comes from Варзацька, Grade 4 (p. 129) — the standard Ukrainian school approach. Notice the vowel **є** running through every form from **ти** to **вони**: -**є**ш, -**є**, -**є**мо, -**є**те, -**ю**ть. That consistent **є** is the signature of Group I.
+Notice the characteristic vowel **-є-** that elegantly links the stem to the ending for most persons. 
 
-Now apply the same pattern to all six essential verbs. Here are the three singular forms — the ones you'll use most:
+Let us dive deep into six essential Group I verbs that will form the absolute foundation of your active vocabulary: **читати** (to read), **знати** (to know), **працювати** (to work), **слухати** (to listen), **гуляти** (to walk), and **готувати** (to cook). Most of these follow the straightforward pattern of dropping the **-ти** and adding the endings. However, there is a special note regarding **працювати** and **готувати**. When conjugating verbs with the **-увати** suffix, the **-ва-** portion drops out entirely before adding the endings, resulting in the streamlined forms **я працюю** (I work) and **я готую** (I cook), rather than the incorrect forms "працюваю" or "готуваю".
 
-| Infinitive | я | ти | він/вона |
-|---|---|---|---|
-| **читати** (to read) | читаю | читаєш | читає |
-| **знати** (to know) | знаю | знаєш | знає |
-| **працювати** (to work) | працюю | працюєш | працює |
-| **слухати** (to listen) | слухаю | слухаєш | слухає |
-| **гуляти** (to walk) | гуляю | гуляєш | гуляє |
-| **готувати** (to cook) | готую | готуєш | готує |
+When pronouncing these verbs, give special phonetic focus to the characteristic vowel. The Ukrainian letter **є** in endings like **-єш** and **-є** sounds distinctly like "ye" when it follows another vowel. For example, in the word **знаєш** (you know), you must clearly pronounce the "ye" sound to ensure authentic pronunciation. Do not reduce it to a flat "e" sound. Emphasizing the clear, bright Ukrainian pronunciation of these specific endings is crucial for being understood correctly by native speakers and avoiding a foreign accent.
 
-One detail about **-увати** verbs: when you conjugate **готувати** or **працювати**, the stem shortens. **Готувати** → **готу-** (not *готува-*), **працювати** → **працю-** (not *працюва-*). The endings stay the same — only the stem changes.
-
-<!-- INJECT_ACTIVITY: fill-in-conjugation -->
-
-A quick note about **робити** (to do). It appeared in the dialogue question **Що ти робиш?** (What are you doing?). But **робити** belongs to Group II — its endings are different: **робиш**, **робить** (with **-и-**, not **-є-**). For now, treat **Що ти робиш?** as a memorized chunk. You'll learn Group II conjugation in M17. Mixing up the two groups is the most common mistake at this stage, so keeping them separate is important.
+<!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->
 
 ## Я, ти, він/вона (Persons)
 
-At A1, three forms cover roughly 90% of your real conversations: **я** (I — the speaker), **ти** (you — the person you're talking to), and **він/вона** (he/she — someone you're talking about). You already know these pronouns from M10. Drill those three verb forms first. The plural forms — **ми** (we), **ви** (you, plural or formal), **вони** (they) — appear below for recognition, but there's no pressure to memorize all six right now.
+While it is important to understand the full paradigm of all six persons, we will prioritize the "Big Three" for your active usage. The forms for **я** (I), **ти** (you), and **він / вона** (he / she) will easily cover ninety percent of your beginner Ukrainian conversations. You talk about your own actions, you ask your conversation partner about theirs, and you describe what someone else is doing. The pattern is incredibly consistent: use the **-ю** ending for the self, the **-єш** ending for the partner, and the **-є** ending for the third person. Mastering just these three targeted endings unlocks massive communicative potential.
 
-Here are the three persons in action, building full sentences with nouns from M08 and adjectives from M09:
+Now you are ready to build your first complete sentences using the classic Subject + Verb + Object structure. You can seamlessly combine these newly conjugated verbs with vocabulary you already know from previous modules. 
 
-- **Я читаю нову книгу.** — I'm reading a new book.
-- **Ти знаєш цю пісню?** — Do you know this song?
-- **Він слухає українську музику.** — He listens to Ukrainian music.
-- **Вона готує смачну вечерю.** — She's cooking a tasty dinner.
-- **Я гуляю в парку.** — I walk in the park.
-- **Ти працюєш тут?** — Do you work here?
+*   **Я читаю нову книгу.** (I am reading a new book.)
+*   **Ти знаєш цю пісню?** (Do you know this song?)
+*   **Вона слухає українську музику.** (She listens to Ukrainian music.)
 
-Each sentence follows the same structure: **person + verb form + object**. The verb ending tells you who is doing the action — **-ю** for я, **-єш** for ти, **-є** for він/вона.
+:::note
+You might notice that the object nouns change their final letters slightly, such as **книга** becoming **книгу** and **пісня** becoming **пісню**. This is the Ukrainian case system in action. For now, do not worry about the underlying grammar rules for the object; simply learn these specific combinations as memorized chunks.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-verb-forms -->
+English speakers often fall into the trap of applying the "No-Be" Rule incorrectly. Because English uses the verb "to be" to create continuous present tense actions like "I am reading", learners frequently try to insert the Ukrainian equivalent **є** into their sentences, resulting in the incorrect phrase **«Я є читаю»**. You must firmly stress to your brain that in Ukrainian, the present tense verb form already contains the continuous action. The single word **читаю** simultaneously means "I read" generally and "I am reading" right at this exact moment.
 
-You may have noticed something: **книга** became **книгу**, **пісня** became **пісню**, **музика** became **музику**. The noun changes form when it receives the action of the verb. That's the accusative case — it's coming in M20. For now, learn these as fixed phrases: **читаю книгу**, **слухаю музику**, **готую вечерю**. No rule required yet; just recognize the pattern.
+While the singular persons dominate basic dialogue, plurality in action is equally important for recognizing group dynamics. The plural forms expand your world to include **ми** (we), **ви** (you plural or formal), and **вони** (they). You will encounter these collective actions frequently in narratives and group settings.
 
-<!-- INJECT_ACTIVITY: match-person-to-form -->
+*   **Ми працюємо разом.** (We work together.)
+*   **Ви гуляєте в парку.** (You walk in the park.)
+*   **Вони знають правду.** (They know the truth.)
 
-Now the plural forms, presented as natural sentences — not for memorization, just for recognition:
-
-- **Ми готуємо вечерю.** — We're cooking dinner.
-- **Ви знаєте українську?** — Do you (plural) know Ukrainian?
-- **Вони гуляють у парку.** — They walk in the park.
-
-The plural endings are **-ємо** (ми), **-єте** (ви), **-ють** (вони). Notice that **ви** is also used as polite singular — when addressing one person formally, like a teacher or a stranger. That's a preview for now; no need to drill it yet. What matters most is the singular trio: **-ю / -єш / -є**. If you can produce those three forms for any Group I verb, you can hold a basic conversation.
-
-<!-- INJECT_ACTIVITY: fill-in-context -->
+<!-- INJECT_ACTIVITY: quiz-subject-verb-agreement -->
+<!-- INJECT_ACTIVITY: fill-in-complete-sentence -->
 
 ## Підсумок — Summary
 
-Group I verbs have infinitives ending in **-ати**, **-увати**, or **-яти**. To conjugate them in the present tense, remove **-ти** and add these endings:
+You have successfully unlocked the core mechanics of Ukrainian verbs through the Group I pattern. Think of this as the "Formula of Actions": you start with the infinitive dictionary form ending in **-ати**, deliberately drop the final **-ти**, and firmly attach your specific personal ending: **-ю, -єш, -є, -ємо, -єте, -ють**. This incredibly reliable mathematical formula works flawlessly for the six core verbs that will serve as the heavy foundation of your daily Ukrainian communication. Whenever you encounter a new verb that follows this precise pattern, you instantly possess the power to use it in six entirely different ways to describe reality.
 
-| я | ти | він/вона | ми | ви | вони |
-|---|---|---|---|---|---|
-| **-ю** | **-єш** | **-є** | **-ємо** | **-єте** | **-ють** |
+As a highly practical cultural note, you should begin encouraging yourself to narrate your daily life using these verbs. As you move through your routine, silently construct simple thoughts in your mind. Think **«Я працюю»** when you sit down at your desk, or **«Вона готує»** when you see someone in the kitchen. Even these exceptionally simple two-word thoughts actively build the essential habit of thinking directly in Ukrainian instead of exhaustively translating word-for-word from English in your head.
 
-The six core verbs you learned: **читати**, **знати**, **працювати**, **слухати**, **гуляти**, **готувати**. A helpful anchor to remember: **ти завжди -єш** — no matter which Group I verb, the **ти** form always ends in **-єш**: ти читаєш, ти слухаєш, ти гуляєш, ти працюєш. That form is the most useful one to drill first.
+Use the following self-check questions to measure your structural understanding before advancing:
 
-### Self-check
+*   Can you conjugate the verb **слухати** (to listen) completely for **я**, **ти**, and **він/вона**?
+*   How exactly do you ask someone the fundamental question "What are you doing?" using the correct verb form?
 
-Test yourself before moving on:
+Review this essential checklist of verbs. You should be able to instantly recognize their meanings and confidently construct basic sentences with them:
 
-- Conjugate **слухати** for я, ти, він/вона → **слухаю** / **слухаєш** / **слухає** ✓
-- What's the **ти** form of **працювати**? → **працюєш** ✓
-- Say "She reads a new book" in Ukrainian → **Вона читає нову книгу.** ✓
-- Ask "What are you doing?" → **Що ти робиш?** ✓
-- Say two things you do every day: **Я читаю...** **Я слухаю...** (open production — use any Group I verb)
+*   [ ] **читати** (to read)
+*   [ ] **знати** (to know)
+*   [ ] **працювати** (to work)
+*   [ ] **слухати** (to listen)
+*   [ ] **гуляти** (to walk)
+*   [ ] **готувати** (to cook)
 
-**Coming next:** M17 — Group II verbs (**говорити**, **робити**) — a different ending pattern with **-и-** instead of **-є-**.
+In Module 17, you will seamlessly transition from these **-ати** verbs to explore the other half of the verbal universe: the **-ити** family, which forms the Second Conjugation.
 
 </module_content>
 
@@ -287,30 +264,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -326,36 +343,57 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -387,68 +425,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

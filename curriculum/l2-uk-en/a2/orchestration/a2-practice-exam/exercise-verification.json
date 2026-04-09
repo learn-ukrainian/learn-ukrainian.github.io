@@ -1,0 +1,344 @@
+{
+  "total_items": 236,
+  "grounded_items": 182,
+  "ungrounded": [
+    {
+      "word": "працює",
+      "exercise_type": "fill-in",
+      "context": "Андрій переїхав до Києва і працює в _____.",
+      "role": "context"
+    },
+    {
+      "word": "хоче",
+      "exercise_type": "fill-in",
+      "context": "У неділю Андрій хоче поїхати за _____.",
+      "role": "context"
+    },
+    {
+      "word": "яку",
+      "exercise_type": "fill-in",
+      "context": "Головна страва вечора, яку готують із пшениці та меду, — це ",
+      "role": "context"
+    },
+    {
+      "word": "співають",
+      "exercise_type": "fill-in",
+      "context": "Різдвяні пісні, які співають на Святвечір, називаються _____",
+      "role": "context"
+    },
+    {
+      "word": "свого",
+      "exercise_type": "quiz",
+      "context": "Я бачу свого _____.",
+      "role": "context"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "quiz",
+      "context": "Вчора Марія _____ мені правду.",
+      "role": "context"
+    },
+    {
+      "word": "наступного",
+      "exercise_type": "quiz",
+      "context": "Наступного тижня я буду _____ іспит.",
+      "role": "context"
+    },
+    {
+      "word": "перерва",
+      "exercise_type": "true-false",
+      "context": "Ми будемо працювати без перерва.",
+      "role": "context"
+    },
+    {
+      "word": "зійшла",
+      "exercise_type": "true-false",
+      "context": "Сонце зійшла.",
+      "role": "context"
+    },
+    {
+      "word": "великого",
+      "exercise_type": "true-false",
+      "context": "Я бачу великого парка.",
+      "role": "context"
+    },
+    {
+      "word": "парка",
+      "exercise_type": "true-false",
+      "context": "Я бачу великого парка.",
+      "role": "context"
+    },
+    {
+      "word": "конкурсі",
+      "exercise_type": "error-correction",
+      "context": "Вона хоче приймати участь у конкурсі.",
+      "role": "context"
+    },
+    {
+      "word": "найближче",
+      "exercise_type": "error-correction",
+      "context": "Я вибачаюсь, де тут найближче кафе?",
+      "role": "context"
+    },
+    {
+      "word": "сильно",
+      "exercise_type": "error-correction",
+      "context": "У мене сильно болить голова",
+      "role": "answer"
+    },
+    {
+      "word": "напрямок",
+      "exercise_type": "group-sort",
+      "context": "Знахідний відмінок (напрямок)",
+      "role": "context"
+    },
+    {
+      "word": "місце",
+      "exercise_type": "group-sort",
+      "context": "Місцевий відмінок (місце)",
+      "role": "context"
+    },
+    {
+      "word": "складаю",
+      "exercise_type": "match-up",
+      "context": "складаю",
+      "role": "context"
+    },
+    {
+      "word": "складаєш",
+      "exercise_type": "match-up",
+      "context": "складаєш",
+      "role": "context"
+    },
+    {
+      "word": "складає",
+      "exercise_type": "match-up",
+      "context": "складає",
+      "role": "context"
+    },
+    {
+      "word": "складаємо",
+      "exercise_type": "match-up",
+      "context": "складаємо",
+      "role": "context"
+    },
+    {
+      "word": "складаєте",
+      "exercise_type": "match-up",
+      "context": "складаєте",
+      "role": "context"
+    },
+    {
+      "word": "складають",
+      "exercise_type": "match-up",
+      "context": "складають",
+      "role": "context"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)",
+      "role": "context"
+    },
+    {
+      "word": "воно",
+      "exercise_type": "group-sort",
+      "context": "воно",
+      "role": "answer"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)",
+      "role": "context"
+    },
+    {
+      "word": "доконаний",
+      "exercise_type": "group-sort",
+      "context": "Доконаний вид (Perfective)",
+      "role": "context"
+    },
+    {
+      "word": "вид",
+      "exercise_type": "group-sort",
+      "context": "Доконаний вид (Perfective)",
+      "role": "context"
+    },
+    {
+      "word": "прочитати",
+      "exercise_type": "group-sort",
+      "context": "прочитати",
+      "role": "answer"
+    },
+    {
+      "word": "недоконаний",
+      "exercise_type": "group-sort",
+      "context": "Недоконаний вид (Imperfective)",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "group-sort",
+      "context": "робити",
+      "role": "answer"
+    },
+    {
+      "word": "відповідати",
+      "exercise_type": "group-sort",
+      "context": "відповідати",
+      "role": "answer"
+    },
+    {
+      "word": "здати",
+      "exercise_type": "match-up",
+      "context": "здати",
+      "role": "context"
+    },
+    {
+      "word": "скласти",
+      "exercise_type": "match-up",
+      "context": "скласти",
+      "role": "context"
+    },
+    {
+      "word": "вечір",
+      "exercise_type": "fill-in",
+      "context": "Вчора я весь вечір _____ книгу.",
+      "role": "context"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "fill-in",
+      "context": "прочитав",
+      "role": "answer"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні я нарешті _____ цю статтю.",
+      "role": "context"
+    },
+    {
+      "word": "цю",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні я нарешті _____ цю статтю.",
+      "role": "context"
+    },
+    {
+      "word": "статтю",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні я нарешті _____ цю статтю.",
+      "role": "context"
+    },
+    {
+      "word": "зроблю",
+      "exercise_type": "fill-in",
+      "context": "зроблю",
+      "role": "answer"
+    },
+    {
+      "word": "писав",
+      "exercise_type": "fill-in",
+      "context": "писав",
+      "role": "answer"
+    },
+    {
+      "word": "довго",
+      "exercise_type": "fill-in",
+      "context": "Він довго _____ листа.",
+      "role": "context"
+    },
+    {
+      "word": "листа",
+      "exercise_type": "fill-in",
+      "context": "Він довго _____ листа.",
+      "role": "context"
+    },
+    {
+      "word": "склала",
+      "exercise_type": "fill-in",
+      "context": "склала",
+      "role": "answer"
+    },
+    {
+      "word": "курсі",
+      "exercise_type": "true-false",
+      "context": "Заняття на курсі проходять два рази на тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "рази",
+      "exercise_type": "true-false",
+      "context": "Заняття на курсі проходять два рази на тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "курсах",
+      "exercise_type": "true-false",
+      "context": "Перше заняття на мовних курсах коштує 2000 гривень.",
+      "role": "context"
+    },
+    {
+      "word": "коштує",
+      "exercise_type": "true-false",
+      "context": "Перше заняття на мовних курсах коштує 2000 гривень.",
+      "role": "context"
+    },
+    {
+      "word": "львова",
+      "exercise_type": "true-false",
+      "context": "Андрій переїхав до Львова.",
+      "role": "context"
+    },
+    {
+      "word": "котрій",
+      "exercise_type": "quiz",
+      "context": "О котрій годині займається вечірня група на курсах?",
+      "role": "context"
+    },
+    {
+      "word": "переїзду",
+      "exercise_type": "quiz",
+      "context": "Де працює Андрій після переїзду?",
+      "role": "context"
+    },
+    {
+      "word": "планує",
+      "exercise_type": "quiz",
+      "context": "Що Андрій планує робити в суботу ввечері?",
+      "role": "context"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "unjumble",
+      "context": "Твоя",
+      "role": "answer"
+    },
+    {
+      "word": "проєкті",
+      "exercise_type": "unjumble",
+      "context": "проєкті.",
+      "role": "answer"
+    },
+    {
+      "word": "твоє",
+      "exercise_type": "unjumble",
+      "context": "твоє.",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 11,
+    "tested_in_exercises": 4,
+    "not_tested": [
+      "граматика",
+      "оцінка",
+      "письмо",
+      "питання",
+      "правильний",
+      "самооцінка",
+      "читання"
+    ]
+  },
+  "all_grounded": false
+}

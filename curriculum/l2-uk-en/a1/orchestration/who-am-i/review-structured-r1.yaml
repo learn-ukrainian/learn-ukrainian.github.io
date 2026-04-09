@@ -2,46 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers all content points. Deduct 1 point for adding an extra exercise
-    marker not present in the plan's `activity_hints`.
+  score: 10
+  evidence: Word budget exceeded (1725 words vs 1200 target). All `content_outline`
+    points covered perfectly. Dialogues match the plan exactly.
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'Critical error: Translates the infinitive verb "звати" as "they-call"
-    (which is "звуть"). This is likely Russian interference (confusing with "зовут").'
+  score: 8
+  evidence: The text claims the dash is "completely silent when speaking... without
+    any extra pause," which contradicts the phonetic rule that the dash represents
+    a logical pause.
 - dimension: 3
   name: Pedagogical quality
-  score: 7
-  evidence: Explains "тебе" as just "the informal you" without noting it's an object
-    form; introduces the `-иця` feminine suffix without providing a single example;
-    confusing explanation of interchangeable greeti
+  score: 8
+  evidence: The module teaches that a dash is used to replace "to be" (Я — студент),
+    but then immediately presents 7 examples without dashes ("Він студент"). The summary
+    includes "Хто ви?" which was not taught an
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary is used naturally in the text
-    and dialogues.
+  evidence: All required vocabulary is integrated seamlessly into contextual sentences
+    and dialogues. Recommended vocabulary is also heavily utilized.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Injects a 5th activity marker (`match-question-words`) that does not exist
-    in the plan.
+  score: 9
+  evidence: The `quiz-register-choice` activity is placed directly after the "Це..."
+    section, which does not cover formal/informal registers.
 - dimension: 6
   name: Engagement & tone
   score: 9
-  evidence: Natural conversational style without overly gamified language.
+  evidence: Excellent teacher persona and cultural notes, but the conclusion uses
+    banned corporate/gamified language ("You now possess the core tools...").
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Clean markdown and proper headings, though the word count exceeds the
-    target significantly (1843 vs 1200), but word targets are minimums.
+  score: 10
+  evidence: Clean markdown, clear H2 headers matching the outline exactly. Word count
+    is strong.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses authentic names, cities, and standard conversational responses.
+  evidence: Explains the cultural context of handshakes, eye contact, and the literal
+    translation of "мене звати" effectively.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Situational dialogues correctly demonstrate the difference between formal
-    and informal registers.
+  score: 10
+  evidence: The dialogues are contextualized beautifully (hostel vs conference) and
+    flow naturally for A1 learners.
 findings: []

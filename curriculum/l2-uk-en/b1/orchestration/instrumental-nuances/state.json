@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "instrumental-nuances",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T23:11:30.107765+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T23:11:30.122811+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T23:12:01.222634+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T23:12:37.573751+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T23:19:50.724000+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T23:19:50.724260+00:00"
+    }
+  }
+}

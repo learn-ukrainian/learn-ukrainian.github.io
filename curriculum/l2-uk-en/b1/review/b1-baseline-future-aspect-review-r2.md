@@ -1,53 +1,54 @@
 ## Linguistic Scan
-- **Critical Factual Error**: The text claims that the synthetic future form "вмиватимусь" is a "noticeable grammatical and stylistic error." This is incorrect. According to the Ukrainian Orthography (Правопис 2019, § 111) and the principles of euphony (милозвучність), the particle `-сь` is used after vowels. Since the synthetic future base `-тиму` ends in a vowel, "вмиватимусь" is a perfectly valid, natural, and standard variant. Labeling it an error is a major linguistic mistake.
-- **Pedagogical Confusion**: In the paragraph about phonetic spelling, the text compares "вмиватимуцця" (a transcription of the 3rd person plural *вмиватимуться*) to "вмиватися" (infinitive) without explaining that they are different grammatical forms.
-- **No Russianisms or Surzhyk found.** The Ukrainian prose is natural and uses correct terminology ("дієвідмінювання", "видова пара", "чергування приголосних").
+No linguistic errors found regarding Russianisms, Surzhyk, Calques, or Paronyms.
 
 ## Exercise Check
-- **Inventory**: All 6 planned exercise markers are present: `quiz`, `match-up`, `group-sort`, `fill-in`, `error-correction`, `free-write`.
-- **Placement**: Correctly distributed after relevant theory sections.
-- **Logic**: Exercises correctly test the identification of aspect, matching aspect pairs, and producing the three future forms.
-- **Prerequisites**: The module correctly assumes knowledge of A2-level conjugation and applies it to the future tense.
+Found 7 `INJECT_ACTIVITY` markers, but the plan only dictates 6. 
+The extra marker `<!-- INJECT_ACTIVITY: fill-in-simple-future -->` in Section 2 is redundant, does not map to a hint, and risks breaking pipeline validation. It must be removed.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 7 planned sections, hits the word target (~4600 words), and incorporates all requested pedagogical points from the cited textbooks (Lytvynova, Zabolotnyi). |
-| 2. Linguistic accuracy | 6/10 | Citing the standard euphonic form "вмиватимусь" as a "noticeable grammatical error" is a critical linguistic mistake. This teaches students a false rule. |
-| 3. Pedagogical quality | 9/10 | Excellent explanation of the aspect-tense matrix and the historical origin of the synthetic future (infinitive + мати). The decision tree in the summary is very effective. |
-| 4. Vocabulary coverage | 10/10 | Naturally integrates all required terms like "видова пара", "двовидові", "синтетична форма", and "чергування приголосних". |
-| 5. Exercise quality | 10/10 | Matches plan hints perfectly. Diversified types (quiz, sort, fill-in, correction). Items are correctly targeted at B1 level. |
-| 6. Engagement & tone | 7/10 | Excessive meta-enthusiasm and AI clichés ("incredibly beautiful logic", "important grammatical trait", "you now possess", "see with your own eyes"). DEDUCTION for telling instead of showing. |
-| 7. Structural integrity | 10/10 | Clear H2 structure matching the plan. Word count is in range. No formatting artifacts. |
-| 8. Cultural accuracy | 10/10 | Natural university setting (Kharkiv), charity concert context, and mention of folk tales as narrative background. |
-| 9. Dialogue quality | 9/10 | The university committee dialogue is functional and uses all three future forms naturally in a realistic scenario. |
+| 1. Plan adherence | 8/10 | The module covers all required sections, but missed the "Practice table with 5 verb pairs for full conjugation" in the "Дієвідмінювання у майбутньому часі" section, and skipped the "dialogue between two friends planning a trip" in the "Складена форма" section. |
+| 2. Linguistic accuracy | 7/10 | A critical error exists in explaining the synthetic future formation: the text instructs learners to take the full infinitive and add "-тиму" (which would produce "працюватитиму"), contradicting its own claim that the ending starts with "м". |
+| 3. Pedagogical quality | 9/10 | The explanation of why perfective verbs lack a present tense is excellent and intuitive. However, the contradictory rule for forming the synthetic future creates severe pedagogical confusion. |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary is seamlessly integrated into the prose in a natural way. |
+| 5. Exercise quality | 8/10 | The writer included an extra `fill-in-simple-future` marker not requested by the plan's `activity_hints`, causing a mismatch. |
+| 6. Engagement & tone | 10/10 | The tone is warm, encouraging, and uses excellent metaphors (like the bridge metaphor for aspect) without relying on gamified corporate filler. |
+| 7. Structural integrity | 10/10 | All Markdown headings match the plan exactly. The word count (4759) well exceeds the 4000-word target. |
+| 8. Cultural accuracy | 10/10 | Demonstrates deep understanding of Ukrainian worldview (the focus on result vs process). Authentic examples (Kharkiv university, Taras Shevchenko park). |
+| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural and multi-turn, though one required dialogue was omitted. |
 
 ## Findings
-[LINGUISTIC] [SEVERITY: critical]
-Location: Section "Дієвідмінювання у майбутньому часі", paragraph beginning with "Ще одна надзвичайно важлива орфографічна пастка..."
-Issue: The text states: "Писати або казати «вмиватимусь» є помітною граматичною та стилістичною помилкою..." This is factually incorrect. In Ukrainian, the particle "-сь" is used after vowels for euphony (Правопис 2019, § 111). Since "-тиму" ends in a vowel, "вмиватимусь" is a valid and natural form.
-Fix: Remove the claim that it is an error and explain that both "-ся" and "-сь" are possible variants.
+[1. Plan adherence] [major]
+Location: Section "Дієвідмінювання у майбутньому часі", end of the third paragraph: "Проста форма майбутнього часу працює за ідентичними правилами."
+Issue: The plan explicitly requires a "Practice table with 5 verb pairs for full conjugation", but the writer only provided inline paragraphs with scattered examples.
+Fix: Add a Markdown table with the conjugation of 5 verb pairs at the end of the paragraph about simple future rules.
 
-[LINGUISTIC] [SEVERITY: major]
-Location: Section "Дієвідмінювання у майбутньому часі", same paragraph.
-Issue: Comparing "вмиватимуцця" (phonetic for 3pl future) specifically to "вмиватися" (infinitive) is confusing for learners.
-Fix: Clarify that these transcriptions represent different grammatical forms (infinitive vs. 3rd person plural).
+[1. Plan adherence] [major]
+Location: Section "Складена (аналітична) форма майбутнього часу", end of the section: "Ви будете гарантовано чути конструкції на зразок «я буду робити» чи «ми будемо чекати» скрізь."
+Issue: The plan requires a "Reading practice: dialogue between two friends planning a trip, using all three future forms." The writer used the main `dialogue_situations` (charity concert) here but completely omitted the required trip planning dialogue.
+Fix: Insert the missing dialogue between two friends planning a trip right before the final summary paragraph of this section.
 
-[TONE] [SEVERITY: minor]
-Location: Intro and Summary.
-Issue: High density of AI-style "sales pitch" and meta-commentary about how "beautiful" or "precise" the language is.
-Fix: Replace generic praise with technical focus.
+[2. Linguistic accuracy] [critical]
+Location: Section "Складна (синтетична) форма майбутнього часу": "Ось повна і незмінна схема для всіх дієслів: я -тиму (I will), ти -тимеш (you will)..."
+Issue: The text tells learners to take the full infinitive (e.g., "працювати") and add "-тиму". This is linguistically incorrect and would result in "працюватитиму". The correct endings to add to the full infinitive start with "м" (-му, -меш, etc.), which the text ironically states in the preceding sentence.
+Fix: Change "-тиму", "-тимеш", etc. to "-му", "-меш", "-ме", "-мемо", "-мете", "-муть" so it correctly attaches to the full infinitive.
+
+[5. Exercise quality] [minor]
+Location: Section "Проста форма майбутнього часу", at the very end.
+Issue: The writer inserted an unauthorized `<!-- INJECT_ACTIVITY: fill-in-simple-future -->` marker that does not exist in the plan's `activity_hints`.
+Fix: Delete the extra marker.
 
 ## Verdict: REVISE
-Justification: The module contains a critical linguistic error regarding the reflexive particle "-сь" in the synthetic future. While the rest of the content is high-quality, teaching false grammar rules is unacceptable.
+The module is rich, engaging, and well-written, but it contains a critical linguistic rule error regarding the synthetic future formation that will thoroughly confuse learners. It also missed two explicit plan requirements (a practice table and a specific dialogue). Applying the fixes below will bring it into full compliance.
 
 <fixes>
-- find: "Писати або казати *«вмиватимусь» є помітною граматичною та стилістичною помилкою в сучасній літературній нормі."
-  replace: "У цих формах ви можете зустріти обидва варіанти: «вмиватимуся» та «вмиватимусь». Хоча повна форма «-ся» є більш традиційною для офіційного стилю, варіант «-сь» також є правильним і часто використовується для милозвучності мовлення."
-- find: "ніколи не можна писати *«вмивацця» чи *«вмиватимуцця» замість літературного «вмиватися»"
-  replace: "ніколи не можна писати *«вмивацця» чи *«вмиватимуцця» замість літературних форм «вмиватися» (інфінітив) або «вмиватимуться» (третя особа множини)"
-- find: "Українська мова має важливу граматичну рису, що робить її висловлювання надзвичайно точними."
-  replace: "Українська мова має важливу граматичну категорію, яка дозволяє точно передавати характер дії."
-- find: "Українська дієслівна система може здаватися дещо незвичною на перший погляд, але насправді вона має надзвичайно красиву та точну логічну структуру."
-  replace: "Українська дієслівна система має чітку та логічну структуру, де вид і час тісно пов'язані між собою."
+- find: "Ці закінчення завжди починаються з літери «м». Ось повна і незмінна схема для всіх дієслів: я -тиму (I will), ти -тимеш (you will), він, вона, воно -тиме (he/she/it will). У множині ми продовжуємо додавати ці закінчення: ми -тимемо (we will), ви -тимете (you [pl] will), вони -тимуть (they will)."
+  replace: "Ці закінчення завжди починаються з літери «м». Ось повна і незмінна схема для всіх дієслів: я -му (I will), ти -меш (you will), він, вона, воно -ме (he/she/it will). У множині ми продовжуємо додавати ці закінчення: ми -мемо (we will), ви -мете (you [pl] will), вони -муть (they will)."
+- find: "Проста форма майбутнього часу працює за ідентичними правилами."
+  replace: "Проста форма майбутнього часу працює за ідентичними правилами.\n\nОсь таблиця для порівняння п'яти корисних видових пар у першій особі однини (я):\n\n| Інфінітив (док. / недок.) | Проста (доконана) | Складна (недоконана) | Складена (недоконана) |\n|---|---|---|---|\n| принести / носити | я принесу | я носитиму | я буду носити |\n| прочитати / читати | я прочитаю | я читатиму | я буду читати |\n| зробити / робити | я зроблю | я робитиму | я буду робити |\n| посидіти / сидіти | я посиджу | я сидітиму | я буду сидіти |\n| запросити / просити | я запрошу | я проситиму | я буду просити |"
+- find: "Ви будете гарантовано чути конструкції на зразок «я буду робити» чи «ми будемо чекати» скрізь."
+  replace: "Прочитайте ще один короткий діалог про подорож, де друзі вільно поєднують усі три форми. Зверніть увагу, чому вони обирають кожну з них:\n> — **Максим:** Куди ми поїдемо (проста) у відпустку? Я буду шукати (складена) готелі.\n> — **Оксана:** Я перевірю (проста) ціни на літаки. Ми відпочиватимемо (складна) на морі цілий тиждень!\n\nВи будете гарантовано чути конструкції на зразок «я буду робити» чи «ми будемо чекати» скрізь."
+- find: "<!-- INJECT_ACTIVITY: fill-in-simple-future -->\n\n## Складна (синтетична) форма майбутнього часу"
+  replace: "## Складна (синтетична) форма майбутнього часу"
 </fixes>

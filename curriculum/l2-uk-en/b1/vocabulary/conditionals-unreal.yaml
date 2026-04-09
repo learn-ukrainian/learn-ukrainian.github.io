@@ -1,6 +1,78 @@
 vocabulary:
+- word: нереа́льний
+  translation: unreal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жаль
+  translation: regret, pity
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: шко́да́
+  translation: a pity
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: впо́ратися
+  translation: to cope, manage
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іна́кше
+  translation: otherwise, differently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тоді́
+  translation: then (time marker for the past)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: обов'язко́во
+  translation: definitely, certainly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зна́ти (знав/зна́ла)
+  translation: to know (knew)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: могти́ (міг/могла́)
+  translation: can, to be able to (could)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: наго́да
+  translation: opportunity, occasion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: перешко́да
+  translation: obstacle, hindrance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фестива́ль
+  translation: festival
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: аби́
-  translation: if only / in order to
+  translation: if only / in order to (minimal condition)
   expression: false
   pos: спол.
   gender: ''
@@ -24,13 +96,13 @@ vocabulary:
   gender: с.
   verified: true
 - word: мрі́я
-  translation: dream
+  translation: dream (a wish for the future)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: фанта́зія
-  translation: fantasy / imagination
+  translation: fantasy, imagination
   expression: false
   pos: ім.
   gender: ж.
@@ -42,7 +114,7 @@ vocabulary:
   gender: с.
   verified: true
 - word: доскона́ло
-  translation: perfectly / thoroughly
+  translation: perfectly, thoroughly
   expression: false
   pos: присл.
   gender: ''
@@ -59,129 +131,117 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: якби́
-  translation: if (for unreal conditions)
+- word: контрфактичність
+  translation: contrary-to-factness
   expression: false
-  pos: спол.
+  pos: ''
+  gender: ''
+  verified: false
+- word: втрачені можливості
+  translation: missed opportunities
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: нереа́льний
-  translation: unreal
+- word: аналітична форма
+  translation: analytical form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: формотворча частка
+  translation: form-building particle
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: милозву́чність
+  translation: euphony (melodiousness)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гнучки́й
+  translation: flexible
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: нереальна умова
-  translation: unreal condition
+- word: логічний наголос
+  translation: logical stress
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: жаль
-  translation: regret / pity
+- word: підне́сено
+  translation: elevated, loftily
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: шко́да́
-  translation: a pity
-  expression: false
-  pos: ''
-  gender: ''
-  verified: true
-- word: впо́ратися
-  translation: to cope / manage
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: іна́кше
-  translation: otherwise / differently
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: тоді́
-  translation: then
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: обов'язко́во
-  translation: definitely / certainly
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: знав/зна́ла
-  translation: knew
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: міг/могла́
-  translation: could
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: наго́да
-  translation: opportunity / occasion
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: перешко́да
-  translation: obstacle / hindrance
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: фестива́ль
-  translation: festival
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: умовний спосіб
-  translation: conditional mood
+- word: мінімальна умова
+  translation: minimal condition
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: б / би
-  translation: would (conditional particle)
-  expression: false
+- word: тривалий процес
+  translation: ongoing process
+  expression: true
   pos: ''
   gender: ''
-  verified: false
+  verified: true
+- word: завершений результат
+  translation: completed result
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: узго́дження
+  translation: agreement (grammatical)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: маркери часу
+  translation: time markers
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: реа́льність
+  translation: reality
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: якби не
   translation: if not for
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: якби ж то
-  translation: if only / if only it were possible
+- word: Якби ж то!
+  translation: If only!
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: кна́йпа
-  translation: pub / tavern
+  translation: pub, tavern
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: ха́та
-  translation: house
+  translation: house (village style)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: гриби́
-  translation: mushrooms
+- word: вірш
+  translation: poem
   expression: false
   pos: ім.
-  gender: ''
+  gender: ч.
   verified: true

@@ -1,0 +1,24 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "вечеря",
+      "вивчати",
+      "готувати",
+      "грати",
+      "гуляти",
+      "знати",
+      "малювати",
+      "музика",
+      "працювати",
+      "робити",
+      "слухати",
+      "читати"
+    ]
+  },
+  "all_grounded": true
+}

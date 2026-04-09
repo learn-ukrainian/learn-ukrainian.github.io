@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct headings. Both dialogues
+    match plan scripts closely (Dialogue 1: Maksym/Oксана getting-to-know, Dialogue
+    2: Anna''s story past→present→future). All r'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All forms VESUM-verified. Gender agreement correct throughout (народився/народилася,
+    жив/жила, вчився/вчилася consistently paired). Case usage correct: "в Києві" (locative),
+    "програмістом" (instrument'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent PPP flow: dialogues present tenses in context → "Три часи разом"
+    systematizes the pattern → "Моя історія" provides model then guided practice.
+    Signal words taught as "listener''s roadmap" wit'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required words appear naturally in prose (not as bare lists): народитися
+    (dialogues + model story), жити (all sections), вчитися (dialogues + pattern),
+    переїхати (both dialogues + model), зараз '
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: '4 markers match 4 plan hints exactly in type and focus. Placement is
+    pedagogically sound — each follows its teaching section. Plan activity logic is
+    sound: ordering tests chronological reasoning, fill'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Zero motivational openers or meta-commentary. No "Let us explore" or
+    "You now possess." Dialogues feel natural: Оксана''s curiosity, Anna''s playful
+    "Але спочатку — українська для тебе!" Taras''s story r'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 4 H2 sections present and correctly ordered: Dialogues → Три часи
+    разом → Моя історія → Summary. Clean markdown with proper `<div class="dialogue">`
+    formatting and `:::note` / `:::tip` blocks. No '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms throughout. No comparisons to Russian.
+    Cities used are Ukrainian (Київ, Львів, Одеса, Торонто for diaspora connection).
+    Diaspora motivation portrayed naturally thr
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Both dialogues have named speakers with distinct voices. Dialogue 1:
+    natural getting-to-know-you flow — Оксана is curious, Максим shares his story,
+    ending with warm "Успіхів тобі!" Dialogue 2: Anna''s '
+findings: []

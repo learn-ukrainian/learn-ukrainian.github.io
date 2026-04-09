@@ -7,15 +7,14 @@ pipeline: v6
 build_status: draft
 ---
 
-import Classify from '@site/src/components/Classify';
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
-import TrueFalse from '@site/src/components/TrueFalse';
+import Translate from '@site/src/components/Translate';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
@@ -25,140 +24,164 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-A bride is showing wedding photos to a friend, pointing out family members and guests in the pictures.
+We have spent recent modules learning how to buy food, order drinks, and talk about objects in our daily environment. The Ukrainian language treats objects in a specific way. However, our world is mostly filled with people. We interact with family members, meet friends, and speak to professionals. When we talk about people rather than objects, Ukrainian grammar shifts its focus. The rules change because the language makes a sharp distinction between a living person and an inanimate object. We must now learn how to name the people around us when they are the target of our actions.
+
+Read this conversation between a bride and her friend at a wedding reception. They are showing wedding photos and identifying people. Pay close attention to the word endings for people.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Нарече́на:</span> Диви́сь, це на́ше весі́лля! Ба́чиш ма́му? *(Look, this is our wedding! Do you see Mom?)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Кого ти ба́чиш? *(Who do you see?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Нарече́на:</span> Я ба́чу ма́му і та́та. *(I see mom and dad.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Так, ба́чу маму. А хто це по́руч? *(Yes, I see Mom. And who is this next to her?)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> А хто це? *(And who is this?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Наречена:</span> Це мій дя́дько. А це ті́тка. *(This is my uncle. And this is the aunt.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Наречена:</span> Це та́то. Бачиш та́та? *(That's Dad. Do you see Dad?)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Зна́єш Оле́ну? *(Do you know Olena?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Наречена:</span> Так. А це мій брат. Ти знаєш мого бра́та? *(Yes. And this is my brother. Do you know my brother?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Так, бачу тата! А хто це? *(Yes, I see Dad! And who is this?)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Ні, я не зна́ю твого́ брата. *(No, I do not know your brother.)*</div>
 
+<div class="dialogue-line"><span class="speaker">Наречена:</span> Ході́мо! Я тебе́ познайо́млю! *(Let's go! I will introduce you!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Наречена:</span> Це мій брат. Ти зна́єш мого бра́та? *(This is my brother. Do you know my brother?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Друг:</span> Ні, я не зна́ю твого́ брата. *(No, I don't know your brother.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Наречена:</span> Ході́мо, я тебе́ познайо́млю! *(Come on, I'll introduce you!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Друг:</span> Ось наречена і нарече́ний. *(Here is the bride and the groom.)*</div>
 
 </div>
 
-Notice the forms: **маму** (not ма́ма), **тата** (not тато), **брата** (not брат). Every time the bride says "do you see" or "do you know" someone, the person's name changes its ending.
+Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **ма́ма** (mom) and **та́то** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
 
-Here is a second conversation — two colleagues at work:
+This rule applies to all people around you, including professionals and colleagues. Read this short exchange between two colleagues at a school.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Марі́я:</span> Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*</div>
+<div class="dialogue-line"><span class="speaker">Коле́га 1:</span> Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Колега 2:</span> Так, я знаю Олену Петрі́вну. *(Yes, I know Olena Petrivna.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Андрі́й:</span> Так, я знаю Оле́ну Петрі́вну. *(Yes, I know Olena Petrivna.)*</div>
+<div class="dialogue-line"><span class="speaker">Колега 1:</span> А ново́го лі́каря? *(And the new doctor?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Колега 2:</span> Ні, я ще не знаю лікаря. *(No, I do not know the doctor yet.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марія:</span> А ново́го лі́каря? *(And the new doctor?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Ні, я ще не знаю лікаря. *(No, I don't know the doctor yet.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He's very kind. I'm waiting for him now.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> До́бре, я теж чекаю Олену. *(OK, I'm also waiting for Olena.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Колега 1:</span> Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He is very kind. I am waiting for him right now.)*</div>
 
 </div>
 
-Again: **вчительку** (not вчи́телька), **Олену** (not Оле́на), **лікаря** (not лі́кар). What do you notice? Every time someone talks about a person using **ба́чити** (to see), **зна́ти** (to know), or **чека́ти** (to wait for), the person's name or title changes form.
-
-The pattern comes down to two question words: **що?** (what?) for things and **кого?** (whom?) for people. When you see or know a *person*, Ukrainian asks **кого?** — and that question triggers a special ending. This is the **знахі́дний відмі́нок** (accusative case) with animate nouns — **кого?**
-
-<FillIn client:only="react" items={[{"sentence": "— Кого ти ___?", "answer": "бачиш", "options": ["бачиш", "бачити", "бачить"]}, {"sentence": "— Я бачу ___ і маму.", "answer": "брата", "options": ["брата", "брат", "братом"]}, {"sentence": "— Ти знаєш мого ___ Тараса?", "answer": "друга", "options": ["друга", "друг", "другу"]}, {"sentence": "— Ні, я не ___ твого друга.", "answer": "знаю", "options": ["знаю", "знає", "знати"]}, {"sentence": "— А кого ти ___?", "answer": "чекаєш", "options": ["чекаєш", "чекати", "чекає"]}, {"sentence": "— Я чекаю ___.", "answer": "лікаря", "options": ["лікаря", "лікар", "лікарем"]}, {"sentence": "Я люблю ___.", "answer": "подругу", "options": ["подруга", "подругу", "подруги"]}, {"sentence": "Я знаю ___.", "answer": "Олену", "options": ["Олена", "Олену", "Олени"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+The word for a female teacher is **вчи́телька**. It changes to **вчительку**. The female name **Оле́на Петрі́вна** becomes **Олену Петрівну**. The masculine word for a doctor is **лі́кар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
 
 ## Кого? (Whom?)
 
-When a verb takes a direct object, Ukrainian asks one of two questions. For things, you ask **що?** (what?). For people and animals, you ask **кого?** (whom?). The answer to each question follows a different pattern.
+The Ukrainian language categorizes nouns into two groups based on whether they are living or not. We call these groups animate and inanimate. The Accusative case is the grammatical form we use for the direct object of an action. An object receives the action. Animate nouns represent people or animals. Inanimate nouns represent objects, concepts, or places. We learned the Accusative case for inanimate objects in Module 37.
 
-With **що?** (inanimate things), masculine nouns stay in their base form — no ending changes at all:
+You already know how to talk about food. You say **Я їм хліб** (I eat what? bread). For inanimate nouns, there is no change for the masculine. The masculine objects like **хліб** (bread) kept their dictionary form. Contrast those food items with a person. When you see your brother, you say **Я бачу брата** (I see whom? the brother). For animate nouns, the masculine changes! The masculine person changes, while the masculine object stays exactly the same.
 
-- Я їм **хліб** (що?) — I eat bread (хліб stays хліб)
-- Я бачу **стіл** (що?) — I see the table (стіл stays стіл)
-- Я п'ю **чай** (що?) — I drink tea (чай stays чай)
+To know which rule to follow, we rely on question words. The question word is the key. The word **що?** (what?) indicates inanimate things, and the masculine stays the same. When you hold an apple, you ask **Що це?** (What is this?). The word **кого?** (whom?) indicates animate people or animals, and the masculine changes. When you see your colleague, the correct question is **Кого ти бачиш?** (Whom do you see?). Your choice of question word dictates the ending of the masculine noun.
 
-You already know this from Module 37 — inanimate masculine accusative equals nominative.
+:::note
+**The Grammar Question Test**
+Ukrainian grammar is deeply connected to question words. When you learn a new grammatical case, memorize its question word. Asking **кого?** (whom?) instantly reminds your brain to apply the animate rule.
+:::
 
-Now switch to **кого?** (animate — people). Watch what happens to the masculine nouns:
+Ukrainian children learn this logic early in Grade 4. Their teachers use a specific mnemonic device based on the school approach. The children memorize the phrase: **Бачу кого? що?** (I see whom? what?). They ask both questions together. By asking these two questions simultaneously, students learn to identify the two patterns. If the noun is an object, the answer to **що?** (what?) confirms there is no change. The question **кого?** triggers the animate rule. The masculine animate in the Accusative case equals the Genitive form.
 
-- Я бачу **брата** (кого?) — I see my brother (not брат!)
-- Я знаю **дру́га** (кого?) — I know my friend (not друг!)
-- Я чекаю **лікаря** (кого?) — I'm waiting for the doctor (not лікар!)
+We have a reliable pattern for these masculine people. For a masculine person, we use the exact same ending we will later use to show possession. This is the key distinction for L2 learners. The object receives the action, and the ending marks the object as a living person. Observe how the words change:
 
-The contrast is stark. Compare side by side: **Я бачу хліб** — but **Я бачу брата**. **Я бачу стіл** — but **Я бачу тата**. Inanimate masculine = no change. Animate masculine = the ending changes.
+*   **брат** → **брата** (brother)
+*   **друг** → **дру́га** (friend)
+*   **тато** → **тата** (dad)
+*   **лікар** → **лікаря** (doctor)
 
-This is exactly how Ukrainian schoolchildren learn it in Grade 4 (Заболо́тний): the verb **бачити** takes two questions — **кого?** for people and **що?** for things. **Кого?** triggers the animate rule: the masculine noun changes ending. **Що?** does not — masculine stays the same. The mnemonic is simple: **кого?** → the noun changes; **що?** → masculine stays.
+This is why animate accusative matters — it changes masculine nouns.
 
-Why does Ukrainian make this distinction? Ukrainian grammar separates all nouns into two categories: **живі́** (animate — living beings) and **неживі́** (inanimate — things). Animate nouns answer **кого?**; inanimate nouns answer **що?**. This is a deep grammatical logic — Ukrainian treats *seeing a person* differently from *seeing a thing*, not just in meaning, but in form. And the animate masculine accusative isn't random: it uses the same ending as the **родо́ви́й відмінок** (genitive case) you already learned. The accusative of **брат** is **брата** — exactly like **нема́ брата** (there is no brother). The next section shows this pattern in full.
+<GroupSort client:only="react" groups={{"Кого? (Animate)": ["брата", "маму", "друга", "лікаря", "Олену"], "Що? (Inanimate)": ["хліб", "каву", "воду", "чай", "борщ"]}} instruction={"Розподіліть слова: істоти та неістоти (Sort the words: animate vs inanimate)"} />
 
-## Знахідний відмінок — живе́ (Accusative Animate)
+## Знахі́дний відмі́нок — живе́ (Accusative Animate)
 
-Feminine animate nouns hold no surprises. They follow the exact same ending as inanimate feminine nouns: **-а → -у**, **-я → -ю**. You already know this from Module 37 (ка́ва → ка́ву). The same pattern applies to people:
+Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **ка́ва** changes to **ка́ву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
 
-- **мама** → **маму** (Я бачу маму) — I see Mom
-- **сестра́** → **сестру́** (Я знаю сестру) — I know my sister
-- **Олена** → **Олену** (Я чекаю Олену) — I'm waiting for Olena
-- **по́друга** → **по́другу** (Я люблю́ подругу) — I love my friend
-- **ті́тка** → **ті́тку** (Я бачу тітку) — I see my aunt
-- **наречена** → **нарече́ну** (Я знаю наречену) — I know the bride
+*   **мама** → **маму** (mom)
+*   **сестра́** → **сестру́** (sister)
+*   **Олена** → **Олену** (Olena)
+*   **по́друга** → **по́другу** (female friend)
+*   **Я бачу маму.** (I see mom.)
+*   **Я знаю сестру.** (I know the sister.)
+*   **Я чекаю Олену.** (I wait for Olena.)
+*   **Я люблю́ подругу.** (I love the female friend.)
 
-Compare: **кава → каву**, **мама → маму** — identical ending. Feminine animate accusative requires no new rule at all.
+Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусі́д** (male neighbor) becomes **сусі́да**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
 
-Now the rule that matters most in this module. Masculine animate accusative equals genitive. The textbook (Карама́н, Grade 10) states it directly: *«Фо́рма знахі́дного відмі́нка однини́ чолові́чого ро́ду назв істо́т збігається з родо́ви́м однини.»* In plain terms: to form the accusative of a masculine animate noun, use its genitive form.
+*   **брат** → **брата** (brother)
+*   **друг** → **друга** (male friend)
+*   **тато** → **тата** (dad)
+*   **сусід** → **сусіда** (male neighbor)
+*   **Я бачу брата.** (I see the brother.)
+*   **Я знаю друга.** (I know the friend.)
+*   **Я люблю тата.** (I love dad.)
+*   **Я бачу сусіда.** (I see the neighbor.)
 
-Here are six masculine animate nouns with their accusative (= genitive) forms:
+:::caution
+**Don't Forget the Men!**
+English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефо́н** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
+:::
 
-- **брат** → **брата** (Я бачу брата) — I see my brother
-- **друг** → **друга** (Я знаю друга) — I know my friend
-- **тато** → **тата** (Я люблю тата) — I love Dad
-- **лікар** → **лікаря** (Я чекаю лікаря) — I'm waiting for the doctor
-- **вчи́тель** → **вчи́теля** (Я знаю вчителя) — I know the teacher
-- **сусі́д** → **сусі́да** (Я бачу сусіда) — I see the neighbor
+Some masculine nouns end in a soft consonant or the suffix **-ар**. These words require a soft vowel ending. They take the **-я** ending instead of the hard **-а**. Many professions fall into this category.
 
-The connection to prior learning: **бачу брата** uses the same form as **нема брата** — the genitive ending you already know.
+*   **лікар** → **лікаря** (doctor)
+*   **вчи́тель** → **вчи́теля** (male teacher)
+*   **продаве́ць** → **продавця́** (male seller)
+*   **колега** → **коле́гу** (colleague)
+*   **Я чекаю лікаря.** (I wait for the doctor.)
+*   **Я знаю вчителя.** (I know the teacher.)
+*   **Я бачу продавця.** (I see the seller.)
+*   **Я знаю колегу.** (I know the colleague.)
 
-Now the critical contrast — animate versus inanimate masculine, side by side. **Що?** (inanimate) — no change: Я бачу **хліб**, Я бачу **стіл**, Я бачу **борщ**. **Кого?** (animate) — genitive form: Я бачу **брата**, Я бачу **тата**, Я бачу **друга**. The test you should apply every time: before writing the form, ask the question. **Кого?** → take the genitive form. **Що?** → leave masculine as is.
-
-<FillIn client:only="react" items={[{"sentence": "Я бачу ___.", "answer": "брата", "options": ["брат", "брата", "братом"]}, {"sentence": "Я знаю ___.", "answer": "друга", "options": ["друг", "друга", "другу"]}, {"sentence": "Я чекаю ___.", "answer": "лікаря", "options": ["лікар", "лікаря", "лікарем"]}, {"sentence": "Я шукаю ___.", "answer": "вчителя", "options": ["вчитель", "вчителя", "вчителю"]}, {"sentence": "Я бачу ___.", "answer": "тата", "options": ["тато", "тата", "татом"]}, {"sentence": "Я знаю ___.", "answer": "сусіда", "options": ["сусід", "сусіда", "сусідом"]}, {"sentence": "Я люблю ___.", "answer": "викладача", "options": ["викладач", "викладача", "викладачем"]}, {"sentence": "Я бачу ___.", "answer": "колегу", "options": ["колега", "колегу", "колеги"]}]} instruction={"Вставте правильну форму (Fill in the correct accusative form — кого?)"} />
-
-<GroupSort client:only="react" groups={{"Animate — кого?": ["брата", "маму", "друга", "лікаря", "Олену", "сусіда", "вчителя"], "Inanimate — що?": ["хліб", "каву", "воду", "чай", "борщ", "стіл", "книгу"]}} instruction={"Розподіліть слова (Sort: animate — кого? or inanimate — що?)"} />
+<FillIn client:only="react" items={[{"sentence": "Я бачу ____.", "answer": "маму", "options": ["маму", "мама", "мами"]}, {"sentence": "Я бачу ____.", "answer": "брата", "options": ["брата", "брат", "брату"]}, {"sentence": "Я знаю ____.", "answer": "Олену", "options": ["Олену", "Олена", "Олени"]}, {"sentence": "Я знаю ____.", "answer": "друга", "options": ["друга", "друг", "другу"]}, {"sentence": "Я люблю ____.", "answer": "тата", "options": ["тата", "тато", "таті"]}, {"sentence": "Я чекаю ____.", "answer": "вчителя", "options": ["вчителя", "вчитель", "вчителю"]}, {"sentence": "Я шукаю ____.", "answer": "подругу", "options": ["подругу", "подруга", "подруги"]}, {"sentence": "Я бачу ____.", "answer": "сусіда", "options": ["сусіда", "сусід", "сусіду"]}, {"sentence": "Я чекаю ____.", "answer": "лікаря", "options": ["лікаря", "лікар", "лікарю"]}, {"sentence": "Я знаю ____.", "answer": "сестру", "options": ["сестру", "сестра", "сестри"]}]} instruction={"Оберіть правильну форму слова (Choose the correct word form)"} />
 
 ## Підсумок — Summary
 
-The **знахідний відмінок** (accusative case) has two sub-patterns, determined by one question: **кого?** or **що?**
+The complete picture of the Accusative case organizes these rules into a clear visual breakdown.  This Accusative summary provides the full picture.
 
-**Inanimate (що?):** Masculine stays the same — **хліб → хліб**, **стіл → стіл**. Feminine changes **-а → -у** — **кава → каву**, **вода́ → воду́**. Neuter stays the same — **молоко́ → молоко**.
+| | Inanimate (що?) | Animate (кого?) |
+| :--- | :--- | :--- |
+| **Masculine** | = nominative (**хліб**) | = genitive (**брата**) |
+| **Feminine** | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
+| **Neuter** | = nominative (**молоко́**) | (rare at A1) |
 
-**Animate (кого?):** Feminine still changes **-а → -у** — **мама → маму**, **Олена → Олену**. Masculine equals genitive — **брат → брата**, **лікар → лікаря**.
+The feminine nouns always change the final vowel. They change **-а** to **-у** and **-я** to **-ю**. The masculine nouns remain unchanged for inanimate objects. They adopt the genitive ending for living people. The neuter nouns do not change.
 
-The single most important rule from this module: *Знахідний відмінок чоловічого роду живи́х істот = родовий відмінок.*
+Certain verbs appear constantly in social interactions. These key verbs with animate accusative require the change to identify the target of the action. You must memorize these words.
 
-Five key verbs that take animate accusative at A1, each with a full example:
+*   **ба́чити** (to see)
+*   **зна́ти** (to know)
+*   **люби́ти** (to love)
+*   **чека́ти** (to wait for)
+*   **шука́ти** (to look for)
 
-- **бачити** (to see) — Я бачу маму і тата.
-- **знати** (to know) — Ти знаєш мого друга Тара́са?
-- **люби́ти** (to love) — Я дуже люблю бабу́сю.
-- **чекати** (to wait for) — Вона́ чека́є лікаря.
-- **шука́ти** (to look for) — Ми шука́ємо на́шого сусіда.
+These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шука́ю сусіда** (I look for the neighbor).
 
-Memorize these five verbs — they are the most common contexts where animate accusative appears in daily speech.
+You can practice these patterns with simple questions and answers. Read the questions and notice the noun endings in the responses.
 
-<Quiz client:only="react" questions={[{"question": "Я знаю ___.", "options": [{"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олени", "correct": false}]}, {"question": "Я бачу ___.", "options": [{"text": "брата", "correct": true}, {"text": "брат", "correct": false}, {"text": "братом", "correct": false}]}, {"question": "Я люблю ___.", "options": [{"text": "подругу", "correct": true}, {"text": "подруга", "correct": false}, {"text": "подруги", "correct": false}]}, {"question": "Я чекаю ___.", "options": [{"text": "сусіда", "correct": true}, {"text": "сусід", "correct": false}, {"text": "сусідом", "correct": false}]}, {"question": "Я шукаю ___.", "options": [{"text": "вчителя", "correct": true}, {"text": "вчитель", "correct": false}, {"text": "вчителю", "correct": false}]}, {"question": "Я знаю ___.", "options": [{"text": "лікаря", "correct": true}, {"text": "лікар", "correct": false}, {"text": "лікарем", "correct": false}]}, {"question": "Я бачу ___.", "options": [{"text": "колегу", "correct": true}, {"text": "колега", "correct": false}, {"text": "колеги", "correct": false}]}, {"question": "Я люблю ___.", "options": [{"text": "тата", "correct": true}, {"text": "тато", "correct": false}, {"text": "татом", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct accusative form)"} />
+*   **Кого ти лю́биш?** (Whom do you love?)
+    **Я люблю маму і тата.** (I love mom and dad.)
+*   **Кого ти чека́єш?** (Whom are you waiting for?)
+    **Я чекаю друга.** (I am waiting for a friend.)
+*   **Кого ти знаєш у шко́лі?** (Whom do you know at school?)
+    **Я знаю вчителя.** (I know the teacher.)
+*   **Кого ти бачиш?** (Whom do you see?)
+    **Я бачу покупця́.** (I see the buyer.)
+*   **Кого ти шука́єш?** (Whom are you looking for?)
+    **Я шукаю викладача́.** (I am looking for the lecturer.)
+
+:::tip
+**Colleagues and Professions**
+The word **колега** (colleague) looks feminine but can describe a man or a woman. Because it ends in **-а**, you always change it to **колегу**, regardless of the person's gender.
+:::
+
+Check your understanding of the pattern. Let us complete this Self-check: **Я бачу ___**. For the word **мама**, the correct form is **маму**. For the word **брат**, the correct form is **брата**. Remember the core rule. If the noun is a person and it is masculine, you must add the ending. The action transfers directly to the living person.
+
+<Quiz client:only="react" questions={[{"question": "Я знаю ____.", "options": [{"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олени", "correct": false}, {"text": "Оленою", "correct": false}]}, {"question": "Я бачу ____.", "options": [{"text": "брат", "correct": false}, {"text": "брату", "correct": false}, {"text": "брата", "correct": true}, {"text": "братом", "correct": false}]}, {"question": "Я люблю ____.", "options": [{"text": "подругу", "correct": true}, {"text": "подруга", "correct": false}, {"text": "подруги", "correct": false}, {"text": "подругою", "correct": false}]}, {"question": "Я чекаю ____.", "options": [{"text": "сусід", "correct": false}, {"text": "сусіда", "correct": true}, {"text": "сусіду", "correct": false}, {"text": "сусідом", "correct": false}]}, {"question": "Я шукаю ____.", "options": [{"text": "вчитель", "correct": false}, {"text": "вчителю", "correct": false}, {"text": "вчителя", "correct": true}, {"text": "вчителем", "correct": false}]}, {"question": "Я знаю ____.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарю", "correct": false}, {"text": "лікаря", "correct": true}, {"text": "лікарем", "correct": false}]}, {"question": "Я бачу ____.", "options": [{"text": "колега", "correct": false}, {"text": "колегу", "correct": true}, {"text": "колеги", "correct": false}, {"text": "колегою", "correct": false}]}, {"question": "Я люблю ____.", "options": [{"text": "тато", "correct": false}, {"text": "тату", "correct": false}, {"text": "тата", "correct": true}, {"text": "татом", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+<FillIn client:only="react" items={[{"sentence": "— Кого ти ____?", "answer": "бачиш", "options": ["бачиш", "бачити", "бачить"]}, {"sentence": "— Я бачу ____ і маму.", "answer": "брата", "options": ["брата", "брат", "братом"]}, {"sentence": "— Ти знаєш мого ____ Тараса?", "answer": "друга", "options": ["друга", "друг", "другу"]}, {"sentence": "— Ні, я не ____ твого друга.", "answer": "знаю", "options": ["знаю", "знає", "знати"]}, {"sentence": "— А кого ти ____?", "answer": "чекаєш", "options": ["чекаєш", "чекати", "чекає"]}, {"sentence": "— Я чекаю ____.", "answer": "лікаря", "options": ["лікаря", "лікар", "лікарем"]}]} instruction={"Доповніть діалог (Complete the dialogue)"} />
 
 </TabItem>
 <TabItem label="Словник">
@@ -167,61 +190,51 @@ Memorize these five verbs — they are the most common contexts where animate ac
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **ба́чити** | to see | дієсл. |  |
-| **зна́ти** | to know | дієсл. |  |
-| **люби́ти** | to love | дієсл. |  |
+| **сусі́д** | neighbor | ім. | ч. |
+| **коле́га** | colleague | ім. | ч. |
+| **виклада́ч** | lecturer | ім. | ч. |
+| **вчи́тель** | teacher (male) | ім. | ч. |
+| **лі́кар** | doctor | ім. | ч. |
+| **продаве́ць** | seller | ім. | ч. |
+| **покупе́ць** | buyer | ім. | ч. |
 | **чека́ти** | to wait for | дієсл. |  |
 | **шука́ти** | to look for | дієсл. |  |
-| **по́друга** | friend (f) | ім. | ж. |
-| **лі́кар** | doctor (m) | ім. | ч. |
-| **вчи́тель** | teacher (m) | ім. | ч. |
-| **сусі́д** | neighbor (m) | ім. | ч. |
-| **та́то** | dad | ім. | ч. |
-| **ма́ма** | mom | ім. | ж. |
+| **по́друга** | friend (female) | ім. | ж. |
+| **ма́ма** | mother | ім. | ж. |
+| **та́то** | father | ім. | ч. |
 | **сестра́** | sister | ім. | ж. |
+| **дя́дько** | uncle | ім. | ч. |
 | **ті́тка** | aunt | ім. | ж. |
-| **бабу́ся** | grandmother | ім. | ж. |
 | **нарече́на** | bride | ім. | ж. |
-| **коле́га** | colleague (m/f) | ім. | ч. |
-| **виклада́ч** | lecturer (m) | ім. | ч. |
-| **продаве́ць** | seller (m) | ім. | ч. |
-| **покупе́ць** | buyer (m) | ім. | ч. |
-| **весі́лля** | wedding | ім. | с. |
-| **живі́** | animate (living beings) | прикм. |  |
-| **неживі́** | inanimate (things) | прикм. |  |
-| **по́руч** | next to, beside | присл. |  |
-| **за́раз** | now | присл. |  |
-| **нови́й** | new | прикм. |  |
-| **до́брий** | kind, good | прикм. |  |
-| **познайо́мити** | to introduce | дієсл. |  |
+| **нарече́ний** | groom | прикм. |  |
+| **вчи́телька** | teacher (female) | ім. | ж. |
+| **кого?** | whom? | ім. | ч. |
+| **що?** | what? | спол. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **родовий відмінок** | genitive case |
-| **кого?** | whom? (animate accusative question) |
-| **ще не** | not yet |
+| **Кого ти бачиш?** | Whom do you see? |
+| **Ходімо!** | Let's go! |
+| **Я тебе познайомлю!** | I will introduce you! |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ба́чити", back: "to see", subtitle: "дієсл." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "люби́ти", back: "to love", subtitle: "дієсл." }, { front: "чека́ти", back: "to wait for", subtitle: "дієсл." }, { front: "шука́ти", back: "to look for", subtitle: "дієсл." }, { front: "по́друга", back: "friend (f)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́кар", back: "doctor (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сусі́д", back: "neighbor (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "та́то", back: "dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mom", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ті́тка", back: "aunt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бабу́ся", back: "grandmother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нарече́на", back: "bride", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "коле́га", back: "colleague (m/f)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "виклада́ч", back: "lecturer (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "продаве́ць", back: "seller (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "покупе́ць", back: "buyer (m)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "весі́лля", back: "wedding", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "живі́", back: "animate (living beings)", subtitle: "прикм." }, { front: "неживі́", back: "inanimate (things)", subtitle: "прикм." }, { front: "по́руч", back: "next to, beside", subtitle: "присл." }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "до́брий", back: "kind, good", subtitle: "прикм." }, { front: "познайо́мити", back: "to introduce", subtitle: "дієсл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "сусі́д", back: "neighbor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "коле́га", back: "colleague", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "виклада́ч", back: "lecturer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher (male)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́кар", back: "doctor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "продаве́ць", back: "seller", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "покупе́ць", back: "buyer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "чека́ти", back: "to wait for", subtitle: "дієсл." }, { front: "шука́ти", back: "to look for", subtitle: "дієсл." }, { front: "по́друга", back: "friend (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дя́дько", back: "uncle", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ті́тка", back: "aunt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нарече́на", back: "bride", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нарече́ний", back: "groom", subtitle: "прикм." }, { front: "вчи́телька", back: "teacher (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кого?", back: "whom?", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "що?", back: "what?", subtitle: "спол." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "мама", "right": "маму"}, {"left": "тато", "right": "тата"}, {"left": "брат", "right": "брата"}, {"left": "друг", "right": "друга"}, {"left": "лікар", "right": "лікаря"}, {"left": "вчитель", "right": "вчителя"}, {"left": "подруга", "right": "подругу"}, {"left": "сусід", "right": "сусіда"}]} instruction={"З'єднайте слово з формою знахідного відмінка (Match each noun to its accusative form)"} />
+<MatchUp client:only="react" pairs={[{"left": "лікар (doctor)", "right": "лікаря"}, {"left": "друг (friend)", "right": "друга"}, {"left": "сусід (neighbor)", "right": "сусіда"}, {"left": "продавець (seller)", "right": "продавця"}, {"left": "викладач (lecturer)", "right": "викладача"}, {"left": "колега (colleague)", "right": "колегу"}, {"left": "покупець (buyer)", "right": "покупця"}]} instruction={"З'єднайте початкову форму з формою знахідного відмінка (Match the base form with the Accusative form)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я бачу брат.", "errorWord": "брат", "correctForm": "брата", "options": ["брата", "братом", "братові"], "explanation": "Animate masculine accusative = genitive: брат → брата (кого?)"}, {"sentence": "Я знаю Олена.", "errorWord": "Олена", "correctForm": "Олену", "options": ["Олену", "Олени", "Оленою"], "explanation": "Feminine animate accusative: -а → -у: Олена → Олену"}, {"sentence": "Я чекаю лікар.", "errorWord": "лікар", "correctForm": "лікаря", "options": ["лікаря", "лікарем", "лікарю"], "explanation": "Animate masculine accusative = genitive: лікар → лікаря (кого?)"}, {"sentence": "Я люблю подруга.", "errorWord": "подруга", "correctForm": "подругу", "options": ["подругу", "подруги", "подрузі"], "explanation": "Feminine animate accusative: -а → -у: подруга → подругу"}, {"sentence": "Я шукаю вчитель.", "errorWord": "вчитель", "correctForm": "вчителя", "options": ["вчителя", "вчителем", "вчителю"], "explanation": "Animate masculine accusative = genitive: вчитель → вчителя (кого?)"}, {"sentence": "Я бачу сусід.", "errorWord": "сусід", "correctForm": "сусіда", "options": ["сусіда", "сусідом", "сусіду"], "explanation": "Animate masculine accusative = genitive: сусід → сусіда (кого?)"}]} instruction={"Знайдіть і виправте помилку (Find and correct the error in each sentence)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я чекаю мій брат.", "errorWord": "брат", "correctForm": "брата", "options": ["брата", "брату", "братом"], "explanation": "Брат (brother) is animate and masculine, so it changes to брата."}, {"sentence": "Ти знаєш лікар?", "errorWord": "лікар", "correctForm": "лікаря", "options": ["лікаря", "лікарю", "лікарем"], "explanation": "Лікар (doctor) is animate and masculine, so it takes the -я ending."}, {"sentence": "Ми любимо тато.", "errorWord": "тато", "correctForm": "тата", "options": ["тата", "тату", "татом"], "explanation": "Тато (dad) is animate and masculine, so -о changes to -а."}, {"sentence": "Вона шукає сусід.", "errorWord": "сусід", "correctForm": "сусіда", "options": ["сусіда", "сусіду", "сусідом"], "explanation": "Сусід (neighbor) is animate and masculine, so it takes the -а ending."}, {"sentence": "Я бачу новий продавець.", "errorWord": "продавець", "correctForm": "продавця", "options": ["продавця", "продавцю", "продавцем"], "explanation": "Продавець (seller) is animate and masculine, so it changes to продавця."}, {"sentence": "Ви знаєте ця колега?", "errorWord": "колега", "correctForm": "колегу", "options": ["колегу", "колеги", "колегою"], "explanation": "Колега (colleague) ends in -а, so it changes to -у in the Accusative case."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "'маму' is the correct accusative form of 'мама'.", "isTrue": true, "explanation": "Yes — feminine accusative: -а → -у. Мама → маму."}, {"statement": "'брат' is the correct accusative form of 'брат' in 'Я знаю брат'.", "isTrue": false, "explanation": "No — animate masculine accusative = genitive: брат → брата. Correct: Я знаю брата."}, {"statement": "'хліб' is the correct accusative form of 'хліб' in 'Я бачу хліб'.", "isTrue": true, "explanation": "Yes — inanimate masculine accusative = nominative: хліб stays хліб (що?)."}, {"statement": "'лікар' is correct in 'Я чекаю лікар'.", "isTrue": false, "explanation": "No — animate masculine accusative = genitive: лікар → лікаря. Correct: Я чекаю лікаря."}, {"statement": "'Олену' is the correct accusative form of 'Олена'.", "isTrue": true, "explanation": "Yes — feminine accusative: -а → -у. Олена → Олену."}, {"statement": "'стіл' is the correct accusative form of 'стіл' in 'Я бачу стіл'.", "isTrue": true, "explanation": "Yes — inanimate masculine accusative = nominative: стіл stays стіл (що?)."}, {"statement": "'друг' is the correct accusative form in 'Я знаю друг'.", "isTrue": false, "explanation": "No — animate masculine accusative = genitive: друг → друга. Correct: Я знаю друга."}, {"statement": "The accusative of a masculine animate noun has the same form as the genitive.", "isTrue": true, "explanation": "Yes — this is the key rule: Знахідний відмінок чоловічого роду живих істот = родовий."}]} instruction={"Правда чи ні? (True or false?)"} />
+<Unjumble client:only="react" items={[{"words": "друга. / Я / мого / чекаю", "answer": "Я чекаю мого друга."}, {"words": "Ти / лікаря? / знаєш / цього", "answer": "Ти знаєш цього лікаря?"}, {"words": "шукає / брата. / Олена / свого", "answer": "Олена шукає свого брата."}, {"words": "сусіда. / бачу / нашого / Я", "answer": "Я бачу нашого сусіда."}, {"words": "любиш / Кого / ти?", "answer": "Кого ти любиш?"}, {"words": "покупця. / продавець / бачить / Новий", "answer": "Новий продавець бачить покупця."}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order to make a sentence)"} />
 
-<Classify client:only="react" categories={[{"label": "Animate masculine — genitive form (кого?)", "items": ["брата", "друга", "тата", "лікаря", "вчителя", "сусіда"]}, {"label": "Animate feminine — ends in -у/-ю (кого?)", "items": ["маму", "сестру", "Олену", "подругу", "тітку", "наречену"]}, {"label": "Inanimate masculine — no change (що?)", "items": ["хліб", "стіл", "чай", "борщ", "сік", "суп"]}]} instruction={"Розподіліть слова за правилом знахідного відмінка (Sort by accusative rule)"} />
+<Order client:only="react" items={["— Кого ти бачиш?", "— Я бачу маму і тата. А це мій брат.", "— Ти знаєш мого брата?", "— Ні, я не знаю твого брата.", "— Ходімо! Я тебе познайомлю!"]} correct_order={[0, 1, 2, 3, 4]} instruction={"Розставте репліки діалогу в правильному порядку (Put the dialogue lines in the correct order)"} />
 
-<Unjumble client:only="react" items={[{"words": "Я / брата / бачу / і / маму", "answer": "Я бачу брата і маму"}, {"words": "знаєш / Ти / Тараса / друга / мого", "answer": "Ти знаєш мого друга Тараса"}, {"words": "чекаю / зараз / Я / лікаря", "answer": "Я чекаю лікаря зараз"}, {"words": "нашого / шукаємо / сусіда / Ми", "answer": "Ми шукаємо нашого сусіда"}, {"words": "любить / подругу / Вона / свою", "answer": "Вона любить свою подругу"}, {"words": "знаю / вчителя / нового / Я", "answer": "Я знаю нового вчителя"}, {"words": "колегу / Ти / бачиш / мого", "answer": "Ти бачиш мого колегу"}]} instruction={"Складіть правильне речення (Put the words in the correct order)"} />
-
-<Observe client:only="react" examples={["Я бачу хліб. (хліб → хліб — no change)", "Я бачу брата. (брат → брата — changes!)", "Я п'ю чай. (чай → чай — no change)", "Я знаю друга. (друг → друга — changes!)", "Я їм борщ. (борщ → борщ — no change)", "Я чекаю лікаря. (лікар → лікаря — changes!)"]} prompt={"What is the pattern? When does a masculine noun change its ending, and when does it stay the same? What question word tells you which rule applies — кого? or що?"} />
-
+<Translate client:only="react" questions={[{"source": "I am looking for the doctor.", "options": [{"text": "Я шукаю лікаря.", "correct": true}, {"text": "Я шукаю лікар.", "correct": false}, {"text": "Я шукаю лікарю.", "correct": false}, {"text": "Я шукаю лікарем.", "correct": false}]}, {"source": "Do you know my brother?", "options": [{"text": "Ти знаєш мого брата?", "correct": true}, {"text": "Ти знаєш мій брат?", "correct": false}, {"text": "Ти знаєш моєму брату?", "correct": false}, {"text": "Ти знаєш моїм братом?", "correct": false}]}, {"source": "I see a friend.", "options": [{"text": "Я бачу друга.", "correct": true}, {"text": "Я бачу друг.", "correct": false}, {"text": "Я бачу другові.", "correct": false}, {"text": "Я бачу другом.", "correct": false}]}, {"source": "We are waiting for the teacher.", "options": [{"text": "Ми чекаємо вчителя.", "correct": true}, {"text": "Ми чекаємо вчитель.", "correct": false}, {"text": "Ми чекаємо вчителю.", "correct": false}, {"text": "Ми чекаємо вчителем.", "correct": false}]}, {"source": "She loves dad.", "options": [{"text": "Вона любить тата.", "correct": true}, {"text": "Вона любить тато.", "correct": false}, {"text": "Вона любить татові.", "correct": false}, {"text": "Вона любить татом.", "correct": false}]}, {"source": "Who do you see?", "options": [{"text": "Кого ти бачиш?", "correct": true}, {"text": "Що ти бачиш?", "correct": false}, {"text": "Хто ти бачиш?", "correct": false}, {"text": "Ким ти бачиш?", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -230,14 +243,14 @@ Memorize these five verbs — they are the most common contexts where animate ac
 
 - [ULP Season 1, Episode 33](https://www.ukrainianlessons.com/episode33/)
   _Accusative case — animate nouns._
-- Grade 4 textbook: Знахідний відмінок (Заболотний)
-  _Ukrainian school approach: бачу кого? що? — animate accusative = genitive._
 
-**Граматика — Grammar (МійКлас)**
+## Підручники (Textbooks)
 
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
-- [МійКлас: Кличний відмінок](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/osoblivosti-napisannia-imennikiv-u-klichnomu-vidminku-464889) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=68), стор. 68
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=68), стор. 68
+- [Ворон А. А. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-voron-2019.pdf#page=133), стор. 133
+- [Вашуленко М. С. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-vashulenko-2019-1.pdf#page=139), стор. 139
+- [Авраменко О. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=162), стор. 162
 
 **Статті — Articles**
 
@@ -249,12 +262,6 @@ Memorize these five verbs — they are the most common contexts where animate ac
 **Відео — Videos**
 
 - [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) (Let's Learn Ukrainian)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Nominative Case (Називний відмінок)](https://www.ukrainianlessons.com/nominativecase/)
-- [Accusative Case (Знахідний відмінок)](https://www.ukrainianlessons.com/accusativecase/)
 
 </TabItem>
 </Tabs>

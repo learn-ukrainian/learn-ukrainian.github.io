@@ -1,0 +1,289 @@
+vocabulary:
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: паціє́нт
+  translation: patient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: покупе́ць
+  translation: customer/buyer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фармаце́вт
+  translation: pharmacist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: голова́
+  translation: head
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: го́рло
+  translation: throat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: спи́на
+  translation: back
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: живі́т
+  translation: stomach
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рука́
+  translation: hand/arm
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нога́
+  translation: leg/foot
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: о́ко
+  translation: eye
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ву́хо
+  translation: ear
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: температу́ра
+  translation: fever/temperature
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́шель
+  translation: cough
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: не́жить
+  translation: runny nose
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: табле́тки
+  translation: pills/tablets
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кра́плі
+  translation: drops
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: засту́да
+  translation: cold (illness)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хво́рий
+  translation: sick (male)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: хво́ра
+  translation: sick (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: боли́ть
+  translation: hurts (singular)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: боля́ть
+  translation: hurts (plural)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ка́шляєте
+  translation: you cough
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: про́ти
+  translation: against/for (medicine context)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ви́пишу
+  translation: I will prescribe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпочива́йте
+  translation: rest! (imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зрозумі́ло
+  translation: understood
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: давно́
+  translation: for long / long ago
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тро́хи
+  translation: a little
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: учо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: У мене болить
+  translation: I have a pain / it hurts me (+ body part)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що у вас болить?
+  translation: What hurts you? / What's the matter?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З учора
+  translation: Since yesterday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене температура
+  translation: I have a fever
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене кашель
+  translation: I have a cough
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене нежить
+  translation: I have a runny nose
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені холодно
+  translation: I feel cold
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені погано
+  translation: I feel bad / I'm not well
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хворий
+  translation: I'm sick (male speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хвора
+  translation: I'm sick (female speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте, будь ласка, таблетки проти...
+  translation: Give me pills for... (pharmacy formula)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проти головного болю
+  translation: for a headache
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проти кашлю
+  translation: for a cough
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проти нежитю
+  translation: for a runny nose
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ще щось?
+  translation: Anything else?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ось, будь ласка
+  translation: Here you go
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

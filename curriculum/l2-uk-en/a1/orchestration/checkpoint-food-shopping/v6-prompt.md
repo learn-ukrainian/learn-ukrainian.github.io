@@ -1,32 +1,14 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Підсумок — Summary'
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -59,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -348,350 +330,336 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-### Batch 1 — Core nouns (15/15 ✅)
-- Confirmed: **їжа** (noun), **напої** ← напій (noun), **борщ** (noun), **кава** (noun), **молоко** (noun), **каша** (noun), **вода** (noun), **помідори** ← помідор (noun), **яблука** ← яблуко (noun), **гривня** (noun), **гривні** (grivnya soft-decl + гривна hard-decl — see Calque Warning §4), **гривень** ← гривня (noun), **сніданок** (noun), **ринок** (noun), **кафе** (noun, indeclinable)
-- Not found: none
-
-### Batch 2 — Verb forms & accusative forms (15/15 ✅)
-- Confirmed: **їм** ← їсти (verb), **п'ю** ← пити (verb), **іду** ← іти (verb), **бачу** ← бачити (verb), **знаєш** ← знати (verb), **кілограм** (noun), **тридцять** (numeral), **кашу** ← каша (Acc.sg.), **каву** ← кава (Acc.sg.), **Олену** ← Олена (Acc.sg. proper noun), **брата** ← брат (Acc.sg. animate), **мого** ← мій (pron adj Acc.sg.m.), **коштує** ← коштувати (verb), **коштують** ← коштувати (verb), **дайте** ← дати (imperative pl.)
-- Not found: none
-
-### Batch 3 — Supplementary food + shopping vocab (15/15 ✅)
-- Confirmed: **снідаю** ← снідати (verb), **обід** (noun), **вечеря** (noun), **чай** (noun), **сік** (noun), **хліб** (noun), **м'ясо** (noun), **риба** (noun), **суп** (noun), **салат** (noun), **фрукти** ← фрукт (noun), **овочі** ← овоч (noun), **ціна** (noun), **рахунок** (noun), **замовити** (verb, pf.)
-- Not found: none
-
-**Total: 45/45 words confirmed in VESUM. No words to avoid.**
-
----
-
-## Textbook Excerpts
-
-### Section: Що ми знаємо? (Self-check M36–M40)
-> *"Їжа й напої українців у XIX ст., як і раніше, були пов'язані з продуктами землеробства та тваринництва… Повсякденними стравами були, як і колись, борщ, пшоняний куліш, різні каші… Із напоїв домашнього приготування найпоширенішими були узвари зі свіжих та сушених фруктів…"*
-> Source: Grade 9, gisem (tier 2) — establishes борщ, каші, напої as culturally grounded Ukrainian food vocabulary.
-
-### Section: Читання (Anna at the market and café)
-> *"Плануєте швидко пообідати? Тоді вам до нас! Широкий вибір холодних закусок: салатів, бутербродів, тарталеток, фруктових та овочевих соків. Пропонуємо холодні та гарячі напої, лимонади! Кожна шоста чашечка кави за наш рахунок!"*
-> Source: Grade 8, Заболотний (tier 1, p.172) — authentic café notice text modeling menu language, кава, рахунок, ordering context. Use as model for the читання text.
-
-### Section: Граматика — Знахідний відмінок inanimate
-> *"Іменник у формі знахідного відмінка означає предмет, на який спрямована дія, і в реченні виступає додатком. ПОРІВНЯЙМО: Їде автомобіль. / Ремонтують автомобіль. … Знахідний відмінок виражає повне охоплення предмета дією, а родовий – часткове. ПОРІВНЯЙМО: купи сіль (усю) / купи солі (частину). Діти поїли (кашу, каші)."*
-> Source: Grade 6, Заболотний (tier 2, p.94) — direct textbook explanation of Acc. inanimate with food example **кашу**. Also contrasts Acc/Gen partial—critical for M37 recap.
-
-### Section: Граматика — Скільки коштує / Гривня forms
-> *"В українській мові маємо пароніми гривна і гривня. Гривна — металева прикраса у вигляді обруча… Гривня — назва української грошової одиниці. Скорочено позначаємо грн (без крапки в кінці). Зверніть увагу! Ці два іменники належать до різних груп відмінювання: гривна — до твердої (гривни, гривною), а гривня — до м'якої (гривні, гривнею)."*
-> Source: Grade 6, Литвинова (tier 1, p.244) — authoritative paronym warning + declension paradigm for гривня. Essential for M39 recap: use **гривня / гривні / гривень** (soft declension), never гривна forms.
-
-### Section: Граматика — Знахідний відмінок animate (маsc = Genitive)
-> *"Іменники, що позначають назви істот, відповідають на питання хто?, а назви неістот — на питання що?… Істоти — назви людей: тато, Алла; тварин: їжак, колібрі; міфологічних і казкових персонажів: мавка, Перун, Колобок; померлих людей: мрець, покійник; шахових фігур, карт та іграшок, що імітують людей і тварин: пішак, валет, лялька"*
-> Source: Grade 6, Авраменко (tier 1, p.78–79) — defines animate (хто?) vs inanimate (що?), listing human names as animate. Grounds the "Acc animate masc = Genitive" rule: **брата** (Gen.sg. = Acc.sg.) ← брат.
-
-### Section: Діалог (Day of food and shopping)
-> *"Ситуація. Складіть діалог (6–8 реплік) в офіційно-діловому стилі… Варіант Б. Ви зайшли в кабінет… щоб замовити учнівський квиток."*
-> Source: Grade 6, Заболотний (tier 2, p.33) — dialogue structure model (6–8 реплік). Also note: the café notice from Grade 8 (above) provides authentic language for ordering dialogue.
-
-### Section: Підсумок — Числівники (тридцять)
-> *"Числівники від п'яти до тридцяти, а також кільканадцять відмінюються однаково… Н. п'ять / Р. п'яти, п'ятьох / Зн. п'ять, п'ятьох … [тридцять — same paradigm]"*
-> Source: Grade 11, Авраменко (tier 2, p.37) — confirms **тридцять** is a regular numeral in the 5–30 group. Nom/Acc form = тридцять ✅ (correct in dialogue: *Тридцять гривень*).
-
----
+- Confirmed: сніданок, каша, кава, молоко, ринок, помідор, гривня, кілограм, яблуко, кафе, борщ, вода, їжа, напої.
+- Not found: None (all words from the plan are confirmed).
 
 ## Grammar Rules
-
-- **Знахідний відмінок inanimate**: Fem. nouns -а → -у (каша→кашу, вода→воду, кава→каву); masc. inanimate = Nom. (борщ→борщ, суп→суп). Confirmed by Grade 6 Заболотний textbook directly.
-  
-- **Знахідний відмінок animate masculine = Genitive**: брат→брата, Андрій→Андрія. Confirmed by animate/inanimate rule in Grade 6 Авраменко (§41). Feminine animate -а→-у same as inanimate (Олена→Олену). In plan dialogue: *ти знаєш мого брата?* — **брата** (Gen.sg. = Acc.sg. animate masc.) ✅
-
-- **Гривня declension (soft group)**: Н. гривня / Р. гривні / Д. гривні / Зн. гривню / Ор. гривнею / М. гривні. Plural Gen: гривень. Правопис 2019 §84 (noun declension soft group — Правопис search returned §5 on letter Г, which is not the case rule; morphology rules are in §§84–100 of Правопис). Confirmed by Grade 6 Литвинова.
-  
-- **⚠️ PARONYM WARNING — гривна ≠ гривня**: гривна = jewelry (hard declension); гривня = currency (soft declension). NEVER write *гривна* when meaning money. The plan correctly uses гривня/гривні/гривень ✅.
-
-- **тридцять** (numeral 30): Nom./Acc. = тридцять. Gen. = тридцяти/тридцятьох. Used correctly in dialogue: *Тридцять гривень* ✅.
-
----
+- Accusative case (inanimate): Masculine and neuter singular nouns usually match the Nominative (борщ, молоко, ринок). Feminine nouns ending in -а/-я change to -у/-ю (кава → каву, каша → кашу).
+- Accusative case (animate): Masculine singular nouns match the Genitive case (брат → брата). Feminine animate nouns follow the -а → -у pattern (Олена → Олену).
+- Verified via ULIF paradigms for "борщ" (Acc: борщ), "кава" (Acc: каву), and "брат" (Acc: брата).
 
 ## Calque Warnings
-
-- **замовити** (to order food): ✅ CORRECT — Антоненко-Давидович explicitly confirms: "заказати" means "to forbid/command" — using it for ordering food is an error. Correct Ukrainian = **замовити** (pf.) / **замовляти** (impf.). Plan uses замовити throughout ✅.
-
-- **кава з молоком**: ✅ OK — No calque flagged. "З + Instrumental" for "with" is natural Ukrainian structure. кава з молоком is standard Ukrainian ✅.
-
-- **іти на ринок**: ✅ OK — Антоненко-Давидович discusses "базар/ринок" context. The modern standard Ukrainian word for a food market is **ринок**. Plan's *Потім іду на ринок* is natural ✅. (Avoid "базар" which has more informal/Soviet connotations in modern usage.)
-
-- **рахунок** (bill at café): ✅ OK in café context — Антоненко-Давидович warns against *"по рахунку"* (= "sparingly" calqued from Russian "по счёту") and against using рахунок in evaluative sense ("на доброму рахунку"). However, **рахунок** as "the bill/check at a restaurant" is correct Ukrainian. Plan's implied usage (рахунок = restaurant bill) is ✅.
-
-- **Мені каву, будь ласка**: ✅ OK — Dative "Мені" for ordering (elliptical: "bring me") is natural Ukrainian ellipsis used in textbook café situations. Not a calque ✅.
-
----
+- "Скільки коштує?": OK — Standard Ukrainian for "How much does it cost?".
+- "Дайте, будь ласка": OK — Standard request. (Note: always use a comma before "будь ласка").
+- "Мені ..., будь ласка": OK — Standard cafe ordering pattern.
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| їжа | **A1** | ✅ On target |
-| борщ | **A1** | ✅ On target |
-| кафе | **A1** | ✅ On target |
-| гривня | **A1** | ✅ On target |
-| сніданок | **A1** | ✅ On target |
-| кілограм | **A1** | ✅ On target |
-| замовляти / замовити | **A1** | ✅ On target |
-| їсти | **A1** | ✅ On target |
-| кава | **A1** | ✅ On target |
-| ринок | **A2** | ⚠️ One level above A1 target |
-
-**Note on ринок (A2):** This word was introduced in M39 (shopping) and is being reviewed in this checkpoint module — using it in a recap context is pedagogically sound. The word appears in authentic A1–A2 Ukrainian teaching materials. No substitution needed for a checkpoint module. Flag in writer notes that this is review vocabulary, not new introduction.
+- сніданок: A1 — OK
+- борщ: A1 — OK
+- кава: A1 — OK
+- молоко: A1 — OK
+- яблуко: A1 — OK
+- помідор: A1 — OK
+- гривня: A1 — OK
+- ринок: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Checkpoint: Food and Shopping
-**Module:** checkpoint-food-shopping | **Phase:** A1.6 [Food and Shopping]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: Checkpoint: Food and Shopping
+**Module:** checkpoint-food-shopping | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/checkpoint-food-shopping.md
+
+# Педагогіка A1: Checkpoint Food Shopping
+
+
+
+## Методичний підхід (Methodological Approach)
+The goal of the A1 checkpoint on food shopping is to move learners from passive knowledge to active, communicative use of the language in a simulated, high-frequency scenario. The approach is grounded in **мовленнєва діяльність** (speech activity), prioritizing practical communication over abstract grammatical knowledge (Source `6-klas-ukrmova-betsa-2023_s0014`).
+
+The core pedagogical tool is the **діалог** (dialogue), as it models the real-world conversational exchange between a shopper and a seller (Source `6-klas-ukrmova-betsa-2023_s0014`). This allows for the natural integration of vocabulary, grammar, and cultural norms. Learning starts with structured dialogues, which are then broken down into key phrases (**репліки**), and finally used as a scaffold for students to create their own conversations (Source `6-klas-ukrmova-betsa-2023_s0018`).
+
+This checkpoint should be treated as a **комунікативне завдання** (communicative task) (Source `9-klas-ukrajinska-mova-voron-2017_s0008`). The primary measure of success is whether the learner can successfully "purchase" an item, asking for its price and expressing what they want. Grammar is a tool to achieve this goal, not the goal itself. The module structure should follow the classic model of introduction, main part, and conclusion (`вступ, основна частина, висновок`), where the "conclusion" is the final communicative task (Source `3-klas-ukrainska-mova-vashulenko-2020-1_s0014`).
+
+## Послідовність введення (Introduction Sequence)
+
+**Step 1: Activate & Introduce Core Vocabulary (Активізація лексики)**
+- Begin by reviewing previously learned food items (яблуко, хліб, вода).
+- Introduce new, essential shopping vocabulary using visual aids (pictures of a market, a store, products). This aligns with the principle that graphical information is often the first thing a child (or a new learner) perceives (Source `5-klas-ukrmova-golub-2022_s0150`).
+- Introduce the key nouns: `магазин`, `ринок`, `продавець` (seller), `покупець` (buyer), `ціна`, and the currency `гривня`. (Source `ext-istoria_movy-10` highlights the importance of context-specific vocabulary in trade).
+
+**Step 2: Introduce Core Communicative Phrases (Ключові фрази)**
+- Teach the most critical questions and statements as fixed chunks. The goal is function, not grammatical analysis at this stage.
+- **Question:** `Скільки коштує...?` (How much does ... cost?)
+- **Request:** `Дайте, будь ласка, ...` (Give me, please...)
+- **Statement:** `Я хочу купити ...` (I want to buy...)
+- **Politeness:** `Дякую` (Thank you), `Будь ласка` (Please/You're welcome).
+- This follows the logic of teaching functional language for specific situations (`мовленнєва подія`) (Source `10-klas-ukrmova-glazova-2018_s0318`).
+
+**Step 3: Model Dialogue (Моделювання діалогу)**
+- Present a simple, complete dialogue between a shopper and a seller. The dialogue should be read aloud to model correct intonation and pronunciation (Source `7-klas-ukrlit-mishhenko-2015_s0109`).
+- Example:
+  - Покупець: Добрий день.
+  - Продавець: Добрий день.
+  - Покупець: Скажіть, будь ласка, скільки коштує хліб?
+  - Продавець: Двадцять гривень.
+  - Покупець: Добре. Дайте, будь ласка, один хліб.
+  - Продавець: Будь ласка.
+  - Покупець: Дякую. До побачення.
+- This provides a complete "script" for learners to analyze and then adapt (Source `6-klas-ukrmova-betsa-2023_s0018`).
+
+**Step 4: Controlled Practice & Role-Play (Контрольована практика)**
+- Begin with simple substitution drills. Provide the model dialogue and a list of other food items and prices for learners to swap in.
+- Structure a role-playing activity where one student is the `продавець` and the other is the `покупець`. This transforms the monologue of learning into a true dialogue (Source `6-klas-ukrmova-betsa-2023_s0014`).
+- Use question-and-answer pairs as a practice format (Source `2-klas-ukrmova-bolshakova-2019-2_s0054`).
+
+**Step 5: Introduction to Genitive Case with Numbers (Введення родового відмінка)**
+- This is a checkpoint, so it's the first exposure to a practical need for a new case. Introduce the concept not as a full paradigm, but as a pattern for quantity.
+- **Pattern 1 (Singular):** Show `один` + Nominative: `один хліб`, `одна пляшка`.
+- **Pattern 2 (2, 3, 4):** Show `два/три/чотири` + Nominative Plural (for A1, this can be simplified or pre-taught): `два банани`.
+- **Pattern 3 (5+):** Introduce the Genitive Plural ending `-ів` or `-` as a rule for "many" of something: `п'ять яблук`, `десять гривень`.
+- This is a functional introduction to a complex grammatical category, focusing on communicative need rather than exhaustive rules (Source `ext-other_blogs-46`). The goal is recognition and basic use, not mastery.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrectly) | ✅ Правильно (Correctly) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Я *буду мати* хліб.` | `Я хочу хліб.` / `Дайте, будь ласка, хліб.` | This is a direct calque from English "I will have...". In Ukrainian, desire is expressed with `хотіти`, and a direct request is made with `давати` in the imperative. The verb `мати` is for possession. <!-- VERIFY --> |
+| `Скільки є хліб?` | `Скільки коштує хліб?` | English "How much *is* the bread?" is translated literally. The Ukrainian structure for asking a price uses the verb `коштувати` (to cost). (Source `ext-istoria_movy-10` implies that direct translation is a common issue). |
+| `Дайте мені п'ять *яблуко*.` | `Дайте мені п'ять яблук.` | After numbers 5 and greater, nouns must be in the Genitive Plural case. Learners default to the Nominative Singular learned first. This is a fundamental rule of noun-numeral agreement. (Source `ext-other_blogs-46`) |
+| `Я плачу з *кредитна картка*.` | `Я плачу кредитною карткою.` | The Instrumental case (`орудний відмінок`) is required to show the "instrument" or method of payment. English uses a preposition ("with a credit card"), while Ukrainian uses a case ending. (Source `ext-other_blogs-46`) |
+| `Це *двадцять гривна*.` | `Це двадцять гривень.` | Similar to the error with `яблука`, the noun `гривня` must be in the Genitive Plural (`гривень`) after numbers like `двадцять`. Learners often forget to decline the currency itself. <!-- VERIFY --> |
+
+## Деколонізаційні застереження (Decolonization Notes)
+This section is critical for building an authentic and respectful understanding of Ukrainian language and culture from the very beginning.
+
+1.  **Currency is `Гривня`, Not `Рубль`**: Emphasize that the national currency of Ukraine is the `гривня` (plural `гривні`, genitive plural `гривень`). There should be absolutely no mention of `рубль`, as it is the currency of the aggressor state and historically associated with imperial and Soviet occupation. Using it is factually incorrect and politically insensitive. (Source `ext-realna_istoria-42` highlights the long history of Russian political and economic influence that Ukraine is overcoming).
+
+2.  **Ukrainian Phonetics Only**: Pronunciation must be taught based on the Ukrainian phonetic system. Do not use Russian sounds as a reference point (e.g., "it's like the Russian 'ы'"). Ukrainian has its own distinct phonology. For example, the Ukrainian `и` is a separate phoneme, not a variant of `і`. Teaching through Russian parallels reinforces a colonial linguistic hierarchy and creates bad pronunciation habits. (Source `ext-imtgsh-151` clearly distinguishes the linguistic paths of Ukrainian and Russian).
+
+3.  **Food Vocabulary is Ukrainian**: While many Slavic languages share food terms, present the vocabulary as authentically Ukrainian. For example, use words like `сир` (cheese), `сметана` (sour cream), and `овочі` (vegetables) without referencing Russian cognates. Use tools like `r2u.org.ua` (mentioned in Source `ext-istoria_movy-10`) to actively check for and avoid Russianisms (`русизми`) that may have crept into colloquial speech.
+
+4.  **No "Little Russian" Tropes**: Avoid any framing that presents Ukrainian culture or language as a smaller, quaint, or "folkloric" version of Russian culture. Shopping for everyday items like `хліб` and `молоко` is a modern, universal activity. The context should be a contemporary Ukrainian city, not an ethnographic museum. (Source `9-klas-istorija-ukrajini-gisem-2017_s0260` shows how the Russian empire historically viewed and suppressed Ukrainian identity as "Little Russian").
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+**Іменники (Nouns):**
+- **Food:** хліб ★★★, вода ★★★, молоко ★★★, сік ★★, чай ★, кава ★, цукор ★★, сіль (f.) ★, яблуко ★★★, банан ★★, картопля (f.) ★★, помідор ★★★, огірок ★★★, сир ★★★, м'ясо ★★★, риба ★★, яйце (pl. яйця) ★★, олія (f.) ★
+- **Shopping:** магазин ★★★, ринок ★★, продавець (m.) ★★, покупець (m.) ★★, ціна ★★★, гроші (pl. only) ★★★, гривня (f.) ★★★, кошик ★
+- **Quantities:** кілограм ★, літр ★, пляшка (f.) ★★, пакет ★
+
+**Дієслова (Verbs):**
+- купувати / купити ★★★
+- коштувати ★★★
+- хотіти ★★★
+- давати / дати ★★★
+- платити / заплатити ★★
+- продавати ★
+- брати / взяти ★★
+
+**Прикметники (Adjectives):**
+- свіжий ★★★
+- смачний ★★
+- дорогий ★
+- дешевий ★
+- великий ★★
+- малий ★★
+
+**Прислівники, займенники, фрази (Adverbs, Pronouns, Phrases):**
+- скільки ★★★
+- будь ласка ★★★
+- дякую ★★★
+- ось / от ★★★
+- тут ★★
+- щось ★
+- ще ★
+- все (that's all) ★★
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Dialogue Role-Play (Діалог за ролями)**
+- **Format:** Based on the structure in `6-klas-ukrmova-betsa-2023_s0018`, provide two roles (Покупець, Продавець) and a list of items with prices. Students must construct a dialogue to buy 1-2 items.
+- **Prompt:**
+  - `Розіграйте діалог із сусідом / сусідкою за партою.` (Act out the dialogue with your deskmate.) (Source `6-klas-ukrmova-betsa-2023_s0014`)
+  - **Items:**
+    - Яблука: 30 грн/кг
+    - Молоко: 40 грн/літр
+    - Хліб: 25 грн
+  - **Goal:** Student A (Покупець) asks the price of two items and buys one. Student B (Продавець) answers and sells the item.
+
+**2. Question Construction (Складання запитань)**
+- **Format:** Inspired by the simple Q&A in `2-klas-ukrmova-bolshakova-2019-2_s0054`. Give the answer and have the student write the correct question.
+- **Prompt:** `Склади запитання до відповідей.` (Create questions for the answers.)
+  - `Відповідь: Цей сир коштує сто гривень.` -> `Запитання: ...?` (Скільки коштує цей сир?)
+  - `Відповідь: Так, я хочу купити помідори.` -> `Запитання: ...?` (Ви хочете купити помідори?)
+  - `Відповідь: Один кілограм, будь ласка.` -> `Запитання: ...?` (Скільки вам ...?)
+
+**3. List Creation / Sentence Building (Створення списку)**
+- **Format:** Adapted from the categorization task in `2-klas-ukrmova-bolshakova-2019-2_s0054`. Provide a list of food items and ask the learner to create a shopping list using the phrase "Я хочу купити..."
+- **Prompt:** `Склади свій список покупок. Почни речення з "Я хочу купити..."` (Make your shopping list. Start the sentence with "I want to buy...")
+- **Vocabulary:** `[молоко, хліб, сік, банани, сир, вода]`
+- **Example output:** `Я хочу купити молоко, хліб і сир.`
+
+**4. Reading Comprehension (Навчальне читання)**
+- **Format:** Provide a short, simple text (a shopping list or a very short story about going to the store) and ask comprehension questions. This models the "Навчальне читання" activities (Source `5-klas-ukrmova-uhor-2022-1_s0015`).
+- **Prompt:** `Прочитайте текст і дайте відповіді на запитання.` (Read the text and answer the questions.)
+- **Text:** `Це мій список покупок. Мені треба купити хліб, молоко і два кілограми картоплі. Ще я хочу купити сік.`
+- **Questions:**
+  1. `Що треба купити?` (What needs to be bought?)
+  2. `Скільки картоплі треба купити?` (How much potato needs to be bought?)
+  3. `Автор хоче купити сік?` (Does the author want to buy juice?)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/numbers-0-100`
+- `pedagogy/a1/asking-questions`
+- `grammar/a2/genitive-case-introduction`
+- `grammar/a2/instrumental-case-introduction`
+- `vocabulary/a1/food`
 
 ---
 
-## Що ми знаємо? (What Do We Know?)
+### Вікі: pedagogy/a1/checkpoint-first-contact.md
 
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 143
-> **Score:** 0.50
->
-> І якраз у яму 
-> втрапить. А ми вже вириємо, постараємося.
-
-## Читання (Reading Practice)
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 239
-> **Score:** 0.33
->
-> 239
-> Відомості із синтаксису й пунктуації. Кома між частинами складного речення
-> Про борщ я можу розпо-
-> відати годинами. Ні для кого 
-> не секрет що майже у кожній 
-> родині існує свій особливий 
-> рецепт борщу. Хтось не уявляє 
-> борщ без квасолі а хтось готує 
-> його без капусти. Всі ці варіан-
-> ти мають право на існування 
-> бо немає якогось «правильно-
-> го» рецепту, просто в кожного 
-> є свій сімейний борщ.
-> І досі популярним є узвар із сухофруктів це дуже корисний 
-> і поживний напі й.
-> Полтава славиться галушками і ми із задоволенням ласуємо 
-> ними коли приїжджаємо в це місто до родичів.
-> 2. Підкресліть граматичні основи, визначте тип речень .
-> 3. Згадайте ваші улюблені страви . Опишіть їх складними реченнями .
-> Вправа 384
-> 1. Прочитайте допис відомого 
-> українського шеф-кухаря 
-> Євгена Клопотенка .
-> 2.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 237
-> **Score:** 0.50
->
-> 237
-> Відомості із синтаксису й пунктуації. Кома між частинами складного речення
-> Кома між частинами складного 
-> речення, з’єднаними безсполучниковим 
-> і  сполучниковим зв’язком
-> Вправа 381
-> 1. Прочитайте речення .
-> В усьому світі відомі 
-> український борщ 
-> і вареники.
-> В усьому світі відомий україн-
-> ський борщ, і вареники не посту-
-> паються йому за популярністю.
-> Рецепт вергунів 
-> передала моїй мамі її 
-> прабабця і попросила збе-
-> рігати його в нашій сім’ї.
-> Рецепт вергунів передала моїй 
-> мамі її прабабця, і він досі збері-
-> гається в нашій сім’ї.
-> Між частинами складного речення в  усному мовленні робимо 
-> паузу і  підвищуємо тон; на  письмі ставимо розділовий знак  — 
-> переважно ко му .
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 158
-> **Score:** 0.33
->
-> 158
-> ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ
-> Вона в нас не вимовляє літе-
-> ру «р». 
-> За мить Яришка вже ставила 
-> на стільці переді мною молоко, 
-> яєчню, сир і хліб із маслом.
-> Я збагнув, що в хаті нікого 
-> немає, усі на роботі, і їй доручено 
-> доглядати мене.
-> – Будь ласка, любий бгатику, 
-> їж! – сказала вона солодким голосом.
-> Я насторожився.
-> А коли вона втретє сказала «любий бгатику» («Любий 
-> бгатику, спегшу пгоковтни таблетку»), це вже мене зовсім 
-> збентежило.
-> «Любий бгатику!» Вона ніколи мене так не називала. 
-> Вона завжди казала на мене «загаза чогтова», «так тобі й 
-> тгеба», «щоб ти гозбив свою погану могду...». І раптом – 
-> «любий бгатику!..».
-> Кепські, виходить, мої справи. Може, і зовсім безнадійні. 
-> Може, я вже й не встану. Тому-то всі такі ніжні до мене: 
-> і батько, і мати, і дід...
-
-## Граматика (Grammar Summary)
-
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 47
-> **Score:** 0.50
->
-> 47
-> 90. 
-> 1. Прочитай текст і розглянь малюнок. Постав запи-
-> тання до кожного абзацу.
-> ОДНА ГРИВНЯ — ОДИН ВІЛ
-> Гривня з’явилася за часів Київської Русі. Це був зли-
-> ток — срібний, іноді золотий. За одну гривню можна було 
-> купити вола.
-> Гривні знову з’явилися за часів відродження україн-
-> ської державності в 1919–1920 роках. Тепер — це наші 
-> українські гроші.
-> 2. Визнач рід та відмінок виділених іменників. За потреби 
-> користуйся таблицями на сс. 41–42.
-> 91. 
-> 1. Прочитай і спиши речення. Підкресли в них голов-
-> ні члени. Визнач, у яких відмінках ужито виділений 
-> іменник. Обґрунтуй свою відповідь.
-> 1. Українська державність відродилася в 1919–1920 ро-
-> ках. 2. Український народ виборов свою державність 
-> у 1919–1920 роках.
-> 2.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 171
-> **Score:** 0.25
->
-> 171
-> 171
-> § 87.  Узгодження  кількісних числівників  з  іменниками
-> райдужної троянди стартує від двадцяти долара (З інтернету). 5. Десять 
-> раз поспіль обирали запорожці Сірка отаманом (М. Слабошпицький).
-> А.	 Виконайте розбір виділеного числівника як частини мови (письмово).
-> Б.	 Визначте, до яких груп за значенням належать усі числівники (усно).
-> 4.	 Виконайте завдання в тестовій формі.
-> 1.	 Помилково узгоджено числівник з іменником у варіанті
-> А	 два шестикласника
-> Б	 п’ять із чвертю тонн
-> В	 дев’ять кавунів 
-> Г	 три харків’янина
-> 2.	 Правильно узгоджено числівник з іменником у варіанті
-> А	 два вагона
-> Б	 три озера
-> В	 чотири дня 
-> Г	 сто два грама
-> 3.	 Правильно узгоджено числівник з іменником у рядку
-> А	 тридцять два грузини
-> Б	 сорок три львів’яни
-> В	 сто чотири кияни 
-> Г	 три вінничани  
-> 5.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 18
-> **Score:** 0.33
->
-> 18
-> 1.	Прочитайте тексти та виконайте завдання.
-> У крамниці музичних інструментів:
-> — Чи є у вас трембіта? 
-> — Так, є, — відповіла продавчиня.
-> — Скільки вона коштує? 
-> — Дев’ять тисяч гривень.
-> Відвідувач крамниці му­
-> зичних інструментів поціка­
-> вився, чи є в продажу трем­
-> біта й скільки вона коштує. 
-> Йому відповіли, що є і вар­
-> тість її — дев’ять тисяч гри­
-> вень.
-> А.	 У якому тексті за допомогою мовних засобів краще передано атмо­
-> сферу й динаміку живого спілкування?
-> Б.	 Завдяки чому досягнуто такого ефекту? 
-> Пряма мова — це точно передане висловлення певної особи: Покупець 
-> запитав у продавчині: «Чи є у вас трембіта?» Згадайте правила вживан­
-> ня розділових знаків за схемами (П — пряма мова, А, а — слова автора): 
-> А: «П».         А: «П?»          А: «П!»       «П», — а.      «П?» — а.
-
-## Діалог (Connected Dialogue)
-
-## Підсумок — Summary
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 3
-> **Score:** 0.25
->
-> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . . . 86
-> ФРАЗЕОЛОГІЯ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
-> Фразеологізми . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 88
-> Різновиди фразеологічних одиниць . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 96
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 4
-> **Score:** 0.50
->
-> 4
-> Зміст
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . 102
-> ФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ . . . . . . . . . 103
-> Фонетика. Звуки мовлення . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 104
-> Транскрипція  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 107
-> Голосні та приголосні звуки . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 110
-> Голосні наголошені й  ненаголошені  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
-> Особливості вимови ненаголошених  голосних . . . . . . . . . . . . . . .
-
-## Grammar Reference
+# Педагогіка A1: Checkpoint First Contact
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Співвідношення звуків і букв
-> **Source:** МійКлас — [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
+The Ukrainian pedagogical approach to teaching initial introductions is fundamentally communicative and context-driven. Even from the first lesson, the goal is to enable a learner to participate in a simple, formulaic dialogue (`діалог`). The core concepts of **ім'я** (first name), **прізвище** (surname), and **по батькові** (patronymic) are introduced as functional chunks of language needed to complete a real-world task, such as introducing oneself or filling out a simple form (Джерело: `4-klas-ukrayinska-mova-varzatska-2021-1_s0159`, `6-klas-ukrmova-zabolotnyi-2020_s0032`).
 
-### Теорія:
+Ukrainian textbooks for early grades (1-2) establish this pattern by immediately presenting model dialogues. They use a "question-and-answer" format that is easy to memorize and adapt (Джерело: `5-klas-ukrmova-uhor-2022-1_s0107`, `6-klas-ukrmova-betsa-2023_s0014`). For example, the structure `— Як тебе звуть? — Мене звуть ... .` is presented as a fixed pair to be practiced with a partner (`Розіграйте діалог із сусідом / сусідкою за партою`) (Джерело: `6-klas-ukrmova-betsa-2023_s0014`).
 
-*www.ua.pistacja.tv*  
- 
-Як ти вже знаєш, в українській мові є  38  **звуків** і 33  **літери** для передачі цих звуків на письмі.
-Чому така різниця між кількістю звуків і букв?
-Деякі букви \(я, ю, є\) позначають **два** звуки у певних позиціях.
+Key methodological principles are:
+1.  **Dialogue First:** The primary mode of instruction is the dialogue or poly-dialogue (`полілог`), where students learn by playing roles in a given situation (`Ситуація`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `5-klas-ukrmova-avramenko-2022_s0011`). This makes the language immediately useful.
+2.  **Structural Repetition:** Core phrases like `Мене звати...` and `Моє прізвище...` are drilled through repetition, not grammatical analysis at first. The focus is on automaticity. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`).
+3.  **Immediate Introduction of Capitalization:** From the outset, learners are shown that names, patronymics, and surnames are proper nouns written with a capital letter (`пишуть з великої літери`) (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0070`, `2-klas-ukrmova-bolshakova-2019-2_s0023`). This is treated as a fundamental orthographic rule, not an advanced topic.
+4.  **Implicit Grammar:** The accusative case in `Мене звати...` and the vocative case in direct address (`Оксано!`) are introduced implicitly through model phrases. Formal grammatical explanation is delayed until the learner is comfortable with the functional use of the phrases (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `6-klas-ukrmova-litvinova-2023_s0148`).
 
-Букви ї, щ завжди позначають
+## Послідовність введення (Introduction Sequence)
 
-... (truncated for context window)
+The introduction of "first contact" language should follow a logical progression from simple to complex, mirroring the approach in Ukrainian native-speaker textbooks.
+
+1.  **Step 1: Foundational Phrases & Pronouns.** Start with greetings (`Добрий день!`) and the core construction `Мене звати...` (My name is...). This immediately introduces the personal pronoun in the accusative case (`мене`) in a fixed, unanalyzed chunk (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). Contrast `Як тебе звати?` (informal 'you') with `Як вас звати?` (formal/plural 'you').
+
+2.  **Step 2: Adding the Surname.** Introduce the concept of `прізвище` (surname) with the parallel construction `Моє прізвище...` (My surname is...). Practice this in a simple dialogue format (Джерело: `6-klas-ukrmova-betsa-2023_s0014`, `5-klas-ukrmova-uhor-2022-1_s0107`). At this stage, learners practice asking and answering both questions in a sequence.
+
+3.  **Step 3: The Vocative Case (Кличний відмінок) for Direct Address.** This is a critical element of natural Ukrainian speech and must be introduced early. Instead of just saying a name, learners must be taught to use the vocative form to call someone.
+    *   For feminine names ending in `-а`, it changes to `-о`: `Анна → Анно!`, `Оксана → Оксано!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   For masculine names ending in a consonant, it changes to `-е`: `Тарас → Тарасе!`, `Павло → Павле!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   Introduce formal address with `пан/пані`: `пане Іваненку`, `пані Оксано` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`). This immediately elevates the learner's politeness and authenticity.
+
+4.  **Step 4: Introducing the Patronymic (По батькові).** Explain that `по батькові` is a name derived from one's father's name and is used in formal or respectful situations. Show the full formal structure: `Прізвище, Ім’я, По батькові` (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`). Explain the common suffixes: `-ович` (masculine) and `-івна` (feminine) (Джерело: `6-klas-ukrmova-betsa-2023_s0016`). The goal at A1 is recognition, not productive use. Learners should understand what it is when they see it on a form or hear it in a formal introduction.
+
+5.  **Step 5: Contextual Application.** Embed these skills in practical scenarios like booking a table (`Скажіть будь ласка ваше прізвище`) or making a doctor's appointment (`ваше прізвище ім'я і номер телефону будь ласка`) (Джерело: `ext-ulp_youtube-120`, `ext-ulp_youtube-58`). This reinforces the utility of the language.
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers often make predictable errors when learning to introduce themselves. The curriculum should proactively address these.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я звати Анна.` | `Мене звати Анна.` | This is a direct translation of "I am called Anna." English speakers must learn the fixed Ukrainian construction which uses the accusative pronoun `мене` (me). (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`) |
+| `Привіт, Марія.` | `Привіт, Маріє!` | Forgetting the vocative case (`Кличний відмінок`) in direct address. It sounds unnatural and blunt to a native speaker. The ending must change (`-ія` -> `-іє`, `-а` -> `-о`, consonant -> `-е`). (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`) |
+| `Моє ім'я є Тарас.` | `Моє ім'я — Тарас.` or `Мене звати Тарас.` | Overuse of the verb `бути` (`є`) where it's typically omitted in the present tense for identity statements. The dash (`—`) is the correct punctuation, or the `Мене звати` structure should be used. <!-- VERIFY --> |
+| `Прізвище моє Ковальчук.` | `Моє прізвище — Ковальчук.` | Unnatural word order based on English. While grammatically possible, the standard, neutral response is `Моє прізвище...` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). |
+| "What is your middle name?" (asking about `по батькові`) | "Як вас по батькові?" | Equating the patronymic with an Anglo-American "middle name." A middle name is a second personal name; a patronymic is a grammatical and cultural construct derived from the father's name. This distinction is crucial. (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`) |
+| `Пан Шевченко...` (when ordering should be name first) | `Пан Тарас...` | In many formal contexts, the correct address is `пан/пані` + First Name. However, in official documents, it is always Last Name first (`прізвище, ім'я`) (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0278`, `9-klas-ukrajinska-mova-avramenko-2017_s0211`). The brief should clarify the context. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian from a decolonized perspective is non-negotiable. This is especially important in foundational topics where Russian-centric habits can form.
+
+1.  **Teach Ukrainian on Its Own Terms:** Never introduce Ukrainian letters or sounds as "like the Russian X." Learners must build a clean Ukrainian phonetic and orthographic foundation from zero. Russian has different letters (e.g., `ы`, `э`) and different pronunciations for shared letters (e.g., `и`, `г`). Using Russian as a reference point pollutes the learning process from day one.
+2.  **Patronymics are East Slavic, Not Russian:** Explicitly state that patronymics (`по батькові`) are a feature of Ukrainian, Belarusian, and Russian cultures. Frame it as a shared heritage, not a Russian import. Highlight the distinct Ukrainian suffixes (`-ович`, `-івна`) as seen in textbooks (Джерело: `6-klas-ukrmova-betsa-2023_s0016`).
+3.  **Correct Transliteration:** Emphasize the official Ukrainian transliteration system (and the common informal one) which differs from Russian. Key examples: `Г` is `H`, not `G`; `И` is `Y`, not `I`; `І` is `I`. This prevents learners from writing Ukrainian names with Russian spelling conventions.
+4.  **Surname Origins:** When discussing surnames, highlight authentic Ukrainian origins related to professions (`Коваль`, `Бондар`, `Гончар`), features, or Cossack history, not just those shared with Russian (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0025`, `3-klas-ukrainska-mova-vashulenko-2020-2_s0158`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is the absolute essential minimum for the "First Contact" module.
+
+*   **Іменники (Nouns):**
+    *   ім'я ★★★ (first name)
+    *   прізвище ★★★ (surname)
+    *   по батькові ★★ (patronymic)
+    *   учень / учениця ★★★ (student m/f)
+    *   вчитель / вчителька ★★★ (teacher m/f)
+    *   друг / подруга ★★ (friend m/f)
+    *   пан / пані / панно ★★★ (Mr. / Mrs. / Miss)
+    *   номер (телефону) ★★ (phone number)
+*   **Дієслова (Verbs):**
+    *   звати ★★★ (to be called)
+    *   бути ★★★ (to be - often omitted in present)
+    *   знати ★★ (to know)
+    *   жити ★ (to live)
+*   **Займенники (Pronouns):**
+    *   я, ти, він, вона, ми, ви, вони ★★★ (Nominative: I, you, he, she, etc.)
+    *   мене, тебе, його, її, нас, вас, їх ★★★ (Accusative: me, you, him, her, etc.)
+    *   мій/моя/моє, твій/твоя/твоє ★★★ (my, your)
+*   **Ключові фрази (Key Phrases):**
+    *   Добрий день. / Привіт. ★★★
+    *   Як тебе/вас звати? ★★★
+    *   Мене звати... ★★★
+    *   Як твоє/ваше прізвище? ★★★
+    *   Моє прізвище... ★★★
+    *   Дуже приємно. / Радий (рада) знайомству. ★★
+    *   Так / Ні ★★★
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises are models for the content writer, demonstrating the native Ukrainian pedagogical methodology.
+
+1.  **Basic Dialogue Completion (from Source `6-klas-ukrmova-betsa-2023_s0014`)**
+    *   **Task:** Побудуйте діалог за зразком. Запишіть. Розіграйте діалог із сусідом / сусідкою за партою.
+    *   **Model:**
+        > — Як тебе звуть?
+        > — Мене звуть … .
+        > — Як твоє прізвище?
+        > — Моє прізвище … .
+    *   **Pedagogical Value:** This simple, repetitive task builds automaticity for the most fundamental introductory exchange. It encourages active, paired practice.
+
+2.  **Identifying Name Components (from Source `5-klas-ukrmova-uhor-2022-1_s0107`)**
+    *   **Task:** Уточніть, де ім’я, де по батькові, де прізвище.
+    *   **Model:**
+        > — Франко — це ім’я?
+        > — Ні, це прізвище. Його звати Іван Якович.
+    *   **Pedagogical Value:** This exercise moves from simple production to comprehension and analysis. It teaches learners to differentiate between the three components of a full formal name and introduces the structure `Його звати...`.
+
+3.  **Table Fill-in (from Source `2-klas-ukrmova-bolshakova-2019-2_s0023`)**
+    *   **Task:** Заповни таблицю за зразком.
+    *   **Input:** `Григоренко Святослав Андрійович, Телюк Наталія Григорівна, Шевченко Тарас Григорович.`
+    *   **Table Structure:**
+| Прізвище | Ім’я | По батькові |
+| :--- | :--- | :--- |
+| Бондар | Лариса | Вікторівна |
+    *   **Pedagogical Value:** This is a classic exercise for reinforcing the structure and order of formal Ukrainian names and practicing reading/writing them correctly.
+
+4.  **Contextual Role-Play (from Source `6-klas-ukrmova-zabolotnyi-2020_s0032`)**
+    *   **Task:** Складіть діалог (6–8 реплік) в офіційно-діловому стилі... Ви прийшли записатися до бібліотеки. Повідомте мету свого візиту, а також на прохання бібліотекарки – своє прізвище та ім’я, дату народження, місце проживання (для оформлення картки читача).
+    *   **Pedagogical Value:** This places the language skill in a highly realistic, official context (`офіційно-діловий стиль`). It moves beyond simple introductions to a multi-turn conversation where personal information is requested and provided for a clear purpose. This demonstrates the practical value of what has been learned.
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/alphabet`
+- `pedagogy/a1/greetings-and-farewells`
+- `grammar/nouns/vocative-case`
+- `grammar/pronouns/personal-pronouns`
+- `culture/names-and-address`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -705,7 +673,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Граматика (Grammar Summary)` (~200 words)
 - `## Діалог (Connected Dialogue)` (~200 words)
 - `## Підсумок — Summary` (~150 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1000 words minimum.
 
@@ -761,7 +728,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -862,70 +829,42 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Що ми знаємо? (~220 words total)
-- P1 (~60 words): Opening self-check framing — "A1.6 covered five topics. Let's see what you can do!" Present 5 checkboxes as self-assessment prompts: ✓ Name 10 foods and 5 drinks (М36) ✓ Say what you eat/drink using accusative (М37) ✓ Order at a café (М38) ✓ Ask prices and buy things (М39) ✓ Use accusative for people (М40)
-- P2 (~80 words): Quick vocabulary warm-up — two mini-lists for self-check. Їжа: борщ, вареники, салат, хліб, сир, піца, каша, яєчня, суп, котлета. Напої: кава, чай, вода, сік, молоко. Encourage learner: "Cover the list. Can you recall 10 foods and 5 drinks without looking? Then you're ready."
-- P3 (~80 words): Grammar warm-up prompt — four quick pattern checks with answers to verify: (1) Я їм ___ (борщ → борщ, салат → салат). (2) Я п'ю ___ (кава → каву, вода → воду). (3) Мені ___, будь ласка (сік → сік, піца → піцу). (4) Я бачу ___ (Олена → Олену, брат → брата). "If all four feel natural, proceed. If not, revisit M37 and M40."
+- P1 (~50 words): Introduction to the A1.6 Checkpoint. We reflect on the journey from identifying basic foods in M36 to navigating social introductions in M40. We establish the goal: integrating food, shopping, and people into a single communicative flow.
+- P2 (~60 words): Vocabulary review of M36-M37. We list ten essential food items (хліб, сир, молоко, яблуко, помідор, картопля, яйце, м'ясо, риба, цукор) and five drinks (вода, сік, чай, кава, пиво) to ensure the building blocks are ready for case manipulation.
+- P3 (~60 words): Functional review of M38-M39. We revisit the core "Cafe" and "Market" patterns: "Мені каву, будь ласка" for ordering and "Скільки коштує...?" for price inquiries, emphasizing the importance of the currency "гривня" over any colonial alternatives.
+- P4 (~50 words): Self-check questionnaire based on the plan. A bulleted list of "Can you?" questions: Can you name foods? Can you use the accusative? Can you order at a cafe? Can you ask prices? Can you introduce a person?
+- <!-- INJECT_ACTIVITY: group-sort-accusative-type --> [group-sort, focus: inanimate (що?) vs animate (кого?) forms, 10 items]
 
----
+## Читання (~280 words total)
+- P1 (~40 words): Setting the stage for our reading practice. Meet Anna, a student in Kyiv, whose Saturday involves a traditional "market-cafe-social" loop that tests every skill learned in the A1.6 phase.
+- P2 (~90 words): Anna at the "Лук'янівський ринок". She navigates the stalls, checking prices for "помідори" and "огірки". Paragraph uses phrases: "Скільки коштують ці яблука?", "Дайте кілограм, будь ласка", and "Це дорого/дешево".
+- P3 (~80 words): Anna transitions to a small cafe called "Смачно". She interacts with the "продавець", ordering a light lunch: "Мені борщ і воду з лимоном, будь ласка". She asks for the "рахунок" and pays "карткою".
+- P4 (~70 words): Anna meets her friend "Олена" and introduces her "брат Тарас". This integrates the animate accusative from M40: "Ти знаєш мого брата?", "Я бачу Олену". We conclude the story with a successful social interaction.
+- <!-- INJECT_ACTIVITY: quiz-shopping-situations --> [quiz, focus: matching shopping/cafe situations to correct phrases, 8 items]
 
-## Читання (~270 words total)
-- P1 (~30 words): Short lead-in — "Read about Anna's day. Notice how she uses accusative for food, drinks, and people. Find at least six accusative forms."
-- Reading text (~200 words): Titled "День Анни" — a connected narrative paragraph using M36-M40 vocabulary. Anna wakes up, eats кашу and drinks каву з молоком for breakfast. She goes to the ринок and asks: «Скільки коштують помідори?» — «Тридцять гривень кілограм.» — «Дайте кілограм, будь ласка.» She buys хліб, сир, і яблука. Then she goes to a café, sits down: «Тут вільно?» She orders: «Мені борщ і воду, будь ласка.» She sees a friend Олена across the room: «О, я бачу Олену! Олено, привіт!» Олена comes over. Anna says: «Ти знаєш мого брата Михайла? Це мій брат.» They eat together. At the end: «Рахунок, будь ласка. Можна карткою?» — «Звичайно.»
-- P2 (~40 words): Comprehension check — 3 quick questions after the text: (1) Що Анна купує на ринку? (2) Що вона замовляє в кафе? (3) Кого вона бачить у кафе? Learner answers in Ukrainian using full sentences.
+## Граматика (~240 words total)
+- P1 (~70 words): Accusative Inanimate Summary. We contrast Masculine/Neuter (no change: борщ, сік, молоко, яблуко) with Feminine (-а/-я changes to -у/-ю: каву, воду, піцу, картоплю). 
+- P2 (~70 words): Accusative Animate Summary. We recap the M40 rule: Feminine follows the -у/-ю pattern (маму, Олену), while Masculine takes the genitive ending -а/-я (брата, друга, лікаря, вчителя).
+- P3 (~60 words): Quantity and Price patterns. We review the agreement of "гривня" with numbers (1 гривня, 2-4 гривні, 5-20 гривень) and the use of "кілограм" and "пляшка" as measure words.
+- P4 (~40 words): "З" + Instrumental snippets. Brief review of common menu "chunks" like "кава з молоком" or "чай з цукром", treating them as fixed phrases for the A1 level.
+- <!-- INJECT_ACTIVITY: quiz-accusative-forms --> [quiz, focus: choose correct accusative form for inanimate and animate nouns, 10 items]
 
----
+## Діалог (~200 words total)
+- P1 (~40 words): Introduction to the "Dinner Party" (Вечеря) scenario. We imagine hosting guests and the full cycle of preparation, from the сніданок (breakfast) to the market visit.
+- P2 (~110 words): A multi-turn connected dialogue involving a "Господиня" and her friend/seller. Flow: 1. Breakfast talk ("Я п'ю каву з молоком"). 2. Market transaction ("Скільки коштують помідори?"). 3. Cafe encounter ("Рахунок, будь ласка"). 4. Friend intro ("Ти знаєш мого брата?").
+- P3 (~50 words): Analysis of the dialogue. We point out how "хотіти" (to want) and "давати" (to give) are used naturally instead of literal translations like "I will have", emphasizing decolonized linguistic habits.
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-completion --> [fill-in, focus: completing the cafe + market dialogue with correct grammar forms, 8 items]
 
-## Граматика (~220 words total)
-- P1 (~50 words): Mini-header "Шість ключових шаблонів A1.6" — frame as a quick-reference summary, not new material. "You learned all of this in M36–M40. Here it is in one place."
-- P2 (~40 words): Pattern 1 — Food/drink vocabulary chunks. Їжа + напої + meals: сніданок, обід, вечеря. Key chunk: кава з молоком, борщ зі сметаною, хліб із сиром. «Я їм кашу на сніданок. Я п'ю каву з молоком.»
-- P3 (~40 words): Pattern 2 — Accusative inanimate. Rule: masculine nouns don't change (борщ → борщ, хліб → хліб). Feminine -а/-я nouns: кава → каву, вода → воду, піца → піцу. Three column mini-table: Nominative | Accusative | Example sentence.
-- P4 (~40 words): Pattern 3 — Ordering and prices. Fixed phrases: «Мені ___, будь ласка» / «Скільки коштує/коштують?» / «Дайте ___, будь ласка» / «Рахунок, будь ласка» / «Можна карткою?» / гривня → гривні → гривень (1/2-4/5+).
-- P5 (~50 words): Pattern 4 — Accusative animate. Feminine same as inanimate: Олена → Олену, мама → маму. Masculine animate = genitive ending: брат → брата, лікар → лікаря, друг → друга, вчитель → вчителя. Quick contrast: «Я бачу борщ» (inanimate, no change) vs «Я бачу брата» (animate, -а).
+## Підсумок (~150 words)
+- P1 (~50 words): Reflection on the A1.6 Food and Shopping phase. We celebrate the shift from simple naming to functional market and social competence.
+- P2 (~100 words): Achievement checklist (as per plan):
+    - You can name foods and drinks.
+    - You can use the accusative case for objects and people.
+    - You can order food, ask for the bill, and pay.
+    - You can navigate a market and ask prices.
+    - Next: A1.7 — "Communication and Plans" (phone calls, emails, and making dates).
 
----
-
-## Діалог (~220 words total)
-- P1 (~20 words): Scene-setter — "Наталя та Дмитро починають день. Читайте і стежте за відмінками." (Natalia and Dmytro start their day.)
-- Dialogue (~140 words): Three-scene connected dialogue covering all A1.6 skills:
-
-**Сніданок:**
-— Що ти їш на сніданок?
-— Я їм кашу і п'ю каву з молоком. А ти?
-— Я їм яєчню і хліб із сиром.
-
-**На ринку:**
-— Скільки коштують помідори?
-— П'ятнадцять гривень кілограм.
-— Дорого! А яблука?
-— Двадцять гривень. Дуже смачні!
-— Добре, дайте кілограм яблук, будь ласка.
-
-**У кафе:**
-— Тут вільно?
-— Так, сідайте!
-— Мені борщ і воду, будь ласка.
-— О, я бачу Олену! Олено, привіт! Ти знаєш мого брата Дмитра?
-— Ні, не знаю. Дуже приємно, Дмитре!
-— Рахунок, будь ласка. Можна карткою?
-— Звичайно. Все було дуже смачно!
-
-- P2 (~60 words): Post-dialogue note — annotate the three grammar patterns used. Bold two examples for each: (1) Accusative inanimate: **кашу**, **яєчню**, **воду**, **борщ**. (2) Accusative animate: **Олену**, **брата Дмитра**. (3) Café/market phrases: **Мені борщ**, **Дайте кілограм**, **Рахунок, будь ласка**. "Did you spot all of them in the dialogue?"
-
----
-
-## Підсумок (~150 words total)
-- P1 (~150 words): A1.6 achievement summary in celebratory but informative tone. "You have completed A1.6 — Food and Shopping. Here is what you can now do:
-  - ✓ Talk about їжа та напої — foods, drinks, and meals (М36)
-  - ✓ Use the accusative case for inanimate nouns — борщ, каву, воду, піцу (М37)
-  - ✓ Order at a кафе — «Мені борщ, будь ласка» / «Рахунок» / «Можна карткою?» (М38)
-  - ✓ Shop at the ринок — «Скільки коштує?» / «Дайте кілограм» / гривня/гривні/гривень (М39)
-  - ✓ Use the accusative case for animate nouns — «Я бачу Олену» / «Я знаю брата» (М40)
-
-  **Наступний крок — A1.7: Спілкування.** You will learn to make plans, write messages, and talk on the phone. Ukrainian is becoming your language."
-
----
-
-Grand total: ~1080 words
+Grand total: ~1090 words
 </skeleton>
 
 ## Output Format

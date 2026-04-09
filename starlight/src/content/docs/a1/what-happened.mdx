@@ -13,6 +13,7 @@ import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -23,230 +24,123 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Dialogues
 
-Monday morning. Окса́на and Дмитро́ meet by the coffee machine at work. They haven't seen each other since Friday — time to catch up on the weekend.
+Monday morning at the office is the perfect time to catch up with coworkers about their weekend activities. Listen closely to how Taras and Olena ask each other about what they did. Pay special attention to the endings of the verbs. Notice how the exact same action has a different ending depending on who performed it.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Приві́т, Дмитре! Що ти роби́в учо́ра? *(Hi, Dmytro! What did you do yesterday?)*</div>
+<div class="dialogue-line"><span class="speaker">Оле́на:</span> Приві́т, Тара́се! **Що ти роби́в учо́ра?** *(Hi, Taras! What did you do yesterday?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Тара́с:</span> Привіт! **Я чита́в кни́жку. А ти?** *(Hi! I read a book. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Привіт! Я чита́в кни́жку. *(Hi! I read a book.)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> **Я готува́ла вече́рю. А що робив Іва́н?** *(I cooked dinner. And what did Ivan do?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Тарас:</span> **Він гуля́в у парку. А Марі́я?** *(He walked in the park. And Mariia?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А яку? *(Which one?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> Детекти́в. А ти? *(A detective novel. And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я готува́ла вече́рю. *(I cooked dinner.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> А що робив Тара́с? *(And what did Taras do?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Він гуля́в у парку. *(He walked in the park.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Дмитро:</span> А Оле́на? *(And Olena?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Вона́ працюва́ла весь день. *(She worked all day.)*</div>
-
+<div class="dialogue-line"><span class="speaker">Олена:</span> **Вона́ працюва́ла.** *(She worked.)*</div>
 
 </div>
 
-Notice the verb **роби́ти** (to do). Дмитро says **робив** — because he is male. Оксана would say **роби́ла** — because she is female. Same verb, different ending. This is the key to Ukrainian past tense: the ending tells you the subject's gender, not the grammatical person (1st, 2nd, 3rd).
+Look at the linguistic patterns in that conversation. The core activity remains the same, but the verb ending changes based on whether **Тарас** (Taras) or **Олена** (Olena) is speaking. When Taras talks about himself, he uses the masculine ending. When Olena talks about herself, she uses the feminine ending. In Ukrainian, the past tense must agree with the gender of the person performing the action.
 
-The next day, Богдан and Марі́я compare how they spent the full weekend. Богдан asks **«Як ти провела́ вихідні́?»** (How did you spend the weekend?) — using **провела** because he's asking a woman.
+Consider another conversation. This time, two colleagues are discussing their entire weekend. Notice what happens when they talk about doing things together as a group.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Як ти провела вихідні? *(How did you spend the weekend?)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> Привіт, Тарасе! **Як ти прові́в вихідні́?** *(Hi, Taras! How did you spend the weekend?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Тарас:</span> До́бре! **У субо́ту я гуляв у мі́сті.** *(Good! On Saturday I walked in the city.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марія:</span> Чудо́во! У субо́ту я ходи́ла в кафе́. *(Great! On Saturday I went to a café.)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> А в неді́лю? *(And on Sunday?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Тарас:</span> **У неділю я диви́вся фільм. А ти?** *(On Sunday I watched a film. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> А в неді́лю? *(And on Sunday?)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> **Я ходи́ла в кафе́ з по́другою.** *(I went to a cafe with a friend.)* **Ми ї́ли торт і пили ка́ву.** *(We ate cake and drank coffee.)*</div>
 
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> У неділю я диви́лася фільм вдо́ма. А ти? *(On Sunday I watched a film at home. And you?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Я прові́в суботу вдома. Готува́в і читав. *(I spent Saturday at home. I cooked and read.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> А в неділю? *(And on Sunday?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Богдан:</span> У неділю ми гуля́ли в парку. *(On Sunday we walked in the park.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Як приє́мно! *(How nice!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Тарас:</span> **Як сма́чно!** *(How delicious!)*</div>
 
 </div>
 
-Марія uses feminine forms: **ходила**, **провела**, **дивилася**. Богдан uses masculine forms: **провів**, **готував**. When Богдан says **ми гуляли** (we walked), the ending is **-ли** — the plural form, which is the same regardless of gender.
-
-Notice how every verb in these dialogues changes its ending depending on who is speaking.
+In natural conversation, you will frequently transition from the present to the past. Compare the present tense **я за́раз працю́ю** (I am working right now) with the past tense **учора я працюва́в** (yesterday I worked). The rules for building these two tenses are completely different, requiring a new approach.
 
 ## Мину́лий час (Past Tense)
 
-Here is the core insight: Ukrainian past tense does not mark **person** — it marks **gender**. This is completely different from present tense. Compare:
+The formal rule for forming the **минулий час** (past tense), which Ukrainian children learn in Grade 3-4 textbooks, is wonderfully simple and mechanical. First, take the infinitive form of the verb and remove the final **-ти** ending to find the core stem. Then, you simply add one of four suffixes to that stem: **-в** for masculine subjects, **-ла** for feminine subjects, **-ло** for neuter subjects, and **-ли** for plural subjects. For example, take the model verb **чита́ти** (to read). Drop the **-ти** to get the stem **чита́-**. Then add the suffix to create **читав**, **чита́ла**, **чита́ло**, or **чита́ли**.
 
-| | Present tense (person changes) | Past tense (gender changes) |
-|---|---|---|
-| я | чита́ю | читав (♂) / чита́ла (♀) |
-| ти | чита́єш | читав (♂) / читала (♀) |
-| він / вона | чита́є | читав (♂) / читала (♀) |
+This brings us to a crucial pedagogical shift. Unlike the present tense, which changes its ending based on the grammatical person (first, second, or third person like **я чита́ю**, **ти чита́єш**), the past tense does not care about person at all. The past tense only cares about gender. If a man is speaking, he says **я читав** (I read). If a woman is speaking, she says **я читала** (I read). Both use the pronoun **я**, but the verb ending changes to match their gender. 
 
-In present tense, **я читаю** and **ти читаєш** have different endings — the ending shows the person. In past tense, **я читав** and **він читав** are identical — both masculine. The ending shows gender, not person.
+*   **Я читав ціка́ву книжку.** *(I read an interesting book.)* [male speaker]
+*   **Я читала цікаву книжку.** *(I read an interesting book.)* [female speaker]
+*   **Ти добре працював.** *(You worked well.)* [to a male]
+*   **Ти добре працювала.** *(You worked well.)* [to a female]
 
-### How to form the past tense
+The most common verb you will use in the past tense is the verb **бу́ти** (to be). It follows the exact same pattern. The paradigms are **був** (masculine), **була́** (feminine), **було́** (neuter), and **були́** (plural). If you want to translate the English phrase "I was," a male speaker says **я був**, and a female speaker says **я була**. 
 
-The rule is straightforward. Take any infinitive, remove **-ти**, and add the gender ending:
+*   **Учора він був удо́ма.** *(Yesterday he was at home.)*
+*   **Учора вона була на робо́ті.** *(Yesterday she was at work.)*
+*   **У неділю ми були в кафе.** *(On Sunday we were in a cafe.)*
 
-- **-в** → він (masculine singular)
-- **-ла** → вона (feminine singular)
-- **-ло** → воно́ (neuter singular)
-- **-ли** → вони́ (plural, all genders)
+Remember that the present tense word **є** (is/are) is never used when talking about the past.
 
-Walk through it with **чита́ти** (to read): **читати** → **чита́-** → **він читав** / **вона читала** / **воно чита́ло** / **вони чита́ли**.
-
-The same pattern works for **гуля́ти** (to walk): **гуляти** → **гуля-** → **він гуляв** / **вона гуля́ла** / **воно гуля́ло** / **вони гуляли**.
-
-And for **працюва́ти** (to work): **працювати** → **працюва-** → **він працюва́в** / **вона працювала** / **воно працюва́ло** / **вони працюва́ли**.
-
-:::tip
-Four endings — that's all: **-в**, **-ла**, **-ло**, **-ли**.
-:::
-
-### Reflexive verbs
-
-Reflexive verbs like **диви́тися** (to watch) keep the **-ся** particle after the gender ending: **він диви́вся** / **вона дивилася** / **воно диви́лося** / **вони диви́лися**. Two example sentences show the pattern:
-
-- **Тарас дивився фільм.** — Taras watched a film.
-- **Іри́на дивилася серіа́л.** — Iryna watched a series.
-
-Compare with non-reflexive **читати**: він читав / вона читала — no **-ся** at the end. With reflexive verbs, the **-ся** simply tags along after the gender suffix.
-
-### First person reveals YOUR gender
-
-When the subject is **я** (I) or **ти** (you), the past tense ending reveals the person's own gender. A male speaker says **«Я читав книжку»** (I read a book). A female speaker says **«Я читала книжку»** — same meaning, same person **я**, different ending.
-
-This means the question **«Що ти робив?»** is directed at a male, while **«Що ти робила?»** is directed at a female. Both mean "What did you do?" — the ending matches the listener's gender.
-
-One more thing: **вони** (they) always takes **-ли**, regardless of whether the group is male, female, or mixed:
-
-- **Він читав.** — He read.
-- **Вона читала.** — She read.
-- **Я читав.** — I (male) read.
-- **Я читала.** — I (female) read.
-- **Вони читали.** — They read. (always **-ли**)
-
-<MatchUp client:only="react" pairs={[{"left": "він", "right": "працював"}, {"left": "вона", "right": "працювала"}, {"left": "воно", "right": "працювало"}, {"left": "вони", "right": "працювали"}, {"left": "Тарас", "right": "говорив"}, {"left": "Олена", "right": "говорила"}]} instruction={"З'єднайте підмет з правильною формою дієслова (Match each subject with the correct verb form)"} />
+The neuter and plural forms are equally straightforward. You will often use the neuter pronoun **воно́** (it) and the **-ло** ending for impersonal expressions about the weather or environment, such as **було тепло́** (it was warm) or **було хо́лодно** (it was cold). The plural ending **-ли** is used for groups of people. A wonderful feature of the plural past tense is that gender distinctions completely disappear. Whether you say **ми гуля́ли** (we walked), **ви гуляли** (you walked), or **вони́ гуляли** (they walked), the ending is always exactly the same.
 
 ## Пра́ктика (Practice)
 
-Here are the six core verbs you already know from earlier modules — now in their full past tense forms:
+You must drill these core patterns using the verbs you already know. The transformation is consistent across almost all basic verbs. 
 
-| Infinitive | він (♂) | вона (♀) | воно (n.) | вони (pl.) |
-|---|---|---|---|---|
-| читати | читав | читала | читало | читали |
-| працювати | працював | працювала | працювало | працювали |
-| гуляти | гуляв | гуляла | гуляло | гуляли |
-| готува́ти | готував | готувала | готува́ло | готува́ли |
-| дивитися | дивився | дивилася | дивилося | дивилися |
-| говори́ти | говори́в | говори́ла | говори́ло | говори́ли |
+*   **працюва́ти** (to work) → **він працював**, **вона працювала**, **вони працюва́ли**
+*   **гуля́ти** (to walk) → **він гуляв**, **вона гуля́ла**, **вони гуляли**
+*   **готува́ти** (to cook) → **він готува́в**, **вона готувала**, **вони готува́ли**
+*   **читати** (to read) → **він читав**, **вона читала**, **вони читали**
+*   **говори́ти** (to speak) → **він говори́в**, **вона говори́ла**, **вони говори́ли**
 
-The stems are familiar from the present tense. The only new piece is the ending: **-в**, **-ла**, **-ло**, **-ли** (and **-ся** sticking to reflexive verbs).
+For reflexive verbs like **диви́тися** (to watch), the reflexive suffix **-ся** remains at the very end of the word, after the gender suffix. The reflexive suffix often shortens to **-сь** after vowels for smoother pronunciation (**вона диви́лась**, **вони диви́лись**), which is completely standard. However, we will focus on the full forms first: **він дивився**, **вона диви́лася**, and **вони диви́лися**.
 
-<FillIn client:only="react" items={[{"sentence": "Учора він ___ книжку.", "answer": "читав", "options": ["читав", "читала", "читати"]}, {"sentence": "Олена ___ вечерю.", "answer": "готувала", "options": ["готувала", "готував", "готували"]}, {"sentence": "Ми ___ в парку.", "answer": "гуляли", "options": ["гуляли", "гуляв", "гуляла"]}, {"sentence": "Вони ___ разом.", "answer": "працювали", "options": ["працювали", "працював", "працювало"]}, {"sentence": "Тарас ___ фільм.", "answer": "дивився", "options": ["дивився", "дивилася", "дивилися"]}, {"sentence": "Що ти ___ учора, Іване?", "answer": "робив", "options": ["робив", "робила", "робили"]}]} instruction={"Вставте правильну форму дієслова (Fill in the correct verb form)"} />
+To ground your sentences in the past, you need time markers. The two most essential phrases at this level are **учора** (yesterday) and **мину́лого ти́жня** (last week). Notice that the adjective **минулого** (last/past) is in the genitive case, agreeing with the masculine noun **ти́ждень** (week). 
 
-### Talking about the past
+*   **Учора я працював.** *(Yesterday I worked.)*
+*   **Минулого тижня вона готувала борщ.** *(Last week she cooked borscht.)*
+*   **Учора вве́чері ми дивилися фільм.** *(Yesterday evening we watched a film.)*
+*   **У неділю вра́нці він читав нови́ни.** *(On Sunday morning he read the news.)*
+*   **У суботу вони гуляли ра́зом.** *(On Saturday they walked together.)*
 
-To describe past events, place a time word at the beginning of the sentence. Two essential time expressions: **учора** (yesterday) and **мину́лого ти́жня** (last week). The time word doesn't change the verb form — it just sets the scene:
+<MatchUp client:only="react" pairs={[{"left": "Він", "right": "працював"}, {"left": "Вона", "right": "працювала"}, {"left": "Воно", "right": "працювало"}, {"left": "Вони", "right": "працювали"}, {"left": "Тарас", "right": "говорив"}, {"left": "Олена", "right": "говорила"}]} instruction={"З'єднайте займенник із дієсловом (Match the pronoun with the verb)"} />
 
-- **Учора я читав ціка́ву книжку.** — Yesterday I read an interesting book.
-- **Минулого тижня вона працювала в о́фісі.** — Last week she worked in the office.
-- **У суботу ми гуляли в парку.** — On Saturday we walked in the park.
-- **У неділю вони готували вечерю ра́зом.** — On Sunday they cooked dinner together.
+<FillIn client:only="react" items={[{"sentence": "Учора він ____ книжку.", "answer": "читав", "options": ["читав", "читала", "читати"]}, {"sentence": "Олена ____ вечерю.", "answer": "готувала", "options": ["готувала", "готував", "готували"]}, {"sentence": "Ми ____ в парку.", "answer": "гуляли", "options": ["гуляли", "гуляв", "гуляла"]}, {"sentence": "Вони ____ разом.", "answer": "працювали", "options": ["працювали", "працював", "працювало"]}, {"sentence": "Тарас ____ фільм.", "answer": "дивився", "options": ["дивився", "дивилася", "дивилися"]}, {"sentence": "Що ти ____ учора, Іване?", "answer": "робив", "options": ["робив", "робила", "робили"]}]} instruction={"Вставте правильну форму дієслова (Fill in the correct verb form)"} />
 
-Notice how the time word (**учора**, **у суботу**, **в неділю**) sits at the front of the sentence. This is natural Ukrainian word order — time comes first for emphasis, but the verb ending stays the same no matter where the time word is placed.
+Question formation in the past tense is very direct. To ask someone "What did you do?", you must use the verb **роби́ти** (to do). However, because the past tense requires gender agreement, the question itself reveals the gender of the person you are talking to. To ask a man, you say **Що ти робив?**. To ask a woman, you say **Що ти роби́ла?**. The response pattern simply reverses this: start with **я**, add the verb with your own gender ending, and finish with the object. 
 
-<FillIn client:only="react" items={[{"sentence": "Марія ___ фільм.", "answer": "дивилася", "options": ["дивилася", "дивився", "дивилися"]}, {"sentence": "Мій брат ___ у парку.", "answer": "гуляв", "options": ["гуляв", "гуляла", "гуляли"]}, {"sentence": "Вони ___ вихідні разом.", "answer": "провели", "options": ["провели", "провів", "провела"]}, {"sentence": "Іван ___ книжку учора.", "answer": "читав", "options": ["читав", "читала", "читали"]}, {"sentence": "Тарас ___ вечерю в суботу.", "answer": "готував", "options": ["готував", "готувала", "готували"]}, {"sentence": "Ми ___ у парку в неділю.", "answer": "гуляли", "options": ["гуляли", "гуляв", "гуляла"]}]} instruction={"Оберіть правильну форму (Choose the correct form based on the subject)"} />
+*   **Що ви роби́ли учора?** *(What did you do yesterday?)* [plural]
+*   **Ми працювали в о́фісі.** *(We worked in the office.)*
+*   **Як вона провела́ вихідні?** *(How did she spend the weekend?)*
+*   **Вона гуляла в парку.** *(She walked in the park.)*
 
-### Putting it all together
+<FillIn client:only="react" items={[{"sentence": "Марія ____ фільм.", "answer": "дивилася", "options": ["дивилася", "дивився", "дивилися"]}, {"sentence": "Мій брат ____ у парку.", "answer": "гуляв", "options": ["гуляв", "гуляла", "гуляли"]}, {"sentence": "Вони ____ вихідні разом.", "answer": "провели", "options": ["провели", "провів", "провела"]}, {"sentence": "Моя подруга ____ каву.", "answer": "пила", "options": ["пила", "пив", "пили"]}, {"sentence": "Іван ____ борщ.", "answer": "готував", "options": ["готував", "готувала", "готували"]}, {"sentence": "Ми ____ цікаву книжку.", "answer": "читали", "options": ["читали", "читав", "читала"]}]} instruction={"Оберіть правильне дієслово за родом (Choose the correct verb by gender)"} />
 
-Now try building short exchanges using **«Що ти робив/робила учора?»** (What did you do yesterday?):
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Що ти робив учора, Андрію? *(What did you do yesterday, Andrii?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрі́й:</span> Я читав і гуляв у парку. *(I read and walked in the park.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А вве́чері? *(And in the evening?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Ввечері я дивився фільм. *(In the evening I watched a film.)*</div>
-
-
-</div>
-
-And the female version:
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Що ти робила учора, Окса́но? *(What did you do yesterday, Oksana?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я готувала вечерю. По́тім говорила з ма́мою. *(I cooked dinner. Then I talked with mom.)*</div>
-
-
-</div>
-
-The question changes — **робив** for a male listener, **робила** for a female listener. The answers change too, matching the speaker's own gender.
+English speakers often fall into a few common pitfalls when learning this system. First, avoid the direct translation of the English "I was doing." You should never say **я є був** or combine **був** with another verb. Just use the past tense of the main verb directly. Second, because English verbs do not change based on the speaker's gender, learners sometimes accidentally use the masculine **-в** form as a default for everything. If the word **я** refers to a woman, she must actively remember to say **я працювала**, not **я працював**.
 
 ## Summary
 
-### The formation rule
+The Ukrainian past tense requires you to think differently than the present tense. Instead of matching the grammatical person, the verb ending must always agree with the gender of the subject. The mechanical transformation is highly consistent: you take the infinitive stem of the verb and add the appropriate gender suffix. 
 
-Past tense in Ukrainian follows one simple pattern: take the infinitive stem (remove **-ти**) and add the gender ending — **-в** (він), **-ла** (вона), **-ло** (воно), **-ли** (вони).
+| Займе́нник (Pronoun) | Закі́нчення (Ending) | Приклад (Example: читати) |
+| :--- | :--- | :--- |
+| **Він** (He) | **-в** | **він читав** |
+| **Вона** (She) | **-ла** | **вона читала** |
+| **Воно** (It) | **-ло** | **воно читало** |
+| **Вони** (They) | **-ли** | **вони читали** |
+
+Always remember this fundamental rule: the past tense shows gender. A male speaker and a female speaker will use different verb endings even though they both use the exact same pronoun **я**.
+
+Before moving on to the next module, test your understanding of these concepts. Ask yourself the following self-check questions to ensure you have internalized the core rules.
+
+*   **Як ми утво́рюємо минулий час?** *(How do we form the past tense?)* You take the infinitive stem of the verb and add the correct gender suffix.
+*   **Яке́ закінчення ма́є жіно́чий рід?** *(What ending does the feminine gender have?)* The feminine ending is always **-ла**.
+*   **Як запита́ти дру́га про вчора́шній день?** *(How to ask a male friend about yesterday?)* You would ask him: **Що ти робив учора?**
 
 :::note
-In Ukrainian, the past tense ending agrees with the **gender** of the subject — not the grammatical person. **Я читав** and **він читав** are identical because both subjects are masculine. **Я читала** and **вона читала** are identical because both are feminine.
+**Your Production Task**
+Find a language partner, or simply practice speaking aloud to yourself. Tell them three things you did yesterday, making sure to use three different verbs. For example, a male learner might say: **Учора я сні́дав. По́тім я гуляв у парку. Уве́чері я читав цікаву книжку.** Pay close attention to your verb endings!
 :::
-
-English has no equivalent — "I read" and "she read" look the same regardless of gender. Ukrainian always tells you who is speaking.
-
-### All six verbs at a glance
-
-| Verb | він (♂) | вона (♀) | вони (pl.) |
-|---|---|---|---|
-| читати | читав | читала | читали |
-| працювати | працював | працювала | працювали |
-| гуляти | гуляв | гуляла | гуляли |
-| готувати | готував | готувала | готували |
-| дивитися | дивився | дивилася | дивилися |
-| говорити | говорив | говорила | говорили |
-
-The endings are consistent: **-в / -ла / -ло / -ли**. The plural **вони** always ends in **-ли** — no gender distinction in plural.
-
-### Useful phrases for talking about the past
-
-Four ready-made conversation starters you can use right away:
-
-- **Що ти робив/робила учора?** — What did you do yesterday? (use **робив** for a male, **робила** for a female)
-- **Як ти провів/провела вихідні?** — How did you spend the weekend? (same pattern — **провів** ♂ / **провела** ♀)
-- **Учора я читав/читала книжку.** — Yesterday I read a book. (match YOUR gender)
-- **Ми гуляли разом.** — We walked together. (plural = always **-ли**)
-
-Each question comes in a pair — one masculine form, one feminine form. Choose the one that matches the person you are speaking to.
-
-### Self-check
-
-Tell your partner what you did yesterday using 3 different verbs.
 
 </TabItem>
 <TabItem label="Словник">
@@ -255,6 +149,11 @@ Tell your partner what you did yesterday using 3 different verbs.
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
+| **мину́лий** | past | прикм. |  |
+| **субо́та** | Saturday | ім. | ж. |
+| **неді́ля** | Sunday | ім. | ж. |
+| **ра́зом** | together | ім. | ч. |
+| **провести́** | to spend (time) | дієсл. |  |
 | **учо́ра** | yesterday | присл. |  |
 | **роби́ти** | to do | дієсл. |  |
 | **чита́ти** | to read | дієсл. |  |
@@ -263,70 +162,55 @@ Tell your partner what you did yesterday using 3 different verbs.
 | **готува́ти** | to cook | дієсл. |  |
 | **диви́тися** | to watch | дієсл. |  |
 | **говори́ти** | to speak | дієсл. |  |
-| **мину́лий** | past (adj.) | прикм. |  |
-| **вихідні́** | weekend | прикм. |  |
-| **субо́та** | Saturday | ім. | ж. |
-| **неді́ля** | Sunday | ім. | ж. |
-| **ра́зом** | together | ім. | ч. |
-| **провести́** | to spend (time) | дієсл. |  |
-| **вече́ря** | dinner | ім. | ж. |
+| **бу́ти** | to be | дієсл. |  |
 | **кни́жка** | book | ім. | ж. |
-| **детекти́в** | detective novel | ім. | ч. |
-| **серіа́л** | TV series | ім. | ч. |
-| **вве́чері** | in the evening | присл. |  |
-| **вдо́ма** | at home | присл. |  |
-| **по́тім** | then, afterwards | присл. |  |
+| **вече́ря** | dinner | ім. | ж. |
+| **нови́ни** | news | ім. | ж. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
 | **минулого тижня** | last week |
-| **весь день** | all day |
-| **Що ти робив учора?** | What did you do yesterday? (asking a male) |
-| **Що ти робила учора?** | What did you do yesterday? (asking a female) |
-| **Як ти провів вихідні?** | How did you spend the weekend? (asking a male) |
-| **Як ти провела вихідні?** | How did you spend the weekend? (asking a female) |
-| **Як приємно!** | How nice! |
-| **Ми гуляли разом.** | We walked together. |
+| **Що ти робив учора?** | What did you do yesterday? |
+| **Як ти провів вихідні?** | How did you spend the weekend? |
+| **було тепло** | it was warm |
+| **було холодно** | it was cold |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "учо́ра", back: "yesterday", subtitle: "присл." }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak", subtitle: "дієсл." }, { front: "мину́лий", back: "past (adj.)", subtitle: "прикм." }, { front: "вихідні́", back: "weekend", subtitle: "прикм." }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́зом", back: "together", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "провести́", back: "to spend (time)", subtitle: "дієсл." }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́жка", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "детекти́в", back: "detective novel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "серіа́л", back: "TV series", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "по́тім", back: "then, afterwards", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "мину́лий", back: "past", subtitle: "прикм." }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ра́зом", back: "together", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "провести́", back: "to spend (time)", subtitle: "дієсл." }, { front: "учо́ра", back: "yesterday", subtitle: "присл." }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak", subtitle: "дієсл." }, { front: "бу́ти", back: "to be", subtitle: "дієсл." }, { front: "кни́жка", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нови́ни", back: "news", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "Учора він ___ цікаву книжку.", "answer": "читав", "options": ["читав", "читала", "читали"]}, {"sentence": "Вона ___ весь день.", "answer": "працювала", "options": ["працювала", "працював", "працювали"]}, {"sentence": "Вони ___ у парку в неділю.", "answer": "гуляли", "options": ["гуляли", "гуляв", "гуляла"]}, {"sentence": "Він ___ вечерю вдома.", "answer": "готував", "options": ["готував", "готувала", "готували"]}, {"sentence": "Вона ___ фільм у суботу.", "answer": "дивилася", "options": ["дивилася", "дивився", "дивилися"]}, {"sentence": "Він ___ з Оксаною.", "answer": "говорив", "options": ["говорив", "говорила", "говорили"]}]} instruction={"Вставте правильну форму (Fill in the correct past tense form)"} />
+<GroupSort client:only="react" groups={{"Він (masculine)": ["працював", "читав", "дивився"], "Вона (feminine)": ["працювала", "читала", "дивилася"], "Вони (plural)": ["працювали", "читали", "дивилися"]}} instruction={"Розподіліть дієслова за родами та числом (Sort verbs by gender and number)"} />
 
-<GroupSort client:only="react" groups={{"він (♂)": ["читав", "гуляв", "готував", "говорив", "робив", "дивився"], "вона (♀)": ["читала", "гуляла", "готувала", "говорила", "робила", "дивилася"], "вони (мн.)": ["читали", "гуляли", "готували", "говорили", "робили", "дивилися"]}} instruction={"Розподіліть форми дієслів за родом і числом (Sort the verb forms by gender and number)"} />
+<Quiz client:only="react" questions={[{"question": "Учора Тарас ____ в офісі.", "options": [{"text": "працював", "correct": true}, {"text": "працювала", "correct": false}, {"text": "працювали", "correct": false}]}, {"question": "Минулого тижня ми ____ фільм.", "options": [{"text": "дивилася", "correct": false}, {"text": "дивився", "correct": false}, {"text": "дивилися", "correct": true}]}, {"question": "У суботу Марія ____ у парку.", "options": [{"text": "гуляв", "correct": false}, {"text": "гуляла", "correct": true}, {"text": "гуляли", "correct": false}]}, {"question": "Що ви ____ у неділю?", "options": [{"text": "робив", "correct": false}, {"text": "робила", "correct": false}, {"text": "робили", "correct": true}]}, {"question": "Іван та Олена ____ разом.", "options": [{"text": "готував", "correct": false}, {"text": "готувала", "correct": false}, {"text": "готували", "correct": true}]}, {"question": "Учора я (female) ____ книжку.", "options": [{"text": "читала", "correct": true}, {"text": "читав", "correct": false}, {"text": "читали", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Оксана читав книжку учора.", "errorWord": "читав", "correctForm": "читала", "options": ["читала", "читали", "читало"], "explanation": "Оксана is female → past tense ending -ла: читала"}, {"sentence": "Вони гуляла в парку в неділю.", "errorWord": "гуляла", "correctForm": "гуляли", "options": ["гуляли", "гуляв", "гуляло"], "explanation": "Вони (plural) → past tense ending -ли: гуляли"}, {"sentence": "Іван готувала вечерю вдома.", "errorWord": "готувала", "correctForm": "готував", "options": ["готував", "готували", "готувало"], "explanation": "Іван is male → past tense ending -в: готував"}, {"sentence": "Вона дивився фільм у суботу.", "errorWord": "дивився", "correctForm": "дивилася", "options": ["дивилася", "дивилися", "дивилося"], "explanation": "Вона is female → reflexive verb past tense uses -лася: дивилася"}, {"sentence": "Ми говорив учора.", "errorWord": "говорив", "correctForm": "говорили", "options": ["говорили", "говорила", "говорило"], "explanation": "Ми (we) is a plural subject → past tense ending -ли: говорили"}, {"sentence": "Марія і Тарас працювала разом.", "errorWord": "працювала", "correctForm": "працювали", "options": ["працювали", "працював", "працювало"], "explanation": "Марія і Тарас = two people = plural subject → ending -ли: працювали"}]} instruction={"Виправте помилку у формі дієслова (Correct the error in the verb form)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Учора вона працював.", "errorWord": "працював", "correctForm": "працювала", "options": ["працювала", "працювали", "працювати"], "explanation": "The pronoun is 'вона' (she), so the verb needs the feminine ending -ла."}, {"sentence": "Минулого тижня ми був у кафе.", "errorWord": "був", "correctForm": "були", "options": ["були", "була", "було"], "explanation": "The pronoun is 'ми' (we), so the verb needs the plural ending -ли."}, {"sentence": "Тарас дивилася фільм у неділю.", "errorWord": "дивилася", "correctForm": "дивився", "options": ["дивився", "дивилися", "дивитись"], "explanation": "Тарас is a man, so the verb needs the masculine ending."}, {"sentence": "Що ти робила учора, Іване?", "errorWord": "робила", "correctForm": "робив", "options": ["робив", "робили", "робити"], "explanation": "Іван is a male name, so the question must use the masculine form."}, {"sentence": "У суботу вони гуляв разом.", "errorWord": "гуляв", "correctForm": "гуляли", "options": ["гуляли", "гуляла", "гуляти"], "explanation": "The pronoun is 'вони' (they), so the verb needs the plural ending -ли."}, {"sentence": "Олена читав цікаву книжку.", "errorWord": "читав", "correctForm": "читала", "options": ["читала", "читали", "читати"], "explanation": "Олена is a woman, so the verb needs the feminine ending -ла."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "У минулому часі дієслово змінюється за особами (я, ти, він).", "isTrue": false, "explanation": "Ukrainian past tense marks gender (♂/♀/neuter), not person. Я читав = він читав — both masculine, same form."}, {"statement": "Форма «читав» використовується для чоловіків у минулому часі.", "isTrue": true, "explanation": "Masculine past tense ending is -в: читав, гуляв, готував, говорив."}, {"statement": "«Вони читали» і «вона читала» мають однакове закінчення.", "isTrue": false, "explanation": "Вони takes -ли (читали); вона takes -ла (читала). They are different endings."}, {"statement": "Зворотні дієслова зберігають «-ся» після закінчення минулого часу.", "isTrue": true, "explanation": "E.g.: він дивився, вона дивилася — the -ся particle stays after the gender suffix."}, {"statement": "«Я читав» (чоловік) і «він читав» — це однакові форми.", "isTrue": true, "explanation": "Past tense marks gender, not person. Both я and він are masculine, so both use -в."}, {"statement": "Форма вони у минулому часі завжди закінчується на «-ло».", "isTrue": false, "explanation": "Вони always takes -ли: вони читали, гуляли, говорили. The ending -ло belongs to воно (neuter singular)."}]} instruction={"Правда чи ні? (True or false?)"} />
+<Translate client:only="react" questions={[{"source": "Yesterday I (male) worked.", "options": [{"text": "Учора я працював.", "correct": true}, {"text": "Учора я працювала.", "correct": false}, {"text": "Учора я працювали.", "correct": false}]}, {"source": "How did she spend the weekend?", "options": [{"text": "Як вона провела вихідні?", "correct": true}, {"text": "Як вона провів вихідні?", "correct": false}, {"text": "Як вона провели вихідні?", "correct": false}]}, {"source": "We watched a film together.", "options": [{"text": "Ми дивилися фільм разом.", "correct": true}, {"text": "Ми дивилася фільм разом.", "correct": false}, {"text": "Ми дивився фільм разом.", "correct": false}]}, {"source": "On Sunday they walked in the park.", "options": [{"text": "У неділю вони гуляли в парку.", "correct": true}, {"text": "У неділю вони гуляв у парку.", "correct": false}, {"text": "У неділю вони гуляла в парку.", "correct": false}]}, {"source": "What did you do yesterday? (to a female)", "options": [{"text": "Що ти робила учора?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що ти робили учора?", "correct": false}]}, {"source": "On Saturday he read a book.", "options": [{"text": "У суботу він читав книжку.", "correct": true}, {"text": "У суботу він читала книжку.", "correct": false}, {"text": "У суботу він читали книжку.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
-<Quiz client:only="react" questions={[{"question": "Марія ___ у кафе в суботу.", "options": [{"text": "ходив", "correct": false}, {"text": "ходила", "correct": true}, {"text": "ходили", "correct": false}]}, {"question": "Богдан ___ книжку вдома.", "options": [{"text": "читала", "correct": false}, {"text": "читав", "correct": true}, {"text": "читали", "correct": false}]}, {"question": "Ми ___ разом у неділю.", "options": [{"text": "гуляв", "correct": false}, {"text": "гуляла", "correct": false}, {"text": "гуляли", "correct": true}]}, {"question": "Що ти ___ учора, Оксано?", "options": [{"text": "робив", "correct": false}, {"text": "робила", "correct": true}, {"text": "робили", "correct": false}]}, {"question": "Вони ___ вечерю разом.", "options": [{"text": "готував", "correct": false}, {"text": "готувала", "correct": false}, {"text": "готували", "correct": true}]}, {"question": "Іван ___ фільм ввечері.", "options": [{"text": "дивилася", "correct": false}, {"text": "дивився", "correct": true}, {"text": "дивилися", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+<TrueFalse client:only="react" items={[{"statement": "Учора Тарас читав книжку.", "isTrue": true, "explanation": "He says: 'Я читав книжку'."}, {"statement": "Олена гуляла у парку.", "isTrue": false, "explanation": "Olena says: 'Я готувала вечерю'. Ivan walked in the park."}, {"statement": "Іван готував вечерю.", "isTrue": false, "explanation": "Olena cooked dinner. Ivan walked in the park."}, {"statement": "Марія працювала.", "isTrue": true, "explanation": "Olena says: 'Вона працювала' when talking about Mariia."}, {"statement": "У неділю Тарас дивився фільм.", "isTrue": true, "explanation": "In the second dialogue, Taras says: 'У неділю я дивився фільм'."}, {"statement": "Олена і Тарас провели вихідні разом.", "isTrue": false, "explanation": "They are talking about their separate weekend activities."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Unjumble client:only="react" items={[{"words": "він / книжку / учора / читав", "answer": "учора він читав книжку"}, {"words": "вечерю / вона / вдома / готувала", "answer": "вона готувала вечерю вдома"}, {"words": "разом / гуляли / в / вони / парку", "answer": "вони гуляли в парку разом"}, {"words": "фільм / Іван / ввечері / дивився", "answer": "Іван дивився фільм ввечері"}, {"words": "вихідні / Марія / вдома / провела", "answer": "Марія провела вихідні вдома"}, {"words": "фільм / ми / разом / дивилися", "answer": "ми дивилися фільм разом"}]} instruction={"Складіть речення (Put the words in the correct order)"} />
-
+<Unjumble client:only="react" items={[{"words": "учора? / ти / Що / робив", "answer": "Що ти робив учора?"}, {"words": "читала / Я / книжку.", "answer": "Я читала книжку."}, {"words": "в / Ми / парку. / гуляли", "answer": "Ми гуляли в парку."}, {"words": "дивилися / разом. / Вони / фільм", "answer": "Вони дивилися фільм разом."}, {"words": "вихідні? / вона / провела / Як", "answer": "Як вона провела вихідні?"}, {"words": "працював. / я / суботу / У", "answer": "У суботу я працював."}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
 **Джерела — References**
 
-- State Standard 2024, §4.2.4.1
-  _Past tense — gender agreement in verb forms._
-- Grade 3-4 textbook: Минулий час
-  _Past tense formation: -в, -ла, -ло, -ли endings._
 - [ULP Season 1, Episodes 26-27](https://www.ukrainianlessons.com/episode26/)
   _Past tense verbs and narrating events._
 
-**Граматика — Grammar (МійКлас)**
+## Підручники (Textbooks)
 
-- [МійКлас: Основа слова і закінчення](https://miyklas.com.ua/p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400) (miyklas.com.ua)
-- [МійКлас: Рід іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978) (miyklas.com.ua)
-- [МійКлас: Часи дієслів. Теперішній час](https://miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/chasi-diyesliv-teperishnii-chas-39373) (miyklas.com.ua)
+- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-1.pdf#page=9), стор. 9
+- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 48
+- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 14
+- [Беца І. Ф. — Українська мова, 6 клас (2023)](https://shkola.in.ua/6-klas-ukrainska-mova-betsa-2023.html), стор. 204
+- [Літвінова І. М. — Українська мова, 7 клас (2024)](https://shkola.in.ua/7-klas-ukrainska-mova-litvinova-2024.html), стор. 59
 
 **Статті — Articles**
 
@@ -339,12 +223,6 @@ Tell your partner what you did yesterday using 3 different verbs.
 **Відео — Videos**
 
 - [The Past Tense in Ukrainian](https://www.youtube.com/watch?v=SUx5xUfABIc) (Speak Ukrainian)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
-- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
-- [Ukrainian Personal Pronouns](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/)
 
 </TabItem>
 </Tabs>

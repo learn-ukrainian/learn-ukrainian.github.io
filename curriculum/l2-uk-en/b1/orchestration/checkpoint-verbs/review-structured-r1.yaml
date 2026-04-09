@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the required vocabulary word "видова пара". Missed the mini-dialogue
+    exercise in Section 1. Missed explicitly listing the comprehension questions in
+    Section 6.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Used the calque "давайте + verb" 6 times, directly contradicting its own
+    teaching. Used misspelled loanword "оффер". Included the English calque "бути
+    тобою". Used non-standard forms "канцелярсько" an
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent integration of review materials. Good contrasts between rules
+    (real vs. unreal conditional, direct vs. polite imperative). Missed explicitly
+    guiding the student to answer the comprehension q
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary covered EXCEPT "видова пара". Recommended vocabulary
+    integrated seamlessly.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 6 activity markers correctly placed after their respective grammar sections,
+    perfectly matching the `activity_hints` in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very engaging, encouraging teacher persona. Explains *why* grammar works
+    the way it does ("Ця струнка і логічна система...", "Це фонетичне правило робить
+    українську мову...").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings present and match the outline. Clean markdown format.
+    Word count (4388) exceeds target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explicit focus on decolonizing language (actively teaching against "Пішли"
+    and "вибачаюся"). Accurate references to Ukrainian euphony.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The IT interview dialogue is very natural, incorporates the grammar points
+    organically, and models professional Ukrainian correctly.
+findings: []

@@ -1,0 +1,128 @@
+{
+  "total_items": 124,
+  "grounded_items": 106,
+  "ungrounded": [
+    {
+      "word": "велике",
+      "exercise_type": "fill-in",
+      "context": "Ось маленька кімната, _____ має велике вікно.",
+      "role": "context"
+    },
+    {
+      "word": "гарне",
+      "exercise_type": "fill-in",
+      "context": "Це гарне місто, _____ знаходиться на півдні.",
+      "role": "context"
+    },
+    {
+      "word": "купив",
+      "exercise_type": "fill-in",
+      "context": "Мій брат купив новий телефон, _____ дуже добре працює.",
+      "role": "context"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "fill-in",
+      "context": "Це нова машина, _____ стоїть на вулиці.",
+      "role": "context"
+    },
+    {
+      "word": "парку",
+      "exercise_type": "fill-in",
+      "context": "Я люблю це тихе місце, _____ знаходиться біля парку.",
+      "role": "context"
+    },
+    {
+      "word": "відвідали",
+      "exercise_type": "true-false",
+      "context": "Це новий ресторан, який ми вчора відвідали.",
+      "role": "context"
+    },
+    {
+      "word": "піти",
+      "exercise_type": "quiz",
+      "context": "Де парк, _____ ми можемо піти погуляти?",
+      "role": "context"
+    },
+    {
+      "word": "погуляти",
+      "exercise_type": "quiz",
+      "context": "Де парк, _____ ми можемо піти погуляти?",
+      "role": "context"
+    },
+    {
+      "word": "лежали",
+      "exercise_type": "match-up",
+      "context": "які лежали на столі?",
+      "role": "context"
+    },
+    {
+      "word": "гуляли",
+      "exercise_type": "match-up",
+      "context": "де ми вчора гуляли.",
+      "role": "context"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "match-up",
+      "context": "звідки привезли цей хліб.",
+      "role": "context"
+    },
+    {
+      "word": "підемо",
+      "exercise_type": "match-up",
+      "context": "куди підемо на вихідних.",
+      "role": "context"
+    },
+    {
+      "word": "вихідних",
+      "exercise_type": "match-up",
+      "context": "куди підемо на вихідних.",
+      "role": "context"
+    },
+    {
+      "word": "тиха",
+      "exercise_type": "match-up",
+      "context": "Це тиха кімната,",
+      "role": "answer"
+    },
+    {
+      "word": "поїхали",
+      "exercise_type": "unjumble",
+      "context": "поїхали.",
+      "role": "answer"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "fill-in",
+      "context": "Ось книга, _____ лежить на столі.",
+      "role": "context"
+    },
+    {
+      "word": "нове",
+      "exercise_type": "fill-in",
+      "context": "Це нове місто, _____ знаходиться на півдні.",
+      "role": "context"
+    },
+    {
+      "word": "пішла",
+      "exercise_type": "error-correction",
+      "context": "Я знаю магазин, де вона пішла.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "затишний",
+      "знаходитися",
+      "котрий",
+      "означальний",
+      "описувати",
+      "речення",
+      "стояти"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,110 +1,143 @@
-Now I have enough evidence to write the complete review. Let me compile all findings.
-
 ## Linguistic Scan
-
-**Russianisms:** None found (the module correctly identifies *самий кращий as a Russicism and teaches against it).
-
-**Surzhyk:** None found.
-
-**Calques:**
-1. **"розташована в Карпатах"** — `search_style_guide` confirms: Антоненко-Давидович explicitly flags "розташований/розташована" for geographic objects as a calque of Russian "расположенный". The verb "розташуватися" applies only to people temporarily setting up (military camps, etc.), not mountains or cities. Appears twice: in the dialogue ("Вона розташована в Карпатах") and in the reading practice ("На півдні розташована ще одна унікальна локація").
-2. **"стилістичний прийом"** — "прийом" is NOT IN VESUM. While commonly used, "засіб" is the standard Ukrainian alternative in this context.
-
-**Paronyms:** None found.
-
-**Russian characters:** None found.
-
-**Gender/case errors:** None found. Declension paradigm for "найкращий" is correct.
-
-**Other:**
-- "неіснуюче" — NOT IN VESUM. Can be replaced with "помилкову форму" for clarity.
-- The phonetic alternation descriptions (г+ш→жч, с+ш→щ) are correct.
-- "зворотний суперлатив" — not standard Ukrainian linguistic terminology (invented pedagogical term), but acceptable as a teaching label for L2 learners. Minor.
+The following errors were found:
+- **Russianisms / Calques:** "оціночних" / "оціночні" (should be "оцінних" / "оцінні"), "існуючих" (should be "наявних"), "початковці" (should be "початківці"), "узагальнюючу" (should be "узагальнювальну"), "зустріти... форми" (calque, should be "натрапити на"), "На сьогоднішній день" (calque, should be "Сьогодні"), "найбільш вражаючими" (participle Russicism, should be "найбільш разючими").
+- **Grammar Errors:** "найкращого дня, ніж цей" (cannot mix a superlative directly with comparative "ніж"), "цій найвищій горі" after "На самій вершині" (Locative case conflict), "одне довге єдине словом" (Instrumental case error instead of Accusative/Nominative), "до абсолютної невпізнання" (wrong gender agreement, "невпізнання" is neuter), wrong pronoun "Вона" referring to the neuter noun "слово".
+- **Stylistic Errors:** "ріже вухо, неприпустима граматична помилка" (ungrammatical coordination of adjectives and a verb phrase without "яка"), "відверто 'канцелярськи'" (awkward adverbial phrase).
 
 ## Exercise Check
-
-**Marker inventory:**
-1. `<!-- INJECT_ACTIVITY: activity-1-simple-superlative -->` — after "Проста форма найвищого ступеня" ✅
-2. `<!-- INJECT_ACTIVITY: activity-2-compound-superlative -->` — after "Складена форма найвищого ступеня" ✅
-3. `<!-- INJECT_ACTIVITY: activity-3-intensified-forms -->` — after "Підсилені форми: що- та як-" ✅
-4. `<!-- INJECT_ACTIVITY: activity-4-synonymous-expressions -->` — after "Синонімічні засоби" ✅
-5. `<!-- INJECT_ACTIVITY: activity-5-context-quiz -->` — after "Ступені порівняння в контексті" ✅
-6. `<!-- INJECT_ACTIVITY: activity-6-error-correction -->` — after "Типові помилки" ✅
-
-**Assessment:**
-- 6 markers match 6 activity hints from the plan. ✅
-- Markers are evenly distributed through the module. ✅
-- Each marker follows its relevant teaching section. ✅
-- Cannot evaluate YAML exercise quality (generated separately).
+- `reading-superlative-landmarks` [reading, 5 items] - OK. Matches plan logic.
+- `fill-in-simple-superlative` [fill-in, 10 items] - OK. Matches plan logic.
+- `quiz-superlative-basics` [quiz, 8 items] - OK. Matches plan logic.
+- `match-up-superlative-terms` [match-up, 12 items] - OK. Matches plan logic.
+- `intensified-forms-drill` [fill-in, 12 items] - OK. Added by writer, logical placement.
+- `synonym-match-up` [match-up, 6 items] - OK. Added by writer, logical placement.
+- `essay-response-comparison` [essay-response, 1 item] - OK. Matches plan logic.
+- `error-correction-superlative` [error-correction, 8 items] - OK. Matches plan logic.
+- `quiz-superlative-summary-check` [quiz, 6 items] - OK. Added by writer for summary.
+Total exercises: 9 (density targets met). Focus areas properly align with the taught material.
 
 ## Scores
-
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | **Covered well:** All 7 H2 sections present. Formation chains (10+ adjectives in §1), declension paradigm, compound form register differences, що-/як- semantics, synonymic means, error catalogue, summary chain diagram — all from plan. **Missed:** Plan §2 explicitly requires "Contrastive practice (Авраменко Grade 6 p.125): provide 8 adjective pairs and have learners form both проста and складена superlatives, then choose which sounds more natural in a given sentence context." This inline practice is absent from the prose — only the activity marker exists. Plan §5 specifies self-check questions ("Утворіть найвищий ступінь: тихий, широкий, близький, дешевий") but these were moved to Підсумок and altered to only "близький" plus different questions. Plan §6 "Типові помилки" has 250-word budget but content is ~500+ words. Vocabulary word "занадто" from plan is absent from prose. |
-| 2. Linguistic accuracy | 8/10 | Ukrainian grammar explanations are accurate. Alternation rules (г+ш→жч, с+ш→щ) are correct. Declension paradigm verified. **Issues:** "розташована в Карпатах" — calque confirmed by Антоненко-Давидович (`search_style_guide` result: "розташуватись означає 'тимчасово розміститися... стосується тільки людей'"). "прийом" NOT IN VESUM (used once: "Цей стилістичний прийом"). "неіснуюче" NOT IN VESUM. |
-| 3. Pedagogical quality | 8/10 | Strong PPP flow: geography lesson situation → pattern identification → multiple practice sections. Excellent: 10+ adjective chains (дорогий→дорожчий→найдорожчий, etc.), full declension paradigm, reading practice "Перлини України", smartphone comparison scenario, proverb analysis. **Deduction:** Missing inline contrastive practice (8 adjective pairs) that plan §2 specifies from Авраменко. The compound section explains register differences but doesn't give learners practice choosing between forms in context — this is delegated entirely to the activity marker. |
-| 4. Vocabulary coverage | 8/10 | **Required vocab present:** найвищий ступінь, префікс, найбільш, найменш, щонайкращий, якнайшвидший, вельми ("вельми шановний"), вкрай ("вкрай необхідний"), надзвичайно ("надзвичайно важливий") — all introduced naturally in context. **Recommended vocab present:** підсилений ("підсилювачі"), синонімічний ("синонімічні засоби"), стилістичний ("стилістична різниця"), прегарний ("прегарна квітка"), білісінький ("білісінький" in repetition section). **Missing:** "занадто" — listed in plan's recommended vocabulary and in content outline §4 point 1 ("дуже, вельми, занадто, вкрай") but absent from prose. |
-| 5. Exercise quality | 8/10 | 6 markers matching 6 plan hints, well-distributed. Each follows its teaching section. Cannot fully evaluate exercise YAML content. The inline self-check in Підсумок is pedagogically sound (4 questions with answers). **Minor:** Plan's diagnostic drill (8-10 error sentences for classification) in §6 is delegated to activity-6 marker rather than inline. |
-| 6. Engagement & tone | 8/10 | **Strong:** Geography lesson framing with named characters (Тарас, Оксана, Максим), travel blog reading practice, smartphone comparison scenario, Ан-225 Мрія and Сергій Бубка references, Ukrainian proverbs. **Deductions:** Meta-commentary present: "Давайте зробимо лінгвістичний аналіз цього тексту", "Поговорімо також про визначні досягнення". Some generic enthusiasm: "надзвичайно виразний граматичний інструмент, якого немає в багатьох інших європейських мовах", "Тепер ви чудово знаєте". |
-| 7. Structural integrity | 8/10 | All 7 H2 sections present and correctly ordered. Clean markdown. Word count 4279 (above 4000 target). ✅ **Deduction:** Section "Типові помилки" significantly exceeds 250-word plan budget (~500+ words, >100% over). The intro/dialogue section is substantial but not budgeted in the plan — this is standard and acceptable. |
-| 8. Cultural accuracy | 10/10 | Excellent decolonized framing. "самий" correctly identified as a Russicism from "самый лучший," never as "similar to Russian." Ukrainian cultural references: Говерла, Дніпро, Світязь, Синевир, Софіївка, Олешківські піски, Ан-225 Мрія, Сергій Бубка, Конституція Орлика (1710). Ukrainian proverbs: "Що темніша ніч, то ясніші зорі." All factually correct and respectful. |
-| 9. Dialogue & conversation quality | 9/10 | Natural multi-turn geography lesson. Named speakers: Пані Олена (teacher), Тарас, Оксана, Максим (students). Real-world setting with genuine motivation (quiz about Ukrainian geography records). Not interrogative — teacher asks open questions, students contribute knowledge eagerly. Culturally appropriate teacher-student dynamics. **Minor:** Could have one more exchange to deepen interaction. |
+| 1. Plan adherence | 10/10 | All sections from the plan are comprehensively covered in order. The word count is 6560 (exceeding the 4000-word target). The common errors catalogue and situational dialogue strictly adhere to plan specifications. |
+| 2. Linguistic accuracy | 7/10 | Several critical and major errors identified: "Я ніколи раніше не бачив найкращого дня, ніж цей" wrongly pairs a superlative with a comparative "ніж". There are multiple case/gender agreement errors ("одне... словом", "На самій вершині цій найвищій горі", "абсолютної невпізнання", "Вона використовується") and several calques/incorrect participial forms ("оціночні", "узагальнюючу", "існуючих", "На сьогоднішній день"). |
+| 3. Pedagogical quality | 10/10 | Outstanding breakdown of the grammar rules. The distinction between simple ("най-") and compound ("найбільш") forms, along with their stylistic register differences, is taught precisely and reinforced with clear, illustrative examples. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are utilized organically and accurately within the prose. |
+| 5. Exercise quality | 10/10 | 9 activity markers are logically injected directly after the relevant concepts. They appropriately cover multiple formats (reading, fill-in, quiz, match-up, error-correction). |
+| 6. Engagement & tone | 10/10 | Enthusiastic, encouraging teacher persona. Connects grammatical rules to practical everyday uses like describing records and shopping for phones. |
+| 7. Structural integrity | 10/10 | Structurally perfect. Clean markdown, accurate headers mirroring the outline, and no broken formatting artifacts. |
+| 8. Cultural accuracy | 10/10 | Strongly decolonized perspective. Accurately explains why "*самий кращий" is a Russicism and integrates Ukrainian landmarks (Hoverla, Synevyr) and proverbs meaningfully. |
+| 9. Dialogue & conversation quality | 10/10 | The opening scenario smoothly contextualizes superlative forms in an authentic geography classroom setting. |
 
 ## Findings
 
-**[LINGUISTIC ACCURACY] [MAJOR]**
-Location: Dialogue, Тарас's reply: "Вона розташована в Карпатах."
-Issue: "розташована" used for a geographic object is a calque of Russian "расположенный." Антоненко-Давидович: "розташуватись означає 'тимчасово розміститися... стосується тільки людей, людського колективу, а не будівель, міст тощо.'"
-Fix: Replace with a verb-free construction: "Вона — у Карпатах."
+[2. Linguistic accuracy] [Critical]
+Location: Section "Проста форма найвищого ступеня" (`* **Родовий** *(Genitive)*: Я ніколи раніше не бачив **найкращого** дня, ніж цей.`)
+Issue: Mixing a superlative degree with a comparative structure "ніж". A superlative establishes absolute supremacy and cannot be paired with a comparative "than this".
+Fix: Replace with `* **Родовий** *(Genitive)*: Я ще довго буду згадувати деталі цього **найкращого** дня.`
 
-**[LINGUISTIC ACCURACY] [MAJOR]**
-Location: Reading practice "Перлини України": "На півдні розташована ще одна унікальна локація"
-Issue: Same calque — "розташована" for a geographic feature.
-Fix: "На півдні є ще одна унікальна локація"
+[2. Linguistic accuracy] [Critical]
+Location: Section "Проста форма найвищого ступеня" (`На самій вершині цій **найвищій** горі лежить вічний сніг.`)
+Issue: Broken grammatical case agreement in a single clause. "На самій вершині" (Locative) clashes awkwardly with "цій найвищій горі".
+Fix: Replace with `На цій **найвищій** горі лежить вічний сніг.`
 
-**[LINGUISTIC ACCURACY] [MINOR]**
-Location: "Ступені порівняння в контексті" section, final paragraph: "Цей стилістичний прийом змушує слухача зупинитися"
-Issue: "прийом" NOT IN VESUM. Standard Ukrainian alternative: "засіб."
-Fix: "Цей стилістичний засіб змушує слухача зупинитися"
+[2. Linguistic accuracy] [Critical]
+Location: Section "Підсумок" (`до абсолютної невпізнання змінюють свій корінь`)
+Issue: Wrong gender agreement. The noun "невпізнання" is neuter (ends in -нн-я), so it requires the neuter adjective form "абсолютного".
+Fix: Replace with `до абсолютного невпізнання змінюють свій корінь`
 
-**[LINGUISTIC ACCURACY] [MINOR]**
-Location: "Типові помилки" section: "кажуть неіснуюче слово «*найдорогіший»"
-Issue: "неіснуюче" NOT IN VESUM. Replaceable with clearer phrasing.
-Fix: "кажуть помилкову форму «*найдорогіший»"
+[2. Linguistic accuracy] [Critical]
+Location: Section "Підсумок" (`Ми пишемо їх як одне довге єдине словом: «найрозумніший»,`)
+Issue: Wrong case. It should be "слово" (Nominative/Accusative), not "словом" (Instrumental).
+Fix: Replace with `Ми пишемо їх як одне довге єдине слово: «найрозумніший»,`
 
-**[VOCABULARY COVERAGE] [MINOR]**
-Location: "Синонімічні засоби" section: "дуже, вельми, вкрай, надзвичайно, абсолютно та особливо"
-Issue: Plan content outline §4 and recommended vocabulary list include "занадто" but it is absent from the prose.
-Fix: Add "занадто" to the list of adverbs.
+[2. Linguistic accuracy] [Critical]
+Location: Section "Типові помилки з найвищим ступенем" (`слово «самий» (або його форма середнього роду «саме») має зовсім іншу, дуже вузьку та специфічну функцію. Вона використовується виключно для вираження`)
+Issue: Wrong pronoun reference. "Вона" wrongly refers back to "слово", which is grammatically neuter ("воно").
+Fix: Replace with `специфічну функцію. Воно використовується виключно для вираження`
 
-**[PLAN ADHERENCE] [MAJOR]**
-Location: "Складена форма найвищого ступеня" section
-Issue: Plan §2 point 4 explicitly requires: "Contrastive practice (Авраменко Grade 6 p.125): provide 8 adjective pairs and have learners form both проста and складена superlatives, then choose which sounds more natural in a given sentence context (academic paper vs casual chat)." No inline contrastive practice with adjective pairs exists in this section. The activity marker alone is insufficient — the plan calls for this within the prose itself.
-Fix: Insert a contrastive practice block after the paragraph about register differences.
+[2. Linguistic accuracy] [Major]
+Location: Section "Вступ та ситуативний діалог" (`на початку багатьох оціночних слів у їхній розмові.`)
+Issue: "оціночних" is a Russicism (оценочных); the standard Ukrainian form is "оцінних" (confirmed via VESUM).
+Fix: Replace with `на початку багатьох оцінних слів у їхній розмові.`
 
-**[ENGAGEMENT & TONE] [MINOR]**
-Location: "Підсилені форми" section: "надзвичайно виразний граматичний інструмент, якого немає в багатьох інших європейських мовах"
-Issue: Generic enthusiasm — telling the learner how amazing the feature is instead of showing it.
-Fix: Cut the superlative praise and jump to the examples.
+[2. Linguistic accuracy] [Major]
+Location: Section "Вступ та ситуативний діалог" (`такі підсилені оціночні слова в повсякденному житті,`)
+Issue: Same as above; "оціночні" is a Russicism. It should be "оцінні".
+Fix: Replace with `такі підсилені оцінні слова в повсякденному житті,`
+
+[2. Linguistic accuracy] [Major]
+Location: Section "Ступені порівняння в контексті" (`найкращий серед усіх (the best among all) існуючих на сьогодні`)
+Issue: The participle "існуючих" is widely considered a calque/Russicism in this adjectival context. "наявних" is the natural Ukrainian alternative.
+Fix: Replace with `найкращий серед усіх (the best among all) наявних на сьогодні`
+
+[2. Linguistic accuracy] [Major]
+Location: Section "Підсумок" (`ми дбайливо зібрали їх у зручну, наочну узагальнюючу таблицю`)
+Issue: "узагальнюючу" is an unnatural active participle. Standard Ukrainian uses "узагальнювальну".
+Fix: Replace with `ми дбайливо зібрали їх у зручну, наочну узагальнювальну таблицю (summary table):`
+
+[2. Linguistic accuracy] [Major]
+Location: Section "Проста форма найвищого ступеня" (`про яке часто забувають початковці.`)
+Issue: Non-standard word form. Standard Ukrainian uses "початківці" (confirmed via VESUM).
+Fix: Replace with `про яке часто забувають початківці. Давайте ще`
+
+[2. Linguistic accuracy] [Major]
+Location: Section "Складена форма найвищого ступеня" (`На сьогоднішній день, згідно з дослідженнями,`)
+Issue: "На сьогоднішній день" is a well-known calque of "на сегодняшний день". Standard Ukrainian is "На сьогодні" or simply "Сьогодні".
+Fix: Replace with `Сьогодні, згідно з дослідженнями,`
+
+[2. Linguistic accuracy] [Major]
+Location: Section "Вступ та ситуативний діалог" (`Його розміри були просто найбільш вражаючими (the most impressive) в історії світової авіації.`)
+Issue: "вражаючими" is an active participle acting as an adjective (Russicism). A better Ukrainian equivalent is "разючими" or "дивовижними".
+Fix: Replace with `Його розміри були просто найбільш разючими (the most impressive) в історії світової авіації.`
+
+[2. Linguistic accuracy] [Major]
+Location: Section "Синонімічні засоби" (`часто зустріти архаїчні короткі форми`)
+Issue: "зустріти форми" is a stylistic calque ("встречать формы"). In Ukrainian, you "натрапляєте на" words or forms.
+Fix: Replace with `часто натрапити на архаїчні короткі форми`
+
+[2. Linguistic accuracy] [Minor]
+Location: Section "Синонімічні засоби" (`занадто сухо, стандартизовано, прісно або відверто "канцелярськи".`)
+Issue: "канцелярськи" is awkward/colloquial. "як канцеляризми" is clearer and more natural.
+Fix: Replace with `занадто сухо, стандартизовано, прісно або як відверті канцеляризми.`
+
+[2. Linguistic accuracy] [Minor]
+Location: Section "Типові помилки з найвищим ступенем" (`це груба, ріже вухо, неприпустима граматична помилка.`)
+Issue: Ungrammatical coordination. Combining adjectives and a verb phrase directly ("ріже вухо") without a conjunction ("яка") is stylistically broken.
+Fix: Replace with `це груба, неприпустима граматична помилка, яка ріже вухо.`
 
 ## Verdict: REVISE
-
-Two major findings (calque "розташована" x2, missing plan-required contrastive practice) and several minor findings. Cultural accuracy and dialogue quality are strong. Linguistic accuracy is good overall but the calque in a language-teaching module is a bad model for learners. Fixable without rewrite.
+The writer did an exceptional job structuring the module, maintaining excellent pedagogy, and exceeding the word count target without feeling padded. However, a series of critical and major linguistic errors were identified—most notably combining a superlative with a comparative "ніж", multiple broken case/gender agreements, and a handful of pervasive stylistic calques (especially active participles like "оціночні" and "існуючих"). Applying these fixes will bring the module up to the target standard.
 
 <fixes>
-- find: "Вона розташована в Карпатах. Це найпопулярніший"
-  replace: "Вона — у Карпатах. Це найпопулярніший"
-- find: "На півдні розташована ще одна унікальна локація"
-  replace: "На півдні є ще одна унікальна локація"
-- find: "Цей стилістичний прийом змушує слухача зупинитися"
-  replace: "Цей стилістичний засіб змушує слухача зупинитися"
-- find: "кажуть неіснуюче слово «*найдорогіший»"
-  replace: "кажуть помилкову форму «*найдорогіший»"
-- find: "дуже, вельми, вкрай, надзвичайно, абсолютно та особливо"
-  replace: "дуже, вельми, вкрай, занадто, надзвичайно, абсолютно та особливо"
-- find: "Українська мова має унікальний та надзвичайно виразний граматичний інструмент, якого немає в багатьох інших європейських мовах. Це спеціальні підсилювачі"
-  replace: "Українська мова має спеціальні підсилювачі"
-- find: "Ще однією дуже грубою стилістичною помилкою є так зване подвійне маркування"
-  insert_after: "\n\nПорівняйте ці вісім прикметників у двох формах найвищого ступеня та визначте, яка форма звучить природніше в кожному контексті:\n\n1. *важливий*: найважливіший / найбільш важливий — «Це найважливіше питання» (розмова) чи «Це найбільш важливе питання порядку денного» (протокол)?\n2. *ефективний*: найефективніший / найбільш ефективний — «Це найефективніший метод!» (пораді другу) чи «найбільш ефективний підхід до лікування» (медична стаття)?\n3. *цікавий*: найцікавіший / найбільш цікавий — «Це найцікавіша книжка!» (розмова) чи «найбільш цікавий об'єкт дослідження» (наукова стаття)?\n4. *складний*: найскладніший / найбільш складний — «Це був найскладніший екзамен» (скарга) чи «найбільш складний етап виробництва» (звіт)?\n5. *поширений*: найпоширеніший / найбільш поширений — «Це найпоширеніша помилка» (урок) чи «найбільш поширена хвороба в регіоні» (статистика)?\n6. *вигідний*: найвигідніший / найбільш вигідний — «Це найвигідніша пропозиція!» (базар) чи «найбільш вигідні умови контракту» (договір)?\n7. *відомий*: найвідоміший / найбільш відомий — «Він найвідоміший співак» (розмова) чи «найбільш відомий представник цього напряму» (енциклопедія)?\n8. *актуальний*: найактуальніший / найбільш актуальний — «Це найактуальніша тема!» (дискусія) чи «найбільш актуальне питання сучасної науки» (доповідь)?\n\nЯк бачите, проста форма завжди звучить природніше в живому спілкуванні, а складена — в офіційних та наукових текстах.\n"
+- find: "на початку багатьох оціночних слів у їхній розмові."
+  replace: "на початку багатьох оцінних слів у їхній розмові."
+- find: "такі підсилені оціночні слова в повсякденному житті,"
+  replace: "такі підсилені оцінні слова в повсякденному житті,"
+- find: "найкращий серед усіх (the best among all) існуючих на сьогодні"
+  replace: "найкращий серед усіх (the best among all) наявних на сьогодні"
+- find: "ми дбайливо зібрали їх у зручну, наочну узагальнюючу таблицю (summary table):"
+  replace: "ми дбайливо зібрали їх у зручну, наочну узагальнювальну таблицю (summary table):"
+- find: "про яке часто забувають початковці. Давайте ще"
+  replace: "про яке часто забувають початківці. Давайте ще"
+- find: "На сьогоднішній день, згідно з дослідженнями,"
+  replace: "Сьогодні, згідно з дослідженнями,"
+- find: "занадто сухо, стандартизовано, прісно або відверто \"канцелярськи\"."
+  replace: "занадто сухо, стандартизовано, прісно або як відверті канцеляризми."
+- find: "Його розміри були просто найбільш вражаючими (the most impressive) в історії світової авіації."
+  replace: "Його розміри були просто найбільш разючими (the most impressive) в історії світової авіації."
+- find: "специфічну функцію. Вона використовується виключно для вираження"
+  replace: "специфічну функцію. Воно використовується виключно для вираження"
+- find: "* **Родовий** *(Genitive)*: Я ніколи раніше не бачив **найкращого** дня, ніж цей."
+  replace: "* **Родовий** *(Genitive)*: Я ще довго буду згадувати деталі цього **найкращого** дня."
+- find: "На самій вершині цій **найвищій** горі лежить вічний сніг."
+  replace: "На цій **найвищій** горі лежить вічний сніг."
+- find: "це груба, ріже вухо, неприпустима граматична помилка."
+  replace: "це груба, неприпустима граматична помилка, яка ріже вухо."
+- find: "Ми пишемо їх як одне довге єдине словом: «найрозумніший»,"
+  replace: "Ми пишемо їх як одне довге єдине слово: «найрозумніший»,"
+- find: "до абсолютної невпізнання змінюють свій корінь"
+  replace: "до абсолютного невпізнання змінюють свій корінь"
+- find: "часто зустріти архаїчні короткі форми"
+  replace: "часто натрапити на архаїчні короткі форми"
 </fixes>

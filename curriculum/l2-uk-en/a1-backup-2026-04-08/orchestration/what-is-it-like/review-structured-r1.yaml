@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present and ordered correctly. Dialogue
+    1 follows Вашуленко Grade 3 p.131 "Моя кімната" pattern ✓ (room description with
+    кімната, стіл, ліжко, вікно, стілець). Dialogue '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All Ukrainian forms verified in VESUM (93/93 content words ✓, 5 not-found
+    are proper nouns: Тарас, Софія, Оля, Вашуленко, Пономарова). Adjective endings
+    correct throughout. Gender agreement verified i'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues present adjectives in context (Presentation)
+    → explicit rule extraction with який/яка/яке pattern (Pattern) → antonym pairs
+    with example sentences (Practice) → self-check'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All **required** vocab from plan used naturally in prose: який/яка/яке
+    ✓, великий ✓, маленький ✓, новий ✓, старий ✓, гарний ✓, чистий ✓, дорогий ✓, дешевий
+    ✓. All **recommended** vocab present: погани'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 plan activity_hints matched with correctly-placed markers. Types
+    match: quiz ✓, fill-in ×2 ✓, match-up ✓. Each marker follows its teaching section.
+    Spread is even (one per major section). Cannot'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'No motivational openers, no "Let us explore," no "you have unlocked."
+    Tone is direct and teacher-like: "Notice what just happened" (after Dialogue 1),
+    "Look at the pattern" (after Dialogue 2), "This i'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections from plan present in correct order: Діалоги → Який?Яка?Яке?
+    → Прикметники → Підсумок ✓. Clean markdown throughout. Word count 1535 > 1200
+    target ✓. No stray tags, no duplicate summar'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms. No "like Russian" or "like English"
+    framing. Textbook references are Ukrainian school textbooks (Пономарова, Вашуленко).
+    Ukrainian quoted in original: «Прикметник'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Both dialogues have named speakers with distinct roles. Dialogue 1 (Тарас/Оля):
+    natural room description — Тарас asks about room features, Оля describes them.
+    Multi-turn, flows naturally from кімната '
+findings: []

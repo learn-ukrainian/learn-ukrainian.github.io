@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "noun-subclasses-hissing",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T09:14:00.429375+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T09:14:00.446799+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T09:19:46.111671+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T09:27:20.253775+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T09:37:11.021113+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T09:37:11.021442+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-09T09:45:41.197722+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T09:45:41.252441+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-09T09:45:41.266611+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-09T18:45:29.021870+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-09T18:45:29.022439+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-09T18:45:30.128921+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-09T18:53:44.924129+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-09T18:53:45.317399+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-09T18:53:48.233511+00:00"
+    }
+  }
+}

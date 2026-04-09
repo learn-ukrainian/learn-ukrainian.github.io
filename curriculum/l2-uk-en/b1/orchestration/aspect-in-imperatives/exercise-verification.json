@@ -1,0 +1,104 @@
+{
+  "total_items": 161,
+  "grounded_items": 146,
+  "ungrounded": [
+    {
+      "word": "шафа",
+      "exercise_type": "fill-in",
+      "context": "Шафа падає. Ой, обережно, _______ мені!",
+      "role": "context"
+    },
+    {
+      "word": "падає",
+      "exercise_type": "fill-in",
+      "context": "Шафа падає. Ой, обережно, _______ мені!",
+      "role": "context"
+    },
+    {
+      "word": "ой",
+      "exercise_type": "fill-in",
+      "context": "Шафа падає. Ой, обережно, _______ мені!",
+      "role": "context"
+    },
+    {
+      "word": "годину",
+      "exercise_type": "fill-in",
+      "context": "Ви маєте годину на іспит. Час пішов. _______!",
+      "role": "context"
+    },
+    {
+      "word": "напишіть",
+      "exercise_type": "group-sort",
+      "context": "Напишіть звіт до вечора.",
+      "role": "answer"
+    },
+    {
+      "word": "послідовна",
+      "exercise_type": "match-up",
+      "context": "Кулінарний крок (конкретна послідовна дія)",
+      "role": "answer"
+    },
+    {
+      "word": "загальне",
+      "exercise_type": "match-up",
+      "context": "Загальне правило безпеки (заборона)",
+      "role": "answer"
+    },
+    {
+      "word": "очікуємо",
+      "exercise_type": "match-up",
+      "context": "Швидка команда (очікуємо конкретний результат)",
+      "role": "answer"
+    },
+    {
+      "word": "заходь",
+      "exercise_type": "error-correction",
+      "context": "Привіт! Заходь і сядь за наш стіл.",
+      "role": "context"
+    },
+    {
+      "word": "падай",
+      "exercise_type": "error-correction",
+      "context": "Обережно, не падай на слизькій дорозі!",
+      "role": "context"
+    },
+    {
+      "word": "забувайте",
+      "exercise_type": "error-correction",
+      "context": "забувайте",
+      "role": "answer"
+    },
+    {
+      "word": "забудьте",
+      "exercise_type": "error-correction",
+      "context": "Діти, не забудьте свої речі в класі щодня.",
+      "role": "context"
+    },
+    {
+      "word": "класі",
+      "exercise_type": "error-correction",
+      "context": "Діти, не забудьте свої речі в класі щодня.",
+      "role": "context"
+    },
+    {
+      "word": "текст",
+      "exercise_type": "error-correction",
+      "context": "Давайте читати цей текст разом.",
+      "role": "context"
+    },
+    {
+      "word": "губити",
+      "exercise_type": "group-sort",
+      "context": "губити",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 20,
+    "tested_in_exercises": 19,
+    "not_tested": [
+      "запізнюватися"
+    ]
+  },
+  "all_grounded": false
+}

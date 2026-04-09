@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "reading-ukrainian",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-03-29T20:04:35.511930+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-29T20:05:25.630982+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-03-29T20:06:29.256133+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-03-31T10:58:32.409842+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-03-31T11:01:51.802134+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-03-29T20:09:39.916981+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-31T11:54:03.434188+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-03-29T20:14:05.168022+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-03-29T20:14:05.183264+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-03-31T11:02:31.070532+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-03-29T20:14:24.943030+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-03-29T20:14:25.038582+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-03T12:28:36.074357+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T15:04:56.394324+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T15:04:58.049702+00:00"
+    }
+  }
+}

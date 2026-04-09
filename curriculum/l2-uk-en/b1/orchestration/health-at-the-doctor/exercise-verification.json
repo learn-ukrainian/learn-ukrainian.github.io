@@ -1,0 +1,249 @@
+{
+  "total_items": 185,
+  "grounded_items": 148,
+  "ungrounded": [
+    {
+      "word": "хворіють",
+      "exercise_type": "fill-in",
+      "context": "Восени багато людей хворіють на ____.",
+      "role": "context"
+    },
+    {
+      "word": "купив",
+      "exercise_type": "fill-in",
+      "context": "Я купив в аптеці ліки від ____.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Моя дитина часто хворіє на ____.",
+      "role": "context"
+    },
+    {
+      "word": "хворіє",
+      "exercise_type": "fill-in",
+      "context": "Моя дитина часто хворіє на ____.",
+      "role": "context"
+    },
+    {
+      "word": "випала",
+      "exercise_type": "quiz",
+      "context": "У мене дуже болить зуб, і випала пломба.",
+      "role": "context"
+    },
+    {
+      "word": "мого",
+      "exercise_type": "quiz",
+      "context": "У мого п'ятирічного сина висока температура і сильний кашель",
+      "role": "context"
+    },
+    {
+      "word": "п'ятирічного",
+      "exercise_type": "quiz",
+      "context": "У мого п'ятирічного сина висока температура і сильний кашель",
+      "role": "context"
+    },
+    {
+      "word": "сина",
+      "exercise_type": "quiz",
+      "context": "У мого п'ятирічного сина висока температура і сильний кашель",
+      "role": "context"
+    },
+    {
+      "word": "накласти",
+      "exercise_type": "quiz",
+      "context": "Мені потрібно накласти шви на глибоку рану.",
+      "role": "context"
+    },
+    {
+      "word": "шви",
+      "exercise_type": "quiz",
+      "context": "Мені потрібно накласти шви на глибоку рану.",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "quiz",
+      "context": "У мене загальна слабкість, нежить і болить горло. До кого йт",
+      "role": "context"
+    },
+    {
+      "word": "планову",
+      "exercise_type": "quiz",
+      "context": "Мені потрібно зробити планову операцію на серці.",
+      "role": "context"
+    },
+    {
+      "word": "серці",
+      "exercise_type": "quiz",
+      "context": "Мені потрібно зробити планову операцію на серці.",
+      "role": "context"
+    },
+    {
+      "word": "застудою",
+      "exercise_type": "error-correction",
+      "context": "Він часто хворіє застудою восени.",
+      "role": "context"
+    },
+    {
+      "word": "жахливу",
+      "exercise_type": "error-correction",
+      "context": "Він має жахливу нежить.",
+      "role": "context"
+    },
+    {
+      "word": "вірус",
+      "exercise_type": "error-correction",
+      "context": "на вірус",
+      "role": "answer"
+    },
+    {
+      "word": "вірусом",
+      "exercise_type": "error-correction",
+      "context": "Сьогодні я хворію вірусом.",
+      "role": "context"
+    },
+    {
+      "word": "скарга",
+      "exercise_type": "match-up",
+      "context": "скарга",
+      "role": "context"
+    },
+    {
+      "word": "нежитю",
+      "exercise_type": "fill-in",
+      "context": "нежитю",
+      "role": "answer"
+    },
+    {
+      "word": "захворів",
+      "exercise_type": "fill-in",
+      "context": "Він захворів на ____.",
+      "role": "context"
+    },
+    {
+      "word": "попросив",
+      "exercise_type": "fill-in",
+      "context": "Я попросив в аптеці сироп від ____.",
+      "role": "context"
+    },
+    {
+      "word": "скаржаться",
+      "exercise_type": "fill-in",
+      "context": "Вони скаржаться на ____ у шлунку.",
+      "role": "context"
+    },
+    {
+      "word": "літери",
+      "exercise_type": "quiz",
+      "context": "Я не бачу літери на дошці під час уроку.",
+      "role": "context"
+    },
+    {
+      "word": "дошці",
+      "exercise_type": "quiz",
+      "context": "Я не бачу літери на дошці під час уроку.",
+      "role": "context"
+    },
+    {
+      "word": "уроку",
+      "exercise_type": "quiz",
+      "context": "Я не бачу літери на дошці під час уроку.",
+      "role": "context"
+    },
+    {
+      "word": "пройти",
+      "exercise_type": "quiz",
+      "context": "Мені треба пройти загальний медичний огляд для нової роботи.",
+      "role": "context"
+    },
+    {
+      "word": "нової",
+      "exercise_type": "quiz",
+      "context": "Мені треба пройти загальний медичний огляд для нової роботи.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "quiz",
+      "context": "Лікар сказав, що мені потрібно терміново видалити апендицит.",
+      "role": "context"
+    },
+    {
+      "word": "видалити",
+      "exercise_type": "quiz",
+      "context": "Лікар сказав, що мені потрібно терміново видалити апендицит.",
+      "role": "context"
+    },
+    {
+      "word": "немовляти",
+      "exercise_type": "quiz",
+      "context": "У немовляти температура і воно постійно плаче.",
+      "role": "context"
+    },
+    {
+      "word": "плаче",
+      "exercise_type": "quiz",
+      "context": "У немовляти температура і воно постійно плаче.",
+      "role": "context"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "quiz",
+      "context": "Я хочу зробити професійну чистку зубів.",
+      "role": "context"
+    },
+    {
+      "word": "професійну",
+      "exercise_type": "quiz",
+      "context": "Я хочу зробити професійну чистку зубів.",
+      "role": "context"
+    },
+    {
+      "word": "чистку",
+      "exercise_type": "quiz",
+      "context": "Я хочу зробити професійну чистку зубів.",
+      "role": "context"
+    },
+    {
+      "word": "купила",
+      "exercise_type": "error-correction",
+      "context": "Я купила в аптеці ліки для кашлю.",
+      "role": "context"
+    },
+    {
+      "word": "високої",
+      "exercise_type": "error-correction",
+      "context": "Пацієнтка скаржиться з високої температури.",
+      "role": "context"
+    },
+    {
+      "word": "одні",
+      "exercise_type": "error-correction",
+      "context": "одні ліки",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 28,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "алергія",
+      "діагноз",
+      "застуда",
+      "лікарня",
+      "обстеження",
+      "поліклініка",
+      "призначити",
+      "симптом",
+      "стоматолог",
+      "таблетка",
+      "терапевт",
+      "хвороба",
+      "хірург",
+      "щеплення"
+    ]
+  },
+  "all_grounded": false
+}

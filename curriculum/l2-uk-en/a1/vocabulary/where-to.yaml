@@ -1,12 +1,6 @@
 vocabulary:
-- word: куди́
-  translation: where to (direction)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
 - word: ї́хати
-  translation: to go by vehicle/transport
+  translation: to go (by transport)
   expression: false
   pos: дієсл.
   gender: ''
@@ -17,76 +11,130 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: у школу
+  translation: to school
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: робо́та
-  translation: work, job
+  translation: work
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: бібліоте́ка
-  translation: library
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: на роботу
+  translation: to work
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: магази́н
-  translation: store, shop
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: у банк
+  translation: to the bank
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: рестора́н
-  translation: restaurant
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: у магазин
+  translation: to the shop
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: по́шта
-  translation: post office
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: у бібліотеку
+  translation: to the library
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: апте́ка
-  translation: pharmacy
+- word: у ресторан
+  translation: to the restaurant
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Оде́са
+  translation: Odesa
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: ''
+  gender: ''
+  verified: false
+- word: в Одесу
+  translation: to Odesa
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: йти додому
+  translation: to return home / to go home
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в аптеку
+  translation: to the pharmacy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на пошту
+  translation: to the post office
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: кафе́
-  translation: café
+  translation: cafe
   expression: false
   pos: ім.
   gender: с.
   verified: true
 - word: мі́сто
-  translation: city, town
+  translation: city
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: вокза́л
-  translation: train station
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: зупи́нка
-  translation: bus stop
+- word: ву́лиця
+  translation: street
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: Оде́са
-  translation: Odesa (city in southern Ukraine)
+- word: пло́ща
+  translation: square
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: залиша́тися
-  translation: to stay, to remain
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: краї́на
+  translation: country
   expression: false
-  pos: дієсл.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: університе́т
+  translation: university
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: центр
+  translation: center
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: аеропо́рт
+  translation: airport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: додо́му
+  translation: home / homeward
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
 - word: вдо́ма
@@ -95,51 +143,45 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: знахідний відмінок
-  translation: accusative case
-  expression: true
-  pos: ''
-  gender: ''
+- word: субо́та
+  translation: Saturday
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
-- word: по́тім
-  translation: then, afterwards
+- word: неді́ля
+  translation: Sunday
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нікуди
+  translation: nowhere
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: зустрі́немося
-  translation: let's meet, we will meet
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Куди ти йдеш?
-  translation: Where are you going? (on foot)
+- word: Тоді до зустрічі!
+  translation: Then see you later!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Куди ти їдеш?
-  translation: Where are you going? (by transport)
+- word: Бувай!
+  translation: Bye!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Я йду в/у...
-  translation: I'm going to... (on foot)
+- word: Клас!
+  translation: Cool! / Great!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Я їду в/у...
-  translation: I'm going to... (by transport)
+- word: знахідний відмінок
+  translation: Accusative case
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: ході́мо
-  translation: let's go (on foot)
-  expression: false
-  pos: дієсл.
   gender: ''
   verified: true

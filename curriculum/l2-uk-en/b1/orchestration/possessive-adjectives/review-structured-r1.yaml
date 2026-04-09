@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The text follows the plan excellently. However, the required vocabulary
+    words `спадщина` and `творчість` from the plan''s `vocabulary_hints` are entirely
+    missing. (Proof of absence: searched for "спадщ'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Deducted for a critical spelling typo at the very end of the module:
+    "остаттньо закріпити матеріал". The correct spelling is "остаточно". Verified
+    via VESUM.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb. The sequence is logical, moving from the philosophical "why" of
+    the cases, to the rules of declensions, and finishing with usage examples. Exceptional
+    handling of the animacy distinction.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Deducted for missing `спадщина` and `творчість` which were explicitly
+    required by the plan. Most recommended words were used correctly.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers accurately match the plan's `activity_hints` count and type. They
+    are well-distributed after the relevant conceptual sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Exceptional tone. The module effectively addresses the "decolonial" aspect
+    of using Ukrainian possessive adjectives naturally without sounding forced. The
+    family dialogue is highly authentic.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'The text correctly surpasses the 4000-word target (5067 words) and headings
+    align with the plan. Deducted due to the raw text leak: `<!-- INJECT_ACTIVITY:
+    fill-in-fem-formation --> [fill-in, focus...`'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Culturally and linguistically highly accurate. Points out the importance
+    of avoiding the genitive case in favor of possessive adjectives to sound like
+    a native Ukrainian rather than a Russian speaker '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The "Family gathering" dialogue effectively demonstrates gender agreement
+    natively within an everyday context.
+findings: []

@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'The text explicitly covers all outline points. Quotes Литвінова and Заболотний
+    ("Як зазначає відомий шкільний підручник української мови О. Литвінової для сьомого
+    класу..."). Vocabulary from the plan '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'The module is exceptionally well-written and correctly uses Ukrainian
+    aspect forms, but contains two known Russian calques: "Як же вам самостійно приймати
+    ці рішення під час реальної розмови?" and "Во'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'The explanation of why `*буду написати` is logically impossible is one
+    of the best pedagogical explanations possible ("Спробувати поєднати їх... це все
+    одно що спробувати змішати олію та чисту воду у '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All vocabulary from the hints is used naturally with in-text translations
+    provided in parentheses (e.g., "запланувати *(to plan (pf — plan is set))*", "писемному
+    стилі *(written style)*").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The markers are injected exactly at the points of pedagogical need, directly
+    following the relevant theory blocks. Total of 6 markers matches the plan exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and insightful ("Ваше внутрішнє вухо вже
+    трохи звикло до мелодики"). No gamified language or fluff. Uses effective metaphors
+    like "три кошики".
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, 4747 words far exceeds the 4000 target. All headings match
+    the plan exactly. No trailing tags or meta-commentary.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Teaches Ukrainian on its own terms. Highlights the synthetic future tense
+    as an authentic feature derived from the old verb "мати", explaining its elegance.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The Mom/Dmytro dialogue ("захистом через процес") is excellent. It uses
+    named speakers, natural flow, and vividly demonstrates the practical psychological
+    use of aspects.
+findings: []

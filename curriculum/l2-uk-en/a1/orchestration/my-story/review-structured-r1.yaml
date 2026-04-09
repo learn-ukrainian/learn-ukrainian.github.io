@@ -3,55 +3,47 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: 'All 4 content_outline sections present with correct headings. Both dialogues
-    match plan scripts closely (Dialogue 1: Maksym/Oксана getting-to-know, Dialogue
-    2: Anna''s story past→present→future). All r'
+  evidence: The text covers all major sections and vocabulary, but missed the neuter
+    past tense ending `-ло` in the summary table and the feminine form `коли я була
+    маленькою` in the signal words table, both of w
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'All forms VESUM-verified. Gender agreement correct throughout (народився/народилася,
-    жив/жила, вчився/вчилася consistently paired). Case usage correct: "в Києві" (locative),
-    "програмістом" (instrument'
+  score: 10
+  evidence: Excellent Ukrainian. Correct use of locative (у Львові, в Одесі) and vocative
+    (Анно). No Surzhyk or calques found.
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'Excellent PPP flow: dialogues present tenses in context → "Три часи разом"
-    systematizes the pattern → "Моя історія" provides model then guided practice.
-    Signal words taught as "listener''s roadmap" wit'
+  evidence: Exceptional pedagogical flow. The inclusion of the Ukrainian school essay
+    structure ("Зачин", "Основна частина", "Кінцівка") is a brilliant teaching device
+    that anchors the lesson.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 8 required words appear naturally in prose (not as bare lists): народитися
-    (dialogues + model story), жити (all sections), вчитися (dialogues + pattern),
-    переїхати (both dialogues + model), зараз '
+  evidence: All required and recommended vocabulary items (народитися, переїхати,
+    далі, мрія, etc.) are included and used naturally in context.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: '4 markers match 4 plan hints exactly in type and focus. Placement is
-    pedagogically sound — each follows its teaching section. Plan activity logic is
-    sound: ordering tests chronological reasoning, fill'
+  evidence: Markers match the plan's activity hints and are distributed perfectly.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'Zero motivational openers or meta-commentary. No "Let us explore" or
-    "You now possess." Dialogues feel natural: Оксана''s curiosity, Anna''s playful
-    "Але спочатку — українська для тебе!" Taras''s story r'
+  evidence: Warm, encouraging teacher tone. "Learning a language is about connecting
+    with people..." is a great, natural opener.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: 'All 4 H2 sections present and correctly ordered: Dialogues → Три часи
-    разом → Моя історія → Summary. Clean markdown with proper `<div class="dialogue">`
-    formatting and `:::note` / `:::tip` blocks. No '
+  score: 10
+  evidence: Exceeds the 1200 word target (1722 words). All headers match the plan.
+    Markdown is perfectly clean.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms throughout. No comparisons to Russian.
-    Cities used are Ukrainian (Київ, Львів, Одеса, Торонто for diaspora connection).
-    Diaspora motivation portrayed naturally thr
+  evidence: References to Ukrainian cities (Lviv, Kyiv, Odesa) and diaspora locations
+    (Toronto) are culturally accurate and appropriate for an L2 curriculum.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: 'Both dialogues have named speakers with distinct voices. Dialogue 1:
-    natural getting-to-know-you flow — Оксана is curious, Максим shares his story,
-    ending with warm "Успіхів тобі!" Dialogue 2: Anna''s '
+  evidence: Dialogues are natural, multi-turn, and clearly demonstrate the grammar
+    patterns in action without sounding robotic.
 findings: []

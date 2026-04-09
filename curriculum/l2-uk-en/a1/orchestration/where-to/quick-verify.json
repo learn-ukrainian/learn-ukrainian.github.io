@@ -1,13 +1,13 @@
 {
-  "attempt": 1,
+  "attempt": 2,
   "passed": true,
   "errors": [],
   "warnings": [
     {
-      "check": "VOCABULARY",
+      "check": "EXERCISES",
       "severity": "WARNING",
-      "message": "Missing 1/6 required vocab: банк → у банк (to the bank)"
+      "message": "Plan expects 4 exercise(s) but content has 3"
     }
   ],
-  "timestamp": "2026-03-30T12:39:35.860677+00:00"
+  "timestamp": "2026-04-08T22:28:34.577932+00:00"
 }

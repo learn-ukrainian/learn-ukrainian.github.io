@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 11: How Many? (A1, A1.2 [My World])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -138,54 +138,78 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
-> — **Покупе́ць:** До́брий день! Скі́льки ко́шту́є торт? *(Good day! How much does the cake cost?)*
-> — **Пекар:** Дві́сті гри́вень. *(Two hundred hryvnias.)*
-> — **Покупець:** А хліб? *(And the bread?)*
-> — **Пекар:** П'ятна́дцять гривень. *(Fifteen hryvnias.)*
-> — **Покупець:** А три бу́лочки? *(And three buns?)*
-> — **Пекар:** Соро́к п'ять гривень. *(Forty-five hryvnias.)*
-> — **Покупець:** А одне́ ті́стечко? *(And one pastry?)*
-> — **Пекар:** Два́дцять гривень. *(Twenty hryvnias.)*
-> — **Покупець:** До́бре. Дякую, до поба́чення! *(Okay. Thank you, goodbye!)*
+## Діалоги — Dialogues
 
-Notice the question **Скільки коштує?** (How much does it cost?) — this is the single most useful phrase for shopping in Ukraine. The three nouns in this dialogue are recycled vocabulary from earlier modules: **торт** (cake) is masculine, **бу́лочка** (bun) is feminine, and **тістечко** (pastry) is neuter. You might see that the noun endings change after different numbers — **одне тістечко** but **три булочки**, **п'ятнадцять гривень** but **двісті гривень**. These changes follow a pattern you will memorize as chunks now. The grammar behind them arrives in A2.
-> — **Оле́нка:** Приві́т, Тара́се! Скільки тобі́ ро́кі́в? *(Hi, Taras! How old are you?)*
-> — **Тара́с:** Ме́ні двадцять п'ять. А тобі? *(I'm twenty-five. And you?)*
-> — **Оленка:** Мені три́дцять два. А твоя́ сестра́ моло́дша? *(I'm thirty-two. Is your sister younger?)*
-> — **Тарас:** Так, їй вісімна́дцять. *(Yes, she's eighteen.)*
-> — **Оленка:** А твій брат? *(And your brother?)*
-> — **Тарас:** Йому одина́дцять. *(He's eleven.)*
+Numbers are the invisible architecture of our daily interactions. From the moment you wake up, you are surrounded by quantities, prices, and measurements. When you walk into a traditional Ukrainian bakery, you do not just point at items; you ask for a specific amount. You might need **один хліб** (one bread) for the family dinner, **одна булочка** (one bun) for a quick snack, or perhaps **одне тістечко** (one pastry) as a treat. You will inevitably need to ask the baker, **Скільки коштує торт? А три булочки?** (How much does a cake cost? And three buns?). If you are packing a backpack for a language class, you check your supplies by counting: **один олівець** (one pencil) for taking notes, and **дві ручки** (two pens) just in case one runs out of ink. Numbers allow us to navigate the practical realities of life, whether we are comparing prices or sharing personal details.
 
-The age formula in Ukrainian works like a fixed chunk: **Мені** (I am), **тобі** (you are), **йому** (he is), **їй** (she is) + a number + **років**. Ukrainian uses three different words for "year(s)" depending on the number: **рік** (year) after 1, **ро́ки́** (years) after 2–4, and **років** (years) after 5 and above. At A1, memorize these as a pattern — one **рік**, twenty-two **роки**, five **років**. Notice in the dialogue: **двадцять п'ять** (25) and **тридцять два** (32) — these combined numbers are just the tens word plus the unit, with no connector. No case analysis needed.
-<!-- INJECT_ACTIVITY: quiz-age -->
-## Чи́сла 1-20 (Numbers 1-20)
-The first ten numbers in Ukrainian are: **оди́н** (1), **два** (2), **три** (3), **чоти́ри** (4), **п'ять** (5), **шість** (6), **сім** (7), **ві́сім** (8), **де́в'ять** (9), **де́сять** (10). Three of these need extra attention when you say them aloud. First, **п'ять** has an apostrophe — the letter **п** is followed by **'ять**, giving it a "p-yat" sound. Second, **сім** is the Ukrainian word for seven — it is NOT "сем," which is a Russian ghost form. Third, **дев'ять** also carries an apostrophe, making it two syllables: "dev-yat." Try counting objects from earlier modules: **один стіл** (one table), **два стільці́** (two chairs), **три кни́ги** (three books), **чотири ручки** (four pens), **п'ять зо́шитів** (five notebooks). The number always comes first, and the nouns are words you already know.
-Numbers 11–20 follow a clear pattern. Ukrainian textbooks (Vashulenko, Grade 3) list them as a family built from a base number plus the suffix **-на́дцять**, parallel to the English "-teen": **одинадцять** (11), **двана́дцять** (12), **трина́дцять** (13), **чотирна́дцять** (14), **п'ятнадцять** (15), **шістна́дцять** (16), **сімна́дцять** (17), **вісімнадцять** (18), **дев'ятна́дцять** (19), **двадцять** (20). The stress rule is consistent and simple: stress ALWAYS falls on the **-на-** syllable within **-надцять**. So it is одинáдцять, дванáдцять, тринáдцять, and so on through дев'ятнáдцять. One spelling trap: **шістнадцять** is written without a soft sign before **н** — not "шістьнадцять." A counting rhyme by Ле́ся Возню́к (in Kravcova, Grade 2, p. 92) puts numbers 1–10 into context: «Один і два — росла́ трава́, три, чотири — покоси́ли, п'ять — на со́нечку суши́ли, шість — в копи́чку посклада́ли, сім — корі́вку годува́ли, вісім — молочко́ дава́ла, дев'ять — ді́ток напува́ла, десять — привела́ теля́тко. Почина́ймо все споча́тку!» Reading this aloud is excellent pronunciation practice for all ten base numbers.
-With numbers 1–20 in hand, you can already do two practical things. First, count real objects around you: **скільки стільці́в у кімна́ті?** (how many chairs in the room?) **скільки книжо́к на столі́?** (how many books on the table?) Second, answer age questions from the dialogue above: **Мені** + number + **років**. Say your own age, a sibling's age, a friend's age — all using numbers from this section. Combined numbers like **двадцять один** (21) and **тридцять п'ять** (35) come in the next section.
-<!-- INJECT_ACTIVITY: fill-in-numbers -->
-## Деся́тки і со́тні (Tens and Hundreds)
-The tens from 20 to 100 follow a predictable pattern — with two famous exceptions. Here is the full list: **двадцять** (20), **тридцять** (30), **сорок** (40), **п'ятдеся́т** (50), **шістдеся́т** (60), **сімдеся́т** (70), **вісімдеся́т** (80), **дев'яно́сто** (90), **сто** (100). Most tens are built from a base number plus a suffix: п'ять → **п'ятдесят**, шість → **шістдесят**. But **сорок** (40) is completely irregular — there is no "чотиридесят" in Ukrainian. Historically, **сорок** referred to a bundle of forty animal pelts used as a trading unit (Го́луб, Grade 6). And **дев'яносто** (90) breaks the pattern too — it is not "дев'ятдеся́т." Memorize both as standalone words. To make combined numbers, place the tens word before the unit with no connector: **двадцять один** (21), **тридцять п'ять** (35), **сорок сім** (47), **вісімдесят дев'ять** (89). Practice examples: **двадцять три студе́нти** (23 students), **сорок вісім гривень** (48 hryvnias), **дев'яносто дві копійки́** (92 kopeks).
-For prices above 100, you need the hundreds: **сто** (100), **двісті** (200), **три́ста** (300), **чоти́риста** (400), **п'ятсо́т** (500), **шістсо́т** (600), **сімсо́т** (700), **вісімсо́т** (800), **дев'ятсо́т** (900), **ти́сяча** (1000). Notice the pattern shift: at 200 the form is **двісті** (not "двасто"), at 300–400 it is **триста** and **чотириста**, and from 500 onward the suffix is **-сот**. The Ukrainian currency is **гри́вня** (hryvnia), and it changes form after numbers just like "year" does: **одна́ гривня** (1), **дві гри́вні** (2–4), **п'ять гривень** (5+). Important: the currency word is **гривня**, not **гри́вна** — that is a different word meaning a neck ornament. Memorize three price chunks from the bakery dialogue: **п'ятнадцять гривень** (15₴), **сорок п'ять гривень** (45₴), **двісті гривень** (200₴). The noun changes гривня/гривні/гривень are price chunks for now — case grammar arrives in A2.
-Ukrainian mobile numbers follow the format 0XX-XXX-XX-XX. Break them into groups for easier reading: **нуль дев'яносто сім** (097) — pause — **три два один** (321) — pause — **сорок п'ять** (45) — pause — **шістдесят сім** (67). Each group is read as a mini-number. A full example: **Мій но́мер** (my number) — **нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім**.
+Let us look at how numbers naturally emerge when shopping at a bustling market stall. In this scenario, a customer is looking to buy a bag and needs to ask about the **ціна** (price). Read the dialogue below to see how numbers are used in a real commercial context.
+
+> **Покупець:** Добрий день! **Скільки коштує сумка?** *(Good afternoon! How much does the bag cost?)*
+> **Продавець:** Добрий день! **Двісті гривень.** *(Good afternoon! Two hundred hryvnias.)*
+> **Покупець:** **А маленька?** *(And the small one?)*
+> **Продавець:** **Сто п'ятдесят.** *(One hundred fifty.)*
+> **Покупець:** **Добре, дякую!** *(Good, thank you!)*
+
+In this exchange, the customer uses the essential phrase **Скільки коштує?** (How much does it cost?) alongside the noun **сумка** (bag) and the adjective **маленька** (small). The seller responds using exact numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty).
+
+Numbers are also crucial when meeting someone new and expanding beyond basic greetings. A common follow-up question in any conversation is asking about age.
+
+> **Антон:** Привіт! **Скільки тобі років?** *(Hi! How old are you?)*
+> **Віктор:** Привіт! **Мені двадцять п'ять. А тобі?** *(Hi! I am twenty-five. And you?)*
+> **Антон:** **Мені тридцять два. А твоя сестра?** *(I am thirty-two. And your sister?)*
+> **Віктор:** **Їй вісімнадцять.** *(She is eighteen.)*
+
+Here, we see the question **Скільки тобі років?** (How old are you?) and the response pattern **Мені...** (To me is...). They use the numbers **вісімнадцять** (eighteen), **двадцять п'ять** (twenty-five), and **тридцять два** (thirty-two). This formula is a fixed pattern you can memorize right now to share your own details.
+
+## Числа 1-20 — Numbers 1-20
+
+The absolute foundation of counting relies on the numbers from one to ten. These are the building blocks you will use every single day. The sequence is **один** (one), **два** (two), **три** (three), **чотири** (four), **п'ять** (five), **шість** (six), **сім** (seven), **вісім** (eight), **дев'ять** (nine), and **десять** (ten). Pronunciation here is critical. Pay close attention to the apostrophe in the words **п'ять** and **дев'ять**. The apostrophe tells you to pronounce the preceding consonant sharply and then transition distinctly into the following vowel, creating a slight pause. Furthermore, notice the clear **і** sound in both **сім** and **вісім**. It sounds like the "ee" in "meet" and must never be relaxed into a softer sound. 
+
+Unlike English, where numbers are static words, Ukrainian numbers must harmonize with the objects they describe. The number one has three distinct forms that match the gender of the noun. You must say **один стіл** (one table) for a masculine noun, **одна книга** (one book) for a feminine noun, and **одне вікно** (one window) for a neuter noun. The number two also changes, but it only has two forms. You use **два** for both masculine and neuter nouns, such as **два столи** (two tables) or **два вікна** (two windows). However, when counting feminine objects, you must switch to the feminine form, which is **дві**. Therefore, you say **дві книги** (two books).
+
+Once you have mastered the first ten numbers, learning the teens is remarkably straightforward because they follow a highly predictable pattern. You simply take the base number and add the suffix **-надцять**. The sequence is **одинадцять** (eleven), **дванадцять** (twelve), **тринадцять** (thirteen), **чотирнадцять** (fourteen), **п'ятнадцять** (fifteen), **шістнадцять** (sixteen), **сімнадцять** (seventeen), **вісімнадцять** (eighteen), and **дев'ятнадцять** (nineteen), leading up to **двадцять** (twenty). There is a crucial phonetic rule here: the stress always falls on the syllable **-на-**. You must pronounce it as **одинадцять** and **дванадцять**. 
+
+:::caution
+A common mistake for learners is trying to place the stress at the beginning of the word, similar to English. Always emphasize the **-на-** syllable in these numbers.
+:::
+
+When we count classroom objects, the nouns change their endings based on the number. You do not need to memorize complex grammatical tables yet; simply learn these high-frequency combinations as fixed patterns. Notice how the ending shifts depending on the quantity: **один зошит** (one notebook), **два зошити** (two notebooks), and **п'ять зошитів** (five notebooks). Similarly, we say **один підручник** (one textbook), **два підручники** (two textbooks), and **десять підручників** (ten textbooks). By learning these blocks together, you internalize the rhythm of the language without analyzing the underlying rules.
+
+<!-- INJECT_ACTIVITY: fill-in-numbers-words -->
+
+## Десятки і сотні — Tens and Hundreds
+
+Larger numbers allow us to discuss broader concepts, prices, and quantities. The tens follow a fairly regular pattern, usually ending in the suffix **-дцять** or **-десят**. The sequence continues with **тридцять** (thirty), **п'ятдесят** (fifty), **шістдесят** (sixty), **сімдесят** (seventy), and **вісімдесят** (eighty). However, there are two critical irregular numbers you must memorize immediately: **сорок** (forty) and **дев'яносто** (ninety). They do not follow the standard suffix rules. To create compound numbers, you simply place the ten and the unit next to each other, exactly as you do in English. For example, you combine them to say **сорок сім** (forty-seven), **двадцять один** (twenty-one), or **дев'яносто дев'ять** (ninety-nine). 
+
+When it comes to purchasing high-value items or discussing large sums, you need the hundreds. The base unit is **сто** (one hundred). The subsequent hundreds are built systematically, but their spellings must be memorized: **двісті** (two hundred), **триста** (three hundred), **чотириста** (four hundred), **п'ятсот** (five hundred), and finally **тисяча** (one thousand). Notice carefully that two hundred is written and pronounced as **двісті**, using the feminine root form, and never as "двасто". These hundreds combine easily with the tens and units you already know. If you want to say three hundred and fifty, you simply say **триста п'ятдесят**. 
+
+:::tip
+The number **тисяча** (thousand) is a feminine noun. If you want to say "one thousand," you must use the feminine form of one: **одна тисяча**.
+:::
+
+These larger numbers are indispensable when dealing with money and currency. The national currency of Ukraine is the **гривня** (hryvnia). Just like the classroom objects we counted earlier, the word for currency changes depending on the exact number preceding it. You must memorize these three core patterns. For amounts ending in one, use the base form: **одна гривня** (one hryvnia). For amounts ending in two, three, or four, the word changes: **дві гривні** (two hryvnias), **три гривні** (three hryvnias), or **чотири гривні** (four hryvnias). For all numbers from five to zero, the form changes again: **п'ять гривень** (five hryvnias), **десять гривень** (ten hryvnias), or **сто гривень** (one hundred hryvnias). Combine these patterns with the essential question **Скільки це коштує?** (How much does this cost?) to handle any shopping scenario confidently.
+
 <!-- INJECT_ACTIVITY: quiz-prices -->
-<!-- INJECT_ACTIVITY: fill-in-phone -->
+
 ## Підсумок — Summary
-This module built three number systems. First, cardinal numbers 1–20: the base ten (**один** through **десять**), then the **-надцять** teens with stress always on **-на-** (одинáдцять, дванáдцять...). Two apostrophe words to remember: **п'ять** and **дев'ять**. Second, the tens from 20 to 100, with two irregulars that must simply be memorized: **сорок** (40) and **дев'яносто** (90). Third, the hundreds from **сто** to **тисяча**, where the pattern shifts at **двісті** (200) and again at **п'ятсот** (500). Combined numbers never need a connector word — just say the tens then the unit: **двадцять три** (23), **сто сорок п'ять** (145).
-**Prices.** The question is **Скільки коштує?** and the answer is a number plus the right form of **гривня**: **одна гривня** (1₴), **дві гривні** (2–4₴), **п'ять гривень** (5+₴). Three memorized frames: **п'ятнадцять гривень** (bread), **сорок п'ять гривень** (three buns), **двісті гривень** (a cake). You can now ask and answer any price up to **тисяча гривень** (1000₴).
-**Age.** The question is **Скільки тобі років?** and the answer follows the formula: **Мені/Йому/Їй** + number + **рік/роки/років**. Three memorized frames: **Мені двадцять п'ять років** (25), **Йому двадцять два роки** (22), **Їй тридцять п'ять років** (35). The switch between рік, роки, and років is a chunk — feel it through repetition, do not analyze it.
-**Phone numbers.** Read Ukrainian mobile numbers in groups of 3–3–2–2. Practice with three sample numbers: (a) 097-321-45-67, (b) 050-112-33-99, (c) 073-456-78-10. Read each one aloud in Ukrainian. The bakery could call you when your cake is ready — just say **Мій номер телефо́ну...** and dictate it.
-Self-check — answer these in Ukrainian:
-- Як сказа́ти 17? → **сімнадцять**
-- Як сказати 40? → **сорок** (not "чотиридесят"!)
-- Як сказати 90? → **дев'яносто** (not "дев'ятдесят"!)
-- Торт коштує 250₴. Як сказати? → **Двісті п'ятдесят гривень.**
-- Скажі́ть своє́ ім'я́ і вік: **Ме́не зва́ти ___, мені ___ років.**
-- Продикту́йте свій номер телефону по-украї́нськи.
 
-**Deterministic word count: 1384 words** (calculated by pipeline, do NOT estimate manually)
+Stating your age in Ukrainian relies on a fixed formula. In Ukrainian, age is not something you "are" or "have"; rather, years are accumulated "to you." The structure **Мені... років** (To me is... years) is a fixed grammatical chunk. You use the dative pronoun **мені** (to me) followed by the number, and then the word for "years". The word for years changes based on the last digit of your age. If your age ends in one (except eleven), you use the singular form: **двадцять один рік** (twenty-one years). If your age ends in two, three, or four, you use the plural form: **тридцять три роки** (thirty-three years). For all other numbers, including zero and the teens, you use the third form: **сорок років** (forty years) or **вісімнадцять років** (eighteen years).
 
+Numbers are also essential for sharing contact information, specifically phone numbers. The word for a digit or a phone number is **номер** (number). When reciting a phone number, you will frequently use the word **нуль** (zero). Ukrainians typically read phone numbers by grouping the digits into blocks of two or three, rather than reciting them as single digits. For instance, the area code 067 is usually read as a single block: **нуль шістдесят сім** (zero sixty-seven). Alternatively, you might hear the digits separated out distinctly, such as **нуль, дев'ять, сім** (zero, nine, seven), before grouping the remaining digits into pairs like **сорок п'ять, шістдесят сім** (forty-five, sixty-seven).
+
+The question word **Скільки** is highly versatile because it functions as both "how many" and "how much," depending on the context. When you ask **Скільки книг?** (How many books?), you are inquiring about the physical quantity of objects. However, when you ask **Скільки коштує книга?** (How much does the book cost?), the focus shifts entirely to the price. This single word serves as the gateway to unlocking both physical inventory and financial transactions in your daily life.
+
+Before finishing this module, take a moment to perform a self-check:
+- Can you say your age? (**Мені ... років**)
+- Can you ask for a price? (**Скільки коштує ...?**)
+- Can you count to ten without looking?
+- Can you say your phone number in Ukrainian?
+
+<!-- INJECT_ACTIVITY: quiz-age-matching -->
+<!-- INJECT_ACTIVITY: fill-in-phone-numbers -->
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1530 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -273,8 +297,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -361,61 +385,16 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 108 words | Not found: 78 words
+Verified: 89 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Возню — NOT IN VESUM
-  ✗ Деся — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ П'ятна — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Продикту — NOT IN VESUM
-  ✗ Скажі — NOT IN VESUM
-  ✗ Скі — NOT IN VESUM
-  ✗ Соро — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ в'ять — NOT IN VESUM
-  ✗ вень — NOT IN VESUM
-  ✗ вку — NOT IN VESUM
-  ✗ вна — NOT IN VESUM
-  ✗ вня — NOT IN VESUM
-  ✗ вні — NOT IN VESUM
-  ✗ вісімдеся — NOT IN VESUM
-  ✗ вісімна — NOT IN VESUM
-  ✗ вісімсо — NOT IN VESUM
-  ✗ годува — NOT IN VESUM
-  ✗ двана — NOT IN VESUM
+  ✗ Антон — NOT IN VESUM
+  ✗ Віктор — NOT IN VESUM
   ✗ двасто — NOT IN VESUM
-  ✗ дев' — NOT IN VESUM
-  ✗ дев'яно — NOT IN VESUM
-  ✗ дев'ятдеся — NOT IN VESUM
-  ✗ дев'ятна — NOT IN VESUM
-  ✗ дев'ятсо — NOT IN VESUM
+  ✗ десят — NOT IN VESUM
   ✗ дцять — NOT IN VESUM
-  ✗ дша — NOT IN VESUM
-  ✗ зва — NOT IN VESUM
-  ✗ ймо — NOT IN VESUM
-  ✗ йте — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ книжо — NOT IN VESUM
-  ✗ кімна — NOT IN VESUM
-  ✗ лочка — NOT IN VESUM
-  ✗ лочки — NOT IN VESUM
-  ✗ льки — NOT IN VESUM
-  ✗ моло — NOT IN VESUM
-  ✗ нечку — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нськи — NOT IN VESUM
-  ✗ нти — NOT IN VESUM
-  ✗ одина — NOT IN VESUM
-  ✗ п'ятдеся — NOT IN VESUM
-  ✗ п'ятсо — NOT IN VESUM
-  ✗ поба — NOT IN VESUM
-  ✗ риста — NOT IN VESUM
-  ✗ сказа — NOT IN VESUM
 
-All 108 other words are confirmed to exist in VESUM.
+All 89 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

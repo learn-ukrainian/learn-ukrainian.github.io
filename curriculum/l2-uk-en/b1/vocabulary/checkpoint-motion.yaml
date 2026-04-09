@@ -29,12 +29,6 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: контрольна робота
-  translation: test/assessment
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: просторовий прийменник
   translation: spatial preposition
   expression: true
@@ -52,12 +46,6 @@ vocabulary:
   expression: false
   pos: прикм.
   gender: ''
-  verified: true
-- word: префікс
-  translation: prefix
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: по́дорож
   translation: journey
@@ -77,350 +65,80 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: науко́во-навча́льний
-  translation: scientific-educational
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сусі́дство
-  translation: proximity
+- word: закрі́плення
+  translation: consolidation
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: ко́ло
-  translation: by/around
+- word: прикме́тник
+  translation: adjective
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: неподалік від
-  translation: not far from
+- word: потребую повторення
+  translation: need review
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: на́прямок
-  translation: direction
+- word: не розумію
+  translation: do not understand
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергування приголосних
+  translation: consonant alternation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: видові пари
+  translation: aspect pairs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як ідуть справи?
+  translation: How are things going?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: голова йде обертом
+  translation: head is spinning / dizzy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: думки літають
+  translation: daydreaming
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: квито́к
+  translation: ticket
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: розташува́ння
-  translation: location
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: регі́стр
-  translation: register
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: навкруги́
-  translation: round about
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: іти́
-  translation: to go/walk
+- word: замо́вити
+  translation: to book/order
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: ї́хати
-  translation: to go/ride
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: нести́
-  translation: to carry
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: везти́
-  translation: to transport
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ходи́ти
-  translation: to go/walk regularly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ї́здити
-  translation: to go/ride regularly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: носи́ти
-  translation: to carry regularly/wear
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вози́ти
-  translation: to transport regularly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: бі́гти
-  translation: to run
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пливти́
-  translation: to swim/sail
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: куди́
-  translation: Where to?
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зві́дки
-  translation: Where from?
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: до
-  translation: to/towards
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: приї́хати
+- word: прибу́ти
   translation: to arrive
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: дої́хати
-  translation: to reach/drive up to
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: дійти́
-  translation: to walk up to
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прихо́дити
-  translation: to be arriving / to arrive regularly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: відносити
-  translation: to be carrying away regularly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прибі́гти
-  translation: to run up to / arrive running
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прибіга́ти
-  translation: to arrive running regularly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: проїжджа́ти
-  translation: to pass through/by
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зайти́
-  translation: to enter / to drop in
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: заї́хати
-  translation: to drive into
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зайти на хвилинку
-  translation: to drop in briefly
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: забі́гти
-  translation: to run in quickly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ви́їхати
-  translation: to drive out
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: перейти́
-  translation: to cross
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: переплисти́
-  translation: to swim across
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: переї́хати
-  translation: to move/relocate
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пройти́
-  translation: to pass
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прої́хати
-  translation: to drive through/past
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: леті́ти
-  translation: to fly
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ви́летіти
-  translation: to fly out / to depart
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прилеті́ти
-  translation: to arrive by flying
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: терміна́л
-  translation: terminal
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пролеті́ти
-  translation: to fly past/through
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: борт
-  translation: board
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: відплива́ти
-  translation: to sail away
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прича́л
-  translation: pier
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: іде дощ
-  translation: it rains
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: іде сніг
-  translation: it snows
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: годинник іде
-  translation: the clock ticks
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: справи йдуть добре
-  translation: things are going well
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: мова йде про...
-  translation: it is about...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: спала на думку
-  translation: came to mind
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Час летить — не наздоженеш
-  translation: Time flies — you won't catch it
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Сім разів відміряй — один відріж
-  translation: Measure seven times — cut once
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пересі́сти
-  translation: to transfer
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: підніма́тися
-  translation: to climb / go up
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зійти́
-  translation: to go down / descend
+- word: відпра́витися
+  translation: to depart
   expression: false
   pos: дієсл.
   gender: ''

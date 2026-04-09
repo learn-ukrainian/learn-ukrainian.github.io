@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "daily-life-and-routines",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T01:32:31.149067+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T01:32:31.162912+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T01:33:03.997368+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T01:34:01.009001+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T01:41:24.880510+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T01:41:24.880751+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-09T01:43:07.993699+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T01:43:08.031054+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-09T01:43:08.043595+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-09T01:46:46.439164+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-09T01:46:46.439312+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-09T01:46:46.882188+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-09T01:49:26.461251+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-09T01:49:26.792568+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-09T01:49:30.373876+00:00"
+    }
+  }
+}

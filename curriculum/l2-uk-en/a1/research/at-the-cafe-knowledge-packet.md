@@ -1,285 +1,323 @@
-# Verified Knowledge Packet: At the Cafe
-**Module:** at-the-cafe | **Phase:** A1.6 [Food and Shopping]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: At the Cafe
+**Module:** at-the-cafe | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/at-the-cafe.md
+
+# Педагогіка A1: At The Cafe
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The "At the Cafe" scenario is a cornerstone of A1 communicative learning. Ukrainian pedagogical materials approach this topic through highly contextualized, functional dialogues. The primary goal is to equip the learner with the essential phrases to successfully navigate a simple ordering and paying interaction.
+
+The core method is built on a "scaffolding" of politeness and utility:
+1.  **Politeness First:** All interactions are framed with core etiquette phrases like `Добрий день`, `Будь ласка`, and `Дякую`. These are treated as non-negotiable building blocks for any request (Source: `4-klas-ukrayinska-mova-varzatska-2021-1_s0004`, `5-klas-ukrmova-uhor-2022-1_s0018`).
+2.  **Start with Invariables:** The initial vocabulary intentionally includes a high number of indeclinable, often international, nouns: `кафе`, `меню`, `какао`, `капучино`, `ескімо`, `метро`, `таксі` (Source: `6-klas-ukrmova-zabolotnyi-2020_s0116`, `6-klas-ukrmova-litvinova-2023_s0178`). This allows the learner to form sentences without the immediate cognitive load of noun declension, focusing purely on the communicative act.
+3.  **Model-Based Learning:** Learning happens through modeling and repetition of dialogue chunks. For example, the pattern `Можна мені, будь ласка, [item]?` is introduced as a complete, polite formula for making a request (Source: `ext-ulp_youtube-125`). Similarly, role-playing simple situations, like ordering from a menu or asking for directions to a cafe, is a common classroom activity (Source: `6-klas-ukrmova-betsa-2023_s0109`, `6-klas-ukrmova-zabolotnyi-2020_s0116`).
+4.  **Practical Outcomes:** Exercises are designed around achieving a real-world goal: ordering food, asking for the bill, or paying. The language is a tool to complete the task (Source: `ext-ulp_youtube-116`, `ext-ulp_youtube-209`). The focus is not on grammatical analysis but on successful communication.
+
+## Послідовність введення (Introduction Sequence)
+
+This sequence is designed to build communicative competence progressively, minimizing grammatical hurdles at the start.
+
+- **Step 1: Foundational Politeness & Location.**
+  - Introduce core greetings (`Добрий день`) and politeness markers (`будь ласка`, `дякую`, `вибачте`).
+  - Introduce the key location nouns: `кафе`, `ресторан`. Emphasize that `кафе` is indeclinable.
+  - Practice with simple statements: `Це кафе.`
+
+- **Step 2: The Core Request Formula.**
+  - Introduce the most versatile A1 request phrase: `Можна мені, будь ласка, ...?` (Can I please have...?) (Source: `ext-ulp_youtube-125`).
+  - Pair this with basic, indeclinable, or high-frequency menu items: `каву`, `чай`, `воду`, `сік`, `меню`.
+  - Example drill: `Можна мені, будь ласка, каву?`, `Можна мені, будь ласка, меню?`.
+
+- **Step 3: Reading a Simple Menu & Making a Choice.**
+  - Introduce more simple, often international, food words: `піца`, `салат`, `суп`, `тістечко`, `морозиво`.
+  - Introduce the phrase `Я буду...` (I will have...) or `Я хочу...` as a way to state a choice. Example: `Я буду піцу і сік.` (Source: `ext-ulp_youtube-83`, `ext-ulp_youtube-132`).
+  - Introduce the question `Що ви будете замовляти?` (What will you be ordering?) that the learner might hear.
+
+- **Step 4: Asking for the Bill and Paying.**
+  - Teach the crucial phrase: `Можна рахунок, будь ласка?` (Can I have the bill, please?) (Source: `ext-ulp_youtube-116`).
+  - Introduce the cashier's question: `Картка чи готівка?` (Card or cash?).
+  - Provide the simple answers: `Картка.` or `Готівка.` (Source: `ext-ulp_youtube-125`).
+
+- **Step 5: Differentiating "For Here" or "To Go".**
+  - Introduce the common question from the barista/cashier: `Вам тут чи з собою?` (For here or to go?).
+  - Teach the two possible replies: `Тут.` (Here) or `З собою.` (To go) (Source: `ext-ulp_youtube-125`). This is a high-frequency interaction in modern cafes.
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often fall into predictable traps based on L1 interference and false cognates.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я заказую піцу.` | `Я замовляю піцу.` | The verb `заказати`/`заказувати` is a direct Russianism. The correct Ukrainian verb for "to order" (food, services) is `замовити`/`замовляти` (Source: `10-klas-ukrmova-glazova-2018_s0042`, `ext-ulp_youtube-209`). This is a critical decolonization point. |
+| `Відкрийте двері.` | `Відчиніть двері.` | English uses "open" for everything. Ukrainian distinguishes. `Відчиняти` is for things that have a physical opening (doors, windows, gates). `Відкривати` is for more abstract concepts (open a book, open an account, open a competition) (Source: `11-klas-ukrmova-zabolotnyi-2019_s0258`, `ext-ulp_youtube-219`). A cafe is `відчинено` (open). |
+| `Дайте капучино в *кафі*.` | `Дайте капучино в кафе.` | Learners attempt to decline foreign loanwords ending in a vowel. Nouns like `кафе`, `меню`, `какао`, `метро`, `бюро` are indeclinable in Ukrainian and must not change their form (Source: `6-klas-ukrmova-zabolotnyi-2020_s0116`, `10-klas-ukrmova-glazova-2018_s0252`). |
+| _(Confusing `про́шу` and `прошу́`)_ | `Про́шу!` (as "You're welcome") | The word `прошу` changes meaning with stress. `Про́шу` (stress on first syllable) is a polite response, synonymous with `будь ласка`. `Прошу́` (stress on second syllable) is the 1st-person singular verb "I ask" (Source: `6-klas-ukrmova-betsa-2023_s0109`, `10-klas-ukrajinska-mova-zabolotnij-2018_s0122`). Learners often use it without being aware of the stress, leading to confusion. |
+| `Велике дякую!` | `Дуже дякую!` | This is a direct calque from English "Thanks a lot" or "Big thanks." The standard Ukrainian way to express strong gratitude is `Дуже дякую` (very much thank you) or `Щиро дякую` (sincerely thank you) (Source: `8-klas-ukrmova-avramenko-2025_s0016`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is a frontline for establishing correct, modern, Russian-free Ukrainian from day one.
+1.  **The `Замовити` vs. `Заказати` Rule is Absolute:** The verb `заказати` is one of the most common and persistent Russianisms. It must be actively flagged and corrected from the very first lesson. The only verb for ordering food, drinks, or services is **`замовляти` (imperfective) / `замовити` (perfective)** (Source: `10-klas-ukrmova-glazova-2018_s0042`). Presenting `заказати` as "colloquial" or "also heard" is unacceptable; it is incorrect in standard Ukrainian.
+2.  **Internationalisms are not Russianisms:** Words like `кафе`, `меню`, `ресторан`, `десерт`, `омлет`, `салат` entered Ukrainian primarily from French (Source: `10-klas-ukrmova-karaman-2018_s0176`). They should be presented as international vocabulary that Ukrainian shares with many European languages, not as words borrowed via Russian. This framing reinforces Ukrainian's place in a broader European context.
+3.  **Teach Ukrainian Phonetics on Their Own Terms:** When teaching pronunciation of cafe-related words, avoid any comparison to Russian pronunciation (e.g., how 'e' or 'o' are pronounced). The learner must build a Ukrainian phonetic foundation from scratch, using Ukrainian audio models.
+4.  **Politeness Formulas:** Emphasize uniquely Ukrainian or pan-European politeness formulas. For "you're welcome," teach `Про́шу` (with correct stress) and `Будь ласка`. Avoid defaulting to patterns that might be more common in Russian conversational style.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is essential for an A1 learner to function in a cafe.
+
+**Іменники (Nouns):**
+- ★★★ `кафе`, `ресторан`, `меню`, `рахунок` (bill)
+- ★★★ `кава`, `чай`, `вода`, `сік`
+- ★★★ `картка` (card), `готівка` (cash)
+- ★★ `піца`, `салат`, `суп`, `хліб`
+- ★★ `тістечко` (cake/pastry), `морозиво` (ice cream), `десерт`
+- ★ `офіціант`/`офіціантка`, `столик` (table)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be), `хотіти` (to want), `мати` (to have)
+- ★★★ `їсти` (to eat), `пити` (to drink)
+- ★★★ `замовляти` / `замовити` (to order)
+- ★★ `платити` / `заплатити` (to pay), `коштувати` (to cost)
+- ★ `сідати` / `сісти` (to sit down)
+
+**Фрази та інше (Phrases & Other):**
+- ★★★ `Добрий день`
+- ★★★ `Будь ласка`, `Дякую`, `Дуже дякую`
+- ★★★ `Вибачте` (Excuse me / Sorry)
+- ★★★ `Так` / `Ні`
+- ★★★ `Можна ...?` (Is it possible...? / May I...?)
+- ★★★ `Тут` (here), `З собою` (to go)
+- ★★ `Смачного!` (Bon appétit!)
+- ★★ `Ще щось?` (Anything else?)
+
+## Приклади з підручників (Textbook Examples)
+
+These examples demonstrate the standard, practical format for teaching this topic in Ukrainian schools.
+
+1.  **Situational Role-Play: Ordering from a Menu**
+    This exercise from a Grade 6 textbook places the learner directly in the situation and requires them to use the target language to achieve a goal.
+    > **СИТУАЦІЯ.** Уявіть, що ви зайшли до кав’ярні. Зверніться до офіціанта, щоб замовити три страви із запропонованого меню.
+    > **МЕНЮ**
+    >  Капучино
+    >  Желе
+    >  Салат олів’є
+    >  Какао
+    >  Ескімо
+    >  Тістечко безе
+    (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0116`)
+
+2.  **Dialogue Completion/Role-Play: Asking for the Bill**
+    This pattern from a Ukrainian Lessons podcast transcript provides the most common and polite way to ask for the bill and handle payment.
+    > **Learner A (Customer):** Можна рахунок, будь ласка?
+    > **Learner B (Waiter):** Так, звичайно. З вас 250 гривень. Оплата карткою чи готівкою?
+    > **Learner A (Customer):** Готівкою. Ось. Решти не треба.
+    > **Learner B (Waiter):** Дякую. Гарного вам дня!
+    (Джерело: `ext-ulp_youtube-116`)
+
+3.  **Functional Dialogue: "For Here or To Go?"**
+    This is a critical micro-dialogue for any modern coffee shop interaction.
+    > **Learner B (Barista):** Вам тут чи з собою?
+    > **Learner A (Customer):** З собою, будь ласка.
+    (Джерело: `ext-ulp_youtube-125`)
+
+4.  **Dialogue Framework: Wrong Number / Location**
+    This simple, repetitive phone dialogue helps practice location names (`кав'ярня`, `ресторан`, `піцерія`) in a low-stakes, memorable format.
+    > — Алло!
+    > — Добрий день! Це **стадіон**?
+    > — Ні, це не **стадіон**. Це **кав’ярня**.
+    > — Що? **Кав’ярня**?
+    > — Так, **кав’ярня**.
+    > — Вибачте!
+    (Джерело: `6-klas-ukrmova-betsa-2023_s0085`, adapted from the museum/theatre example)
+
+## Пов'язані статті (Related Articles)
+- `[[pedagogy/a1/politeness-and-greetings]]`
+- `[[pedagogy/a1/numbers-and-counting]]`
+- `[[grammar/indeclinable-nouns]]`
+- `[[vocabulary/food-and-drinks]]`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/around-the-city.md
 
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 230
-> **Score:** 0.25
->
-> 230
-> Шукаємо відповіді на запитання:
-> Як стати гарним співрозмовником / гарною співрозмовницею?
-> Відповідно до поставленого запитання сформулюйте особис-
-> ті цілі.
-> 521   Прочитайте «слова дня». Що вони означають? Чи всі вони можуть 
-> поєднуватися зі словосполученнями «гарний співрозмовник», 
-> «гарна співрозмовниця»? Чому?
-> Про що «говорить» усмішка? Вона повідомляє: «Ви мені 
-> подобаєтеся! Мені приємно спілкуватися з вами! Я радий / 
-> рада вас бачити!» Усміхайтеся!
-> 522   Розгляньте світлини. Які ознаки гарного співрозмовника очевид-
-> ні? Назвіть їх.
-> 523   Складіть діалог двох співрозмовників / співрозмовниць, один / 
-> одна з яких любить осінь, а другий / друга — літо, використовую-
-> чи подані речення.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 239
-> **Score:** 0.50
->
-> 239
-> Відомості із синтаксису й пунктуації. Кома між частинами складного речення
-> Про борщ я можу розпо-
-> відати годинами. Ні для кого 
-> не секрет що майже у кожній 
-> родині існує свій особливий 
-> рецепт борщу. Хтось не уявляє 
-> борщ без квасолі а хтось готує 
-> його без капусти. Всі ці варіан-
-> ти мають право на існування 
-> бо немає якогось «правильно-
-> го» рецепту, просто в кожного 
-> є свій сімейний борщ.
-> І досі популярним є узвар із сухофруктів це дуже корисний 
-> і поживний напі й.
-> Полтава славиться галушками і ми із задоволенням ласуємо 
-> ними коли приїжджаємо в це місто до родичів.
-> 2. Підкресліть граматичні основи, визначте тип речень .
-> 3. Згадайте ваші улюблені страви . Опишіть їх складними реченнями .
-> Вправа 384
-> 1. Прочитайте допис відомого 
-> українського шеф-кухаря 
-> Євгена Клопотенка .
-> 2.
-
-## Як замовити (How to Order)
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 199
-> **Score:** 0.33
->
-> 199
-> 462   Прочитайте речення. Визначте комунікативний намір мовців 
-> (прохання, умовляння, благання, клянчення чи пропозиція). 
-> Обґрунтуйте свій вибір. На  яке прохання ви відгукнулися б? 
-> Хто з мовців найкраще обґрунтував свої бажання?
-> 1. Мамо, купи мені цю іграшку, купи, купи, купи, купи!!! 
-> У Вероніки є точнісінько така, і я хочу! Купи-и-и-и!!! 
-> 2. Дідусю, благаю, візьми мене з собою в похід на Говерлу! 
-> Я ще там ніколи не був! 3. Тату, можна я не буду пристібатися 
-> паском безпеки?! Я ж не маленький! Ну дозволь! Дозволь! 
-> Глянь, не всі навіть дорослі пристебнуті! 4. «Дмитрику, цього 
-> року так рясно вродили в нашому садку яблука! Допоможи 
-> мені зібрати врожай! Мені самій не впоратися!» — мовила 
-> бабуся. 5.
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 129
-> **Score:** 0.25
->
-> 129
-> подякувати
-> звернутися 
-> з проханням
-> пояснити свій 
-> учинок
-> порадити
-> поділитися 
-> досвідом, 
-> враженнями
-> висловити 
-> припущення
-> За допомогою складних 
-> речень можна реалізувати 
-> будь-який комунікативний 
-> намір:
-> 1. Розкажи мені щось цікаве, щоб я слухав і мав з того 
-> користь. 2. Люблю гортати старі книги, бо від них віє спо-
-> коєм. 3. Дай мені розуміння і сили прощати, щоб і я був про-
-> щений. 4. Люблю писати історії, у яких слова грають, як 
-> інструменти в оркестрі. 5. Якщо зробиш крок назад, застряг-
-> неш у вчорашньому дні (Із тв. М. Дочинця).
-> 318   Виберіть один із текстів. Прочитайте його, дайте відповіді на за-
-> питання і виконайте завдання. 
-> І. Розгулявся січень хугою**. Усеньку добу висвистував гуч-
-> ними вітрами. І в моє вікно почали стукати синички. Холодно 
-> їм, голодно.
-
-## Культура кафе (Cafe Culture)
-
-> **Source:** ponomarova, Grade 4
-> **Section:** Сторінка 109
-> **Score:** 0.50
->
-> 109
-> 4. Прочитай етикетку улюбленого напою китайців. Розка-
-> жи, яку  інформацію вона  містить.  Що в ній для  тебе  як
-> споживача  найважливіше?
-> 4
-> 5. Родзинка дізналася, де винайшли чай. Прочитай і ти.
-> Вирощувати й заварювати чай почали в Китаї. 
-> А сталося це, коли випадково листок чайного куща 
-> впав у чашку з окропом. 
-> Чай буває білий, зелений, чорний. Усі вони
-> з листя одного куща, який називається «Каме-
-> лія китайська». Тільки сушать листя по-різному. 
-> Тому й виходить різний смак і властивості чаю.
-> Чай зміцнює імунітет, зубну емаль, якщо його 
-> споживають без цукру. Також допомагає працюва-
-> ти серцю і судинам, перетравлювати їжу.
-> 6. Добери антоніми до виділених у тексті про чай дієслів 
-> і запиши в колонку. Постав утворені дієслова у формі 
-> майбутнього часу й запиши у другу колонку.
-> 7.
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 23
-> **Score:** 0.50
->
-> 20
-> Культура мовлення
-> ПРАВИЛЬНО
-> НЕПРАВИЛЬНО
-> прочитати правильно
-> увімкнути світло
-> відчиняти ворота
-> розгорнути зошит
-> наступний урок 
-> прочитати вірно
-> включити світло
-> відкривати ворота
-> розкрити зошит
-> слідуючий урок 
-> 30.	 Запишіть речення, уставляючи на місці пропуску одне із запропо-
-> нованих у рамці слів. 
-> 1. Оксано, ... , будь ласка, лампу.
-> уключи / увімкни
-> 2. Текст записано ... .
-> вірно / правильно
-> 3. ... книжки на сторінці 35.
-> розкрийте / розгорніть
-> 4. Поверни ручку, щоб ... двері.
-> відкрити / відчинити
-> 5. А що там на ... сторінці?
-> наступній / слідуючій
-> 6. Ви будете ... участь у змаганні?
-> брати / приймати
-> 31.	 І. Складіть з кожним іменником можливе словосполучення, ді-
-> бравши дієслово з поданого нижче переліку. Ви можете скористатися 
-> кожним дієсловом лише один раз.
-
-## Підсумок — Summary
-
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 244
-> **Score:** 0.33
->
-> Розділ 7. Числівник 
-> 244
-> із  6-річного віку, а  підліток у  віці 
-> від 14 до 18 (роки) може само-
-> стійно відкрити рахунок на своє 
-> ім’я.
-> Картку можна оформити без-
-> коштовно. Якщо ви бажаєте інди-
-> відуальний дизайн, це коштує додаткових витрат  — від 
-> 99 грн. Деякі банки пропонують дитячу картку з  фото, 
-> за це доведеться заплатити від 50  грн.
-> (Із сайту Національного банку України)
-> 2. Чи маєте ви банківську картку? Якщо так, то в  яких ситуаціях її вико-
-> ристовуєте?
-> 3. Які, на ваш погляд, є  переваги й  недоліки користування карткою?
-> 4. Що таке пін-код? Для чого він потрібен?
-> 5. Що таке CVC? Для чого потрібні ці три цифри?
-> 6.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 169
-> **Score:** 0.25
->
-> 169
-> 169
-> § 86.  М’який  знак  у  числівниках
-> 3.	 Прочитайте текст і виконайте завдання.
-> Корисні  ласощі
-> Сухофрукти — дуже смачний і корисний продукт. Калорійність і кіль­
-> кісний показник цукру на 100 г у сухих фруктах різні. Наприклад, у ку­
-> разі місткість цукру — 72,1 г, калорійність — 215,6 ккал. Яблука сушені 
-> мають 61,9 г цукру, а їхня калорійність становить 230,9 ккал, у груші су­
-> шеній цукру — 63,2 г і 250,1 ккал, в інжирі — 77,8 г цукру та 256,8 ккал.
-> Сушених яблук рекомендовано вживати не більше 30–50 г на добу (З ін-
-> тернету).
-> А.	 Замініть цифри словами. Запишіть їх.
-
-## Grammar Reference
-
-> **Source:** golub, Grade 6
-> **Section:** Сторінка 222
-> **Score:** 0.50
->
-> Море. У мені (Слава Світова).
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 143
-> **Score:** 0.25
->
-> І якраз у яму 
-> втрапить. А ми вже вириємо, постараємося.
+# Педагогіка A1: Around The City
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core methodological approach for teaching "Around The City" at the A1 level is communicative and situational. The goal is not to exhaustively list vocabulary but to equip the learner with functional chunks to solve a real-world problem: getting lost and asking for directions. The approach should mirror how a native speaker would help a foreigner, simplifying language into clear, actionable steps.
 
-### Теорія:
-  
+Instruction should be built around a core dialogue pattern, as demonstrated in Ukrainian Lessons Podcast episodes (Source 22, Source 23). This involves:
+1.  **Gaining attention politely:** Starting with `Вибачте, будь ласка...` (Source 23).
+2.  **Asking the core question:** Using the simple construction `Де [назва місця]?` (e.g., `Де вокзал?`, `Де центр?`) (Source 23).
+3.  **Understanding a simple response:** Processing basic directional adverbs (`прямо`, `праворуч`, `ліворуч`) and verbs (`ідіть`, `поверніть`) (Source 22).
+4.  **Clarifying transport:** Differentiating between types of transport like `автобус` (bus) and `поїзд` (train), which dictates whether one needs an `автовокзал` or `залізничний вокзал` (Source 22).
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+Ukrainian elementary textbooks introduce related concepts through simple, repetitive structures. For example, exercises focus on using prepositions with locations (`Підійшли до річки`, `Сховався за деревом`) (Source 10) or listing related items to build semantic fields (`Яблука, груші, сливи... — це фрукти`) (Source 28). This method of grouping and association should be used for city vocabulary (e.g., `музей`, `церква`, `магазин` are all places in a city).
 
-### Словосполучення
-> **Source:** МійКлас — [Словосполучення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/slovospoluchennia-39535)
+The learning process should be scaffolded, starting with recognizing place names, then forming a question, and finally understanding a multi-step answer. Role-playing dialogues is a highly effective activity at this stage (Source 12, Source 20).
 
-### Теорія:
+## Послідовність введення (Introduction Sequence)
 
-*www.ua.pistacja.tv*  
-Словосполучення
-Словосполучення — це поєднання дв**ох і більше повнозначних слів**, одне з яких є головним, а інше \(інші\) — залежним\(\-и\). 
+1.  **Core Question & Basic Locations:** Start with the most fundamental survival question: `Де...?` (Where is?). Pair it with the most essential, high-frequency A1-level locations.
+    *   `Де центр?` (Where is the center?) (Source 23)
+    *   `Де вокзал?` (Where is the station?) (Source 22)
+    *   `Де метро?` (Where is the metro?) (Source 23)
+    *   `Де туалет?` <!-- VERIFY -->
+    This immediately gives the learner a functional tool.
 
-Слова у словосполученні поєднуються за допомогою **граматичного зв'язку \(закінчень і прийменників\) або за змістом і граматично.**
-Приклад:
-Прикласти листок подорожника, зелений  сад, червоний **від** сорому, вивчена напам'ять поезія, занадто далеко.
-**Слово**, від якого ставимо запитання, називається головним.
- 
-**Слово**, до якого ставимо запитання, називається залежним.
-Приклад:
-Вправа \(яка?\) *цікава*, приїхали \(з якою метою?\) *відпочити*, знайшов \(що?\) *бурштин*, біжу \(яким способом?\) *наввипередки*, черга \(яка?\) *до лікаря*.
+2.  **Simple Positional Answers:** Introduce the simplest possible answers a person might point and give.
+    *   `Тут` (Here)
+    *   `Там` (There)
+    *   `Он там` (Over there) (Source 23)
 
-### Ознаки словосполучення. Типи зв'язку слів
-> **Source:** МійКлас — [Ознаки словосполучення. Типи зв'язку слів](https://www.miyklas.com.ua/p/ukrainska-mova/8-klas/slovospoluchennia-i-rechennia-39534/oznaki-slovospoluchennia-golovne-i-zalezhne-slovo-v-slovospoluchenni-tip_-476383)
+3.  **Essential Directional Commands:** Introduce the imperative verbs and adverbs for giving basic directions. Always teach the formal "ви" forms first (`-іть` ending) as they are safest for speaking to strangers.
+    *   `Ідіть прямо` (Go straight) (Source 22)
+    *   `Поверніть праворуч` (Turn right) (Source 22)
+    *   `Поверніть ліворуч` (Turn left) (Source 22)
 
-### Теорія:
+4.  **Key Nouns for Navigation:** Introduce nouns that act as landmarks in directions.
+    *   `вулиця` (street) (Source 28)
+    *   `перехрестя` (intersection) (Source 22)
+    *   `церква` (church) (Source 2, Source 9)
+    *   `магазин` (shop) (Source 28)
 
-*www.ua.pistacja.tv*  
- 
-**Словосполучення за будовою поділяються на прості і складні**.
+5.  **Combining into Short Instructions:** Practice combining the elements from steps 3 and 4.
+    *   `Ідіть прямо по вулиці...` (Go straight on ... street) (Source 22).
+    *   `На перехресті поверніть праворуч` (At the intersection, turn right) (Source 22).
 
-Прості \(непоширені\) словосполучення складаються з двох повнозначних слів — одного головного і одного залежного  \(*сміливий вчинок*\).
-У складних словосполученнях \(поширених\) поєднано три й більше повнозначні слова: *\(героїчний подвиг народу*\).
-****Залежне слово з головним ****може поєднуватись у словосполученні безпосередньо \(*мокрим снігом, купа паперу, зачинати жнива*\) або за допомогою прийменників \(*стояти біля станції метро, побігла від криниці, мокрий від дощу\)*.
+6.  **Transportation Vocabulary:** Introduce basic modes of transport and the places associated with them. It is crucial to distinguish between `автовокзал` and `залізничний вокзал`.
+    *   `автобус` (bus) → `автовокзал` (bus station) (Source 22)
+    *   `поїзд` (train) → `залізничний вокзал` (railway station) (Source 22)
+    *   `метро` (metro/subway) (Source 23)
 
----
-**Total textbook excerpts found:** 11
-**Grades searched:** 4, 5, 6
+7.  **The Concept of "Needing to Take":** Introduce the impersonal construction `треба їхати` (one needs to go/travel).
+    *   `Треба їхати на метро.` (You need to go by metro.) (Source 23) This is a critical A1 structure that avoids complex verb conjugations.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Вибачаюся` | `Вибачте` | `Вибачаюся` is a reflexive verb meaning "I apologize myself," which is a calque from Russian and considered unnatural and slightly self-centered in modern Ukrainian. The correct form for apologizing or getting someone's attention is the imperative `Вибачте` (Excuse me / Forgive me) (Source 26). |
+| `Де є центр?` | `Де центр?` | English speakers often try to insert the verb "to be" (`є`) in simple "Where is X?" questions, directly translating from English. In Ukrainian, the verb "to be" is omitted in present tense location questions. The structure is simply `Де + [ іменник ]?` (Source 23). |
+| `Іти до праворуч` | `Ідіть праворуч` or `Поверніть праворуч` | Learners may confuse adverbs of direction (`праворуч` - to the right) with nouns of place, incorrectly adding a preposition like `до` (to). The adverbs `праворуч`, `ліворуч`, and `прямо` do not require prepositions when used with verbs of motion (Source 22). |
+| Asking for the "train station" and getting the "bus station" | `Залізничний вокзал` (for trains) vs. `Автовокзал` (for buses) | In English, "station" can be ambiguous. In Ukrainian, the distinction is critical. `Вокзал` by itself often implies the main railway station, but it's best to be specific. A speaker asking for a `поїзд` (train) needs the `залізничний вокзал`; someone asking for an `автобус` (bus) needs the `автовокзал` (Source 22). |
+| Using informal `Іди` with a stranger | `Ідіть` | Learners might encounter the informal `ти` forms (`іди`, `поверни`) first. It is crucial to emphasize that when asking for directions from a stranger, the formal `ви` form (`ідіть`, `поверніть`) is mandatory for politeness and respect (Source 22). |
+| `Це далеко?` (with rising intonation) | `Це далеко?` | This is a positive interference. Unlike English, which often uses auxiliary verbs for questions ("**Is it** far?"), Ukrainian can often form a yes/no question simply by applying a rising intonation to a declarative sentence (Source 23). This is an easy win for learners. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is highly susceptible to colonial narratives, and it is imperative to address this from the beginning.
+
+1.  **The "Empty Land" Myth:** The Russian imperial narrative often claims that southern and eastern Ukrainian cities were "founded" by Russian monarchs (like Catherine II) on empty, wild land. This is false. Content must explicitly state that these cities were often built upon or agglomerated from pre-existing Cossack settlements. The city of Dnipro, for instance, was established on the site of the Cossack sloboda `Половиця` (Source 9). The textbook should present this as the norm: a Ukrainian settlement was renamed and absorbed, its history erased.
+
+2.  **Authentic Toponymy:** Ukrainian place names have deep historical and geographical roots. Village names often derive from geography (`Грядина` - from garden beds, Source 2), local crafts (`гончарі` - potters, Source 1), or ancient landmarks (`Добрий Дуб` - a sacred oak, Source 2). Presenting vocabulary like `куток` (a neighborhood or corner of a village) (Source 2) and `урочище` (a distinct natural landmark) (Source 2) grounds the learner in an authentic Ukrainian perception of space, rather than a generic, universal one.
+
+3.  **No Russian Analogies:** Do not teach Ukrainian directions or locations by comparing them to Russian. For example, never say "вулиця is like Russian улица." Teach Ukrainian on its own terms. Phonetics, grammar, and vocabulary should be presented as a self-contained system. The presence of Cossack, Polish, and other historical layers (Source 3) should be highlighted to show Ukraine's history is European and distinct.
+
+4.  **Transportation Hubs as Ukrainian Spaces:** While `вокзал` is an internationalism (from Vauxhall Gardens), its culture in Ukraine is distinctly Ukrainian. Train travel is a major part of Ukrainian life (Source 22). Frame `вокзали` not as generic transport hubs, but as vibrant centers of Ukrainian life, often with their own markets (`ринок`) and social dynamics (Source 22).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+*   **Places (Місця):**
+    *   `місто` (city) ★★★ (Source 9)
+    *   `село` (village) ★★★ (Source 10)
+    *   `центр` (center) ★★★ (Source 23)
+    *   `вулиця` (street) ★★★ (Source 28)
+    *   `площа` (square) ★★ (Source 28)
+    *   `музей` (museum) ★★ (Source 15)
+    *   `церква` (church) ★★ (Source 9)
+    *   `магазин` (shop) ★★ (Source 28)
+    *   `школа` (school) ★★ (Source 28)
+    *   `бібліотека` (library) ★★ (Source 28)
+    *   `пошта` (post office) ★★ (Source 28)
+    *   `парк` (park) ★ (Source 9)
+    *   `річка` (river) ★ (Source 10)
+*   **Transport (Транспорт):**
+    *   `вокзал` (station) ★★★ (Source 22)
+    *   `залізничний вокзал` (railway station) ★★★ (Source 22)
+    *   `автовокзал` (bus station) ★★★ (Source 22)
+    *   `метро` (metro/subway) ★★★ (Source 23)
+    *   `станція` (station, e.g., metro station) ★★★ (Source 23)
+    *   `поїзд` (train) ★★ (Source 22)
+    *   `автобус` (bus) ★★ (Source 22)
+*   **Navigation Points (Орієнтири):**
+    *   `перехрестя` (intersection) ★★★ (Source 22)
+    *   `будинок` (building, house) ★★ (Source 10)
+    *   `дорога` (road) ★ (Source 4)
+
+### Дієслова (Verbs - Imperative Formal)
+*   `ідіть` (go) ★★★ (Source 22)
+*   `поверніть` (turn) ★★★ (Source 22)
+*   `скажіть` (tell me/say) ★★★ (Source 23)
+*   `вибачте` (excuse me) ★★★ (Source 23)
+*   `дивіться / бачите` (look / you see) ★★ (Source 23)
+
+### Прислівники (Adverbs)
+*   `прямо` (straight) ★★★ (Source 22)
+*   `праворуч` / `направо` (to the right) ★★★ (Source 22)
+*   `ліворуч` / `наліво` (to the left) ★★★ (Source 22)
+*   `тут` (here) ★★★ <!-- VERIFY -->
+*   `там` / `он там` (there / over there) ★★★ (Source 23)
+*   `далеко` (far) ★★ (Source 23)
+*   `близько` (near) ★★ (Source 23)
+*   `пішки` (on foot) ★ (Source 25)
+
+### Ключові фрази (Key Phrases)
+*   `Будь ласка` (Please / You're welcome) ★★★ (Source 23)
+*   `Дякую` / `Дуже дякую` (Thank you / Thank you very much) ★★★ (Source 23)
+*   `Де...?` (Where is...?) ★★★ (Source 23)
+*   `Треба їхати на...` (You need to go by...) ★★ (Source 23)
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Role-Play Dialogue (Situational Practice)**
+*   **Task:** Based on the model from Ukrainian Lessons Podcast (Source 20, Source 22), create a dialogue. One learner is lost and asks for directions to the museum. The other gives simple, two-step directions.
+*   **Student A (Lost Tourist):** `Вибачте, будь ласка. Скажіть, будь ласка, де музей?`
+*   **Student B (Local):** `Ідіть прямо по цій вулиці, а потім поверніть праворуч. Музей буде там.`
+*   **Student A:** `Дуже дякую!`
+*   **Student B:** `Будь ласка.`
+
+**2. Fill-in-the-Preposition (Grammar Focus)**
+*   **Task:** Complete the sentences with the correct preposition from the box: `до`, `в/у`, `на`, `за`. (Inspired by Source 10).
+    *   1. Ми підійшли ____ будинку. (We approached the house.)
+    *   2. Голуби потрапили ____ пастку. (The doves got into the trap.) (Source 10)
+    *   3. Ми сіли ____ метро. (We got on the metro.)
+    *   4. Школа знаходиться ____ тим поворотом. (The school is behind that turn.)
+*   **Answers:** 1. до, 2. в, 3. на, 4. за
+
+**3. Location Identification on a Simple Map (Visual Comprehension)**
+*   **Task:** Provide a simple, schematic map of a town center with 4-5 labeled buildings (e.g., `Школа`, `Вокзал`, `Церква`, `Магазин`). Ask the learner "Where is the X?" and have them respond using simple prepositions. (Adapted from the map task in Source 5).
+*   **Question:** `Де школа?`
+*   **Possible Answer:** `Школа біля церкви.` (The school is near the church.)
+*   **Question:** `Де магазин?`
+*   **Possible Answer:** `Магазин на вулиці Шевченка.` (The shop is on Shevchenko street.)
+
+**4. Building Sentences (Syntax Practice)**
+*   **Task:** Give the learner scrambled words and have them form a correct sentence giving a direction.
+    *   1. `прямо / Ідіть / вулиці / по` -> `Ідіть прямо по вулиці.` (Source 22)
+    *   2. `наліво / На / поверніть / перехресті` -> `На перехресті поверніть наліво.` (Source 22)
+    *   3. `треба / на / Їхати / метро` -> `Треба їхати на метро.` (Source 23)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/polite-expressions`
+- `grammar/cases/prepositional`
+- `grammar/verbs/imperative-mood`
+- `vocabulary/a1/transport`
+</wiki_context>
+
+## Plan References
+
+- 
+- 

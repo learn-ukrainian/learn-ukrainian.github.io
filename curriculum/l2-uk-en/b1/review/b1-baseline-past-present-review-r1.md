@@ -1,44 +1,67 @@
-I will verify the naturalness of the term "прийом" in the context of "граматичний прийом" and check for any potential Russianisms or calques in the prose.
-
 ## Linguistic Scan
-* **Critical Error**: In the dialogue within the "Дієслова на -ся" section, there is a conjugation agreement error: "Ми там регулярно **зустрічаються** з одногрупниками..." (3rd person plural used with 1st person plural subject). Correct form: **зустрічаємося**.
-* **Proper Nouns**: VESUM data flagged "Європою", "Дарина", "Олексій", "Олена" as missing, but these are valid inflected forms of standard names/proper nouns and are not errors.
+Found a few linguistic and stylistic errors:
+- **Calque:** `перевірочне запитання` is a calque from Russian "проверочный". The correct standard Ukrainian term is `перевірне запитання`.
+- **Colloquialism / Calque:** `співбесідою на роботу` is a colloquial calque from "собеседование на работу". Standard Ukrainian is simply `співбесідою` or `співбесідою щодо працевлаштування`.
+- **Pleonasm:** `Англомовні мовці` is slightly redundant ("English-speaking speakers"). Better to use `Англомовні студенти`.
+- **Anglicism:** Using `гендерну ідентичність` to describe the grammatical gender of a subject in a sentence is an English-centric concept transfer. In grammar, we refer strictly to `рід` (grammatical gender) or `стать` (biological sex).
+
+*(Note: The text contains manual stress marks throughout the prose. Per the guidelines, this is ignored for scoring, but typically the pipeline handles prose stress automatically.)*
 
 ## Exercise Check
-* Activity markers are present, appropriately named, and logically placed after the relevant teaching content.
-* The activity types (group-sort, quiz, match-up, error-correction, open-writing, fill-in) match the `activity_hints` in the plan exactly.
-* Marker count: 6 (Matches plan).
+- `<!-- INJECT_ACTIVITY: group-sort -->` — matches `group-sort` (I vs II дієвідміна). Placed correctly after Section 1.
+- `<!-- INJECT_ACTIVITY: fill-in-tense-forms -->` — matches `fill-in` (tense forms). Placed correctly after Section 2.
+- `<!-- INJECT_ACTIVITY: quiz-aspect-id -->` — matches `quiz` (aspect identification). Placed correctly after Section 3.
+- `<!-- INJECT_ACTIVITY: match-up-aspect-pairs -->` — matches `match-up` (aspectual pairs). Placed correctly after Section 3.
+- `<!-- INJECT_ACTIVITY: error-correction-aspect -->` — matches `error-correction`. Placed correctly after Section 4.
+- `<!-- INJECT_ACTIVITY: open-writing-yesterday -->` — matches `open-writing`. Placed correctly after Section 4.
+All 6 plan activities are represented, logically spaced, and properly placed after their respective teaching concepts.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Covers all grammar points and sections. However, it replaced the specific "Самоперевірка" tasks (Conjugate *бачити*, forms of *нести*, etc.) with general questions. Word count is ~23% over target (4934 vs 4000). |
-| 2. Linguistic accuracy | 8/10 | Excellent terminology and grammar explanation, but the critical conjugation error "ми... зустрічаються" in the dialogue is a significant slip. |
-| 3. Pedagogical quality | 10/10 | Exceptional explanation of the logic behind aspect (why perfective has no present tense) and the mnemonic for *-ться/-шся*. The "scenery vs plot" metaphor for aspect is very effective for B1. |
-| 4. Vocabulary coverage | 10/10 | All required metalanguage (*дієвідміна*, *тематичний голосний*, *видова пара*) and recommended terms are integrated naturally into the prose. |
-| 5. Exercise quality | 10/10 | Exercises test the specific skills taught (conjugation, aspect identification, error correction) and are placed correctly. Plausible distractors provided in descriptions. |
-| 6. Engagement & tone | 10/10 | Direct, professional, and teacher-like. Avoids generic enthusiasm. Uses concrete cultural anchors (Kyiv cafe). |
-| 7. Structural integrity | 10/10 | All H2 headings match the plan exactly. Clean markdown with no artifacts. |
-| 8. Cultural accuracy | 10/10 | Correct cultural context (Kyiv cafes, students studying in libraries). Decolonized perspective (Ukrainian grammar explained on its own terms). |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural and multi-turn, though the grammar error in the second dialogue slightly impacts the quality score here. |
+| 1. Plan adherence | 10/10 | Every point covered. Ex: the distinction of 1st vs 2nd conjugation, the past tense suffixes, the aspectual pairs (префіксальний, суфіксальний, суплетивні) are all present exactly as planned. |
+| 2. Linguistic accuracy | 9/10 | Generally excellent, but deducted slightly for a few calques and pleonasms ("перевірочне", "співбесідою на роботу", "Англомовні мовці"). |
+| 3. Pedagogical quality | 10/10 | Outstanding PPP flow. The writer expertly links the dialogue back to the grammar concepts: "Згадайте, як Олексій описував своє літо: «Я працював...» Оскільки Олексій — чоловік..." This is textbook-perfect pedagogy. |
+| 4. Vocabulary coverage | 10/10 | All required metalanguage terms from the plan are introduced naturally, bolded, and translated (напр., *дієвідмінювання (conjugation)*, *доконаний вид (perfective aspect)*). |
+| 5. Exercise quality | 10/10 | All 6 injected markers exactly match the plan's type and focus. Placements perfectly follow the conceptual explanations. |
+| 6. Engagement & tone | 10/10 | Natural and encouraging without sounding corporate. The "narrative transformation" example in Section 4 is a brilliant, engaging way to demonstrate aspect. |
+| 7. Structural integrity | 10/10 | The module is well-structured with all H2 headers matching the plan. Word count is 4687, safely exceeding the 4000 target. |
+| 8. Cultural accuracy | 10/10 | Excellent decolonized note: "Відпадіння цього кінцевого приголосного звука є ключовою історичною та морфологічною відмінністю від російської мови, де ця літера неухильно зберігається." |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly natural, context-rich, and perfectly illustrate the grammar points (e.g., the coffee shop catch-up and the exam worry scenario). |
 
 ## Findings
-1. [LINGUISTIC] [critical]
-Location: Section "Дієслова на -ся", Dialogue: "Олена: ... Ми там регулярно зустрічаються з одногрупниками..."
-Issue: Conjugation error. Subject is "Ми" (1st person plural), but the verb "зустрічаються" is 3rd person plural.
-Fix: Change "зустрічаються" to "зустрічаємося".
+[2. Linguistic accuracy] [Critical]
+Location: "поста́вте переві́рочне запитання" and "Перевірочне запитання тут звучить так:"
+Issue: "Перевірочне" is a Russian calque (проверочное). The correct pedagogical term in Ukrainian is "перевірне".
+Fix: Replace "перевірочне" with "перевірне".
 
-2. [PLAN ADHERENCE] [major]
-Location: Section "Підсумок: від знання до вживання", Self-check questions.
-Issue: The plan specified four specific tasks (conjugate *бачити*, forms of *нести*, determine aspect of list, narrate yesterday). The generated content replaced these with four general conceptual questions.
-Fix: Incorporate the plan's specific tasks into the self-check section.
+[2. Linguistic accuracy] [Major]
+Location: "перед важливим і́спитом або складною співбе́сідою на роботу."
+Issue: "Співбесіда на роботу" is a colloquial calque from Russian. Standard phrasing is just "співбесідою" or "співбесідою щодо роботи".
+Fix: Replace "співбе́сідою на роботу" with "співбе́сідою".
+
+[2. Linguistic accuracy] [Minor]
+Location: "Англомо́вні мо́вці часто намага́ються механі́чно перенести́"
+Issue: "Англомовні мовці" is a pleonasm (English-speaking speakers).
+Fix: Replace "Англомо́вні мо́вці" with "Англомо́вні студе́нти".
+
+[2. Linguistic accuracy] [Minor]
+Location: "дієслово в минулому часі — це своєрі́дне дзе́ркало суб'єкта, яке́ відобража́є його ге́ндерну іденти́чність."
+Issue: Using "gender identity" to explain grammatical gender agreement is an unnatural anglicism. The Ukrainian term is "рід".
+Fix: Replace "ге́ндерну іденти́чність" with "рід".
 
 ## Verdict: REVISE
-The module is pedagogically excellent and stylistically very strong. However, it contains a critical grammatical error in a dialogue and deviates from the specific self-check tasks defined in the plan. These must be corrected before shipping.
+The text is exceptionally strong, rich, and pedagogically sound. However, the presence of a few calques (like "перевірочне") constitutes a critical linguistic error in a curriculum, requiring a REVISE verdict to apply deterministic fixes.
 
 <fixes>
-- find: "Ми там регулярно зустрічаються з одногрупниками і готуємося всі разом."
-  replace: "Ми там регулярно зустрічаємося з одногрупниками і готуємося всі разом."
-- find: "Спробуйте абсолютно самостійно дати правильні та точні відповіді на ці чотири ключові запитання, перш ніж читати наші підказки. По-перше: як дуже швидко відрізнити першу **дієвідміну** *(conjugation)* від другої? Відповідь надзвичайно проста: завжди уважно дивіться на **тематичний голосний** *(thematic vowel)* у самих закінченнях. Перша дієвідміна активно використовує літери «е» або «є» («пиш**е**ш», «чита**є**ш»), а друга дієвідміна завжди жорстко вимагає «и» або «ї» («роб**и**ш», «сто**ї**ш»). По-друге: як саме граматично утворюється минулий час виключно для чоловічого роду? Вам потрібно взяти чисту **основу інфінітива** *(infinitive stem)* і просто додати до неї один специфічний **суфікс** *(suffix)* «-в» (наприклад: «чита-ти» миттєво стає «чита-в»). По-третє: чому відоме дієслово «зробити» абсолютно ніколи не має теперішнього часу? Тому що це конкретне слово належить до доконаного виду, який фокусується виключно на фінальному, фіксованому результаті. Ви фізично ніяк не можете мати повністю завершений результат прямо зараз, перебуваючи всередині самого процесу дії. І по-четверте: коли ми обов'язково використовуємо закінчення «-ться», а коли пишемо «-шся»? Завжди орієнтуйтеся на шкільне запитання: якщо ви питаєте «що роби**ть**?», то сміливо пишіть «усміхається» з м'яким знаком. Якщо ваше пряме питання звучить як «що робиш?», тоді пишіть «усміхаєшся» повністю без нього."
-  replace: "Спробуйте абсолютно самостійно виконати ці чотири завдання для самоперевірки. 1. Провідміняйте дієслово **бачити** в теперішньому часі (пам'ятайте про II дієвідміну). 2. Утворіть усі форми минулого часу (чоловічий, жіночий, середній рід та множина) для дієслова **нести**. 3. Визначте час і вид для кожного слова: **гуляв, побачив, шукала, знайшла, працювали**. 4. Спробуйте коротко розповісти про свій вчорашній день, чергуючи доконаний вид (для послідовних подій) і недоконаний вид (для опису тла або тривалих процесів)."
+- find: "поста́вте переві́рочне запитання:"
+  replace: "поста́вте переві́рне запитання:"
+- find: "Перевірочне запитання тут звучить так:"
+  replace: "Переві́рне запитання тут звучить так:"
+- find: "Англомо́вні мо́вці часто намага́ються"
+  replace: "Англомо́вні студе́нти часто намага́ються"
+- find: "яке́ відобража́є його ге́ндерну іденти́чність."
+  replace: "яке́ відобража́є його рід."
+- find: "або складною співбе́сідою на роботу."
+  replace: "або складною співбе́сідою."
 </fixes>

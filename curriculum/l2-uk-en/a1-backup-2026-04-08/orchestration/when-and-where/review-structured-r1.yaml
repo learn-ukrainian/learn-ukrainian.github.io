@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered all sections and dialog structures from the plan. Minor deduction
+    for skipping some recommended vocabulary (`чути`, `розуміти`, `головне`).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Included a factually incorrect absolute rule (`Ukrainian ALWAYS places
+    a comma before що, де, коли when they serve as conjunctions — no exceptions.`).
+    Used a slightly unnatural calque (`добрий час`) a
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of the difference between question words and conjunctions,
+    with very clear examples. Minor deduction for grouping "Скажи" under "Казати"
+    without noting it's a perfective pair, whic
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary (`що, де, коли, знати, думати, казати`) used naturally
+    and repeatedly in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan's `activity_hints` and are placed correctly
+    after the relevant explanations.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The dialogues are highly engaging, featuring named speakers in realistic,
+    highly communicative situations. The tone is encouraging but focused.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean structure, but leaked a generated AI artifact at the bottom of the
+    file (`**Deterministic word count...`).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally neutral and accurate.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are expanded beyond the plan beautifully, creating very natural
+    multi-turn conversations that seamlessly integrate the target grammar.
+findings: []

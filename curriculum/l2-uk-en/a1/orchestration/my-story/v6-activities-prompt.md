@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
+- `<!-- INJECT_ACTIVITY: matching-tense-category -->`
 - `<!-- INJECT_ACTIVITY: fill-in-signal-words -->`
 - `<!-- INJECT_ACTIVITY: ordering-life-events -->`
-- `<!-- INJECT_ACTIVITY: fill-in-biography -->`
-- `<!-- INJECT_ACTIVITY: matching-verb-tense -->`
+- `<!-- INJECT_ACTIVITY: fill-in-biography-combined -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -111,152 +111,151 @@ required:
 <module_content>
 ## Dialogues
 
-Two people meet at a language school in Kyiv. One has lived here for years; the other just arrived. They want to know each other's full story — where they come from, what they do now, and what comes next.
+Learning a language is about connecting with people. You already know how to state simple facts about yourself: your name, your country, and your profession. Now, it is time to move from simple facts to a cohesive narrative. A life story spans across time. You need to talk about where you were born, what you do now, and what you plan for the future. By combining the past, present, and future tenses, you can share your unique journey. 
 
-> **Оксана:** Розкажи про себе! *(Tell me about yourself!)*
-> **Максим:** Я народився в Канаді, у Торонто. *(I was born in Canada, in Toronto.)*
-> **Оксана:** А зараз ти живеш тут? *(And now you live here?)*
-> **Максим:** Так, зараз я живу в Києві. *(Yes, now I live in Kyiv.)*
-> **Оксана:** Чому ти переїхав? *(Why did you move?)*
-> **Максим:** Я хотів вивчати українську. *(I wanted to study Ukrainian.)* Мої бабуся і дідусь з України. *(My grandma and grandpa are from Ukraine.)*
-> **Оксана:** А що ти будеш робити далі? *(And what will you do next?)*
-> **Максим:** Я буду працювати тут і вчити мову. *(I will work here and learn the language.)*
-> **Оксана:** Чудово! Успіхів тобі! *(Wonderful! Best of luck!)*
+When getting to know someone deeply, you will ask about their past and their plans. Read this interview between two friends.
 
-All three tenses appear in this single conversation. **Народився** (was born) — past. **Живу** (live) — present. **Буду працювати** (will work) — future. Maksym moves naturally from his childhood in Canada, through his present life in Kyiv, to his future plans. That is the shape of every life story.
+> **Олег:** **Розкажи про себе!** *(Tell about yourself!)*
+> **Марко:** **Я народився в Канаді, у Торонто.** *(I was born in Canada, in Toronto.)*
+> **Олег:** **А зараз ти живеш тут?** *(And now do you live here?)*
+> **Марко:** **Так, зараз я живу в Києві.** *(Yes, now I live in Kyiv.)*
+> **Олег:** **Чому ти переїхав?** *(Why did you move?)*
+> **Марко:** **Я хотів вивчати українську.** *(I wanted to study Ukrainian.)* **Мої бабуся і дідусь з України.** *(My grandmother and grandfather are from Ukraine.)*
+> **Олег:** **А що ти будеш робити далі?** *(And what will you do next?)*
+> **Марко:** **Я буду працювати тут і вчити мову.** *(I will work here and study the language.)*
+> **Олег:** **Чудово! Успіхів тобі!** *(Wonderful! Success to you!)*
 
-Now hear Anna tell her story — from birth to future dreams.
+Notice how Marko moves smoothly through time. He starts in the past with **народився** (was born). Then, he uses the present tense **живу** (I live) to describe his current situation. Finally, he shifts to the future tense with **буду працювати** (I will work). In just a few sentences, he paints a complete picture of his life using three different grammatical timeframes.
 
-> **Анна:** Я народилася у Львові. *(I was born in Lviv.)* Там я вчилася в школі. *(I studied at school there.)*
-> **Колега:** А потім? *(And then?)*
-> **Анна:** Потім я переїхала в Київ. *(Then I moved to Kyiv.)* Я закінчила університет. *(I finished university.)*
-> **Колега:** А зараз? *(And now?)*
-> **Анна:** Зараз я працюю вчителькою. *(Now I work as a teacher.)* Я живу в центрі міста. *(I live in the city centre.)*
-> **Колега:** А що далі? *(And what's next?)*
-> **Анна:** Я буду подорожувати! *(I will travel!)* Я хочу побачити Японію. *(I want to see Japan.)*
-> **Колега:** І ти будеш вчити японську? *(And you'll learn Japanese?)*
-> **Анна:** Може! Але спочатку — українська для тебе! *(Maybe! But first — Ukrainian for you!)*
+Now, let us read Anna's story. She talks about her education and her career path.
 
-Notice how Anna's story flows: past (**народилася**, **вчилася**, **переїхала**, **закінчила**) → present (**працюю**, **живу**) → future (**буду подорожувати**). The story moves forward in time, just like Maksym's. Past events first, then what is true now, then dreams. That is the shape of every life story in Ukrainian.
+> **Максим:** **Анно, розкажи свою історію.** *(Anna, tell your story.)*
+> **Анна:** **Я народилася у Львові.** *(I was born in Lviv.)* **Там я вчилася в школі.** *(There I studied in school.)*
+> **Максим:** **А університет?** *(And university?)*
+> **Анна:** **Потім я переїхала в Київ і закінчила університет.** *(Then I moved to Kyiv and finished university.)*
+> **Максим:** **Ким ти працюєш?** *(What do you work as?)*
+> **Анна:** **Зараз я працюю вчителькою і живу в центрі міста.** *(Now I work as a teacher and live in the city center.)*
+> **Максим:** **А що далі?** *(And what next?)*
+> **Анна:** **Я буду подорожувати!** *(I will travel!)* **Я хочу побачити Японію.** *(I want to see Japan.)*
+> **Максим:** **І ти будеш вчити японську?** *(And you will study Japanese?)*
+> **Анна:** **Може! Але спочатку — українська для тебе!** *(Maybe! But first — Ukrainian for you!)*
+
+Anna explains her sequence of life events clearly: Birth, School, University, Job, and Future Dream. Because Anna is a woman, she uses feminine past tense endings: **народилася** (was born), **вчилася** (studied), and **переїхала** (moved). Each stage of her life requires a specific grammatical form to show exactly when it happened.
 
 ## Три часи разом (Three Tenses Together)
 
-Every life story has three parts. Here is the scaffold you need:
+To tell your biography, you need a "Time Line" that combines three main structures. First, the Past Tense (**Минулий час**). This uses gendered endings: **-в** for masculine, and **-ла** for feminine. Second, the Present Tense (**Теперішній час**). This uses person endings, like **-ю** or **-єш**. Third, the Compound Future Tense (**Майбутній час**). This uses the auxiliary verb **буду** plus an infinitive. Together, they organize your story.
 
-**МИНУЛИЙ ЧАС** (past tense) — things that already happened:
-- **Я народився** / **народилася** в... *(I was born in...)*
-- **Я жив** / **жила** в... *(I lived in...)*
-- **Я вчився** / **вчилася**... *(I studied...)*
-- **Я працював** / **працювала**... *(I worked...)*
+Let us look at a grandparent telling their life story to their grandchildren. This perfectly demonstrates the Past Tense.
 
-**ТЕПЕРІШНІЙ ЧАС** (present tense) — what is true right now:
-- **Зараз я живу** в... *(Now I live in...)*
-- **Я працюю**... *(I work...)*
-- **Я вивчаю**... *(I study/am learning...)*
-- **Я люблю**... *(I love...)*
+> **Дідусь:** **Я народився в селі.** *(I was born in a village.)*
+> **Онук:** **Там була школа?** *(Was there a school there?)*
+> **Дідусь:** **Так, я ходив у школу.** *(Yes, I went to school.)*
 
-**МАЙБУТНІЙ ЧАС** (future tense) — what will come:
-- **Я буду працювати**... *(I will work...)*
-- **Я буду вивчати**... *(I will study...)*
-- **Я буду жити**... *(I will live...)*
+The verb **народитися** means "to be born". It is almost always used in the past tense. A man says **я народився**, and a woman says **я народилася**. Other key verbs are **жити** (to live) and **вчитися** (to study).
+*   **Він жив у селі.** (He lived in a village.)
+*   **Вона жила у місті.** (She lived in a city.)
+*   **Я вчився в університеті.** (I studied at the university. — masculine)
 
-Look at the past tense forms closely. Gender matters: **-в** for masculine (**я народивСЯ**) and **-ла** for feminine (**я народиЛАся**). Three more pairs: **жив** / **жила**, **вчився** / **вчилася**, **працював** / **працювала**. A man says **я народився**, a woman says **я народилася** — the ending always tells you.
+Next, you ground your story in the present. Use the adverb **зараз** (now) to show you are talking about today. The Present Tense uses endings that match the person speaking.
+*   **Зараз я живу в місті.** (Now I live in a city.)
+*   **Зараз я працюю в лікарні.** (Now I work in a hospital.)
+*   **Я вивчаю українську мову.** (I study the Ukrainian language.)
 
-Signal words are the listener's roadmap. They tell the listener which tense is coming before the verb arrives:
+These actions are happening right now in your timeline. 
 
-**Past signals:** **раніше** (before/earlier), **у дитинстві** (in childhood), **тоді** (back then).
-**Present signals:** **зараз** (now), **сьогодні** (today), **цього року** (this year).
-**Future signals:** **потім** (then/later), **далі** (further/next), **наступного року** (next year), **скоро** (soon).
+Finally, you look forward. The Future Tense describes your plans and dreams. Use the words **потім** (then) and **далі** (further) to signal a shift into the future. Form the future by taking **буду** (I will) and adding an infinitive verb.
+*   **Потім я буду жити в Одесі.** (Then I will live in Odesa.)
+*   **Далі ми будемо подорожувати.** (Further we will travel.)
+*   **Я буду відпочивати на дачі.** (I will rest at the dacha.)
 
-Compare this pair: **Раніше я жив у Канаді** *(Before, I lived in Canada)* vs. **Зараз я живу в Україні** *(Now I live in Ukraine)*. Same verb root **жи-**, opposite tense, different signal word. The signal word does the work.
+Signal words are crucial. They tell the listener which tense is coming before you even say the verb. Here is a table of the most important signal words for your life story:
 
-Ukrainian speakers use **А потім...** *(And then...)* to move from past to present and **А далі...** *(And next...)* to move from present to future. These two phrases are the hinges of every life story. Try it: **Я народився в Одесі. А потім я переїхав у Київ. А далі — я буду подорожувати!** *(I was born in Odesa. And then I moved to Kyiv. And next — I will travel!)*
+| Signal Word | Meaning | Tense Trigger |
+| :--- | :--- | :--- |
+| **раніше** | before / earlier | Past |
+| **у дитинстві** | in childhood | Past |
+| **коли я був маленьким** | when I was little (masc) | Past |
+| **зараз** | now | Present |
+| **сьогодні** | today | Present |
+| **цього року** | this year | Present |
+| **потім** | then | Future |
+| **далі** | further / next | Future |
+| **наступного року** | next year | Future |
+
+If you start a sentence with **раніше**, your listener automatically expects a past tense verb.
+
+<!-- INJECT_ACTIVITY: matching-tense-category -->
 
 <!-- INJECT_ACTIVITY: fill-in-signal-words -->
 
 ## Моя історія (My Story)
 
-Now read a full model story. Taras is a programmer from Odesa who moved to Kyiv. Read his story and notice how all three tenses flow together naturally.
+Now, read a complete model story. This is Taras's life. Notice how he connects simple sentences into a full biography.
 
-:::note
-**Тарас розповідає** *(Taras tells his story)*
+*   **Я народився в Одесі у тисяча дев'ятсот дев'яносто п'ятому році.** (I was born in Odesa in nineteen ninety-five.)
+*   **Я жив там з батьками і сестрою.** (I lived there with parents and sister.)
+*   **Я ходив у школу і любив математику.** (I went to school and loved math.)
+*   **Потім я переїхав у Київ і вчився в університеті.** (Then I moved to Kyiv and studied in the university.)
+*   **Зараз я живу в Києві.** (Now I live in Kyiv.)
+*   **Я працюю програмістом.** (I work as a programmer.)
+*   **Я люблю свою роботу.** (I love my work.)
+*   **У вільний час я граю у футбол і читаю книжки.** (In free time I play football and read books.)
+*   **Далі я буду подорожувати.** (Next I will travel.)
+*   **Я буду вивчати англійську.** (I will study English.)
+*   **І я буду жити в Києві — це моє місто!** (And I will live in Kyiv — this is my city!)
 
-**Я народився в Одесі.** *(I was born in Odesa.)* **Я жив там з батьками і сестрою.** *(I lived there with my parents and sister.)* **У дитинстві я ходив у школу.** *(In childhood I went to school.)* **Я любив математику.** *(I loved maths.)* **Потім я переїхав у Київ.** *(Then I moved to Kyiv.)* **Я вчився в університеті.** *(I studied at university.)*
+Taras's story uses a clear structure taught in Ukrainian schools. It has three parts. First is the **Зачин** (Introduction) — he states his birth and childhood. Second is the **Основна частина** (Main Part) — he describes his current life, job, and hobbies. Third is the **Кінцівка** (Conclusion) — he shares his future plans and his feelings about his city.
 
-**Зараз я живу в Києві.** *(Now I live in Kyiv.)* **Я працюю програмістом.** *(I work as a programmer.)* **Я люблю свою роботу.** *(I love my job.)* **На дозвіллі я граю у футбол.** *(In my free time I play football.)* **Я читаю книжки.** *(I read books.)*
+A key verb for storytelling is **переїхати** (to move). It acts as a bridge between locations and times in your life. Another important verb is **закінчити** (to finish / to graduate). When you talk about the future, you can mention a **мрія** (dream). Using **переїхати** physically changes the setting of your narrative from your past home to your present home.
 
-**Далі я буду подорожувати.** *(Next I will travel.)* **Я буду вивчати англійську.** *(I will study English.)* **І я буду жити в Києві.** *(And I will live in Kyiv.)* **Це моє місто!** *(This is my city!)*
-:::
+Now it is your turn to tell your story. You will write a short biography of 8 to 10 sentences. Follow these steps. Start with the past. Use these sentence starters:
+*   **Я народився в...** (I was born in...) or **Я народилася в...** (for women).
+*   **Я жив у...** (I lived in...) or **Я жила у...**
+*   **Я вчився в...** (I studied in...) or **Я вчилася в...**
+*   **Я працював...** (I worked...) or **Я працювала...**
 
-The tense shifts are clear. Past verbs: **народився**, **жив**, **ходив**, **любив**, **переїхав**, **вчився**. Present verbs: **живу**, **працюю**, **люблю**, **граю**, **читаю**. Future constructions: **буду подорожувати**, **буду вивчати**, **буду жити**. Each block has its own signal word: **у дитинстві** and **потім** for the past, **зараз** for the present, **далі** for the future.
+Then, move to the present.
+*   **Зараз я живу в...** (Now I live in...)
+*   **Я працюю...** (I work...)
+*   **Я вивчаю українську...** (I study Ukrainian...)
+
+Finally, finish with the future.
+*   **Далі я буду...** (Next I will...)
+*   **Я хочу...** (I want...)
+
+Use at least three past verbs, three present verbs, and three future constructions.
 
 <!-- INJECT_ACTIVITY: ordering-life-events -->
 
-Now your turn. Tell YOUR story using the same scaffold:
-
-**Past** — start with: **Я народився** / **народилася** в [місто/країна]. Then add: **Я жив/жила...** **Я вчився/вчилася...** Use at least three past verbs with the correct gender ending (**-в** or **-ла**).
-
-**Present** — shift with **зараз**: **Зараз я живу...** **Я працюю...** **Я вивчаю українську.** Why are you learning? **Я вивчаю українську, тому що...** *(I'm studying Ukrainian because...)*
-
-**Future** — shift with **далі**: **Я буду...** **Я хочу...** Use at least three **буду** + infinitive constructions.
-
-Target: 8–10 sentences. Use **раніше** / **зараз** / **далі** to signal each tense shift.
-
-<!-- INJECT_ACTIVITY: fill-in-biography -->
+<!-- INJECT_ACTIVITY: fill-in-biography-combined -->
 
 ## Summary
 
-Three tenses — three patterns. Here they are side by side.
+You can now tell a complete life story. The three-tense system is your timeline. Here is a final recap:
 
-**Минулий час** (past tense) — add **-в** (masculine), **-ла** (feminine), **-ло** (neuter), or **-ли** (plural) to the verb stem:
-- **народи-в** / **народи-ла** *(was born)*
-- **жи-в** / **жи-ла** *(lived)*
-- **вчи-в-ся** / **вчи-ла-ся** *(studied)*
+| Tense | Form | Example |
+| :--- | :--- | :--- |
+| **Минулий** (Past) | **-в** (m), **-ла** (f), **-ли** (pl) | **Я народився.** (I was born.) / **Я жила.** (I lived.) |
+| **Теперішній** (Present) | **-ю**, **-єш**, **-є** (person endings) | **Я живу.** (I live.) / **Ти працюєш.** (You work.) |
+| **Майбутній** (Future) | **буду**, **будеш**, **буде** + infinitive | **Я буду працювати.** (I will work.) |
 
-**Теперішній час** (present tense) — person endings:
-- **я живу**, **ти живеш**, **він/вона живе**
-- **ми живемо**, **ви живете**, **вони живуть**
+Let us check your core vocabulary for this module. You need these eight words to narrate your journey:
+*   **народитися** (to be born): **Я народився в Америці.** (I was born in America.)
+*   **жити** (to live): **Ми живемо в місті.** (We live in the city.)
+*   **вчитися** (to study): **Вона вчиться в школі.** (She studies at school.)
+*   **переїхати** (to move): **Я хочу переїхати в Україну.** (I want to move to Ukraine.)
+*   **зараз** (now): **Зараз він працює.** (Now he is working.)
+*   **раніше** (before / earlier): **Раніше я жив там.** (Before I lived there.)
+*   **далі** (further / next): **Що ти будеш робити далі?** (What will you do next?)
+*   **розповідати** (to tell / narrate): **Я люблю розповідати історії.** (I love to tell stories.)
 
-**Майбутній час** (future tense) — **буду** + infinitive:
-- **я буду подорожувати** *(I will travel)*
-- **ти будеш працювати** *(you will work)*
-- **він/вона буде вивчати** *(he/she will study)*
-
-At A1, future tense always uses **буду** + infinitive — never a single conjugated form.
-
-**Signal words — quick reference:**
-
-**МИНУЛИЙ:** **раніше** *(earlier)*, **у дитинстві** *(in childhood)*, **тоді** *(back then)*, **потім** *(then, narrating past sequence)*.
-**ТЕПЕРІШНІЙ:** **зараз** *(now)*, **сьогодні** *(today)*, **цього року** *(this year)*.
-**МАЙБУТНІЙ:** **далі** *(next)*, **потім** *(then, pointing forward)*, **наступного року** *(next year)*, **скоро** *(soon)*.
-
-:::tip
-The word **потім** can signal a past sequence OR a future plan — context tells you which!
-:::
-
-**Life story vocabulary** — words every story needs:
-
-- **народитися** *(to be born)* — я народився / народилася
-- **жити** *(to live)* — я жив / жила / живу / буду жити
-- **вчитися** *(to study)* — я вчився / вчилася / буду вчитися
-- **переїхати** *(to move/relocate)* — я переїхав / переїхала
-- **подорожувати** *(to travel)* — я буду подорожувати
-- **закінчити** *(to finish/graduate)* — я закінчив / закінчила
-- **розповідати** *(to tell/narrate)* — я розповідаю / буду розповідати
-
-<!-- INJECT_ACTIVITY: matching-verb-tense -->
-
-## Підсумок
-
-Check yourself against these five questions:
-
-- Can you say where you were born? (**Я народився/народилася в...**)
-- Can you describe where you live NOW? (**Зараз я живу в...**)
-- Can you say THREE things you did in the past? (use **-в/-ла** forms)
-- Can you say TWO things you plan to do? (use **буду** + infinitive)
-- Can you tell your whole story in 8 sentences, using signal words **раніше** / **зараз** / **далі**?
-
-If you answered yes to all five — you can tell your life story in Ukrainian. **Я народився, я живу, я буду...** — your story has all three tenses. **Успіхів!** *(Best of luck!)*
+Before you finish this module, use this self-check checklist:
+*   Can you state where you were born using the correct gender agreement (**народився** or **народилася**)?
+*   Can you use the word **зараз** to describe your current job or study?
+*   Can you list two things you will do next year using **буду**?
+*   Do you know the difference between **раніше** (before) and **потім** (then)?
+*   Have you written your own 8-10 sentence narrative using all three tenses?
 
 </module_content>
 
@@ -346,30 +345,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -389,36 +428,58 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-vocabulary
-- **match-up** — Слово → переклад: Match Ukrainian words to English translations
-- **fill-in** — Вставте слово: Fill in the missing word from context
-- **anagram** — Склади слово: Rearrange letters to form the target word
-- **odd-one-out** — Четверте зайве: Pick the word that doesn't belong to the semantic group
-- **translate** — Оберіть переклад: Choose correct translation from options
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -450,68 +511,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

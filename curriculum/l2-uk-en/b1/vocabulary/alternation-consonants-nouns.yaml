@@ -1,4 +1,58 @@
 vocabulary:
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: при́голосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: голосні́
+  translation: vowels
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ко́рінь
+  translation: root
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: закі́нчення
+  translation: ending
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: задньоязико́вий
+  translation: velar
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: палаталіза́ція
+  translation: palatalization
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пе́рша палаталіза́ція
+  translation: first palatalization
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дру́га палаталіза́ція
+  translation: second palatalization
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
 - word: шипля́чий
   translation: hushing consonant
   expression: false
@@ -17,6 +71,72 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
+- word: кли́чний відмі́нок
+  translation: vocative case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: дава́льний відмі́нок
+  translation: dative case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: місце́вий відмі́нок
+  translation: locative case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: називни́й відмі́нок
+  translation: nominative case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: родо́ви́й відмі́нок
+  translation: genitive case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ору́дний відмі́нок
+  translation: instrumental case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відмі́на
+  translation: declension class
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тверда́ гру́па
+  translation: hard group
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: м'яка́ гру́па
+  translation: soft group
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: мі́шана гру́па
+  translation: mixed group
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
 - word: прислі́в'я
   translation: proverb
   expression: false
@@ -53,188 +173,80 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: чергува́ння
-  translation: alternation
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: при́голосний
-  translation: consonant
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: палаталіза́ція
-  translation: palatalization
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кличний відмінок
-  translation: vocative case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: давальний відмінок
-  translation: dative case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: місцевий відмінок
-  translation: locative case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: задньоязико́вий
-  translation: velar
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: відмі́на
-  translation: declension class
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: тверда група
-  translation: hard group
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: м'яка група
-  translation: soft group
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: мішана група
-  translation: mixed group
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: закі́нчення
-  translation: ending
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: зверта́ння
   translation: form of address
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: ко́рінь
-  translation: root
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: книга́рня
-  translation: bookstore
+- word: ка́лька
+  translation: calque
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: осно́ва
-  translation: stem (linguistic)
+- word: ідіо́ма
+  translation: idiom
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: перша палаталізація
-  translation: first palatalization
-  expression: true
+- word: вла́сна на́зва
+  translation: proper name
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: друга палаталізація
-  translation: second palatalization
-  expression: true
+  verified: false
+- word: голосни́й пере́днього ря́ду
+  translation: front vowel
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: пестли́вість
-  translation: affection / endearment
+  verified: false
+- word: типова па́стка
+  translation: common pitfall
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: самопере́ві́рка
+  translation: self-check
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: зменшувальність
-  translation: diminutiveness
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: прикме́тник
-  translation: adjective
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: дієвідмі́нювання
-  translation: verb conjugation
+- word: дієсло́во
+  translation: verb
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: інфініти́в
-  translation: infinitive
+- word: іме́нник
+  translation: noun
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: неісто́та
-  translation: inanimate object
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: прийме́нник
-  translation: preposition
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: власна назва
-  translation: proper name
+- word: Терпи, козаче, отаманом будеш
+  translation: Be patient, Cossack, you will be an ataman
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: топо́нім
-  translation: toponym
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Яка гарна книжка!
-  translation: What a beautiful book!
+- word: Що на умі, те й на язиці
+  translation: What is on the mind is on the tongue
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: на місці
-  translation: on the spot / there
+- word: Привіт, Олеже!
+  translation: Hi, Oleh!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: О мій Боже!
-  translation: Oh my God!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: на другому поверсі
-  translation: on the second floor
+- word: Добрий день, друже!
+  translation: Good day, friend!
   expression: true
   pos: ''
   gender: ''

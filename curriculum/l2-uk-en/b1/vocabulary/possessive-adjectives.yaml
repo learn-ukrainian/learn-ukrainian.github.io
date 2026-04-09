@@ -1,0 +1,265 @@
+vocabulary:
+- word: браті́в
+  translation: brother's
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: учителі́в
+  translation: teacher's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Пе́трів
+  translation: Petro's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Марі́їн
+  translation: Mariya's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Олексі́їв
+  translation: Oleksiy's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: непрямий відмінок
+  translation: oblique case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: коротка форма
+  translation: short form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: присві́йний
+  translation: possessive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нале́жність
+  translation: belonging
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́терин
+  translation: mother's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сестри́н
+  translation: sister's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бабу́син
+  translation: grandmother's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дідусі́в
+  translation: grandfather's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Шевче́нків
+  translation: Shevchenko's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Ле́син
+  translation: Lesya's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Франкі́в
+  translation: Franko's
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відмі́на
+  translation: declension class
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спа́дщина
+  translation: heritage
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тво́рчість
+  translation: creative work
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пое́зія
+  translation: poetry
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чий?
+  translation: whose?
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: присвійні прикметники
+  translation: possessive adjectives
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якісні прикметники
+  translation: qualitative adjectives
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відносні прикметники
+  translation: relative adjectives
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: присвійні займенники
+  translation: possessive pronouns
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ху́стка
+  translation: headscarf
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: окуля́ри
+  translation: glasses
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Андрі́їв
+  translation: Andriy's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Сергіїв
+  translation: Serhiy's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Ю́ріїв
+  translation: Yuriy's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Ольжин
+  translation: Olha's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Оленчин
+  translation: Olenka's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ті́тчин
+  translation: aunt's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: доччи́н
+  translation: daughter's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Ната́лчин
+  translation: Natalka's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Софі́їн
+  translation: Sofiya's
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: мату́син
+  translation: mommy's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: подру́жин
+  translation: friend's
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: пестлива форма
+  translation: diminutive form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: змішане відмінювання
+  translation: mixed declension
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: повна форма
+  translation: full form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ахіллесова п'ята
+  translation: Achilles' heel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: піфагорова теорема
+  translation: Pythagorean theorem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

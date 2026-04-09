@@ -1,26 +1,82 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 55,
+  "grounded_items": 44,
+  "ungrounded": [
+    {
+      "word": "змінюється",
+      "exercise_type": "group-sort",
+      "context": "Змінюється (-у/-ю)",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "group-sort",
+      "context": "Не змінюється",
+      "role": "context"
+    },
+    {
+      "word": "м'ясо",
+      "exercise_type": "group-sort",
+      "context": "м'ясо",
+      "role": "answer"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'суп' змінюється на 'супу' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "суп'",
+      "exercise_type": "true-false",
+      "context": "Слово 'суп' змінюється на 'супу' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "супу'",
+      "exercise_type": "true-false",
+      "context": "Слово 'суп' змінюється на 'супу' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "знахідному",
+      "exercise_type": "true-false",
+      "context": "Слово 'суп' змінюється на 'супу' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Слово 'суп' змінюється на 'супу' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "кава'",
+      "exercise_type": "true-false",
+      "context": "Слово 'кава' змінюється на 'каву' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "каву'",
+      "exercise_type": "true-false",
+      "context": "Слово 'кава' змінюється на 'каву' у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "україні",
+      "exercise_type": "true-false",
+      "context": "В Україні суп п'ють, а не їдять.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "воду",
-      "каву",
-      "картоплю",
-      "кашу",
-      "п'ю",
-      "п'ють",
-      "п'є",
       "пити",
-      "рибу",
       "сметану",
-      "їдять",
-      "їм",
-      "їсти",
-      "їсть"
+      "їсти"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,0 +1,376 @@
+version: '1.0'
+module: i-eat-i-drink
+level: a1
+inline:
+- id: fill-in-conjugation
+  type: fill-in
+  instruction: Вставте правильну форму дієслова (Fill in the correct verb form)
+  items:
+  - sentence: Я ____ суп.
+    answer: їм
+    options:
+    - їм
+    - їсть
+    - їдять
+    - їси
+    - їмо
+    - їсте
+  - sentence: Ми ____ чай.
+    answer: п'ємо
+    options:
+    - п'ємо
+    - п'є
+    - п'ють
+    - п'єш
+    - п'єте
+    - п'ю
+  - sentence: Вона ____ хліб.
+    answer: їсть
+    options:
+    - їсть
+    - їм
+    - їдять
+    - їси
+    - їмо
+    - їсте
+  - sentence: Вони ____ воду.
+    answer: п'ють
+    options:
+    - п'ють
+    - п'ємо
+    - п'є
+    - п'єш
+    - п'єте
+    - п'ю
+  - sentence: Ти ____ рибу?
+    answer: їси
+    options:
+    - їси
+    - їм
+    - їсть
+    - їдять
+    - їмо
+    - їсте
+  - sentence: Ви ____ каву?
+    answer: п'єте
+    options:
+    - п'єте
+    - п'ємо
+    - п'є
+    - п'єш
+    - п'ють
+    - п'ю
+  - sentence: Він ____ сік.
+    answer: п'є
+    options:
+    - п'є
+    - п'ю
+    - п'єш
+    - п'ємо
+    - п'єте
+    - п'ють
+  - sentence: Вони ____ кашу.
+    answer: їдять
+    options:
+    - їдять
+    - їсть
+    - їм
+    - їси
+    - їмо
+    - їсте
+- id: fill-in-accusative
+  type: fill-in
+  instruction: Вставте правильну форму іменника (Fill in the correct noun form)
+  items:
+  - sentence: Я їм ____. (риба)
+    answer: рибу
+    options:
+    - рибу
+    - риба
+    - рибі
+  - sentence: Вона п'є ____. (вода)
+    answer: воду
+    options:
+    - воду
+    - вода
+    - воді
+  - sentence: Він їсть ____. (хліб)
+    answer: хліб
+    options:
+    - хліб
+    - хліба
+    - хлібу
+  - sentence: Ми п'ємо ____. (молоко)
+    answer: молоко
+    options:
+    - молоко
+    - молока
+    - молоку
+  - sentence: Вони їдять ____. (каша)
+    answer: кашу
+    options:
+    - кашу
+    - каша
+    - каші
+  - sentence: Ти п'єш ____. (кава)
+    answer: каву
+    options:
+    - каву
+    - кава
+    - каві
+  - sentence: Я їм ____. (суп)
+    answer: суп
+    options:
+    - суп
+    - супу
+    - супом
+  - sentence: Вона їсть ____. (картопля)
+    answer: картоплю
+    options:
+    - картоплю
+    - картопля
+    - картоплі
+- id: quiz-accusative
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Я п'ю ___
+    options:
+    - каву
+    - кава
+    - кави
+    correct: 0
+  - question: Він їсть ___
+    options:
+    - риба
+    - рибу
+    - рибі
+    correct: 1
+  - question: Ми п'ємо ___
+    options:
+    - соком
+    - соку
+    - сік
+    correct: 2
+  - question: Вона їсть ___
+    options:
+    - м'ясу
+    - м'ясо
+    - м'яса
+    correct: 1
+  - question: Вони п'ють ___
+    options:
+    - вода
+    - воді
+    - воду
+    correct: 2
+  - question: Ти їси ___
+    options:
+    - каша
+    - каші
+    - кашу
+    correct: 2
+- id: group-sort-accusative
+  type: group-sort
+  instruction: Розподіліть слова за групами (Sort words into groups)
+  groups:
+  - label: Змінюється (-у / -ю)
+    items:
+    - кава
+    - вода
+    - риба
+    - каша
+    - картопля
+    - сметана
+  - label: Не змінюється (як у називному)
+    items:
+    - хліб
+    - сік
+    - молоко
+    - м'ясо
+    - суп
+    - яйце
+workbook:
+- type: match-up
+  instruction: З'єднайте займенник із правильною формою дієслова їсти (Match each
+    pronoun to the correct form of їсти)
+  pairs:
+  - left: я
+    right: їм
+  - left: ти
+    right: їси
+  - left: він / вона
+    right: їсть
+  - left: ми
+    right: їмо
+  - left: ви
+    right: їсте
+  - left: вони
+    right: їдять
+- type: match-up
+  instruction: З'єднайте займенник із правильною формою дієслова пити (Match each
+    pronoun to the correct form of пити)
+  pairs:
+  - left: я
+    right: п'ю
+  - left: ти
+    right: п'єш
+  - left: він / вона
+    right: п'є
+  - left: ми
+    right: п'ємо
+  - left: ви
+    right: п'єте
+  - left: вони
+    right: п'ють
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Я п'ю кава.
+    error: кава
+    correction: каву
+    error_type: word
+    options:
+    - каву
+    - кавою
+    - кави
+    explanation: 'After п''ю the noun must be in the accusative case. Feminine nouns
+      ending in -а change to -у: кава → каву.'
+  - sentence: Він їсть рибі.
+    error: рибі
+    correction: рибу
+    error_type: word
+    options:
+    - рибу
+    - риби
+    - рибою
+    explanation: Accusative of риба (feminine -а) is рибу. Рибі is the dative case.
+  - sentence: Ми п'ємо воді.
+    error: воді
+    correction: воду
+    error_type: word
+    options:
+    - воду
+    - води
+    - водою
+    explanation: Accusative of вода (feminine -а) is воду. Воді is the dative/locative
+      case.
+  - sentence: Вона їсть картопля.
+    error: картопля
+    correction: картоплю
+    error_type: word
+    options:
+    - картоплю
+    - картоплі
+    - картоплею
+    explanation: Accusative of картопля (feminine -я) is картоплю. The nominative
+      form cannot follow їсть.
+  - sentence: Вони п'ють кави.
+    error: кави
+    correction: каву
+    error_type: word
+    options:
+    - каву
+    - каво
+    - кавою
+    explanation: Accusative of кава is каву. Кави is the genitive case.
+  - sentence: Я їм м'ясу.
+    error: м'ясу
+    correction: м'ясо
+    error_type: word
+    options:
+    - м'ясо
+    - м'яса
+    - м'ясом
+    explanation: М'ясо is a neuter noun — it does not change in the accusative case.
+      М'ясу is the dative case.
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Олег їсть кашу на сніданок.
+    correct: true
+    explanation: 'Correct! Олег says: Я їм кашу і п''ю каву.'
+  - statement: Олег п'є чай.
+    correct: false
+    explanation: 'No — Олег п''є каву. It is Олена who drinks tea: Вона їсть хліб
+      з маслом і п''є чай.'
+  - statement: Олена їсть яйця.
+    correct: false
+    explanation: 'No — Вона їсть хліб з маслом. The children eat eggs: Вони їдять
+      яйця.'
+  - statement: Діти п'ють молоко.
+    correct: true
+    explanation: Correct! Вони їдять яйця і п'ють молоко.
+  - statement: Колеги їдять суп і салат на обід.
+    correct: true
+    explanation: Correct! Ми їмо суп і салат.
+  - statement: Колеги п'ють каву на обід.
+    correct: false
+    explanation: No — Ми п'ємо воду або сік. Coffee was at breakfast.
+- type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  items:
+  - words:
+    - їм
+    - Я
+    - рибу
+    correct_order:
+    - Я
+    - їм
+    - рибу
+  - words:
+    - п'є
+    - каву
+    - Вона
+    correct_order:
+    - Вона
+    - п'є
+    - каву
+  - words:
+    - їдять
+    - кашу
+    - Вони
+    correct_order:
+    - Вони
+    - їдять
+    - кашу
+  - words:
+    - воду
+    - Ми
+    - п'ємо
+    correct_order:
+    - Ми
+    - п'ємо
+    - воду
+  - words:
+    - хліб
+    - Він
+    - їсть
+    correct_order:
+    - Він
+    - їсть
+    - хліб
+  - words:
+    - п'єш
+    - Ти
+    - сік
+    correct_order:
+    - Ти
+    - п'єш
+    - сік
+  - words:
+    - картоплю
+    - їсте
+    - Ви
+    correct_order:
+    - Ви
+    - їсте
+    - картоплю
+  - words:
+    - молоко
+    - Вони
+    - п'ють
+    correct_order:
+    - Вони
+    - п'ють
+    - молоко

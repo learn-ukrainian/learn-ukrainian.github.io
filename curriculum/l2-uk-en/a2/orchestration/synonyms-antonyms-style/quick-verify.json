@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 3/10 required vocab: зменшувальний (diminutive), образний (figurative, expressive), ласкавий (tender, affectionate)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-08T17:50:15.358859+00:00"
+}

@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text follows the content outline meticulously, quoting the exact textbooks
+    requested. Deducted slightly for deviating from the strict `activity_hints` count.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contains colloquial calques ("давайте") and uses 4 vocabulary words absent
+    from VESUM ("прийом", "розстановки", "протиріччя", "парковці").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The explanation of stylistic tools like asyndeton
+    vs. polysyndeton with Shevchenko's quote is deeply insightful.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required vocabulary (однорідний, сполучник, єднальний) is integrated smoothly
+    into the prose without relying on bare lists.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Marker management is flawed. Generated 4 extraneous markers ("fill-in-generalizing",
+    etc.), altered standard IDs, and misplaced the `quiz` activity block.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teaching persona. Authoritative, encouraging, and highly conversational
+    without gamified language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean structure and Markdown. Word count of 4999 comfortably exceeds the
+    4000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally sound. Features proper literary citations and realistic dialogue.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between Ірина and Дмитро seamlessly models standard Ukrainian
+    travel planning while naturally utilizing target conjunctions.
+findings: []

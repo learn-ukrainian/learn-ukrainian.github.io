@@ -1,28 +1,147 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 72,
+  "grounded_items": 50,
+  "ungrounded": [
+    {
+      "word": "ти",
+      "exercise_type": "fill-in",
+      "context": "— Чому ти любиш літо? — Тому що влітку _____.",
+      "role": "context"
+    },
+    {
+      "word": "любиш",
+      "exercise_type": "fill-in",
+      "context": "— Чому ти любиш літо? — Тому що влітку _____.",
+      "role": "context"
+    },
+    {
+      "word": "так",
+      "exercise_type": "fill-in",
+      "context": "— _____ сьогодні йде дощ? — Так, і дуже холодно.",
+      "role": "context"
+    },
+    {
+      "word": "мокро",
+      "exercise_type": "match-up",
+      "context": "холодно і мокро",
+      "role": "context"
+    },
+    {
+      "word": "зима",
+      "exercise_type": "match-up",
+      "context": "зима",
+      "role": "context"
+    },
+    {
+      "word": "тридцять",
+      "exercise_type": "match-up",
+      "context": "плюс тридцять",
+      "role": "answer"
+    },
+    {
+      "word": "часто",
+      "exercise_type": "fill-in",
+      "context": "Взимку часто _____.",
+      "role": "context"
+    },
+    {
+      "word": "п'ять",
+      "exercise_type": "unjumble",
+      "context": "п'ять",
+      "role": "answer"
+    },
+    {
+      "word": "коли",
+      "exercise_type": "true-false",
+      "context": "Коли плюс тридцять градусів, дуже спекотно.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'погода' — це чоловічий рід.",
+      "role": "context"
+    },
+    {
+      "word": "погода'",
+      "exercise_type": "true-false",
+      "context": "Слово 'погода' — це чоловічий рід.",
+      "role": "context"
+    },
+    {
+      "word": "чоловічий",
+      "exercise_type": "true-false",
+      "context": "Слово 'погода' — це чоловічий рід.",
+      "role": "context"
+    },
+    {
+      "word": "рід",
+      "exercise_type": "true-false",
+      "context": "Слово 'погода' — це чоловічий рід.",
+      "role": "context"
+    },
+    {
+      "word": "ми",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'іде дощ', коли бачимо дощ.",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'іде дощ', коли бачимо дощ.",
+      "role": "context"
+    },
+    {
+      "word": "дощ'",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'іде дощ', коли бачимо дощ.",
+      "role": "context"
+    },
+    {
+      "word": "бачимо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'іде дощ', коли бачимо дощ.",
+      "role": "context"
+    },
+    {
+      "word": "був",
+      "exercise_type": "error-correction",
+      "context": "Вчора був холодно.",
+      "role": "context"
+    },
+    {
+      "word": "потрібне",
+      "exercise_type": "error-correction",
+      "context": "потрібне",
+      "role": "answer"
+    },
+    {
+      "word": "потрібен",
+      "exercise_type": "error-correction",
+      "context": "На вулиці холодно, потрібен сонце.",
+      "role": "context"
+    },
+    {
+      "word": "сезони",
+      "exercise_type": "group-sort",
+      "context": "Сезони (Seasons)",
+      "role": "context"
+    },
+    {
+      "word": "час",
+      "exercise_type": "group-sort",
+      "context": "Час (Time)",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "вчора",
-      "вітер",
       "градус",
-      "дощ",
-      "завтра",
-      "погода",
-      "прохолодно",
-      "сніг",
-      "сонце",
-      "сонячно",
-      "спекотно",
-      "сьогодні",
-      "тепло",
-      "хмарно",
-      "холодно",
       "ясно"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

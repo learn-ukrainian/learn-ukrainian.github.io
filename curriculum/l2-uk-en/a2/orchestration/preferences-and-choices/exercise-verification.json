@@ -1,0 +1,291 @@
+{
+  "total_items": 173,
+  "grounded_items": 128,
+  "ungrounded": [
+    {
+      "word": "поїхати",
+      "exercise_type": "quiz",
+      "context": "Вона _____ поїхати в гори, а не на море.",
+      "role": "context"
+    },
+    {
+      "word": "гори",
+      "exercise_type": "quiz",
+      "context": "Вона _____ поїхати в гори, а не на море.",
+      "role": "context"
+    },
+    {
+      "word": "море",
+      "exercise_type": "quiz",
+      "context": "Вона _____ поїхати в гори, а не на море.",
+      "role": "context"
+    },
+    {
+      "word": "десерт",
+      "exercise_type": "quiz",
+      "context": "Що ти _____ на десерт: торт чи морозиво?",
+      "role": "context"
+    },
+    {
+      "word": "торт",
+      "exercise_type": "quiz",
+      "context": "Що ти _____ на десерт: торт чи морозиво?",
+      "role": "context"
+    },
+    {
+      "word": "морозиво",
+      "exercise_type": "quiz",
+      "context": "Що ти _____ на десерт: торт чи морозиво?",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "quiz",
+      "context": "Він _____ залишитися вдома і читати книгу.",
+      "role": "context"
+    },
+    {
+      "word": "їм",
+      "exercise_type": "quiz",
+      "context": "Їм більше _____ дивитися комедії, ніж драми.",
+      "role": "context"
+    },
+    {
+      "word": "комедії",
+      "exercise_type": "quiz",
+      "context": "Їм більше _____ дивитися комедії, ніж драми.",
+      "role": "context"
+    },
+    {
+      "word": "драми",
+      "exercise_type": "quiz",
+      "context": "Їм більше _____ дивитися комедії, ніж драми.",
+      "role": "context"
+    },
+    {
+      "word": "сніданок",
+      "exercise_type": "quiz",
+      "context": "На сніданок я зазвичай _____ вівсянку.",
+      "role": "context"
+    },
+    {
+      "word": "вівсянку",
+      "exercise_type": "quiz",
+      "context": "На сніданок я зазвичай _____ вівсянку.",
+      "role": "context"
+    },
+    {
+      "word": "таксі",
+      "exercise_type": "quiz",
+      "context": "Ми _____ піти пішки, а не їхати на таксі.",
+      "role": "context"
+    },
+    {
+      "word": "оптимісткою",
+      "exercise_type": "fill-in",
+      "context": "оптимісткою",
+      "role": "answer"
+    },
+    {
+      "word": "погода",
+      "exercise_type": "fill-in",
+      "context": "Мені _____, що завтра буде хороша погода.",
+      "role": "context"
+    },
+    {
+      "word": "переможемо",
+      "exercise_type": "fill-in",
+      "context": "Він переконаний, _____ ми переможемо.",
+      "role": "context"
+    },
+    {
+      "word": "офіційно",
+      "exercise_type": "match-up",
+      "context": "Коли ви повністю підтримуєте ідею (офіційно)",
+      "role": "answer"
+    },
+    {
+      "word": "емоційно",
+      "exercise_type": "match-up",
+      "context": "Коли ви абсолютно впевнені (емоційно)",
+      "role": "answer"
+    },
+    {
+      "word": "правий",
+      "exercise_type": "match-up",
+      "context": "Коли ви хочете сказати, що співрозмовник правий",
+      "role": "answer"
+    },
+    {
+      "word": "вважаєте",
+      "exercise_type": "match-up",
+      "context": "Коли ви вважаєте, що людина дуже помиляється",
+      "role": "answer"
+    },
+    {
+      "word": "людина",
+      "exercise_type": "match-up",
+      "context": "Коли ви вважаєте, що людина дуже помиляється",
+      "role": "answer"
+    },
+    {
+      "word": "погоджуєтеся",
+      "exercise_type": "match-up",
+      "context": "Коли ви погоджуєтеся, але є одне «але»",
+      "role": "answer"
+    },
+    {
+      "word": "згодні",
+      "exercise_type": "match-up",
+      "context": "Коли ви не згодні (дуже офіційно)",
+      "role": "answer"
+    },
+    {
+      "word": "українка",
+      "exercise_type": "error-correction",
+      "context": "Вона вважає себе українка.",
+      "role": "context"
+    },
+    {
+      "word": "тобою",
+      "exercise_type": "unjumble",
+      "context": "тобою.",
+      "role": "answer"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "error-correction",
+      "context": "Я згодна з тобою (говорить чоловік).",
+      "role": "context"
+    },
+    {
+      "word": "прийде",
+      "exercise_type": "fill-in",
+      "context": "— Мені _____, що він не прийде.",
+      "role": "context"
+    },
+    {
+      "word": "треба",
+      "exercise_type": "fill-in",
+      "context": "— Я _____, що нам треба їхати.",
+      "role": "context"
+    },
+    {
+      "word": "чудова",
+      "exercise_type": "fill-in",
+      "context": "— _____, це чудова ідея!",
+      "role": "context"
+    },
+    {
+      "word": "ідея",
+      "exercise_type": "fill-in",
+      "context": "— _____, це чудова ідея!",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "fill-in",
+      "context": "— На мою _____, ця книга краща.",
+      "role": "context"
+    },
+    {
+      "word": "згода",
+      "exercise_type": "group-sort",
+      "context": "Згода",
+      "role": "context"
+    },
+    {
+      "word": "незгода",
+      "exercise_type": "group-sort",
+      "context": "Незгода",
+      "role": "context"
+    },
+    {
+      "word": "гарно",
+      "exercise_type": "unjumble",
+      "context": "гарно.",
+      "role": "answer"
+    },
+    {
+      "word": "правильне",
+      "exercise_type": "true-false",
+      "context": "Слово «считаю» — це правильне українське слово.",
+      "role": "context"
+    },
+    {
+      "word": "українське",
+      "exercise_type": "true-false",
+      "context": "Слово «считаю» — це правильне українське слово.",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Дієслово «подобатися» використовується з давальним відмінком",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Слово «навпаки» означає, що ви повністю не згодні.",
+      "role": "context"
+    },
+    {
+      "word": "пісня",
+      "exercise_type": "quiz",
+      "context": "— Тобі подобається ця пісня?\n— _____, вона чудова!",
+      "role": "context"
+    },
+    {
+      "word": "погана",
+      "exercise_type": "quiz",
+      "context": "— Я думаю, що це погана ідея.\n— _____, я вважаю, що вона ген",
+      "role": "context"
+    },
+    {
+      "word": "геніальна",
+      "exercise_type": "quiz",
+      "context": "— Я думаю, що це погана ідея.\n— _____, я вважаю, що вона ген",
+      "role": "context"
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "quiz",
+      "context": "Я _____ працювати в тиші.",
+      "role": "context"
+    },
+    {
+      "word": "тиші",
+      "exercise_type": "quiz",
+      "context": "Я _____ працювати в тиші.",
+      "role": "context"
+    },
+    {
+      "word": "хорошим",
+      "exercise_type": "quiz",
+      "context": "Він _____ себе хорошим лікарем.",
+      "role": "context"
+    },
+    {
+      "word": "лікарем",
+      "exercise_type": "quiz",
+      "context": "Він _____ себе хорошим лікарем.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "воліти",
+      "дозволити",
+      "думка",
+      "обирати",
+      "перше",
+      "по",
+      "погоджуватися",
+      "рація"
+    ]
+  },
+  "all_grounded": false
+}

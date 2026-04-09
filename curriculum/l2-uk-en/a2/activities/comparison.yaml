@@ -1,0 +1,631 @@
+version: '1.0'
+module: comparison
+level: a2
+inline:
+- id: fill-in-form-the-comparative-from-the-base-adjective
+  type: fill-in
+  instruction: Вставте правильну форму вищого ступеня
+  items:
+  - sentence: Цей чай солодкий, але той чай ____.
+    answer: солодший
+    options:
+    - солодкіший
+    - солодший
+    - більш солодкіший
+  - sentence: Ця книжка цікава, але нова книжка ____.
+    answer: цікавіша
+    options:
+    - цікавіша
+    - цікавша
+    - більш цікавіша
+  - sentence: Мій светр теплий, але твій светр ____.
+    answer: тепліший
+    options:
+    - тепліший
+    - тепльший
+    - більш теплий
+  - sentence: Цей телефон дорогий, але комп'ютер ____.
+    answer: дорожчий
+    options:
+    - дорогіший
+    - дорожчий
+    - більш дорожчий
+  - sentence: Брат високий, але його друг ще ____.
+    answer: вищий
+    options:
+    - високіший
+    - вищий
+    - високший
+  - sentence: Цей будинок гарний, але той ____.
+    answer: гарніший
+    options:
+    - гарніший
+    - гарнший
+    - більш гарніший
+  - sentence: Моя дорога коротка, але твоя ще ____.
+    answer: коротша
+    options:
+    - короткіша
+    - коротша
+    - коротча
+  - sentence: Цей магазин близький, але супермаркет ще ____.
+    answer: ближчий
+    options:
+    - близькіший
+    - ближчий
+    - близчий
+- id: true-false-identify-correct-and-incorrect-comparative-constructions-genitive-traps
+  type: true-false
+  instruction: Чи правильна ця конструкція порівняння?
+  items:
+  - statement: Цей телефон дорожчий, ніж той.
+    correct: true
+    explanation: Конструкція «ніж + називний відмінок» є правильною.
+  - statement: Цей телефон дорожчий того.
+    correct: false
+    explanation: 'В українській мові ми не використовуємо родовий відмінок без прийменника.
+      Правильно: дорожчий за той або дорожчий, ніж той.'
+  - statement: Ця кімната більша за ту.
+    correct: true
+    explanation: Конструкція «за + знахідний відмінок» є правильною.
+  - statement: Мій брат розумніший, ніж я.
+    correct: true
+    explanation: Конструкція «ніж + називний відмінок» (я) є правильною.
+  - statement: Мій брат розумніший мене.
+    correct: false
+    explanation: Це калька з російської. В українській мові треба казати «розумніший
+      за мене» або «розумніший, ніж я».
+  - statement: Одеса тепліша Києва.
+    correct: false
+    explanation: 'Без прийменника це русизм. Правильно: тепліша за Київ або тепліша,
+      ніж Київ.'
+  - statement: Ця кава значно солодша за чай.
+    correct: true
+    explanation: Конструкція з підсилювачем «значно» і прийменником «за» є абсолютно
+      правильною.
+  - statement: Твій комп'ютер потужніший, ніж мій.
+    correct: true
+    explanation: Це правильна конструкція з «ніж» та називним відмінком.
+- id: match-up-match-adjective-to-its-superlative-form
+  type: match-up
+  instruction: З'єднайте прикметник з його формою найвищого ступеня
+  pairs:
+  - left: солодкий
+    right: найсолодший
+  - left: цікавий
+    right: найцікавіший
+  - left: дорогий
+    right: найдорожчий
+  - left: швидкий
+    right: найшвидший
+  - left: високий
+    right: найвищий
+  - left: гарний
+    right: найгарніший
+  - left: теплий
+    right: найтепліший
+  - left: популярний
+    right: найбільш популярний
+- id: quiz-suppletive-choice-choose-the-correct-suppletive-form
+  type: quiz
+  instruction: Оберіть правильну особливу форму (irregular form)
+  items:
+  - question: Цей новий телефон великий, але той екран ще _____.
+    options:
+    - великіший
+    - більший
+    - найбільший
+    - величіший
+    correct: 1
+  - question: Ця кава добра, але в новому кафе вона _____.
+    options:
+    - добріша
+    - більш добра
+    - краща
+    - гарніша
+    correct: 2
+  - question: Вчора погода була погана, а сьогодні вона ще _____.
+    options:
+    - поганіша
+    - гірша
+    - найгірша
+    - менша
+    correct: 1
+  - question: Ця проблема мала, але та проблема значно _____.
+    options:
+    - маліша
+    - менша
+    - найменша
+    - краща
+    correct: 1
+  - question: Це мій _____ друг, ми знайомі 10 років!
+    options:
+    - найкращий
+    - самий кращий
+    - найдобріший
+    - більший
+    correct: 0
+  - question: У мене є _____ брат, йому тільки 5 років.
+    options:
+    - менший
+    - маліший
+    - найменший
+    - гірший
+    correct: 0
+  - question: Я думаю, що старий ресторан _____, ніж новий.
+    options:
+    - ліпший
+    - найкращий
+    - кращий
+    - самий добрий
+    correct: 2
+  - question: Це _____ день у моєму житті, я втратив роботу і ключі.
+    options:
+    - гірший
+    - найпоганіший
+    - найгірший
+    - самий поганий
+    correct: 2
+- id: error-correction-comparison-find-and-fix-wrong-comparative-and-superlative-forms-double-comparison-russianisms
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в утворенні ступенів порівняння
+  items:
+  - sentence: Мій новий комп'ютер більш кращий, ніж старий.
+    error: більш кращий
+    correction: кращий
+    error_type: construction
+    options:
+    - кращий
+    - більш гарний
+    - найкращий
+    explanation: «Кращий» вже означає «better». Не можна використовувати «більш» разом
+      із формою вищого ступеня (подвійне порівняння).
+  - sentence: Ця книжка сама цікава в бібліотеці.
+    error: сама цікава
+    correction: найцікавіша
+    error_type: word
+    options:
+    - найцікавіша
+    - більш цікавіша
+    - сама цікавіша
+    explanation: Українська мова ніколи не використовує слово «самий» для порівняння.
+      Завжди використовуйте префікс «най-».
+  - sentence: Ця кімната більш тепліша, ніж та.
+    error: більш тепліша
+    correction: тепліша
+    error_type: construction
+    options:
+    - тепліша
+    - більш тепла
+    - найтепліша
+    explanation: 'Це подвійне порівняння. Правильно казати: або «тепліша», або «більш
+      тепла».'
+  - sentence: Київ — це самий великий мегаполіс України.
+    error: самий великий
+    correction: найбільший
+    error_type: word
+    options:
+    - найбільший
+    - самий більший
+    - більший
+    explanation: Слово «самий» — це русизм. Використовуйте форму «найбільший».
+  - sentence: Сьогодні мій брат працює більш швидше.
+    error: більш швидше
+    correction: швидше
+    error_type: construction
+    options:
+    - швидше
+    - найшвидше
+    - швидкіше
+    explanation: Не можна поєднувати слово «більш» і форму вищого ступеня.
+  - sentence: Це самий кращий ресторан у місті.
+    error: самий кращий
+    correction: найкращий
+    error_type: word
+    options:
+    - найкращий
+    - самий гарний
+    - більш кращий
+    explanation: «Самий» — русизм. Завжди використовуємо «найкращий».
+workbook:
+- id: workbook-translate-comparison
+  type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: This phone is much more expensive.
+    options:
+    - text: Цей телефон набагато дорожчий.
+      correct: true
+    - text: Цей телефон набагато дорогіший.
+      correct: false
+    - text: Цей телефон більш дорожчий.
+      correct: false
+    - text: Цей телефон самий дорожчий.
+      correct: false
+  - source: She is older than my sister.
+    options:
+    - text: Вона старша за мою сестру.
+      correct: true
+    - text: Вона старша моєї сестри.
+      correct: false
+    - text: Вона більш старіша, ніж моя сестра.
+      correct: false
+    - text: Вона сама стара, ніж моя сестра.
+      correct: false
+  - source: He reads faster than me.
+    options:
+    - text: Він читає швидше, ніж я.
+      correct: true
+    - text: Він читає швидше мене.
+      correct: false
+    - text: Він читає більш швидше, ніж я.
+      correct: false
+    - text: Він читає самий швидкий, ніж я.
+      correct: false
+  - source: This is the best option.
+    options:
+    - text: Це найкращий варіант.
+      correct: true
+    - text: Це самий кращий варіант.
+      correct: false
+    - text: Це найбільш кращий варіант.
+      correct: false
+    - text: Це більш кращий варіант.
+      correct: false
+  - source: Lviv is significantly more interesting.
+    options:
+    - text: Львів значно цікавіший.
+      correct: true
+    - text: Львів значно більш цікавіший.
+      correct: false
+    - text: Львів набагато цікавше.
+      correct: false
+    - text: Львів самий цікавий.
+      correct: false
+  - source: Find the fastest way home.
+    options:
+    - text: Знайдіть якнайшвидший шлях додому.
+      correct: true
+    - text: Знайдіть самий швидкий шлях додому.
+      correct: false
+    - text: Знайдіть найбільш швидкий шлях додому.
+      correct: false
+    - text: Знайдіть якшвидкий шлях додому.
+      correct: false
+- id: workbook-unjumble-comparison
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - цей
+    - ніж
+    - Цей
+    - потужніший,
+    - телефон.
+    - комп'ютер
+    correct_order:
+    - Цей
+    - комп'ютер
+    - потужніший,
+    - ніж
+    - цей
+    - телефон.
+  - words:
+    - більша
+    - квартира
+    - Моя
+    - стару.
+    - нова
+    - за
+    correct_order:
+    - Моя
+    - нова
+    - квартира
+    - більша
+    - за
+    - стару.
+  - words:
+    - ресторан
+    - кращий.
+    - Я
+    - старий
+    - думаю,
+    - що
+    correct_order:
+    - Я
+    - думаю,
+    - що
+    - старий
+    - ресторан
+    - кращий.
+  - words:
+    - моєму
+    - житті.
+    - Це
+    - день
+    - найкращий
+    - у
+    correct_order:
+    - Це
+    - найкращий
+    - день
+    - у
+    - моєму
+    - житті.
+  - words:
+    - навпаки,
+    - гірший,
+    - Він
+    - кращий.
+    - а
+    - не
+    correct_order:
+    - Він
+    - не
+    - гірший,
+    - а
+    - навпаки,
+    - кращий.
+  - words:
+    - офіс
+    - Мій
+    - значно
+    - більший.
+    - старий
+    - був
+    correct_order:
+    - Мій
+    - старий
+    - офіс
+    - був
+    - значно
+    - більший.
+- id: workbook-group-sort-comparison
+  type: group-sort
+  instruction: Розподіліть прикметники за групами (звичайні чи особливі форми)
+  groups:
+  - label: Звичайні форми (-ш-/-іш-)
+    items:
+    - солодший
+    - цікавіший
+    - дорожчий
+    - вищий
+  - label: Особливі форми (змінюють корінь)
+    items:
+    - більший
+    - менший
+    - кращий
+    - гірший
+- id: workbook-match-up-noun-adjective
+  type: match-up
+  instruction: З'єднайте іменник із правильною формою прикметника
+  pairs:
+  - left: місто
+    right: більше
+  - left: будинок
+    right: вищий
+  - left: книга
+    right: цікавіша
+  - left: екран
+    right: менший
+  - left: кафе
+    right: краще
+  - left: погода
+    right: гірша
+- id: workbook-match-up-pronoun-verb
+  type: match-up
+  instruction: З'єднайте займенник із дієсловом
+  pairs:
+  - left: я
+    right: працюю швидше
+  - left: ти
+    right: читаєш краще
+  - left: він
+    right: знає більше
+  - left: вона
+    right: робить гірше
+  - left: ми
+    right: купуємо дешевше
+  - left: вони
+    right: живуть комфортніше
+- id: workbook-fill-in-pronouns-comparison
+  type: fill-in
+  instruction: Вставте правильний займенник у порівнянні
+  items:
+  - sentence: Я працюю швидше, ніж ____.
+    answer: він
+    options:
+    - він
+    - його
+    - йому
+  - sentence: Вона читає краще за ____.
+    answer: мене
+    options:
+    - мене
+    - я
+    - мені
+  - sentence: Цей телефон дорожчий, ніж ____.
+    answer: мій
+    options:
+    - мій
+    - мого
+    - моєму
+  - sentence: Ми знаємо більше за ____.
+    answer: них
+    options:
+    - вони
+    - їх
+    - них
+  - sentence: Ви живете комфортніше, ніж ____.
+    answer: ми
+    options:
+    - ми
+    - нас
+    - нам
+  - sentence: Він говорить повільніше за ____.
+    answer: тебе
+    options:
+    - тебе
+    - ти
+    - тобі
+- id: workbook-group-sort-pronouns
+  type: group-sort
+  instruction: Розподіліть займенники на однину та множину
+  groups:
+  - label: Однина
+    items:
+    - я
+    - ти
+    - він
+    - вона
+    - воно
+  - label: Множина
+    items:
+    - ми
+    - ви
+    - вони
+- id: workbook-quiz-ty-chi-vy
+  type: quiz
+  instruction: Оберіть правильну форму звертання (ти чи Ви)
+  items:
+  - question: Олено Іванівно, _____ працюєте набагато швидше, ніж я.
+    options:
+    - ви
+    - Ви
+    - ти
+    - Ти
+    correct: 1
+  - question: Друже, _____ маєш кращий телефон, ніж у мене.
+    options:
+    - ти
+    - Ти
+    - Ви
+    - ви
+    correct: 0
+  - question: Пане директоре, чи _____ можете дати мені цікавіший проєкт?
+    options:
+    - Ви
+    - ви
+    - Ти
+    - ти
+    correct: 0
+  - question: Оксано, _____ готуєш солодший чай, ніж моя мама.
+    options:
+    - ти
+    - Ти
+    - Ви
+    - ви
+    correct: 0
+  - question: Шановні клієнти, _____ знайдете тут найкращі ціни.
+    options:
+    - ви
+    - Ви
+    - ти
+    - Ти
+    correct: 0
+  - question: Мамо, _____ завжди даєш найкращі поради.
+    options:
+    - ти
+    - Ти
+    - Ви
+    - ви
+    correct: 0
+- id: workbook-fill-in-adjective-agreement
+  type: fill-in
+  instruction: Вставте правильну форму прикметника
+  items:
+  - sentence: Ця кімната _____, ніж моя стара.
+    answer: більша
+    options:
+    - більша
+    - більший
+    - більше
+  - sentence: Мій новий комп'ютер _____, ніж твій.
+    answer: швидший
+    options:
+    - швидший
+    - швидша
+    - швидше
+  - sentence: Це завдання _____, ніж я думав.
+    answer: коротше
+    options:
+    - коротше
+    - коротший
+    - коротша
+  - sentence: Ця проблема значно _____.
+    answer: менша
+    options:
+    - менша
+    - менший
+    - менше
+  - sentence: Твій проєкт _____, ніж її проєкт.
+    answer: кращий
+    options:
+    - кращий
+    - краща
+    - краще
+  - sentence: Її плаття _____, ніж моє.
+    answer: гарніше
+    options:
+    - гарніше
+    - гарніший
+    - гарніша
+- id: workbook-error-correction-agreement
+  type: error-correction
+  instruction: Знайдіть помилку в узгодженні прикметника й іменника за родом/числом
+  items:
+  - sentence: Цей нова телефон значно швидший.
+    error: нова
+    correction: новий
+    error_type: word
+    options:
+    - новий
+    - нове
+    - нові
+    explanation: Телефон — це іменник чоловічого роду, тому прикметник має закінчення
+      -ий.
+  - sentence: Моя старий квартира була менша.
+    error: старий
+    correction: стара
+    error_type: word
+    options:
+    - стара
+    - старе
+    - старі
+    explanation: Квартира — це іменник жіночого роду.
+  - sentence: Це найкращий рішення у моєму житті.
+    error: найкращий
+    correction: найкраще
+    error_type: word
+    options:
+    - найкраще
+    - найкраща
+    - найкращі
+    explanation: Рішення — середній рід.
+  - sentence: Нове ресторан має тепліший атмосферу.
+    error: Нове
+    correction: Новий
+    error_type: word
+    options:
+    - Новий
+    - Нова
+    - Нові
+    explanation: Ресторан — чоловічий рід.
+  - sentence: Ця екран набагато більший.
+    error: Ця
+    correction: Цей
+    error_type: word
+    options:
+    - Цей
+    - Це
+    - Ці
+    explanation: Екран — чоловічий рід.
+  - sentence: Твої комп'ютер дуже старий.
+    error: Твої
+    correction: Твій
+    error_type: word
+    options:
+    - Твій
+    - Твоя
+    - Твоє
+    explanation: Комп'ютер — чоловічий рід, однина.

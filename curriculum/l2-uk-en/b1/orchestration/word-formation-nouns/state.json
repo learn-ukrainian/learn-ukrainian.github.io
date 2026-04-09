@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "word-formation-nouns",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T20:47:26.314573+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T20:47:26.337862+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T20:47:59.162121+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T20:48:36.831805+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T20:55:48.690723+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T20:55:48.691336+00:00"
+    }
+  }
+}

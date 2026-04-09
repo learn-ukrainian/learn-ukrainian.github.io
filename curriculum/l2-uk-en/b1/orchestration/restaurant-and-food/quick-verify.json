@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/15 required vocab: закуска (appetizer/starter — first course before soup)"
+    }
+  ],
+  "timestamp": "2026-04-09T19:22:51.425399+00:00"
+}

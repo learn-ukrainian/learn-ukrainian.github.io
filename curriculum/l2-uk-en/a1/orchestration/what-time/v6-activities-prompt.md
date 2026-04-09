@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,9 +27,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-up-times -->`
-- `<!-- INJECT_ACTIVITY: quiz-clock-faces -->`
-- `<!-- INJECT_ACTIVITY: fill-in-o-kotrij -->`
+- `<!-- INJECT_ACTIVITY: quiz-clock-matching -->`
+- `<!-- INJECT_ACTIVITY: match-up-digits -->`
+- `<!-- INJECT_ACTIVITY: fill-in-o-kotrii -->`
 - `<!-- INJECT_ACTIVITY: quiz-time-of-day -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -86,152 +86,83 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги
 
-Ukrainian splits time into two questions. **Котра година?** (what time is it?) asks about *right now*. **О котрій?** (at what time?) asks about *when something happens*. Both questions appear in the dialogues below — spot them as you read.
+In Ukrainian, we talk about time using two main questions. We use one to ask for the current time, and another to schedule an event. A typical telephone conversation between colleagues illustrates how these questions function when people coordinate their schedules and find a time to meet.
 
-### Діалог 1 — Зустріч (A Meeting)
+> **Марина:** Привіт, Олексію! **Котра година**? *(Hi, Oleksiy! What time is it?)*
+> **Олексій:** Привіт! **Десята**. *(Hi! Ten o'clock.)*
+> **Марина:** **О котрій** ти **працюєш**? *(At what time do you work?)*
+> **Олексій:** **О дев'ятій**. А ти? *(At nine. And you?)*
+> **Марина:** Я працюю **о десятій**. *(I work at ten.)*
+> **Олексій:** **Добре**, **тоді** **о першій**? *(Good, then at one?)*
+> **Марина:** Так! *(Yes!)*
 
-> **Марина:** Алло, Олексію! Котра година? *(Hello, Oleksiy! What time is it?)*
-> **Олексій:** Десята. *(Ten o'clock.)*
-> **Марина:** О котрій ти зазвичай працюєш? *(What time do you usually work?)*
-> **Олексій:** О дев'ятій. А ти? *(At nine. And you?)*
-> **Марина:** Я працюю о десятій. *(I work at ten.)*
-> **Олексій:** Зрозуміло. *(Got it.)*
-> **Марина:** Може, зустрінемося о першій? *(Maybe we meet at one?)*
-> **Олексій:** Зачекай хвилинку... Так, підходить! *(Wait a moment... Yes, that works!)*
-> **Марина:** Добре, тоді о першій! *(Good, then at one!)*
+The specific communicative functions of these questions show a clear division. The phrase **котра година** identifies the current time on the clock, much like asking for a name in an ordered sequence. Marina wants to know the exact hour right now. On the other hand, the question **о котрій** asks for a specific point on a timeline. Speakers use this when scheduling an event or an action. You should contrast the English phrases "At what time?" versus "What time is it?". While English uses the noun "time" for both concepts, Ukrainian relies on two distinct structures to differentiate between identifying the current moment and setting an appointment.
 
-Марина needs to find a gap in both schedules. She uses **Котра година?** to check the current time, then **О котрій ти працюєш?** to ask about Олексій's schedule. The final agreement — **тоді о першій** — is a chunk you'll use constantly: *тоді* (then) + the meeting time.
+A discussion about daily schedules between two university students shows how time phrases work with familiar verbs. This scenario integrates verbs from your previous vocabulary, such as **снідати** (to eat breakfast), **обідати** (to eat lunch), **вечеряти** (to eat dinner), and **відпочивати** (to rest), directly with these new time chunks.
 
-### Діалог 2 — Розклад дня (Daily Schedule)
+> **Студент А:** **Коли** ти снідаєш? *(When do you eat breakfast?)*
+> **Студент Б:** **О восьмій ранку**. *(At eight in the morning.)*
+> **Студент А:** А обідаєш? *(And eat lunch?)*
+> **Студент Б:** **О першій**. Вечеряю **о сьомій**. *(At one. I eat dinner at seven.)*
 
-> **Олексій:** Коли ти снідаєш? *(When do you eat breakfast?)*
-> **Марина:** О восьмій ранку. *(At eight in the morning.)*
-> **Олексій:** А обідаєш? *(And lunch?)*
-> **Марина:** О першій дня. *(At one in the afternoon.)*
-> **Олексій:** О котрій вечеряєш? *(What time do you eat dinner?)*
-> **Марина:** О сьомій. А ти? *(At seven. And you?)*
-> **Олексій:** Я вечеряю о восьмій вечора. *(I eat dinner at eight in the evening.)*
+Here, the students use the question word **коли** (when) interchangeably with scheduling questions. The answers form neat, fixed chunks that specify exactly when each routine action takes place during the day.
 
-Here the verbs **снідати** (to eat breakfast), **обідати** (to eat lunch), and **вечеряти** (to eat dinner) connect directly with time expressions. These verbs appeared in A1.3 — now you're combining them with specific hours. Notice the time-of-day words after each hour: **ранку** (morning), **дня** (afternoon), **вечора** (evening). These remove ambiguity, just like "AM" and "PM" in English.
+## Котра година?
 
-Two patterns emerged from both dialogues. First: **Котра година?** gets a bare ordinal answer — **Десята.** Second: **О котрій?** gets **о** plus a shifted form — **О десятій.** The same hour appears in two shapes: *десята* vs. *о десятій*. The ending flips from **-а** to **-ій**. The next sections break down exactly how each form works.
+When you want to know the current time, the standard and natural question to ask a Ukrainian speaker is **Котра година?**. The word **котра** means "which" specifically for an ordered sequence, and it is a feminine word. We use this instead of **яка** (what kind of) or **скільки** (how much). You are literally asking "Which hour is it?" in a sequence of twenty-four hours. You must avoid the common errors **який зараз час** (what kind of time is it now) or **скільки годин** (how many hours), as these do not sound natural to a native speaker.
 
-## Котра година? (What Time Is It?)
+To answer this question for the full hours from one to twelve, we use feminine ordinal numbers. Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook, because the word **година** (hour) is feminine, the numbers must agree with it. You simply list the hour as the "first," "second," or "third" hour. Here are the core forms: **перша** (1:00), **друга** (2:00), **третя** (3:00), **четверта** (4:00), **п'ята** (5:00), **шоста** (6:00), **сьома** (7:00), **восьма** (8:00), **дев'ята** (9:00), **десята** (10:00), **одинадцята** (11:00), and **дванадцята** (12:00). You must contrast these sequence words with regular cardinal numbers like **один** (one) or **два** (two), which are never used to state the hour.
 
-The question **Котра година?** literally asks "which hour?" The word **котра** (which) is feminine because **година** (hour) is a feminine noun. The answer is a feminine ordinal number — just the number, nothing else. Where English says "It is ten o'clock," Ukrainian says **Десята** — "The tenth [hour]." One word is enough.
+Telling half-hours in Ukrainian relies on a specific structural pattern using the word **пів** (half). We use the phrase **пів на** (half towards) followed by the ordinal number for the next hour. The ordinal number takes the accusative case, ending in a "у" or "ю" sound. You must focus on the mental concept of moving "half towards the next hour". For example, 1:30 is **пів на другу** (literally "half to the second"), 6:30 is **пів на сьому** (half to the seventh), and 11:30 is **пів на дванадцяту** (half to the twelfth). You should remember that saying something like "пів восьмої" is a direct mistake.
 
-- **Котра зараз година? — Дев'ята.** *(What time is it now? — Nine o'clock.)*
+For now, you only need to recognize quarters, using the word **чверть** (quarter). You will hear **чверть на** (a quarter past) and **за чверть** (a quarter to). For example, 2:15 is **чверть на третю** (a quarter onto the third) and 2:45 is **за чверть третя** (in a quarter, the third). You must warn against using the word "без" (without) for time, which is a common Russianism and incorrect in standard Ukrainian.
 
-Here are all twelve hours as feminine ordinals. Learn them the way you learn months — as a set of twelve labels, not as grammar:
+<!-- INJECT_ACTIVITY: quiz-clock-matching -->
+<!-- INJECT_ACTIVITY: match-up-digits -->
 
-| | | |
-|---|---|---|
-| **перша** (1:00) | **друга** (2:00) | **третя** (3:00) |
-| **четверта** (4:00) | **п'ята** (5:00) | **шоста** (6:00) |
-| **сьома** (7:00) | **восьма** (8:00) | **дев'ята** (9:00) |
-| **десята** (10:00) | **одинадцята** (11:00) | **дванадцята** (12:00) |
+## О котрій?
 
-You are not learning the cardinal number "ten" here — you are learning the word **десята**, which means "10 o'clock." Think of each as a label for a point on the clock. A quick pronunciation note: **одинадцята** has five syllables (о-ди-над-ця-та), so take your time with it. And **друга** also means "female friend" in other contexts — but when answering **Котра година?**, the meaning is always "two o'clock."
+When you need to talk about scheduling an event, you ask **О котрій годині?**. This introduces the preposition **о** or **об** (at). The rule for choosing between them is simple: use **об** before vowels to make the pronunciation smooth, like in the phrase **об одинадцятій**, and use **о** before consonants. You must explicitly forbid using the prepositions "в" or "у" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid.
 
-<!-- INJECT_ACTIVITY: match-up-times -->
+The answers to this scheduling question are locative time chunks. You should learn to treat these as fixed vocabulary units right now. They combine the preposition with the locative case ending for the hour. The complete list of chunks is: **о першій**, **о другій**, **о третій**, **о четвертій**, **о п'ятій**, **о шостій**, **о сьомій**, **о восьмій**, **о дев'ятій**, **о десятій**, **об одинадцятій**, and **о дванадцятій**. Memorizing these phrases as whole pieces will make speaking about your daily plans much easier and much more natural in conversation without needing to think about complex grammar rules.
 
-### Пів на... (Half Past)
+To be more precise, you can refine your time expressions with time of day words. The base words are **ранок** (morning, m), **день** (day, m), **вечір** (evening, m), and **ніч** (night, f). Ukrainian uses their genitive forms as markers to specify the part of the day: **ранку** (of the morning), **дня** (of the day or afternoon), **вечора** (of the evening), and **ночі** (of the night). You add these directly after the hour chunk. For examples, you can say **о сьомій ранку** (at 7 AM), **о третій дня** (at 3 PM), or **о десятій вечора** (at 10 PM). This is how speakers distinguish morning and afternoon clearly.
 
-The half-hour pattern is **пів на** + the *next* hour. The logic: you are halfway *toward* the next hour.
+There are also special time markers for noon and midnight. You can learn **опівдні** (at noon) and **опівночі** (at midnight) as single-word vocabulary chunks. When talking about the middle of the day, you have a choice: you can use the full phrase **о дванадцятій дня** (at twelve of the day), or you can simply use the single word **опівдні** to mean exactly the same thing. You will also frequently hear the words **зараз** (now) and **скоро** (soon) when people discuss their immediate plans or describe events that are happening very shortly.
 
-- **Пів на другу** = 1:30 (halfway to the second hour)
-- **Пів на восьму** = 7:30 (halfway to the eighth hour)
-- **Пів на дев'яту** = 8:30 — from Захарійчук Grade 4: *О пів на дев'яту продзвенів дзвінок* (At 8:30 the bell rang)
-
-At A1, full hours and **пів на** are the core skill. Practice:
-
-- **Зараз пів на третю.** *(It's 2:30 now.)*
-
-### Чверть (Quarter Hours) — Recognition Only
-
-From Ponomarova Grade 4: *Сьома година п'ятнадцять хвилин, або чверть на восьму* (7:15, or a quarter past seven). And *за чверть восьма* = 7:45 (a quarter to eight). Two forms exist: **чверть на** (quarter past — looking forward to the next hour) and **за чверть** (quarter to — counting down). You don't need to produce these yet — just recognize them when you hear them.
-
-<!-- INJECT_ACTIVITY: quiz-clock-faces -->
-
-## О котрій? (At What Time?)
-
-The scheduling question is **О котрій годині?** — "At what time?" The preposition **о** (or **об** before a vowel) transforms the bare ordinal into a when-it-happens expression. Compare the two questions side by side:
-
-- **Котра година? — Десята.** *(What time is it? — Ten.)*
-- **О котрій зустріч? — О десятій.** *(At what time is the meeting? — At ten.)*
-
-Two questions, two forms of the same hour. Here is the complete set of **о** + hour forms. Memorize these as ready-made phrases — not as grammar:
-
-| | |
-|---|---|
-| **о першій** (at 1:00) | **о сьомій** (at 7:00) |
-| **о другій** (at 2:00) | **о восьмій** (at 8:00) |
-| **о третій** (at 3:00) | **о дев'ятій** (at 9:00) |
-| **о четвертій** (at 4:00) | **о десятій** (at 10:00) |
-| **о п'ятій** (at 5:00) | **об одинадцятій** (at 11:00) |
-| **о шостій** (at 6:00) | **о дванадцятій** (at 12:00) |
-
-One detail: **об одинадцятій** uses **об** instead of **о** because *одинадцятій* starts with a vowel. From Захарійчук Grade 4: *Чекатиму об одинадцятій годині.* All other hours use **о**. The pattern shortcut: if the answer to **Котра?** is *десята*, the answer to **О котрій?** is *о десятій* — the ending **-а** flips to **-ій**. Spot the pattern, don't memorize a rule.
-
-<!-- INJECT_ACTIVITY: fill-in-o-kotrij -->
-
-### Ранку, дня, вечора, ночі (Time of Day)
-
-After the hour, add a time-of-day word to remove ambiguity — just like "AM" and "PM" in English. There are four words:
-
-- **ранку** — in the morning
-- **дня** — in the afternoon
-- **вечора** — in the evening
-- **ночі** — at night
-
-From Захарійчук Grade 4: *Прокинувся о сьомій годині ранку.* (He woke up at seven in the morning.) Here is the full picture:
-
-- **О сьомій ранку** — 7 AM
-- **О третій дня** — 3 PM
-- **О десятій вечора** — 10 PM
-- **О другій ночі** — 2 AM
-
-Two special words stand alone without **о**: **опівдні** (at noon) and **опівночі** (at midnight). You simply say *Зустрінемося опівдні* — no preposition needed.
-
-The words **ранку**, **дня**, **вечора**, **ночі** are fixed phrases here. You don't need to know why they look the way they do — just attach them after the hour. This is how Ukrainian children learn time: phrase first, grammar later. Think of each combination as a single unit: *о восьмій ранку* is one chunk, not three separate words.
-
+<!-- INJECT_ACTIVITY: fill-in-o-kotrii -->
 <!-- INJECT_ACTIVITY: quiz-time-of-day -->
 
 ## Підсумок — Summary
 
-Two questions, two answer shapes:
+This summary table helps you contrast the question structures and the correct answer structures for telling time.
 
-**Котра година?** → answer with a bare ordinal:
-- **Десята. Сьома. Пів на третю.**
+| Question | Ukrainian Answer | English Meaning |
+| :--- | :--- | :--- |
+| **Котра година?** | **Десята.** | What time? — Ten o'clock. |
+| **О котрій годині?** | **О десятій.** | At what time? — At ten. |
+| **Котра година?** | **Пів на другу.** | What time? — 1:30. |
+| **О котрій годині?** | **О пів на другу.** | At what time? — At 1:30. |
 
-**О котрій?** → answer with **о** + the shifted form:
-- **О десятій. О сьомій. О пів на третю.**
+Remember the common pitfalls: there is no "без" for minutes, there is no "в" for scheduling hours, and you must never use basic cardinal numbers to identify the hour.
 
-The shift at a glance:
+Use this self-check checklist to verify your understanding of the material before you move on to the next module. Read each point carefully and try to answer out loud.
 
-| Котра година? | О котрій? |
-|---|---|
-| **перша** | **о першій** |
-| **дев'ята** | **о дев'ятій** |
-| **одинадцята** | **об одинадцятій** |
+*   Can you say what time it is right now? Answer the question: **Котра зараз година?**
+*   Can you state exactly what time you wake up in the morning? Try to answer: **О котрій ти прокидаєшся?**
+*   Can you say the phrase "half past four" in Ukrainian? Ensure you use the correct pattern: **Пів на п'яту.**
+*   Do you know when you must use the preposition **об** instead of the standard **о**? You use it before vowels for smoother pronunciation.
 
-One anchor: whenever you see **о котрій**, the answer ends in **-ій**.
+For your final writing task, you should create a simple three-sentence schedule describing your own typical day. This will help you practice combining verbs with the time chunks you have just learned. Review the use of ordinal forms and prepositions as you write.
 
-Here is your complete time vocabulary from this module, grouped by type. Hours: **перша**, **друга**, **третя**, **четверта**, **п'ята**, **шоста**, **сьома**, **восьма**, **дев'ята**, **десята**, **одинадцята**, **дванадцята**. Half hour: **пів на** + the next hour. Time of day: **ранку** (morning), **дня** (afternoon), **вечора** (evening), **ночі** (night). The four nouns behind them: **ранок** (morning), **день** (day), **вечір** (evening), **ніч** (night). Special: **опівдні** (at noon), **опівночі** (at midnight). Questions: **Котра година?** and **О котрій годині?** — your scheduling toolkit.
+Here is a model example to guide you:
+*   **Я прокидаюся о сьомій ранку.** (I wake up at seven in the morning.)
+*   **Я обідаю о першій дня.** (I eat lunch at one in the afternoon.)
+*   **Я вечеряю о восьмій вечора.** (I eat dinner at eight in the evening.)
 
-Test yourself — answer each question out loud in Ukrainian before reading the model answer:
-
-- **Котра година зараз?** → Look at your clock. Say the time: e.g., *Зараз третя.*
-- **О котрій ти прокидаєшся?** → e.g., *Я прокидаюся о сьомій ранку.*
-- **О котрій ти обідаєш?** → e.g., *Я обідаю о першій дня.*
-- **О котрій ти лягаєш спати?** → e.g., *Я лягаю спати о десятій вечора.*
-- **Пів на котру буде о 8:30?** → *Пів на дев'яту.*
-
-Aim to answer all five without scrolling back. If you hesitate on any hour form, review the table in section 2.
-
-You can now say *what time* something happens. The next step is *what day* and *what month*. In Module 23, you'll combine time with days: **У понеділок о дев'ятій ранку** — the full coordinate of a plan. Ukrainian scheduling vocabulary builds one layer at a time.
+Try writing three similar sentences using your own daily routine and time expressions!
 
 </module_content>
 
@@ -321,30 +252,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -364,21 +335,51 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: grammar-possession [§4.2.1.4, §4.2.2]
+**Присвійність** (Possession)
+- **fill-in** — У мене є...: Структура «У мене/тебе/нього є...» — як українська виражає володіння / Structure «У мене/тебе/нього є...» — how Ukrainian expresses possession
+  - Instruction: *Вставте правильне слово*
+- **fill-in** — Мій, твій, наш...: Обрати присвійний займенник, що узгоджується з родом та числом іменника / Choose possessive pronoun matching noun gender and number
+  - Instruction: *Вставте правильну форму*
+- **match-up** — Чий? Чия? Чиє?: Зіставити присвійний займенник з іменником за родом / Match possessive pronoun to noun by gender
+  - Instruction: *З'єднайте*
+- **quiz** — У кого є?: Визначити, хто має щось, за контекстом речення / Determine who has something based on sentence context
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: «У мене є» — унікальна українська структура. Переклад з англ. «I have» маскує різницю
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -410,68 +411,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

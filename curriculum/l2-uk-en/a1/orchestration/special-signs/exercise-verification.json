@@ -1,103 +1,139 @@
 {
-  "total_items": 54,
-  "grounded_items": 36,
+  "total_items": 44,
+  "grounded_items": 23,
   "ungrounded": [
     {
-      "word": "сім",
+      "word": "ясо",
       "exercise_type": "fill-in",
-      "context": "сім___я (family)"
+      "context": "Тут є м_ясо.",
+      "role": "context"
     },
     {
-      "word": "ден",
+      "word": "мій",
       "exercise_type": "fill-in",
-      "context": "ден___ (day)"
+      "context": "Це мій комп_ютер.",
+      "role": "context"
     },
     {
-      "word": "ять",
+      "word": "комп",
       "exercise_type": "fill-in",
-      "context": "п___ять (five)"
+      "context": "Це мій комп_ютер.",
+      "role": "context"
+    },
+    {
+      "word": "ютер",
+      "exercise_type": "fill-in",
+      "context": "Це мій комп_ютер.",
+      "role": "context"
+    },
+    {
+      "word": "батьк",
+      "exercise_type": "fill-in",
+      "context": "Це батьк_о.",
+      "role": "context"
     },
     {
       "word": "учител",
       "exercise_type": "fill-in",
-      "context": "учител___ (teacher)"
+      "context": "Там учител_.",
+      "role": "context"
     },
     {
-      "word": "ясо",
+      "word": "маю",
       "exercise_type": "fill-in",
-      "context": "м___ясо (meat)"
+      "context": "Я маю п_ять.",
+      "role": "context"
     },
     {
-      "word": "дев",
+      "word": "ять",
       "exercise_type": "fill-in",
-      "context": "дев___ять (nine)"
+      "context": "Я маю п_ять.",
+      "role": "context"
     },
     {
-      "word": "арно",
-      "exercise_type": "quiz",
-      "context": "___арно (beautifully, nicely)"
+      "word": "легко'",
+      "exercise_type": "true-false",
+      "context": "The word 'легко' is pronounced with a hard, deep 'г' sound.",
+      "role": "context"
     },
     {
-      "word": "ґарно",
-      "exercise_type": "quiz",
-      "context": "Ґ — ґарно"
+      "word": "г'",
+      "exercise_type": "true-false",
+      "context": "The word 'легко' is pronounced with a hard, deep 'г' sound.",
+      "role": "context"
+    },
+    {
+      "word": "балка'",
+      "exercise_type": "true-false",
+      "context": "The words 'балка' and 'палка' sound exactly the same.",
+      "role": "context"
+    },
+    {
+      "word": "палка'",
+      "exercise_type": "true-false",
+      "context": "The words 'балка' and 'палка' sound exactly the same.",
+      "role": "context"
+    },
+    {
+      "word": "мороз'",
+      "exercise_type": "true-false",
+      "context": "The word 'мороз' loses its vibration at the end and sounds l",
+      "role": "context"
+    },
+    {
+      "word": "с'",
+      "exercise_type": "true-false",
+      "context": "The word 'мороз' loses its vibration at the end and sounds l",
+      "role": "context"
     },
     {
       "word": "анок",
       "exercise_type": "quiz",
-      "context": "___анок (porch)"
-    },
-    {
-      "word": "ганок",
-      "exercise_type": "quiz",
-      "context": "Г — ганок"
+      "context": "___анок (porch)",
+      "role": "context"
     },
     {
       "word": "удзик",
       "exercise_type": "quiz",
-      "context": "___удзик (button)"
+      "context": "___удзик (button)",
+      "role": "context"
     },
     {
-      "word": "гудзик",
+      "word": "арно",
       "exercise_type": "quiz",
-      "context": "Г — гудзик"
+      "context": "___арно (nicely)",
+      "role": "context"
     },
     {
       "word": "ора",
       "exercise_type": "quiz",
-      "context": "___ора (mountain)"
-    },
-    {
-      "word": "ґора",
-      "exercise_type": "quiz",
-      "context": "Ґ — ґора"
+      "context": "___ора (mountain)",
+      "role": "context"
     },
     {
       "word": "олова",
       "exercise_type": "quiz",
-      "context": "___олова (head)"
+      "context": "___олова (head)",
+      "role": "context"
     },
     {
-      "word": "ґолова",
+      "word": "ле",
       "exercise_type": "quiz",
-      "context": "Ґ — ґолова"
+      "context": "ле___ко (easily)",
+      "role": "context"
     },
     {
-      "word": "ава",
+      "word": "ко",
       "exercise_type": "quiz",
-      "context": "___ава (crow)"
-    },
-    {
-      "word": "гава",
-      "exercise_type": "quiz",
-      "context": "Г — гава"
+      "context": "ле___ко (easily)",
+      "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
     "tested_in_exercises": 11,
     "not_tested": [
-      "м'який"
+      "гарно"
     ]
   },
   "all_grounded": false

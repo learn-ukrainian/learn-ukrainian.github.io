@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -243,383 +243,327 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-### Plan vocabulary (all 15 words)
-- ✅ читати (verb)
-- ✅ писати (verb)
-- ✅ слухати (verb)
-- ✅ дивитися (verb)
-- ✅ говорити (verb)
-- ✅ дати (verb) — note: 5 matches returned; 3 show lemma дата(noun, gen. pl.) — verb infinitive дати is also a valid VESUM form. No concern: verb exists.
-- ✅ сказати (verb)
-- ✅ іти (verb)
-- ✅ відкрити (verb)
-- ✅ сісти (verb)
-- ✅ показати (verb)
-- ✅ запитати (verb)
-- ✅ підручник (noun)
-- ✅ сторінка (noun)
-- ✅ речення (noun)
-
-### Imperative forms used in plan
-- ✅ читай / читайте
-- ✅ пиши / пишіть
-- ✅ слухай / слухайте
-- ✅ дивись / дивіться (initial search had typo "дивісь" — corrected, both forms confirmed)
-- ✅ говори / говоріть — note: "говори" matched 4 results listed as говір(noun) lemma (noun "dialect"), imperative of говорити nonetheless confirmed via говоріть match and standard grammar. No concern.
-- ✅ дай / дайте
-- ✅ скажи / скажіть
-- ✅ іди / ідіть
-- ✅ відкрий / відкрийте
-- ✅ сядь / сядьте
-- ✅ подивись / подивіться
-- ✅ напиши / напишіть
-- ✅ ходімо
-- ✅ вибачте
-- ✅ запитуйте
-- ✅ меню (noun, indeclinable)
-- ✅ погода (noun)
-- ✅ кава (noun)
-
-### Not found in VESUM
-- ❌ **None.** All plan vocabulary and imperative forms confirmed.
-
----
-
-## Textbook Excerpts
-
-### Section: Наказовий спосіб (The Imperative Mood) — formation rules
-> «Форми наказового способу дієслів мають такі закінчення: Однина — 2-а ос.: -∅, -и (ріж, роби); Множина — 2-а ос.: -те, -іть або -іте (ріжте, робіть або робіте). Для творення дієслів наказового способу 1-ї особи множини використовують також закінчення -ім: ходім, робім. Використання часток давай, давайте для творення форм наказового способу не відповідає літературній нормі.»
-> Source: Авраменко, Grade 11 (2019), §17
-
-### Section: Як утворити — м'який знак rule
-> «У дієсловах наказового способу пишемо м'який знак у кінці слова та складу після д, т, з, с, ц, л, н: лізь, лізьте, будь, будьте, глянь, гляньте, занось, заносьте.»
-> Source: Авраменко, Grade 7 (2024), p. 82
-
-### Section: Діалоги — classroom situation (polite request context)
-> «Пригадайте, що таке прохання. Згадайте й запишіть етикетні формули, за допомогою яких можна ввічливо висловити прохання. Розіграйте діалоги, у яких одна людина висловлює прохання, а друга погоджується його виконати чи відмовляє. Пропоновані ситуації: вдома, у магазині, у транспорті, у шкільній їдальні тощо.»
-> Source: Літвінова, Grade 7 (2024), p. 62
-
-### Section: ходімо — 1st person plural imperative (natural Ukrainian)
-> «Часто забувають, що українська мова має в наказовому способі не тільки форми 2-ї особи однини й множини, як російська, – читай і читайте, роби і робіть, а ще й форму 1-ї особи множини – читаймо, робімо. Російська мова, не маючи цієї форми, користується описовою конструкцією типу давайте читать.»
-> Source: Антоненко-Давидович, «Як ми говоримо», §ДІЄСЛОВА
-
-### Section: Forbidden давай construction (directly relevant to A1 learners)
-> «У творенні форм наказового способу не використовуємо частки давай, давайте. ПОРІВНЯЙМО: Правильно — заспіваймо, розкажімо; НЕправильно — давай заспіваємо, давайте розкажемо.»
-> Source: Заболотний, Grade 7 (2024), p. 74
-
----
+- Confirmed: читати, писати, слухати, дивитися, говорити, дати, сказати, іти, відкрити, сісти, показати, запитати, підручник, сторінка, речення.
+- Not found: None. All planned words exist and are grammatically sound for A1.
 
 ## Grammar Rules
-
-- **Imperative formation from теперішній час stem:** Confirmed by Авраменко Grade 7 §37 and Grade 11 §17 — «Утворюємо від основи теперішнього часу»
-- **2nd person plural -іть / -іте (both normative):** «паралельно із закінченням -іть можна вживати й закінчення -іте (воно хоч і рідше вживане, але нормативне): ходіть — ходіте, несіть — несіте» — Авраменко Grade 11 §17. Plan's table uses -іть forms throughout — correct and normative. ✅
-- **М'який знак after д, т, з, с, ц, л, н:** «пишемо м'який знак у кінці слова та складу після д, т, з, с, ц, л, н» — Авраменко Grade 7 p. 82. Applies to: сядь, сядьте in plan's summary table. ✅
-- **давай/давайте FORBIDDEN:** Confirmed in two Tier 1 sources (Заболотний Grade 7, Авраменко Grade 11). Plan correctly avoids this construction throughout. ✅
-- **Правопис 2019 RAG:** No direct hits returned for imperative mood or м'який знак — rules governed by morphology sections, not orthography §§1-61. Textbook sources above are authoritative.
-
----
+- The Imperative Mood (Наказовий спосіб): Правопис § 116 — Provides rules for forming imperatives with endings -и, -∅ (2nd sing); -імо, -ім, -мо (1st plur); -іть, -те (2nd plur).
+- Stem-based formation: Group I (-ати) mostly uses -й/-йте (читай, слухай, відкривай); Group II and consonant stems use -и/-іть (пиши, пишіть, кажи, скажіть).
 
 ## Calque Warnings
-
-- **будь ласка** — ✅ OK. No calque. Standard polite formula, attested in textbook contexts (Літвінова Grade 7: «ввічливо висловити прохання»). Not flagged by Антоненко-Давидович.
-- **ходімо в кафе** — ✅ OK. Антоненко-Давидович explicitly praises this as *native* Ukrainian form (1st person plural imperative), contrasting with the *Russian* workaround of давайте + infinitive. Using ходімо in Dialogue 2 is pedagogically exemplary.
-- **запитати / запитуйте** — ✅ OK. Standard Ukrainian verb. Антоненко-Давидович flags only the impersonal «питається» (as a Russian calque of «спрашивается»); transitive «запитати когось» is correct Ukrainian. Plan uses «Можна запитати?» and «запитуйте!» — both natural. ✅
-- **дивись / подивись** — ✅ OK. Антоненко-Давидович uses «подивитись» naturally in example text. No calque issue.
-
----
+- "Давай" + infinitive: Potential calque from Russian — "давай читати" is incorrect. Correct Ukrainian uses the synthetic imperative: "читаймо" or "давай" + perfective future (but better avoid at A1). Use synthetic forms like "ходімо" (let's go) or "пишімо".
+- "Відкрийте підручники": OK — although "розгорніть" is more specific for books, "відкрийте" is standard and more accessible for A1 learners.
 
 ## CEFR Check
-
-- читати: **A1** — ✅ on target
-- писати: **A1** — ✅ on target
-- слухати: **A1** — ✅ on target
-- говорити: **A1** — ✅ on target
-- підручник: **A1** — ✅ on target
-- сторінка: **A1** — ✅ on target
-- речення: **A1** — ✅ on target
-- іти/йти: **A1** — ✅ on target (PULS lists both variants as A1 motion verbs)
-
-**No vocabulary above A1 level found.** All 8 sampled words confirmed A1 by PULS database.
-
----
-
-## Summary for Writer
-
-**All clear to build.** No blockers found.
-
-Three items to keep in mind:
-1. **сядь / сядьте** — plan's table is correct (м'який знак after д confirmed by Авраменко Grade 7).
-2. **ходімо** — use it confidently in Dialogue 2. It is *more natural* than ходімте and specifically praised by Антоненко-Давидович as the form Russian lacks.
-3. **давай construction** — if learners ask "can I say давай підемо?", the answer is: in informal spoken Ukrainian you will hear it, but it is not standard (підемо alone, or ходімо/ідемо, is correct). Two Tier 1 textbooks (Заболотний, Авраменко) flag this explicitly. Worth a brief note in the module.
+- читати: A1 — OK
+- писати: A1 — OK
+- слухати: A1 — OK
+- дивитися: A1 — OK
+- говорити: A1 — OK
+- іти: A1 — OK
+- підручник: A1 — OK
+- сторінка: A1 — OK
+- речення: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Please Do This
-**Module:** please-do-this | **Phase:** A1.7 [Communication]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: Please Do This
+**Module:** please-do-this | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/please-do-this.md
+
+# Педагогіка A1: Please Do This
+
+
+
+## Методичний підхід (Methodological Approach)
+
+This guide outlines the core pedagogical principles for creating A1 level content. The primary goal is not just to teach rules, but to foster a positive, effective, and decolonized learning experience from the very first lesson.
+
+1.  **Emotion-Driven Learning (Емоційне навчання):** We remember things that evoke strong emotions (Source: `ext-ulp_youtube-90`). A1 content should not be a dry list of vocabulary. It must be embedded in relatable, personal stories. For example, instead of just a list of foods, present them in a story about a family dinner, connecting a word like «смачно» to the warmth of family, just as a diaspora learner might remember a word from their grandfather (Source: `ext-ulp_youtube-90`).
+
+2.  **Active Retrieval Practice (Практика відтворення):** Passive re-reading is inefficient. The most effective learning happens when the brain struggles to recall information (`відтворення`). This is when the "muscles" of memory are built (Source: `ext-ulp_youtube-90`). A1 modules MUST be built around frequent, low-stakes retrieval exercises. This means less passive reading and more "test-like" activities that force the learner to produce language.
+
+3.  **Testing as a Learning Tool (Тест як метод навчання):** For A1, "tests" are not for grades; they are the primary method of learning. Instead of teaching a concept and then testing it, we should often test *before* teaching. For instance, before a lesson on verb forms, give the learner a sentence with a blank and ask them to guess the verb. This creates a "need to know," making the subsequent explanation more effective (Source: `ext-ulp_youtube-90`). This "test-first" approach helps learners immediately see what they need to focus on.
+
+4.  **Goal-Oriented Content (Цілеспрямований контент):** Every A1 learner has a goal, whether it's understanding relatives, reading the news, or traveling (Source: `ext-ulp_youtube-166`). The content must serve these goals. For A1, this means focusing on practical, high-frequency situations: introductions, ordering food, asking for directions, talking about family and hobbies. The curriculum must deliver immediate, real-world communicative competence.
+
+5.  **Structured Comfort Zone Expansion (Вихід із зони комфорту):** While A1 is about building foundations, learners must be gently pushed to interact with simple, authentic materials. This could be a short children's poem (Source: `ext-ulp_youtube-164`), a simple dialogue from a podcast, or a single page from a graded reader (Source: `ext-ulp_youtube-69`). The key is to make this process structured and supported, for example, by providing a transcript and vocabulary for a one-minute authentic audio clip (Source: `ext-ulp_youtube-166`).
+
+## Послідовність введення (Introduction Sequence)
+
+The order of introduction is critical for building a solid foundation.
+
+1.  **Step 1: Foundational Concepts & Core Vocabulary.** Begin with the absolute basics. Introduce the concept that a text is a series of sentences linked by meaning (Source: `3-klas-ukrainska-mova-vashulenko-2020-1_s0002`). Teach high-frequency social formulas ("Привіт," "Дякую," "Будь ласка") and the most common nouns and verbs related to personal identity (`я`, `ти`, `студент`, `читати`).
+
+2.  **Step 2: Basic Sentence Structure & Present Tense.** Introduce the simple sentence structure (Subject-Verb-Object). Teach the present tense of high-frequency verbs from the 1st and 2nd conjugations. Crucially, teach the omission of "to be" in the present tense ("Я студент," not "Я є студент"). Model this with sentence-building exercises (Source: `6-klas-ukrmova-betsa-2023_s0020`).
+
+3.  **Step 3: Introduction to Cases (Nominative & Accusative).** Do not overwhelm with all seven cases. Start with the Nominative (subject) and Accusative (direct object). This unlocks the ability to form basic transitive sentences ("Я читаю книжку").
+
+4.  **Step 4: The Imperative Mood for Polite Requests.** Introduce the imperative mood not as a command, but as the primary way to make polite requests when combined with "будь ласка." This is a fundamental communicative function (Source: `7-klas-ukrmova-litvinova-2024_s0066`, `5-klas-ukrmova-uhor-2022-1_s0187`).
+
+5.  **Step 5: Past Tense & Basic Prepositional Phrases.** Introduce the past tense, which is relatively simple in Ukrainian (forms based on gender and number). Simultaneously, teach basic prepositional phrases to talk about location (`в/у`, `на`). This allows for simple storytelling ("Я був у Києві").
+
+The general sequence of grammatical topics should follow the logic seen in native textbooks: Verb Forms (Infinitive, Person) → Tense/Mood → Cases (Source: `7-klas-ukrmova-litvinova-2024_s0008`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+This section guides the writer on what to anticipate and proactively address.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| *Я є студент. | Я студент. | The verb `бути` (to be) is omitted in the present tense in standard Ukrainian. This is a direct structural transfer from English and must be explicitly corrected from Day 1. |
+| *Дайте мені каву. (Abrupt) | Дайте, будь ласка, каву. | English speakers often look for modal verbs ("Could I have...") for politeness. In Ukrainian, the imperative form + `будь ласка` is the standard, natural way to make a polite request. The bare imperative can sound like a rude command (Sources: `7-klas-ukrmova-litvinova-2024_s0066`, `5-klas-ukrmova-uhor-2022-1_s0187`). |
+| Прівєт! Как діла? | Привіт! Як справи? | This is Surzhyk, a mix of Ukrainian and Russian. It is not "slang" or a "dialect"; it is a remnant of linguistic Russification. The curriculum must teach pure, standard Ukrainian from the start (Source: `ext-ulp_youtube-168`). |
+| Я маю книжку. | У мене є книжка. | While `мати` can mean "to have," the `У + [genitive] + є` construction is far more common and natural for expressing possession of objects in everyday speech. Teaching this structure first prevents an unnatural, English-like sentence pattern. |
+| *Він хоче іти в **парікмахерську**. | Він хоче йти в **перукарню**. | This is a lexical error, borrowing a common Russian word instead of using the correct Ukrainian equivalent. A1 vocabulary must be carefully vetted to exclude such Russianisms (Source: `ext-ulp_youtube-168`). |
+| Я читаю книжку **зараз**. | Я читаю книжку. | English speakers overuse "now" to specify the present continuous. In Ukrainian, the imperfective verb `читаю` already implies an ongoing action in the present. Adding `зараз` is often redundant and unnatural unless for specific emphasis. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**This is a non-negotiable component of the curriculum.** The teaching of Ukrainian must be free from the influence of Russian linguistic colonialism. Russia actively uses its language and its version of "history" as a weapon to erase Ukrainian identity (Source: `ext-realna_istoria-101`).
+
+1.  **No Russian Comparisons:** Never teach Ukrainian letters, sounds, or grammar by comparing them to Russian (e.g., "Ukrainian 'и' is like Russian 'ы'"). This centers Russian as the default and frames Ukrainian as a deviation. Ukrainian phonetics and grammar must be taught on their own terms.
+
+2.  **Zero Tolerance for Surzhyk:** Surzhyk is not a "quirky dialect." It is a direct result of centuries of forced Russification and the suppression of the Ukrainian language (Source: `ext-ulp_youtube-168`). Its use in educational materials, even as an example of "what not to do," can normalize it. The curriculum must present only standard, clean Ukrainian. Examples like `Привет` or `садік` must be identified as foreignisms to be avoided.
+
+3.  **Correctly Frame Shared Vocabulary:** Ukrainian and Russian share some vocabulary due to a common Slavic root. It is critical to frame this correctly. These are not "Russian words in Ukrainian." They are cognates from a common ancestor. When a word exists in both languages, the Ukrainian form is presented as native, not as a borrowing (Source: `ext-ulp_youtube-139`).
+
+4.  **Ukrainian is the Only Medium of Instruction (for the language itself):** While explanations can be in English, all target language examples, dialogues, and texts must be 100% Ukrainian. The goal is to build a "Ukrainian brain" from scratch, not to map Ukrainian onto an English or Russian framework.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is suitable for A1 learners (teens and adults). It is simple but not childish.
+
+**Іменники (Nouns):**
+*   ★★★: `книжка`, `школа`, `студент`, `вчитель`, `мова`, `Україна`, `Київ`, `день`, `друг`, `сім'я`, `мама`, `тато`, `час`, `робота`, `вода`, `кава`
+*   ★★: `музей`, `вулиця`, `місто`, `село`, `сніданок`, `обід`, `вечеря`, `питання`, `слово`
+*   ★: `подорож`, `хобі`, `канікули` (Source: `6-klas-ukrmova-betsa-2023_s0083`)
+
+**Дієслова (Verbs):**
+*   ★★★: `бути`, `мати`, `хотіти`, `могти`, `знати`, `розуміти`, `говорити`, `читати`, `писати`, `жити`, `працювати`, `йти`, `їхати`
+*   ★★: `любити`, `дивитися`, `слухати`, `робити`, `давати`, `питати`, `їсти`, `пити`
+*   ★: `грати (в/на)` (Source: `6-klas-ukrmova-betsa-2023_s0020`), `починати`, `допомагати`
+
+**Прикметники / Прислівники (Adjectives / Adverbs):**
+*   ★★★: `добрий`, `новий`, `старий`, `великий`, `малий`, `український`, `тут`, `там`, `добре`, `погано`
+*   ★★: `цікавий`, `гарний`, `смачний`, `сьогодні`, `завтра`, `вчора`, `швидко`, `повільно`
+*   ★: `важливий`, `легкий`, `важкий`
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities on these proven formats from Ukrainian schoolbooks.
+
+1.  **Structured Sentence Building (Побудова речень):**
+    *   **Task:** Create full sentences from prompts. This drills vocabulary and basic grammar in a controlled way.
+    *   **Example:** (From `6-klas-ukrmova-betsa-2023_s0020`)
+        > Складіть речення за зразком.
+        > **Зразок:** Томаш — кататися на ковзанах — льодовий майданчик. -> *Томаш катається на ковзанах на льодовому майданчику.*
+        > 1. Андрій — кататися на скейтборді — парк
+        > 2. Марті — подобатися — народні танці
+        > 3. Батьки — ходити в похід — гори
+
+2.  **Polite Request Dialogues (Діалоги з проханням):**
+    *   **Task:** Create and role-play short dialogues for common situations, focusing on polite forms.
+    *   **Example:** (Adapted from `5-klas-ukrmova-uhor-2022-1_s0187`)
+        > Складіть діалог, уявіть ситуацію: ви прийшли у магазин. Вам потрібно купити ручку і зошит. Використайте в ньому слова «Спасибі!» і «Будь ласка».
+
+3.  **Imperative Verb Formation (Утворення наказового способу):**
+    *   **Task:** Fill in the blanks by correctly forming the imperative mood of the verb.
+    *   **Example:** (From `7-klas-ukrmova-litvinova-2024_s0066`)
+        > Утворіть від дієслів у дужках форми наказового способу.
+        > 1. Так (сказати), ви хочете стати справжніми богатирями?
+        > 2. (Слухати), добрий чоловіче, коли вже довелося нам іти разом, (зробити) так.
+        > 3. Тепер (іти) додому, бо пізно.
+
+4.  **Intensive Listening & Repetition (Інтенсивне слухання і повторення):**
+    *   **Task:** A powerful exercise to train listening comprehension and pronunciation simultaneously.
+    *   **Example:** (Based on the method described in `ext-ulp_youtube-166`)
+        > 1. Знайдіть українське відео з субтитрами.
+        > 2. Прослухайте одне речення без субтитрів. Зупиніть відео.
+        > 3. Спробуйте самі сказати вголос, що ви почули. Повторіть кілька разів.
+        > 4. Включіть субтитри і перевірте, чи правильно ви почули і сказали. Запишіть нові слова.
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/introduction-to-cases`
+- `pedagogy/a1/present-tense-conjugation`
+- `pedagogy/a1/imperative-mood-politeness`
+- `pedagogy/decolonization/surzhyk-and-russianisms`
+- `curriculum/a1/vocabulary-by-theme`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 267
-> **Score:** 0.33
->
-> 263
-> 263
-> ТЕМА 15. СТВОРЕННЯ ТА РОЗІГРУВАННЯ
-> ДІАЛОГІВ
-> ПРИГАДАЙМО. Чим діалогічне мовлення відрізняється від монологічного?
-> І. Поміркуйте, що є запорукою успішної комунікації.
-> ІІ. Прочитайте й виправте допущені помилки (усно). 
-> 1. Велике дякую! 2. Вибачте мене. 3. Перепрошую, винува-
-> тий. 4. Вибачаюся. 5. Виказую свою вдячність. 6. Сьогоднішній
-> день. 7. Щасливого путі!
-> ПОПРАЦЮЙТЕ В ПАРАХ. Складіть і розіграйте за особами діалог (7–8 реп-
-> лік) відповідно до запропонованої ситуації спілкування, дотримуючись правил 
-> мовленнєвого етикету. Використайте підсилювальні чи видільні частки з поданого 
-> нижче переліку.
-> Ситуація А. Дочка / син просить дозволу в мами / тата піти най-
-> ближчої неділі в парк розваг із друзями й подругами.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 202
-> **Score:** 0.33
->
-> 202
-> Відомості із синтаксису й пунктуації.  Речення з одним головним членом
-> Вправа 328
-> Розгляньте світлини на с.  188.  Складіть за ними речення.  Запишіть їх і під-
-> кресліть граматичні основи.
-> Вправа 329
-> Виконайте тест.  У кожному завданні лише один правильний варіант від-
-> повіді.
-> 1.	 Односкладним є  речення
-> А	У двері постукали.
-> Б	 У двері хтось постукав.
-> В	 У двері постукав Петро.
-> Г	 Я почув стук у двері.
-> 2.	 Двоскладним є  речення
-> А	Лунає пісня.
-> Б	 Чути пісню.
-> В	 Заспіваймо пісню!
-> Г	 Яка чудова пісня!
-> 3.	 Односкладними є  всі речення, ОКРІМ
-> А	Треба бути взаємоввічливими.
-> Б	 Будьте взаємоввічливі.
-> В	 Нехай будуть взаємоввічливі.
-> Г	 Ввічливість — ознака вихованості.
-> Перевірити
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 204
-> **Score:** 0.50
->
-> 204
-> Відомості із синтаксису й пунктуації. Види речень за метою висловлення
->  Дайте домашку 
-> з математики.
-> 15:28
-> Я загубила в класі 
-> щоденник. Ніхто 
-> не бачив?
-> 15:39
-> На завтра треба 
-> готувати поробку?
-> 15:53
-> Візьміть завтра під-
-> ручники з англій-
-> ської, буде заміна. 
-> 16:21
-> Ходімо разом 
-> у кіно. 
-> р
-> 16:42
-> Я не знаю, як 
-> розв’язати задачу. 
-> Допоможіть!!!  
->  
->  
-> Д
->  
->  
->  
-> 17:36
-> Вправа 331
-> 1. Прочитайте речення, узяті з чату 
-> класу .
-> 2. Назвіть спочатку розповідні ре-
-> чення, потім питальні та  спону-
-> кальні .
-> 3. Поміркуйте, як змінити ці фрази, 
-> щоб вони відповідали нормам 
-> етикету . Запишіть свої варіанти .
-> Вправа 332
-> 1.
-
-## Наказовий спосіб (The Imperative Mood)
-
-> **Source:** litvinova, Grade 7
-> **Section:** Сторінка 62
-> **Score:** 0.50
->
-> § 11  Наказовий спосіб діє слів  
-> 59
-> Вправа 84 
->  
-> Спишіть речення, утворивши від діє слів у дужках форми наказового способу 
-> 1) Так (сказати), ви хочете стати справжніми богатирями? 
-> (Є. Кравченко). 2) (Слухати), добрий чоловіче, коли вже дове­
-> лося нам іти разом, (зробити) так (Нар. тв.). 3) Котигорошок 
-> поклонився батькові в ноги й каже: «Батечку, (піти) до кова­
-> ля, (викувати) мені сильну залізну булаву» (А.  Лотоцький). 
-> 4) (Приїхати) самі, (знайти) мене, і я вас обов’язково з ними 
-> познайомлю (А. Мухарський). 5) Тепер (іти) додому, бо пізно, 
-> і тебе Бог (благословити), дитино, та (подати) тобі всього до­
-> бра в житті (В.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 45
-> **Score:** 0.50
->
-> В. Прочитайте текст удруге й докладно його перекажіть (усно).
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 85
-> **Score:** 0.33
->
-> 82
-> Зауважте!
-> У дієсловах наказового способу пишемо м’який знак у кінці слова та 
-> складу після д, т, з, с, ц, л, н:  лізь, лізьте, будь, будьте, глянь, гляньте, 
-> занось, заносьте.
-> 2.	 Утворіть усі можливі форми наказового способу (за зразком). Запишіть 
-> їх і виділіть у них закінчення.
-> Зразок. Несу — несімо, неси, несіть, хай несе, хай несуть. 
-> Несу, кричу, роблю, знаю, їду, бережу, лізу. 
-> 1.	Прочитайте діалог і виконайте завдання.
-
-## Як утворити? (How to Form It)
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 30
-> **Score:** 0.50
->
-> Б. Зробіть звуковий запис виділених слів.
-
-## Підсумок — Summary
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 235
-> **Score:** 0.25
->
-> 235
-> Слухати — це «заплатити» своєю увагою, тобто обмі-
-> няти свою увагу на те, що вам необхідно. Тиша — це 
-> не показник уваги.
-> 529   І   Прочитайте речення. Якою темою вони об’єднані? Перекажіть 
-> своїми словами найцінніші для вас думки. Зобразіть зміст 
-> будь-якого речення на малюнку.
-> 1. Коли ви дивитеся комусь у вічі, це свідчить про те, що 
-> ви слухаєте. 2. Коли протягом розмови людина постійно від-
-> водить погляд, це змушує мовця почуватися ніяко-
-> во (За Дж. Борґом). 3. Бог дав два вуха, а один язик, тож 
-> і користуйся ними в такій пропорційності (Нар. творчість). 
-> 4. Один із найшвидших способів змусити людей думати про 
-> вас гарно — вислухати їх (А. Шопенгауер). 5. Людині потрібно 
-> лише 2 роки, щоб навчитися говорити, і 60 літ, щоб навчити-
-> ся тримати язик за зубами (Л. Фейхтвангер). 6.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 45
-> **Score:** 0.50
->
-> В. Прочитайте текст удруге й докладно його перекажіть (усно).
-
-## Grammar Reference
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 45
-> **Score:** 0.50
->
-> В. Прочитайте текст удруге й докладно його перекажіть (усно).
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 85
-> **Score:** 0.50
->
-> 82
-> Зауважте!
-> У дієсловах наказового способу пишемо м’який знак у кінці слова та 
-> складу після д, т, з, с, ц, л, н:  лізь, лізьте, будь, будьте, глянь, гляньте, 
-> занось, заносьте.
-> 2.	 Утворіть усі можливі форми наказового способу (за зразком). Запишіть 
-> їх і виділіть у них закінчення.
-> Зразок. Несу — несімо, неси, несіть, хай несе, хай несуть. 
-> Несу, кричу, роблю, знаю, їду, бережу, лізу. 
-> 1.	Прочитайте діалог і виконайте завдання.
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
-  
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-### Способи дієслів
-> **Source:** МійКлас — [Способи дієслів](https://www.miyklas.com.ua/p/ukrainska-mova/7-klas/diyeslovo-14736/sposobi-diyesliv-39998)
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-### Теорія:
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-*www.ua.pistacja.tv*  
-Спосіб дієслова виражає відношення названої дієсловом дії або стану до реальності.
-**Є три способи дієслів: дійсний, умовний і наказовий.**
-Дійсний спосіб
-Умовний спосіб
-Творення умовного способу
+## Послідовність введення (Introduction Sequence)
 
-*www.ua.pistacja.tv*  
-Дієслова умовного способу творяться додаванням до форм минулого часу частки *би \(б\)*.
-Дієслово\\ минулого\\ часу \+ частки\\ би \(б\) = дієслово\\ умовного\\ способу.
-Частку пишуть окремо від дієслів, при цьому після голосного вживаємо б, а після приголосного — би.
-Приклад:
-Cпівав би, співала б, співали б.
-**Частка би \(б\) може стояти**
-- після дієслова: *Чи жила б Україна без кобзи\-бандури?* \(І.
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
 
-### Дієслово, дієслівні форми. Дієвідміни. Наказовий спосіб
-> **Source:** МійКлас — [Дієслово, дієслівні форми. Дієвідміни. Наказовий спосіб](https://www.miyklas.com.ua/p/ukrainska-mova/11-klas/morfologichna-norma-379685/diyeslovo-diyeslivni-formi-diyevidmini-diyesliv-nakazovii-sposib-380008)
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
 
-### Теорія:
-Дієслово — самостійна частина мови, що означає дію або стан предмета й відповідає на питання що робити? що зробив?
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
 
-... (truncated for context window)
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -632,7 +576,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Наказовий спосіб (The Imperative Mood)` (~300 words)
 - `## Як утворити? (How to Form It)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -690,7 +633,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -791,80 +734,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
+## Діалоги (~330 words)
+- P1 (~30 words): Introduction to the social contexts where instructions and requests are vital, setting the scene for two different registers of speech.
+- P2 (~100 words): Dialogue 1 — In the classroom. A teacher gives instructions to students: «Відкрийте підручники, будь ласка. Читайте текст. Пишіть три речення. Запитуйте, якщо є питання.» Focus on the plural/formal forms.
+- P3 (~50 words): Analysis of the classroom dialogue, highlighting the relationship between the teacher and students and the use of plural verbs for a group.
+- P4 (~100 words): Dialogue 2 — Between friends. Two friends discuss going to a café: «Слухай, ходімо! Подивись, яка погода. Дай мені меню. Скажи, що ти хочеш.» Focus on informal singular forms.
+- P5 (~50 words): Analysis of the informal dialogue, noting how the tone differs from the classroom setting despite the grammatical goal remaining the same.
 
-- P1 (~20 words): Scene-setting sentence — classroom, teacher addresses students, morning Ukrainian lesson begins.
-- Dialogue 1 (~120 words): 8-turn classroom exchange — Вчителька (teacher) and Учні (students):
-  - Вчителька: Відкрийте підручники, будь ласка. Читайте текст на сторінці двадцять три.
-  - Учень: Вибачте, яку сторінку?
-  - Вчителька: Сторінку двадцять три. Читайте тихо, одна хвилина.
-  - Вчителька: Добре. Тепер пишіть. Напишіть три речення про текст.
-  - Учениця: Можна запитати?
-  - Вчителька: Так, запитуйте!
-  - Учениця: Що означає це слово?
-  - Вчителька: Подивіться у словник. Відкрийте його.
-  Focus: classroom imperatives відкрийте, читайте, пишіть, напишіть, запитуйте, подивіться.
-- P2 (~15 words): Brief scene-break — now after school, two friends walking to a café.
-- Dialogue 2 (~120 words): 8-turn friends exchange — Oles and Daryna:
-  - Олесь: Слухай, ходімо в кафе! Подивись, яка гарна погода!
-  - Дарина: Добре! Іди, я зараз.
-  - Олесь: Сідай тут, це гарне місце.
-  - Дарина: Дай мені меню, будь ласка.
-  - Олесь: Ось, дивись. Скажи, що ти хочеш?
-  - Дарина: Я хочу каву і тістечко.
-  - Олесь: Добре. Гей, офіціанте, принесіть, будь ласка, каву і тістечко!
-  - Дарина: Дякую, Олесю!
-  Focus: informal imperatives слухай, подивись, іди, сідай, дай, дивись, скажи.
-- P3 (~55 words): Short comprehension note — point out which imperatives were ти-forms (слухай, іди, сідай, дай, скажи) vs. ви-forms used for the group/formal (відкрийте, читайте, пишіть). Highlight будь ласка appearing in both dialogues. Ask learner: which words were commands and which were polite requests?
+## Наказовий спосіб (~330 words)
+- P1 (~90 words): Defining the "Наказовий спосіб" (Imperative Mood) using Ukrainian Grade 5 terminology. Explain its primary functions: commands, requests, invitations, and warnings.
+- P2 (~80 words): Register awareness: Choosing between "ти" (informal singular) and "ви" (formal or plural). Explain that this choice mirrors the pronouns the learner already knows from earlier modules.
+- P3 (~90 words): Politeness and "Будь ласка." Explain the cultural nuance that while the imperative is direct, adding "будь ласка" (please) transforms a command into a standard polite request. Contrast "Дай!" with "Дай, будь ласка."
+- P4 (~70 words): Using names and titles to soften requests. Examples of addressing peers (Олено, читай) versus formal address (Пане Іване, читайте) using the vocative hint.
+- <!-- INJECT_ACTIVITY: group-sort-imperative-register --> [group-sort, Sort: ти-forms vs ви-forms (читай vs читайте, дай vs дайте, скажи vs скажіть), 10 items]
 
-## Наказовий спосіб (~330 words total)
+## Як утворити? (~330 words)
+- P1 (~80 words): Formation of the "ти" form for Group I verbs ending in -ати. Explain the stem extraction and adding -й: читати → читай, слухати → слухай, співати → співай.
+- P2 (~80 words): Formation of the "ти" form for Group II verbs ending in -ити. Explain the drop of the ending and the result: говорити → говори, ходити → ходи, сидіти → сиди. Mention the role of stress.
+- P3 (~80 words): Common irregular and short imperatives that every A1 learner needs. Examples: дати → дай, сказати → скажи, їсти → їж, іти → іди, відкрити → відкрий.
+- P4 (~90 words): Formation of the "ви" form for all verbs. The universal rule: take the "ти" form and add -те. Examples: читай + те = читайте, говори + те = говоріть (note the vowel shift for stress), дай + те = дайте.
+- <!-- INJECT_ACTIVITY: fill-in-imperative-formation --> [fill-in, Form imperative: читати → читай / читайте, писати → пиши / пишіть, 10 items]
+- <!-- INJECT_ACTIVITY: quiz-polite-choice --> [quiz, Choose correct: ___, будь ласка! (дай / даєш / дати) for context, 8 items]
 
-- P1 (~80 words): Introduce the term наказовий спосіб (imperative mood) — used for commands (Читай!), requests (Дай, будь ласка.), instructions (Напишіть три речення.), and invitations (Ходімо в кафе!). Explain two forms covered here: ти-form (one person, informal — your friend, sibling) and ви-form (formal — teacher, stranger — or plural — whole class). Give a minimal pair: Дай! (to a friend) vs. Дайте! (to a teacher or group).
-- P2 (~80 words): Politeness mechanism — будь ласка transforms any imperative into a polite request. Four examples showing the same verb escalating: Дай! → Дай, будь ласка. → Дайте, будь ласка. → Пане Іване, дайте, будь ласка. Clarify that Ukrainian imperatives without будь ласка are NOT rude — they are how teachers, coaches, and parents speak naturally. Tone and name add warmth: Оленко, прочитай, будь ласка.
-- P3 (~80 words): Contrast with English expectations — English speakers sometimes feel Ukrainian commands sound blunt. Explain: in Ukrainian classrooms, Читайте! and Пишіть! are normal, professional instruction. Робіть вправу! is what Заболотний's textbook looks like on every page. Adding будь ласка is for extra politeness, not basic courtesy. Give three authentic classroom examples from dialogue 1 that sounded natural without будь ласка: Читайте текст. Напишіть три речення. Запитуйте!
-- P4 (~90 words): The two contexts where you MUST use ви-form: (1) speaking to one adult you address formally (your teacher, a stranger, a doctor — Скажіть, будь ласка, де зупинка?) and (2) speaking to more than one person regardless of age (Діти, сідайте! — Children, sit down!). Give three real-life scenario examples: telling your whole family to sit down (Сідайте!), asking a shop assistant (Покажіть, будь ласка.), telling friends to come (Ходімо!).
-
-## Як утворити? (~330 words total)
-
-- P1 (~70 words): Explain the two-step formation principle — find the stem from the present tense 3rd person plural (вони читають → читай-), then add the imperative ending. Two ending patterns: -й (after vowel stem: читай, слухай, давай) and -и/-і (after consonant stem: пиши, говори, неси). Keep it simple at A1 — just these two patterns. One sentence summary: якщо основа закінчується на голосний → -й; якщо на приголосний → -и.
-- P2 (~90 words): Ти-forms in detail with 8 high-frequency verbs:
-  - читати (читають → читай) — read
-  - слухати (слухають → слухай) — listen
-  - писати (пишуть → пиши) — write
-  - говорити (говорять → говори) — speak
-  - дивитися (дивляться → дивись) — look/watch
-  - ходити (ходять → ходи) — walk/go
-  - іти (ідуть → іди) — go
-  - сісти (сядуть → сядь) — sit down
-  Show the vowel-stem group (читай, слухай) and consonant-stem group (пиши, говори, дивись) side by side. Note: іди and сядь are irregular but essential — learn them as vocabulary.
-- P3 (~90 words): Ви-forms — add -те or -іть to the ти-form. Rule of thumb: if ти-form ends in -й → add -те (читай → читайте, слухай → слухайте, давай → давайте); if ти-form ends in -и → add -іть (пиши → пишіть, говори → говоріть, ходи → ходіть, дивись → дивіться). Special cases with soft sign from Авраменко/Заболотний: будь → будьте, глянь → гляньте. Full parallel list: читай/читайте, пиши/пишіть, дивись/дивіться, сядь/сядьте, іди/ідіть.
-- Exercise 1 (~20 words label): Fill-in activity — complete the imperative table: infinitive given → fill ти-form and ви-form. 10 items using читати, писати, слухати, говорити, дивитися, ходити, іти, відкрити, показати, запитати.
-- P4 (~60 words): Irregular high-priority imperatives — four verbs that don't follow the stem pattern and must be memorized: дати → дай/дайте (give), сказати → скажи/скажіть (say/tell), їсти → їж/їжте (eat), взяти → візьми/візьміть (take). These four appear constantly in daily speech. Memory hook: all four are one-syllable ти-forms — дай, скажи, їж, візьми.
-- Exercise 2 (~20 words label): Quiz — choose the correct form: ___, будь ласка! with options (дай / даєш / дати), (скажіть / скажете / сказати), etc. 8 items.
-
-## Підсумок (~330 words total)
-
-- P1 (~30 words): Brief framing — here are the essential imperatives you now know. You can give instructions in the classroom, café, and gym. Two forms: ти for friends, ви for teachers and groups.
-- Table (~120 words): Consolidation reference table — 10 verbs with infinitive, ти-form, ви-form, and English meaning:
-  | Інфінітив | Ти | Ви | Значення |
-  | читати | читай | читайте | read |
-  | писати | пиши | пишіть | write |
-  | слухати | слухай | слухайте | listen |
-  | дивитися | дивись | дивіться | look/watch |
-  | говорити | говори | говоріть | speak |
-  | іти | іди | ідіть | go |
-  | дати | дай | дайте | give |
-  | сказати | скажи | скажіть | say/tell |
-  | сісти | сядь | сядьте | sit down |
-  | відкрити | відкрий | відкрийте | open |
-- P2 (~60 words): Будь ласка reminder — three ready-made polite phrases to memorize as chunks: Скажіть, будь ласка (Excuse me, could you tell me…), Дайте, будь ласка (Could you give me…), Покажіть, будь ласка (Could you show me…). These work in shops, at school, at the doctor's. Chunk-learning tip: learn the whole phrase, not just the verb.
-- Exercise 3 (~20 words label): Group-sort activity — sort 10 imperative forms into two columns: ти-forms vs. ви-forms. Items: читай, читайте, дай, дайте, пиши, пишіть, скажи, скажіть, сядь, сядьте.
-- Exercise 4 (~20 words label): Fill-in context exercise — complete the mini-dialogues with the correct form (ти or ви): Олено, ___ книжку! vs. Пане Іване, ___ книжку! (дай/дайте), etc. 6 items with both informal and formal context cues.
-- Self-check (~80 words): Three self-check questions in bullet format:
-  - Як сказати «Please read» своєму вчителеві? → Читайте, будь ласка.
-  - Як сказати «Listen!» другові? → Слухай!
-  - Як сказати «Give me, please» у магазині незнайомцю? → Дайте, будь ласка.
-  Plus one production prompt: Look around where you are right now. Give three instructions to an imaginary friend using imperatives you learned. Write them down: ___! ___! ___!
+## Підсумок — Summary (~330 words)
+- P1 (~150 words): Comprehensive table of essential imperatives for daily life. List verbs: читати, писати, слухати, дивитися, говорити, іти, дати, сказати, сісти, відкрити. Provide the "ти" form, "ви" form, and English meaning for each.
+- P2 (~180 words): Self-check and practical application. 
+    - Q: How do you ask a friend to "look"? (A: Дивись!) 
+    - Q: How do you ask a group of people to "listen"? (A: Слухайте!)
+    - Q: What word makes any command polite? (A: Будь ласка.)
+    - Q: How do you say "Please say" to a boss? (A: Скажіть, будь ласка.)
+- <!-- INJECT_ACTIVITY: fill-in-contextual-names --> [fill-in, Complete: Олено, ___ книжку! Пане Іване, ___ книжку! (дай/дайте), 6 items]
 
 Grand total: ~1320 words
 </skeleton>

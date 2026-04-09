@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "cases-with-quantity-expressions",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-09T20:47:42.063966+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-09T20:47:42.075537+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-09T20:48:13.957781+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-09T20:49:23.136089+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-09T20:59:42.379309+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T20:59:42.380362+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-09T21:04:03.178996+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-09T21:04:03.235634+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-09T21:04:03.248126+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-09T21:04:47.481801+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-09T21:04:47.481988+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-09T21:04:47.881119+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-09T21:06:43.965024+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-09T21:06:44.304699+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-09T21:06:49.629865+00:00"
+    }
+  }
+}

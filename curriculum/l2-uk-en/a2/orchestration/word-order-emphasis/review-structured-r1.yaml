@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module covers almost all points excellently, but completely misses
+    the final point in the 4th section: "Reading practice: identifying word order
+    shifts in a short Ukrainian text and explaining why'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent natural Ukrainian overall. However, in the summary, the term
+    "об'єкт" is used instead of the correct grammatical term "додаток" ("Для чого
+    виносити об'єкт на початок речення?").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The progression from theme/rheme to direct word order and then contrastive
+    inversion is explained very clearly with great intuitive rules (like checking
+    by answering questions).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is present and integrated naturally into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 5 required exercise markers are present and correspond to the concepts
+    taught immediately prior.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging, and highly informative tone. No filler or corporate
+    speech.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 2049, exceeding the 2000 target. Sections map neatly to
+    the outline.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Contrasts Ukrainian syntactic flexibility with English rigidity accurately,
+    highlighting how case endings allow this freedom.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues demonstrate natural spoken language with shifting emphasis (e.g.
+    "не Сенцов, а Лозниця" corrective contrast).
+findings: []

@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/14 required vocab: видова пара (aspectual pair), хай / нехай (let — 3rd person imperative)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 3"
+    }
+  ],
+  "timestamp": "2026-04-09T20:13:11.521777+00:00"
+}

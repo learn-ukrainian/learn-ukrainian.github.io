@@ -2,265 +2,253 @@ version: '1.0'
 module: free-time
 level: a1
 inline:
-- id: match-hobby-verbs
-  type: match-up
-  instruction: З'єднайте пари (Match the pairs)
-  pairs:
-  - left: to play football
-    right: грати у футбол
-  - left: to play guitar
-    right: грати на гітарі
-  - left: to listen to music
-    right: слухати музику
-  - left: to watch films
-    right: дивитися фільми
-  - left: to go to the cinema
-    right: ходити в кіно
-  - left: to go to the theater
-    right: ходити в театр
-  - left: to read a book
-    right: читати книгу
-  - left: to go to a concert
-    right: ходити на концерт
-- id: fill-in-prepositions
+- id: fill-in-invitations
   type: fill-in
-  instruction: Оберіть правильний прийменник (Choose the correct preposition)
+  instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - sentence: Він грає ___ піаніно.
-    answer: на
-    options:
-    - на
-    - у
-    - в
-  - sentence: Ми граємо ___ футбол.
-    answer: у
-    options:
-    - у
-    - на
-    - в
-  - sentence: Я хочу ходити ___ концерт.
-    answer: на
-    options:
-    - на
-    - в
-    - у
-  - sentence: Вони ходять ___ театр раз на місяць.
-    answer: в
-    options:
-    - в
-    - на
-    - у
-  - sentence: Вона грає ___ скрипці.
-    answer: на
-    options:
-    - на
-    - у
-    - в
-  - sentence: Він ходить ___ музей іноді.
-    answer: в
-    options:
-    - в
-    - на
-    - у
-  - sentence: Я ходжу ___ кіно у суботу.
-    answer: в
-    options:
-    - в
-    - на
-    - у
-- id: fill-in-frequency
-  type: fill-in
-  instruction: Оберіть правильне слово або фразу (Choose the correct word or phrase)
-  items:
-  - sentence: Неділя — вихідний день. Я ___ працюю у неділю.
-    answer: ніколи не
-    options:
-    - ніколи не
-    - завжди
-    - часто
-  - sentence: Вона грає у теніс двічі ___ тиждень.
-    answer: на
-    options:
-    - на
-    - у
-    - в
-  - sentence: — ___ в кіно у суботу! — Добре!
+  - sentence: — _____ в кіно у суботу! — Добре!
     answer: Ходімо
     options:
     - Ходімо
     - Давай
     - Ідемо
-  - sentence: Я люблю спорт, тому ___ граю у баскетбол.
-    answer: часто
-    options:
-    - часто
-    - ніколи
-    - рідко
-  - sentence: Я не маю часу, тому ___ читаю книги.
-    answer: рідко
-    options:
-    - рідко
-    - часто
-    - завжди
-  - sentence: — Що ти робиш ___ ? — Зазвичай відпочиваю.
+  - sentence: Що ти робиш _____?
     answer: у вихідні
     options:
     - у вихідні
     - вихідні
     - на вихідні
-workbook:
-- type: group-sort
-  instruction: Розподіліть слова за групами (Sort the words into groups)
-  groups:
-  - label: грати у ___
-    items:
-    - футбол
-    - баскетбол
-    - теніс
-    - волейбол
-  - label: грати на ___
-    items:
-    - гітарі
-    - піаніно
-    - скрипці
-  - label: ходити в / на ___
-    items:
-    - кіно
-    - театр
-    - концерт
-    - музей
-- type: true-false
-  instruction: Правда чи ні? (True or false?)
+  - sentence: — _____ на концерт завтра! — Чудова ідея!
+    answer: Ходімо
+    options:
+    - Ходімо
+    - Йдемо
+    - Давай
+  - sentence: — Що ви робите _____? — Ми граємо у теніс.
+    answer: у вихідні
+    options:
+    - у вихідні
+    - вихідні
+    - на вихідні
+  - sentence: — _____ в музей! — Я не люблю музеї.
+    answer: Ходімо
+    options:
+    - Ходімо
+    - Пішли
+    - Давай
+  - sentence: Я маю вільний _____, ходімо гуляти!
+    answer: час
+    options:
+    - час
+    - день
+    - тиждень
+- id: match-up-hobbies
+  type: match-up
+  instruction: З'єднайте дієслово з іменником (Match the verb to the logical noun)
+  pairs:
+  - left: грати
+    right: у футбол
+  - left: грати
+    right: на гітарі
+  - left: слухати
+    right: музику
+  - left: дивитися
+    right: фільми
+  - left: ходити
+    right: в театр
+  - left: читати
+    right: книгу
+  - left: малювати
+    right: вдома
+- id: preposition-check
+  type: fill-in
+  instruction: Оберіть правильний прийменник (Choose the correct preposition)
   items:
-  - statement: Вона ніколи ходить у театр.
-    correct: false
-    explanation: '''Ніколи'' always requires ''не'' before the verb: ніколи не ходить.'
-  - statement: Я часто граю у футбол — двічі на тиждень.
-    correct: true
-    explanation: '''Часто'' (often) is consistent with ''двічі на тиждень'' (twice
-      a week).'
-  - statement: Він завжди малює — кожен день.
-    correct: true
-    explanation: '''Завжди'' (always) and ''кожен день'' (every day) express the same
-      frequency.'
-  - statement: Я рідко читаю книги — кожен день.
-    correct: false
-    explanation: '''Рідко'' (rarely) contradicts ''кожен день'' (every day) — these
-      are opposites.'
-  - statement: Я ніколи не граю у волейбол — у мене немає часу.
-    correct: true
-    explanation: 'Correct: ''ніколи не'' + verb. The context (no time) supports ''never''.'
-  - statement: Він ніколи не ходить у кіно — двічі на тиждень.
-    correct: false
-    explanation: '''Ніколи не ходить'' (never goes) contradicts ''двічі на тиждень''
-      (twice a week).'
-  - statement: Ми зазвичай дивимося фільми у вихідні.
-    correct: true
-    explanation: 'Correct structure: ''зазвичай'' (usually) + verb + object + time
-      phrase.'
-- type: quiz
-  instruction: Дайте відповідь на запитання (Answer the question)
+  - sentence: Він грає _____ піаніно.
+    answer: на
+    options:
+    - на
+    - у
+    - в
+  - sentence: Ми граємо _____ футбол.
+    answer: у
+    options:
+    - у
+    - на
+    - в
+  - sentence: Я хочу ходити _____ концерт.
+    answer: на
+    options:
+    - на
+    - в
+    - у
+  - sentence: Вони ходять _____ театр раз на місяць.
+    answer: в
+    options:
+    - в
+    - на
+    - у
+  - sentence: Вона грає _____ гітарі.
+    answer: на
+    options:
+    - на
+    - у
+    - в
+  - sentence: Діти грають _____ теніс.
+    answer: у
+    options:
+    - у
+    - на
+    - в
+- id: fill-in-frequency
+  type: fill-in
+  instruction: Оберіть правильне слово (Choose the correct word)
   items:
-  - question: Що Вітя зазвичай робить у вихідні?
+  - sentence: Я _____ працюю у неділю, бо це мій вихідний.
+    answer: ніколи не
     options:
-    - Ходить у театр
-    - Гуляє і читає
-    - Грає у футбол
-    - Слухає музику
-    correct: 1
-  - question: Куди Лєна запрошує Вітю в суботу?
-    options:
-    - У музей
-    - На концерт
-    - В кіно
-    - В театр
-    correct: 2
-  - question: Як часто Лєна грає у футбол?
-    options:
-    - Раз на тиждень
-    - Двічі на тиждень
-    - Кожен день
-    - Рідко
-    correct: 1
-  - question: Коли саме Лєна грає у футбол?
-    options:
-    - У понеділок і середу
-    - У п'ятницю і суботу
-    - У вівторок і четвер
-    - У неділю
-    correct: 2
-  - question: Як часто Лєна ходить у музей?
-    options:
-    - Кожен день
-    - Двічі на тиждень
-    - Раз на місяць
-    - Ніколи
-    correct: 2
-  - question: Що Вітя і Лєна люблять робити?
-    options:
-    - Грати у футбол
-    - Слухати музику
-    - Ходити в театр
-    - Малювати
-    correct: 3
-- type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
-  items:
-  - sentence: Я ___ слухаю музику — кожен день.
-    answer: завжди
-    options:
-    - завжди
-    - рідко
-    - іноді
     - ніколи не
-  - sentence: Він ___ ходить у театр — раз на рік.
+    - завжди
+    - часто
+  - sentence: Вона грає у теніс двічі _____.
+    answer: на тиждень
+    options:
+    - на тиждень
+    - у тиждень
+    - в тиждень
+  - sentence: Я люблю спорт, тому _____ граю у баскетбол.
+    answer: часто
+    options:
+    - часто
+    - ніколи
+    - рідко
+  - sentence: Я не маю часу, тому _____ читаю книги.
     answer: рідко
     options:
     - рідко
     - часто
     - завжди
-    - іноді
-  - sentence: Вона ___ грає на гітарі — тричі на тиждень.
-    answer: часто
+  - sentence: Він _____ слухає таку музику.
+    answer: ніколи не
     options:
-    - часто
-    - іноді
-    - рідко
-    - завжди
-  - sentence: Зазвичай я граю у волейбол, але ___ ходжу в театр.
-    answer: іноді
-    options:
-    - іноді
-    - завжди
     - ніколи не
-    - рідко
-  - sentence: Він ___ не дивиться фільми — він не любить кіно.
-    answer: ніколи
-    options:
     - ніколи
-    - рідко
-    - іноді
-    - часто
-  - sentence: Ми ___ граємо у баскетбол — двічі або тричі на тиждень.
-    answer: часто
+    - не ніколи
+  - sentence: Ми _____ гуляємо ввечері, якщо гарна погода.
+    answer: зазвичай
     options:
-    - часто
-    - ніколи
-    - рідко
     - зазвичай
-- type: error-correction
-  instruction: Знайдіть помилку і виправте (Find the error and correct it)
+    - ніколи
+    - рідко
+workbook:
+- id: group-sort-hobbies
+  type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort words by categories)
+  groups:
+  - label: Спорт і ігри (грати у)
+    items:
+    - футбол
+    - баскетбол
+    - теніс
+    - комп'ютерні ігри
+  - label: Музичні інструменти (грати на)
+    items:
+    - гітарі
+    - піаніно
+    - скрипці
+- id: true-false-rules
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
   items:
-  - sentence: Він грає у піаніно.
-    error: у
-    correction: на
-    error_type: word
+  - statement: Ми кажемо «грати на футбол».
+    correct: false
+    explanation: 'Для спорту ми використовуємо прийменник «у/в»: грати у футбол.'
+  - statement: Після слова «ніколи» завжди має бути частка «не».
+    correct: true
+    explanation: 'В українській мові використовується подвійне заперечення: «ніколи
+      не».'
+  - statement: Ми кажемо «ходити в концерт».
+    correct: false
+    explanation: 'Для подій (подія) ми використовуємо прийменник «на»: ходити на концерт.'
+  - statement: «Ходімо!» — це запрошення щось зробити разом.
+    correct: true
+    explanation: Це стандартна форма для запрошення (Let's go!).
+  - statement: Ми кажемо «грати на гітарі».
+    correct: true
+    explanation: Для музичних інструментів використовується прийменник «на».
+  - statement: Ми кажемо «ходити на кіно».
+    correct: false
+    explanation: 'Для будівель (building) використовується прийменник «в/у»: ходити
+      в кіно.'
+- id: translate-hobbies
+  type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: I play football.
     options:
-    - на
-    - в
-    - до
-    explanation: 'Instruments use ''на'': грати на піаніно.'
-  - sentence: Вона ходить на театр.
+    - text: Я граю у футбол.
+      correct: true
+    - text: Я граю на футбол.
+      correct: false
+    - text: Я граю в футболі.
+      correct: false
+    - text: Я граю футбол.
+      correct: false
+  - source: She plays the piano.
+    options:
+    - text: Вона грає на піаніно.
+      correct: true
+    - text: Вона грає у піаніно.
+      correct: false
+    - text: Вона грає в піаніно.
+      correct: false
+    - text: Вона грає піаніно.
+      correct: false
+  - source: We often go to the cinema.
+    options:
+    - text: Ми часто ходимо в кіно.
+      correct: true
+    - text: Ми часто ходимо на кіно.
+      correct: false
+    - text: Ми рідко ходимо в кіно.
+      correct: false
+    - text: Ми зазвичай ходимо в кіно.
+      correct: false
+  - source: Let's go to the theater!
+    options:
+    - text: Ходімо в театр!
+      correct: true
+    - text: Ходімо на театр!
+      correct: false
+    - text: Йдемо у театрі!
+      correct: false
+    - text: Давай в театрі!
+      correct: false
+  - source: I never listen to music.
+    options:
+    - text: Я ніколи не слухаю музику.
+      correct: true
+    - text: Я ніколи слухаю музику.
+      correct: false
+    - text: Я не ніколи слухаю музику.
+      correct: false
+    - text: Я завжди не слухаю музику.
+      correct: false
+  - source: What do you do on the weekend?
+    options:
+    - text: Що ти робиш у вихідні?
+      correct: true
+    - text: Що ти робиш на вихідні?
+      correct: false
+    - text: Що ти робиш вихідні?
+      correct: false
+    - text: Що ти робиш у вихідний?
+      correct: false
+- id: error-correction-prepositions
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  items:
+  - sentence: Ми ходимо на музей у суботу.
     error: на
     correction: в
     error_type: word
@@ -268,17 +256,8 @@ workbook:
     - в
     - у
     - до
-    explanation: 'Places of entertainment use ''в'': ходити в театр.'
-  - sentence: Я граю на футбол.
-    error: на
-    correction: у
-    error_type: word
-    options:
-    - у
-    - в
-    - до
-    explanation: 'Sports use ''у'': грати у футбол.'
-  - sentence: Ми ходимо в концерт.
+    explanation: Для будівель (музей) використовується прийменник в/у.
+  - sentence: Я граю в гітарі щодня.
     error: в
     correction: на
     error_type: word
@@ -286,8 +265,26 @@ workbook:
     - на
     - у
     - до
-    explanation: 'Events and performances use ''на'': ходити на концерт.'
-  - sentence: Він грає у скрипці.
+    explanation: Для інструментів використовується прийменник на.
+  - sentence: Вона ніколи грає у теніс.
+    error: грає
+    correction: не грає
+    error_type: construction
+    options:
+    - не грає
+    - грати
+    - грають
+    explanation: В українській мові використовується подвійне заперечення з ніколи.
+  - sentence: Вони грають на комп'ютерні ігри.
+    error: на
+    correction: у
+    error_type: word
+    options:
+    - у
+    - в
+    - до
+    explanation: Для ігор та спорту використовується прийменник у/в.
+  - sentence: Він грає у скрипці дуже гарно.
     error: у
     correction: на
     error_type: word
@@ -295,8 +292,8 @@ workbook:
     - на
     - в
     - до
-    explanation: 'Instruments use ''на'': грати на скрипці.'
-  - sentence: Вона ходить на музей.
+    explanation: Для інструментів використовується прийменник на.
+  - sentence: Ходімо на кіно сьогодні!
     error: на
     correction: в
     error_type: word
@@ -304,87 +301,80 @@ workbook:
     - в
     - у
     - до
-    explanation: 'Places use ''в'': ходити в музей.'
-- type: unjumble
-  instruction: Складіть речення зі слів (Put the words in order to make a sentence)
+    explanation: Для будівель використовується прийменник в/у.
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
   items:
   - words:
     - у
-    - суботу
-    - кіно
-    - в
-    - Ходімо
-    correct_order:
-    - Ходімо
-    - в
-    - кіно
-    - у
-    - суботу
-  - words:
-    - на
-    - грає
-    - двічі
-    - теніс
-    - Лєна
-    - тиждень
-    - у
-    correct_order:
-    - Лєна
-    - грає
-    - у
-    - теніс
-    - двічі
-    - на
-    - тиждень
-  - words:
-    - рідко
+    - граю
     - Я
-    - серіали
-    - дивлюся
+    - футбол.
     correct_order:
     - Я
-    - рідко
-    - дивлюся
-    - серіали
-  - words:
-    - не
-    - ніколи
-    - в
-    - музей
-    - ходить
-    - Він
-    correct_order:
-    - Він
-    - ніколи
-    - не
-    - ходить
-    - в
-    - музей
-  - words:
-    - завжди
+    - граю
     - у
-    - Вона
-    - неділю
-    - читає
-    correct_order:
-    - Вона
-    - завжди
-    - читає
-    - у
-    - неділю
+    - футбол.
   - words:
-    - тиждень
+    - ніколи
+    - гітарі.
+    - не
+    - Вона
     - грає
     - на
-    - баскетбол
-    - тричі
-    - у
-    - Він
     correct_order:
-    - Він
+    - Вона
+    - ніколи
+    - не
     - грає
-    - у
-    - баскетбол
-    - тричі
     - на
-    - тиждень
+    - гітарі.
+  - words:
+    - в
+    - Ходімо
+    - кіно!
+    correct_order:
+    - Ходімо
+    - в
+    - кіно!
+  - words:
+    - робиш
+    - у
+    - ти
+    - Що
+    - вихідні?
+    correct_order:
+    - Що
+    - ти
+    - робиш
+    - у
+    - вихідні?
+  - words:
+    - часто
+    - в
+    - Ми
+    - театр.
+    - ходимо
+    correct_order:
+    - Ми
+    - часто
+    - ходимо
+    - в
+    - театр.
+  - words:
+    - граю
+    - у
+    - теніс
+    - двічі
+    - на
+    - тиждень.
+    - Я
+    correct_order:
+    - Я
+    - граю
+    - у
+    - теніс
+    - двічі
+    - на
+    - тиждень.

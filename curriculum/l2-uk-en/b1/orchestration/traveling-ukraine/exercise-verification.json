@@ -1,0 +1,193 @@
+{
+  "total_items": 193,
+  "grounded_items": 166,
+  "ungrounded": [
+    {
+      "word": "автомобільний",
+      "exercise_type": "group-sort",
+      "context": "Автомобільний (Road)",
+      "role": "context"
+    },
+    {
+      "word": "повітряний",
+      "exercise_type": "group-sort",
+      "context": "Повітряний (Air)",
+      "role": "context"
+    },
+    {
+      "word": "водний",
+      "exercise_type": "group-sort",
+      "context": "Водний (Water)",
+      "role": "context"
+    },
+    {
+      "word": "першої",
+      "exercise_type": "error-correction",
+      "context": "Потяг відправляється з першої платформи.",
+      "role": "context"
+    },
+    {
+      "word": "сьомій",
+      "exercise_type": "error-correction",
+      "context": "Наш автобус відправляється о сьомій.",
+      "role": "context"
+    },
+    {
+      "word": "винуватий",
+      "exercise_type": "error-correction",
+      "context": "Хто винуватий у затримці рейсу?",
+      "role": "context"
+    },
+    {
+      "word": "рейсу",
+      "exercise_type": "error-correction",
+      "context": "Хто винуватий у затримці рейсу?",
+      "role": "context"
+    },
+    {
+      "word": "брали",
+      "exercise_type": "error-correction",
+      "context": "брали участь",
+      "role": "answer"
+    },
+    {
+      "word": "участь",
+      "exercise_type": "error-correction",
+      "context": "брали участь",
+      "role": "answer"
+    },
+    {
+      "word": "приймали",
+      "exercise_type": "error-correction",
+      "context": "Ми приймали участь у екскурсії.",
+      "role": "context"
+    },
+    {
+      "word": "впевнений",
+      "exercise_type": "error-correction",
+      "context": "Я повністю впевнений, що ми встигнемо.",
+      "role": "context"
+    },
+    {
+      "word": "гідом",
+      "exercise_type": "quiz",
+      "context": "Туристи з гідом довго ____ навколо великого міського парку.",
+      "role": "context"
+    },
+    {
+      "word": "вночі",
+      "exercise_type": "quiz",
+      "context": "Вночі ми дуже швидко ____ Вінницю без жодної зупинки.",
+      "role": "context"
+    },
+    {
+      "word": "жодної",
+      "exercise_type": "quiz",
+      "context": "Вночі ми дуже швидко ____ Вінницю без жодної зупинки.",
+      "role": "context"
+    },
+    {
+      "word": "площа",
+      "exercise_type": "match-up",
+      "context": "Площа Ринок",
+      "role": "answer"
+    },
+    {
+      "word": "одеса",
+      "exercise_type": "match-up",
+      "context": "Одеса",
+      "role": "context"
+    },
+    {
+      "word": "гора",
+      "exercise_type": "match-up",
+      "context": "Гора Говерла",
+      "role": "answer"
+    },
+    {
+      "word": "пройти",
+      "exercise_type": "fill-in",
+      "context": "Вам потрібно пройти ____ два квартали.",
+      "role": "context"
+    },
+    {
+      "word": "подорож'",
+      "exercise_type": "true-false",
+      "context": "Слово 'подорож' означає дуже коротку мандрівку, наприклад, у",
+      "role": "context"
+    },
+    {
+      "word": "коротку",
+      "exercise_type": "true-false",
+      "context": "Слово 'подорож' означає дуже коротку мандрівку, наприклад, у",
+      "role": "context"
+    },
+    {
+      "word": "україною'",
+      "exercise_type": "true-false",
+      "context": "В українській мові ми кажемо 'подорожувати Україною' без жод",
+      "role": "context"
+    },
+    {
+      "word": "комфортний",
+      "exercise_type": "true-false",
+      "context": "Найбільш приватний та комфортний варіант для нічних поїздок ",
+      "role": "context"
+    },
+    {
+      "word": "потязі",
+      "exercise_type": "true-false",
+      "context": "Найбільш приватний та комфортний варіант для нічних поїздок ",
+      "role": "context"
+    },
+    {
+      "word": "відходить'",
+      "exercise_type": "true-false",
+      "context": "В українській мові правильно казати, що поїзд 'відходить' аб",
+      "role": "context"
+    },
+    {
+      "word": "рушає'",
+      "exercise_type": "true-false",
+      "context": "В українській мові правильно казати, що поїзд 'відходить' аб",
+      "role": "context"
+    },
+    {
+      "word": "виліт'",
+      "exercise_type": "true-false",
+      "context": "Коли літак безпечно приземляється, ми використовуємо слово '",
+      "role": "context"
+    },
+    {
+      "word": "подолали",
+      "exercise_type": "true-false",
+      "context": "Дієслово руху з префіксом 'до-' означає, що ви успішно подол",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 26,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "вокзал",
+      "готель",
+      "екскурсія",
+      "затримка",
+      "зворотний",
+      "зупинка",
+      "мандрувати",
+      "мандрівка",
+      "маршрут",
+      "пам'ятка",
+      "пасажир",
+      "пересадка",
+      "перон",
+      "платформа",
+      "провідник",
+      "рейс",
+      "розклад",
+      "хостел"
+    ]
+  },
+  "all_grounded": false
+}

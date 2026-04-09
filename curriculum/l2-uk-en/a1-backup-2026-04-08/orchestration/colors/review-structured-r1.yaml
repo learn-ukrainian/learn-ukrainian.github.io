@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present in correct order. Vocabulary hints
+    fully covered: all 10 required words appear naturally in prose (червоний, жовтий,
+    зелений, синій, блакитний, білий, чорний, сі'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All Ukrainian forms VESUM-verified. Gender agreement correct throughout.
+    Hard/soft stem paradigm explained accurately (confirmed against Вашуленко Grade
+    3 p.130 RAG result: "-ий, -ій" endings for М, "'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present colors in context → explicit teaching
+    with tables → practice markers. Multiple examples per grammar point (3+ for hard-stem,
+    side-by-side comparison table for hard v'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocab items appear naturally in prose (not as bare lists).
+    All 7 recommended items present. New words introduced in context: e.g., помаранчевий
+    introduced via Большакова''s poem ("Сонце'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 plan activity hints matched with correctly typed markers. Markers
+    placed after relevant teaching. fill-in tests gender agreement (language skill
+    ✓), group-sort tests grammar classification (✓), '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no "you have unlocked" gamification, no meta-commentary.
+    Cultural hooks are specific and well-placed: Ukrainian flag poem, вишиванка regional
+    color patterns (Полісся vs. Полта'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections present and correctly ordered (Діалоги → Кольори →
+    Синій≠блакитний → Підсумок). No duplicate summaries, no stray tags, no meta-commentary
+    sections. Word count 1524 — well above 1200 '
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'Ukrainian presented on its own terms — no "like Russian but..." framing.
+    Flag symbolism accurately described. Вишиванка regional patterns (Полісся: червоний
+    і чорний; Полтавщина: червоний і синій) are'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Both dialogues have named speakers with distinct roles (Наталка/Продавець,
+    Дмитро/Ліза). Natural multi-turn exchanges — Dialogue 1 flows through a real flower-buying
+    scenario with spontaneous question
+findings: []

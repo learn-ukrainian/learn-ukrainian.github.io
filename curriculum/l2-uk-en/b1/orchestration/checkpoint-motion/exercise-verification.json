@@ -1,0 +1,572 @@
+{
+  "total_items": 403,
+  "grounded_items": 312,
+  "ungrounded": [
+    {
+      "word": "машина",
+      "exercise_type": "quiz",
+      "context": "Моя машина стоїть _____ старого будинку.",
+      "role": "context"
+    },
+    {
+      "word": "старого",
+      "exercise_type": "quiz",
+      "context": "Моя машина стоїть _____ старого будинку.",
+      "role": "context"
+    },
+    {
+      "word": "будинку",
+      "exercise_type": "quiz",
+      "context": "Моя машина стоїть _____ старого будинку.",
+      "role": "context"
+    },
+    {
+      "word": "зустрів",
+      "exercise_type": "quiz",
+      "context": "Я зустрів свого друга _____ парком і школою.",
+      "role": "context"
+    },
+    {
+      "word": "свого",
+      "exercise_type": "quiz",
+      "context": "Я зустрів свого друга _____ парком і школою.",
+      "role": "context"
+    },
+    {
+      "word": "школою",
+      "exercise_type": "quiz",
+      "context": "Я зустрів свого друга _____ парком і школою.",
+      "role": "context"
+    },
+    {
+      "word": "стояли",
+      "exercise_type": "quiz",
+      "context": "Студенти стояли _____ великого стадіону.",
+      "role": "context"
+    },
+    {
+      "word": "автобусі",
+      "exercise_type": "quiz",
+      "context": "Вона сиділа _____ зі мною в автобусі.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "quiz",
+      "context": "Моя сестра часто _____ у відпустку в гори.",
+      "role": "context"
+    },
+    {
+      "word": "кінотеатр",
+      "exercise_type": "quiz",
+      "context": "Сьогодні ввечері ми _____ в кінотеатр автомобілем.",
+      "role": "context"
+    },
+    {
+      "word": "автомобілем",
+      "exercise_type": "quiz",
+      "context": "Сьогодні ввечері ми _____ в кінотеатр автомобілем.",
+      "role": "context"
+    },
+    {
+      "word": "щочетверга",
+      "exercise_type": "quiz",
+      "context": "Я _____ в спортзал щовівторка та щочетверга.",
+      "role": "context"
+    },
+    {
+      "word": "автобусом",
+      "exercise_type": "quiz",
+      "context": "Вона зазвичай _____ на роботу автобусом.",
+      "role": "context"
+    },
+    {
+      "word": "прогулянку",
+      "exercise_type": "fill-in",
+      "context": "Я щодня _____ на прогулянку в парк.",
+      "role": "context"
+    },
+    {
+      "word": "батьків",
+      "exercise_type": "fill-in",
+      "context": "Ми часто _____ до батьків на вихідні.",
+      "role": "context"
+    },
+    {
+      "word": "біжать",
+      "exercise_type": "fill-in",
+      "context": "біжать",
+      "role": "answer"
+    },
+    {
+      "word": "зателефонував",
+      "exercise_type": "fill-in",
+      "context": "Він щойно зателефонував і сказав, що вже _____.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "fill-in",
+      "context": "Він щойно зателефонував і сказав, що вже _____.",
+      "role": "context"
+    },
+    {
+      "word": "відрядження",
+      "exercise_type": "fill-in",
+      "context": "Я часто _____ у відрядження за кордон.",
+      "role": "context"
+    },
+    {
+      "word": "кордон",
+      "exercise_type": "fill-in",
+      "context": "Я часто _____ у відрядження за кордон.",
+      "role": "context"
+    },
+    {
+      "word": "йшла",
+      "exercise_type": "fill-in",
+      "context": "Вона щойно _____йшла в магазин за хлібом.",
+      "role": "context"
+    },
+    {
+      "word": "їхав",
+      "exercise_type": "fill-in",
+      "context": "Наш поїзд нарешті _____їхав до Києва.",
+      "role": "context"
+    },
+    {
+      "word": "набирає",
+      "exercise_type": "fill-in",
+      "context": "Автобус уже _____їхав від перону і набирає швидкість.",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "group-sort",
+      "context": "йти на вокзал",
+      "role": "answer"
+    },
+    {
+      "word": "доходити",
+      "exercise_type": "match-up",
+      "context": "доходити",
+      "role": "context"
+    },
+    {
+      "word": "приїжджати",
+      "exercise_type": "match-up",
+      "context": "приїжджати",
+      "role": "context"
+    },
+    {
+      "word": "заходити",
+      "exercise_type": "match-up",
+      "context": "заходити",
+      "role": "context"
+    },
+    {
+      "word": "переїжджати",
+      "exercise_type": "match-up",
+      "context": "переїжджати",
+      "role": "context"
+    },
+    {
+      "word": "пам'ятник",
+      "exercise_type": "fill-in",
+      "context": "Нам доведеться _____ усю площу, щоб знайти цей пам'ятник.",
+      "role": "context"
+    },
+    {
+      "word": "зачекати",
+      "exercise_type": "fill-in",
+      "context": "Ви повинні _____ з кімнати і зачекати в коридорі.",
+      "role": "context"
+    },
+    {
+      "word": "коридорі",
+      "exercise_type": "fill-in",
+      "context": "Ви повинні _____ з кімнати і зачекати в коридорі.",
+      "role": "context"
+    },
+    {
+      "word": "залетіти",
+      "exercise_type": "group-sort",
+      "context": "залетіти",
+      "role": "answer"
+    },
+    {
+      "word": "долетіти",
+      "exercise_type": "group-sort",
+      "context": "долетіти",
+      "role": "answer"
+    },
+    {
+      "word": "об'їхати",
+      "exercise_type": "group-sort",
+      "context": "об'їхати",
+      "role": "answer"
+    },
+    {
+      "word": "віддалення",
+      "exercise_type": "group-sort",
+      "context": "Початок руху або віддалення",
+      "role": "context"
+    },
+    {
+      "word": "полетіти",
+      "exercise_type": "group-sort",
+      "context": "полетіти",
+      "role": "answer"
+    },
+    {
+      "word": "фізичний",
+      "exercise_type": "group-sort",
+      "context": "Пряме значення (фізичний рух)",
+      "role": "context"
+    },
+    {
+      "word": "пливе",
+      "exercise_type": "group-sort",
+      "context": "корабель пливе",
+      "role": "answer"
+    },
+    {
+      "word": "валізу",
+      "exercise_type": "group-sort",
+      "context": "нести валізу",
+      "role": "answer"
+    },
+    {
+      "word": "метафора",
+      "exercise_type": "group-sort",
+      "context": "Переносне значення (метафора)",
+      "role": "context"
+    },
+    {
+      "word": "підійшов",
+      "exercise_type": "fill-in",
+      "context": "підійшов",
+      "role": "answer"
+    },
+    {
+      "word": "дівчина",
+      "exercise_type": "error-correction",
+      "context": "Дівчина пішла в школу щодня.",
+      "role": "context"
+    },
+    {
+      "word": "пішла",
+      "exercise_type": "error-correction",
+      "context": "Дівчина пішла в школу щодня.",
+      "role": "context"
+    },
+    {
+      "word": "школу",
+      "exercise_type": "error-correction",
+      "context": "Дівчина пішла в школу щодня.",
+      "role": "context"
+    },
+    {
+      "word": "бистро",
+      "exercise_type": "error-correction",
+      "context": "Час іде дуже бистро.",
+      "role": "context"
+    },
+    {
+      "word": "проїхала",
+      "exercise_type": "error-correction",
+      "context": "проїхала",
+      "role": "answer"
+    },
+    {
+      "word": "переїхала",
+      "exercise_type": "error-correction",
+      "context": "Машина переїхала повз автобусну зупинку.",
+      "role": "context"
+    },
+    {
+      "word": "кружиться",
+      "exercise_type": "error-correction",
+      "context": "У мене голова кружиться від такої кількості інформації.",
+      "role": "context"
+    },
+    {
+      "word": "такої",
+      "exercise_type": "error-correction",
+      "context": "У мене голова кружиться від такої кількості інформації.",
+      "role": "context"
+    },
+    {
+      "word": "кількості",
+      "exercise_type": "error-correction",
+      "context": "У мене голова кружиться від такої кількості інформації.",
+      "role": "context"
+    },
+    {
+      "word": "відлетів",
+      "exercise_type": "error-correction",
+      "context": "Корабель відлетів від причалу вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "рівне",
+      "exercise_type": "true-false",
+      "context": "Туристи доїхали до міста Рівне ближче до обіду.",
+      "role": "context"
+    },
+    {
+      "word": "києві",
+      "exercise_type": "true-false",
+      "context": "Автомобіль залишили на безпечній парковці навпроти готелю в ",
+      "role": "context"
+    },
+    {
+      "word": "радить",
+      "exercise_type": "true-false",
+      "context": "Касир радить пасажиру почекати в залі очікування.",
+      "role": "context"
+    },
+    {
+      "word": "пасажиру",
+      "exercise_type": "true-false",
+      "context": "Касир радить пасажиру почекати в залі очікування.",
+      "role": "context"
+    },
+    {
+      "word": "почекати",
+      "exercise_type": "true-false",
+      "context": "Касир радить пасажиру почекати в залі очікування.",
+      "role": "context"
+    },
+    {
+      "word": "залі",
+      "exercise_type": "true-false",
+      "context": "Касир радить пасажиру почекати в залі очікування.",
+      "role": "context"
+    },
+    {
+      "word": "очікування",
+      "exercise_type": "true-false",
+      "context": "Касир радить пасажиру почекати в залі очікування.",
+      "role": "context"
+    },
+    {
+      "word": "фінальною",
+      "exercise_type": "true-false",
+      "context": "Фінальною точкою автомобільної мандрівки було мальовниче міс",
+      "role": "context"
+    },
+    {
+      "word": "точкою",
+      "exercise_type": "true-false",
+      "context": "Фінальною точкою автомобільної мандрівки було мальовниче міс",
+      "role": "context"
+    },
+    {
+      "word": "автомобільної",
+      "exercise_type": "true-false",
+      "context": "Фінальною точкою автомобільної мандрівки було мальовниче міс",
+      "role": "context"
+    },
+    {
+      "word": "вийшов",
+      "exercise_type": "fill-in",
+      "context": "вийшов",
+      "role": "answer"
+    },
+    {
+      "word": "зайшов",
+      "exercise_type": "fill-in",
+      "context": "зайшов",
+      "role": "answer"
+    },
+    {
+      "word": "автобуса",
+      "exercise_type": "fill-in",
+      "context": "Я обережно _____ у салон автобуса.",
+      "role": "context"
+    },
+    {
+      "word": "надворі",
+      "exercise_type": "fill-in",
+      "context": "Коли ми врешті-решт _____ в маленьке мальовниче містечко в К",
+      "role": "context"
+    },
+    {
+      "word": "перейшла",
+      "exercise_type": "fill-in",
+      "context": "перейшла",
+      "role": "answer"
+    },
+    {
+      "word": "собака",
+      "exercise_type": "quiz",
+      "context": "Який прийменник потрібен у реченні: 'Собака спить _____ стол",
+      "role": "context"
+    },
+    {
+      "word": "столом'",
+      "exercise_type": "quiz",
+      "context": "Який прийменник потрібен у реченні: 'Собака спить _____ стол",
+      "role": "context"
+    },
+    {
+      "word": "виберете",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово виберете: 'Кожного літа ми _____ на море'?",
+      "role": "context"
+    },
+    {
+      "word": "літа",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово виберете: 'Кожного літа ми _____ на море'?",
+      "role": "context"
+    },
+    {
+      "word": "море'",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово виберете: 'Кожного літа ми _____ на море'?",
+      "role": "context"
+    },
+    {
+      "word": "доповніть",
+      "exercise_type": "quiz",
+      "context": "Доповніть речення: 'Вона _____ з автобуса і пішла додому'.",
+      "role": "context"
+    },
+    {
+      "word": "додому'",
+      "exercise_type": "quiz",
+      "context": "Доповніть речення: 'Вона _____ з автобуса і пішла додому'.",
+      "role": "context"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний відмінок після 'між': 'Крісло стоїть між ",
+      "role": "context"
+    },
+    {
+      "word": "між'",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний відмінок після 'між': 'Крісло стоїть між ",
+      "role": "context"
+    },
+    {
+      "word": "крісло",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний відмінок після 'між': 'Крісло стоїть між ",
+      "role": "context"
+    },
+    {
+      "word": "перейти'",
+      "exercise_type": "quiz",
+      "context": "Що означає префікс 'пере-' у слові 'перейти'?",
+      "role": "context"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово підходить найкраще: 'Наш літак _____ в аеропорт",
+      "role": "context"
+    },
+    {
+      "word": "аеропорт",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово підходить найкраще: 'Наш літак _____ в аеропорт",
+      "role": "context"
+    },
+    {
+      "word": "вчасно'",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово підходить найкраще: 'Наш літак _____ в аеропорт",
+      "role": "context"
+    },
+    {
+      "word": "фразу",
+      "exercise_type": "quiz",
+      "context": "Доповніть фразу: 'У мене дуже багато роботи, просто _____ йд",
+      "role": "context"
+    },
+    {
+      "word": "обертом'",
+      "exercise_type": "quiz",
+      "context": "Доповніть фразу: 'У мене дуже багато роботи, просто _____ йд",
+      "role": "context"
+    },
+    {
+      "word": "приїхати'",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильну пару до дієслова 'приїхати':",
+      "role": "context"
+    },
+    {
+      "word": "пересуватися",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово означає 'регулярно пересуватися пішки'?",
+      "role": "context"
+    },
+    {
+      "word": "пішки'",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово означає 'регулярно пересуватися пішки'?",
+      "role": "context"
+    },
+    {
+      "word": "підійти'",
+      "exercise_type": "quiz",
+      "context": "Який прийменник потрібен після 'підійти': 'Я підійшов _____ ",
+      "role": "context"
+    },
+    {
+      "word": "дверей'",
+      "exercise_type": "quiz",
+      "context": "Який прийменник потрібен після 'підійти': 'Я підійшов _____ ",
+      "role": "context"
+    },
+    {
+      "word": "переносним",
+      "exercise_type": "quiz",
+      "context": "Знайдіть речення з переносним значенням:",
+      "role": "context"
+    },
+    {
+      "word": "значенням",
+      "exercise_type": "quiz",
+      "context": "Знайдіть речення з переносним значенням:",
+      "role": "context"
+    },
+    {
+      "word": "корабля",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово правильно описує рух корабля від берега?",
+      "role": "context"
+    },
+    {
+      "word": "берега",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово правильно описує рух корабля від берега?",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 4,
+    "not_tested": [
+      "впевнено",
+      "завдання",
+      "контрольна",
+      "маршрут",
+      "односпрямований",
+      "перевірка",
+      "повторення",
+      "подорож",
+      "просторовий",
+      "робота",
+      "розклад",
+      "різноспрямований",
+      "самооцінка"
+    ]
+  },
+  "all_grounded": false
+}

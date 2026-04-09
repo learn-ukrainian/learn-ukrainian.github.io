@@ -1,0 +1,250 @@
+version: "1.0"
+module: checkpoint-communication
+level: a1
+
+inline:
+  - id: vocative-imperative-practice
+    type: fill-in
+    instruction: "Вставте правильну форму слова (кличний відмінок або наказний спосіб)"
+    items:
+      - sentence: "____, читай цей текст, будь ласка!"
+        answer: "Олено"
+        options: ["Олена", "Олено", "Олену"]
+      - sentence: "Тарасе, ____ квитки, будь ласка!"
+        answer: "принеси"
+        options: ["принести", "принеси", "принесіть"]
+      - sentence: "____, дай мені напій, будь ласка."
+        answer: "Андрію"
+        options: ["Андрій", "Андрію", "Андрія"]
+      - sentence: "Діти, ____ цей текст."
+        answer: "читайте"
+        options: ["читай", "читайте", "читати"]
+      - sentence: "____, скажи, коли ти будеш у школі."
+        answer: "Оксано"
+        options: ["Оксана", "Оксано", "Оксану"]
+      - sentence: "Друзі, ____ раніше!"
+        answer: "прийдіть"
+        options: ["прийди", "прийдіть", "прийти"]
+      - sentence: "____, принеси кутю."
+        answer: "Друже"
+        options: ["Друг", "Друже", "Друга"]
+      - sentence: "____, купи гарні свічки."
+        answer: "Матусю"
+        options: ["Матуся", "Матусю", "Матусі"]
+
+  - id: conjunctions-quiz
+    type: quiz
+    instruction: "Оберіть правильний сполучник"
+    items:
+      - question: "Я хочу йти, ___ я не знаю, де ми будемо."
+        options: ["але", "бо", "і", "а"]
+        correct: 0
+      - question: "Мій чай гарячий, ___ твій холодний."
+        options: ["а", "і", "бо", "що"]
+        correct: 0
+      - question: "Нам потрібні стільці, ___ людей буде багато."
+        options: ["бо", "але", "а", "що"]
+        correct: 0
+      - question: "Принеси плакати ___ квитки."
+        options: ["і", "бо", "коли", "але"]
+        correct: 0
+      - question: "Я знаю, ___ ти маєш напої."
+        options: ["що", "але", "бо", "а"]
+        correct: 0
+      - question: "Скажи, ___ ти вільна."
+        options: ["коли", "бо", "і", "але"]
+        correct: 0
+      - question: "Олена знає, ___ купити гарні свічки."
+        options: ["де", "бо", "і", "але"]
+        correct: 0
+      - question: "Ми святкуємо Різдво, ___ ми друзі!"
+        options: ["бо", "але", "і", "що"]
+        correct: 0
+
+  - id: complex-sentences-fill-in
+    type: fill-in
+    instruction: "Вставте правильне слово для складного речення"
+    items:
+      - sentence: "Я думаю, ____ ми можемо святкувати разом."
+        answer: "що"
+        options: ["що", "де", "коли"]
+      - sentence: "Скажи, ____ ти будеш у школі."
+        answer: "коли"
+        options: ["коли", "що", "де"]
+      - sentence: "Вона знає, ____ купити квитки."
+        answer: "де"
+        options: ["де", "що", "коли"]
+      - sentence: "Ти знаєш, ____ скоро Різдво?"
+        answer: "що"
+        options: ["що", "де", "коли"]
+      - sentence: "Я не знаю, ____ ми будемо."
+        answer: "де"
+        options: ["де", "коли", "що"]
+      - sentence: "Скажіть, ____ ви вільні."
+        answer: "коли"
+        options: ["коли", "що", "де"]
+
+  - id: holiday-greeting-match
+    type: quiz
+    instruction: "Оберіть правильну відповідь або привітання"
+    items:
+      - question: "Merry Christmas!"
+        options: ["З Різдвом!", "З Великоднем!", "З Новим роком!", "Навзаєм!"]
+        correct: 0
+      - question: "Happy New Year!"
+        options: ["З Новим роком!", "З Різдвом!", "З Великоднем!", "Вас також!"]
+        correct: 0
+      - question: "Happy Easter!"
+        options: ["З Великоднем!", "З Різдвом!", "З Новим роком!", "Навзаєм!"]
+        correct: 0
+      - question: "Universal response to a holiday greeting:"
+        options: ["Навзаєм!", "Будь ласка!", "Так!", "Добре!"]
+        correct: 0
+      - question: "Preposition used for Ukrainian holiday greetings:"
+        options: ["З", "На", "В", "У"]
+        correct: 0
+      - question: "The Ukrainian word for Christmas is:"
+        options: ["Різдво", "Великдень", "Новий рік", "Свято"]
+        correct: 0
+      - question: "What case is used for holidays in greetings?"
+        options: ["Орудний (Instrumental)", "Називний (Nominative)", "Кличний (Vocative)", "Знахідний (Accusative)"]
+        correct: 0
+      - question: "The Ukrainian word for Easter is:"
+        options: ["Великдень", "Різдво", "Новий рік", "Свято"]
+        correct: 0
+
+workbook:
+  - type: group-sort
+    instruction: "Розподіліть імена у кличному відмінку"
+    groups:
+      - label: "-о"
+        items: ["Олено", "Оксано"]
+      - label: "-е"
+        items: ["Тарасе", "Петре", "друже"]
+      - label: "-ю"
+        items: ["Андрію", "матусю"]
+
+  - type: translate
+    instruction: "Оберіть правильний переклад"
+    items:
+      - source: "Come earlier, please."
+        options:
+          - text: "Прийди раніше, будь ласка."
+            correct: true
+          - text: "Принеси плакати, будь ласка."
+            correct: false
+      - source: "Bring the tickets."
+        options:
+          - text: "Принеси квитки."
+            correct: true
+          - text: "Скажи, коли ти будеш."
+            correct: false
+      - source: "I know that you have the drinks."
+        options:
+          - text: "Я знаю, що ти маєш напої."
+            correct: true
+          - text: "Але нам потрібні стільці."
+            correct: false
+      - source: "Tell me when you are free."
+        options:
+          - text: "Скажи, коли ти вільна."
+            correct: true
+          - text: "Я не знаю, де ми будемо."
+            correct: false
+      - source: "Let's go to my place!"
+        options:
+          - text: "Ходімо до мене!"
+            correct: true
+          - text: "Я вільна двадцять четвертого."
+            correct: false
+      - source: "I want us to celebrate together."
+        options:
+          - text: "Я хочу, щоб ми святкували разом."
+            correct: true
+          - text: "Ми можемо святкувати разом."
+            correct: false
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Оксана, принеси квитки, будь ласка."
+        error: "Оксана"
+        correction: "Оксано"
+        error_type: "word"
+        options: ["Оксано", "Оксану", "Оксані"]
+        explanation: "Для імен використовуйте кличний відмінок."
+      - sentence: "Тарас, скажи, коли ти будеш."
+        error: "Тарас"
+        correction: "Тарасе"
+        error_type: "word"
+        options: ["Тарасе", "Тарасу", "Тараса"]
+        explanation: "Чоловічі імена на твердий приголосний мають закінчення -е."
+      - sentence: "Андрій, прийди раніше!"
+        error: "Андрій"
+        correction: "Андрію"
+        error_type: "word"
+        options: ["Андрію", "Андрія", "Андріє"]
+        explanation: "Чоловічі імена на -й мають закінчення -ю."
+      - sentence: "Олено, дайте мені напій."
+        error: "дайте"
+        correction: "дай"
+        error_type: "word"
+        options: ["дай", "давати", "даєш"]
+        explanation: "Використовуйте форму «дай» (ти), якщо говорите з одним другом."
+      - sentence: "Друзі, пиши цей текст."
+        error: "пиши"
+        correction: "пишіть"
+        error_type: "word"
+        options: ["пишіть", "писати", "пишемо"]
+        explanation: "Використовуйте форму множини «пишіть» для групи людей."
+      - sentence: "Мій чай гарячий, але твій холодний."
+        error: "але"
+        correction: "а"
+        error_type: "word"
+        options: ["а", "і", "бо"]
+        explanation: "Використовуйте «а» для порівняння двох різних речей."
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["школі.", "Скажи,", "коли", "будеш", "ти", "у"]
+        correct_order: ["Скажи,", "коли", "ти", "будеш", "у", "школі."]
+      - words: ["квитки.", "плакати", "Принеси", "і"]
+        correct_order: ["Принеси", "плакати", "і", "квитки."]
+      - words: ["святкували", "щоб", "хочу,", "Я", "ми", "разом."]
+        correct_order: ["Я", "хочу,", "щоб", "ми", "святкували", "разом."]
+      - words: ["до", "Ходімо", "мене!"]
+        correct_order: ["Ходімо", "до", "мене!"]
+      - words: ["свічки.", "де", "гарні", "купити", "знаю,", "Я"]
+        correct_order: ["Я", "знаю,", "де", "купити", "гарні", "свічки."]
+      - words: ["бо", "буде", "людей", "потрібні", "Нам", "багато.", "стільці,"]
+        correct_order: ["Нам", "потрібні", "стільці,", "бо", "людей", "буде", "багато."]
+
+  - type: true-false
+    instruction: "Правда чи ні?"
+    items:
+      - statement: "Слово «Оксано» — це кличний відмінок від слова «Оксана»."
+        correct: true
+      - statement: "Слово «роби» — це форма для групи людей («ви»)."
+        correct: false
+        explanation: "«Роби» — це форма для однієї людини («ти»). Для «ви» — «робіть»."
+      - statement: "У реченні «Я знаю, що...» перед словом «що» обов'язково треба ставити кому."
+        correct: true
+      - statement: "Слово «Андрію» — це кличний відмінок для імені «Андрій»."
+        correct: true
+      - statement: "«З Різдвом!» — це правильне привітання на свято Великдень."
+        correct: false
+        explanation: "«З Різдвом!» — це привітання на Різдво (Christmas)."
+      - statement: "«Навзаєм!» — це хороша відповідь на привітання зі святом."
+        correct: true
+
+  - type: order
+    instruction: "Розставте репліки діалогу в правильному порядку"
+    items:
+      - "— Олено, привіт! Ти знаєш, що скоро Різдво?"
+      - "— Так, Тарасе! Я думаю, що ми можемо святкувати разом."
+      - "— Добре! Скажи, коли ти вільна."
+      - "— Я вільна двадцять четвертого."
+      - "— Ходімо до мене! Принеси кутю, будь ласка."
+      - "— Добре, принесу! З Різдвом!"
+    correct_order: [0, 1, 2, 3, 4, 5]

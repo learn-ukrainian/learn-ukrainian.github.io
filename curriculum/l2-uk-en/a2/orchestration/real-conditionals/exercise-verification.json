@@ -1,0 +1,168 @@
+{
+  "total_items": 166,
+  "grounded_items": 142,
+  "ungrounded": [
+    {
+      "word": "поспіши",
+      "exercise_type": "fill-in",
+      "context": "поспіши",
+      "role": "answer"
+    },
+    {
+      "word": "поспішатимеш",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти зараз не поспішатимеш, ти запізнишся на поїзд.",
+      "role": "context"
+    },
+    {
+      "word": "можуть",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти щодня запізнишся на роботу, тебе можуть звільнити.",
+      "role": "context"
+    },
+    {
+      "word": "звільнити",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти щодня запізнишся на роботу, тебе можуть звільнити.",
+      "role": "context"
+    },
+    {
+      "word": "братимеш",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти не братимеш парасольку сьогодні, ти змокнеш.",
+      "role": "context"
+    },
+    {
+      "word": "допомагаєш",
+      "exercise_type": "error-correction",
+      "context": "допомагаєш",
+      "role": "answer"
+    },
+    {
+      "word": "колегам",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти завжди допоможеш своїм колегам, тебе будуть поважати",
+      "role": "context"
+    },
+    {
+      "word": "поважати",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти завжди допоможеш своїм колегам, тебе будуть поважати",
+      "role": "context"
+    },
+    {
+      "word": "закінчиш",
+      "exercise_type": "error-correction",
+      "context": "закінчиш",
+      "role": "answer"
+    },
+    {
+      "word": "закінчуватимеш",
+      "exercise_type": "error-correction",
+      "context": "Якщо ти швидко закінчуватимеш роботу сьогодні, то ми підемо ",
+      "role": "context"
+    },
+    {
+      "word": "куплю",
+      "exercise_type": "error-correction",
+      "context": "Якщо я маю гроші, я завжди куплю свіжі продукти.",
+      "role": "context"
+    },
+    {
+      "word": "підготувати",
+      "exercise_type": "quiz",
+      "context": "_____ ти хочеш, я допоможу тобі підготувати грядку.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "quiz",
+      "context": "_____ я знав відповідь, я б тобі сказав, але я не знаю.",
+      "role": "context"
+    },
+    {
+      "word": "літати",
+      "exercise_type": "quiz",
+      "context": "_____ тільки я міг літати, як птах!",
+      "role": "context"
+    },
+    {
+      "word": "птах",
+      "exercise_type": "quiz",
+      "context": "_____ тільки я міг літати, як птах!",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "quiz",
+      "context": "Я обов'язково зателефоную тобі, _____ моя зустріч закінчитьс",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Слово «якщо» використовується для фантастичних і неможливих ",
+      "role": "context"
+    },
+    {
+      "word": "неможливих",
+      "exercise_type": "true-false",
+      "context": "Слово «якщо» використовується для фантастичних і неможливих ",
+      "role": "context"
+    },
+    {
+      "word": "реальній",
+      "exercise_type": "true-false",
+      "context": "Після слова «якщо» в реальній умові ми ніколи не використову",
+      "role": "context"
+    },
+    {
+      "word": "загальних",
+      "exercise_type": "true-false",
+      "context": "Для загальних істин (фізичних фактів) ми завжди використовує",
+      "role": "context"
+    },
+    {
+      "word": "істин",
+      "exercise_type": "true-false",
+      "context": "Для загальних істин (фізичних фактів) ми завжди використовує",
+      "role": "context"
+    },
+    {
+      "word": "фізичних",
+      "exercise_type": "true-false",
+      "context": "Для загальних істин (фізичних фактів) ми завжди використовує",
+      "role": "context"
+    },
+    {
+      "word": "порадах",
+      "exercise_type": "true-false",
+      "context": "У реченнях-порадах ми часто використовуємо теперішній час в ",
+      "role": "context"
+    },
+    {
+      "word": "додому",
+      "exercise_type": "unjumble",
+      "context": "додому,",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 4,
+    "not_tested": [
+      "відпустка",
+      "допомогти",
+      "залишитися",
+      "запізнитися",
+      "змокнути",
+      "парасолька",
+      "порада",
+      "поспішити",
+      "реальний",
+      "умова",
+      "якби"
+    ]
+  },
+  "all_grounded": false
+}

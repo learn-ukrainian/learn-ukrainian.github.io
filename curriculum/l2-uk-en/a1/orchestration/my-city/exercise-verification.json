@@ -1,28 +1,200 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 98,
+  "grounded_items": 67,
+  "ungrounded": [
+    {
+      "word": "купувати",
+      "exercise_type": "match-up",
+      "context": "купувати ліки",
+      "role": "context"
+    },
+    {
+      "word": "читати",
+      "exercise_type": "match-up",
+      "context": "читати книги",
+      "role": "context"
+    },
+    {
+      "word": "дивитися",
+      "exercise_type": "match-up",
+      "context": "дивитися фільм",
+      "role": "context"
+    },
+    {
+      "word": "обідати",
+      "exercise_type": "match-up",
+      "context": "обідати",
+      "role": "context"
+    },
+    {
+      "word": "офіс",
+      "exercise_type": "match-up",
+      "context": "офіс",
+      "role": "answer"
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "match-up",
+      "context": "працювати",
+      "role": "context"
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "match-up",
+      "context": "відпочивати",
+      "role": "context"
+    },
+    {
+      "word": "дім",
+      "exercise_type": "match-up",
+      "context": "дім",
+      "role": "answer"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "match-up",
+      "context": "жити",
+      "role": "context"
+    },
+    {
+      "word": "зараз",
+      "exercise_type": "quiz",
+      "context": "Я зараз ___ аптеці.",
+      "role": "context"
+    },
+    {
+      "word": "чекають",
+      "exercise_type": "quiz",
+      "context": "Люди чекають ___ зупинці.",
+      "role": "context"
+    },
+    {
+      "word": "сім'я",
+      "exercise_type": "quiz",
+      "context": "Сім'я обідає ___ ресторані.",
+      "role": "context"
+    },
+    {
+      "word": "нова",
+      "exercise_type": "fill-in",
+      "context": "Тут є нова ____.",
+      "role": "context"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "fill-in",
+      "context": "Там є стара ____.",
+      "role": "context"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "fill-in",
+      "context": "У місті є новий ____.",
+      "role": "context"
+    },
+    {
+      "word": "мені",
+      "exercise_type": "quiz",
+      "context": "Мені потрібні ліки. Де я?",
+      "role": "context"
+    },
+    {
+      "word": "потрібні",
+      "exercise_type": "quiz",
+      "context": "Мені потрібні ліки. Де я?",
+      "role": "context"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "quiz",
+      "context": "Я хочу дивитися фільм. Де я?",
+      "role": "context"
+    },
+    {
+      "word": "хочемо",
+      "exercise_type": "quiz",
+      "context": "Ми хочемо обідати. Де ми?",
+      "role": "context"
+    },
+    {
+      "word": "чекаю",
+      "exercise_type": "quiz",
+      "context": "Я чекаю автобус. Де я?",
+      "role": "context"
+    },
+    {
+      "word": "потрібен",
+      "exercise_type": "quiz",
+      "context": "Мені потрібен поїзд. Де я?",
+      "role": "context"
+    },
+    {
+      "word": "площа",
+      "exercise_type": "group-sort",
+      "context": "площа",
+      "role": "answer"
+    },
+    {
+      "word": "купують",
+      "exercise_type": "true-false",
+      "context": "Люди купують ліки в аптеці.",
+      "role": "context"
+    },
+    {
+      "word": "завжди",
+      "exercise_type": "true-false",
+      "context": "Поїзд завжди на зупинці.",
+      "role": "context"
+    },
+    {
+      "word": "місце",
+      "exercise_type": "true-false",
+      "context": "Вокзал — це місце, де є автобуси.",
+      "role": "context"
+    },
+    {
+      "word": "автобуси",
+      "exercise_type": "true-false",
+      "context": "Вокзал — це місце, де є автобуси.",
+      "role": "context"
+    },
+    {
+      "word": "читають",
+      "exercise_type": "true-false",
+      "context": "Студенти читають книги у бібліотеці.",
+      "role": "context"
+    },
+    {
+      "word": "чекаємо",
+      "exercise_type": "error-correction",
+      "context": "Ми чекаємо автобус в зупинці.",
+      "role": "context"
+    },
+    {
+      "word": "готелю",
+      "exercise_type": "fill-in",
+      "context": "готелю",
+      "role": "answer"
+    },
+    {
+      "word": "вокзалу",
+      "exercise_type": "fill-in",
+      "context": "вокзалу",
+      "role": "answer"
+    },
+    {
+      "word": "музею",
+      "exercise_type": "fill-in",
+      "context": "музею",
+      "role": "answer"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 15,
     "not_tested": [
-      "аптека",
-      "близько",
-      "бібліотека",
-      "біля",
-      "вокзал",
-      "готель",
-      "далеко",
-      "лікарня",
-      "магазин",
-      "музей",
-      "пошта",
-      "ресторан",
-      "супермаркет",
-      "там",
-      "тут",
-      "церква"
+      "супермаркет"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

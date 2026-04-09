@@ -1,0 +1,391 @@
+vocabulary:
+- word: Івана Купала
+  translation: Midsummer holiday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кутя́
+  translation: traditional Christmas dish
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: віно́к
+  translation: wreath
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рушни́к
+  translation: embroidered towel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виши́ва́нка
+  translation: embroidered shirt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: живо́пис
+  translation: painting
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: скульпту́ра
+  translation: sculpture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: змага́ння
+  translation: competition
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: перемо́га
+  translation: victory
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: експози́ція
+  translation: exposition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дозві́лля
+  translation: leisure, free time
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: захо́плення
+  translation: hobby, passion
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мисте́цтво
+  translation: art
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ви́ставка
+  translation: exhibition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: виста́ва
+  translation: performance, show
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Різдво́
+  translation: Christmas
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Вели́кдень
+  translation: Easter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: свя́то
+  translation: holiday, celebration
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тради́ція
+  translation: tradition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: культу́ра
+  translation: culture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: святкува́ти
+  translation: to celebrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: коля́дка
+  translation: Christmas carol
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пи́санка
+  translation: decorated Easter egg
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: меню́
+  translation: menu
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: замо́влення
+  translation: order
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стра́ва
+  translation: dish
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: шеф-ку́хар
+  translation: chef
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вільний час
+  translation: free time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: активний відпочинок
+  translation: active recreation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: настільні ігри
+  translation: board games
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́дорож
+  translation: travel
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фотогра́фія
+  translation: photography
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спорт
+  translation: sport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: йо́га
+  translation: yoga
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пла́вання
+  translation: swimming
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: тренува́ння
+  translation: training
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: тре́нер
+  translation: coach
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: теа́тр
+  translation: theatre
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пое́зія
+  translation: poetry
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: музе́й
+  translation: museum
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: конце́рт
+  translation: concert
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: державні свята
+  translation: state holidays
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: релігійні свята
+  translation: religious holidays
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День Незалежності України
+  translation: Independence Day of Ukraine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День Конституції
+  translation: Constitution Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Святве́чір
+  translation: Christmas Eve
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: діду́х
+  translation: traditional wheat sheaf
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́ска
+  translation: Easter bread
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́шик
+  translation: basket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: купальська ніч
+  translation: Kupala night
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: па́пороть
+  translation: fern
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Святий Миколай
+  translation: Saint Nicholas
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дід Мороз
+  translation: Ded Moroz
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: раху́нок
+  translation: bill
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: чайові́
+  translation: tips
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: варе́ники
+  translation: dumplings
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: банош
+  translation: banosh
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: голубці́
+  translation: cabbage rolls
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фірмова страва
+  translation: signature dish
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перекона́ння
+  translation: persuasion
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: переко́наний
+  translation: convinced
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ти маєш рацію
+  translation: you are right
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на власні очі
+  translation: with one's own eyes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на мою думку
+  translation: in my opinion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

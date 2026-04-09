@@ -2,263 +2,299 @@ version: '1.0'
 module: my-city
 level: a1
 inline:
-- id: quiz-prepositions
-  type: quiz
-  instruction: Оберіть правильний прийменник (Choose the correct preposition)
-  items:
-  - question: ___ аптеці (at the pharmacy)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 0
-  - question: ___ пошті (at the post office)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 1
-  - question: ___ вокзалі (at the train station)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 1
-  - question: ___ ресторані (at the restaurant)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 0
-  - question: ___ стадіоні (at the stadium)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 1
-  - question: ___ бібліотеці (at the library)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 0
-  - question: ___ музеї (at the museum)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 0
-  - question: ___ зупинці (at the bus stop)
-    options:
-    - в/у
-    - на
-    - біля
-    correct: 1
-- id: match-places-activities
+- id: match-place-activity
   type: match-up
-  instruction: З'єднайте місце з дією (Match the place to the activity)
+  instruction: З'єднайте місце з дією (Match the place with the activity)
   pairs:
   - left: аптека
     right: купувати ліки
   - left: бібліотека
     right: читати книги
-  - left: ресторан
-    right: їсти піцу
-  - left: кафе
-    right: пити каву
-  - left: пошта
-    right: надсилати листи
   - left: кінотеатр
     right: дивитися фільм
-  - left: вокзал
-    right: чекати на потяг
+  - left: магазин
+    right: купувати продукти
+  - left: ресторан
+    right: обідати
+  - left: офіс
+    right: працювати
   - left: парк
     right: відпочивати
-- id: quiz-where-would-you-go
+  - left: дім
+    right: жити
+- id: quiz-preposition-v-na
   type: quiz
-  instruction: Де ти це робиш? (Where do you do this?)
+  instruction: 'Оберіть правильний прийменник: в/у чи на? (Choose the correct preposition:
+    в/у or на?)'
   items:
-  - question: Ти хочеш купити ліки. (You want to buy medicine.)
+  - question: Я зараз ___ аптеці.
     options:
-    - у ресторані
-    - в аптеці
-    - у готелі
-    correct: 1
-  - question: Ти хочеш читати книги. (You want to read books.)
-    options:
-    - на пошті
-    - в музеї
-    - у бібліотеці
-    correct: 2
-  - question: Ти хочеш їсти піцу. (You want to eat pizza.)
-    options:
-    - у ресторані
-    - на вокзалі
-    - у банку
-    correct: 0
-  - question: Ти хочеш надіслати лист. (You want to send a letter.)
-    options:
-    - у магазині
-    - на пошті
-    - у кінотеатрі
-    correct: 1
-  - question: Ти хочеш дивитися фільм. (You want to watch a film.)
-    options:
-    - у бібліотеці
-    - у кінотеатрі
-    - в університеті
-    correct: 1
-  - question: Ти хочеш чекати на потяг. (You want to wait for a train.)
-    options:
-    - у готелі
-    - у лікарні
-    - на вокзалі
-    correct: 2
-- id: fill-in-your-city
-  type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
-  items:
-  - sentence: У моєму місті ____ великий парк.
-    answer: є
-    options:
-    - є
-    - немає
-    - тут
-  - sentence: Біля мого дому ____ магазин і кафе.
-    answer: є
-    options:
-    - є
-    - там
-    - немає
-  - sentence: Університет ____ від дому.
-    answer: далеко
-    options:
-    - близько
-    - далеко
-    - тут
-  - sentence: Аптека ____ парку.
-    answer: біля
-    options:
-    - біля
+    - в
     - у
-    - від
-  - sentence: Лікарня ____. Вона не близько.
-    answer: далеко
-    options:
-    - тут
-    - близько
-    - далеко
-  - sentence: Біля вокзалу ____ готель.
-    answer: є
-    options:
-    - немає
-    - є
-    - там
-- id: quiz-mixed-review
-  type: quiz
-  instruction: Оберіть правильний варіант (Choose the correct option)
-  items:
-  - question: Що є біля дому Аліни? (What is near Alina's house?)
-    options:
-    - аптека і вокзал
-    - магазин і кафе
-    - ресторан і музей
-    correct: 1
-  - question: Яке слово означає «far»? (Which word means «far»?)
-    options:
-    - близько
-    - тут
-    - далеко
-    correct: 2
-  - question: Де Аліна питає про аптеку? (Where does Alina ask about the pharmacy?)
-    options:
-    - у бібліотеці
-    - на вулиці
-    - у кафе
-    correct: 1
-  - question: Бібліотека ___ центрі міста.
-    options:
     - на
-    - від
+    correct: 0
+  - question: Він працює ___ пошті.
+    options:
+    - в
     - у
+    - на
     correct: 2
-  - question: Що означає «вокзал»? (What does «вокзал» mean?)
+  - question: Ми ___ банку.
     options:
-    - pharmacy
-    - library
-    - train station
-    correct: 2
-  - question: Як сказати «the hospital is far»? (How to say it?)
-    options:
-    - Лікарня близько.
-    - Лікарня там.
-    - Лікарня далеко.
-    correct: 2
-  - question: «Біля» вживається з … (Which case does «біля» take?)
-    options:
-    - locative
-    - genitive
-    - nominative
+    - в
+    - у
+    - на
     correct: 1
+  - question: Люди чекають ___ зупинці.
+    options:
+    - в
+    - у
+    - на
+    correct: 2
+  - question: Сім'я обідає ___ ресторані.
+    options:
+    - в
+    - у
+    - на
+    correct: 1
+  - question: Поїзд ___ вокзалі.
+    options:
+    - в
+    - у
+    - на
+    correct: 2
+  - question: Студенти ___ бібліотеці.
+    options:
+    - в
+    - у
+    - на
+    correct: 1
+  - question: Брат ___ готелі.
+    options:
+    - в
+    - у
+    - на
+    correct: 0
+- id: fill-in-describe-city
+  type: fill-in
+  instruction: Що є у місті? Оберіть правильне слово (What is in the city? Choose
+    the correct word)
+  items:
+  - sentence: У моєму місті є великий ____.
+    answer: парк
+    options:
+    - парк
+    - парку
+    - парком
+  - sentence: Тут є нова ____.
+    answer: лікарня
+    options:
+    - лікарня
+    - лікарні
+    - лікарню
+  - sentence: У центрі міста є ____.
+    answer: готель
+    options:
+    - готель
+    - готелю
+    - готелем
+  - sentence: Біля дому є ____.
+    answer: магазин
+    options:
+    - магазин
+    - магазину
+    - магазином
+  - sentence: Там є стара ____.
+    answer: церква
+    options:
+    - церква
+    - церкви
+    - церкву
+  - sentence: У місті є новий ____.
+    answer: кінотеатр
+    options:
+    - кінотеатр
+    - кінотеатру
+    - кінотеатром
+- id: quiz-situational-place
+  type: quiz
+  instruction: Куди ви йдете? Оберіть правильне місце (Where are you going? Choose
+    the correct place)
+  items:
+  - question: Мені потрібні ліки. Де я?
+    options:
+    - в аптеці
+    - у бібліотеці
+    - на вокзалі
+    - у парку
+    correct: 0
+  - question: Я хочу дивитися фільм. Де я?
+    options:
+    - на пошті
+    - в лікарні
+    - у кінотеатрі
+    - у магазині
+    correct: 2
+  - question: Мама купує продукти. Де вона?
+    options:
+    - в готелі
+    - у магазині
+    - на зупинці
+    - у музеї
+    correct: 1
+  - question: Ми хочемо обідати. Де ми?
+    options:
+    - у ресторані
+    - на площі
+    - у банку
+    - на пошті
+    correct: 0
+  - question: Я чекаю автобус. Де я?
+    options:
+    - в офісі
+    - на вокзалі
+    - на зупинці
+    - в університеті
+    correct: 2
+  - question: Мені потрібен поїзд. Де я?
+    options:
+    - на вокзалі
+    - у парку
+    - на зупинці
+    - в аптеці
+    correct: 0
 workbook:
-- type: group-sort
-  instruction: Розподіліть місця за прийменником (Sort places by preposition — в/у
-    or на)
+- id: wb-group-sort-places
+  type: group-sort
+  instruction: 'Розподіліть слова за прийменниками: В/У чи НА? (Sort the words by
+    their preposition: В/У or НА?)'
   groups:
-  - label: в/у
+  - label: В / У
     items:
     - аптека
     - бібліотека
-    - магазин
-    - ресторан
     - банк
     - готель
     - музей
+    - магазин
+    - ресторан
     - лікарня
-    - кінотеатр
-    - університет
-  - label: на
+  - label: НА
     items:
     - пошта
     - вокзал
     - стадіон
     - зупинка
-    - ринок
     - площа
-- type: true-false
+    - автовокзал
+- id: wb-true-false-logic
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Аліна зупиняє перехожого і питає, де аптека. (Alina stops a stranger
-      and asks where the pharmacy is.)
+  - statement: Люди купують ліки в аптеці.
     correct: true
-    explanation: 'Так — Аліна каже перехожому: «Вибачте, де тут аптека?»'
-  - statement: Аптека знаходиться в центрі міста. (The pharmacy is in the city center.)
+    explanation: Так, аптека — це місце, де продають ліки.
+  - statement: Поїзд завжди на зупинці.
     correct: false
-    explanation: Ні — аптека на вулиці Шевченка, біля парку. Бібліотека в центрі міста.
-  - statement: «Далеко» означає «near». («Далеко» means «near».)
-    correct: false
-    explanation: Ні — «далеко» означає «far». «Near» — це «близько» або «недалеко».
-  - statement: «На пошті» — правильна форма. («На пошті» is the correct form.)
+    explanation: Ні, автобус на зупинці, а поїзд на вокзалі.
+  - statement: Ми дивляться фільм у кінотеатрі.
     correct: true
-    explanation: 'Так — пошта бере прийменник «на»: на пошті, як і вокзал, стадіон,
-      зупинка.'
-  - statement: Слово «кафе» змінюється у всіх відмінках. (The word «кафе» changes
-      in all cases.)
+    explanation: Так, у кінотеатрі дивляться фільми.
+  - statement: Вокзал — це місце, де є автобуси.
     correct: false
-    explanation: 'Ні — «кафе» не змінюється: в кафе, біля кафе, це кафе — завжди однакова
-      форма.'
-  - statement: Лікарня далеко від центру. (The hospital is far from the center.)
+    explanation: Ні, вокзал для поїздів. Для автобусів — автовокзал або зупинка.
+  - statement: Студенти читають книги у бібліотеці.
     correct: true
-    explanation: 'Так — Аліна каже: «Лікарня там, далеко від центру.»'
-  - statement: «Біля» вживається з місцевим відмінком. («Біля» is used with the locative
-      case.)
+    explanation: Так, бібліотека — це місце для книг.
+  - statement: Магазин тут, а школа близько. Школа далеко?
     correct: false
-    explanation: 'Ні — «біля» вживається з родовим відмінком (genitive): біля парку,
-      біля дому, біля вокзалу.'
-- type: error-correction
-  instruction: Виправте помилку (Correct the mistake)
+    explanation: Ні, близько означає 'near', тому школа не далеко.
+- id: wb-unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
   items:
-  - sentence: Я чекаю на потяг в вокзалі.
+  - words:
+    - є
+    - великий
+    - У
+    - парк.
+    - місті
+    correct_order:
+    - У
+    - місті
+    - є
+    - великий
+    - парк.
+  - words:
+    - далеко?
+    - Це
+    - близько
+    - чи
+    correct_order:
+    - Це
+    - близько
+    - чи
+    - далеко?
+  - words:
+    - аптека
+    - вулиці
+    - Аптека
+    - Шевченка.
+    - на
+    correct_order:
+    - Аптека
+    - на
+    - вулиці
+    - Шевченка.
+  - words:
+    - є
+    - дому
+    - Біля
+    - магазин.
+    correct_order:
+    - Біля
+    - дому
+    - є
+    - магазин.
+  - words:
+    - У
+    - стадіон.
+    - є
+    - моєму
+    - один
+    - місті
+    correct_order:
+    - У
+    - моєму
+    - місті
+    - є
+    - один
+    - стадіон.
+  - words:
+    - центрі
+    - Ресторан
+    - міста.
+    - у
+    correct_order:
+    - Ресторан
+    - у
+    - центрі
+    - міста.
+- id: wb-error-correction-prepositions
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  items:
+  - sentence: Я купую ліки на аптеці.
+    error: на
+    correction: в
+    error_type: word
+    options:
+    - в
+    - у
+    - біля
+    explanation: Аптека — це закрите приміщення, тому 'в аптеці'.
+  - sentence: Ми чекаємо автобус в зупинці.
     error: в
     correction: на
     error_type: word
@@ -266,8 +302,8 @@ workbook:
     - на
     - у
     - біля
-    explanation: 'Вокзал бере «на»: на вокзалі — транспортні вузли завжди з «на».'
-  - sentence: Я надсилаю листи у пошті.
+    explanation: Зупинка — це відкрите місце, тому 'на зупинці'.
+  - sentence: Брат працює у пошті.
     error: у
     correction: на
     error_type: word
@@ -275,9 +311,8 @@ workbook:
     - на
     - в
     - біля
-    explanation: 'Пошта бере «на»: на пошті. Сервісні установи типу пошта, вокзал,
-      стадіон — «на».'
-  - sentence: Ми граємо у стадіоні.
+    explanation: Пошта — це відкрита концепція, тому 'на пошті'.
+  - sentence: Мама купує продукти у вокзалі.
     error: у
     correction: на
     error_type: word
@@ -285,124 +320,77 @@ workbook:
     - на
     - в
     - біля
-    explanation: 'Стадіон бере «на»: на стадіоні.'
-  - sentence: Автобус тут у зупинці.
-    error: у
-    correction: на
+    explanation: Вокзал — це платформа або відкрите місце, тому 'на вокзалі'.
+  - sentence: Сестра відпочиває на парку.
+    error: на
+    correction: у
     error_type: word
-    options:
-    - на
-    - в
-    - біля
-    explanation: 'Зупинка бере «на»: на зупинці.'
-  - sentence: Я купую ліки в ресторані.
-    error: ресторані
-    correction: аптеці
-    error_type: word
-    options:
-    - аптеці
-    - бібліотеці
-    - музеї
-    explanation: Ліки купують в аптеці, а не в ресторані. Ресторан — це місце для
-      їжі.
-  - sentence: Я читаю книги у бібліотека.
-    error: бібліотека
-    correction: бібліотеці
-    error_type: word
-    options:
-    - бібліотеці
-    - бібліотека
-    - бібліотеку
-    explanation: 'Після «у» потрібен місцевий відмінок (locative): у бібліотеці, не
-      бібліотека.'
-- type: fill-in
-  instruction: Опишіть місто. Вставте правильне слово (Describe the city — fill in
-    the correct word)
-  items:
-  - sentence: Театр ____ центрі міста.
-    answer: у
     options:
     - у
+    - в
     - на
-    - від
-  - sentence: Зупинка ____ вокзалу.
-    answer: біля
+    explanation: Парк — це обмежена територія, тому 'у парку'.
+  - sentence: Вони дивляться фільм на кінотеатрі.
+    error: на
+    correction: у
+    error_type: word
     options:
-    - біля
     - у
+    - в
     - на
-  - sentence: Університет ____, не близько.
-    answer: далеко
-    options:
-    - далеко
-    - тут
-    - близько
-  - sentence: Магазин ____ від мого дому.
-    answer: близько
-    options:
-    - далеко
-    - близько
-    - там
-  - sentence: У нашому районі ____ бібліотека і парк.
-    answer: є
-    options:
-    - є
-    - немає
-    - тут
-  - sentence: Біля мого дому ____ вокзалу.
-    answer: немає
-    options:
-    - є
-    - немає
-    - там
-- type: translate
-  instruction: Оберіть правильний переклад (Choose the correct Ukrainian translation)
+    explanation: Кінотеатр — це закрите приміщення, тому 'у кінотеатрі'.
+- id: wb-fill-in-genitive
+  type: fill-in
+  instruction: Вставте правильну форму слова після 'біля' (Insert the correct form
+    of the word after 'біля')
   items:
-  - source: at the pharmacy
+  - sentence: Аптека біля ____.
+    answer: парку
     options:
-    - text: в аптеці
-      correct: true
-    - text: на аптеці
-      correct: false
-    - text: біля аптеки
-      correct: false
-  - source: at the post office
+    - парк
+    - парку
+    - парком
+  - sentence: Магазин біля ____.
+    answer: дому
     options:
-    - text: в пошті
-      correct: false
-    - text: на пошті
-      correct: true
-    - text: біля пошти
-      correct: false
-  - source: near the park
+    - дім
+    - дому
+    - домом
+  - sentence: Лікарня біля ____.
+    answer: банку
     options:
-    - text: в парку
-      correct: false
-    - text: на парку
-      correct: false
-    - text: біля парку
-      correct: true
-  - source: at the train station
+    - банк
+    - банку
+    - банком
+  - sentence: Кафе біля ____.
+    answer: готелю
     options:
-    - text: у вокзалі
-      correct: false
-    - text: на вокзалі
-      correct: true
-    - text: біля вокзалу
-      correct: false
-  - source: in the city center
+    - готель
+    - готелю
+    - готелем
+  - sentence: Ресторан біля ____.
+    answer: вокзалу
     options:
-    - text: у центрі міста
-      correct: true
-    - text: на центрі міста
-      correct: false
-    - text: від центру міста
-      correct: false
-  - source: the library is nearby
+    - вокзал
+    - вокзалу
+    - вокзалом
+  - sentence: Бібліотека біля ____.
+    answer: музею
     options:
-    - text: Бібліотека далеко.
-      correct: false
-    - text: Бібліотека там.
-      correct: false
-    - text: Бібліотека близько.
-      correct: true
+    - музей
+    - музею
+    - музеєм
+- id: wb-order-dialogue
+  type: order
+  instruction: Розставте репліки діалогу в правильному порядку (Put the dialogue lines
+    in the correct order)
+  items:
+  - — Дякую. А де бібліотека?
+  - — Аптека на вулиці Шевченка.
+  - — Бібліотека у центрі.
+  - — Вибачте, будь ласка. Де тут аптека?
+  correct_order:
+  - 3
+  - 1
+  - 0
+  - 2

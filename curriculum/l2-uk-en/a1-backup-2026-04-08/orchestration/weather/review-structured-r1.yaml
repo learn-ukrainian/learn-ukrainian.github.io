@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all major points, but missed using "вчора" in context despite it
+    being in the plan and summary list. Generated an extra, unprompted exercise marker.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent overall, but breaks the parallel structure of state adverbs
+    with "восени — дощ" (noun) in the first section.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Superb use of textbook references (Avramenko, Zabolotny). Minor sequencing
+    flaw with placing an activity marker before the required vocabulary is taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All vocabulary is beautifully contextualized, except "вчора" which only
+    appears in the summary list without being demonstrated in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 4 markers for 3 hints. The first marker `fill-in-weather-season` is placed
+    before precipitation verbs are introduced, making it impossible for the learner
+    to solve at that point in the reading.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural tone, avoiding gamified cliches. The anecdote about "Can
+    rain really walk?" from Avramenko is a fantastic pedagogical hook.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean structure, but the extra activity marker creates an imbalance.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses Celsius properly and explains real-world conversational habits ("drop
+    градусів").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are highly contextual. "Так, але не дуже холодно!" is a slightly
+    unnatural fragment as a response to "do you like snow?", requiring a small tweak.
+findings: []

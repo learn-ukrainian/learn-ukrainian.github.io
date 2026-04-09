@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covered almost all points, including required vocabulary and dialogue
+    formats. However, missed the specific passive participle phrase "Дослідження,
+    проведене нашою групою, показало цікаві результати" '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Generally excellent grammar, but contains a factual orthographic error
+    claiming that words like "математика", "фізика", "інформатика" end in the suffix
+    "-іка". By the "дев'ятка" rule, these are spelle
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional breakdown of complex B1.5 grammar. The explanation of dangling
+    participles (дієприслівникові звороти) and the specific focus on avoiding Russian
+    calques (e.g., "працюючий студент") are out
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words were integrated naturally into the
+    text and dialogues without reading like forced lists.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 requested activity markers are present, correctly named, and logically
+    distributed right after the relevant theory sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Professional yet encouraging tone. Explains academic register perfectly
+    without sounding robotic.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4981 (safely above the 4000 target). Clean formatting, all
+    headings match the outline perfectly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Beautifully explains the modern Ukrainian educational reality, including
+    NUS, ECTS, ZNO/NMT, and the decolonization of academic degrees (dropping 'Candidate
+    of Sciences').
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues successfully model formal vs. informal academic registers,
+    demonstrating correct usage of gerunds in natural contexts.
+findings: []

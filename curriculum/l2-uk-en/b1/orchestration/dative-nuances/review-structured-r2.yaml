@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed the specific practice scenario requested for Section 2: "Practice:
+    a class introduction scenario where people share ages using dative constructions.
+    Include past tense". All other plan points w'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical grammatical misstatement about adverbs having neuter
+    gender ("Сам стан виражається безособовим словом... найчастіше — прислівником
+    середнього роду") and hallucinates a preposition '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding explanation of the psychological logic of the Ukrainian dative
+    (lack of agency, external forces) compared to English active constructions.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary is woven naturally into the contextual
+    prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 8 exercise markers strategically placed to test what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, deeply analytical, and highly engaging. The writer acts as an insightful
+    linguistic guide.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is an excellent 5510 words. Markdown formatting is clean, no
+    stray tags.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Successfully connects grammatical structures (dative of state) to the
+    Ukrainian worldview ("знімає своє 'его' з п'єдесталу").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue between Olena and Marko is natural and successfully demonstrates
+    the "ethical dative" (давальний зацікавленої особи). Deducting 1 point only because
+    the age dialogue was skipped.
+findings: []

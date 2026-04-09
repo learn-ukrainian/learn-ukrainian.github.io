@@ -122,121 +122,126 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги (Dialogues)
 
-It's Saturday morning. Окса́на and Степа́н stand outside their apartment building, planning the day. They have a long list of errands — and not enough time to do them together. The obvious question: **Куди́ ти йдеш?** (Where are you going?)
+It is a busy Saturday morning in the bustling city center. Oksana and Stepan are standing on the street corner, holding their lists of weekend errands. They need to visit several different places before finally meeting up later in the afternoon. In Ukrainian, when you are talking about going to a specific destination, you must answer the essential question **куди** (where to).
 
-> — **Оксана:** Куди ти йдеш? *(Where are you going?)*
-> — **Степан:** Я йду в банк. А ти? *(I'm going to the bank. And you?)*
-> — **Оксана:** Я йду на по́шту. А по́тім? *(I'm going to the post office. And then?)*
-> — **Степан:** Потім іду́ в апте́ку. А ти? *(Then I'm going to the pharmacy. And you?)*
-> — **Оксана:** Я йду у бібліоте́ку. *(I'm going to the library.)*
-> — **Степан:** До́бре. *(Good.)*
-> — **Оксана:** А потім ході́мо в кафе́! *(And then let's go to a café!)*
-> — **Степан:** Добре! Зустрі́немося в кафе о тре́тій. *(Good! Let's meet at the café at three.)*
+Listen to their conversation as they figure out their immediate plans and split up to run their respective errands. Pay close attention to how they use the specific question word **куди** (where to) and the prepositions **в** (in/to) and **на** (on/to) to indicate their direction of travel.
 
-Look at every destination in that conversation. Each one follows the same pattern: a verb of motion + **в** or **на** + the place name. **Я йду в банк** — I'm going TO the bank. **Я йду на пошту** — I'm going TO the post office. But notice Степа́н's last line: **зустрінемося в кафе** (we'll meet AT the café) — he's already talking about being THERE, not going there.
+> **Степан:** Привіт! **Куди ти йдеш?** *(Hi! Where are you going?)*
+> **Оксана:** Привіт! **Я йду в банк.** А ти? *(Hi! I am going to the bank. And you?)*
+> **Степан:** **Я йду на роботу.** *(I am going to work.)*
+> **Оксана:** А потім? *(And then?)*
+> **Степан:** **Потім іду в магазин.** *(Then I am going to the store.)*
+> **Оксана:** **А потім ходімо в кафе!** *(And then let's go to a cafe!)*
+> **Степан:** Добре! **Я йду в аптеку.** *(Good! I am going to the pharmacy.)*
+> **Оксана:** **А я йду на пошту.** *(And I am going to the post office.)*
+> **Степан:** **Тоді до зустрічі!** *(Then see you later!)*
+> **Оксана:** **Бувай!** *(Bye!)*
 
-:::tip
-**В банк** (direction — going there) vs **в ба́нку** (location — already there). Same preposition **в**, but the noun ending changes. This is the whole lesson in one pair.
+Later that afternoon, they meet up at the local cafe and start discussing their upcoming travel plans for the next weekend. Notice how the verb changes when they talk about taking a train or bus to a different city rather than just walking around town.
+
+> **Оксана:** **Куди ти їдеш у суботу?** *(Where are you traveling on Saturday?)*
+> **Степан:** **Я їду у Львів.** *(I am traveling to Lviv.)*
+> **Оксана:** Клас! А Олена? *(Cool! And Olena?)*
+> **Степан:** **Вона їде в Одесу.** *(She is traveling to Odesa.)*
+> **Оксана:** А я нікуди не їду. *(And I am not traveling anywhere.)*
+> **Степан:** Чому? *(Why?)*
+> **Оксана:** **Я йду в бібліотеку.** *(I am going to the library.)*
+> **Степан:** **А в неділю?** *(And on Sunday?)*
+> **Оксана:** **У неділю я йду в парк.** *(On Sunday I am going to the park.)*
+
+:::note
+**Two "Wheres"**
+Did you notice how the nouns at the end of their sentences looked slightly different than usual? When Oksana says «**Я йду на пошту**» (I am going to the post office) or «**Я йду в банк**» (I am going to the bank), she is using a specific grammatical form. In English, the word "where" covers both your current location and your future destination. Ukrainian strictly separates these concepts. Asking **куди** (where to) triggers a specific grammatical change that shows movement toward a target.
 :::
 
-Later that evening, the two friends talk about weekend travel plans.
+## Куди? Знахідний відмінок (Where To? Accusative)
 
-> — **Степан:** Куди ти ї́деш у субо́ту? *(Where are you going on Saturday?)*
-> — **Оксана:** Я ї́ду у Львів. *(I'm going to Lviv.)*
-> — **Степан:** А Оле́на? *(And Olena?)*
-> — **Оксана:** Вона́ ї́де в Оде́су. *(She's going to Odesa.)*
-> — **Степан:** А Мико́ла? *(And Mykola?)*
-> — **Оксана:** Він залиша́ється вдо́ма. А ти? *(He's staying home. And you?)*
+In Ukrainian primary schools, Grade 4 students learn to identify cases using "helper words" to ask the right question. For the Accusative case, known as **знахідний відмінок** (accusative case), the helper method is **бачу — кого? що?** (I see — whom? what?). When we talk about inanimate places and destinations, we use the question **що?** (what?). When combined with motion verbs and prepositions like **в/у** or **на**, the Accusative case indicates **куди** (where to) or motion toward a place.
 
-Two verbs appeared in these dialogues: **йти** (to go on foot) — for local errands like **в банк** and **на пошту** — and **ї́хати** (to go by transport) — for cities like **у Львів** and **в Одесу**. Both take the same pattern: **в/на** + the place you're heading to, answering the question **Куди?** (Where to?).
+:::tip
+**The "No-Change" Rule**
+For inanimate masculine nouns and all neuter nouns, the Accusative form is identical to the basic Nominative dictionary form. You simply add the preposition **в/у** (in/into) or **на** (on/onto) before the noun. The noun itself does not change its ending at all.
+:::
 
-## Куди? Знахі́дний відмі́нок (Where To? Accusative)
+*   банк → у банк (to the bank)
+*   магазин → у магазин (to the store)
+*   парк → у парк (to the park)
+*   кафе → у кафе (to the cafe)
+*   місто → у місто (to the city)
 
-Ukrainian schoolchildren learn their cases with helper words. For the accusative — **знахідний відмінок** — the helper is **«ба́чу»** (I see): Зн.в. (бачу) — кого? що? Try it: **бачу банк**, **бачу шко́лу**, **бачу кафе**. Whatever form the noun takes after **бачу** is its accusative form. For direction, Ukrainian simply adds **в/у** or **на** before that same accusative form: **в банк**, **у школу**, **у кафе**. That's **Куди?** (Where to?).
+Feminine nouns, however, undergo a highly visible and consistent change. If a feminine noun ends in **-а** or **-я** in its dictionary form, that ending must shift to **-у** or **-ю** in the Accusative case. This small vowel shift is the most frequent signal that you are talking about a destination rather than a static location.
 
-Here is the core contrast, built around one noun. Take **банк** (bank):
+*   школа → у школу (to school)
+*   робота → на роботу (to work)
+*   бібліотека → у бібліотеку (to the library)
+*   вулиця → на вулицю (onto the street)
+*   аптека → в аптеку (to the pharmacy)
+*   пошта → на пошту (to the post office)
+*   країна → в країну (to the country)
+*   площа → на площу (onto the square)
 
-- **Де ти?** — **Я в банку.** *(Where are you? — I'm at the bank.)* — locative case, static position
-- **Куди ти йдеш?** — **Я йду в банк.** *(Where are you going? — I'm going to the bank.)* — accusative case, motion toward
+This rule for direction applies perfectly to countries and cities as well. Inanimate masculine cities like Kyiv or Lviv will not change their form, while feminine cities will change their final vowel. You will say **в Одесу** (to Odesa). Most importantly, the sovereign nation of Ukraine is a feminine noun ending in **-а**. When expressing travel to Ukraine, you must always use the preposition **в** with the Accusative case ending: **в Україну** (to Ukraine). Never use the preposition **на** for the country of Ukraine.
 
-Same preposition **в**, same noun **банк** — but **банку** vs **банк**. The ending on the noun signals whether you are already there or moving toward it. The same contrast works with **шко́ла** (school): **Де?** — **в шко́лі** (locative). **Куди?** — **у школу** (accusative).
-
-Now for the endings. As Grade 4 Ukrainian textbooks teach: masculine inanimate nouns and neuter nouns look identical in the accusative and nominative. Only feminine nouns change their ending.
-
-| Gender | Rule | Examples |
-|--------|------|----------|
-| Masculine (inanimate) | = nominative (no change) | банк → в банк, магази́н → у магазин, парк → у парк, рестора́н → у ресторан |
-| Feminine (-а/-я → -у/-ю) | final vowel shifts | школа → у школу, робо́та → на робо́ту, бібліоте́ка → у бібліотеку, апте́ка → в аптеку |
-| Neuter | = nominative (no change) | кафе → у кафе, мі́сто → у місто |
-
-Masculine and neuter nouns require no work at all — the accusative form is the same as the nominative. Only feminine nouns shift their ending: **-а** becomes **-у**, and **-я** becomes **-ю**. Think of feminine nouns as "leaning forward" toward their destination — **школа** stretches to **школу**, **бібліотека** reaches out to **бібліотеку**, **по́шта** becomes **пошту**. If a place name ends in **-а** or **-я**, swap it for **-у** or **-ю**. Everything else stays exactly the same.
-
-<!-- INJECT_ACTIVITY: fill-in -->
+<!-- INJECT_ACTIVITY: fill-in-accusative-places -->
 
 ## Де чи куди? (Where or Where To?)
 
-Ukrainian distinguishes two questions about location. **Де ти?** (Where are you?) describes a static position — no movement. It always uses the locative case after **в/у/на**. **Куди ти йдеш?** (Where are you going?) describes direction — movement toward a place. It always uses the accusative case after **в/у/на**. The prepositions **в**, **у**, and **на** appear in both — it is the noun ending that tells the listener whether you mean position or motion.
+The most critical habit to build is separating static location from dynamic direction. English conflates these by using "where" and "in" or "at" for both situations. Ukrainian demands a strict choice depending on the intent of the verb. If your verb shows static existence, you must ask **де?** (where?) and use the Locative case. If your verb shows movement toward a goal, you must ask **куди?** (where to?) and use the Accusative case, even though the prepositions **в/у** and **на** remain exactly the same.
 
-Here are six everyday places, each shown in both cases:
+Compare these two states directly. Notice how the same preposition requires a completely different noun ending based on whether you are simply existing in a place or traveling toward it.
 
-| Place | Де? (locative) | Куди? (accusative) |
-|-------|----------------|---------------------|
-| школа | в школі | у школу |
-| робота | на робо́ті | на роботу |
-| банк | у банку | у банк |
-| парк | у парку | у парк |
-| бібліотека | у бібліоте́ці | у бібліотеку |
-| магазин | у магази́ні | у магазин |
+| Place | **Де?** (Static - Locative) | **Куди?** (Motion - Accusative) |
+| :--- | :--- | :--- |
+| **школа** (school) | **Я в школі.** (I am at school.) | **Я йду у школу.** (I am going to school.) |
+| **робота** (work) | **Він на роботі.** (He is at work.) | **Він іде на роботу.** (He is going to work.) |
+| **банк** (bank) | **Ми у банку.** (We are in the bank.) | **Ми йдемо у банк.** (We are going to the bank.) |
+| **парк** (park) | **Вона у парку.** (She is in the park.) | **Вона йде у парк.** (She is going to the park.) |
+| **кафе** (cafe) | **Степан у кафе.** (Stepan is in the cafe.) | **Степан іде у кафе.** (Stepan is going to the cafe.) |
+| **аптека** (pharmacy) | **Оксана в аптеці.** (Oksana is in the pharmacy.) | **Оксана йде в аптеку.** (Oksana is going to the pharmacy.) |
 
-Notice that **робота** uses **на** (not **в**) in both columns — **на роботі**, **на роботу**. You learned this pattern in the previous module: certain places always take **на**. The preposition stays the same whether the question is **Де?** or **Куди?** — only the noun ending changes.
+To answer the question **куди?** (where to?), you need verbs of motion. Ukrainian distinguishes between moving under your own physical power and moving by using a vehicle. The verb **йти** means "to go on foot" or "to walk". The verb **їхати** means "to go by transport" or "to drive/ride". Both of these verbs trigger the Accusative case for the destination.
 
-<!-- INJECT_ACTIVITY: group-sort -->
+*   **Я йду в магазин.** (I am walking to the store.)
+*   **Студент іде в університет.** (The student is walking to the university.)
+*   **Ми йдемо в ресторан.** (We are walking to the restaurant.)
+*   **Вони йдуть у кіно.** (They are walking to the cinema.)
+*   **Я їду на вокзал.** (I am driving to the station.)
+*   **Ми їдемо в центр.** (We are driving to the center.)
+*   **Тарас їде у Київ.** (Taras is traveling to Kyiv.)
+*   **Вона їде в аеропорт.** (She is traveling to the airport.)
 
-Both **йти** and **їхати** answer **Куди?**, but they signal different means of getting there.
+:::caution
+**The Exception: Going Home**
+There is one very common destination that breaks the preposition rules entirely: your own home. When expressing movement homeward, Ukrainian uses a special directional adverb: **додому** (homeward / to home). This word has the direction built directly into it, so it never takes a preposition. You must contrast this with the static adverb **вдома** (at home).
+:::
 
-**Йти** (on foot) — for places within walking distance:
+*   **Де Іван? Іван вдома.** (Where is Ivan? Ivan is at home.)
+*   **Куди йде Іван? Іван іде додому.** (Where is Ivan going? Ivan is going home.)
 
-- **Я йду в магазин.** *(I'm going to the store.)*
-- **Ти йдеш на зупи́нку.** *(You're going to the bus stop.)*
-- **Він іде́ у бібліотеку.** *(He's going to the library.)*
-
-**Їхати** (by vehicle) — when a bus, train, or car is involved:
-
-- **Я їду на вокза́л.** *(I'm going to the train station.)*
-- **Ми ї́демо у Львів.** *(We're going to Lviv.)*
-- **Вона їде в Одесу.** *(She's going to Odesa.)*
-
-Quick conjugation reminder: **йду, йдеш, іде** and **їду, їдеш, їде**.
-
-A simple rule of thumb: if you can walk there in ten minutes, Ukrainian speakers typically say **йти**. Cities, other towns, train stations — that's **їхати**. But both verbs take **в/на** + accusative. The noun endings work exactly the same way regardless of which verb you choose.
-
-<!-- INJECT_ACTIVITY: quiz-motion-verbs -->
-
-<!-- INJECT_ACTIVITY: quiz-de-kudy -->
+<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->
+<!-- INJECT_ACTIVITY: group-sort-locative-accusative -->
+<!-- INJECT_ACTIVITY: quiz-vs -->
 
 ## Підсумок — Summary
 
-Ukrainian has two distinct questions for talking about places. **Де?** (Where?) uses the locative case — you are already there, standing still. **Куди?** (Where to?) uses the accusative case — you are moving toward that place. Both questions use the same prepositions **в/у/на**. The noun ending is the only signal. When you hear the word after **в/у/на**, ask yourself: am I there, or am I going there?
+The absolute cornerstone of Ukrainian spatial grammar is the strict two-question system. The question **де?** (where?) asks about a static location and requires the Locative case. The question **куди?** (where to?) asks about dynamic direction and requires the Accusative case. When answering **куди?** (where to?), remember the simplest rule: inanimate masculine and neuter nouns look exactly identical to their original dictionary forms. The only time you need to actively change the noun is when it is a feminine noun ending in **-а** or **-я**, which must always shift to **-у** or **-ю**.
 
-Here are the accusative endings one more time, with examples:
+**How do I say "I am going to the bank" and "He is going to the park"?**
+You say **Я йду у банк** and **Він іде у парк**. Because these are inanimate masculine nouns, they follow the "no-change" rule for the Accusative case. They look completely identical to the Nominative case.
 
-**Masculine inanimate → no change:** банк → **у банк**, парк → **у парк**, магазин → **у магазин**, ресторан → **у ресторан**. **Neuter → no change:** кафе → **у кафе**, місто → **у місто**. **Feminine → -а/-я becomes -у/-ю:** школа → **у школу**, робота → **на роботу**, бібліотека → **у бібліотеку**, аптека → **в аптеку**, пошта → **на пошту**. Masculine and neuter require no work. Feminine: swap the final vowel.
+**How do I say "We are going to the library" and "She is going to work"?**
+You say **Ми йдемо у бібліотеку** and **Вона іде на роботу**. These are feminine nouns ending in **-а**. To show direction, the **-а** must change to **-у**.
 
-Two motion verbs carry you to your destination. **Йти** (on foot): **я йду, ти йдеш, він/вона іде** + accusative direction — **у школу, в магазин, на пошту**. **Їхати** (by transport): **я їду, ти їдеш, він/вона їде** + accusative direction — **у Львів, на вокзал, в Одесу**. Both verbs answer **Куди ти йдеш/їдеш?** Both take **в/на** + accusative.
+**What is the difference between "Я вдома" and "Я йду додому"?**
+The phrase **Я вдома** (I am at home) is static; it means you are already located there. The phrase **Я йду додому** (I am going home) is dynamic; it means you are currently moving in the direction of your home.
 
-### Self-Check
-
-- **Де ти?** → Use locative: **Я в банку.** / **Я у школі.** / **Я на роботі.**
-- **Куди ти йдеш?** → Use accusative: **Я йду в банк.** / **Я йду у школу.** / **Я йду на роботу.**
-- Is the place masculine or neuter? → No change in accusative (**банк, кафе, місто**).
-- Is the place feminine (-а/-я)? → Swap to -у/-ю (**школа → школу, бібліотека → бібліотеку**).
-- Walking or riding? → **Йти** on foot, **їхати** by vehicle — same accusative either way.
-
-**Deterministic word count: 1370 words** (calculated by pipeline, do NOT estimate manually)
-
+**Which case follows verbs of motion like "їхати" and "йти"?**
+Verbs of motion show direction toward a target, so they answer the question **куди?** (where to?) and must be followed by the Accusative case.
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1445 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -324,8 +329,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -370,8 +375,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -412,40 +417,18 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 58 words | Not found: 29 words
+Verified: 75 words | Not found: 7 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Діало — NOT IN VESUM
-  ✗ Знахі — NOT IN VESUM
-  ✗ Зустрі — NOT IN VESUM
+  ✗ Іван — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
-  ✗ Мико — NOT IN VESUM
-  ✗ Оде — NOT IN VESUM
   ✗ Одесу — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
   ✗ Оксана — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Степа — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
   ✗ Степан — NOT IN VESUM
-  ✗ апте — NOT IN VESUM
-  ✗ бібліоте — NOT IN VESUM
-  ✗ вдо — NOT IN VESUM
-  ✗ вокза — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ деш — NOT IN VESUM
-  ✗ дний — NOT IN VESUM
-  ✗ магази — NOT IN VESUM
-  ✗ немося — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ рестора — NOT IN VESUM
-  ✗ субо — NOT IN VESUM
-  ✗ шко — NOT IN VESUM
-  ✗ шта — NOT IN VESUM
-  ✗ шту — NOT IN VESUM
-  ✗ ється — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
 
-All 58 other words are confirmed to exist in VESUM.
+All 75 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

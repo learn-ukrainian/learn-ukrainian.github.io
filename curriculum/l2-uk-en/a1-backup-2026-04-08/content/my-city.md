@@ -1,0 +1,142 @@
+## Діало́ги (Dialogues)
+
+**Алі́на** has just moved to a new part of Kyiv. She stops a stranger on the street.
+
+> — **Аліна:** Ви́бачте, де тут апте́ка? *(Excuse me, where is the pharmacy here?)*
+> — **Перехо́жий:** Аптека на ву́лиці Шевче́нка, бі́ля парку. *(The pharmacy is on Shevchenko Street, near the park.)*
+> — **Аліна:** А бібліоте́ка? *(And the library?)*
+> — **Перехожий:** Бібліотека в це́нтрі мі́ста. *(The library is in the city center.)*
+> — **Аліна:** Це дале́ко? *(Is it far?)*
+> — **Перехожий:** Ні, бли́зько. *(No, it's close.)*
+> — **Аліна:** Дякую! *(Thank you!)*
+> — **Перехожий:** Будь ла́ска! *(You're welcome!)*
+
+
+Notice the polite register here. **Вибачте** (excuse me) is how you address a stranger on the street. The stranger answers with specific locations: **на вулиці Шевченка** (on Shevchenko Street) uses **на** + locative for streets, and **біля парку** (near the park) pins the pharmacy to a landmark. The reply **в центрі міста** (in the city center) uses **в** + locative. Two location adverbs close the exchange: **далеко** (far) and **близько** (near/close).
+
+Now Аліна is drawing a map of her Kyiv neighborhood for her pen pal, and chatting with her friend **І́гор** about what to mark.
+
+> — **Ігор:** Що є біля твого́ до́му? *(What's near your house?)*
+> — **Аліна:** Біля дому є магази́н і кафе́. А по́руч з кафе — о́зеро. *(Near the house there's a shop and a café. And next to the café is a lake.)*
+> — **Ігор:** А ліка́рня у це́нтрі? *(And is the hospital in the center?)*
+> — **Аліна:** Ні, лікарня там, далеко від це́нтру. *(No, the hospital is over there, far from the center.)*
+> — **Ігор:** Біля тебе́ є стадіо́н? *(Is there a stadium near you?)*
+> — **Аліна:** Так, стадіон на пло́щі, а по́шта на вокза́лі. *(Yes, the stadium is on the square, and the post office is at the train station.)*
+
+
+This dialogue recycles **є** (there is/are) from earlier modules — now it works with city places. **Біля дому** (near the house) is a fixed chunk with **біля** + genitive. Notice **магазин** (shop) and **кафе** (café) — two essential neighborhood words. The phrase **далеко від центру** (far from the center) pairs the adverb **далеко** with a genitive chunk. We also introduced **по́руч з** (next to), which takes the instrumental case, though **кафе** doesn't change.
+
+Every Ukrainian **мі́сто** (city) has its landmarks: a **ри́нок** (market), a **пло́ща** (square), a **вокза́л** (train station), a **по́шта** (post office). Kyiv's most famous street is **Хреща́тик** — the main **ву́лиця** (street) that runs through the heart of the capital. Close by sits **Майда́н Незале́жності** (Independence Square), the central square that every Ukrainian knows — **центра́льна площа**. Lviv has its own iconic **площа Ринок** (Market Square). When Ukrainians give directions, they orient by these landmarks — not by abstract addresses.
+
+## Місця́ в мі́сті (City Places)
+
+Here are 17 essential city places. Gender matters because locative endings differ — feminine, masculine, and neuter nouns each have their own pattern from M29.
+
+**Feminine (f):**
+- **аптека** (pharmacy) · **бібліотека** (library) · **лікарня** (hospital) · **пошта** (post office) · **це́рква** (church) · **зупи́нка** (bus stop)
+
+**Masculine (m):**
+- **магазин** (shop) · **суперма́ркет** (supermarket) · **рестора́н** (restaurant) · **банк** (bank) · **вокзал** (train station) · **готе́ль** (hotel) · **музе́й** (museum) · **теа́тр** (theatre) · **кінотеа́тр** (cinema) · **стадіон** (stadium) · **університе́т** (university)
+
+**Neuter (n):**
+- **кафе** (café) · **о́зеро** (lake)
+
+Two prepositions control where you are. Most places take **в/у** + locative. A small group — transit and service infrastructure — takes **на** + locative. Here are the locative forms:
+
+**В/у + locative:**
+- аптека → **в апте́ці** · бібліотека → **у бібліоте́ці** · магазин → **в магази́ні** · банк → **у ба́нку** · готель → **у готе́лі** · ресторан → **у рестора́ні** · музей → **в музе́ї** · університет → **в університе́ті** · лікарня → **у ліка́рні** · кінотеатр → **у кінотеа́трі** · театр → **у теа́трі** · церква → **у це́ркві**
+
+**На + locative:**
+- пошта → **на по́шті** · вокзал → **на вокза́лі** · стадіон → **на стадіо́ні** · зупинка → **на зупи́нці** · площа → **на пло́щі**
+
+The pattern for these places: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, **площа**. The rest take **в/у**.
+
+<!-- INJECT_ACTIVITY: quiz-prepositions -->
+
+Now combine these places with verbs you already know from A1.3. What do you do at each place?
+
+- **Я купу́ю лі́ки в аптеці.** — I buy medicine at the pharmacy.
+- **Я чита́ю кни́ги у бібліотеці.** — I read books at the library.
+- **Я їм пі́цу в ресторані.** — I eat pizza at the restaurant.
+- **Я п'ю ка́ву в кафе.** — I drink coffee at the café.
+- **Я надсила́ю листи́ на пошті.** — I send letters at the post office.
+- **Я дивлю́ся фільм у кінотеатрі.** — I watch a film at the cinema.
+- **Я відпочива́ю в парку.** — I relax in the park.
+- **Я чека́ю на по́тяг на вокзалі.** — I wait for a train at the station.
+
+Notice how familiar verbs — **купую**, **читаю**, **їм**, **п'ю** — now appear in locative context. The place tells you *where* the action happens. And **кафе** never changes form: **в кафе**, **біля кафе** — it stays the same in every case, because it is an indeclinable noun.
+
+<!-- INJECT_ACTIVITY: match-places-activities -->
+
+## Де це? (Where Is It?)
+
+Four core adverbs let you describe where anything is. They come in natural pairs:
+
+**Тут** (here) vs **там** (there):
+- **Аптека тут.** — The pharmacy is here.
+- **Вокзал там.** — The train station is there.
+
+**Далеко** (far) vs **близько** (near):
+- **Університет далеко від дому.** — The university is far from home.
+- **Магазин близько.** — The shop is nearby.
+- **Стадіон далеко.** — The stadium is far.
+- **Бібліотека близько від парку.** — The library is near the park.
+
+A useful synonym: **недале́ко** means the same as **близько**.
+
+The preposition **біля** always takes the genitive case — but at A1, learn these as memorized chunks, not grammar rules. Just remember: **біля** + a fixed word form.
+
+- **біля парку** — near the park
+- **біля дому** — near the house
+- **біля університе́ту** — near the university
+- **біля вокза́лу** — near the station
+- **біля кафе** — near the café (кафе never changes!)
+
+Six example sentences:
+- **Аптека біля парку.** — The pharmacy is near the park.
+- **Музей біля університету.** — The museum is near the university.
+- **Зупинка біля вокзалу.** — The bus stop is near the station.
+- **Магазин біля мого дому.** — The shop is near my house.
+- **Церква біля площі.** — The church is near the square.
+- **Готель біля кафе.** — The hotel is near the café.
+
+:::tip
+**Кафе** never changes — **біля кафе**, **у кафе**, **це кафе**. It looks the same in every case. This is true for many borrowed words ending in **-е** or **-о**: **метро́**, **кіно́**, **кафе**.
+:::
+
+Three more location phrases for describing your neighborhood:
+
+- **у центрі міста** (in the city center) — **Театр у центрі міста.** The theatre is in the city center.
+- **на ро́зі вулиці** (on the corner of the street) — **Аптека на розі вулиці Шевченка.** The pharmacy is on the corner of Shevchenko Street.
+- **у на́шому райо́ні** (in our neighborhood) — **Бібліотека у нашому районі.** The library is in our neighborhood.
+
+Now describe your whole city using **є** (there is/are). The construction is simple: **У** + place + **є** + what's there.
+
+- **У Ки́єві є метро.** — Kyiv has a metro.
+- **У нашому місті є вели́кий парк.** — Our city has a big park.
+- **У цьому́ районі є стадіон і кінотеатр.** — This neighborhood has a stadium and a cinema.
+
+For the negative, use **нема́є** + genitive: **Біля мого дому немає вокзалу.** (There is no train station near my house.)
+
+<!-- INJECT_ACTIVITY: quiz-where-would-you-go -->
+
+## Підсумок — Summary
+
+Here is your city vocabulary organized by preposition — the most important pattern from this module:
+
+Remember the core pattern: **на** is used with **пошта**, **вокзал**, **стадіон**, **зупинка**, and **площа**. Most other places take **в/у**.
+
+Self-check — answer these questions about your own city:
+
+- **Де ти купу́єш ліки?** → В аптеці.
+- **Де ти їси́?** → У ресторані / у кафе.
+- **Де ти чита́єш книги?** → У бібліотеці.
+- **Де ти чека́єш на потяг?** → На вокзалі.
+- **Що є біля твого дому?** → Біля мого дому є … (your answer).
+- **Твій університет далеко чи близько?** → (open answer).
+
+<!-- INJECT_ACTIVITY: fill-in-your-city -->
+
+The next module (M31 — Where To?) introduces **куди́** — movement *toward* places using the accusative case: **Я іду́ до бібліоте́ки. Я ї́ду на вокзал.** The same places, a new question: not **де** (where — location) but **куди** (where to — destination).
+
+

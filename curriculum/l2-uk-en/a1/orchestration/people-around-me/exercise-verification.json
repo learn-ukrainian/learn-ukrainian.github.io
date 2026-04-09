@@ -1,26 +1,116 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 59,
+  "grounded_items": 43,
+  "ungrounded": [
+    {
+      "word": "воду",
+      "exercise_type": "group-sort",
+      "context": "воду",
+      "role": "answer"
+    },
+    {
+      "word": "чай",
+      "exercise_type": "group-sort",
+      "context": "чай",
+      "role": "answer"
+    },
+    {
+      "word": "борщ",
+      "exercise_type": "group-sort",
+      "context": "борщ",
+      "role": "answer"
+    },
+    {
+      "word": "тараса",
+      "exercise_type": "fill-in",
+      "context": "— Ти знаєш мого ____ Тараса?",
+      "role": "context"
+    },
+    {
+      "word": "ми",
+      "exercise_type": "error-correction",
+      "context": "Ми любимо тато.",
+      "role": "context"
+    },
+    {
+      "word": "любимо",
+      "exercise_type": "error-correction",
+      "context": "Ми любимо тато.",
+      "role": "context"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "error-correction",
+      "context": "Вона шукає сусід.",
+      "role": "context"
+    },
+    {
+      "word": "шукає",
+      "exercise_type": "unjumble",
+      "context": "шукає",
+      "role": "answer"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "unjumble",
+      "context": "Новий",
+      "role": "answer"
+    },
+    {
+      "word": "ви",
+      "exercise_type": "error-correction",
+      "context": "Ви знаєте ця колега?",
+      "role": "context"
+    },
+    {
+      "word": "знаєте",
+      "exercise_type": "error-correction",
+      "context": "Ви знаєте ця колега?",
+      "role": "context"
+    },
+    {
+      "word": "ця",
+      "exercise_type": "error-correction",
+      "context": "Ви знаєте ця колега?",
+      "role": "context"
+    },
+    {
+      "word": "цього",
+      "exercise_type": "unjumble",
+      "context": "цього",
+      "role": "answer"
+    },
+    {
+      "word": "свого",
+      "exercise_type": "unjumble",
+      "context": "свого",
+      "role": "answer"
+    },
+    {
+      "word": "нашого",
+      "exercise_type": "unjumble",
+      "context": "нашого",
+      "role": "answer"
+    },
+    {
+      "word": "бачить",
+      "exercise_type": "unjumble",
+      "context": "бачить",
+      "role": "answer"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 7,
     "not_tested": [
       "бачити",
-      "викладач",
       "вчитель",
-      "друг",
       "знати",
-      "колега",
       "любити",
-      "лікар",
       "подруга",
-      "покупець",
-      "продавець",
-      "сусід",
       "чекати",
       "шукати"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

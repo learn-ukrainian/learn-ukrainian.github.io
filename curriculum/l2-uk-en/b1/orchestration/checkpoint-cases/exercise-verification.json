@@ -1,0 +1,405 @@
+{
+  "total_items": 260,
+  "grounded_items": 195,
+  "ungrounded": [
+    {
+      "word": "випив",
+      "exercise_type": "fill-in",
+      "context": "Він випив склянку ____ і пішов на роботу.",
+      "role": "context"
+    },
+    {
+      "word": "вдягнув",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні на вулиці дуже ____, тому я вдягнув теплу куртку.",
+      "role": "context"
+    },
+    {
+      "word": "теплу",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні на вулиці дуже ____, тому я вдягнув теплу куртку.",
+      "role": "context"
+    },
+    {
+      "word": "куртку",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні на вулиці дуже ____, тому я вдягнув теплу куртку.",
+      "role": "context"
+    },
+    {
+      "word": "мріяв",
+      "exercise_type": "fill-in",
+      "context": "Мій брат завжди мріяв працювати ____.",
+      "role": "context"
+    },
+    {
+      "word": "їхали",
+      "exercise_type": "fill-in",
+      "context": "Вони швидко їхали новою ____ додому.",
+      "role": "context"
+    },
+    {
+      "word": "новою",
+      "exercise_type": "fill-in",
+      "context": "Вони швидко їхали новою ____ додому.",
+      "role": "context"
+    },
+    {
+      "word": "звільнюся",
+      "exercise_type": "error-correction",
+      "context": "Я зателефоную тобі за годину, коли звільнюся.",
+      "role": "context"
+    },
+    {
+      "word": "негоди",
+      "exercise_type": "error-correction",
+      "context": "Наш рейс скасували із-за негоди.",
+      "role": "context"
+    },
+    {
+      "word": "івана",
+      "exercise_type": "quiz",
+      "context": "Як правильно звернутися до Івана Петровича?",
+      "role": "context"
+    },
+    {
+      "word": "петровича",
+      "exercise_type": "quiz",
+      "context": "Як правильно звернутися до Івана Петровича?",
+      "role": "context"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний варіант: У кімнаті стоїть...",
+      "role": "context"
+    },
+    {
+      "word": "кімнаті",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний варіант: У кімнаті стоїть...",
+      "role": "context"
+    },
+    {
+      "word": "скільки",
+      "exercise_type": "quiz",
+      "context": "Скільки тут людей?",
+      "role": "context"
+    },
+    {
+      "word": "дробу",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильну форму дробу:",
+      "role": "context"
+    },
+    {
+      "word": "щодо",
+      "exercise_type": "quiz",
+      "context": "Що означає дієслово «боятися» щодо керування відмінками?",
+      "role": "context"
+    },
+    {
+      "word": "стилі",
+      "exercise_type": "quiz",
+      "context": "Який прийменник використовується з Орудним відмінком в офіці",
+      "role": "context"
+    },
+    {
+      "word": "перекладу",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильний варіант перекладу «due to the fact that»:",
+      "role": "context"
+    },
+    {
+      "word": "негативна",
+      "exercise_type": "match-up",
+      "context": "негативна або нейтральна причина",
+      "role": "context"
+    },
+    {
+      "word": "нейтральна",
+      "exercise_type": "match-up",
+      "context": "негативна або нейтральна причина",
+      "role": "context"
+    },
+    {
+      "word": "позитивна",
+      "exercise_type": "match-up",
+      "context": "позитивна причина з хорошим результатом",
+      "role": "context"
+    },
+    {
+      "word": "хорошим",
+      "exercise_type": "match-up",
+      "context": "позитивна причина з хорошим результатом",
+      "role": "context"
+    },
+    {
+      "word": "результатом",
+      "exercise_type": "match-up",
+      "context": "позитивна причина з хорошим результатом",
+      "role": "context"
+    },
+    {
+      "word": "необхідний",
+      "exercise_type": "match-up",
+      "context": "час, необхідний для повного завершення дії",
+      "role": "context"
+    },
+    {
+      "word": "безперервна",
+      "exercise_type": "match-up",
+      "context": "безперервна дія у виділений час",
+      "role": "context"
+    },
+    {
+      "word": "збірний",
+      "exercise_type": "true-false",
+      "context": "Збірний числівник «двоє» використовується зі словом «люди».",
+      "role": "context"
+    },
+    {
+      "word": "словом",
+      "exercise_type": "true-false",
+      "context": "Збірний числівник «двоє» використовується зі словом «люди».",
+      "role": "context"
+    },
+    {
+      "word": "при",
+      "exercise_type": "true-false",
+      "context": "Родовий відмінок вживається при запереченні об'єкта (наприкл",
+      "role": "context"
+    },
+    {
+      "word": "запереченні",
+      "exercise_type": "true-false",
+      "context": "Родовий відмінок вживається при запереченні об'єкта (наприкл",
+      "role": "context"
+    },
+    {
+      "word": "об'єкта",
+      "exercise_type": "true-false",
+      "context": "Родовий відмінок вживається при запереченні об'єкта (наприкл",
+      "role": "context"
+    },
+    {
+      "word": "іменники",
+      "exercise_type": "true-false",
+      "context": "Іменники чоловічого роду для назв міст мають у Родовому відм",
+      "role": "context"
+    },
+    {
+      "word": "назв",
+      "exercise_type": "true-false",
+      "context": "Іменники чоловічого роду для назв міст мають у Родовому відм",
+      "role": "context"
+    },
+    {
+      "word": "словосполучення",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «сміятися над кимось» є правильною українськ",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «сміятися над кимось» є правильною українськ",
+      "role": "context"
+    },
+    {
+      "word": "формою",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «сміятися над кимось» є правильною українськ",
+      "role": "context"
+    },
+    {
+      "word": "позначати",
+      "exercise_type": "true-false",
+      "context": "Прийменник «за» може позначати мету руху, наприклад, «піти з",
+      "role": "context"
+    },
+    {
+      "word": "довго",
+      "exercise_type": "error-correction",
+      "context": "Він довго сміявся над своїм братом.",
+      "role": "context"
+    },
+    {
+      "word": "сміявся",
+      "exercise_type": "error-correction",
+      "context": "Він довго сміявся над своїм братом.",
+      "role": "context"
+    },
+    {
+      "word": "своїм",
+      "exercise_type": "error-correction",
+      "context": "Він довго сміявся над своїм братом.",
+      "role": "context"
+    },
+    {
+      "word": "братом",
+      "exercise_type": "error-correction",
+      "context": "Він довго сміявся над своїм братом.",
+      "role": "context"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "error-correction",
+      "context": "Я хочу щиро подякувати вас за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "подякувати",
+      "exercise_type": "error-correction",
+      "context": "Я хочу щиро подякувати вас за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "допомогу",
+      "exercise_type": "error-correction",
+      "context": "Я хочу щиро подякувати вас за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "навчаються",
+      "exercise_type": "error-correction",
+      "context": "Студенти щодня навчаються музиці.",
+      "role": "context"
+    },
+    {
+      "word": "плану",
+      "exercise_type": "error-correction",
+      "context": "Ми працюємо згідно плану.",
+      "role": "context"
+    },
+    {
+      "word": "сильного",
+      "exercise_type": "error-correction",
+      "context": "Із-за сильного дощу ми залишилися вдома.",
+      "role": "context"
+    },
+    {
+      "word": "контрольну",
+      "exercise_type": "error-correction",
+      "context": "Він написав контрольну роботу після п'ять днів підготовки.",
+      "role": "context"
+    },
+    {
+      "word": "підготовки",
+      "exercise_type": "error-correction",
+      "context": "Він написав контрольну роботу після п'ять днів підготовки.",
+      "role": "context"
+    },
+    {
+      "word": "конкретні",
+      "exercise_type": "group-sort",
+      "context": "Закінчення -а/-я (конкретні предмети, міста, особи)",
+      "role": "context"
+    },
+    {
+      "word": "особи",
+      "exercise_type": "group-sort",
+      "context": "Закінчення -а/-я (конкретні предмети, міста, особи)",
+      "role": "context"
+    },
+    {
+      "word": "лікар",
+      "exercise_type": "group-sort",
+      "context": "лікар",
+      "role": "answer"
+    },
+    {
+      "word": "цукор",
+      "exercise_type": "group-sort",
+      "context": "цукор",
+      "role": "answer"
+    },
+    {
+      "word": "біль",
+      "exercise_type": "group-sort",
+      "context": "біль",
+      "role": "answer"
+    },
+    {
+      "word": "футбол",
+      "exercise_type": "group-sort",
+      "context": "футбол",
+      "role": "answer"
+    },
+    {
+      "word": "вправа",
+      "exercise_type": "fill-in",
+      "context": "Ця вправа — це ____ аналіз ваших знань.",
+      "role": "context"
+    },
+    {
+      "word": "теорії",
+      "exercise_type": "fill-in",
+      "context": "Якщо ви маєте ____ у знаннях, варто повернутися до теорії.",
+      "role": "context"
+    },
+    {
+      "word": "журналі",
+      "exercise_type": "fill-in",
+      "context": "У журналі з'явилася нова ____ про нерухомість.",
+      "role": "context"
+    },
+    {
+      "word": "з'явилася",
+      "exercise_type": "fill-in",
+      "context": "У журналі з'явилася нова ____ про нерухомість.",
+      "role": "context"
+    },
+    {
+      "word": "наприкінці",
+      "exercise_type": "fill-in",
+      "context": "Наприкінці курсу обов'язкова чесна ____ своїх навичок.",
+      "role": "context"
+    },
+    {
+      "word": "обов'язкова",
+      "exercise_type": "fill-in",
+      "context": "Наприкінці курсу обов'язкова чесна ____ своїх навичок.",
+      "role": "context"
+    },
+    {
+      "word": "навичок",
+      "exercise_type": "fill-in",
+      "context": "Наприкінці курсу обов'язкова чесна ____ своїх навичок.",
+      "role": "context"
+    },
+    {
+      "word": "оцінки",
+      "exercise_type": "fill-in",
+      "context": "Для оцінки прогресу проводиться детальна ____.",
+      "role": "context"
+    },
+    {
+      "word": "прогресу",
+      "exercise_type": "fill-in",
+      "context": "Для оцінки прогресу проводиться детальна ____.",
+      "role": "context"
+    },
+    {
+      "word": "проводиться",
+      "exercise_type": "fill-in",
+      "context": "Для оцінки прогресу проводиться детальна ____.",
+      "role": "context"
+    },
+    {
+      "word": "детальна",
+      "exercise_type": "fill-in",
+      "context": "Для оцінки прогресу проводиться детальна ____.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 8,
+    "tested_in_exercises": 6,
+    "not_tested": [
+      "помилок",
+      "прогалина"
+    ]
+  },
+  "all_grounded": false
+}

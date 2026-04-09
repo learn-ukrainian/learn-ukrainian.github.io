@@ -2,56 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All 4 content_outline sections covered. Dialogue 1 matches plan's market
-    scenario exactly (яблука, помідори, prices, "Дайте, будь ласка"). Dialogue 2 matches
-    supermarket scenario (хліб location, сир p
+  score: 8
+  evidence: The module covers all structural sections and dialogue scenarios perfectly,
+    but fails to include the required vocabulary word `купувати` (only using perfective
+    `купити`).
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All 133 VESUM-verified words confirmed. Currency patterns correct (1 гривня/2-4
-    гривні/5+ гривень, 1 копійка/2 копійки/5+ копійок). Genitive forms after quantities
-    correct (яблук, помідорів, молока, с
+  score: 8
+  evidence: The module explains Ukrainian numeral case agreement but contains a critical
+    factual omission by failing to mention that numbers ending in 11-14 take the genitive
+    plural (`гривень`).
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Strong PPP flow: Dialogues present situations first, "Скільки коштує?"
-    section extracts patterns, then practice via price lists and self-check. Grammar
-    (genitive after quantities) correctly deferred t'
+  score: 10
+  evidence: Excellent PPP flow. Grammar rules for case usage with quantities are taught
+    brilliantly as "fixed chunks" ("The hidden 'of'"), which is perfect for A1 learners.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: 'All 9 required vocabulary items appear naturally in prose (not as bare
-    lists): коштувати in "Скільки коштує?", скільки throughout, гривня in currency
-    section, ціна in "Нормальна ціна", магазин and рин'
+  score: 8
+  evidence: The required word `купувати` and recommended word `гроші` are absent from
+    the prose text.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 activity markers matching all 4 plan hints. Each placed after relevant
-    teaching. The plan''s activity items are well-designed: fill-in prices tests коштує+nominative
-    agreement, quiz tests гривня/грив'
+  score: 8
+  evidence: The `match-up-shops` exercise is placed immediately after the Dialogues,
+    testing vocabulary (`м'ясний відділ`, `крамниця`) that isn't taught until the
+    subsequent section.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: No motivational openers, no meta-commentary, no gamified language. The
-    tip box is genuinely useful ("Four phrases to memorize now"). Dialogues feel natural
-    — Мама/Дочка interaction is warm and realist
+  score: 10
+  evidence: The tone is exceptionally warm and engaging, using an encouraging teacher
+    persona without falling into corporate/gamified language.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 sections from plan present in correct order: Діалоги, Скільки
-    коштує?, Де купити?, Підсумок. No duplicate summaries, no meta-commentary sections,
-    no stray tags. Word count 1571 vs target 1200'
+  evidence: All H2 headings match the plan perfectly. The word count is 1830 (well
+    above the 1200 target).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. Currency explained as гривня (not
-    "Ukrainian hryvnia equivalent to..."). крамниця presented as a Ukrainian word
-    distinct from магазин (Антоненко-Давидович confirm
+  evidence: Superb decolonized context explaining the difference between the Russian-imposed
+    `копійка` and the historical Ukrainian `шаг`, as well as the cultural habit of
+    using diminutives in markets.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Three distinct dialogues with named speakers (Тарас/Продавець, Мама/Дочка/Касир,
-    Ви/Продавець). Natural multi-turn exchanges — Dialogue 2 is particularly strong
-    (finding bread → checking milk → compar
+  evidence: Dialogues are natural, polite, and effectively demonstrate the difference
+    between communicative market interactions and transactional supermarket shopping.
 findings: []

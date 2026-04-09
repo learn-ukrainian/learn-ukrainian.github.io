@@ -1,0 +1,217 @@
+vocabulary:
+- word: котри́й
+  translation: which
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́ти́шний
+  translation: cozy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: знахо́дитися
+  translation: to be located
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стоя́ти
+  translation: to stand
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: яки́й
+  translation: which, that
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: яка
+  translation: which, that (feminine)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: яке́
+  translation: which, that (neuter)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: які́
+  translation: which, that (plural)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: де
+  translation: where
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: куди́
+  translation: where to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зві́дки
+  translation: where from
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: означа́льний
+  translation: attributive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: опи́сувати
+  translation: to describe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: означальне підрядне речення
+  translation: relative clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: головне речення
+  translation: main clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підрядне речення
+  translation: subordinate clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́ма
+  translation: comma
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: що
+  translation: that, who (relative)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: ріелтор
+  translation: real estate agent
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: балко́н
+  translation: balcony
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виходити на
+  translation: to face, to look out onto
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сусі́дній
+  translation: neighboring
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тихе місце
+  translation: quiet place
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сусі́д
+  translation: neighbor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: райо́н
+  translation: neighborhood, district
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: спокі́йний
+  translation: peaceful, calm
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пека́рня
+  translation: bakery
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кав'я́рня
+  translation: coffee shop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: за́пах
+  translation: smell, aroma
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: елега́нтний
+  translation: elegant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́йвий
+  translation: redundant, extra
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: інтона́ція
+  translation: intonation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: па́уза
+  translation: pause
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стари́й
+  translation: old
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: улю́блений
+  translation: favorite
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

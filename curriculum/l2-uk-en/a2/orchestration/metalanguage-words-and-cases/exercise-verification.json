@@ -1,0 +1,198 @@
+{
+  "total_items": 153,
+  "grounded_items": 123,
+  "ungrounded": [
+    {
+      "word": "великого",
+      "exercise_type": "quiz",
+      "context": "Я бачу великого **кота**.",
+      "role": "context"
+    },
+    {
+      "word": "читає",
+      "exercise_type": "quiz",
+      "context": "**Вона** читає цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "quiz",
+      "context": "**Вона** читає цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "дав",
+      "exercise_type": "quiz",
+      "context": "Студент дав зошит **вчителю**.",
+      "role": "context"
+    },
+    {
+      "word": "вчителю",
+      "exercise_type": "quiz",
+      "context": "Студент дав зошит **вчителю**.",
+      "role": "context"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "quiz",
+      "context": "На **столі** лежить книга.",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "quiz",
+      "context": "На **столі** лежить книга.",
+      "role": "context"
+    },
+    {
+      "word": "ручкою",
+      "exercise_type": "quiz",
+      "context": "Брат пише **ручкою**.",
+      "role": "context"
+    },
+    {
+      "word": "будинок",
+      "exercise_type": "quiz",
+      "context": "Це будинок моєї **мами**.",
+      "role": "context"
+    },
+    {
+      "word": "моєї",
+      "exercise_type": "quiz",
+      "context": "Це будинок моєї **мами**.",
+      "role": "context"
+    },
+    {
+      "word": "мами",
+      "exercise_type": "quiz",
+      "context": "Це будинок моєї **мами**.",
+      "role": "context"
+    },
+    {
+      "word": "люблю",
+      "exercise_type": "quiz",
+      "context": "Я люблю **тепле** молоко.",
+      "role": "context"
+    },
+    {
+      "word": "тепле",
+      "exercise_type": "error-correction",
+      "context": "тепле",
+      "role": "answer"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "quiz",
+      "context": "Я люблю **тепле** молоко.",
+      "role": "context"
+    },
+    {
+      "word": "стукає",
+      "exercise_type": "quiz",
+      "context": "**Хтось** стукає у двері.",
+      "role": "context"
+    },
+    {
+      "word": "двері",
+      "exercise_type": "quiz",
+      "context": "**Хтось** стукає у двері.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "error-correction",
+      "context": "Моя",
+      "role": "answer"
+    },
+    {
+      "word": "лікарем",
+      "exercise_type": "error-correction",
+      "context": "Мій мама працює лікарем.",
+      "role": "context"
+    },
+    {
+      "word": "гарне",
+      "exercise_type": "error-correction",
+      "context": "гарне",
+      "role": "answer"
+    },
+    {
+      "word": "гарний",
+      "exercise_type": "error-correction",
+      "context": "Яке гарний місто!",
+      "role": "context"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "error-correction",
+      "context": "Він прочитав цікавий книгу.",
+      "role": "context"
+    },
+    {
+      "word": "цікавий",
+      "exercise_type": "error-correction",
+      "context": "Він прочитав цікавий книгу.",
+      "role": "context"
+    },
+    {
+      "word": "теплий",
+      "exercise_type": "error-correction",
+      "context": "Це теплий вікно.",
+      "role": "context"
+    },
+    {
+      "word": "живе",
+      "exercise_type": "error-correction",
+      "context": "Моя брат живе в Києві.",
+      "role": "context"
+    },
+    {
+      "word": "києві",
+      "exercise_type": "error-correction",
+      "context": "Моя брат живе в Києві.",
+      "role": "context"
+    },
+    {
+      "word": "якого",
+      "exercise_type": "quiz",
+      "context": "До якого роду належить слово «родина»?",
+      "role": "context"
+    },
+    {
+      "word": "належить",
+      "exercise_type": "quiz",
+      "context": "До якого роду належить слово «родина»?",
+      "role": "context"
+    },
+    {
+      "word": "шість",
+      "exercise_type": "true-false",
+      "context": "В українській мові є шість відмінків.",
+      "role": "context"
+    },
+    {
+      "word": "стяг",
+      "exercise_type": "true-false",
+      "context": "Слово «стяг» — це дієслово.",
+      "role": "context"
+    },
+    {
+      "word": "свої",
+      "exercise_type": "unjumble",
+      "context": "свої",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "жіночий",
+      "мови",
+      "середній",
+      "частина",
+      "чоловічий"
+    ]
+  },
+  "all_grounded": false
+}

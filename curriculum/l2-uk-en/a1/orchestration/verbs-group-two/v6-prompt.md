@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 15-25% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 15-25% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -235,401 +236,380 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (12/12 infinitives):**
-- ✅ говорити (verb)
-- ✅ бачити (verb)
-- ✅ робити (verb)
-- ✅ вчити (verb)
-- ✅ просити (verb)
-- ✅ ходити (verb)
-- ✅ дивитися (verb)
-- ✅ вчитися (verb)
-- ✅ любити (verb)
-- ✅ трохи (adv)
-- ✅ добре (adv)
-- ✅ увечері (adv)
-
-**All conjugated forms confirmed (24/24):**
-говорю, говориш, говорить, говоримо, говорите, говорять ✅
-бачу, бачиш, бачить, бачимо, бачите, **бачать** ✅ (correct -ать, not *бачять)
-роблю, робиш, робить ✅
-ходжу, ходиш, ходять ✅
-прошу, просиш, просить ✅
-вчу, вчиш, вчить ✅
-
-**Not found:** none — all words verified.
-
----
-
-## Textbook Excerpts
-
-### Section: Друга дієвідміна (Group II Verbs)
-> "До ІІ дієвідміни належать дієслова, які в 3-й особі множини мають закінчення -ать (-ять). НАПРИКЛАД: стоять, кричать, заносять."
-> "Дієслова ІІ дієвідміни в усіх особових закінченнях (крім 1-ї особи однини та 3-ї особи множини) мають букву и (ї)."
-> Source: Литвинова, Grade 7 (tier 1, NUS 2024), §10 Дієвідмінювання дієслів
-
-> Full paradigm table for Group I vs II confirmed (І: пишу/пишеш/пише/пишемо/пишете/пишуть vs ІІ: вчу/вчиш/вчить/вчимо/вчите/вчать):
-> Source: Литвинова, Grade 7 (tier 1), p.52
-
-### Section: Група I чи II? (Which Group?)
-> "Існує два способи визначити дієвідміну та з'ясувати, яке закінчення правильне. Утворити форму 3-ї особи множини: ходити — ходять (ІІ дієвідміна)."
-> Source: Литвинова, Grade 7 (tier 1), §10
-
-> "І дієвідміна: -у(-ю), -еш(-єш), -е(-є), -емо(-ємо), -ете(-єте), -уть(-ють) | ІІ дієвідміна: -у(-ю), -иш(-їш), -ить, -имо, -ите, -ать(-ять)"
-> Source: Караман, Grade 10, §71
-
-> Key rule confirmed: **ти-form** → -єш (Group I) vs -иш (Group II); **вони-form** → -ють (Group I) vs -ять/-ать (Group II).
-> Source: Авраменко, Grade 11, p.51
-
-### Section: Consonant Alternations (Plan: Чергування у 1 ос. одн.)
-> "В особових формах дієслів теперішнього і майбутнього часу чергуються приголосні: [д]→[дж]: водити — воджу | [с]→[ш]: носити — ношу | [з]→[ж]: возити — вожу | [т]→[ч]: крутити — кручу"
-> Source: Глазова, Grade 10, §26 Чергування приголосних звуків
-
-> Additional confirmation: [д]→[дж] ходити — ходжу (Авраменко Grade 5 §50); народити — народжувати
-> Source: Авраменко, Grade 5 (tier 1), §50
-
-### Section: Діалоги (Dialogues — evening at home, abilities)
-> The textbook corpus has Grade 10 rhetoric examples using говорити ("Від уміння говорити нерідко залежить успіх"). No direct A1 dialogue about language abilities exists in the textbooks — the plan dialogue ("Ти говориш українською? — Так, я говорю трохи.") is pedagogically appropriate as an original construction grounded in the ULP Ep24 pattern. ✅ no textbook contradiction.
-> Source: Заболотний, Grade 10, p.45
-
----
+- Confirmed: говорити, бачити, робити, вчити, просити, ходити, дивитися, вчитися, любити, трохи, добре, увечері
+- Not found: [none]
 
 ## Grammar Rules
-
-- **Group II -ать after sibilants**: After ч, ш, ж, щ, the 3rd-person plural ending is **-ать** (not -ять). бачать ✅, кричать ✅. Confirmed by Зabolotnyi Grade 7 table and Litvinova Grade 7 §10. Note: This rule is stated correctly in the plan ("після шиплячих → -ать").
-
-- **Consonant alternations in я-form only**: Confirmed by Glazova Grade 10 §26 and Avramenko Grade 5 §50 — changes occur in present/future tense personal forms. The plan correctly states these changes only affect the я-form for these particular verbs.
-
-- **Правопис 2019 note**: The query for "дієслово" and "особові закінчення дієслів" did not resolve to a specific Правопис §. Verb morphology (conjugation endings) is governed by the grammatical tradition, not a separate spelling rule — Правопис 2019 addresses spelling (and/і, е/и in suffixes), while conjugation paradigms come from grammar. No orthographic conflict found.
-
-- **вчити vs учити**: Антоненко-Давидович confirms: "Пишемо вживати й уживати, вчити й учити залежно від того, на голосну чи приголосну кінчається попереднє слово (закон чергування у/в)." Plan correctly uses вчити (after consonant context). ✅
-
----
+- Дієвідмінювання (II дієвідміна): До II дієвідміни належать дієслова, які в 3-й особі множини мають закінчення -ать (-ять). В особових закінченнях (крім 1-ї особи однини та 3-ї особи множини) пишемо букву и (ї): -иш, -ить, -имо, -ите.
+- Чергування приголосних: У 1-й особі однини (я-форма) відбуваються зміни: б → бл (роблю), д → дж (ходжу), с → ш (прошу). Правопис § 105 (Verbal endings/Diyedvidminyuvannya).
 
 ## Calque Warnings
+- говорити на українській мові: Calque — Correct: говорити українською (мовою).
+- дивитися фільм: OK.
+- вчити мову: OK.
 
-- **дивитися фільм**: ✅ OK — not flagged as a calque by Антоненко-Давидович. Natural Ukrainian.
-- **вчуся** (я вчуся / я вчу нові слова): ✅ OK — AD confirms вчитися takes genitive object ("вчити сестер грамоти"), reflexive form without object ("я вчуся") is natural. No calque risk.
-- **просити (to ask/request)**: ✅ OK — but **⚠️ Pedagogical note**: the plan glosses просити as "to ask/request" — correct, but the writer should distinguish for learners that просити = to ask for something/request (a favor), NOT to ask a question (that is питати/запитувати). This is a false friend trap for English speakers.
-- **молодець** (in Dialogue 2): ✅ OK — authentic Ukrainian praise word, not a calque. Антоненко-Давидович style guide has no objection.
-
----
-
-## CEFR Check (PULS database)
-
-All 12 vocabulary words confirmed A1:
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| говорити | A1 | ✅ on-target |
-| бачити | A1 | ✅ on-target |
-| робити | A1 | ✅ on-target |
-| вчити / учити | A1 | ✅ on-target |
-| просити | A1 | ✅ on-target |
-| ходити | A1 | ✅ on-target |
-| вчитися / учитися | A1 | ✅ on-target |
-| любити | A1 | ✅ on-target |
-| трохи | A1 | ✅ on-target |
-| добре | A1 | ✅ on-target |
-| увечері / ввечері | A1 | ✅ on-target |
-| дивитися | confirmed VESUM verb; not found directly in PULS — no CEFR flag |
-
-**No words above A1 target.** дивитися is VESUM-verified but absent from PULS list — flag as <!-- VERIFY CEFR --> but no reason to exclude.
+## CEFR Check
+- говорити: A1 — OK
+- бачити: A1 — OK
+- робити: A1 — OK
+- вчити: A1 — OK
+- трохи: A1 — OK
+- добре: A1 — OK
+- увечері: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Verbs Group II
-**Module:** verbs-group-two | **Phase:** A1.3 [Actions]
-**Textbook grades searched:** 3, 4, 5
+# Knowledge Packet: Verbs Group II
+**Module:** verbs-group-two | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/verbs-group-two.md
+
+# Педагогіка A1: Verbs Group Two
+
+
+
+## Методичний підхід (Methodological Approach)
+
+Навчання дієслів другої дієвідміни для початківців має бути поступовим і зосередженим на високочастотних, практичних дієсловах. Основний підхід, що прослідковується в освітніх матеріалах для українських дітей та іноземців, — це введення дієвідмін як двох основних "патернів" або "груп" для зміни дієслів у теперішньому часі (Джерело: `ext-ulp_youtube-53`).
+
+На відміну від першої дієвідміни, друга є менш поширеною, але містить ключові дієслова, як-от *робити, говорити, бачити, любити* (Джерело: `ext-ulp_youtube-280`, `ext-ulp_youtube-53`). Методологія для рівня А1 повинна базуватися на:
+
+1.  **Простих ідентифікаторах:** Наголошувати, що дієслова з суфіксами **-и-**, **-і-**, **-ї-** або **-а-** після шиплячого в інфінітиві, які випадають при відмінюванні, переважно належать до II дієвідміни (Джерело: `7-klas-ukrmova-litvinova-2024_s0061`, `7-klas-ukrmova-avramenko-2024_s0086`). Для А1 достатньо зосередитись на індикаторі **-ити** в інфінітиві, наприклад, *говор**и**ти, роб**и**ти* (Джерело: `ext-ulp_youtube-280`).
+2.  **Чіткому розрізненні закінчень:** Головна відмінність, яку має засвоїти учень, — це використання голосних **-и-** / **-ї-** в особових закінченнях (окрім 1-ої ос. одн. та 3-ої ос. мн.) на противагу **-е-** / **-є-** у першій дієвідміні (Джерело: `6-klas-ukrmova-betsa-2023_s0210`). Також ключовим є закінчення **-ать/-ять** у 3-й особі множини (*вони говорять*), на відміну від *-уть/-ють* (*вони читають*) (Джерело: `7-klas-ukrmova-litvinova-2024_s0061`).
+3.  **Введення чергування приголосних як норми:** Чергування приголосних у першій особі однини (і 3-й мн.) не є винятком, а правилом для певних груп дієслів. Це потрібно вводити одразу з дієсловами *любити* -> *люблю*, *сидіти* -> *сиджу* (Джерело: `6-klas-ukrmova-betsa-2023_s0212`). Подкасти для іноземців пояснюють це як потребу для милозвучності (Джерело: `ext-ulp_youtube-280`).
+4.  **Контекстуальне навчання:** Замість сухих таблиць, дієслова вводяться через прості діалоги та життєві ситуації: "Що ти робиш?", "Я нічого не роблю", "Ми сидимо, говоримо" (Джерело: `ext-ulp_youtube-280`). Це допомагає закріпити форми в активному вжитку.
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Крок 1: Введення концепції двох дієвідмін.** Пояснити, що в українській мові дієслова змінюються за двома основними "сім'ями" (дієвідмінами). II дієвідміна — менша, але важлива. Ключовий маркер для 3-ої особи множини (вони) — закінчення **-ать** або **-ять** (Джерело: `6-klas-ukrmova-betsa-2023_s0210`).
+2.  **Крок 2: Знайомство з базовими дієсловами II дієвідміни.** Почати з 2-3 високочастотних дієслів без чергування, де основа інфінітива очевидна. Найкращий кандидат — **говорити**. Показати його відмінювання повністю.
+    *   *я говорю, ти говориш, він/вона говорить, ми говоримо, ви говорите, вони говорять* (Джерело: `ext-ulp_youtube-280`).
+3.  **Крок 3: Введення дієслів з чергуванням приголосних.** Пояснити, що для милозвучності в 1-й особі однини (`я`) деякі приголосні змінюються. Вводити по одному типу чергування:
+    *   **Губні + л:** *любити* -> *я лю**бл**ю*, *вони лю**бл**ять* (Джерело: `6-klas-ukrmova-betsa-2023_s0212`).
+    *   **с -> ш:** *просити* -> *я про**ш**у* (Джерело: `10-klas-ukrmova-karaman-2018_s0321`).
+    *   **д -> дж:** *сидіти* -> *я си**дж**у* (Джерело: `6-klas-ukrmova-betsa-2023_s0212`).
+    *   **з -> ж:** *возити* -> *я во**ж**у*.
+    *   На рівні А1 достатньо зосередитися на `любити`, `сидіти`, `бачити` (*бачу*), `просити`.
+4.  **Крок 4: Введення зворотних дієслів (на -ся).** Пояснити, що частка **-ся** просто додається в кінці.
+    *   **Вчитися:** *я вчуся, ти вчишся, він вчиться* (Джерело: `ext-other_blogs-21`). Звернути увагу на правопис: *-шся* у 2-й особі однини, *-ться* у 3-й особі (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0143`, `7-klas-ukrmova-zabolotnyi-2024_s0062`).
+    *   **Дивитися:** *я дивлюся, ти дивишся, вони дивляться*. Це дієслово також демонструє чергування `в -> вл` (Джерело: `ext-other_blogs-21`).
+5.  **Крок 5: Дієслова на -ати після шиплячих.** Ввести дієслово *мовчати* як приклад, де інфінітив на *-ати*, але воно належить до II дієвідміни.
+    *   *мовчати* -> *я мовчу, ти мовчиш, вони мовчать* (Джерело: `10-klas-ukrmova-karaman-2018_s0320`). Для А1 це може бути факультативним, щоб не перевантажувати.
+6.  **Крок 6: Практика в контексті.** Створення простих речень та запитань-відповідей. "Що ти робиш?", "Де ти вчишся?", "Ти бачиш мене?" (Джерело: `ext-ulp_youtube-280`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+Для англомовних учнів типовими є помилки, пов'язані з інтерференцією та недостатнім засвоєнням нових для них граматичних категорій.
+
+| ❌ Помилково (неправильно) | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| *Ми говор**е**мо* | *Ми говор**и**мо* | Учень застосовує голосний **-е-** з першої дієвідміни до дієслова другої. Треба наголошувати, що після твердих приголосних у II дієвідміні використовується **-и-** (Джерело: `6-klas-ukrmova-betsa-2023_s0210`). |
+| *Я люб**ю*** | *Я люб**лю*** | Пропуск чергування губного приголосного `б` на `бл`. Це одна з найпоширеніших помилок. Пояснювати це як обов'язкове "пом'якшення" для милозвучності в 1-й особі (Джерело: `6-klas-ukrmova-betsa-2023_s0212`). |
+| *Ти вчи**ш**ся?* | *Ти вчи**шся**?* | Орфографічна помилка. Хоча вимова схожа на `[с':а]`, на письмі у 2-й особі однини завжди пишеться **-шся** (Джерело: `7-klas-ukrmova-zabolotnyi-2024_s0062`). |
+| *Вони сид**ють*** | *Вони сид**ять*** | Неправильне закінчення 3-ої особи множини (за аналогією до І дієвідміни). Слід з першого кроку закріпити правило: II дієвідміна = **-ать/-ять** (Джерело: `7-klas-ukrmova-litvinova-2024_s0061`). |
+| *Я бачу **на** тебе.* | *Я бачу **тебе**.* | Калька з англійської "I look **at** you". Дієслово *бачити* (to see) вимагає прямого додатка у знахідному відмінку без прийменника. *Дивитися* може вживатися з прийменником `на` (*дивитися на тебе*). |
+| *Він хоче **говорить**.* | *Він хоче **говорити**.* | Вживання особової форми дієслова після модального дієслова замість інфінітиву. В українській мові після дієслів типу *хотіти, могти, мусити* завжди йде інфінітив (неозначена форма на -ти) (Джерело: `4-klas-ukrayinska-mova-varzatska-2021-1_s0125`). |
+| *Він **стоїть** біля будинку.* | *Він **стоїть** біля будинку.* | Помилка наголосу. Хоча форма правильна, англомовні учні часто роблять наголос на основі (*ст**о**їть*), тоді як у цій формі наголос падає на закінчення (*сто**ї**ть*) (Джерело: `ext-ulp_youtube-280`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**Це обов'язковий розділ.** Навчання української мови має відбуватися на власних умовах, без опори на російську як посередника, що є поширеною, але шкідливою практикою.
+
+1.  **Ніколи не пояснювати українські дієслова через російські аналоги.** Фрази на кшталт "це як російське 'говорить', але з іншою вимовою" є неприпустимими. Це створює хибне уявлення про українську мову як діалект чи варіант російської. Українська система дієвідмінювання має власну логіку та історію (Джерело: `ext-istoria_movy-65`).
+2.  **Уникати російських кальок.** Слова як "получається" (`виходить`), "приймати участь" (`брати участь`) є поширеними росіянізмами, яких слід уникати з першого дня (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0047`). Це стосується і вибору дієслів для прикладів.
+3.  **Акцентувати на унікальних рисах української фонетики.** Чергування приголосних (`люблю`, `сиджу`) є яскравою рисою української мови. Її слід подавати як природний і милозвучний процес, а не як "ускладнення" порівняно з іншими мовами.
+4.  **Не використовувати російську абетку для порівняння.** Українські літери `и` та `і` мають своє унікальне звучання та етимологію. Пояснення через російські `ы` та `и` заважає формуванню правильної української вимови.
+5.  **Наголошувати на власне українській лексиці.** При виборі дієслів-прикладів надавати перевагу тим, що є питомо українськими або мають чітко виражені українські риси.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+На рівні А1 слід вводити лише найуживаніші дієслова II дієвідміни, що необхідні для базового спілкування.
+
+**Дієслова (Verbs):**
+
+*   **★★★ (Essential):**
+    *   `говорити` (to speak, talk)
+    *   `робити` (to do, make)
+    *   `бачити` (to see)
+    *   `сидіти` (to sit)
+    *   `стояти` (to stand)
+    *   `любити` (to love, like)
+    *   `дивитися (-сь)` (to watch, look)
+    *   `вчитися (-сь)` (to study, learn)
+    *   `ходити` (to go, walk - multidirectional)
+*   **★★ (Useful):**
+    *   `просити` (to ask for)
+    *   `платити` (to pay)
+    *   `лежати` (to lie down)
+    *   `чистити` (to clean)
+    *   `боятися (-сь)` (to be afraid of)
+*   **★ (Can wait):**
+    *   `мовчати` (to be silent)
+    *   `кричати` (to shout)
+    *   `дружити` (to be friends)
+    *   `сваритися` (to argue)
+
+**Іменники (Nouns) для контексту:**
+*   `робота`, `школа`, `університет`, `урок`, `книга`, `фільм`, `музика`, `друг`, `подруга`, `дім`, `вікно`, `кіт`, `собака`.
+
+**Прислівники (Adverbs) та інші частини мови:**
+*   `добре`, `погано`, `зараз`, `вдома`, `тут`, `багато`, `мало`, `нічого` (як у "я нічого не роблю" - Джерело: `ext-ulp_youtube-280`).
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Вправа "Доповни речення" (за моделлю з Джерела `7-klas-ukrmova-zabolotnyi-2024_s0062`)**
+
+    *Поставте дієслова в дужках у правильну форму теперішнього часу.*
+
+    1.  Що ти (робити) зараз? -> *Що ти робиш зараз?*
+    2.  Ми (вчитись) в університеті. -> *Ми вчимося в університеті.*
+    3.  Я не (бачити) тебе. -> *Я не бачу тебе.*
+    4.  Вони голосно (говорити). -> *Вони голосно говорять.*
+    5.  Мама (любити) квіти. -> *Мама любить квіти.*
+
+2.  **Вправа "Утвори форму 1-ої особи" (за моделлю з Джерела `6-klas-ukrmova-betsa-2023_s0213`)**
+
+    *Напишіть форму 1-ої особи однини ("я ...") для кожного дієслова, звертаючи увагу на чергування.*
+
+    | Інфінітив | Я ...? |
+    |:---|:---|
+    | просити | *прошу* |
+    | сидіти | *сиджу* |
+    | любити | *люблю* |
+    | бачити | *бачу* |
+    | чистити | *чищу* |
+    | платити | *плачу* |
+
+3.  **Вправа "Вибери правильне закінчення" (за моделлю з Джерела `7-klas-ukrmova-avramenko-2024_s0086`)**
+
+    *Обведіть правильну літеру в закінченні дієслова.*
+
+    1.  Ти говор**и/е**ш українською?
+    2.  Ми сид**и/е**мо вдома.
+    3.  Ви вч**и/е**те нові слова?
+    4.  Що він роб**и/е**ть?
+    5.  Я дивл**ю/у**ся фільм.
+
+4.  **Вправа "Побудуй діалог" (за моделлю з Джерела `ext-ulp_youtube-280`)**
+
+    *Складіть короткий діалог, використовуючи подані слова.*
+
+    *Слова: ти, я, що, робити, дивитися, фільм, нічого, сидіти.*
+
+    ***Зразок відповіді:***
+    *— Привіт! Що ти **робиш**?*
+    *— Привіт! Я **нічого** не **роблю**. Просто **сиджу**.*
+    *— Ти **хочеш** **дивитися** фільм?*
+    *— Так, **хочу**!*
+
+## Пов'язані статті (Related Articles)
+
+- `[[pedagogy/a1/verbs-group-one]]`
+- `[[pedagogy/a1/present-tense]]`
+- `[[pedagogy/a1/verbs-of-motion]]`
+- `[[pedagogy/a1/imperative-mood]]`
+- `[[pedagogy/a2/verbal-aspect-introduction]]`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/verbs-group-one.md
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 4
-> **Score:** 0.50
+# Педагогіка A1: Verbs Group One
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The introduction of verbs to A1 learners must be practical and pattern-based. The core concept is **дієвідмінювання** (conjugation), which Ukrainian textbooks for native speakers introduce by differentiating two main groups, or conjugations (дієвідміни) (Джерело: `7-klas-ukrmova-litvinova-2024_s0059`).
+
+The primary method for determining a verb's conjugation group, and therefore its endings, is by its 3rd person plural form (`вони`).
+*   **I дієвідміна (First Conjugation):** Verbs that end in **-уть / -ють** in the 3rd person plural (e.g., `вони читають`, `вони пишуть`). These verbs will generally take **-е-** or **-є-** in their other personal endings (Джерело: `11-klas-ukrmova-zabolotnyi-2019_s0069`).
+*   **II дієвідміна (Second Conjugation):** Verbs that end in **-ать / -ять** in the 3rd person plural (e.g., `вони говорять`, `вони стоять`). These verbs will generally take **-и-** or **-ї-** in their endings (Джерело: `11-klas-ukrmova-zabolotnyi-2019_s0069`).
+
+For A1 learners, this brief focuses exclusively on **I дієвідміна (First Conjugation)**. The approach is to:
+1.  Introduce verbs as "action words" (`що робити?`) using high-frequency examples like `читати`, `слухати`, `малювати` (Джерело: `2-klas-ukrmova-vashulenko-2019-1_s0080`).
+2.  Pair these verbs immediately with personal pronouns (`я, ти, ми, ви, він, вона, вони`) to establish the concept of conjugation (Джерело: `5-klas-ukrmova-uhor-2022-1_s0039`).
+3.  Teach the set of endings for the First Conjugation as a pattern to be memorized and applied, rather than through complex grammatical rules about infinitives (Джерело: `10-klas-ukrmova-karaman-2018_s0320`).
+4.  Focus on imperfective aspect (`що робити?`) to describe habits, general actions, and ongoing processes, which is the most common use case for A1 learners discussing their lives and hobbies (Джерело: `6-klas-ukrmova-betsa-2023_s0200`). The compound future (`буду робити`) should be introduced for future plans, as it reinforces the infinitive form (Джерело: `ext-ulp_youtube-276`).
+
+## Послідовність введення (Introduction Sequence)
+
+**Step 1: Introduce High-Frequency Infinitives**
+Begin with a small set of the most common First Conjugation verbs in their infinitive form (`-ти`). These verbs should relate to daily life and hobbies.
+*   `читати` (to read)
+*   `писати` (to write)
+*   `знати` (to know)
+*   `розуміти` (to understand)
+*   `працювати` (to work)
+*   `слухати` (to listen)
+*   `грати` (to play)
+*   `робити` (to do/make)
+These are chosen for their phonetic simplicity and immediate utility (Джерело: `6-klas-ukrmova-betsa-2023_s0020`, `ext-ulp_youtube-107`).
+
+**Step 2: Introduce Personal Pronouns and the Concept of Conjugation**
+Explicitly show that the verb *changes* for each person.
+*   `я` (I)
+*   `ти` (you, singular informal)
+*   `він / вона / воно` (he / she / it)
+*   `ми` (we)
+*   `ви` (you, plural/formal)
+*   `вони` (they)
+(Джерело: `5-klas-ukrmova-uhor-2022-1_s0039`)
+
+**Step 3: Teach the First Conjugation Endings (-e- type)**
+Present the endings as a pattern. The core vowel is **'е'** (or **'є'** after a vowel).
+*   `я` → **-ю** (e.g., `читаю`, `граю`)
+*   `ти` → **-єш** (e.g., `читаєш`, `граєш`)
+*   `він, вона, воно` → **-є** (e.g., `читає`, `грає`)
+*   `ми` → **-ємо** (e.g., `читаємо`, `граємо`)
+*   `ви` → **-єте** (e.g., `читаєте`, `граєте`)
+*   `вони` → **-ють** (e.g., `читають`, `грають`)
+(Джерело: `11-klas-ukrmova-zabolotnyi-2019_s0069`, `7-klas-ukrmova-litvinova-2024_s0059`)
+
+**Step 4: Practice with Model Verbs**
+Drill the pattern with the initial set of verbs. For example, `читати`:
+*   `я читаю`
+*   `ти читаєш`
+*   `він читає`
+*   `ми читаємо`
+*   `ви читаєте`
+*   `вони читають`
+(Джерело: `4-klas-ukrayinska-mova-kravtsova-2021-1_s0105`)
+
+**Step 5: Introduce Simple Sentences**
+Immediately put the conjugated verbs into simple `Subject + Verb` or `Subject + Verb + Object` sentences.
+*   `Я читаю книгу.` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0077`)
+*   `Ти слухаєш музику.` (Джерело: `6-klas-ukrmova-betsa-2023_s0020`)
+*   `Ми граємо у футбол.` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0042`)
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я читати книгу.` | `Я читаю книгу.` | English learners often forget to conjugate the verb and use the infinitive form for all persons, as English verb endings are much simpler. Reinforce that the verb ending MUST change for the pronoun. |
+| `Ти зна**и**ш.` | `Ти зна**є**ш.` | Learners overgeneralize the Second Conjugation ending `-иш`. For First Conjugation verbs, the characteristic vowel is `-е-` or `-є-`. The rule is simple: if `вони зна**ють**` (I conj.), then `ти зна**єш**` (Джерело: `11-klas-ukrmova-zabolotnyi-2019_s0069`). |
+| `Він є читає.` or `Він є розуміє.`| `Він читає.` / `Він розуміє.` | English speakers insert the verb "to be" (`є`) in present tense sentences out of habit. Stress that in Ukrainian, the present tense is formed directly from the main verb, and `є` is omitted unless it's the main verb itself (e.g., `Це є стіл`). |
+| `Завтра я робити домашнє завдання.` | `Завтра я **буду** робити домашнє завдання.` | When forming the compound future tense, learners may drop the auxiliary verb `бути`. Emphasize the two-word structure: `буду/будеш/буде + інфінітив` (Джерело: `ext-ulp_youtube-276`, `6-klas-ukrmova-betsa-2023_s0208`). |
+| `Я **про**читаю книгу кожного дня.` | `Я читаю книгу кожного дня.` | This is an aspect error. Learners misuse the perfective (`що зробити?`) for habitual actions. Teach that for routines and repeated actions ("every day"), the imperfective (`що робити?`) is required (Джерело: `ext-other_blogs-23`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This section is mandatory for building an authentic and respectful curriculum.
+
+1.  **Teach Ukrainian on Its Own Terms:** The Ukrainian verb system must be presented as a complete, self-contained system. **NEVER** introduce Ukrainian verbs or conjugations by comparing them to Russian (e.g., "it's like the Russian verb X, but you change the ending"). This approach creates a false dependency and hinders the development of correct Ukrainian phonetic and grammatical habits.
+
+2.  **Avoid Russian "Cognate Traps":** While many verbs are of common Slavic origin, their conjugation patterns, stress, and even usage can differ significantly. For example, relying on a Russian cognate might lead to incorrect stress or using a Second Conjugation pattern for a First Conjugation Ukrainian verb. The learner must acquire verbs as Ukrainian lexical items.
+
+3.  **Emphasize Native Pronunciation from Zero:** The vowel sounds in endings like `-ешь` vs. `-иш` are distinct in Ukrainian and do not map to Russian equivalents. From day one, the writer must use audio examples that model native Ukrainian pronunciation, preventing the learner from defaulting to a Russian phonetic base.
+
+4.  **No "Surzhyk" (Mixed Language):** All examples, explanations, and vocabulary must be in standard, modern Ukrainian. Avoid calques or grammatical structures that are influenced by Russian. For instance, the use of certain prepositions with verbs can be a marker of Russian influence. Stick to examples found in modern Ukrainian textbooks and resources (Джерело: `ext-ulp_youtube-198`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This is the core vocabulary for A1 verb practice.
+
+**Дієслова (Verbs) - I дієвідміна**
+*   `читати` (to read) ★★★ (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+*   `грати` (to play) ★★★ (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+*   `робити` (to do/make) ★★★ (Джерело: `4-klas-ukrayinska-mova-kravtsova-2021-1_s0105`)
+*   `знати` (to know) ★★★ (Джерело: `ext-ulp_youtube-276`)
+*   `думати` (to think) ★★★ (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0066`)
+*   `працювати` (to work) ★★ (Джерело: `5-klas-ukrmova-uhor-2022-1_s0063`)
+*   `слухати` (to listen) ★★ (Джерело: `6-klas-ukrmova-betsa-2023_s0020`)
+*   `питати` (to ask) ★★ (Джерело: `ext-ulp_youtube-215`)
+*   `співати` (to sing) ★★ (Джерело: `6-klas-ukrmova-betsa-2023_s0198`)
+*   `гуляти` (to walk/stroll) ★ (Джерело: `6-klas-ukrmova-betsa-2023_s0198`)
+*   `відпочивати` (to rest) ★ (Джерело: `5-klas-ukrmova-uhor-2022-1_s0042`)
+*   `малювати` (to draw) ★ (Джерело: `5-klas-ukrmova-uhor-2022-1_s0099`)
+
+**Іменники (Nouns) for context**
+*   `книга` (book) ★★★
+*   `музика` (music) ★★★
+*   `робота` (work) ★★
+*   `футбол`, `теніс` (sports) ★★
+*   `лист` (letter) ★
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Вправа на відмінювання (Conjugation Drill)**
+*Мета:* Відпрацювати закінчення дієслів I дієвідміни.
+*Формат:* Заповнити таблицю або змінити дієслова в дужках.
+*Приклад (адаптовано з `4-klas-ukrayinska-mova-kravtsova-2021-1_s0105`):*
+
+> Зміни дієслова в дужках і запиши у формі 2-ї особи однини та множини. Познач закінчення.
 >
-> 4
-> ЧОГО  Я  ВЧУСЯ?
-> Вдома вчить мене матуся,
-> в школі вчить мене учитель,
-> і сама я добре вчуся
-> рідним словом говорити.
-> Вчусь не тільки говорити,
-> а й читати і писати.
-> Щоб усі раділи діти,
-> щоб пишались мама й тато.
-> Щоб пішла між люди слава,
-> щоб сказали: «От дитинка
-> добра, мудра і ласкава.
-> Це маленька українка!»
-> Що таке текст
-> 1
-> Розпізнаю текст за його основними ознаками
-> 	 	
-> 1   Прочитайте вірш Михайла Маморського. Про що розповідається 
-> в кожному з речень? Чи пов’язані вони одне з одним? Чи 
-> становлять ці речення текст?
-> Досліди, що озна-
-> чає слово канікули. 
-> Де про це можна 
-> діз­натися?
-> Я — дослідник
-> Я — дослідниця
-> Поділися своїми враженнями 
-> про канікули з однокласниками 
-> (однокласницями). Чи можна 
-> назвати твою розповідь текстом?
-> Перевірте свої 
-> міркування за поданим 
-> висновком.
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 25
-> **Score:** 0.25
+> Ти ... (грати, писати, робити).
+> Ви ... (грати, писати, робити).
 >
-> 25
-> Вступ. Українська мова в житті українців.  Підсумовуємо й узагальнюємо
-> Мова — основний засіб спілкування, але ж не єдиний. Ми 
-> можемо передавати інформацію в  інший спосіб: мімікою, же-
-> стами, символами, звуковими сигналами. Чому  ж тоді мову 
-> вважаємо основним засобом? Річ у тім, що мовними засоба-
-> ми ми можемо передати будь-яку інформацію. Для прикладу 
-> спробуйте повідомити розклад ваших уроків на  завтра мімі-
-> кою. Або відповісти на  запитання, котра година, жестами. 
-> А  розказувати про все це за  допомогою мови легко і  звично.
-> А чи міркували ви, яким  би був світ без мови? Уявіть: 
-> ви прокидаєтеся зранку і  не чуєте жодного слова, не  бачите 
-> жодної літери. Ви нікому не телефонуєте, не читаєте книжок, 
-> журналів, бігборди на  вулицях без тексту тощо.
+> *Очікувана відповідь: Ти гра**єш**, пиш**еш**, роб**иш**. Ви гра**єте**, пиш**ете**, роб**ите**.* (Примітка: `писати` і `робити` тут введені для контрасту, але фокус на `грати`).
 
-## Друга дієвідміна (Group II Verbs)
+**2. Складання речень (Sentence Building)**
+*Мета:* Використовувати щойно вивчені форми в контексті.
+*Формат:* Скласти речення за зразком.
+*Приклад (адаптовано з `6-klas-ukrmova-betsa-2023_s0020`):*
 
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 110
-> **Score:** 0.50
+> Складіть речення за зразком.
+> Зразок: Я — читати — книга. → Я читаю книгу.
 >
-> 110
-> 	 Послухай або прочитай повторно текст. Користуючись малюнка-
-> ми (с. 109), додатковим матеріалом у «Зошиті з розвитку усного 
-> та писемного мовлення», напиши докладний переказ тексту.
-> 261.		Розгляньте таблицю змінювання дієслів теперішнього часу 
-> в однині та множині за особами. Обговоріть її зміст.
-> 2-га 
-> ти
-> 2-га 
-> ви
-> що 
-> робиш?
-> що 
-> робите?
-> пливеш,
-> кричиш
-> пливете,
-> кричите
-> 3-тя 
-> він, вона, 
-> воно
-> 3-тя 
-> вони
-> що 
-> робить?
-> що 
-> роблять?
-> пливе,
-> кричить
-> пливуть,
-> кричать
-> Особа
-> Особа
-> 1-ша 
-> я
-> 1-ша 
-> ми
-> що 
-> роблю?
-> що 
-> робимо?
-> пливу,
-> кричу
-> пливемо,
-> кричимо
-> Однина
-> Множина
-> 	 Зверни увагу на особові закінчення. Постав дієслово думати в 
-> усіх особових формах теперішнього часу. Запиши.
+> 1. Ти — слухати — музика.
+> 2. Ми — грати — у футбол.
+> 3. Вони — працювати — вдома.
 
-## Група I чи II? (Which Group?)
+**3. Відповіді на запитання (Question & Answer)**
+*Мета:* Практикувати дієслова в живому мовленні.
+*Формат:* Прості запитання, що вимагають відповіді з дієсловом у правильній формі.
+*Приклад (адаптовано з `ext-ulp_youtube-104` та `2-klas-ukrmova-vashulenko-2019-1_s0080`):*
 
-> **Source:** savchenko, Grade 4
-> **Section:** Сторінка 157
-> **Score:** 0.50
+> Дайте усну відповідь на запитання.
 >
-> 157
-> ЗМICТ
-> ЧИТАЄМО Й РОЗПОВІДАЄМО
-> ПРО СВОЇ ЗАХОПЛЕННЯ
-> Ліна Костенко. Вже брами літа замикає осінь…  . . . . . . . . . . . . . . . 5
-> Олександра Савченко. Як читають книжки? . . . . . . . . . . . . . . . . . . 6
-> Марія Манеру. Читач Максимко . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7 
-> ВЕСЕЛЕ СЛОВО. Василь Марсюк. Диктант . . . . . . . . . . . . . . . . . . . 8
-> Медіавіконце: види і джерела інформації . . . . . . . . . . . . . . . . . 9
-> Давид Гуліа. Розум, знання і сила . . . . . . . . . . . . . . . . . . . . . . . . . . 10
-> ПРАГНЕМО ЗРОЗУМІТИ СВОЇХ ПРЕДКІВ
-> Як ще не було початку світа… 
-> (Українська народна обрядова пісня) . . . . . . . . . . . . . . . . . . . . . . . 13
-> Створення світу (За єгипетськими міфами). Переповіла Ольга Бондарук . . . . . . . . . . . . . . . . . . . . .
-
-## Підсумок — Summary
-
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 140
-> **Score:** 0.25
+> 1. Що ти любиш робити? (Почни з "Я люблю...")
+> 2. Що ти робиш зараз? (Почни з "Я...")
 >
-> 140
-> У третій особі однини дієслова теперішнього і май-
-> бутнього часу мають закінчення ­е (­є) або ­ить, ­їть.
-> У третій особі множини ці дієслова мають закінчення 
-> ­уть (­ють) або ­ать (­ять).
-> 297. Спиши слова. Як їх можна згрупувати?
-> 298. 1. Прочитай текст. Яку картину ти уявляєш? Які слова 
-> особливо яскраво передають душевний біль Кобзаря?
-> «ХОЧ КРИХОТКУ ЗЕМЛІ...»
-> Перебуваючи на засланні в далекій Орській фортеці, 
-> майже в кожному своєму вірші Тарас Шевченко виливає 
-> тугу за рідним краєм. Він просить долю, пристрасно мо-
-> литься, щоб:
-> ...хоч крихотку землі
-> із-за Дніпра мого святого
-> святії вітри принесли,
-> та й більш нічого...
->  
->  
->  
->     За Василем Скуратівським
-> 2. Випиши дієслова 3-ї особи однини та виділи в них за-
-> кінчення.
+> *Приклади відповідей: Я люблю **читати**. Я **слухаю** музику.*
 
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 142
-> **Score:** 0.50
+**4. Вправа на майбутній час (Future Tense Drill)**
+*Мета:* Відпрацювати складену форму майбутнього часу.
+*Формат:* Перетворити речення з теперішнього часу на майбутній.
+*Приклад (адаптовано з `6-klas-ukrmova-betsa-2023_s0208`):*
+
+> Напишіть речення в майбутньому часі.
+> Зразок: Петро вивчає історію. → Петро **буде вивчати** історію.
 >
-> 142
-> Якщо дієслова в 3-й особі множини мають закінчення
-> то в ненаголошених особових закінченнях  
-> пишемо літери
-> -уть (-ють),
-> е, є:
-> в’я’жеш (бо в’яжуть);
-> співа’ємо (бо співають).
-> и, ї:
-> лі’чиш (бо лічать);
-> кле’їте (бо клеять).
-> -ать (-ять),
-> 301. Спиши слова. Яке серед них «зайве»? Поясни, чому.
-> 302. 1. Прочитай дієслова.
-> Запрос..те, розкле..мо, прос..ш, ход..мо, віддяч..те, 
-> почеп..мо, перемага..те, розкаж..ш, друж..те, стогн..ш.
-> 2. Спиши, вставляючи пропущені букви. Познач наголос.
-> Міркуй так: ставлю дієслово запросите у форму 3-ї осо-
-> би множини: вони (що зроблять?) — запросять. Закінчення 
-> -ять. Отже, у ненаголошеному особовому закінченні пишу 
-> літеру и.
-> 303. 1. Прочитай текст. Яка картина постає в твоїй уяві?
-> Стежинка біжить і біжить.
+> 1. Олена працює дизайнеркою.
+> 2. Ярослав слухає українські пісні.
+> 3. Я іду в магазин.
 
-## Grammar Reference
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a1/verbs-group-two`
+- `pedagogy/a1/sentence-structure-simple`
+- `pedagogy/a2/verbal-aspect-introduction`
+</wiki_context>
 
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 140
-> **Score:** 0.25
->
-> 140
-> У третій особі однини дієслова теперішнього і май-
-> бутнього часу мають закінчення ­е (­є) або ­ить, ­їть.
-> У третій особі множини ці дієслова мають закінчення 
-> ­уть (­ють) або ­ать (­ять).
-> 297. Спиши слова. Як їх можна згрупувати?
-> 298. 1. Прочитай текст. Яку картину ти уявляєш? Які слова 
-> особливо яскраво передають душевний біль Кобзаря?
-> «ХОЧ КРИХОТКУ ЗЕМЛІ...»
-> Перебуваючи на засланні в далекій Орській фортеці, 
-> майже в кожному своєму вірші Тарас Шевченко виливає 
-> тугу за рідним краєм. Він просить долю, пристрасно мо-
-> литься, щоб:
-> ...хоч крихотку землі
-> із-за Дніпра мого святого
-> святії вітри принесли,
-> та й більш нічого...
->  
->  
->  
->     За Василем Скуратівським
-> 2. Випиши дієслова 3-ї особи однини та виділи в них за-
-> кінчення.
+## Plan References
 
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 142
-> **Score:** 0.50
->
-> 142
-> Якщо дієслова в 3-й особі множини мають закінчення
-> то в ненаголошених особових закінченнях  
-> пишемо літери
-> -уть (-ють),
-> е, є:
-> в’я’жеш (бо в’яжуть);
-> співа’ємо (бо співають).
-> и, ї:
-> лі’чиш (бо лічать);
-> кле’їте (бо клеять).
-> -ать (-ять),
-> 301. Спиши слова. Яке серед них «зайве»? Поясни, чому.
-> 302. 1. Прочитай дієслова.
-> Запрос..те, розкле..мо, прос..ш, ход..мо, віддяч..те, 
-> почеп..мо, перемага..те, розкаж..ш, друж..те, стогн..ш.
-> 2. Спиши, вставляючи пропущені букви. Познач наголос.
-> Міркуй так: ставлю дієслово запросите у форму 3-ї осо-
-> би множини: вони (що зроблять?) — запросять. Закінчення 
-> -ять. Отже, у ненаголошеному особовому закінченні пишу 
-> літеру и.
-> 303. 1. Прочитай текст. Яка картина постає в твоїй уяві?
-> Стежинка біжить і біжить.
+- 
+- 
+- 
 
-
-## МійКлас Theory (miyklas.com.ua)
-
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
-
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
-
-### Теорія:
-  
-
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосн
-
-... (truncated for context window)
 </knowledge_packet>
 
 ---
@@ -642,7 +622,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Друга дієвідміна (Group II Verbs)` (~300 words)
 - `## Група I чи II? (Which Group?)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -697,7 +676,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -799,46 +778,42 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
-- P1 (~40 words): Scene-setter — introduce Діалог 1. Тарас and Микола are at a language café. Тарас hears Микола speaking and reacts. Frames the question: can you speak Ukrainian?
-- Dialogue 1 (~110 words): Тарас asks «Ти говориш українською?» — Микола answers «Так, я говорю трохи. А ти?» — Тарас says «Я бачу, що ти добре говориш! Де ти вчиш?» — Микола responds «Я вчу онлайн. Це нелегко, але цікаво.» — Тарас: «Я теж вчу. Ми обидва говоримо українською!» Full conjugation: говорю, говориш, говорить, вчу, вчиш, бачу — all Group II verbs in natural exchange.
-- P2 (~30 words): Short connector — transition to evening scene. Note that both dialogues use the same Group II pattern — different situations, same endings.
-- Dialogue 2 (~110 words): Оксана asks Богдан «Що ти робиш увечері?» — Богдан: «Я дивлюся фільм. А ти?» — Оксана: «Я вчу нові слова. А потім дивлюся серіал.» — Богдан: «Ти добре робиш — треба вчити щодня!» — Оксана: «Я прошу друга допомагати. Він говорить дуже добре.» Features: робиш, дивлюся, вчу, дивлюся, робиш, прошу, говорить. Inline gloss: дивлюся = «I watch» — the -ся ending means «oneself» (preview for M20, no analysis needed now).
-- P3 (~40 words): Observation paragraph — point out three things learners should notice: (1) every verb in both dialogues follows a pattern, (2) the ти-form always ends in -иш, (3) the вони-form ends in -ять or -ять. Next section explains why.
+## Діалоги — Dialogues (~300 words total)
+- P1 (~40 words): Introduction to the module's setting. We meet Тарас (Taras) and Микола (Mykola) at the gym, where physical actions provide the perfect context for the "doing" and "seeing" verbs of Group II.
+- P2 (~110 words): Dialogue 1 — Physical context at the gym. Taras asks "Ти бачиш цей м'яч?" (Do you see this ball?) and "Що ти робиш?" (What are you doing?). Mykola responds using Group II verbs: "Я роблю вправи" (I am doing exercises) and "Ми багато говоримо" (We talk a lot). The dialogue establishes the natural flow of these verbs in casual conversation.
+- P3 (~60 words): Linguistic breakdown of Dialogue 1. Explain how "бачиш" and "говоримо" follow a different ending pattern than the "читаєш" (Group I) verbs learned in Module 16. Introduce the term "Second Conjugation" (Друга дієвідміна).
+- P4 (~90 words): Dialogue 2 — Evening at home. A shift to a quieter setting where the friends discuss their evening plans. Focus on the verbs "дивитися" (to watch) and "вчити" (to study/teach). Examples: "Я дивлюся новий фільм" (I am watching a new movie) and "Ти вчиш українські слова?" (Are you studying Ukrainian words?). This dialogue previews the reflexive suffix "-ся" in a natural way.
 
----
+## Друга дієвідміна — Group II Verbs (~320 words total)
+- P1 (~70 words): The Core Rule. Explain that most Group II verbs can be identified by their infinitive ending in -ити (like говорити, робити) or -іти. Contrast this with the -ати pattern of Group I. Emphasize that the characteristic vowel for these endings is -и- (or -ї-), making it the "I-type" group.
+- P2 (~100 words): The Conjugation Paradigm. Provide a detailed, step-by-step breakdown of the verb "говорити" (to speak). List every form with its ending clearly marked: я говорю (-ю), ти говориш (-иш), він/вона говорить (-ить), ми говоримо (-имо), ви говорите (-ите), вони говорять (-ять). Note the consistent use of the "и" vowel across the middle persons.
+- <!-- INJECT_ACTIVITY: fill-in-conjugation-paradigm --> [fill-in, Conjugate: я говор__, ти говор__, він говор__, 10 items]
+- P3 (~80 words): The Six Essential Verbs. Introduce the high-frequency list: говорити (to speak), бачити (to see), робити (to do), вчити (to study), просити (to ask), and ходити (to walk/go). Provide a short sentence for each to show them in action: "Вона вчить мову", "Ми ходимо в парк", "Ви просите каву".
+- P4 (~70 words): The Sibilant Rule (ч, ш, ж, щ). Explain that after these "hissing" sounds, the "я" ending becomes -у (instead of -ю) and the "вони" ending becomes -ать (instead of -ять). Use "бачити" (to see) and "вчити" (to study) as the primary examples: я бачу, вони бачать; я вчу, вони вчать. This is presented as a phonetic requirement for Ukrainian melody.
 
-## Друга дієвідміна (Group II Verbs) (~330 words total)
-- P1 (~70 words): Introduce Group II — verbs whose infinitive ends in -ити (or -іти): говорити, бачити, робити, вчити, просити, ходити. These are different from Group I (-ати verbs like читати). The signal for Group II: look at the ти-form — if it ends in -иш (говориш, бачиш), it's Group II. Set up the full conjugation table of говорити as the anchor.
-- P2 (~100 words): Full paradigm of говорити as master example — я говорю, ти говориш, він/вона говорить, ми говоримо, ви говорите, вони говорять. Then condensed forms for all six required verbs: бачити → бачу/бачиш/бачить/бачимо/бачите/бачать; робити → роблю/робиш/робить; вчити → вчу/вчиш/вчить; просити → прошу/просиш/просить; ходити → ходжу/ходиш/ходить. Note: вони говорять, вони бачать (after sibilants → briefly flagged, explained in next section).
-- P3 (~80 words): Consonant changes — the я-form only rule. Four key shifts: б→бл (робити → роблю), д→дж (ходити → ходжу), с→ш (просити → прошу), ч→ч / no change (бачити → бачу). Emphasize: ONLY the я-form shifts. All other forms (ти, він, ми, ви, вони) are perfectly regular. Practical tip: learn the я-form separately for each verb; the rest follows automatically.
-- P4 (~30 words): Micro-drill prompt — before the activity, learners try три форми mentally: «As a warm-up: say я/ти/він form of вчити and ходити out loud.»
-- Activity — Fill-in (10 items): Conjugate говорити and ходити across all persons. Format: «Я говор___», «Ти ходиш — true/false», «Вони говор___», «Ми ход___», etc. Tests all six persons for both verbs. (~50 words of instruction text, not counted in prose total)
+## Група I чи II? — Which Group? (~330 words total)
+- P1 (~90 words): Side-by-Side Comparison. Create a clear contrast between Group I (E-type) and Group II (I-type) using "читати" vs "говорити". Compare the endings for "ти" (читаєш vs говориш) and "вони" (читають vs говорять). This "Signature Comparison" helps students immediately identify the pattern by looking at the endings.
+- <!-- INJECT_ACTIVITY: group-sort-verbs --> [group-sort, Sort verbs into Group I (-ати) and Group II (-ити), 10 items]
+- <!-- INJECT_ACTIVITY: quiz-verb-choice --> [quiz, Choose correct form: Ти (бачу/бачиш/бачить) це?, 8 items]
+- P2 (~60 words): Introduction to Consonant Changes. Explain that for "mylozvuchnist" (melody), some Group II verbs change their last stem consonant, but ONLY in the "я" (I) form. Reassure students that the rest of the paradigm (ти, він, ми, ви) remains regular.
+- P3 (~100 words): Specific Shift Patterns. Break down the four most common shifts for A1: б → бл (любити -> люблю, робити -> роблю), д → дж (ходити -> ходжу, сидіти -> сиджу), с → ш (просити -> прошу), and з → ж (возити -> вожу). Emphasize that these should be learned as part of the verb's "identity" rather than a complex mechanical rule.
+- <!-- INJECT_ACTIVITY: fill-in-translation-context --> [fill-in, Complete with correct verb form: Вона ___ українською. (говорити), 6 items]
+- P4 (~80 words): The Reflexive Suffix Preview. Briefly explain the suffix "-ся" used with verbs like "вчитися" (to learn/study) and "дивитися" (to watch). Show how it attaches after the conjugated ending: я вчу + ся = вчуся; ти вчиш + ся = вчишся. Note that this suffix indicates an action directed back at the speaker or a state of being.
 
----
+## Підсумок — Summary (~320 words total)
+- P1 (~100 words): Recap of the two major verb "families" in Ukrainian. Reinforce the mnemonic: Group I is the "E-family" (читаєш) and Group II is the "I-family" (говориш). Remind learners that the "вони" form is the best way to double-check the group (-ють vs -ять).
+- P2 (~100 words): Final summary of the "я" form shifts (роблю, ходжу, прошу) and the sibilant rule for 3rd person plural (бачать). Stress that mastering these Group II verbs unlocks the ability to describe almost all basic daily activities and skills.
+- P3 (~120 words): Self-check Q&A list based on the module's objectives.
+    - Q: Conjugate "бачити" for the persons я, ти, and він.
+    - A: я бачу, ти бачиш, він бачить.
+    - Q: Is the verb "слухати" Group I or Group II? Why?
+    - A: Group I, because the infinitive ends in -ати and the ти-form is "слухаєш".
+    - Q: What happens to the letter 'д' in the "я" form of "ходити"?
+    - A: It changes to 'дж' -> "я ходжу".
+    - Q: What is the ending for "вони" in Group II?
+    - A: -ять (or -ать after sibilants).
 
-## Група I чи II? (Which Group?) (~330 words total)
-- P1 (~90 words): Side-by-side comparison of Group I (-ати) vs Group II (-ити) endings. Full parallel table using читати vs говорити: | Особа | читати (I) | говорити (II) | — я | читаю | говорю — ти | читаєш | говориш — він/вона | читає | говорить — ми | читаємо | говоримо — ви | читаєте | говорите — вони | читають | говорять. Key insight: the -є- vowel in Group I endings (читаєш, читає) vs the -и- in Group II (говориш, говорить). That single vowel difference is the test.
-- P2 (~70 words): The two fastest identification tests — (1) Check the ти-form: -єш = Group I, -иш = Group II. (2) Check the вони-form: -ють = Group I, -ять/-ать = Group II. Examples from the dialogues: бачиш → Group II (confirmed: бачать), читаєш → Group I (confirmed: читають), робиш → Group II (confirmed: роблять... wait — роблять). Stress that this is a discovery rule, not memorization.
-- P3 (~80 words): The -ать vs -ять rule for вони. After sibilant consonants (ч, ш, ж, щ), the ending is -ать not -ять: бачать (not *бачять), кричать (not *кричять). After all other consonants, вони takes -ять: говорять, ходять, просять. Textbook anchor: Varzatska Grade 4, p.142 — uses the test «put the verb in 3rd plural → if -ять/-ать, you're in Group II.» Two worked examples: лічиш → лічать (Group II), співаєш → співають (Group I).
-- P4 (~40 words): Reality check — most high-frequency Ukrainian verbs are Group I. But the verbs learners most need right now — говорити, робити, бачити, ходити — are all Group II. So mastering Group II unlocks exactly the core everyday verbs.
-- Activity — Group-sort (10 items): Sort verbs into Group I or Group II based on infinitive + ти-form clue. Items: читати, говорити, писати, бачити, слухати, робити, малювати, ходити, грати, вчити. (~30 words instruction)
-- Activity — Quiz, choose correct form (8 items): Format «Ти (бачу / бачиш / бачить) це місто?», «Вони (говорять / говорите / говоримо) швидко», «Ми (робить / робимо / роблять) домашнє завдання», etc. Tests both groups. (~30 words instruction)
-
----
-
-## Підсумок — Summary (~330 words total)
-- P1 (~100 words): Consolidated recap — two verb groups, two patterns. Group I (-ати verbs): endings carry -є- vowel → -ю, -єш, -є, -ємо, -єте, -ють. Group II (-ити/-іти verbs): endings carry -и- vowel → -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать. Consonant changes in Group II я-form only (роблю, ходжу, прошу, бачу — ч has no change). Sibilant rule: after ч/ш/ж/щ → вони form takes -ать. State the most important single test: look at the ти-form — -єш or -иш?
-- P2 (~80 words): Backward look at the dialogues — revisit Dialogue 1 and 2 with fresh eyes. Label each verb in both dialogues with its group: говориш (II), говорю (II), бачу (II), вчу (II), робиш (II), дивлюся (II), прошу (II). Note: every single verb in today's dialogues was Group II — not a coincidence. These are the highest-frequency action verbs in spoken Ukrainian.
-- P3 (~100 words): Self-check — bulleted Q&A format as specified in plan:
-  - Conjugate **бачити** for я, ти, він/вона: → бачу, бачиш, бачить ✓
-  - Is **слухати** Group I or II? → Check ти-form: слухаєш → -єш → Group I ✓
-  - Is **говорити** Group I or II? → Check ти-form: говориш → -иш → Group II ✓
-  - What happens to **робити** in the я-form? → б→бл: роблю ✓
-  - Вони form of **бачити** — -ять or -ать? → бачать (ч is a sibilant → -ать) ✓
-- Activity — Fill-in, complete sentences (6 items): «Вона ___ українською. (говорити)», «Ми ___ у парку щодня. (ходити)», «Ти ___ гарно. (робити)», «Я ___ тебе! (бачити)», «Вони ___ нас. (просити)», «Він ___ нові слова. (вчити)». (~30 words instruction)
-
-Grand total: ~1320 words
+Grand total: ~1270 words
 </skeleton>
 
 ## Output Format

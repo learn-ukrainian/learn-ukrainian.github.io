@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -28,8 +28,8 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: fill-in-days-order -->`
-- `<!-- INJECT_ACTIVITY: match-months-seasons -->`
-- `<!-- INJECT_ACTIVITY: fill-in-chunks -->`
+- `<!-- INJECT_ACTIVITY: match-up-months-seasons -->`
+- `<!-- INJECT_ACTIVITY: fill-in-day-month-chunks -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -100,157 +100,86 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Dialogues
 
-**Що ти робиш у понеділок?** Your friend wants to make plans for the week. How do you answer? You need the days of the week — and in Ukrainian, they carry stories inside their names. But first, listen to two conversations that show how Ukrainians talk about time.
+Time management and scheduling are essential parts of daily life. In Ukraine, planning revolves around the **тиждень** (week). For anyone accustomed to calendars starting on Sunday, a small mental adjustment is required. The Ukrainian week strictly begins on **понеділок** (Monday). Observe how two friends, Olena and Marko, coordinate their plans for the upcoming week. They use days as time markers to organize their activities.
 
-**(Планування тижня / Planning the week)**
+> **Олена:** Привіт, Марку! Що ти робиш у понеділок? *(Hi Marko! What are you doing on Monday?)*
+> **Марко:** У понеділок я працюю. *(On Monday I am working.)*
+> **Олена:** А у вівторок? *(And on Tuesday?)*
+> **Марко:** У вівторок я вивчаю українську. *(On Tuesday I study Ukrainian.)*
+> **Олена:** А у суботу? *(And on Saturday?)*
+> **Марко:** У суботу гуляю. Неділя — вільний день! *(On Saturday I walk. Sunday is a free day!)*
 
-> **Тарас:** Що ти робиш у понеділок? *(What are you doing on Monday?)*
-> **Оленка:** Я працюю. А у вівторок? *(I'm working. And on Tuesday?)*
-> **Тарас:** У вівторок я вивчаю українську. *(On Tuesday I study Ukrainian.)*
-> **Оленка:** А у суботу? *(And on Saturday?)*
-> **Тарас:** У суботу гуляю з друзями. *(On Saturday I hang out with friends.)*
-> **Оленка:** А в неділю? *(And on Sunday?)*
-> **Тарас:** Неділя — вільний день! *(Sunday is a free day!)*
+Notice how Olena uses the question **Що ти робиш у...?** (What are you doing on...?) to ask about specific days. Marko responds using the exact same grammatical structure to state his plans. He also highlights a very important lifestyle concept: **неділя — вільний день** (Sunday is a free day). A **вільний день** (free day) is a day without professional obligations, which contrasts directly with a **робочий день** (work day). 
 
-Tаras uses **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у суботу** (on Saturday), and **в неділю** (on Sunday) to talk about his schedule. Each day pairs with **у** or **в** — a small word that means "on" when paired with a day. The endings of the days change slightly in these chunks: **субота** becomes **суботу**, **неділя** becomes **неділю**. For now, treat each "у/в + day" combination as a fixed phrase to memorize whole.
+When discussing birthdays, the vocabulary naturally shifts from days of the week to months and seasons. Read how Andriy and Sofia discuss their birthdays.
 
-**(Коли у тебе день народження? / When is your birthday?)**
+> **Андрій:** Софіє, коли у тебе день народження? *(Sofia, when is your birthday?)*
+> **Софія:** У березні. *(In March.)*
+> **Андрій:** Якого числа? *(What date?)*
+> **Софія:** П'ятнадцятого березня. *(The fifteenth of March.)*
+> **Андрій:** Це весна? *(Is that spring?)*
+> **Софія:** Так, початок весни. *(Yes, the beginning of spring.)*
 
-> **Марія:** Коли у тебе день народження? *(When is your birthday?)*
-> **Андрій:** У березні. *(In March.)*
-> **Марія:** Якого числа? *(What date?)*
-> **Андрій:** П'ятнадцятого березня. А у тебе? *(The fifteenth of March. And yours?)*
-> **Марія:** У мене в серпні. *(Mine is in August.)*
-> **Андрій:** О, це літо! Тепло і сонячно. *(Oh, that's summer! Warm and sunny.)*
+When Andriy wants to know the exact day, he asks **Якого числа?** (What date?). For now, treat both the question **Якого числа?** and the response **П'ятнадцятого березня** (The fifteenth of March) as fixed vocabulary chunks to memorize.
 
-Here you see the same pattern with months: **у березні** (in March), **в серпні** (in August). The phrase **день народження** (birthday, literally "day of birth") is a fixed expression — memorize it as one unit. Андрій also connects the month to a season: **серпень** (August) belongs to **літо** (summer).
+## Дні тижня — Days of the Week
 
-Notice how **у** or **в** keeps appearing before time words — **у понеділок**, **у вівторок**, **у березні**, **в серпні**. This is the core pattern of this module. Ukrainian uses **у/в** before days, months, and some seasons. You will see it again and again as we go deeper.
+To effectively plan a schedule, the seven days of the week are required. In order, they are: **понеділок** (Monday), **вівторок** (Tuesday), **середа** (Wednesday), **четвер** (Thursday), **п'ятниця** (Friday), **субота** (Saturday), and **неділя** (Sunday). There are two golden rules you must remember about the Ukrainian calendar. First, days of the week are never capitalized in Ukrainian unless they start a sentence. They are common nouns. Second, the week always starts on Monday. 
 
-## Дні тижня (Days of the Week)
+When you want to say that something happens "on" a specific day, you use the prepositions **у** or **в** followed by the day. The ending of the word might change depending on its gender. For masculine days, the form remains completely stable. You simply add the preposition: **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у четвер** (on Thursday). For feminine days ending in a vowel, the final vowel shifts to an -у or -ю sound. You simply memorize this pattern: **середа** → **у середу** (on Wednesday), **п'ятниця** → **у п'ятницю** (on Friday), **неділя** → **в неділю** (on Sunday). The same rule applies to Saturday: **субота** → **в суботу** (on Saturday).
 
-Ukrainian has seven days, and unlike English, they are always written in **lowercase** — no capital letters. English writes "Monday, Tuesday"; Ukrainian writes **понеділок, вівторок**. A capital letter appears only at the start of a sentence.
+Let us focus specifically on the word **неділя** (Sunday). For learners coming from other Slavic languages, this word can be a tricky false friend. In Russian, a similar-sounding word means "week." In Ukrainian, **неділя** only means Sunday. The etymology is fascinating and helps anchor its meaning: it comes from the phrase "не ділати," which translates to "not to work." Note that while **неділя** means Sunday in standard Ukrainian, in some regional dialects it can also mean "week." However, the standard word for "week" is always **тиждень**.
 
-Here are all seven, starting from the beginning of the Ukrainian week:
+To talk about your week broadly, you can group the days into two main categories. The days from Monday to Friday are called **робочі дні** (work days). The days of rest, Saturday and Sunday, are called **вихідні** (the weekend). In Ukrainian elementary schools, such as in the Grade 2 textbook by Vashulenko, students learn days of the week by creating a personal weekly schedule.
 
-- **понеділок** (Monday)
-- **вівторок** (Tuesday)
-- **середа** (Wednesday)
-- **четвер** (Thursday)
-- **п'ятниця** (Friday)
-- **субота** (Saturday)
-- **неділя** (Sunday)
-
-Ukrainian calendars start the week on **понеділок**, not on Sunday as in some English-speaking countries. One important note: **неділя** means "Sunday," but the word for "week" is **тиждень**. In some dialects and older texts, **неділя** can mean "week," but in standard modern Ukrainian, a week is always a **тиждень**.
-
-These names are not random sounds — they tell a story. **Четвер** comes from **четвертий** (fourth) — it is the fourth day. **П'ятниця** comes from **п'ять** (five) — the fifth day. **Середа** means "middle" — it sits in the middle of the working week. **Субота** has ancient roots shared with the word "Sabbath," borrowed long ago through Greek. Knowing these connections makes the days easier to remember: four, five, middle — **четвер, п'ятниця, середа**.
+*   **У робочі дні я в офісі.** (On work days I am at the office.)
+*   **У вихідні я вдома.** (On the weekend I am at home.)
 
 <!-- INJECT_ACTIVITY: fill-in-days-order -->
 
-To say "on" a specific day, Ukrainian uses **у** or **в** followed by a special form of the day. Memorize each chunk as a whole phrase:
+## Місяці і пори року — Months and Seasons
 
-| Day | "On" that day |
-|-----|---------------|
-| понеділок | **у понеділок** |
-| вівторок | **у вівторок** |
-| середа | **у середу** |
-| четвер | **у четвер** |
-| п'ятниця | **у п'ятницю** |
-| субота | **в суботу** |
-| неділя | **в неділю** |
+Just as the days form a week, the twelve months form a year. In Ukrainian schools, such as in the Grade 2 textbook by Vashulenko, months are introduced through seasonal stories and poems, connecting the vocabulary directly to the natural world. The twelve months organized by their respective season are listed below. All are written in lowercase letters.
 
-Some endings change: **середа** becomes **середу**, **п'ятниця** becomes **п'ятницю**, **субота** becomes **суботу**, **неділя** becomes **неділю**. Others stay the same: **понеділок, вівторок, четвер**. Do not try to figure out the grammar rule behind this yet — just memorize each chunk as a unit, the way a child learns "on Monday" without analyzing why "on" is there.
+*   **Зима** (Winter): **грудень** (December), **січень** (January), **лютий** (February).
+*   **Весна** (Spring): **березень** (March), **квітень** (April), **травень** (May).
+*   **Літо** (Summer): **червень** (June), **липень** (July), **серпень** (August).
+*   **Осінь** (Autumn): **вересень** (September), **жовтень** (October), **листопад** (November).
 
-Here are four sentences showing these chunks in action:
+The story of the Ukrainian months is deeply rooted in the natural world. While English and Russian use names derived from the ancient Latin calendar, Ukrainian has preserved its native Slavic system. The names describe exactly what is happening in nature. For example, **березень** (March) comes from the word for birch tree, as this is when birch sap begins to flow. **Квітень** (April) is related to flowers blooming. **Липень** (July) is named after the linden tree. **Вересень** (September) is tied to the blooming of heather. Perhaps the most obvious is **листопад** (November), which literally means "leaf fall."
 
-- **Я навчаюся у вівторок і в четвер.** — I study on Tuesday and Thursday.
-- **Тато працює у понеділок.** — Dad works on Monday.
-- **У п'ятницю ми дивимося фільм.** — On Friday we watch a movie.
-- **В суботу я сплю довго.** — On Saturday I sleep late.
+When you want to say that something happens "in" a specific month, you again use the prepositions **у** or **в**. However, months require a different grammatical ending than days. You must add the ending **-і** to the base word. Often, the final fleeting vowel **-е-** in the month's name drops out. Here is the pattern you need to learn: **січень** → **у січні** (in January), **березень** → **у березні** (in March), **квітень** → **у квітні** (in April), **жовтень** → **у жовтні** (in October). The exception is **лютий**, which takes a different ending: **у лютому** (in February).
 
-## Місяці і пори року (Months and Seasons)
+Finally, you also need to know how to say "in" a specific season. When acting as an adverb to answer the question "when?", the seasons take irregular forms that you simply must memorize as fixed vocabulary items: **взимку** (in winter), **навесні** (in spring), **влітку** (in summer), **восени** (in autumn). Compare these to the base nouns: **зима**, **весна**, **літо**, **осінь**.
 
-Ukrainian organizes the year into four seasons, and each season holds three months. The seasons are:
+<!-- INJECT_ACTIVITY: match-up-months-seasons -->
 
-- **Зима** (winter) — сніг і холод (snow and cold)
-- **Весна** (spring) — квіти і тепло (flowers and warmth)
-- **Літо** (summer) — сонце і море (sun and sea)
-- **Осінь** (autumn) — листя і дощ (leaves and rain)
-
-Now the twelve months, grouped by season — all **lowercase**, just like days:
-
-| Зима (winter) | Весна (spring) | Літо (summer) | Осінь (autumn) |
-|---|---|---|---|
-| **грудень** (Dec) | **березень** (Mar) | **червень** (Jun) | **вересень** (Sep) |
-| **січень** (Jan) | **квітень** (Apr) | **липень** (Jul) | **жовтень** (Oct) |
-| **лютий** (Feb) | **травень** (May) | **серпень** (Aug) | **листопад** (Nov) |
-
-Ukrainian month names come from nature — not from Roman gods like "January" or "March" in English. **Березень** (March) comes from **береза** (birch tree) — birch sap flows in early spring. **Липень** (July) comes from **липа** (linden tree) — linden blossoms fill the air in July. **Листопад** (November) literally means "leaves fall" — **листя** (leaves) + **падати** (to fall). This is a Ukrainian linguistic fingerprint: the calendar is a nature calendar. All twelve months are masculine gender.
-
-<!-- INJECT_ACTIVITY: match-months-seasons -->
-
-To say "in" a specific month, Ukrainian uses **у/в** with a changed form of the month name. Here are all twelve:
-
-- **у січні** (in January), **у лютому** (in February), **в березні** (in March)
-- **у квітні** (in April), **у травні** (in May), **в червні** (in June)
-- **в липні** (in July), **в серпні** (in August), **у вересні** (in September)
-- **в жовтні** (in October), **в листопаді** (in November), **в грудні** (in December)
-
-Notice that **лютий** becomes **у лютому** — it follows a different pattern from the other months because **лютий** is originally an adjective (meaning "fierce" — fierce frosts!), not a noun like the rest.
-
-For seasons, Ukrainian uses special frozen forms that cannot be broken apart. Memorize these four chunks:
-
-- **взимку** (in winter)
-- **навесні** (in spring)
-- **влітку** (in summer)
-- **восени** (in autumn)
-
-These are adverbs — single words, not "у + season." They look different from the season names, so just learn each one by heart.
-
-Two model sentences putting this together:
-
-- **Мій день народження в жовтні.** — My birthday is in October.
-- **Влітку я їжджу на море.** — In summer I go to the sea.
-
-And four more mixing months and seasons:
-
-- **У грудні холодно — це зима.** — In December it's cold — it's winter.
-- **Навесні квітнуть дерева.** — In spring, trees bloom.
-- **В серпні ми відпочиваємо.** — In August we rest.
-- **Восени починається школа.** — In autumn, school begins.
-
-<!-- INJECT_ACTIVITY: fill-in-chunks -->
+<!-- INJECT_ACTIVITY: fill-in-day-month-chunks -->
 
 ## Підсумок — Summary
 
-You now have the full Ukrainian calendar at your fingertips. Here is everything organized for quick reference and self-testing.
+To help organize the calendar vocabulary, here is a consolidated reference table mapping the base noun, which answers the question **Що?** (What?), to the time expression, which answers the question **Коли?** (When?).
 
-**Дні тижня** (Days of the week):
+| Що? (What?) | Коли? (When?) |
+| :--- | :--- |
+| **понеділок** | **у понеділок** |
+| **середа** | **у середу** |
+| **січень** | **у січні** |
+| **зима** | **взимку** |
 
-- понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя
-- Chunks: **у понеділок, у вівторок, у середу, у четвер, у п'ятницю, в суботу, в неділю**
+Learning this vocabulary is a vital step in thinking like a Ukrainian. By using native Slavic names like **березень** instead of Latin-based alternatives, and by structuring your week to begin on **понеділок**, you are aligning yourself with the cultural rhythms of Ukraine. Remember to practice the soft endings on months like **січень** and **вересень** to make your pronunciation sound natural and authentic. The soft sign **ь** indicates that the preceding consonant is soft.
 
-**Місяці** (Months):
+Answer the following questions based on today's actual date and your own life. Speak the answers out loud to practice forming the complete phrases.
 
-- січень, лютий, березень, квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень
-- Chunks: **у січні, у лютому, в березні, у квітні, у травні, в червні, в липні, в серпні, у вересні, в жовтні, в листопаді, в грудні**
+*   Який сьогодні день тижня? (Сьогодні ...)
+*   Який зараз місяць? (Зараз ...)
+*   Яка зараз пора року? (Зараз ...)
+*   Коли у тебе день народження? (Мій день народження у ...)
+*   Що ти робиш у суботу? (У суботу я ...)
 
-**Пори року** (Seasons):
-
-- зима, весна, літо, осінь
-- Chunks: **взимку, навесні, влітку, восени**
-
-Test yourself — answer these questions in Ukrainian:
-
-- **Який сьогодні день?** — What day is today?
-- **Який зараз місяць?** — What month is it now?
-- **Яка зараз пора року?** — What season is it now?
-- **Коли у тебе день народження?** — When is your birthday?
-- **Що ти робиш у суботу?** — What do you do on Saturday?
-
-Try answering out loud. Use the chunks you learned: **У мене день народження в ...** (My birthday is in ...), **У суботу я ...** (On Saturday I ...). The goal is not to construct these from grammar rules — the goal is to reach for the whole chunk automatically, just as a native speaker does.
+Mastering these basic questions provides the confidence to schedule meetings, talk about the past, and make plans for the future in Ukrainian.
 
 </module_content>
 
@@ -340,30 +269,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -383,21 +352,39 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -429,68 +416,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

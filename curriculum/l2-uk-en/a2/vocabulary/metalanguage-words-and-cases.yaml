@@ -1,0 +1,151 @@
+vocabulary:
+- word: частина мови
+  translation: part of speech
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іме́нник
+  translation: noun
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прикме́тник
+  translation: adjective
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієсло́во
+  translation: verb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: займе́нник
+  translation: pronoun
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: числі́вник
+  translation: numeral
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прислі́вник
+  translation: adverb
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прийме́нник
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рід
+  translation: gender
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: число́
+  translation: number
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: однина́
+  translation: singular
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: множина́
+  translation: plural
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відмі́нок
+  translation: case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відмі́нювання
+  translation: declension
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: істо́та
+  translation: animate noun (living being)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: неісто́та
+  translation: inanimate noun
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: збігатися
+  translation: to coincide/match
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: об'єкт дії
+  translation: object of an action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зверта́ння
+  translation: address (direct form)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: задати питання
+  translation: to ask a question
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зв'язок слів у реченні
+  translation: connection of words in a sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: назва предмета
+  translation: name of an object
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ознака предмета
+  translation: characteristic of an object
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дія предмета
+  translation: action of an object
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка це частина мови?
+  translation: What part of speech is it?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

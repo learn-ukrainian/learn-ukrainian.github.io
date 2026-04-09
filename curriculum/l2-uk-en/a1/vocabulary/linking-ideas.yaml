@@ -1,39 +1,27 @@
 vocabulary:
+- word: тому́
+  translation: therefore
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: або́
+  translation: or
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
 - word: але́
-  translation: but (strong contrast or contradiction)
+  translation: but
   expression: false
   pos: спол.
   gender: ''
   verified: true
 - word: бо
-  translation: because (conversational)
+  translation: because
   expression: false
   pos: спол.
   gender: ''
-  verified: true
-- word: чому́
-  translation: why
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: та́ко́ж
-  translation: also
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: або́
-  translation: or (in statements)
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: тому́
-  translation: therefore, that's why
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: сполу́чник
   translation: conjunction
@@ -41,34 +29,10 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: сполу́чники
-  translation: conjunctions
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: сполучи́ти
-  translation: to connect, to link
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
 - word: вто́млений
   translation: tired
   expression: false
   pos: прикм.
-  gender: ''
-  verified: true
-- word: діє́та
-  translation: diet
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: на дієті
-  translation: on a diet
-  expression: true
-  pos: ''
   gender: ''
   verified: true
 - word: без цукру
@@ -77,58 +41,88 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: без звуку
-  translation: on silent (phone)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: ті́стечко
-  translation: pastry, small cake
+  translation: pastry
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: ві́льний
-  translation: free, available
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: зустрі́тися
-  translation: to meet up
-  expression: false
-  pos: дієсл.
+- word: на дієті
+  translation: on a diet
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: зателефонува́ти
-  translation: to call (by phone)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: відпові́сти́
-  translation: to answer
+  translation: to call
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: ви́бач
-  translation: sorry, excuse me
+  translation: sorry
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: ні́чого
-  translation: no problem, never mind
+- word: без звуку
+  translation: on silent
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: го́ри
+  translation: mountains
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мо́ре
+  translation: sea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́то
+  translation: summer
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: хво́рий
-  translation: sick, ill
+- word: деше́вше
+  translation: cheaper
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: гаря́чий
+  translation: hot
   expression: false
   pos: прикм.
+  gender: ''
+  verified: true
+- word: смачни́й
+  translation: tasty
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: розу́мний
+  translation: smart
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: хво́рий
+  translation: sick
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: йде дощ
+  translation: it is raining
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: голо́дний
@@ -137,63 +131,9 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: деше́вше
-  translation: cheaper
+- word: ціка́во
+  translation: interesting
   expression: false
   pos: присл.
-  gender: ''
-  verified: true
-- word: дале́ко
-  translation: far away
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Карпа́ти
-  translation: the Carpathians
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: мо́ре
-  translation: sea
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: го́ри
-  translation: mountains
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: йде дощ
-  translation: it's raining
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: зна́чення
-  translation: meaning
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: приклад
-  translation: example
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Чому ти вчиш українську?
-  translation: Why are you learning Ukrainian?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Пої́демо
-  translation: Let's go (by vehicle)
-  expression: false
-  pos: дієсл.
   gender: ''
   verified: true

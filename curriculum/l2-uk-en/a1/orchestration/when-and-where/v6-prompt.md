@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -44,7 +44,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -243,424 +243,322 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (12/12):**
-- ✅ **що** — conj (also noun) — standard conjunction form confirmed
-- ✅ **де** — adv / particle — confirmed
-- ✅ **коли** — FOUND (7 matches; top display shows кіл-noun forms but adv/conj form exists among all 7 — standard Ukrainian adverb/conjunction, no concern)
-- ✅ **знати** — verb (impf.)
-- ✅ **думати** — verb (impf.)
-- ✅ **казати** — verb (impf.)
-- ✅ **сказати** — verb (pf.)
-- ✅ **бачити** — verb (impf.)
-- ✅ **чути** — verb (impf.)
-- ✅ **розуміти** — verb (impf.)
-- ✅ **речення** — noun
-- ✅ **головне** — noun/adj (confirmed)
-
-**Not found:** none — all 12 plan vocabulary items are in VESUM.
-
----
-
-## Textbook Excerpts
-
-### Section: Складне речення (Complex Sentences)
-> "Складнопідрядним називають складне речення, частини якого нерівноправні за змістом і з'єднані за допомогою сполучників підрядності або сполучних слів."
-> "Сполучники підрядності не є членами речення (що, щоб, коли, бо, тому що, якщо…)"
-> "На письмі підрядну частину складнопідрядного речення відокремлюємо комою, а в усному мовленні – паузою."
-> Source: Заболотний, Grade 9 (§14, p. 78-79)
-
-### Section: Що, де, коли — двоє облич (Two Faces)
-> "Відносні займенники – ті самі, що й питальні, але їх уживаємо для зв'язку частин складного речення."
-> "Сполучні слова є членами речення, на них падає логічний наголос, до них можна поставити питання. У ролі сполучних слів використовуємо: прислівники: як, наскільки, де, куди, звідки, коли…"
-> Source: Заболотний, Grade 9 (p. 79); Grade 6 (p. 200)
-
-### Section: Підсумок — Summary
-> "Складнопідрядне речення складається з головної і підрядної частин. Від головного речення в більшості випадків можна поставити питання до підрядного речення."
-> "Приклади: Я завжди думав і думаю, що без гарячої любові до природи людина не може бути митцем (О. Довженко). І несуть мене по полю, де здобув я нашу волю, коні вороні (П. Воронько)."
-> Source: Ворон, Grade 11 (p. 173-174)
-
-### Section: Діалоги (key verb казати vs говорити)
-> "Я кажу, що прийду" — correct use of казати for conveying specific content.
-> "Він казав знехотя" — казати used for specific utterances/messages.
-> Source: Антоненко-Давидович, §ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ
-
----
+- Confirmed: що (conj/pron), де (adv/conj), коли (adv/conj), знати (verb), думати (verb), казати (verb), сказати (verb), бачити (verb), чути (verb), розуміти (verb), речення (noun), головне (adj/noun)
+- Not found: [none]
 
 ## Grammar Rules
-
-- **Comma before subordinating conjunction**: Правопис 2019 did not return a direct section match via topic search, but Grade 9 textbooks (Заболотний §14, Авраменко §17) uniformly confirm: *"підрядну частину складнопідрядного речення відокремлюємо комою"* — always a comma before що/де/коли used as subordinating conjunctions. This is established pedagogical consensus.
-- **що/де/коли as conjunctions vs. question words**: Grade 7 Авраменко (§80) classifies що as з'ясувальний сполучник підрядності; де/коли as сполучні слова (прислівники functioning as connectors). The plan's "two faces" framing matches the textbook distinction between питальні and відносні/сполучні uses.
-
----
+- [Кома в складному реченні]: Grade 5 textbooks (Zabolotnyi, Avramenko) — Між частинами складного речення ставимо кому. Перед сполучниками що, де, коли в ролі сполучних слів кома ставиться завжди, оскільки вони з'єднують підрядну частину з головною.
+- [Складне речення]: Grade 5 (Litvinova, 2022) — Складне речення складається з двох або більше частин, кожна з яких має свою граматичну основу.
 
 ## Calque Warnings
-
-- **казати vs. говорити**: ✅ OK — Plan correctly uses **казати** (Він каже, що...; Скажи, коли...) for conveying specific content. Антоненко-Давидович confirms казати is the precise verb for "saying something specific/telling," not a calque. Avoid говорити in these patterns.
-- **зустрітися**: ✅ OK — Plan uses it for a genuine meeting between people ("я хочу зустрітися"). Антоненко-Давидович warns against using зустрічатися in the abstract/figurative sense (calque of Russian встречаться), but person-to-person meetings are correct.
-- **думати, що**: ✅ OK — Я думаю, що... is natural Ukrainian. No calque issue found.
-
----
+- [Я думаю, що]: OK — Standard Ukrainian phrasing for expressing an opinion (я думаю, я вважаю).
+- [Головне речення]: OK — Standard linguistic term for the main clause in a complex sentence.
+- [Казати, що]: OK — Standard usage for reported speech/subordinate clauses.
 
 ## CEFR Check
-
-- **знати**: A1 ✅ — on target
-- **думати**: A1 ✅ — on target
-- **казати**: A1 ✅ — on target
-- **сказати**: A1 ✅ — on target
-- **розуміти**: A1 ✅ — on target
-- **бачити**: A1 ✅ — on target
-- **чути**: A1 ✅ — on target
-- **речення**: A1 ✅ — on target
-
-**All vocabulary confirmed A1.** No above-target words detected. Note: metalinguistic term **складнопідрядне речення** appears in Grade 9 curricula — the plan correctly introduces this as a Grade 5 term for reference without requiring learners to produce it at A1.
+- знати: A1 — OK
+- думати: A1 — OK
+- казати: A1 — OK
+- бачити: A1 — OK
+- розуміти: A1 — OK
+- речення: A1/A2 — OK (common as metalanguage)
+- коли: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: When and Where
-**Module:** when-and-where | **Phase:** A1.7 [Communication]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: When and Where
+**Module:** when-and-where | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/when-and-where.md
+
+# Педагогіка A1: When And Where
+
+
+
+## Методичний підхід (Methodological Approach)
+
+На рівні А1, концепції часу та місця (`коли` і `де`) вводяться через комунікативний та контекстуальний підхід, а не через формальний граматичний аналіз. Українські методики для початкових класів зосереджуються на негайному практичному застосуванні (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0143`). Головна мета — надати учневі інструменти для відповіді на базові питання: `Де ти?`, `Звідки ти?`, `Коли ти вдома?`.
+
+Підхід має бути покроковим:
+1.  **Контекстуалізація через діалог:** Починати з простих діалогів. Замість того, щоб пояснювати "прислівники місця", краще показати діалог: "- Де ти? - Я тут." (`<!-- VERIFY -->`).
+2.  **Засвоєння блоками (Chunking):** Багато конструкцій місця та часу, які вимагають знання відмінків, слід вводити як цілісні лексичні одиниці. Наприклад, `вдома`, `на роботі`, `в Україні`. Учениця Кортні згадує, як їй було важко розібратися з відмінками, коли вона зрозуміла, що "майже кожне слово має кілька форм" (Джерело: `ext-ulp_youtube-87`). Щоб уникнути цього когнітивного перевантаження на етапі A1, ми вчимо фрази як єдине ціле.
+3.  **Від простого до складного:** Послідовність введення має йти від найбільш конкретних і частотних слів (`тут`, `зараз`) до більш абстрактних або менш частотних (`всюди`, `згодом`).
+4.  **Спіральне навчання:** Поняття вводяться, практикуються, а потім знову повертаються в нових контекстах. Наприклад, прислівник `вранці` спочатку використовується в реченні `Я п'ю каву вранці`, а пізніше в складнішій конструкції з дієсловами руху.
+5.  **Практика через реальні завдання:** Учні повинні використовувати мову для виконання значущих для них завдань. Наприклад, скласти свій розклад дня або написати список покупок українською (Джерело: `ext-ulp_youtube-87`). Це мотивує і показує практичну цінність мови.
+
+Формальний аналіз складнопідрядних речень з підрядними місця та часу (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0110`) є концепцією для значно вищих рівнів. На А1 ми закладаємо лише фундамент, вводячи сполучник `коли` в дуже простих конструкціях.
+
+## Послідовність введення (Introduction Sequence)
+
+**Крок 1: Базові прислівники "тут і зараз"**
+- **Що:** Ввести найпростіші прислівники місця та часу, що не вимагають знання відмінків.
+- **Лексика:** `тут` (here), `там` (there), `зараз` (now), `вже` (already), `ще` (still/yet), `потім` (then/later).
+- **Чому:** Це слова з високою частотністю, які дозволяють негайно будувати прості, але корисні речення (`Він тут. Я вже вдома.`).
+
+**Крок 2: Питальні слова `Де?` та `Коли?`**
+- **Що:** Ввести основні питальні слова для місця (статика) та часу.
+- **Лексика:** `Де?` (Where?), `Коли?` (When?).
+- **Чому:** Питання є основою комунікації. Учень має навчитися не тільки відповідати, але й запитувати. `Де?` і `Коли?` є ключовими для орієнтації в просторі та часі.
+
+**Крок 3: Конструкції місця з прийменниками `в/у` та `на` (Місцевий відмінок)**
+- **Що:** Ввести найпоширеніші прийменники місця з іменниками у місцевому відмінку, але подавати їх як готові фрази.
+- **Лексика:** `вдома`, `в школі`, `в університеті`, `в магазині`, `в офісі`, `в Києві`, `в Україні`; `на роботі`, `на вулиці`, `на пошті`.
+- **Чому:** Це дозволяє говорити про місцезнаходження без необхідності вивчати повну парадигму місцевого відмінка, що є складним для початківців (Джерело: `ext-ulp_youtube-87`).
+
+**Крок 4: Питальні слова `Куди?` та `Звідки?` (Напрямок)**
+- **Що:** Ввести питальні слова, що позначають напрямок руху.
+- **Лексика:** `Куди?` (Where to?), `Звідки?` (From where?).
+- **Чому:** Українська мова чітко розрізняє статичне місце (`Де?`) і напрямок (`Куди?`), на відміну від англійської, де "Where?" може означати і те, і інше. Це розрізнення є фундаментальним і має бути засвоєне з самого початку (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0110`).
+
+**Крок 5: Базові вирази часу**
+- **Що:** Ввести основні одиниці часу.
+- **Лексика:** `сьогодні`, `вчора`, `завтра`; `вранці`, `вдень`, `ввечері`, `вночі`; дні тижня (`в понеділок`, `у вівторок`...); назви місяців, які можна вчити через повторення, як це робила Кортні (Джерело: `ext-ulp_youtube-87`).
+- **Чому:** Це розширює здатність учня описувати події в часі, виходячи за межі простого `зараз`.
+
+**Крок 6: Простий сполучник `коли`**
+- **Що:** Ввести `коли` як сполучник, що з'єднує дві прості дії.
+- **Приклад:** `Коли я вдома, я читаю.`
+- **Чому:** Це перший крок до побудови складних речень. Хоча повний синтаксис підрядних речень часу є просунутою темою (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0110`), введення простої конструкції `[Коли ...], [ ... ]` є доступним для рівня А1 і готує учнів до майбутніх тем.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Неправильно) | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| *Де ти ідеш?* | *Куди ти ідеш?* | В англійській мові "Where are you going?" використовує те саме питальне слово, що й "Where are you?". В українській мові для напрямку руху використовується `куди?`, а для статичного місця — `де?` (Джерело: `9-klas-ukrajinska-mova-avramenko-2017_s0110`). |
+| *Я живу в вулиця Шевченка.* | *Я живу на вулиці Шевченка.* | Неправильний вибір прийменника. Зі словом `вулиця` вживається прийменник `на`. Це потрібно запам'ятовувати як сталі вирази. (`<!-- VERIFY -->`). |
+| *Ми були в Україна.* | *Ми були в Україні.* | Неправильне використання відмінка після прийменника. Після `в` на позначення місця використовується місцевий відмінок, а не називний. Це одна з найскладніших тем для початківців (Джерело: `ext-ulp_youtube-87`). |
+| *Я буду там в п'ять годин.* | *Я буду там о п'ятій годині.* | Для позначення часу дії (`о котрій годині?`) використовується прийменник `о` + порядковий числівник у місцевому відмінку. Прямий переклад з англійського "at five o'clock" призводить до помилок. (`<!-- VERIFY -->`). |
+| *Вчора я читаю книжку.* | *Вчора я читав/читала книжку.* | Неправильне використання часу дієслова. Події, що відбулися `вчора`, вимагають минулого часу дієслова, а не теперішнього. |
+| *Я з США.* | *Я зі США.* | Фонетична помилка. Коли прийменник `з` стоїть перед словом, що починається на збіг приголосних (особливо якщо перший `с` або `з`), він перетворюється на `зі` для милозвучності. (`<!-- VERIFY -->`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**Обов'язково для виконання.** Навчання української мови з нуля повинно будуватися на автентичних українських моделях, уникаючи російських аналогій, які можуть закріпити неправильні фонетичні та граматичні звички.
+
+1.  **Жодних російських аналогій:** Ніколи не пояснюйте українські звуки чи літери через російські. Наприклад, фрази "українське `и` схоже на російське `ы`" або "українське `і` - це як російське `и`" є шкідливими. Натомість, учень має будувати нову фонетичну систему з нуля, спираючись на аудіоприклади та описи артикуляції. Українська фонетична система є самодостатньою.
+
+2.  **Розрізнення `Де/Куди` та `Где/Куда`:** Хоча системи схожі, важливо представляти українську пару `де/куди` як незалежну систему, а не "як у російській". Це запобігає ментальній прив'язці до іншої мови і сприяє формуванню чистого українського мовного мислення.
+
+3.  **Прийменники `в/у` та `на`:** Правила вживання цих прийменників в українській мові мають власну логіку і часто не збігаються з російською. Наприклад, `в Україні` (не *на*). Навчання має базуватися на українських прикладах та правилах, а не на порівняльному аналізі з російською, що може заплутати учня.
+
+4.  **Лексика:** Хоча деякі учні можуть знати російську, як Рассел з Канади (Джерело: `ext-ulp_youtube-139`), і це може допомогти в розпізнаванні слів, викладач повинен активно запобігати використанню русизмів. Слід підкреслювати автентичну українську лексику, навіть якщо існують схожі російські слова. Наприклад, вчити `незабаром` (soon), а не кальку `в скорому часі`.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Прислівники (Adverbs) ★★★
+- **Місця:** `тут`, `там`, `вдома`, `десь` (somewhere)
+- **Часу:** `зараз`, `сьогодні`, `вчора`, `завтра`, `потім`, `рано`, `пізно`, `вже`, `ще`, `завжди`, `ніколи`, `часто`, `рідко`
+- **Напрямку:** `сюди` (here, to this place), `туди` (there, to that place), `додому` (homewards)
+
+### Іменники (Nouns)
+- **Місця:** `дім` (будинок) ★★★, `робота` ★★★, `школа` ★★★, `місто` ★★★, `магазин` ★★, `кафе` ★★, `парк` ★★, `Україна` ★★★
+- **Часу:** `ранок` ★★★, `день` ★★★, `вечір` ★★★, `ніч` ★★, `тиждень` ★★, `рік` ★, `понеділок`, `вівторок` і т.д. ★
+
+### Прийменники (Prepositions) ★★★
+- `в` / `у` (in, at)
+- `на` (on, at)
+- `до` (to, towards)
+- `з` / `зі` (from)
+- `о` (at - for time)
+
+## Приклади з підручників (Textbook Examples)
+
+**Приклад 1: Доповнення речень (за мотивами Вправи 186, Джерело: `7-klas-ukrmova-litvinova-2024_s0144`)**
+*Інструкція: Доповніть речення, використовуючи слова з дужок.*
+1.  Я живу ... (`тут` / `завтра`).
+2.  Ми працюємо ... (`в офісі` / `пізно`).
+3.  Вони йдуть ... (`додому` / `вчора`).
+4.  Ти будеш вільний ...? (`де` / `коли`).
+5.  Магазин знаходиться ... (`там` / `зараз`).
+
+**Приклад 2: Вибір правильного питального слова**
+*Інструкція: Виберіть правильне слово: `Де?` чи `Куди?`*
+1.  (___) ти живеш?
+2.  (___) ти ідеш сьогодні ввечері?
+3.  (___) знаходиться найближча станція метро?
+4.  (___) ви їдете у відпустку?
+5.  (___) твої ключі?
+
+**Приклад 3: Складання речень за схемою (за мотивами Вправи 187, Джерело: `7-klas-ukrmova-litvinova-2024_s0144`)**
+*Інструкція: Складіть власні речення, відповідаючи на питання в дужках.*
+1.  Я п'ю каву (коли?). -> *Я п'ю каву вранці.*
+2.  Мої друзі живуть (де?).
+3.  Ми йдемо (куди?) після уроку.
+4.  Він приїхав (звідки?).
+5.  Вона працює (де?).
+
+**Приклад 4: Читання та аналіз короткого тексту**
+*Інструкція: Прочитайте текст і знайдіть усі слова та фрази, що відповідають на питання `Де?`, `Коли?`, `Куди?` та `Звідки?`.*
+Текст: "Мене звати Кортні. Я з Каліфорнії. У 2016 році я приїхала в Україну. Я жила в Черкасах. Зараз я живу в США. Сьогодні я слухаю український подкаст вдома." (Адаптовано з Джерела: `ext-ulp_youtube-87` та `ext-ulp_youtube-178`).
+
+- **Де?** -> в Черкасах, в США, вдома
+- **Коли?** -> У 2016 році, зараз, сьогодні
+- **Куди?** -> в Україну
+- **Звідки?** -> з Каліфорнії
+
+## Пов'язані статті (Related Articles)
+
+- `[[pedagogy/a1/locative-case|Педагогіка A1: Місцевий відмінок]]`
+- `[[pedagogy/a1/accusative-case|Педагогіка A1: Знахідний відмінок (напрямок)]]`
+- `[[pedagogy/a1/genitive-case|Педагогіка A1: Родовий відмінок (звідки)]]`
+- `[[pedagogy/a1/verbs-of-motion|Педагогіка A1: Дієслова руху]]`
+- `[[vocabulary/a1/time-and-dates|Словник A1: Час і дати]]`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/where-is-it.md
 
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 239
-> **Score:** 0.50
->
-> 235
-> 235
-> Зверніть увагу! 
-> Вибір того чи того стійкого етикетного вислову залежить від 
-> ситуації спілкування, а також від віку, соціального статусу, 
-> Люди, які володіють мовленнєвим етикетом, більш успішні й
-> швидше досягають порозуміння з іншими. Під час спіл ку ван-
-> ня можемо використовувати стійкі етикетні вислови. 
-> Етикетні
-> тематичні групи
-> Стійкі етикетні вислови
-> (формули спілкування)
-> Вітання
-> Добрий день! Добридень! Вітаю! Привіт! Добро-
-> го здоров’я! Моє шанування! Радий(-а) тебе ба-
-> чити! Здоровенькі були! Слава Україні! Героям
-> слава!
-> Прощання
-> До побачення! До зустрічі! Прощавайте! Щас-
-> ливо! Щасливої дороги! Бувайте здорові! На все 
-> добре! На зв’язку! На добраніч! Хай Бог помагає!
-> Вибачення
-> Пробачте. Перепрошую. Даруйте. Прошу виба-
-> чення. Мені дуже шкода. Прийміть мої виба-
-> чення.
+# Педагогіка A1: Where Is It
 
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 244
-> **Score:** 0.25
->
-> 244
-> 551   Визначте, які етикетні формули доцільно використовувати 
-> в таких ситуаціях. Для чого ми їх використовуємо?
-> 1. … ти приніс мені словник? 2. … котра година? 3. … ви не 
-> підкажете, як пройти до вулиці Київської? 4. … я не можу 
-> виконати це доручення. 5. … з якої колії відправляється 
-> потяг № 242? 6. Сергію, відчини, … , вікно.
-> 552   Прочитайте вголос діалог і схарактеризуйте його. Які норми 
-> мовленнєвого етикету порушено? Відредагуйте діалог так, щоб 
-> тональність спілкування набула доброзичливості.
-> — Сашку! Іди вечеряти! — гукає мама.
-> — Іду! — відповідає син, не відриваючись від монітора.
-> — То ти йдеш?
-> — Іду! — повторює Сашко, продовжуючи цікаву гру.
 
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 221
-> **Score:** 0.50
->
-> 218
-> Доброго ранку! Добрий день! Привіт! Радий бачити тебе. 
-> * * *
-> До побачення! На все добре! Гарного дня! Бувайте здорові! До зу-
-> стрічі!
-> Бажаю успіхів! Хай щастить! Рада була зустрітися.
-> * * *
-> Вибачте. Пробачте. Прошу вибачити (пробачити).
-> Даруйте. Перепрошую. Вибачте, що турбую.
-> * * *
-> Дякую. Щиро дякую. Я тобі дуже вдячний. Будь ласка. Нема 
-> за що.
-> 528.	І. ПОПРАЦЮЙТЕ В ПАРАХ. Уявіть, що хтось із вас опинився в 
-> чужому місті і йому необхідно з’ясувати, де розміщено стадіон (цирк чи 
-> театр). А хтось із вас живе в цьому місті. Складіть і розіграйте за осо-
-> бами діалог (5–6 реплік), можливий у цій ситуації. Уживайте слова 
-> ввічливості.
-> ІІ.
 
-## Складне речення (Complex Sentences)
+## Методичний підхід (Methodological Approach)
 
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 240
-> **Score:** 0.33
->
-> 240
-> Відомості із синтаксису й пунктуації.  Кома між частинами складного речення
-> Вправа 386
-> Виконайте тест.  У завданнях 1 і 2 лише один правильний варіант відповіді, 
-> у  завданні 3 потрібно встановити відповідність між варіантами.
-> 1.	 Складні речення записано в  усіх рядках, ОКРІМ
-> А	Піч варила, а я солила.
-> Б	 Не кожен хліб заробляє, а кожен його їсть.
-> В	 Хліб і на ноги поставить, і з ніг звалить.
-> Г	 Млин меле водою, а чоловік живе їдою.
-> 2.	 Пунктуаційну помилку допущено в  реченні
-> А	Він спав, а снилися йому гори бутербродів і ріки 
-> молока.
-> Б	 Я чув, що це неймовірна смакота.
-> В	 Аромат пирога розійшовся квартирою, і заполонив 
-> кожен куточок.
-> Г	 Кисіль пили ще давні слов’яни, але й сучасні науковці 
-> відзначають користь напою.
+Teaching A1 learners to express location centers on the **Місцевий відмінок (Locative case)**. The pedagogical approach, drawn from Ukrainian primary school textbooks and L2 materials, prioritizes communicative function over abstract grammatical rules.
 
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 14
-> **Score:** 0.33
->
-> 14
-> 1.	Прочитайте речення та виконайте завдання. 
-> Зараз, на жаль, піде дощ.
-> Зараз, на щастя, піде дощ.
-> А.	 За допомогою яких слів передано протилежне ставлення до природно-
-> го явища?
-> Б.	 Чому ці слова виділено комами?
-> Вставні слова виражають ставлення мовця до сказаного, а саме: 
-> •	 (не)впевненість: може, мабуть, очевидно, здається, звісно, без сум-
-> ніву;
-> •	 емоційну оцінку: на жаль, як на зло, на лихо, на щастя, на радість;
-> •	 джерело інформації: кажуть, по-моєму, вважаю, бачу, на думку … ; 
-> •	 привернення уваги: до речі, уявіть собі, не повірите, знаєш;
-> •	 зв’язок між думками: по-перше, по-друге, наприклад, отже.
-> На письмі вставні слова відокремлюємо комами: Чужа душа — то, ка-
-> жуть, темний ліс (Л.
+The core concept is that the Locative case answers the question **Де?** (Where?) and *always* requires a preposition, most commonly `в` (`у`) or `на` (Source 21, 14). The initial teaching strategy is pattern-based, not rule-based. Learners are exposed to high-frequency chunks and frame sentences.
 
-## Що, де, коли — двоє облич (Two Faces)
+1.  **Start with Function:** Introduce the question `Де ти?` (Where are you?) and provide simple, uninflected answers like `Я вдома` (I'm at home) (Source 1). This establishes the communicative goal immediately.
+2.  **Introduce `в / у` for Enclosed Spaces:** Begin with easily recognizable places. Exercises often involve matching a person/profession to their workplace, like `Лікар працює в лікарні` (The doctor works in the hospital) (Source 40). This builds a strong association between the preposition `в` and being "inside" a location.
+3.  **Introduce `на` for Open Spaces & Concepts:** Contrast `в` with `на`. `На` is used for open areas (`на вулиці`, `на площі`), surfaces, events (`на концерті`), and some institutional concepts (`на пошті`, `на роботі`) (Source 8, 7). This distinction is a key learning point that differs significantly from English.
+4.  **Pattern Recognition of Endings:** Instead of presenting declension tables upfront, introduce case endings through examples. Start with the most common ending (`-і` for feminine nouns like `Україна` -> `в Україні`), then introduce masculine/neuter (`Київ` -> `у Києві`), and finally the masculine exceptions (`парк` -> `у парку`) (Sources 7, 34, 1). Consonant mutation (`рука` -> `в руці`) is taught as a sound change rule connected to the `-і` ending (Source 43).
+5.  **Capitalization as a Writing Skill:** Ukrainian textbooks for early grades explicitly teach that names of countries, cities, villages, and streets are written with a capital letter (Джерело: `2-klas-ukrmova-vashulenko-2019-1_s0058`, `2-klas-ukrmova-bolshakova-2019-2_s0036`). This is presented as a fundamental writing convention.
 
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 245
-> **Score:** 0.50
->
-> Ч а с т и н и   м о в и
-> Самостійні 
-> Іменник 
-> сонце
-> хто? що?
-> Прикметник
-> сонячний, мамин
-> який? чий?
-> Числівник
-> три, третій
-> скільки? котрий?
-> Займенник
-> я, ти, він
-> хто? що?
-> Дієслово
-> сидіти
-> що робити? що зробити?
-> Прислівник 
-> сонячно, восени
-> як? де? коли? куди?
-> Службові
-> Прийменник
-> на, в, з, до
-> Не відповідають на 
-> питання
-> Сполучник
-> і, й, та, але
-> Частка
-> не, б, хай
-> В и д и  р е ч е н ь
-> За метою 
-> висловлювання
-> За емоційним 
-> забарвленням
-> За будовою
-> розповідне
-> окличне
-> просте
-> питальне
-> неокличне
-> складне
-> спонукальне
-> Ч л е н и   р е ч е н н я
-> Головні
-> Другорядні
-> Підмет
-> Присудок
-> Означення
-> Обставина
-> Додаток
-> хто? 
-> що?
-> що робить?
-> що зробить?
-> який? чий?
-> як? де? 
-> коли?
-> та ін.
-> кого? чого? 
-> кому? чому? 
-> та ін.
+The overall method is to move from whole communicative phrases to recognizing patterns, and only then to explicit (but simplified) grammatical explanation.
 
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 165
-> **Score:** 0.25
->
-> 161
-> 161
-> 
-> 
-> 
-> аби-
-> ані- де- чи- що- як-
-> аби
-> ані
-> де
-> чи
-> як
-> 
-> по-
-> -ому -ему (-єму) -и -е 
-> (-є)
-> по
-> по
-> по
-> по
-> 
-> будь-
-> -будь
-> -небудь
-> казна-
-> хтозна-
-> -то
-> будь
-> будь
-> небудь казна
-> то
-> 
-> ОРФОГРАМА
-> І. Прочитайте вголос прислівники, правильно їх наголошуючи. Обґрунтуйте 
-> написання. 
-> Навѕки, навхрест, нарівно, насухо, посередині, босоніж, 
-> водночас, запанібрата, по-людськи, по-людському, по-заячи, 
-> хто зна-коли, як-небудь, часто-густо, давним-давно, не сьогодні-зав-
-> тра, з дѕда-пр
-> ѕ
-> адіда, усього-на-всього, будь-що-будь, де-не-де.
+## Послідовність введення (Introduction Sequence)
 
-## Підсумок — Summary
+To avoid cognitive overload, concepts should be introduced in a logical, scaffolded sequence.
 
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 268
-> **Score:** 0.50
->
-> Розділ 8. Займенник 
-> 268
-> 7) Словом, наша дискусiя велася в однiй площинi: я дово-
-> див, що вони ж розумнi й мусять мене зрозумiти, а  вони 
-> казали, що я дурний i нiчого не розумiю (В. Нестайко).
-> 2. Підкресліть займенники відповідно до функції в реченні.
-> Про що говорять слова
-> Займенники котрий/котра/котре/котрі вживаємо, 
-> коли говоримо про час або коли потрібно вирізнити 
-> когось із-поміж інших, наприклад: У котрому вагоні 
-> ти їдеш? О котрій годині прибуття? У всіх інших 
-> випадках варто вживати займенник який/яка/яке/
-> які: Це хлопець, з яким ми познайомилися в таборі.
-> Іноді вибір займенника міняє зміст речення, порів-
-> няйте: Котрий зараз урок? — Четвертий.
+1.  **Step 1: The Question `Де?` and Preposition `в/у`**
+    *   Begin with the question `Де?` (Where?).
+    *   Introduce the preposition `в` (or its euphonic variant `у`) with simple, high-frequency, enclosed nouns that are often cognates for English speakers. At this stage, use masculine nouns that take the `-у` ending to avoid teaching case endings immediately.
+    *   **Examples:** `Я в парку.` (I am in the park.), `Ми в банку.` (We are at the bank.) (Source 1, 12). The key takeaway is `в + місце` (in + place).
 
-## Grammar Reference
+2.  **Step 2: The Preposition `на` for Open Spaces and Concepts**
+    *   Introduce `на` to contrast with `в/у`. Teach it with open spaces and common institutional concepts.
+    *   **Examples:** `Я на вулиці.` (I am on the street.), `Він на роботі.` (He is at work.), `Вони на ринку.` (They are at the market.) (Source 8).
 
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 165
-> **Score:** 0.33
->
-> 161
-> 161
-> 
-> 
-> 
-> аби-
-> ані- де- чи- що- як-
-> аби
-> ані
-> де
-> чи
-> як
-> 
-> по-
-> -ому -ему (-єму) -и -е 
-> (-є)
-> по
-> по
-> по
-> по
-> 
-> будь-
-> -будь
-> -небудь
-> казна-
-> хтозна-
-> -то
-> будь
-> будь
-> небудь казна
-> то
-> 
-> ОРФОГРАМА
-> І. Прочитайте вголос прислівники, правильно їх наголошуючи. Обґрунтуйте 
-> написання. 
-> Навѕки, навхрест, нарівно, насухо, посередині, босоніж, 
-> водночас, запанібрата, по-людськи, по-людському, по-заячи, 
-> хто зна-коли, як-небудь, часто-густо, давним-давно, не сьогодні-зав-
-> тра, з дѕда-пр
-> ѕ
-> адіда, усього-на-всього, будь-що-будь, де-не-де.
+3.  **Step 3: The Locative `-і` Ending (Feminine Nouns)**
+    *   Introduce the most common Locative ending: `-і`.
+    *   Start with feminine nouns ending in `-а`. `школа → в школі`, `кав'ярня → в кав'ярні`.
+    *   Immediately teach the associated consonant mutation `г, к, х → з, ц, с` before the `-і` ending. This is a phonological rule, not an exception.
+    *   **Examples:** `рука → в руці`, `нога → на нозі`, `книга → в книзі`, `муха → на мусі` (Source 43). `площа -> на площі` (Source 9).
 
-> **Source:** schupak, Grade 5
-> **Section:** Сторінка 52
-> **Score:** 0.33
->
-> РОЗДІЛ 2
-> 52
-> А
-> Б
-> В
-> Г
-> Д
-> Е
-> 4.	 ІСТОРИЧНИЙ І КАЛЕНДАРНИЙ ЧАС
-> Розгадайте ребус. Що ви знаєте про закодоване в ребусі поняття? 
-> Де ви з ним зустрічалися в житті? Навіщо ця річ потрібна людині? Ви-
-> словіть припущення, яку роль відіграє закодована річ у вивченні історії.
-> Поміркуймо!
-> Історичний час не слід плутати з календарним часом.
-> Календар — це система відліку часу, яка ґрунтується 
-> на астрономічн
+4.  **Step 4: The Locative `-і` Ending (Masculine & Neuter Nouns)**
+    *   Introduce the `-і` ending for most masculine and neuter nouns.
+    *   **Examples:** `Київ → в Києві` (Source 7), `Львів → у Львові` (Source 1), `місто → у місті` (Source 7), `море → на морі` (Source 1).
 
-... (truncated for context window)
+5.  **Step 5: Masculine `-у/-ю` Ending Revisited**
+    *   Solidify the list of common masculine exceptions that take the `-у`/`-ю` ending. Present these as a group to be memorized for A1.
+    *   **Examples:** `парк → в парку`, `банк → в банку`, `будинок → у будинку`, `аеропорт -> в аеропорту`, `ліс -> у лісі` (Source 1, 12, 32).
+
+6.  **Step 6: Plural Locative (`-ах/-ях`)**
+    *   Introduce the plural ending for all genders.
+    *   **Examples:** `Карпати → в Карпатах` (Source 1), `Чернівці → у Чернівцях` (Source 1), `гори → в горах` (Source 1).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning to express location. The curriculum should proactively address these.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я в місто Київ.` | `Я в місті Києві.` | English doesn't decline nouns for location, so learners often forget to apply the Locative case to both the general noun (`місто`) and the proper noun (`Київ`). The correct Ukrainian structure requires both to be in the Locative case (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0082`). |
+| `Я працюю в роботі.` | `Я працюю на роботі.` | This is a direct translation of the English preposition "in". Ukrainian uses `на роботі` for the abstract concept of being "at work". This is a fixed expression that must be memorized (Джерело: `ext-ulp_youtube-284`). |
+| `Я в книгі.` | `Я в книзі.` | Learners often master the `-і` ending but forget the mandatory consonant mutation for feminine nouns ending in `-г`, `-к`, `-х`. The change `г → з` is a fundamental phonetic rule of the language (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0046`). |
+| `Ми в паркі.` | `Ми в парку.` | This is an overgeneralization of the `-і` ending. Learners apply the most common Locative ending to masculine nouns that are exceptions. A curated list of common nouns taking `-у` should be drilled early (Джерело: `ext-ulp_youtube-237`). |
+| `Я живу вулиця Шевченка.` | `Я живу на вулиці Шевченка.` | English can omit the preposition in some contexts ("I live Шевченка Street"). Ukrainian's Locative case requires a preposition (`на` for streets) to signify location. Omitting it changes the meaning or makes the sentence ungrammatical (Source 21, 6). |
+| `Театр є в площа.` | `Театр є на площі.` | Learners mix up `в` and `на`. The rule is generally `в` for enclosed spaces and `на` for open spaces/surfaces. A square (`площа`) is an open space, so it takes `на` and the Locative ending `-і` (Source 9, 33). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to avoid Russification and present the language on its own terms.
+
+*   **Orthography and Pronunciation:** The primary example is the capital's name. It must be taught as **`Київ` (Kyiv)**, not the Russian-derived `Киев` (Kiev). This is not just a spelling preference but a matter of national identity and linguistic accuracy (Source 7). All place names should use the official Ukrainian romanization standard.
+*   **Avoid Russian Analogies:** Never teach Ukrainian concepts as "like the Russian X". For example, the distinction between `в` and `на` has its own logic and history in Ukrainian and does not perfectly map to Russian usage. Learners must build a Ukrainian mental model from scratch, not by adapting a Russian one.
+*   **Historical Context of Place Names:** When discussing locations, use Ukrainian-centric historical narratives. For example, the history of industrialization in Donbas should include figures like the Ukrainian entrepreneur Oleksiy Alchevsky, challenging the Russian myth that the region's industry was a purely Russian creation (Джерело: `ext-komik_istoryk-72`).
+*   **Vocabulary:** Be mindful of semantic false friends with Russian. While many words are shared Slavic roots, their usage or frequency can differ. The curriculum must be based on contemporary Ukrainian sources, like the provided podcasts and textbooks, not on bilingual dictionaries that may contain outdated or Russian-influenced vocabulary. The goal is to teach living, natural Ukrainian.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is essential for forming basic sentences about location at the A1 level.
+
+#### Іменники (Nouns)
+*   **★★★ (Essential):** `місто` (city), `село` (village), `вулиця` (street), `площа` (square), `парк` (park), `дім / будинок` (house/building), `квартира` (apartment), `кімната` (room), `школа` (school), `робота` (work), `магазин` (store), `кафе` (cafe), `ресторан` (restaurant), `банк` (bank), `пошта` (post office), `ринок` (market), `Україна` (Ukraine), `Київ` (Kyiv). (Sources 6, 7, 8, 13, 40, 44)
+*   **★★ (Useful):** `музей` (museum), `театр` (theater), `річка` (river), `море` (sea), `гори` (mountains), `ліс` (forest), `офіс` (office), `центр` (center). (Sources 1, 13, 27)
+*   **★ (Can wait):** `університет` (university), `бібліотека` (library), `лікарня` (hospital), `вокзал` (train station), `аеропорт` (airport). (Source 40, 41, 42)
+
+#### Дієслова (Verbs)
+*   `бути` (to be), `жити` (to live), `працювати` (to work), `гуляти` (to walk/stroll), `сидіти` (to sit), `їсти` (to eat), `бувати` (to be/visit). (Source 7, 5)
+
+#### Прислівники (Adverbs)
+*   `тут` (here), `там` (there), `вдома` (at home), `далеко` (far), `близько` (near).
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities on these proven formats from Ukrainian textbooks.
+
+1.  **Fill-in-the-Blank Address (Source 30)**
+    *   **Concept:** Practice writing a personal address, reinforcing the structure and capitalization of place names.
+    *   **Prompt:** `Напиши свою адресу за планом.`
+        1.  `Як називається країна, у якій ти живеш?`
+        2.  `Як називається місто, у якому ти живеш?`
+        3.  `Як називається вулиця, на якій ти живеш?`
+        4.  `Номер будинку, номер квартири.`
+
+2.  **Sentence Completion with Places (Source 6)**
+    *   **Concept:** Practice using place names in the correct form within a sentence structure.
+    *   **Prompt:** `Додайте потрібні назви і запишіть.`
+        *   `Наше місто (село) називається _____.`
+        *   `Центральна вулиця в місті (селі) — _____.`
+        *   `Наша школа розташована на вулиці _____.`
+        *   `Поблизу міста (села) протікає річка _____.`
+
+3.  **Tourist & Local Dialogue (Source 20)**
+    *   **Concept:** A communicative role-playing exercise to practice asking for and giving locations. This is highly effective.
+    *   **Setup:** Provide a simple map of a fictional town with key locations labeled (парк, банк, музей, театр, кав'ярня).
+    *   **Prompt:** `Один з вас турист, а інший — мешканець міста. Турист не знає, що де розташовано. Поясніть йому.`
+    *   **Example Dialogue:**
+        *   Турист: `— Вибачте, де розташований театр?`
+        *   Мешканець: `— Театр розташований на вулиці Мукачівській. Йдіть прямо і поверніть ліворуч. Там побачите театр.`
+
+4.  **Matching People to Workplaces (Source 40)**
+    *   **Concept:** Reinforce vocabulary for places and professions, and the `в/у + Locative` structure.
+    *   **Setup:** Create two columns: one with professions (`лікар`, `вчитель`, `продавець`) and one with workplaces (`лікарня`, `школа`, `магазин`).
+    *   **Prompt:** `З'єднайте пари і складіть речення за зразком.`
+    *   **Example:** `Зразок: Лікар працює в лікарні.`
+
+## Пов'язані статті (Related Articles)
+
+*   `pedagogy/a1/what-is-this`
+*   `grammar/cases/locative`
+*   `grammar/prepositions-of-place`
+*   `vocabulary/a1/places-in-a-city`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -831,96 +729,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~390 words total)
+## Діалоги — Dialogues (~330 words total)
+- D1 (~110 words): [Planning to meet at a cafe. Speakers: Гість (lost) and Господар. Гість asks "Ти знаєш, де нове кафе?", Господар replies "Так, я знаю, де воно". They discuss time: "Скажи, коли ти вільний" and "Я думаю, що о шостій буде добре". Ends with confirmation: "Я теж думаю, що це гарний час". Bolded conjunctions: де, коли, що.]
+- D2 (~110 words): [Asking about a friend. Speakers: Friend A and Friend B. "Ти знаєш, що Олена вже в Києві?". Response: "Ні, я не знав! А де вона живе?". Explanation: "Я не знаю, де саме, але я знаю, що біля центру". Final instruction: "Скажи їй, коли побачиш, що я хочу зустрітися". Response: "Добре, скажу, коли побачу".]
+- P1 (~110 words): [Analysis of the dialogues. Explain that the bolded words (що, де, коли) are not asking questions here, but acting as bridges. Introduce the concept of a "connector" word that glues two pieces of information together: "I know" + "where she lives". Preview the necessity of the comma in Ukrainian which was seen in every bolded example.]
 
-- P1 (~30 words): Brief scene-setter — two friends connecting by phone. Олексій cannot find the café; Марта guides him. Introduces all three conjunctions in authentic context before any explanation.
+## Складне речення — Complex Sentences (~330 words total)
+- P1 (~110 words): [Contrast M44 (Linking equal ideas with "і" or "але") with M45 (Connecting a main idea to a dependent one). Explain that in "Я знаю, що він тут", "Я знаю" is the boss (main clause) and "що він тут" is the extra info (subordinate clause). Use the Grade 5 term 'складнопідрядне речення' gently to describe this hierarchy.]
+- P2 (~110 words): [The Golden Rule of Punctuation. In Ukrainian, you ALWAYS place a comma before 'що', 'де', and 'коли' when they act as conjunctions. Contrast this with English where "I think that..." has no comma. Provide 3 clear side-by-side examples: "Я думаю, що це правильно", "Він не знає, де магазин", "Зателефонуй, коли прийдеш".]
+- P3 (~110 words): [The "Trigger Verbs". List and explain the verbs that naturally want a subordinate clause: знати (to know), думати (to think), казати/сказати (to say/tell), бачити (to see), чути (to hear), and розуміти (to understand). Show how they "need" a 'що', 'де', or 'коли' to finish the thought: "Я бачу, що...", "Ти чуєш, де...".]
+- <!-- INJECT_ACTIVITY: fill-in-conjunction-choice --> [Fill-in-the-blank: Choose between що, де, коли to complete the logic of the sentence. Focus: "Я знаю, ___ він тут. Я не знаю, ___ вона живе." 8 items.]
+- <!-- INJECT_ACTIVITY: quiz-comma-placement --> [Multiple choice/Quiz: Select the sentence with the correct punctuation. Focus on the mandatory comma before the conjunction. 8 items.]
 
-- Dialogue 1 (~120 words): Full 8-turn exchange between Марта and Олексій about finding a café and setting a meeting time.
-  — Марто, ти знаєш, де нове кафе «Вітер»?
-  — Так, я знаю, де воно. Іди прямо, де побачиш фонтан — поверни ліворуч.
-  — Добре. А коли ти там будеш?
-  — Я не знаю точно, коли зможу. Скажи, коли ти вільний.
-  — Я вільний, коли закінчу роботу. Думаю, о шостій.
-  — Я теж думаю, що о шостій — добрий час.
-  — Чудово. А де саме сісти — ти знаєш?
-  — Знаю. Будинок, що стоїть біля великого дерева — там і вхід.
+## Що, де, коли — двоє облич (Two Faces) (~330 words total)
+- P1 (~110 words): [Role 1: Question Words. Brief review of M20. In "Де ти?", "Що це?", and "Коли ти прийдеш?", the words are at the start, there is a question mark, and we are looking for information. Use 3 simple review examples to ground the learner.]
+- P2 (~110 words): [Role 2: Conjunctions. Explain that when these words move to the middle of the sentence (after a comma), they stop being questions. "Де ти?" vs "Я знаю, де ти". Crucial point: the part after the comma follows normal statement word order—no inversion or special question markers are needed because the "asking" is already finished.]
+- P3 (~110 words): [Advanced usage: 'Коли' at the start. Explain that sometimes the subordinate clause comes first for emphasis: "Коли я вдома, я відпочиваю". Explain that the comma still separates the two parts. Compare to the English "When..., ...". Use examples with 'що' and 'де' to show they usually stay in the middle, while 'коли' is the most flexible.]
+- <!-- INJECT_ACTIVITY: quiz-function-id --> [Quiz: Identify the role of the word. Is it a "Question Word" or a "Conjunction"? Compare: "Де ти живеш?" vs "Я знаю, де ти живеш." 8 items.]
+- <!-- INJECT_ACTIVITY: fill-in-sentence-builder --> [Guided sentence building: "I think that [he is at home]", "He says that [the cafe is open]". Practice using the trigger verbs with що, де, коли. 6 items.]
 
-- P2 (~60 words): Observation: Point to three bolded conjunctions from Dialogue 1 — що, де, коли. Each connects two parts of a sentence: Я знаю, [що воно там]. / Я не знаю, [коли зможу]. / [Де побачиш фонтан] — поверни ліворуч. Note comma before each. Learner can already use them receptively.
-
-- Dialogue 2 (~120 words): Full 8-turn exchange — Тарас and Ніна discussing Олена's return to Kyiv.
-  — Ти знаєш, що Олена вже в Києві?
-  — Ні, я не знав! А де вона живе?
-  — Я не знаю, де саме. Але я думаю, що десь біля центру.
-  — А коли вона приїхала?
-  — Я не знаю точно, коли. Вона казала, що приїде в березні.
-  — Скажи їй, коли побачиш, що я хочу зустрітися.
-  — Добре, скажу. Але ти знаєш, що вона дуже зайнята?
-  — Знаю. Але я думаю, що вона знайде час.
-
-- P3 (~60 words): Observation: Point out the chain of complex sentences in Dialogue 2. Notice: Я не знаю, де саме — де саме (exactly where) makes the meaning more natural; я думаю, що... used twice; Скажи їй, коли побачиш connects two time-related actions. These are not just phrases — they are a new sentence architecture.
-
----
-
-## Складне речення (~340 words total)
-
-- P1 (~90 words): Bridge from M44. In M44 you connected EQUAL ideas: Я читаю, і він пише. / Вона хоче піти, але він не хоче. Both clauses could stand alone. Now: a MAIN idea carries a DEPENDENT idea attached to it — the dependent clause cannot stand alone. Я знаю → знаєш WHAT? → Я знаю, що він тут. / Я не знаю → не знаєш WHERE? → Я не знаю, де він живе. / Скажи → скажи WHEN? → Скажи мені, коли ти прийдеш. Grade 5 term: складнопідрядне речення (complex sentence with a subordinate clause).
-
-- P2 (~110 words): The three subordinating conjunctions laid out with parallel examples:
-  - **що** (that): Я знаю, що він тут. / Я думаю, що це правильно. / Він каже, що вона в Києві. / Ми бачимо, що ти стараєшся.
-  - **де** (where): Я не знаю, де він живе. / Скажи мені, де кафе. / Я знаю, де це. / Вони не знають, де ми.
-  - **коли** (when): Зателефонуй, коли прийдеш. / Я не знаю, коли він прийде. / Скажи, коли ти вільний. / Коли я прийду, ми поговоримо.
-  Each conjunction answers a different question: що → what/that; де → where; коли → when.
-
-- P3 (~80 words): Comma rule. Ukrainian ALWAYS places a comma before що, де, коли when they serve as conjunctions — no exceptions. English sometimes drops "that" and makes the comma optional: "I think this is right" (no comma, no "that"). Ukrainian never does: Я думаю, що це правильно. (comma + що always). Similarly: Він не знає, де магазин. / Зателефонуй, коли прийдеш. Write this rule in your notebook: comma + conjunction = always paired in Ukrainian.
-
-- Exercise: quiz — Where is the comma? Choose the correctly punctuated sentence from two options (8 items). Examples: "Я знаю що він там" vs "Я знаю, що він там." / "Скажи коли ти прийдеш" vs "Скажи, коли ти прийдеш." Tests comma placement with що, де, коли only — concepts taught in P3 above.
-
-- P4 (~60 words): Practical reinforcement — now you can answer questions more completely. Instead of Я не знаю (I don't know — full stop), you can say Я не знаю, де він. / Я не знаю, коли. / Я не знаю, що це. The subordinate clause turns a dead end into a real answer. Compare: Він тут? → Я думаю, що так. / Де Олена? → Я не знаю, де вона.
-
----
-
-## Що, де, коли — двоє облич (~310 words total)
-
-- P1 (~80 words): These three words already live in your vocabulary from M20 as question words. Що це? (What is this?) — starts the sentence, ends with ?. Де ти? (Where are you?) — starts the sentence, ends with ?. Коли ти прийдеш? (When will you come?) — starts the sentence, ends with ?. Now they take on a second job: connecting two clauses inside one sentence, sitting in the middle rather than the beginning.
-
-- P2 (~90 words): How to tell them apart — two clear signals. **Question word:** stands at the start of a sentence (or very early), the sentence ends with ?, no comma before it. **Conjunction:** sits in the middle of the sentence, connects two clauses, always preceded by a comma. Side-by-side contrast:
-  - Де ти живеш? (question — start, ?) ↔ Я знаю, де ти живеш. (conjunction — middle, comma)
-  - Що це? (question) ↔ Я знаю, що це книжка. (conjunction)
-  - Коли прийдеш? (question) ↔ Скажи, коли прийдеш. (conjunction)
-
-- Exercise: quiz — Question word or conjunction? Identify the role of the underlined word in each sentence (8 items). Uses pairs from P2 above — concept just explained.
-
-- P3 (~100 words): Common patterns with each conjunction — these are the frames learners will reach for immediately:
-  - **що**: Я знаю, що... / Я не знаю, що... / Я думаю, що... / Він каже, що... / Ми бачимо, що...
-  - **де**: Я знаю, де... / Я не знаю, де... / Скажи мені, де... / Ти знаєш, де...?
-  - **коли**: Скажи, коли... / Я не знаю, коли... / Зателефонуй, коли... / Коли я прийду,...
-  Special case: **Коли** can also open the sentence — Коли я прийду, ми поговоримо. (When I arrive, we'll talk.) The comma still appears, now after the subordinate clause.
-
-- Exercise: fill-in — Choose що, де, or коли to complete 8 sentences. Items include: Я знаю, ___ він тут. / Я не знаю, ___ вона живе. / Скажи, ___ ти прийдеш. / Він думає, ___ це легко. / Я не знаю, ___ починається фільм. / Ти знаєш, ___ кафе? Tests the patterns from P3 only.
-
----
-
-## Підсумок (~300 words total)
-
-- P1 (~100 words): Summary table of the three subordinating conjunctions introduced in this module:
-  | Сполучник | Значення | Приклад |
-  |-----------|----------|---------|
-  | що | that | Я знаю, що він тут. |
-  | де | where | Я не знаю, де кафе. |
-  | коли | when | Скажи, коли прийдеш. |
-  Rule: Always a comma before the conjunction. These combine with the M44 conjunctions (і, але, бо, або) to give you a full set of tools for connecting ideas. The label for these new conjunctions: підрядні сполучники (subordinating conjunctions) — they make one clause depend on another.
-
-- P2 (~100 words): Rich combined sentences — now that you have both M44 and M45 conjunctions, you can build multi-layered Ukrainian. Two worked examples unpacked word by word:
-  - Я не йду, бо я не знаю, де це. — "I'm not going because I don't know where it is." Two conjunctions: бо (M44) + де (M45).
-  - Він каже, що прийде, коли закінчить. — "He says he'll come when he finishes." Two subordinate clauses: що + коли.
-  - Я думаю, що він не знає, де ми. — three-part chain, still readable and natural.
-  These are not advanced grammar — native speakers use them in every conversation.
-
-- Exercise: fill-in — Build 6 complete complex sentences by finishing the frame. Frames: Я думаю, що ___. / Він каже, що ___. / Я не знаю, де ___. / Скажи мені, коли ___. / Я знаю, що ___. / Зателефонуй, коли ___.
-
-- P3 self-check (~70 words): Self-check before the next module. Can you build these three sentences without looking back? (1) Я думаю, що... [add your own ending] (2) Я не знаю, де... [add your own ending] (3) Скажи мені, коли... [add your own ending]. If yes — you have subordinating conjunctions at A1. In M46 (Holidays), you will use all three conjunctions to describe when and where celebrations happen.
-
----
+## Підсумок — Summary (~350 words total)
+- P1 (~150 words): [Detailed recap table/list. 
+  - що: that (Я знаю, що...) 
+  - де: where (Я не знаю, де...) 
+  - коли: when (Скажи, коли...) 
+  Reiterate: Comma is NON-NEGOTIABLE. Mention that 'що' (that) and 'що' (what) look the same but perform different functions based on context.]
+- P2 (~100 words): [Building "Super Sentences". Show how to combine M44 and M45. Example: "Я не йду, бо я не знаю, де це" (using 'because' + 'where'). Example: "Він каже, що прийде, коли закінчить" (two clauses!). This demonstrates how these small words unlock real-world complexity.]
+- P3 (~100 words): [Self-check checklist. 
+  1. Can you name the 3 conjunctions from this module? 
+  2. Do you remember to put a comma before them? 
+  3. Can you build 3 sentences starting with: "Я думаю, що...", "Я не знаю, де...", and "Скажи мені, коли..."?]
 
 Grand total: ~1340 words
 </skeleton>

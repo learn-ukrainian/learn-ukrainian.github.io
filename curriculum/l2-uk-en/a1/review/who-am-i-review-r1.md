@@ -1,64 +1,105 @@
 ## Linguistic Scan
-- No major linguistic errors found in the Ukrainian text itself (no Russianisms, Surzhyk, or calques). However, there is a critical linguistic/factual error in the English explanation of the Ukrainian grammar regarding the verb "звати" (confusing the infinitive with the 3rd person plural).
+No linguistic errors found in terms of Russianisms, Surzhyk, or calques. All vocabulary is perfectly attested in Ukrainian. However, there is a critical phonetic/orthographic error regarding the dash rule, which is documented in the findings below.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-self-intro -->`: Matches plan (fill-in, 6 items).
-- `<!-- INJECT_ACTIVITY: quiz-formal-informal -->`: Matches plan (quiz, 6 items).
-- `<!-- INJECT_ACTIVITY: match-question-words -->`: **DOES NOT MATCH PLAN.** The plan only contains 4 activities. This is a stray marker.
-- `<!-- INJECT_ACTIVITY: match-professions -->`: Matches plan (match-up, 8 items).
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue -->`: Matches plan (fill-in, 6 items).
+- `<!-- INJECT_ACTIVITY: fill-in-self-intro -->`: Placed correctly after "Мене звати...".
+- `<!-- INJECT_ACTIVITY: quiz-register-choice -->`: Placed incorrectly after "Це...". The "Це..." section focuses on "What is this/Who is this" and does not teach registers. It should be moved after the "Особові займенники" section, which actually teaches formal vs. informal pronouns.
+- `<!-- INJECT_ACTIVITY: match-up-gendered-professions -->`: Placed correctly after "Я — студент".
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-final -->`: Placed correctly after "Звідки?".
+- Total markers: 4 (matches plan exactly).
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers all content points. Deduct 1 point for adding an extra exercise marker not present in the plan's `activity_hints`. |
-| 2. Linguistic accuracy | 7/10 | Critical error: Translates the infinitive verb "звати" as "they-call" (which is "звуть"). This is likely Russian interference (confusing with "зовут"). |
-| 3. Pedagogical quality | 7/10 | Explains "тебе" as just "the informal you" without noting it's an object form; introduces the `-иця` feminine suffix without providing a single example; confusing explanation of interchangeable greeting phrases. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary is used naturally in the text and dialogues. |
-| 5. Exercise quality | 8/10 | Injects a 5th activity marker (`match-question-words`) that does not exist in the plan. |
-| 6. Engagement & tone | 9/10 | Natural conversational style without overly gamified language. |
-| 7. Structural integrity | 9/10 | Clean markdown and proper headings, though the word count exceeds the target significantly (1843 vs 1200), but word targets are minimums. |
-| 8. Cultural accuracy | 10/10 | Uses authentic names, cities, and standard conversational responses. |
-| 9. Dialogue & conversation quality | 9/10 | Situational dialogues correctly demonstrate the difference between formal and informal registers. |
+| 1. Plan adherence | 10/10 | Word budget exceeded (1725 words vs 1200 target). All `content_outline` points covered perfectly. Dialogues match the plan exactly. |
+| 2. Linguistic accuracy | 8/10 | The text claims the dash is "completely silent when speaking... without any extra pause," which contradicts the phonetic rule that the dash represents a logical pause. |
+| 3. Pedagogical quality | 8/10 | The module teaches that a dash is used to replace "to be" (Я — студент), but then immediately presents 7 examples without dashes ("Він студент"). The summary includes "Хто ви?" which was not taught and is pragmatically abrupt. |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary is integrated seamlessly into contextual sentences and dialogues. Recommended vocabulary is also heavily utilized. |
+| 5. Exercise quality | 9/10 | The `quiz-register-choice` activity is placed directly after the "Це..." section, which does not cover formal/informal registers. |
+| 6. Engagement & tone | 9/10 | Excellent teacher persona and cultural notes, but the conclusion uses banned corporate/gamified language ("You now possess the core tools..."). |
+| 7. Structural integrity | 10/10 | Clean markdown, clear H2 headers matching the outline exactly. Word count is strong. |
+| 8. Cultural accuracy | 10/10 | Explains the cultural context of handshakes, eye contact, and the literal translation of "мене звати" effectively. |
+| 9. Dialogue & conversation quality | 10/10 | The dialogues are contextualized beautifully (hostel vs conference) and flow naturally for A1 learners. |
 
 ## Findings
-2. Linguistic accuracy [CRITICAL]
-Location: Section "Мене звати...", first paragraph: `**Мене звати** literally translates as "me they-call." There is no verb "to be" and no word for "my name." Ukrainian doesn't say "My name IS Marko" — it says "Me-they-call Marko."`
-Issue: Factual grammar error. The verb "звати" is the infinitive ("to call"), not the 3rd person plural ("звуть", "they call"). Therefore, "мене звати" literally translates to "to call me", while "мене звуть" is "they call me". Claiming "звати" literally translates as "they-call" is incorrect and teaches wrong grammar.
-Fix: Replace with: `**Мене звати** literally translates as "to call me." There is no verb "to be" and no word for "my name." Ukrainian doesn't say "My name IS Marko" — it says "To-call me Marko."`
 
-3. Pedagogical quality [MAJOR]
-Location: Section "Я — студент", last paragraph: `A pattern to notice: the endings **-ка**, **-ня**, **-иця** often mark the feminine form.`
-Issue: The rule introduces the ending `-иця`, but there are absolutely zero examples of words ending in `-иця` in the preceding or following text (only `-ка` and `-ня` are shown). It is bad pedagogy to introduce a grammatical suffix without providing any examples of it.
-Fix: Remove the mention of `-иця`. Replace with: `A pattern to notice: the endings **-ка** and **-ня** often mark the feminine form.`
+[Linguistic accuracy] [Critical]
+Location: Section "Я — студент (I am a student)" — `The dash (—) replaces the missing verb "to be" in writing, but it is completely silent when speaking. When reading the sentence **Я — лікар** out loud, simply say the two words naturally without any extra pause.`
+Issue: The text provides a factually incorrect phonetic rule. In Ukrainian, a dash between a subject and a nominal predicate explicitly represents a logical intonational pause. Instructing learners to "simply say the two words naturally without any extra pause" contradicts the orthographic reason for the dash's existence.
+Fix: Update the tip to explain that a slight pause can be made where the dash is.
 
-3. Pedagogical quality [MAJOR]
-Location: Section "Діалоги", after Dialogue 1: `**Тебе** is the informal "you" — used between friends, peers, and people of similar age.`
-Issue: Imprecise phrasing that might lead beginners to mistakenly think "тебе" is the subject pronoun "you" (which is "ти", correctly taught later). "Тебе" is the object form.
-Fix: Replace with: `**Тебе** is the object form of the informal "you" (**ти**) — used between friends, peers, and people of similar age.`
+[Pedagogical quality] [Major]
+Location: Section "Я — студент (I am a student)" — `**Він студент.** (He is a student.) vs **Вона студентка.**`
+Issue: The text establishes the rule that a long dash marks the spot of the missing verb, but then lists 7 consecutive examples of professions and nationalities without the dash, directly contradicting its own stated rule and confusing learners.
+Fix: Add the dash to all profession and nationality examples to maintain consistency with the section's rule.
 
-5. Exercise quality [MAJOR]
-Location: Section "Це...", at the very end: `<!-- INJECT_ACTIVITY: match-question-words -->`
-Issue: This activity marker does not correspond to any activity defined in the plan's `activity_hints`. The plan defines exactly 4 activities, but the content injects 5 markers.
-Fix: Remove the stray marker.
+[Exercise quality] [Major]
+Location: Section "Це... (This is...)" — `<!-- INJECT_ACTIVITY: quiz-register-choice -->`
+Issue: The activity `quiz-register-choice` tests formal vs informal register, but it is placed after a section about pointing at objects/people ("Who is this/What is this"), which has nothing to do with registers.
+Fix: Move the activity marker to immediately after the "Особові займенники" section, where formal and informal pronouns (ти vs ви) are actually taught.
 
-3. Pedagogical quality [MINOR]
-Location: Section "Мене звати...", third paragraph: `The response is **Мені також!** meaning "me too" or "likewise." A slightly more formal variant is **Приємно познайомитись!** — "pleasant to get acquainted." All three expressions are interchangeable.`
-Issue: This phrasing implies that "Приємно познайомитись!" is interchangeable with the response "Мені також!". However, "Приємно познайомитись!" is an alternative to the initial greeting ("Дуже приємно!"), not a response to it.
-Fix: Replace with: `The response is **Мені також!** meaning "me too" or "likewise." A slightly more formal variant of the initial greeting is **Приємно познайомитись!** — "pleasant to get acquainted."`
+[Pedagogical quality] [Major]
+Location: Section "Підсумок — Summary" — `- **Хто ви? — Я — вчителька.** (Who are you? — I am a teacher.)`
+Issue: The summary includes the question "Хто ви?", which was never taught in the module. Furthermore, asking "Хто ви?" as a standalone question to find out someone's profession is pragmatically abrupt ("Who are you?") in Ukrainian.
+Fix: Replace the question with a simple declarative statement taught in the text.
+
+[Engagement & tone] [Minor]
+Location: Section "Підсумок — Summary" — `You now possess the core tools to introduce yourself...`
+Issue: The text uses banned corporate/gamified language ("You now possess...").
+Fix: Reword to a more natural teacher phrase ("You are now ready to...").
 
 ## Verdict: REVISE
-The module contains a critical factual error confusing the infinitive form "звати" with the 3rd person plural "звуть" when explaining literal translations, as well as a few major pedagogical imprecisions and a stray, unmapped activity marker. All issues have clear text replacements.
+The module is incredibly strong, exceeding word counts and integrating cultural notes effectively. However, the contradiction regarding the dash rule (teaching it, then ignoring it in 7 examples) and the factually incorrect phonetic claim about the dash must be fixed. There are also minor structural fixes required for exercise placement.
 
 <fixes>
-- find: "**Мене звати** literally translates as \"me they-call.\" There is no verb \"to be\" and no word for \"my name.\" Ukrainian doesn't say \"My name IS Marko\" — it says \"Me-they-call Marko.\""
-  replace: "**Мене звати** literally translates as \"to call me.\" There is no verb \"to be\" and no word for \"my name.\" Ukrainian doesn't say \"My name IS Marko\" — it says \"To-call me Marko.\""
-- find: "A pattern to notice: the endings **-ка**, **-ня**, **-иця** often mark the feminine form."
-  replace: "A pattern to notice: the endings **-ка** and **-ня** often mark the feminine form."
-- find: "**Тебе** is the informal \"you\" — used between friends, peers, and people of similar age."
-  replace: "**Тебе** is the object form of the informal \"you\" (**ти**) — used between friends, peers, and people of similar age."
-- find: "<!-- INJECT_ACTIVITY: match-question-words -->"
-  replace: ""
-- find: "The response is **Мені також!** meaning \"me too\" or \"likewise.\" A slightly more formal variant is **Приємно познайомитись!** — \"pleasant to get acquainted.\" All three expressions are interchangeable."
-  replace: "The response is **Мені також!** meaning \"me too\" or \"likewise.\" A slightly more formal variant of the initial greeting is **Приємно познайомитись!** — \"pleasant to get acquainted.\""
+- find: |-
+    The dash (—) replaces the missing verb "to be" in writing, but it is completely silent when speaking. When reading the sentence **Я — лікар** out loud, simply say the two words naturally without any extra pause.
+  replace: |-
+    The dash (—) replaces the missing verb "to be" in writing. When reading the sentence **Я — лікар** out loud, you can either say the two words naturally or make a very slight pause where the dash is.
+- find: |-
+    **Він студент.** (He is a student.) vs **Вона студентка.** (She is a student.)
+    **Він лікар.** (He is a doctor.) vs **Вона лікарка.** (She is a doctor.)
+    **Він вчитель.** (He is a teacher.) vs **Вона вчителька.** (She is a teacher.)
+    **Він програміст.** (He is a programmer.) vs **Вона програмістка.** (She is a programmer.)
+  replace: |-
+    **Він — студент.** (He is a student.) vs **Вона — студентка.** (She is a student.)
+    **Він — лікар.** (He is a doctor.) vs **Вона — лікарка.** (She is a doctor.)
+    **Він — вчитель.** (He is a teacher.) vs **Вона — вчителька.** (She is a teacher.)
+    **Він — програміст.** (He is a programmer.) vs **Вона — програмістка.** (She is a programmer.)
+- find: |-
+    **Він українець.** (He is a Ukrainian.) vs **Вона українка.** (She is a Ukrainian.)
+    **Він американець.** (He is an American.) vs **Вона американка.** (She is an American.)
+    **Він канадієць.** (He is a Canadian.) vs **Вона канадка.** (She is a Canadian.)
+  replace: |-
+    **Він — українець.** (He is a Ukrainian.) vs **Вона — українка.** (She is a Ukrainian.)
+    **Він — американець.** (He is an American.) vs **Вона — американка.** (She is an American.)
+    **Він — канадієць.** (He is a Canadian.) vs **Вона — канадка.** (She is a Canadian.)
+- find: |-
+    This construction is the fastest way to build your vocabulary. You point, you ask, you identify.
+
+    <!-- INJECT_ACTIVITY: quiz-register-choice -->
+
+    ## Особові займенники (Personal Pronouns)
+  replace: |-
+    This construction is the fastest way to build your vocabulary. You point, you ask, you identify.
+
+    ## Особові займенники (Personal Pronouns)
+- find: |-
+    When writing a formal letter or email to one specific person, you capitalize it as **Ви** to show high respect. These pronouns drive the rest of the sentence.
+
+    ## Я — студент (I am a student)
+  replace: |-
+    When writing a formal letter or email to one specific person, you capitalize it as **Ви** to show high respect. These pronouns drive the rest of the sentence.
+
+    <!-- INJECT_ACTIVITY: quiz-register-choice -->
+
+    ## Я — студент (I am a student)
+- find: |-
+    You now possess the core tools to introduce yourself, identify the world around you, and engage in a first conversation. You can navigate formal and informal encounters with confidence. Use this checklist to verify your understanding of the foundational patterns:
+  replace: |-
+    You are now ready to introduce yourself, identify the world around you, and engage in a first conversation. You can navigate formal and informal encounters with confidence. Use this checklist to verify your understanding of the foundational patterns:
+- find: |-
+    - **Хто ви? — Я — вчителька.** (Who are you? — I am a teacher.)
+  replace: |-
+    - **Вона — вчителька.** (She is a teacher.)
 </fixes>

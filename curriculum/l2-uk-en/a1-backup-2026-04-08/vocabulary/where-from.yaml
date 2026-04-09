@@ -1,0 +1,259 @@
+vocabulary:
+- word: зві́дки
+  translation: where from
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Украї́на
+  translation: Ukraine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Ки́їв
+  translation: Kyiv
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Оде́са
+  translation: Odesa
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Кана́да
+  translation: Canada
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: США
+  translation: USA
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: А́нглія
+  translation: England
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Німе́ччина
+  translation: Germany
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: По́льща
+  translation: Poland
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: додо́му
+  translation: home (direction, homeward)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Дніпро́
+  translation: Dnipro
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Запорі́жжя
+  translation: Zaporizhzhia
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Уго́рщина
+  translation: Hungary
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Руму́нія
+  translation: Romania
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Фра́нція
+  translation: France
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Япо́нія
+  translation: Japan
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Іта́лія
+  translation: Italy
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Торо́нто
+  translation: Toronto
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: То́кіо
+  translation: Tokyo
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: робо́та
+  translation: work
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: магази́н
+  translation: store, shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сяць
+  translation: month
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тому́
+  translation: ago
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ско́ро
+  translation: soon
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: now
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: давно́
+  translation: long ago, for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: куди́
+  translation: where to (direction)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: украї́нець
+  translation: Ukrainian (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: украї́нка
+  translation: Ukrainian (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поля́к
+  translation: Polish person (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́лька
+  translation: Polish person (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Я з України.
+  translation: I am from Ukraine.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я приїхав
+  translation: I arrived (masculine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я приїхала
+  translation: I arrived (feminine)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як цікаво!
+  translation: How interesting!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Давно тут?
+  translation: Been here long?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Звідки ти йдеш?
+  translation: Where are you coming from?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з роботи
+  translation: from work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зі школи
+  translation: from school
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з магазину
+  translation: from the store
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я живу в Києві, але я зі Львова.
+  translation: I live in Kyiv, but I am from Lviv.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

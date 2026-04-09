@@ -1,59 +1,55 @@
 ## Linguistic Scan
-No linguistic errors found. 
+1 error found:
+- "Вишиванковий день" is incorrect; the authentic term is "День вишиванки".
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-holiday-dates -->`: Tests 8 items but placed after Dialogues, where only 2 dates have been taught. Needs moving to the end.
-- `<!-- INJECT_ACTIVITY: quiz-holiday-traditions -->`: Tests Christmas vs Easter. Placed after Easter. Correct.
-- `<!-- INJECT_ACTIVITY: group-sort-traditions -->`: Sorts traditions. Placed after Independence Day. Correct.
-- `<!-- INJECT_ACTIVITY: fill-in-greetings -->`: Tests greetings. Placed after Summary. Correct.
+All 4 `<!-- INJECT_ACTIVITY: {id} -->` markers are present and match the plan's `activity_hints` exactly.
+- `quiz-holiday-match` is correctly placed after the Dialogues section.
+- `quiz-holiday-clues` is correctly placed after the Ukrainian Holidays section.
+- `group-sort-traditions` is correctly placed after the State Holidays section.
+- `fill-in-greetings` is correctly placed at the end of the Summary.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | The module covers all plan points but mechanically copied the plan's shorthand "грудень 25" into the final summary table instead of adapting it to natural Ukrainian date formatting ("25 грудня"). |
-| 2. Linguistic accuracy | 10/10 | Excellent. Uses accurate terminology like "пісні", correct instrumental forms ("З Різдвом", "З Великоднем"). No Surzhyk or calques found. |
-| 3. Pedagogical quality | 10/10 | Excellent flow. The breakdown of "незалежність" (не + залежати) is a brilliant teaching moment. |
-| 4. Vocabulary coverage | 9/10 | All vocabulary is present EXCEPT the required verb `святкувати` in Ukrainian. The writer translated it to English ("Ukraine celebrates") and changed the plan's `Раніше святкували...` to `Раніше було...` in the dialogue, dropping the required word entirely. |
-| 5. Exercise quality | 8/10 | The `quiz-holiday-dates` activity marker is placed immediately after the Dialogues, testing dates for holidays (like Easter and New Year) that have not been introduced yet. |
-| 6. Engagement & tone | 10/10 | Perfect. Connects grammar to prior knowledge seamlessly ("You already know the instrumental case from з + noun"). |
-| 7. Structural integrity | 10/10 | Clean markdown, all sections are present and appropriately sized. |
-| 8. Cultural accuracy | 10/10 | Highly accurate. Correctly explains the Dec 25 date shift as a break from Russian influence and accurately represents traditions. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, polite, and realistic for language learners. |
+| 1. Plan adherence | 10/10 | The module follows the plan perfectly, covering all required points in `content_outline`. |
+| 2. Linguistic accuracy | 9/10 | Excellent Ukrainian overall, but uses the unnatural formulation "Вишиванковий день" (inherited from the plan) instead of the authentic "День вишиванки". |
+| 3. Pedagogical quality | 9/10 | Provides great cultural context (e.g., the difference between Великдень and паска), but the explanation of instrumental case endings incorrectly claims that only noun rules apply, ignoring the adjective ending in "З Новим роком!". |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are integrated naturally. |
+| 5. Exercise quality | 10/10 | All activity injection markers are present, correctly spelled, and logically placed after the relevant teaching content. |
+| 6. Engagement & tone | 10/10 | Warm, encouraging teacher persona that avoids gamified filler. Culturally rich and engaging. |
+| 7. Structural integrity | 10/10 | Clean Markdown formatting. Word count (1542 words) comfortably exceeds the 1200-word target. |
+| 8. Cultural accuracy | 10/10 | Highly accurate. Correctly explains the 2023 calendar shift, the 12 dishes of Свята вечеря, and the significance of various holidays. |
+| 9. Dialogue & conversation quality | 8/10 | The dialogues are natural and use good vocabulary, but the formatting repeats the same speaker on consecutive lines instead of combining their speech into a single conversational turn. |
 
 ## Findings
-[1. Plan adherence] [SEVERITY: minor]
-Location: `| гру́день 25 | Різдво | З Різдвом Христовим! |` (and subsequent calendar rows)
-Issue: The writer copied the plan's shorthand "грудень 25" into the final summary table. In Ukrainian, dates are written as "25 грудня" (number + genitive case for the month), not nominative. This reads unnaturally in the summary table.
-Fix: Change the table formats from "month + number" to "number + genitive month".
+[2. Linguistic accuracy] [CRITICAL]
+Location: `Державні свята: Громадянська ідентичність`
+"In the spring, Ukrainians celebrate a unique cultural event called **Вишиванковий день** (Vyshyvanka Day)."
+Issue: "Вишиванковий день" is an unnatural formulation (0 frequency in GRAC corpus). The universally accepted name for this holiday is "День вишиванки". While this error originated in the plan, it must be corrected in the content to teach the authentic term.
+Fix: Change "**Вишиванковий день**" to "**День вишиванки**".
 
-[4. Vocabulary coverage] [SEVERITY: major]
-Location: `— **Том:** Теж? Рані́ше було́ сьо́мого сі́чня, так? *(Also? It used to be January 7th, right?)*`
-Issue: The required vocabulary word `святкувати` (to celebrate) was missed in the Ukrainian text. The writer changed the plan's `Раніше святкували...` to `Раніше було...` and only used "celebrate" in the English explanations.
-Fix: Restore the verb `святкувати` to the dialogue to ensure the required vocabulary is introduced in context.
+[9. Dialogue & conversation quality] [MAJOR]
+Location: `Діалоги: Говоримо про свята`
+Issue: The same speaker is repeated consecutively on multiple lines instead of combining their speech into a single conversational turn. This makes the dialogue visually clunky and robotic.
+Fix: Combine the consecutive lines from the same speaker into single blocks.
 
-[5. Exercise quality] [SEVERITY: major]
-Location: `<!-- INJECT_ACTIVITY: quiz-holiday-dates -->` (placed after the Dialogues section)
-Issue: The activity tests dates for 8 holidays, but at this point in the module, the learner has only been introduced to two dates (Christmas and Independence Day). The activity must be moved to the end of the module after all dates are taught.
-Fix: Move the `quiz-holiday-dates` marker to the end of the module, before the greetings fill-in activity.
+[3. Pedagogical quality] [MAJOR]
+Location: `Підсумок — Summary`
+"The spelling changes at the end of the words follow the exact same rules you learned for nouns."
+Issue: This claim is inaccurate because one of the primary examples directly below it is "З Новим роком!", where "Новим" is an adjective taking the instrumental adjective ending (-им). Stating that only noun rules apply is pedagogically misleading.
+Fix: Update the sentence to include adjectives: "The spelling changes at the end of the words follow the exact same rules you learned for nouns and adjectives."
 
 ## Verdict: REVISE
-The module is exceptionally well-written, culturally rich, and pedagogically sound. However, the missing required vocabulary word `святкувати` and the premature placement of the dates quiz are major pedagogical issues that require a REVISE verdict to correct.
+The module is very high quality, rich in cultural detail, and covers all required vocabulary perfectly. However, it requires a revision to fix a linguistic error ("Вишиванковий день"), correct the pedagogical explanation of adjective endings, and clean up the dialogue formatting.
 
 <fixes>
-- find: "— **Том:** Теж? Рані́ше було́ сьо́мого сі́чня, так? *(Also? It used to be January 7th, right?)*"
-  replace: "— **Том:** Теж? Рані́ше святкува́ли сьо́мого сі́чня, так? *(Also? You used to celebrate on January 7th, right?)*"
-- find: "*(Where do people go on Independence Day?)*\n\n<!-- INJECT_ACTIVITY: quiz-holiday-dates -->\n\n## Украї́нські свя́та́"
-  replace: "*(Where do people go on Independence Day?)*\n\n## Украї́нські свя́та́"
-- find: "<!-- INJECT_ACTIVITY: fill-in-greetings -->"
-  replace: "<!-- INJECT_ACTIVITY: quiz-holiday-dates -->\n<!-- INJECT_ACTIVITY: fill-in-greetings -->"
-- find: "| гру́день 25 | Різдво | З Різдвом Христовим! |"
-  replace: "| 25 гру́дня | Різдво | З Різдвом Христовим! |"
-- find: "| сі́чень 1 | Новий рік | З Новим роком! |"
-  replace: "| 1 сі́чня | Новий рік | З Новим роком! |"
-- find: "| се́рпень 24 | День Незалежності | З Днем Незалежності! / Слава Україні! |"
-  replace: "| 24 се́рпня | День Незалежності | З Днем Незалежності! / Слава Україні! |"
-- find: "| жо́втень 1 | День захисників і захисниць | — |"
-  replace: "| 1 жо́втня | День захисників і захисниць | — |"
-- find: "| тра́вень (тре́тій четве́р) | Вишиванковий день | — |"
-  replace: "| тре́тій четве́р тра́вня | Вишиванковий день | — |"
+- find: "**Вишиванковий день**"
+  replace: "**День вишиванки**"
+- find: "> **Українська родина:** У нас теж! *(We also have it then!)*\n> **Українська родина:** Раніше святкували сьомого січня. *(Earlier we celebrated on the seventh of January.)*\n> **Українська родина:** Але тепер двадцять п'ятого. *(But now on the twenty-fifth.)*"
+  replace: "> **Українська родина:** У нас теж! Раніше святкували сьомого січня, але тепер двадцять п'ятого. *(We also have it then! Earlier we celebrated on the seventh of January, but now on the twenty-fifth.)*"
+- find: "> **Оксана:** Ввечері салют. *(In the evening there are fireworks.)*\n> **Оксана:** І святковий вечір з друзями. *(And a festive evening with friends.)*"
+  replace: "> **Оксана:** Ввечері салют і святковий вечір з друзями. *(In the evening there are fireworks and a festive evening with friends.)*"
+- find: "The spelling changes at the end of the words follow the exact same rules you learned for nouns."
+  replace: "The spelling changes at the end of the words follow the exact same rules you learned for nouns and adjectives."
 </fixes>

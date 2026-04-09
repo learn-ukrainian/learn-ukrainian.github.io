@@ -1,0 +1,199 @@
+{
+  "total_items": 126,
+  "grounded_items": 96,
+  "ungrounded": [
+    {
+      "word": "десятому",
+      "exercise_type": "fill-in",
+      "context": "десятому",
+      "role": "answer"
+    },
+    {
+      "word": "живемо",
+      "exercise_type": "fill-in",
+      "context": "Ми живемо на _____ поверсі.",
+      "role": "context"
+    },
+    {
+      "word": "зайняв",
+      "exercise_type": "fill-in",
+      "context": "Він зайняв _____ місце.",
+      "role": "context"
+    },
+    {
+      "word": "місце",
+      "exercise_type": "fill-in",
+      "context": "Він зайняв _____ місце.",
+      "role": "context"
+    },
+    {
+      "word": "третю",
+      "exercise_type": "fill-in",
+      "context": "третю",
+      "role": "answer"
+    },
+    {
+      "word": "читаю",
+      "exercise_type": "fill-in",
+      "context": "Я читаю _____ книгу.",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "fill-in",
+      "context": "Я читаю _____ книгу.",
+      "role": "context"
+    },
+    {
+      "word": "наша",
+      "exercise_type": "fill-in",
+      "context": "Це наша _____ зупинка.",
+      "role": "context"
+    },
+    {
+      "word": "роботі",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні мій _____ день на роботі.",
+      "role": "context"
+    },
+    {
+      "word": "шістдесят",
+      "exercise_type": "group-sort",
+      "context": "шістдесят",
+      "role": "answer"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "quiz",
+      "context": "У мене є два _____.",
+      "role": "context"
+    },
+    {
+      "word": "там",
+      "exercise_type": "quiz",
+      "context": "Там стоять три _____.",
+      "role": "context"
+    },
+    {
+      "word": "стоять",
+      "exercise_type": "quiz",
+      "context": "Там стоять три _____.",
+      "role": "context"
+    },
+    {
+      "word": "класі",
+      "exercise_type": "quiz",
+      "context": "У класі сорок один _____.",
+      "role": "context"
+    },
+    {
+      "word": "потрібно",
+      "exercise_type": "quiz",
+      "context": "Мені потрібно кілька _____.",
+      "role": "context"
+    },
+    {
+      "word": "першій",
+      "exercise_type": "fill-in",
+      "context": "Першій",
+      "role": "answer"
+    },
+    {
+      "word": "другій",
+      "exercise_type": "fill-in",
+      "context": "Другій",
+      "role": "answer"
+    },
+    {
+      "word": "лінії",
+      "exercise_type": "fill-in",
+      "context": "Це будинок на _____ лінії.",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "error-correction",
+      "context": "Я маю два брата.",
+      "role": "context"
+    },
+    {
+      "word": "брата",
+      "exercise_type": "error-correction",
+      "context": "Я маю два брата.",
+      "role": "context"
+    },
+    {
+      "word": "квитків",
+      "exercise_type": "error-correction",
+      "context": "квитків",
+      "role": "answer"
+    },
+    {
+      "word": "купила",
+      "exercise_type": "error-correction",
+      "context": "Вона купила п'ять квитки.",
+      "role": "context"
+    },
+    {
+      "word": "гривні",
+      "exercise_type": "error-correction",
+      "context": "Це коштує двісті гривні.",
+      "role": "context"
+    },
+    {
+      "word": "києва",
+      "exercise_type": "unjumble",
+      "context": "Києва.",
+      "role": "answer"
+    },
+    {
+      "word": "живе",
+      "exercise_type": "unjumble",
+      "context": "живе",
+      "role": "answer"
+    },
+    {
+      "word": "триває",
+      "exercise_type": "fill-in",
+      "context": "Урок триває _____ години.",
+      "role": "context"
+    },
+    {
+      "word": "другові",
+      "exercise_type": "fill-in",
+      "context": "Моєму другові двадцять _____.",
+      "role": "context"
+    },
+    {
+      "word": "цьому",
+      "exercise_type": "fill-in",
+      "context": "Цьому місту триста _____.",
+      "role": "context"
+    },
+    {
+      "word": "місту",
+      "exercise_type": "fill-in",
+      "context": "Цьому місту триста _____.",
+      "role": "context"
+    },
+    {
+      "word": "триста",
+      "exercise_type": "fill-in",
+      "context": "Цьому місту триста _____.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "вік",
+      "коштувати",
+      "кілограм",
+      "кількісний",
+      "порядковий",
+      "числівник"
+    ]
+  },
+  "all_grounded": false
+}

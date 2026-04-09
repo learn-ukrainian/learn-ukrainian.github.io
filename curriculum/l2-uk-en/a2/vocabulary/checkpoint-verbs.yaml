@@ -1,0 +1,253 @@
+vocabulary:
+- word: впе́внено
+  translation: confidently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: самопере́ві́рка
+  translation: self-check
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: обра́ти
+  translation: to choose (pf.)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пере́ві́рка
+  translation: review, check
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: завда́ння
+  translation: task, exercise
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: по́ми́лка
+  translation: error, mistake
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ви́правити
+  translation: to correct
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дієслова руху
+  translation: motion verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щове́чора
+  translation: every evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за ніч
+  translation: in one night
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: складена форма
+  translation: compound form (future)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проста форма
+  translation: simple form (future)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: синтетична форма
+  translation: synthetic form (future)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́зом
+  translation: together
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дуже швидко
+  translation: very quickly
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на уроці
+  translation: in class / during the lesson
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: маши́ною
+  translation: by car
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: неха́й
+  translation: let / may
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: бу́дьте
+  translation: be (imperative pl./pol.)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обере́жно
+  translation: carefully
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щасли́вий
+  translation: happy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: обере́жний
+  translation: careful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пере́рва
+  translation: break
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на перерву
+  translation: for a break
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́тягом
+  translation: by train
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: авто́бусом
+  translation: by bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обов'язко́во
+  translation: definitely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ка́рта
+  translation: map
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: теплий одяг
+  translation: warm clothes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рані́ше
+  translation: earlier / before
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: архітекту́ра
+  translation: architecture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кав'я́рня
+  translation: cafe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: цілий день
+  translation: all day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: звича́йно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: найкращі місця
+  translation: the best places
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ласкаво просимо!
+  translation: Welcome!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рухаймося далі
+  translation: let's move forward
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

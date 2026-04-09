@@ -1,0 +1,43 @@
+## Тест: який наказ звучить природно? (~850 words total)
+- P1 (~120 words): [Introduction to the communicative power of the imperative in Ukrainian. Explain that while basic forms are learned at A2, B1 mastery requires understanding the pragmatic "why" behind aspect choice. Frame the concept of the "instinctive" versus "logical" choice in commands.]
+- P2 (~100 words): [Setting the stage for the diagnostic test. Instruct the learner to rely on their "ear" for naturalness. Present the 10 pairs of imperatives in specific contexts (e.g., opening a window, writing a number, coming in) and ask them to pick the one that feels right.]
+- <!-- INJECT_ACTIVITY: diagnostic-aspect-quiz --> [Quiz, Focus: pattern recognition for natural imperative aspect in 10 contextual pairs, 10 items]
+- P3 (~150 words): [Analysis of the test results. Explain the emerging pattern: why positive requests often favor the perfective (specific result) while negative ones favor the imperfective (prohibition of activity). Introduce the core terminology: "команда" (command), "прохання" (request), "заборона" (prohibition), and "застереження" (warning).]
+- P4 (~160 words): [Formation review: Re-establish the morphological link between the present tense stem and the imperative. Review 2nd person (ти/ви) forms, 1st person plural (ходімо, пишімо), and the 3rd person analytic forms using хай/нехай (хай він скаже). Emphasize that aspect is determined by the choice of lemma, not the ending.]
+- P5 (~170 words): [Linguistic deep dive: The semantic "core" of the imperative. Explain how the imperative mood "activates" the aspect. Perfective focus = the "event" boundary. Imperfective focus = the "action" itself. Use the example: Сядь! (sit down - end the state of standing) vs Сідай! (take a seat - start the process of sitting/invitation).]
+- P6 (~150 words): [Decolonization note: The "Давай" trap. Explain why "Давай(те) + infinitive" is a Russian calque. Introduce the native Ukrainian synthetic forms (пишімо, будьмо) and the use of the 2nd person plural as the polite standard (пишіть). Provide 3 comparison examples showing the "surzhyk" vs authentic versions.]
+
+## Позитивний наказ: доконаний чи недоконаний? (~1050 words total)
+- P1 (~150 words): [The Perfective Default for specific results. Explain that when you want a task done once and for all, use PF. Examples: Напиши звіт (write the report), Подай сіль (pass the salt), Вимкни світло (turn off the light). Contrast this with the IMPF which would sound like a general instruction.]
+- P2 (~120 words): [Dialogue Situation: A cooking lesson. Instructor uses sequential PF commands: Спочатку наріж (first cut), потім поклади (then put), врешті посоли (finally salt). This demonstrates the use of PF for "checkpoints" in a process.]
+- P3 (~140 words): [The Imperfective Invitation. Explain why "Заходьте!" (Come in!) and "Сідайте!" (Sit down!) are IMPF. The IMPF removes the "pressure" of the command, making it a welcoming process or a gesture of permission. Contrast "Сядь!" (abrupt command) with "Сідайте" (polite invitation).]
+- P4 (~130 words): [Permission to Begin. Explain the use of IMPF to signal the start of a duration. Example: "Починайте!" (Begin!), "Читайте!" (Go ahead and read). Here, the speaker is authorizing the process to occur, not just demanding a result.]
+- P5 (~130 words): [The Politeness Scale. Argue that IMPF can be "softer" because it doesn't insist on a completed result in the same way. Contrast "Допоможи мені" (PF - specific request for help now) with "Допомагайте один одному" (IMPF - general advice/softer collective appeal).]
+- P6 (~130 words): [Emphasis on Process/Manner. Explain that if the instruction is about *how* to do something, use IMPF. Examples: "Пишіть акуратно" (write neatly), "Говоріть повільніше" (speak slower). The focus is on the ongoing quality of the action.]
+- P7 (~120 words): [Summary of the PF/IMPF split in positive commands. Provide a clear table or list comparing: Result (PF) vs. Process (IMPF), Command (PF) vs. Invitation (IMPF), Instruction (PF) vs. Advice (IMPF).]
+- <!-- INJECT_ACTIVITY: positive-imperative-choice --> [Fill-in, Focus: choose and form PF or IMPF imperative for positive contexts like invitations and specific commands, 8 items]
+- <!-- INJECT_ACTIVITY: imperative-category-sort --> [Group-sort, Focus: sorting positive imperatives into "Команда" (PF) and "Запрошення/Процес" (IMPF), 10 items]
+
+## Негативний наказ: чому майже завжди недоконаний? (~1050 words total)
+- P1 (~160 words): [The "Hard Rule" of Negation: Не + IMPF. Explain that 95% of negative imperatives are IMPF. Examples: "Не кричи!" (Don't shout!), "Не чіпай!" (Don't touch!). Logic: you are prohibiting the very existence/process of the activity.]
+- P2 (~140 words): [Linguistic justification: Why PF negation is rare. Prohibiting a result (PF) is logically difficult. You don't forbid the "completion" of an act; you forbid the act itself. Use the example: "Не пиши" (don't write at all) vs the non-existent "*Не напиши" (don't finish writing).]
+- P3 (~120 words): [Dialogue Situation: Parent sending a teenager out. Parent uses general prohibitions: "Не запізнюйся" (don't be late), "Не розмовляй з незнайомцями" (don't talk to strangers). These are behavioral rules, hence IMPF.]
+- P4 (~160 words): [The "Accidental Result" Exception: Не + PF. Introduce the concept of "Застереження" (Warning). Explain that PF is used when warning against an *unintentional* result. Examples: "Не впади!" (Don't fall!/Careful not to fall!), "Не загуби ключі!" (Don't lose the keys!).]
+- P5 (~140 words): [Comparing "Не забувай" vs "Не забудь". Deep dive into the most common PF exception. "Не забувай" (IMPF) is general advice (e.g., "don't forget your roots"). "Не забудь" (PF) is a specific reminder (e.g., "don't forget to buy bread today").]
+- P6 (~150 words): [Logic check: Prohibiting vs. Warning. If you want someone *not to start* an action, use IMPF (Не відчиняй). If you are worried something *might happen to them*, use PF (Не застудися - don't catch a cold). Focus on the "agency" of the subject.]
+- P7 (~130 words): [Register and Tone: Explain that PF warnings (Не впади) often carry an emotional nuance of concern, whereas IMPF prohibitions (Не бігай) carry the force of authority or law.]
+- <!-- INJECT_ACTIVITY: negative-imperative-logic --> [Match-up, Focus: matching negative imperatives to their logical function: general prohibition (IMPF) or specific warning (PF), 8 items]
+
+## Підсумок: вид як прагматичний вибір (~1050 words total)
+- P1 (~150 words): [The Synthesis Matrix. Provide a definitive logic map. Positive: Result (PF) vs Process/Invitation (IMPF). Negative: Prohibition (IMPF) vs Warning of Accident (PF). Stress that the "rules" are actually pragmatic choices made by the speaker.]
+- P2 (~130 words): [Common Error Clinic. Explain why "*Не відкрий вікно!" is the #1 mistake for learners. It sounds like a warning that the window might accidentally open itself, which is nonsensical. Correct form: "Не відкривай" (I am forbidding you to open it).]
+- P3 (~120 words): [Scenario A Analysis: Cooking. Review how to mix aspects. PF for the sequence (Візьми, наріж) + IMPF for the safety/manner (Ріжте обережно, не поспішайте).]
+- P4 (~120 words): [Scenario B Analysis: Doctor's Advice. Mix of specific orders (Випийте ці ліки - PF) and general health rules (Не їжте гострого - IMPF).]
+- P5 (~120 words): [Scenario C Analysis: Tourist Guide. Mix of invitations (Дивіться ліворуч - IMPF) and specific alerts (Зверніть увагу на цей собор - PF).]
+- P6 (~120 words): [Scenario D Analysis: Social Etiquette. How aspect choice affects warmth. "Заходьте, сідайте" (IMPF - warm) vs "Зайдіть, сядьте" (PF - military-style directness).]
+- P7 (~130 words): [Summary of the "Politeness vs. Clarity" tension. In Ukrainian, being clear (PF) is often more important than being vague, but being welcoming (IMPF) is more important than being efficient. Wrap up the pragmatic value of the choice.]
+- <!-- INJECT_ACTIVITY: error-correction-pragmatics --> [Error-correction, Focus: correcting aspect errors in imperatives based on situational pragmatics, 6 items]
+- <!-- INJECT_ACTIVITY: guest-rules-writing --> [Open-writing, Focus: writing 6 sentences of house rules for a guest using a mix of PF commands, IMPF invitations, and IMPF prohibitions, 6 items]
+- P8 (~40 words): [Preview: Next module - Aspect and General Negation (не + минулий час). How "я не робив" vs "я не зробив" changes the story of your day.]
+
+Grand total: ~4000 words

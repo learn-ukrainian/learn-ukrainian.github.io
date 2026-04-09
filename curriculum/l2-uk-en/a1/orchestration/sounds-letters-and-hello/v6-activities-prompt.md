@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -7,7 +7,7 @@ You are generating structured exercise YAML for a Ukrainian language module. The
 
 Generate an `activities/sounds-letters-and-hello.yaml` file for module **1: Sounds, Letters, and Hello** (a1).
 
-Output **pure YAML only** — no markdown fencing, no preamble, no explanation. Just the YAML document.
+**CRITICAL: Output ONLY raw YAML.** Your very first character must be `version:`. No markdown, no commentary, no explanation, no file paths, no "Here is the YAML", no code fences. Just the YAML document starting with `version: "1.0"`. ANY text before `version:` will cause a parse failure.
 
 ---
 
@@ -27,14 +27,12 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: letter-grid -->`
-- `<!-- INJECT_ACTIVITY: watch-and-repeat -->`
-- `<!-- INJECT_ACTIVITY: group-sort -->`
-- `<!-- INJECT_ACTIVITY: watch-and-repeat -->`
-- `<!-- INJECT_ACTIVITY: group-sort -->`
-- `<!-- INJECT_ACTIVITY: fill-in -->`
-- `<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->`
-- `<!-- INJECT_ACTIVITY: match-false-friends -->`
+- `<!-- INJECT_ACTIVITY: quiz-sounds-letters -->`
+- `<!-- INJECT_ACTIVITY: letter-grid-alphabet -->`
+- `<!-- INJECT_ACTIVITY: group-sort-sounds -->`
+- `<!-- INJECT_ACTIVITY: match-up-letters -->`
+- `<!-- INJECT_ACTIVITY: watch-repeat-pronunciation -->`
+- `<!-- INJECT_ACTIVITY: fill-in-greeting -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -117,90 +115,61 @@ required:
 <module_content>
 ## Звуки і літери (Sounds and Letters)
 
-Look at this page. What you see are letters — shapes printed in ink. Now say a word out loud. Any word. What your mouth just produced is a sound — vibrations shaped by breath, lips, and tongue. In Ukrainian, this distinction is not a footnote. It is the absolute foundation of how the language is taught. Every Ukrainian student learns a golden rule in their first year of school, from the textbook of Заболотний (Grade 5, p. 83): **Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо** — "We hear and pronounce sounds, but we see and write letters." Take the word **мама** (mother). You *hear* and *say* two sounds repeating — [м] then [а], [м] then [а]. You *see* and *write* four letters: М-А-М-А. A **звук** (sound) is breath shaped by your mouth and throat. A **літера** (letter) is ink on paper. These are not the same thing.
+Look at the text on this page. What you are seeing are letters. Now, say a word out loud. What you just produced is a sound. This distinction is the absolute foundation of the Ukrainian language. There is a golden rule taught to every Ukrainian student in the fifth grade, from the textbook by Zabolotnyi: **Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо** (We hear and pronounce sounds, but we see and write letters). Think of it like music: the sound is the physical note you play on an instrument, while the letter is simply the sheet music written on paper to record it. Ukrainian teachers drill this difference from the very first day of grade school because confusing the visual symbol with the physical sound causes immediate pronunciation errors. 
 
-Ukrainian has **33 літери** (letters) in its alphabet, but **38 звуків** (sounds). Why the mismatch? Two reasons. First, four letters — **Я**, **Ю**, **Є**, **Ї** — can each represent *two* sounds in certain positions. You will master how this works in M02. Second, the letter **Ь** (called **м'який знак**, the soft sign) represents *no sound at all*. It is a silent instruction — it tells you that the consonant before it should be pronounced softly, and then it disappears from the sound picture entirely. There is a famous pedagogical question from Litvinova (Grade 5, p. 130): "Чи можна говорити «голосна літера»?" — "Can you say 'vowel letter'?" The answer is no. Sounds are **голосні** (vowel) or **приголосні** (consonant). Letters only *represent* sounds. They are not sounds themselves. This distinction matters throughout all of Ukrainian phonetics.
+You might wonder how a language can have a different number of sounds and letters. The math of Ukrainian is interesting: the alphabet has exactly 33 letters, but the spoken language has 38 distinct sounds. This mismatch occurs because certain "smart" letters can represent two sounds at the exact same time. For example, the letters **Я**, **Ю**, **Є**, and **Ї** can hold a combination of sounds, acting like a hidden "y" sound before a vowel. Conversely, one specific letter—the soft sign, written as **Ь**—makes absolutely no sound of its own. It acts only as a silent modifier, slightly changing how you pronounce the consonant that stands directly before it. Remember that letters are just the visual clothing that sounds wear.
 
-The Ukrainian alphabet is called **абетка** (also **алфавіт**). Its 33 letters run in a fixed order from **А** to **Я**. Unlike English, Ukrainian spelling is largely phonetic — what you see on the page is almost always what you say aloud. There are no "silent e" surprises, no "gh" ambiguities, no letters pretending to be other letters. Once you know the 38 sounds and which letters represent them, you can read any Ukrainian word aloud — even before you understand its meaning. From Вашуленко (Grade 2, p. 26): "Усі тут літери живуть, їх 33 — від А до Я" — "All the letters live here, all 33 — from А to Я."
+Because sounds and letters are strictly separate concepts, Ukrainian demands linguistic accuracy when you discuss them. In a fifth-grade textbook, the author Litvinova asks students a pedagogical question: **Чи можна говорити «голосна літера»?** (Is it possible to say "vowel letter"?). The answer is a strict no. The word **голосний** (vowel) describes the physical nature of a sound that is made with your voice, not the ink on a page. A letter like **А** is simply a visual symbol representing the vowel sound. It cannot be a vowel itself. This precision helps learners truly understand the phonetic logic of the language.
 
-Here is the full **абетка** — your map for every module ahead. Ten of these letters represent vowel sounds (marked below). Twenty-two represent consonant sounds. One — **Ь** — represents no sound at all.
+The complete collection of these 33 symbols is the Ukrainian alphabet. The native Ukrainian term for this sequence is **абетка**, derived directly from the names of the first two letters, А and Бе. You will also frequently hear the term **алфавіт**. Unlike English, where spelling can be completely unpredictable, Ukrainian is highly phonetic. What you see on the page is almost exactly what you hear when you speak. There are no silent letters waiting to trick you, and no surprise pronunciations. To master these 33 letters and 38 sounds, you will watch a series of short pronunciation videos by Anna Ohoiko. She will serve as your primary guide for hearing the authentic sounds of the language.
 
-| | | | | | | | | |
-|---|---|---|---|---|---|---|---|---|
-| **А а** | **Б б** | **В в** | **Г г** | **Ґ ґ** | **Д д** | **Е е** | **Є є** | **Ж ж** |
-| **З з** | **И и** | **І і** | **Ї ї** | **Й й** | **К к** | **Л л** | **М м** | **Н н** |
-| **О о** | **П п** | **Р р** | **С с** | **Т т** | **У у** | **Ф ф** | **Х х** | **Ц ц** |
-| **Ч ч** | **Ш ш** | **Щ щ** | **Ь** | **Ю ю** | **Я я** | | | |
+<!-- INJECT_ACTIVITY: quiz-sounds-letters -->
 
-Vowel letters: А, Е, И, І, О, У + Я, Ю, Є, Ї. Consonant letters: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ. Special: Ь (no sound — softens the consonant before it).
-
-<!-- INJECT_ACTIVITY: letter-grid -->
+<!-- INJECT_ACTIVITY: letter-grid-alphabet -->
 
 ## Голосні звуки (Vowel Sounds)
 
-Ukrainian first-graders learn vowels through a poem from Большакова (Grade 1, p. 24): "Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються, весело співаються!" — "You'll hear vowels in a song, and in a dark forest, when you're surprised, and when you're delighted. Easy to pronounce, fun to sing!" **Голосні** (vowel sounds) are produced when air flows freely through the mouth with nothing blocking the way. Voice alone shapes them — no lips pressing together, no tongue touching the roof of your mouth, no teeth getting in the way. Because nothing obstructs the air, you can sustain a голосний indefinitely: **А-А-А-А** across a field, **О-О-О** into an empty room. You can sing every vowel. That singability is the definition.
+The core of the language begins with **голосні звуки** (vowel sounds). In a Ukrainian first-grade textbook, author Bolshakova teaches children about vowels through a simple poem: **Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються, весело співаються!** (You will hear vowels in a song, and in a dark forest, and when you are surprised, and when you are admiring. They are easily pronounced, cheerfully sung!). Vowels are made entirely with your voice. The air flows freely from your lungs and through your mouth without hitting any physical obstruction like your lips, teeth, or tongue. Because they are pure voice, vowels are the only sounds in the language that you can truly sing, stretch out, or shout clearly across a large field.
 
-There are six vowel *sounds*: [а], [о], [у], [е], [и], [і]. But ten vowel *letters*: А, О, У, Е, И, І — plus Я, Ю, Є, Ї. From Кравцова (Grade 2, p. 9), the chart makes this mapping explicit: the sound [а] can be written as А or Я; [у] as У or Ю; [е] as Е or Є; [і] as І or Ї. Those extra four letters — Я, Ю, Є, Ї — are called "iotated." They can add a [й] sound before the vowel in certain positions. A full explanation waits in M02. For now, the key lesson: count the *sounds*, not the letters. Ukrainian has six голосні звуки, not ten.
+There are exactly 6 pure vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, as you look at the alphabet, you will notice there are 10 vowel letters: **А**, **О**, **У**, **Е**, **И**, **І**, **Я**, **Ю**, **Є**, and **Ї**. The extra four letters (**Я**, **Ю**, **Є**, **Ї**) are known as "iotated" vowels. They are those "smart letters" mentioned earlier that can represent two sounds at once. You will learn their exact mechanics later, but for now, know that every single Ukrainian word must have at least one vowel sound. Vowels are the absolute heart of every syllable. You cannot form a Ukrainian syllable without exactly one vowel sound holding it together.
 
-Hear vowels in real words. **мАмА** — two [а] sounds. **мОлОкО** (milk) — three [о] sounds (from Большакова, p. 24). **око** (eye) — two [о] sounds. **дім** (house) — one [і] sound. **ніс** (nose) — one [і] sound. Every syllable in Ukrainian contains exactly one голосний звук. Vowels are the heartbeat of syllables. A word with three vowel sounds has three syllables. When you meet a new Ukrainian word, finding the голосні is always your first step.
+When Ukrainian children analyze words, they use a special visual notation. According to the first-grade textbook by Zakhariichuk, a vowel sound is marked with a simple dot: [•]. You can practice hearing these vowels in basic words right now. Listen to the word **мама** (mother). You hear two distinct [а] sounds: [мА-мА]. Now listen to **молоко** (milk). This word flows with three [о] sounds: [мО-лО-кО]. The word **око** (eye) contains two [о] sounds: [О-кО]. These pure sounds must be mastered completely before you move on to complex reading. When you watch the pronunciation videos for the vowel letters, focus heavily on mimicking that clear, unobstructed airflow.
 
-<!-- INJECT_ACTIVITY: watch-and-repeat -->
+<!-- INJECT_ACTIVITY: group-sort-sounds -->
 
-<!-- INJECT_ACTIVITY: group-sort -->
+<!-- INJECT_ACTIVITY: match-up-letters -->
 
 ## Приголосні звуки (Consonant Sounds)
 
-Where голосні flow freely, **приголосні** (consonant sounds) are blocked. Большакова (Grade 1, p. 24) captures the contrast in another poem: "Приголосні деренчать і тихенько шелестять, голосно свистять, скриплять, і гарчать, і точуть, співати не хочуть." — "Consonants rattle and quietly rustle, whistle loudly, screech, growl, and grind — they don't want to sing!" The obstruction comes from different places: lips pressing together ([м], [б], [п]), tongue touching teeth ([с], [з], [т], [д]), or the back of the throat ([г], [х]). That obstruction creates noise — hissing [с-с-с], buzzing [з-з-з], tapping [р-р-р]. Try holding [к] or [п] for three seconds. You cannot. That unsingability is what defines a приголосний.
+The partners to the vowels are the **приголосні звуки** (consonant sounds). The author Bolshakova describes them in contrast to vowels: **Приголосні деренчать і тихенько шелестять, голосно свистять і шиплять** (Consonants rattle and quietly rustle, loudly whistle and hiss). Consonants are formed very differently from vowels. Instead of free-flowing air, consonants are made by creating a physical obstruction in your mouth using your tongue, your teeth, or your lips. They consist of voice mixed with noise, or sometimes just noise alone. Because the air is blocked or squeezed, you cannot sing a pure consonant sound like [к] or [т].
 
-Ukrainian has 32 consonant *sounds* from just 22 consonant letters. The reason: many consonants come in pairs — **тверді** (hard) and **м'які** (soft). From Большакова (Grade 2, p. 42): "Приголосні звуки бувають тверді та м'які." A hard [д] and a soft [д'] are two different sounds represented by the same letter **Д**. A hard [н] and a soft [н'] — same letter **Н**, two sounds. Захарійчук (Grade 1, p. 15) marks them in sound models: [–] for hard consonants, [=] for soft consonants. This hard/soft pairing does not exist in English. It is one of the distinctly Slavic features of Ukrainian phonetics, and you will return to it in depth in M03.
+The Ukrainian language features 32 consonant sounds produced by 22 consonant letters. A major feature of these sounds is the hard versus soft distinction. Many consonants come in pairs: a **твердий** (hard) version and a **м'який** (soft) version. Soft consonants are palatalized, meaning the middle of your tongue raises toward the roof of your mouth, similar to the "n" in the English word "new". The Zakhariichuk textbook notation marks hard sounds with a single dash [–] and soft sounds with a double dash [=]. This hard and soft distinction does not exist in English, but it is uniquely Slavic and completely changes the meaning of a Ukrainian word.
 
-Three special consonant facts to note now. First, **Ґ** — a letter unique to Ukrainian, representing a hard [ґ] sound, as in **ґанок** (porch). It looks like Г but sounds different. Second, **Щ** always represents *two* sounds together: [шч]. The word **щука** (pike, the fish) starts with [шч], not a single sound. Third, the **м'який знак** (**Ь**) represents *zero* sounds. It is a softness signal, not a sound. In the word **сіль** (salt), the Ь tells you the final [л] is soft — and then Ь vanishes from the sound picture completely.
+You will meet the primary consonant letters through video practice: **М**, **Н**, **Т**, **С**, **Л**, **К**, and **Р**. Pay special attention to the letter **Ґ**, which makes a hard [g] sound. This letter is uniquely Ukrainian and has a history of being suppressed during the Soviet era, making it an important symbol of linguistic identity. You will also encounter the letter **Щ**, which is a "double letter" that always represents two sounds together: [шч]. Finally, you will see the soft sign, **Ь**. As a reminder, this letter is the silent "helper" that changes the consonant standing directly before it from a hard sound into a soft one.
 
-<!-- INJECT_ACTIVITY: watch-and-repeat -->
-
-<!-- INJECT_ACTIVITY: group-sort -->
+<!-- INJECT_ACTIVITY: watch-repeat-pronunciation -->
 
 ## Привіт! (Hello!)
 
-Time for your first real Ukrainian conversation. **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як справи?** (How are you?). Three answers you will hear every day: **Добре** (fine, good), **Чудово** (great, wonderful), **Нормально** (okay, so-so). To return the question: **А у тебе?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
+Now that you understand the building blocks of the language, it is time for your very first Ukrainian conversation. Following the pattern from Anna Ohoiko’s Ukrainian Lessons Podcast Episode 1, we start with the most common informal greeting: **Привіт!** (Hi!). This friendly word is used exclusively for close relationships: friends, family members, classmates, and peers. You would not use it with a boss or a stranger. After saying hello, the standard follow-up question is **Як справи?** (How are you?). You have several excellent ways to respond to this question. You can say **Добре** (Fine), you can say **Чудово** (Great), or if things are just average, you can simply say **Нормально** (Okay).
 
-> **Тарас:** Привіт, Оля! *(Hi, Olya!)*
-> **Оля:** Привіт, Тарасе! Як справи? *(Hi, Taras! How are you?)*
-> **Тарас:** Добре, дякую. А у тебе? *(Good, thanks. And you?)*
-> **Оля:** Чудово! Рада тебе бачити. *(Great! Glad to see you.)*
-> **Тарас:** І я радий тебе бачити! *(And I'm glad to see you!)*
+Consider a simple meeting between two friends on the street:
 
-Notice something: Оля says **рада** while Тарас says **радий**. Both mean "glad," but **рада** is the feminine form and **радий** is the masculine form. Ukrainian adjectives agree with the speaker's gender — confirmed in Заболотний (Grade 5, p. 218). This is your very first glimpse of grammatical gender, a major topic from M08 onward. For now, just notice the difference and use the form that matches you.
+> **Анна:** Привіт! Як справи? *(Hi! How are you?)*
+> **Іван:** Чудово! А у тебе? *(Great! And you?)*
+> **Анна:** Добре. *(Fine.)*
 
-Now, a **звуковий аналіз** (sound analysis) of **Привіт** — following the method from Большакова (Grade 1, p. 29). Letter by letter: **П** [п] — приголосний; **р** [р] — приголосний; **и** [и] — голосний; **в** [в] — приголосний; **і** [і] — голосний; **т** [т] — приголосний. Count: 2 голосні, 4 приголосні. Six letters, six sounds. This single word contains every type of sound you learned today — vowels and consonants together in one real Ukrainian greeting.
+Notice Ivan's question: **А у тебе?** (And you?). This is the most natural way to return a question and keep the conversation flowing smoothly. You might also notice that these sentences are very short. In Ukrainian, we frequently omit the verb "to be" (am, is, are) in these simple present-tense phrases. You do not need to say "I am fine"; you simply state the feeling: **Добре**.
 
-<!-- INJECT_ACTIVITY: fill-in -->
+This basic greeting also provides your first encounter with grammatical gender. If someone is happy to see you, their response changes depending on who is speaking. A female speaker will say **Рада тебе бачити!** (Glad to see you!). A male speaker will say **Радий тебе бачити!** (Glad to see you!). The ending of the word changes based on the speaker's gender. Ukrainian adjectives and certain verb forms alter their shape to match gender. This concept is a major part of the language, serving as a brief preview of the "Gender and Nouns" topic arriving in Module 8.
 
-<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->
+A sound analysis (**звуковий аналіз**) of your first word, **Привіт**, reveals its structure. It breaks down letter by letter: the letter **П** represents the consonant [п], **р** is the consonant [р], **и** is the vowel [и], **в** is the consonant [в], **і** is the vowel [і], and **т** is the consonant [т]. The word contains exactly two vowel sounds and four consonant sounds. Every type of sound category you learned in this module appears in this single greeting.
 
-<!-- INJECT_ACTIVITY: match-false-friends -->
+<!-- INJECT_ACTIVITY: fill-in-greeting -->
 
 ## Підсумок (Summary)
 
-Test yourself with these questions — every answer comes from what you learned above.
-
-**How many letters are in the Ukrainian alphabet?** → **33 літери**.
-
-**How many sounds does Ukrainian have?** → **38 звуків**.
-
-**Why are there more sounds than letters?** → Because Я, Ю, Є, Ї can represent two sounds each, and Ь represents no sound — it only softens the consonant before it.
-
-**What are голосні звуки?** → Sounds made with free-flowing voice — [а], [о], [у], [е], [и], [і]. Air passes through the mouth without obstruction. You can sing them.
-
-**What are приголосні звуки?** → Sounds made with obstruction — lips, tongue, or teeth create noise. You cannot sing them.
-
-**Can you say "голосна літера"?** → **Ні!** Голосні are sounds, not letters. Letters *represent* sounds — they are not sounds themselves.
-
-**What does Привіт mean?** → Hi! (informal greeting).
-
-**What do you say after Як справи?** → **Добре**, **Чудово**, or **Нормально** — then **А у тебе?**
-
-**What is the difference between рада and радий?** → **Рада** is the feminine form (a woman speaking); **радий** is the masculine form (a man speaking). Both mean "glad."
+Before moving forward, check your understanding of these foundational concepts with the following questions. How many letters are in the Ukrainian alphabet? There are exactly 33 letters. How many sounds exist in the Ukrainian language? There are 38 distinct sounds. What is the fundamental difference between a sound and a letter? Sounds are what you hear and pronounce with your mouth, while letters are the symbols you see and write on paper. What exactly is a **голосний звук**? It is a vowel sound, created using only your voice without any physical obstruction in your mouth. What is a **приголосний звук**? It is a consonant sound, produced by creating an obstruction with your tongue, teeth, or lips. Can you ever say **голосна літера**? Strictly speaking, no. Sounds are vowels or consonants, whereas letters merely represent them visually. Finally, how do you respond to **Як справи?** in a positive way? You can confidently answer **Добре** or **Чудово**.
 
 </module_content>
 
@@ -290,30 +259,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -335,8 +344,15 @@ The learner is on their FIRST DAYS learning Ukrainian. They:
 - quiz: in ENGLISH about Ukrainian sounds ('What sound does В make?')
 - observe: show patterns in Ukrainian with English prompts
 - group-sort: sort letters into vowels/consonants
+- divide-words: split words into syllables (складоподіл)
+- count-syllables: count syllables by counting vowels
+- pick-syllables: select open/closed syllables
+- odd-one-out: find the word that doesn't belong
+- watch-and-repeat: pronunciation video practice
+- translate: single words/short phrases English→Ukrainian (multiple choice)
+- error-correction: find simple errors (gender agreement, missing ь)
 
-**DO NOT use:** fill-in with Ukrainian sentences, error-correction, translate (learner can't write Ukrainian yet), cloze, unjumble.
+**DO NOT use:** cloze, mark-the-words, select, essay-response, unjumble (learner can't construct Ukrainian sentences yet).
 
 **Pronunciation videos (Anna Ohoiko):**
 - Overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
@@ -348,48 +364,85 @@ Use these in exercises: reference specific videos, embed WatchAndRepeat activiti
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: phonetics-sounds-letters
-- **quiz** — Звук чи літера?: Distinguish звук from літера — fundamental Ukrainian phonetics distinction
-  - Instruction: *Choose the correct answer*
-- **match-up** — Літера → Звук: Match letters to their sound values, especially multi-sound letters (я, ю, є, ї)
-  - Instruction: *Match each letter to the sound(s) it represents*
-- **group-sort** — Голосні й приголосні: Sort letters/sounds into голосні (vowel) vs приголосні (consonant)
+### Pattern: phonetics-sounds-letters [§4.1.1, §4.1.4]
+**Звуки і літери** (Sounds and letters)
+- **quiz** — Звук чи літера?: Розрізнити звук і літеру — основа української фонетики / Distinguish звук from літера — fundamental Ukrainian phonetics distinction
+  - Instruction: *Оберіть правильну відповідь*
+- **match-up** — Літера → Звук: Зіставити літери зі звуковими значеннями, особливо багатозвучні (я, ю, є, ї) / Match letters to their sound values, especially multi-sound letters (я, ю, є, ї)
+  - Instruction: *З'єднайте літеру зі звуком*
+- **group-sort** — Голосні й приголосні: Розподілити звуки на голосні та приголосні / Sort letters/sounds into голосні (vowel) vs приголосні (consonant)
   - Instruction: *Розподіліть звуки*
-- **image-to-letter** — Знайди літеру: See image, identify the Ukrainian letter it starts with
+- **image-to-letter** — Знайди літеру: Побачити зображення, визначити українську літеру / See image, identify the Ukrainian letter it starts with
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує фонетичні знання
+- ❌ fill-in-no-options: Занадто складно для A1 — початківці потребують варіантів відповідей
 
-### Pattern: phonetics-soft-hard
-- **group-sort** — М'який чи твердий?: Sort consonants/words by soft vs hard pronunciation
+### Pattern: phonetics-soft-hard [§4.1.2, §4.1.3]
+**М'який знак і апостроф** (Soft sign and apostrophe)
+- **group-sort** — М'який чи твердий?: Розподілити приголосні/слова за м'якістю чи твердістю вимови / Sort consonants/words by soft vs hard pronunciation
   - Instruction: *Розподіліть*
-- **quiz** — Де потрібен ь?: Choose which word needs м'який знак
-- **error-correction** — Виправ помилку: Find where м'який знак or апостроф is missing/wrong
+- **quiz** — Де потрібен ь?: Обрати слово, де потрібен м'який знак / Choose which word needs м'який знак
+- **error-correction** — Виправ помилку: Знайти, де м'який знак або апостроф пропущено або вжито неправильно / Find where м'який знак or апостроф is missing/wrong
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: Занадто складно для A1 без варіантів
 
-### Pattern: grammar-numbers
-- **quiz** — Яке число?: Recognize written number words
-- **fill-in** — Напиши цифру словом: Write the number as a Ukrainian word
-- **match-up** — Цифра → слово: Match digits to their Ukrainian word forms
+### Pattern: phonetics-stress [§4.1.5]
+**Наголос** (Word stress)
+- **quiz** — Де наголос?: Обрати правильне місце наголосу — критично для української вимови / Choose the correct stress position — critical for Ukrainian pronunciation
+  - Instruction: *Оберіть слово з правильним наголосом*
+- **odd-one-out** — Четверте зайве за наголосом: Обрати слово з іншою моделлю наголосу / Pick the word with different stress pattern
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in: Наголос — це вимова, не написання. Тестувати через вибір, не вписування
 
-### Pattern: general-vocabulary
-- **match-up** — Слово → переклад: Match Ukrainian words to English translations
-- **fill-in** — Вставте слово: Fill in the missing word from context
-- **anagram** — Склади слово: Rearrange letters to form the target word
-- **odd-one-out** — Четверте зайве: Pick the word that doesn't belong to the semantic group
-- **translate** — Оберіть переклад: Choose correct translation from options
+### Pattern: grammar-numbers [§4.2.1.3]
+**Числівники** (Numerals)
+- **quiz** — Яке число?: Розпізнати числівники, записані словами / Recognize written number words
+- **fill-in** — Напиши цифру словом: Записати числівник словом по-українськи / Write the number as a Ukrainian word
+- **match-up** — Цифра → слово: Зіставити цифри з їхніми українськими назвами / Match digits to their Ukrainian word forms
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: Числівники складні для написання — давати варіанти на A1
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -421,68 +474,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

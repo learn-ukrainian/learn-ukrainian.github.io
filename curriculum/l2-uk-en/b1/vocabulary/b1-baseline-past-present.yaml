@@ -1,64 +1,4 @@
 vocabulary:
-- word: суфікс минулого часу
-  translation: past tense suffix
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: тематичний голосний
-  translation: thematic vowel
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: чергува́ння
-  translation: alternation
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: основа інфінітива
-  translation: infinitive stem
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: основа теперішнього часу
-  translation: present tense stem
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: послідовність дій
-  translation: sequence of actions
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: тло розповіді
-  translation: narrative background
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: постфі́кс
-  translation: postfix
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: безособо́вий
-  translation: impersonal
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: узго́дження
-  translation: agreement
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: теперішній час
   translation: present tense
   expression: true
@@ -67,12 +7,6 @@ vocabulary:
   verified: true
 - word: минулий час
   translation: past tense
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: майбутній час
-  translation: future tense
   expression: true
   pos: ''
   gender: ''
@@ -137,178 +71,424 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: дієсло́во
-  translation: verb
+- word: суфікс минулого часу
+  translation: past tense suffix
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тематичний голосний
+  translation: thematic vowel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: написа́ння
-  translation: spelling
+- word: основа інфінітива
+  translation: infinitive stem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: основа теперішнього часу
+  translation: present tense stem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: послідовність дій
+  translation: sequence of actions
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тло розповіді
+  translation: narrative background
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: постфі́кс
+  translation: postfix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: безособо́вий
+  translation: impersonal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: узго́дження
+  translation: agreement
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: чергування приголосних
-  translation: consonant alternation
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: щодня́
-  translation: every day
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зазвича́й
-  translation: usually
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ча́сто
-  translation: often
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: київська кав'ярня
-  translation: Kyiv café
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: проце́с
-  translation: process
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: результа́т
-  translation: result
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: зви́чка
-  translation: habit
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: префікса́ція
-  translation: prefixation
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: суфікса́ція
-  translation: suffixation
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: суплетиві́зм
-  translation: suppletion
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: відтінок значення
-  translation: nuance of meaning
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: сюже́т
-  translation: plot
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: декора́ції
-  translation: scenery
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: послідо́вність
-  translation: sequence
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: тло
-  translation: background
+- word: видавни́цтво
+  translation: publishing house
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: перервана дія
-  translation: interrupted action
+- word: стаття́
+  translation: article
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Давно не бачилися
+  translation: Long time no see
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: коли́
-  translation: when
+- word: писа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нести́
+  translation: to carry
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спа́ти
+  translation: to sleep
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стоя́ти
+  translation: to stand
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: боя́тися
+  translation: to be afraid
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сиді́ти
+  translation: to sit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: води́ти
+  translation: to lead
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проси́ти
+  translation: to request
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: носи́ти
+  translation: to carry
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вози́ти
+  translation: to transport
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: купи́ти
+  translation: to buy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: to be able to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бі́гти
+  translation: to run
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вести́
+  translation: to lead
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поме́рти
+  translation: to die
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́здити
+  translation: to go by vehicle
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сказа́ти
+  translation: to say
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: написа́ти
+  translation: to finish writing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прочита́ти
+  translation: to finish reading
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зроби́ти
+  translation: to finish doing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́рішити
+  translation: to decide
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вирі́шувати
+  translation: to be deciding
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: да́ти
+  translation: to give (finished)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дава́ти
+  translation: to give (process)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бра́ти
+  translation: to take (process)
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: ра́птом
-  translation: suddenly
+- word: взя́ти
+  translation: to take (finished)
   expression: false
-  pos: присл.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: якра́з
-  translation: just / exactly
+- word: проки́нутися
+  translation: to wake up
   expression: false
-  pos: присл.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: три години
-  translation: for three hours
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: до́вго
-  translation: for a long time
+- word: вста́ти
+  translation: to get up
   expression: false
-  pos: присл.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: цілий день
-  translation: all day
-  expression: true
-  pos: ''
+- word: одягну́тися
+  translation: to get dressed
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: себе́
-  translation: oneself
+- word: ви́йти
+  translation: to go out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ду́ти
+  translation: to blow
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співа́ти
+  translation: to sing
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зателефонува́ти
+  translation: to call
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зупини́тися
+  translation: to stop
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпра́вити
+  translation: to send
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приї́хати
+  translation: to arrive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зайти́
+  translation: to enter
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: замо́вити
+  translation: to order
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́пити
+  translation: to drink
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: піти
+  translation: to go
   expression: false
   pos: ім.
+  gender: ж.
+  verified: true
+- word: ми́тися
+  translation: to wash oneself
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: зворотне дієслово
-  translation: reflexive verb
-  expression: true
-  pos: ''
+- word: одяга́тися
+  translation: to dress oneself
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: мені не спиться
-  translation: I can't sleep
-  expression: true
-  pos: ''
+- word: голи́тися
+  translation: to shave oneself
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: їй хочеться
-  translation: she wants to
-  expression: true
-  pos: ''
+- word: зустріча́тися
+  translation: to meet each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обійма́тися
+  translation: to hug each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: цілува́тися
+  translation: to kiss each other
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хвилюва́тися
+  translation: to worry
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дивува́тися
+  translation: to be surprised
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обража́тися
+  translation: to be offended
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дуватися
+  translation: to rejoice
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
 - word: почува́тися
@@ -317,27 +497,33 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: ціка́витися
-  translation: to be interested in
+- word: вда́тися
+  translation: to work out
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: поверта́тися
-  translation: to return
+- word: прогуля́тися
+  translation: to take a walk
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: зведена таблиця
-  translation: comprehensive table
+- word: мені не спиться
+  translation: I can't sleep
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: самопере́ві́рка
-  translation: self-check
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: їй хочеться кави
+  translation: she wants coffee
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Не переживай!
+  translation: Don't worry!
+  expression: true
+  pos: ''
+  gender: ''
   verified: true

@@ -1,0 +1,199 @@
+vocabulary:
+- word: вважа́ти
+  translation: to think, to consider
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: волі́ти
+  translation: to prefer
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обира́ти
+  translation: to choose
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ду́мка
+  translation: opinion, thought
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зго́ден
+  translation: agree (m.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зго́дна
+  translation: agree (f.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ра́ція
+  translation: rightness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: переко́наний
+  translation: convinced (m.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: безумо́вно
+  translation: absolutely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: іна́кше
+  translation: differently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: дозво́лити
+  translation: to allow, to permit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пого́джуватися
+  translation: to agree
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по-пе́рше
+  translation: firstly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-дру́ге
+  translation: secondly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: більше подобається ... ніж ...
+  translation: like more ... than ...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ви́рішити
+  translation: to decide
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: На мою думку...
+  translation: In my opinion...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я вважаю, що...
+  translation: I think that...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені здається, що...
+  translation: It seems to me that...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переко́нана
+  translation: convinced (f.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: адже́
+  translation: since, after all
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: оскі́льки
+  translation: since, as
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: мати рацію
+  translation: to be right
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Саме так!
+  translation: Exactly!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Цілком погоджуюся
+  translation: I completely agree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я не зовсім згоден
+  translation: I don't quite agree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можливо, але...
+  translation: Maybe, but...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я думаю інакше
+  translation: I think differently
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дозвольте не погодитися
+  translation: Allow me to disagree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З одного боку... з іншого боку...
+  translation: On one hand... on the other hand...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це правда, але...
+  translation: That's true, but...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: крім того
+  translation: moreover
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на завершення
+  translation: in conclusion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

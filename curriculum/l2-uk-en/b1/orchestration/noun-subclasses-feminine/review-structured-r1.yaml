@@ -1,0 +1,99 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections from the outline are present with excellent detail. All semantic
+    groups, paradigms (including the exception "мати"), and spelling rules are taught
+    exactly as outlined.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Several critical transcription/generation artifacts found: English words
+    left in the text ("standard", "standardно") and truncated words ("уніка закінчення").
+    Also, an incorrect phonetic term "вібруюч'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb PPP flow. The module starts with clear definitions, connects to
+    previously learned topics (vowel alternation [і] → [о/е]), and presents the diagnostic
+    algorithm logically.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is used in context (любов, осінь, радість, подорож,
+    ніч, піч, сіль, кров, мати, etc.).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 planned activities are injected in the correct places, immediately
+    after the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. The text feels natural, encouraging, and informative
+    without filler ("Це фундаментальна і питома фонетична особливість нашої мови").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 5281 (exceeds the 4000 target). All markdown headers match
+    the plan flawlessly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Brilliant decolonization point on the difference between Ukrainian phonetic
+    consonant doubling and the Russian orthographic soft sign.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue is a realistic hospital setting ("нічна зміна") that perfectly
+    incorporates target vocabulary (ніч, подорож, тиша, сіль, піч).
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections from the outline are present with excellent detail. All semantic
+    groups, paradigms (including the exception "мати"), and spelling rules are taught
+    exactly as outlined.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Several critical transcription/generation artifacts found: English words
+    left in the text ("Ми просто додаємо standard закінчення", "Орудний відмінок утворюється
+    standardно") and truncated words ("мус'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb PPP flow. The module starts with clear definitions, connects to
+    previously learned topics (vowel alternation [і] → [о/е]), and presents the diagnostic
+    algorithm logically.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is used in context (любов, осінь, радість, подорож,
+    ніч, піч, сіль, кров, мати, etc.).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 planned activities are injected in the correct places, immediately
+    after the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. The text feels natural, encouraging, and informative
+    without filler ("Це фундаментальна і питома фонетична особливість нашої мови").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 5281 (exceeds the 4000 target). All markdown headers match
+    the plan flawlessly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Brilliant decolonization point on the difference between Ukrainian phonetic
+    consonant doubling and the Russian orthographic soft sign.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue is a realistic hospital setting ("нічна зміна") that perfectly
+    incorporates target vocabulary (ніч, подорож, тиша, сіль, піч).
+findings: []

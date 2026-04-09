@@ -3,53 +3,47 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 10
-  evidence: The text follows the outline perfectly. It includes all dialogues exactly
-    as requested ("Слухай, ходімо в кафе!"), and uses all required and recommended
-    vocabulary in natural contexts.
+  evidence: All sections from the outline are present, dialogues match the plan situations
+    exactly, word count (1518) exceeds target.
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: 'The text makes a factually incorrect linguistic claim: "Four irregular
-    verbs appear constantly in daily speech. They do not follow the stem pattern —
-    memorize them: ... сказати ... взяти". Both of the'
+  evidence: 'Contradictory grammar formula: `говори + те = говоріть` and `пиши + те
+    = пишіть`. The mathematical equation `и + те = іть` is morphologically false.'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent PPP flow and great contextualization ("In Ukrainian Grade 5,
-    this grammar topic has a name..."). However, contradicting its own "find the stem
-    from the present tense" rule by calling regular
+  score: 8
+  evidence: The explanation "replace the final infinitive ending with -и" is confusing
+    because the previous paragraph defines the infinitive ending strictly as "-ти"
+    (which would lead a learner to erroneously for
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All 8 required words (`читати, писати, слухати, дивитися, говорити, дати,
-    сказати, іти`) and all 4 recommended words are integrated naturally into dialogues
-    and examples.
+  score: 9
+  evidence: All required vocabulary is used in context, but the recommended word `показати`
+    is missing from the module entirely.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Exercise markers are placed immediately after the relevant teaching points,
-    ensuring learners practice what was just explained before moving on.
+  evidence: All activity markers are perfectly placed directly after the relevant
+    teaching sections.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is professional and reassuring. It effectively explains that
-    bare imperatives are not rude in Ukrainian culture ("In Ukrainian classrooms,
-    Читайте! and Пишіть! are standard instructions — not
+  score: 9
+  evidence: Uses mildly gamified/corporate phrasing ("Mastering the наказовий спосіб
+    unlocks your ability...").
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown. Word count (1269) is within the acceptable +/- 10% range
-    of the 1200 target.
+  evidence: Word count is solid, all headers are correct, no dangling sentences or
+    markdown artifacts.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Superb cultural notes, specifically the callout against Russian calques:
-    "**Ходімо!** is a uniquely Ukrainian form... In standard Ukrainian, do NOT say
-    *давай підемо*".'
+  evidence: Accurately explains that direct imperatives are normal in Ukrainian and
+    not inherently rude, capturing the cultural communication style perfectly.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogues feel authentic to the classroom and cafe situations. The shift
-    from `ти` to `ви` when Олесь addresses the waiter is a great demonstration of
-    register switching.
+  evidence: Dialogues are natural, accurately portraying classroom and friend-to-friend
+    settings with excellent colloquial flow ("Добре, йди, я зараз").
 findings: []

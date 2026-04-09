@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 5-15% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 5-15% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок — Summary`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -128,6 +129,17 @@ objectives:
 - Use the Це construction to identify things and people
 - Ask and answer "What is your name?" formally and informally
 - Understand the Ukrainian sentence without verb "to be" (Я — студент)
+dialogue_situations:
+- setting: Hostel common room — two backpackers meet for the first time
+  speakers:
+  - Марко (Canadian student)
+  - Олена (from Kyiv)
+  motivation: Мене звати, Звідки ти? — real first-meeting context
+- setting: University orientation day — students introduce themselves to the group
+  speakers:
+  - Тарас (new student)
+  - Софія (second-year volunteer)
+  motivation: Formal vs informal register, professions with Я — студент
 content_outline:
 - section: Діалоги (Dialogues)
   words: 350
@@ -261,569 +273,300 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**All 34 words confirmed — 34/34 found:**
-
-- Confirmed (batch 1): я, ти, він, вона, ви, мене, звати, як, тебе, вас, це, дуже, приємно, студент, студентка
-- Confirmed (batch 2): вчитель, вчителька, лікар, лікарка, українець, українка, Україна, ми, вони, програміст, програмістка, інженер, інженерка, звідки, друг
-- Confirmed (batch 3): його (31 matches → він/воно), її (28 matches → вона), Канада, Німеччина
-
-- Not found: **none**
-
-⚠️ **One form note**: VESUM returns **його** as a form of він/воно (31 matches) and **її** as form of вона (28 matches) — correctly confirming they are genitive/accusative possessive forms. The plan's note that "його/її don't change" is pedagogically correct for A1 chunk teaching (they function as invariable possessives at this level). ✅
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги — знайомство
-> "Я вітаюсь і знайомлюсь. Доброго ранку! Мене звати Ганна. Привіт! Я Тарас. Будемо вчитися разом."
-> **Source: Bolshakova, Grade 1 (Буквар, 2018), p. 4** — Tier 2
-
-This is a direct textbook grounding for Dialogue 1. The Bolshakova bukvar introduces "Мене звати [Name]" at the very first page of the course, confirming A1.1 placement is correct.
-
-### Section: Мене звати... (My name is...)
-> "Отже, мене звуть Петро, а прізвище моє – Петренко."
-> **Source: Zabolotnyi, Grade 11, 2019, p. 199** — Tier 2
-
-> "— Як вас зовуть? — спитав я її раптом. — Фу, казна-що!.. Хіба коли я вам скажу, що мене звуть Галею..."
-> **Source: Vynnychenko (literary source, via Avramenko Grade 10)**
-
-⚠️ **Important distinction**: Ukrainian uses two constructions:
-- **"Мене звати [Name]"** — infinitive as predicate (Bolshakova Grade 1) — plan's choice ✅
-- **"Мене звуть [Name]"** — 3rd person plural present (Zabolotnyi Grade 11)
-
-Both are correct Ukrainian. The plan's choice of "мене звати" is Bolshakova-attested and simpler for A1. **However**, the module should acknowledge that learners will hear "мене звуть" frequently — a brief note ("you may also hear мене звуть — both are correct") is pedagogically sound. VESUM confirms **звати** (verb) and **звуть** is its 3rd pl present form.
-
-Also confirmed: "Як вас зовуть?" appears in classical Ukrainian literature — "зовуть" is an acceptable variant of "звуть" (archaic/stylistic, no need to teach at A1).
-
-### Section: Це... (This is...)
-> "Вказівні займенники вирізняють один предмет, особу чи ознаку з-поміж інших: цей, оцей, сей, той... Зверніть увагу! Займенники та, те, ті, ця, це, ці..."
-> **Source: Litvinova, Grade 6, 2023, p. 272** — Tier 1
-
-> "День — це крок життя (Сенека). Досвід — то дорога дуже довга."
-> **Source: Glazova, Grade 11, p. 115** — Tier 2
-
-Confirms: **це** functions as a particle/copula in equational sentences ("це = this is"). Dash rule when це precedes a noun predicate is confirmed (see Grammar Rules below).
-
-### Section: Особові займенники (Personal Pronouns)
-> "Особові займенники вказують на особу мовця (я, ми), співрозмовника (ти, ви) або ж осіб, про яких говорять (він, вона, воно, вони)."
-> **Source: Litvinova, Grade 6, 2023, p. 256** — Tier 1
-
-Full pronoun table (я/ти/він/вона/ми/ви/вони) confirmed. Formal Ви:
-> "За давньою традицією українці послуговуються займенником ви під час звертання до однієї особи... Пишемо з великої букви займенники Ви, Ваш як форму ввічливості у звертанні до однієї конкретної особи в листах, офіційних документах."
-> **Source: Avramenko, Grade 6, 2023, p. 192** — Tier 1
-
-Also Zabolotnyi Grade 6 confirms: "Займенник ти — добре знайомих людей, рівних або молодших за віком / незнайомі люди середнього і старшого віку спілкуються на «ви»"
-
-### Section: Я — студент (I am a student)
-> "Я не геній. Я звичайний чоловік (І. Франко). [Увага! Тире ставимо, якщо на такий підмет падає логічний наголос: Ми — народ в своїй величезності. Я — вічний, сміливий і молодий!]"
-> **Source: Glazova, Grade 11, 2019, p. 115** — Tier 2
-
-> "Ми – діти сонця. / Ми патріоти нашої держави. / Я – киянин. / Я педагог, учитель, вихователь."
-> **Source: Zabolotnyi, Grade 8, 2025, p. 70** — Tier 1
-
-⚠️ **Dash note**: The dash in "Я — студент" is technically optional with a personal pronoun subject (the rule says no dash is required). **However**, Grade 8 Zabolotnyi explicitly contrasts "Я – киянин" (with dash, emphatic) vs "Я педагог" (no dash) in the SAME exercise — showing both are in use. For A1 pedagogy, **teaching the dash** as a marker of "where 'is' goes" is sound and textbook-supported. ✅
-
-### Section: Звідки? (Where from?)
-> No direct textbook excerpt for the "Звідки ти? / Я з України" construction found in RAG (this construction is more common in L2 materials than native-speaker textbooks which assume learners already know where they're from). However:
-- **VESUM confirms**: звідки (adverb) ✅
-- **PULS confirms**: звідки = A1 ✅
-- **Pattern confirmed**: "з + genitive" for origin is standard and implied by the structure of Ukrainian prepositions
-
-> "Я народився в Україні і не відчуваю потреби вдавати, що я хтось інший."
-> **Source: Glazova, Grade 10, p. 203** — Tier 2 (confirms identity/origin framing in Ukrainian texts)
-
-### Section: Дуже приємно / meeting phrases
-> "Після того як співрозмовник називає себе, доречні фрази на кшталт «Дуже приємно», «Радий (рада) з вами познайомитися» тощо."
-> **Source: Litvinova, Grade 7, 2024, p. 205** — Tier 1
-
-**CONFIRMED** — "Дуже приємно" is textbook-attested as the standard post-introduction formula. Also confirms: it is said **after** names are exchanged (matches plan exactly). ✅
-
----
+- Confirmed: я, ти, він, вона, ви, ми, вони, це, звідки, друг, його, її, Україна, Канада, Німеччина, студент, студентка, вчитель, вчителька, лікар, лікарка, українець, українка, програміст, програмістка, інженер, інженерка, звати, приємно.
+- Not found: None (all provided vocabulary confirmed).
 
 ## Grammar Rules
-
-- **Zero copula (нульова зв'язка)**: No Правопис section covers this (it's a morpho-syntactic feature, not an orthographic rule). Multiple textbooks confirm: present-tense "є" is omitted in nominal predicate constructions. Pattern: Я — студент / Він — лікар. Confirmed across Grades 6, 8, 11.
-
-- **Dash between subject and predicate**: Правопис query returned no match (punctuation rules). Confirmed via Grade 11 textbooks (Glazova, Voron, Avramenko):
-  - Dash **IS** placed when predicate is a noun in nominative case preceded by **це, то, ось**: "Це — матері мова" 
-  - Dash is **NOT required** when subject is a personal pronoun (я, ти, він...) — but emphatic/author's dash is acceptable: "Я — українець"
-  - For A1: teaching "Я — студент" with dash is pedagogically fine as it marks the copula position explicitly ✅
-
-- **Ви (capital) for formal address**: Grade 6 Avramenko (Tier 1) confirms: write Ви, Ваш with capital letter when addressing one person formally in written texts (letters, official docs). In dialogues and speech, lowercase ви. Plan's note is correct. ✅
-
----
+- Тире між підметом і присудком: Правопис §158 — Тире ставиться між підметом і присудком, коли присудок виражений іменником... у називному відмінку, а дієслова-зв'язки немає (наприклад: "Я — студент").
+- Ви (форми ввічливості): Правопис §60.2 — З великої букви пишемо займенники Ви, Ваш як форму ввічливості у звертанні до однієї конкретної особи в листах, офіційних документах тощо.
 
 ## Calque Warnings
-
-- **"дуже приємно"** — ✅ OK — Textbook-confirmed natural Ukrainian (Litvinova Grade 7). No calque. Used exactly as the plan describes.
-- **"приємно познайомитись"** — ✅ OK — Textbook attests "Радий (рада) з вами познайомитися" (Litvinova Grade 7). Style guide found no warnings against either formulation. Both "приємно познайомитись" and "радий/рада познайомитися" are natural Ukrainian.
-- **"мене звати"** — ✅ OK — Directly from Bolshakova Grade 1 ("Мене звати Ганна"). No style guide warning. This is idiomatic Ukrainian, not a calque.
-
-No calques detected in the plan vocabulary or phrasebook. Style guide (Антоненко-Давидович) returned no relevant warnings for any of these phrases.
-
----
+- мене звати: OK — Standard Ukrainian (verified in СУМ-11: "Як вас зовуть?").
+- дуже приємно: OK — Standard greeting/response.
+- як тебе звати: OK — Standard informal greeting (verified in СУМ-11: "Як вас зовуть?").
 
 ## CEFR Check
-
-All words verified against PULS (puls.peremova.org, 5,939 words):
-
-- **студент**: A1 ✅
-- **вчитель**: A1 ✅
-- **лікар**: A1 ✅
-- **програміст**: A1 ✅ (also програмістка: A1 ✅)
-- **інженер**: A1 ✅
-- **звідки**: A1 ✅
-- **приємно**: A1 ✅
-- **друг**: A1 ✅
-
-No words above target level. All plan vocabulary is confirmed A1-appropriate.
-
----
-
-## Summary for Writer
-
-✅ **All 34 vocabulary words verified in VESUM — none to avoid**
-✅ **All key vocabulary confirmed A1 by PULS**
-✅ **All three check phrases confirmed natural Ukrainian (no calques)**
-✅ **Textbook groundings found for every section**
-
-⚠️ **Three notes to handle in content:**
-1. **"Мене звати" vs "Мене звуть"**: Both correct. Module should acknowledge "мене звуть" as an equivalent learners will encounter, but teach "мене звати" as the primary A1 form (Bolshakova-grounded).
-2. **Dash in "Я — студент"**: Grammatically optional with personal pronoun subjects, but emphatic dash is textbook-supported and pedagogically useful at A1 to mark the copula slot. Teach it — just don't overclaim "the dash is required."
-3. **"Ви" capitalization**: Only in formal written texts (letters, official docs), not in everyday dialogue. Plan correctly restricts this to formal contexts.
+- студент: A1 — OK
+- вчитель: A1 — OK
+- лікар: A1 — OK
+- друг: A1 — OK
+- Україна: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Who Am I?
-**Module:** who-am-i | **Phase:** A1.1 [Sounds, Letters, and First Contact]
-**Textbook grades searched:** 1, 2
+# Knowledge Packet: Who Am I?
+**Module:** who-am-i | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/who-am-i.md
+
+# Педагогіка A1: Who Am I
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The "Who Am I" theme is foundational for A1 learners, establishing core identity expressions. The Ukrainian pedagogical approach, as seen in primary and introductory materials, is built on communicative patterns and gradual grammatical layering, rather than explicit rule memorization at the start.
+
+1.  **Pattern-Based Introduction:** The initial focus is on mastering high-frequency conversational chunks. Learners first acquire phrases like `Мене звати...` and `Я...` through dialogues and repetition (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `ext-ulp_youtube-301`). The grammatical explanation (e.g., that `Мене` is the accusative case of `Я`) is deferred until the pattern is automatized.
+
+2.  **Omission of Present Tense "To Be":** A critical concept is the omission of the verb 'to be' (`є`) in present tense declarative sentences about identity. Ukrainian textbooks and lessons for natives and foreigners consistently model sentences like `Я вчителька` or `Він студент` (Джерело: `ext-ulp_youtube-294`, `ext-ulp_youtube-88`). This must be presented as the default, natural structure, not as "dropping" a verb.
+
+3.  **Immediate Introduction of Grammatical Gender:** Unlike English, gender is central to even the most basic introductions. Therefore, the concept of masculine and feminine nouns for professions (`вчитель`/`вчителька`, `студент`/`студентка`) and nationalities (`українець`/`українка`) is introduced from day one (Джерело: `ext-ulp_youtube-296`, `ext-ulp_youtube-86`). This is non-negotiable and taught through paired examples.
+
+4.  **Pronouns as the Sentence Backbone:** Personal pronouns (`я, ти, він, вона, ми, ви, вони`) are the anchors for this topic. Ukrainian textbooks dedicate significant space to them early on, showing how they form the subject of identity sentences (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0087`, `4-klas-ukrayinska-mova-ponomarova-2021-1_s0086`).
+
+5.  **Contextual Questioning:** Questions are taught alongside answers. The pair `Як вас звати?` / `Мене звати...` is a unit (Джерело: `ext-article-0`). Similarly, `Ким ти працюєш?` is introduced as a fixed phrase to elicit a profession, even though the instrumental case (`Ким`) is an advanced topic. The answer is simplified to the nominative case (`Я лікар`) for A1 learners (Джерело: `ext-ulp_youtube-294`).
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Step 1: Core Personal Pronouns (Singular).** Introduce `я` (I), `ти` (you, informal), `він` (he), `вона` (she). These are the essential building blocks for forming simple identity statements (Джерело: `5-klas-ukrmova-uhor-2022-1_s0039`).
+
+2.  **Step 2: The "Name" Formula.** Teach the phrase `Мене звати [Ім'я]` as a complete, unchangeable chunk. Contrast it with `Як тебе/вас звати?`. Explain it literally means "They call me..." to prevent direct, incorrect translation from English (Джерело: `ext-ulp_youtube-301`, `5-klas-ukrmova-uhor-2022-1_s0106`).
+
+3.  **Step 3: Identity Statements (`Я...`) & Gendered Nouns.** Introduce the pattern `Я + [Іменник]`. Immediately present masculine/feminine pairs for professions and nationalities.
+    *   `Я студент.` / `Я студентка.` (Джерело: `ext-ulp_youtube-296`)
+    *   `Я українець.` / `Я українка.` (Джерело: `ext-ulp_youtube-301`)
+    This establishes the gender agreement rule from the outset.
+
+4.  **Step 4: Plural Pronouns & Statements.** Introduce `ми` (we), `ви` (you, formal/plural), `вони` (they) and show how they are used with plural nouns (`Ми студенти`, `Вони лікарі`).
+
+5.  **Step 5: The Profession Question.** Introduce the question `Ким ти працюєш?` (informal) and `Ким ви працюєте?` (formal) as a set phrase (Джерело: `ext-ulp_youtube-294`). The learner's focus should be on recognizing the question and providing the simple nominative answer (`Я програміст`), not on analyzing the instrumental case.
+
+6.  **Step 6: Location.** Introduce `Де ти живеш?` and the response `Я живу в [Місто]`. This adds another layer to the personal introduction (Джерело: `ext-ulp_youtube-294`).
+
+7.  **Step 7: Simple Possessives for Family.** Introduce `мій/моя` and `твій/твоя` to talk about family members and their professions. Example: `Моя мама — лікар. Мій тато — інженер.` (Джерело: `ext-ulp_youtube-294`, `5-klas-ukrmova-uhor-2022-1_s0004`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Моє ім'я Джон.` | `Мене звати Джон.` | Direct translation from English "My name is...". The idiomatic Ukrainian construction is `Мене звати...` (They call me...) (Джерело: `ext-ulp_youtube-301`). |
+| `Я є вчитель.` | `Я вчитель.` | Learners insert the verb "to be" (`є`) based on English grammar. In Ukrainian, it's omitted in present tense identity statements (Джерело: `ext-ulp_youtube-88`). |
+| `Моя мама є лікар.` | `Моя мама — лікар.` | Same as above. The dash (`—`) is often used in writing to represent the implied verb, but it is not pronounced (Джерело: `ext-ulp_youtube-88`). |
+| `Вона дизайнер.` (when referring to a female) | `Вона дизайнерка.` | English uses gender-neutral profession names. Ukrainian requires the feminine form for a female subject where one exists (Джерело: `ext-ulp_youtube-86`, `10-klas-ukrajinska-mova-avramenko-2018_s0236`). |
+| `Що ти робиш?` (to ask about profession) | `Ким ти працюєш?` | `Що ти робиш?` means "What are you doing *right now*?". `Ким ти працюєш?` is the correct, specific question for one's job (Джерело: `ext-ulp_youtube-294`). |
+| `Я звати Анна.` | `Мене звати Анна.` | The learner incorrectly uses the nominative pronoun `я` instead of the required accusative `мене` (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0089`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This section is mandatory for ensuring an authentic, modern Ukrainian pedagogy.
+
+1.  **No Russian Phonetic Analogies:** The learner must build Ukrainian phonetic categories from scratch. Never teach sounds by comparing them to Russian (e.g., "Ukrainian `и` is like Russian `ы`"). This creates phonetic interference and reinforces a colonial mindset. Ukrainian has its own distinct phonetic system. The existence of Russification efforts throughout history underscores the importance of linguistic distinction (Джерело: `ext-realna_istoria-29`).
+
+2.  **Feminine Forms are Standard:** Actively teach and normalize feminine forms of professions (`лікарка`, `вчителька`, `програмістка`, `дизайнерка`). While official documents in the past sometimes defaulted to masculine forms, modern conversational and professional Ukrainian increasingly uses feminines. Presenting them as optional or secondary is outdated and ignores contemporary usage (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0236`, `ext-ulp_youtube-86`).
+
+3.  **Teach `Ви` as Formal *and* Plural:** English learners often map "you" to `ти` and only use `ви` for groups. Emphasize from the first lesson that `ви` is the default, respectful form for addressing any single adult stranger, teacher, or person in a formal context (Джерело: `ext-ulp_youtube-301`). Using `ти` inappropriately is a common L2 error that can cause offense.
+
+4.  **Ukrainian First, Internationalisms Second:** Prioritize native Ukrainian terms for professions (e.g., `письменник`, `митець`, `будівельник`) before introducing internationalisms (`дизайнер`, `менеджер`). This grounds the learner in the language's native lexicon (Джерело: `ext-ulp_youtube-86`, `ext-ulp_youtube-88`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+**Pronouns (Займенники)**
+*   `я`, `ти`, `він`, `вона`, `воно` - ★★★ (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0086`)
+*   `ми`, `ви`, `вони` - ★★★ (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0086`)
+*   `мене`, `тебе` - ★★ (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`)
+*   `мій`, `моя`, `твій`, `твоя` - ★★ (Джерело: `5-klas-ukrmova-uhor-2022-1_s0004`)
+
+**Nouns (Іменники)**
+*   *Professions:* вчитель/вчителька, лікар/лікарка, студент/студентка, програміст, дизайнер, інженер, пенсіонер/пенсіонерка - ★★★ (Джерело: `ext-ulp_youtube-296`, `ext-ulp_youtube-86`)
+*   *Nationalities:* українець/українка, американець/американка - ★★★ (Джерело: `ext-ulp_youtube-301`)
+*   *Family:* мама, тато, батьки, брат, сестра, бабуся, дідусь - ★★★ (Джерело: `ext-ulp_youtube-294`)
+*   *Places:* Україна, місто, Київ - ★★ (Джерело: `ext-ulp_youtube-294`)
+
+**Verbs (Дієслова)**
+*   `звати` - ★★★ (used in the fixed phrase `мене звати`)
+*   `працювати` - ★★ (used in the question `Ким працюєте?`)
+*   `жити` - ★★ (used in the question `Де живете?`)
+
+**Question Words & Adverbs (Питальні слова та прислівники)**
+*   `хто?`, `що?`, `де?`, `як?` - ★★★
+*   `ким?` - ★★ (as a chunk)
+*   `звідки?` - ★★ (Джерело: `ext-article-0`)
+*   `так`, `ні` - ★★★
+*   `дуже приємно`, `взаємно` - ★★★ (Джерело: `ext-ulp_youtube-301`)
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Dialogue Roleplay (Introduction):** Learners practice a simple introductory dialogue, filling in their own information.
+    *   **Prompt:** *Розіграйте діалог. Розкажіть про себе.*
+    *   — Привіт! Мене звати _____. А тебе?
+    *   — Дуже приємно. Мене звати _____.
+    *   — Ти студент? / Ти студентка?
+    *   — Так, я студент. / Ні, я лікарка.
+    (Adapted from `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+2.  **Sentence Transformation (Gender Agreement):** Learners convert sentences from masculine to feminine.
+    *   **Prompt:** *Замініть іменники та доповніть речення.*
+    *   1. Мій тато — вчитель. → Моя мама — __________. (`вчителька`)
+    *   2. Його брат — студент. → Його сестра — __________. (`студентка`)
+    *   3. Мій друг — американець. → Моя подруга — __________. (`американка`)
+    (Pattern based on `6-klas-ukrmova-betsa-2023_s0078`)
+
+3.  **Fill-in-the-blanks (Pronouns):** Learners choose the correct personal pronoun.
+    *   **Prompt:** *Вставте пропущені займенники: я, ти, він, вона, вони.*
+    *   1. _____ живу в Києві.
+    *   2. _____ вчителька. _____ працює в школі.
+    *   3. Це мої батьки. _____
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/i-eat-i-drink.md
 
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 4
-> **Score:** 0.50
->
-> 4
-> Я ВИВЧАЮ УКРАЇНСЬКУ МОВУ
-> Ми живемо в Україні. Наша мова — українська. 
-> Ми будемо вчитися говорити, читати й писати українською. 
-> Я читаю 
-> українською.
-> Я пишу 
-> українською.
-> Я слухаю 
-> українську.
-> Я говорю 
-> українською.
-> Я вітаюсь і знайомлюсь. 
-> 1
-> Доброго ранку!
-> Мене звати Ганна.
-> Привіт! Я Тарас. 
-> Будемо вчитися разом.
-> Будемо дружити!
+# Педагогіка A1: I Eat I Drink
 
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 23
-> **Score:** 0.50
->
-> 23
-> Розкажи про різницю у вживанні імен у дитячому і доросло-
-> му віці. Чому це прийнято? Напиши, як до тебе звертаються 
-> зараз і як звертатимуться в майбутньому.
-> Андрійко
-> Ганнуся 
-> Андрій
-> Ганна
-> Андрій
-> Вікторович
-> Ганна 
-> Сергіївна
->  
-> Редагуємо
-> Я — дарина Тесленко Андріївна. Я — Іваненко Борисович 
-> Микола. Хлопчик Василько, Дівчинка оля.
->  
-> Текст. Тема тексту. Заголовок. Головний герой
-> Маляку взагалі-то по-справжньому не так звати. У ди-
-> тинстві дорослі часто питали Маляку, як її звати. Відповідала 
-> вона по-правильному: «Марійка», але виходило «Маляка». 
-> Тепер Марійкою Маляка тільки зошити підписує, а пред-
-> ставляється всім Малякою. Тож знайомтеся — Маляка.
-> Так ось. Маляка просто марила всім, що хоч 
-> якось стосувалося принцес. Навіть драконами.
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 38
-> **Score:** 0.33
->
-> 36
-> 36
-> 	 Розглянь фото дітей. Здогадайся, як звати 
-> хлопчика.  Хто з дівчаток — Оксана, а хто — 
-> Аліна? 
-> 	
-> У яких предметах «заховалася» буква о?
-> 	 Розглянь малюнки й дай відповідь на запи-
-> тання.
-> 	
-> Що було в клоуна?
-> 	
-> Хто забрав кульки?
-> 	
-> Що сорока зробила з кульок?
 
-## Мене звати... (My name is...)
+## Методичний підхід (Methodological Approach)
 
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 138
-> **Score:** 0.50
->
-> НАВЧАЮСЯ СТВОРЮВАТИ ВИСЛОВЛЮВАННЯ НА ВІДОМУ ТЕМУ
-> ІййіД[2і| Прочитайте текст про чемність 
-> у спілкуванні між людьми.
-> Чемна людина завжди вітається 
-> і прощається, ввічливо відповідає на 
-> привітання. З такою людиною при­
-> ємно спілкуватися, бо вона ніколи 
-> не образить і не принизить. Чемність 
-> виявляється не тільки у словах, а й у 
-> жестах, у виразі очей. Тому в чемної 
-> людини завжди багато друзів.
-> створюю 
-> записую
-> £ Яку людину
-> •“
-> називають
-> чЄмною? г
-> • Доведіть, що ви — чемні діти. Назвіть слова ввічливості, 
-> які ви вживаєте у спілкуванні з іншими. Починайте 
-> висловлюватися за зразком.
-> Я — чемна людина, тому що ...
-> Усміхнися світу, і світ усміхнеться тобі.
-> !й11В1М22| Прочитайте.
+The core methodological principle for introducing "I eat, I drink" at the A1 level is to move from simple identification to active use through the introduction of the Accusative case. Ukrainian pedagogy emphasizes a structured, cyclical approach where vocabulary is introduced in thematic blocks and immediately put into grammatical practice.
 
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 4
-> **Score:** 0.25
->
-> 4
-> Я ВИВЧАЮ УКРАЇНСЬКУ МОВУ
-> Ми живемо в Україні. Наша мова — українська. 
-> Ми будемо вчитися говорити, читати й писати українською. 
-> Я читаю 
-> українською.
-> Я пишу 
-> українською.
-> Я слухаю 
-> українську.
-> Я говорю 
-> українською.
-> Я вітаюсь і знайомлюсь. 
-> 1
-> Доброго ранку!
-> Мене звати Ганна.
-> Привіт! Я Тарас. 
-> Будемо вчитися разом.
-> Будемо дружити!
+1.  **Thematic Vocabulary Blocks:** Native-speaker textbooks introduce food and drink vocabulary in clear, logical groups. The writer should follow this model. For example, a Grade 5 textbook for Hungarian speakers groups words by question (`Що?`, `Що робити?`) and then by category: `Страви` (Dishes), `Продукти` (Products), `Фрукти` (Fruits), `Овочі` (Vegetables), and `Смак` (Taste) (Source `5-klas-ukrmova-uhor-2022-1_s0022`). This method helps learners build a mental map of the vocabulary domain.
 
-## Це... (This is...)
+2.  **Verb-Noun Pairing:** The curriculum should immediately link a new noun to its relevant verb. For instance, when teaching `сніданок` (breakfast), also teach the verb `снідати` (to have breakfast). Similarly, pair `обід` with `обідати` and `вечеря` with `вечеряти` (Source `5-klas-ukrmova-uhor-2022-1_s0022`, Source `ext-ulp_youtube-255`). This reinforces the connection and moves the learner from passive vocabulary to active use.
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 23
-> **Score:** 0.50
->
-> 21
-> Хто це?
-> Слова — назви живих предметів
-> 	 Який у тебе сьогодні настрій? Вибери.
->  [ –    –|–  ] 
->  [ =    –|–   ] 
->  [ –  |–  |– ] 
->  [ =  |–   – ] 
-> Що?
-> Хто?
+3.  **Grammar in Context (The Accusative Case):** The concept of a direct object (`знахідний відмінок`) is central to this topic. It should not be taught as a dry grammar table. Instead, introduce it through high-frequency sentence patterns like "Я їм...", "Я п'ю...", "Я хочу...". The learner first hears and mimics the pattern, for example, `Я хочу воду` (Source `ext-ulp_youtube-119`). Only after they are comfortable with the pattern should the rule (feminine `-а` → `-у`) be explained. This "pattern before rule" approach is crucial for internalizing the case system naturally. Textbooks for native speakers demonstrate this by showing contrasting sentences like «Несе Галя воду» where `воду` is the object (Source `5-klas-ukrmova-litvinova-2022_s0219`).
 
-> **Source:** kravcova, Grade 2
-> **Section:** Сторінка 21
-> **Score:** 0.25
->
-> УКРАЇНА — РІДНИЙ КРАЙ
-> Утвори слова з поданих груп складів,
-> на у ї кра щи Бать на ків
-> чиз на Віт
-> Послухай пісню Миколи Ведмедері на слова Анатолія 
-> Камінчука «Це моя Україна». Перевір, чи уважно ти слухав 
-> (слухала). Дай відповіді на запитання.
-> • Яку назву має твоя Батьківщина?
-> • Які рослини згадані в пісні?
-> Ж
-> Прочитай вірш.
-> Анатолій Камінчук
-> ЦЕ МОЯ УКРАЇНА
-> Зацвітає калина, 
-> зеленіє ліщина, 
-> степом котиться диво-луна, 
-> це моя Україна, 
-> це моя Батьківщина, 
-> що, як тато і мама, одна.
-> • 3 ким автор порівнює Батьківщину?
-> • Прочитай виділені слова. Чи погоджуєшся ти з цією думкою?
-> Свої міркування висловлюй за зразком:
-> Так, я погоджуюся з цією думкою. Я вважаю, що ..., оскіль­
-> ки ....
+4.  **Interactive Practice through Q&A:** Learning is solidified through simple, repetitive questions. For example: `Що ти їси?` (What are you eating?), `Що ти п'єш?` (What are you drinking?), `Яку воду ти вживаєш?` (What water do you consume?) (Source `3-klas-ukrainska-mova-ponomarova-2020-1_s0008`). This encourages active recall and production from the very beginning.
 
-## Особові займенники (Personal Pronouns)
+## Послідовність введення (Introduction Sequence)
 
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 41
-> **Score:** 0.25
->
-> 41
->  
-> рис – ріс 
-> дим – дім 
-> у лісі 
-> на дубі
->  
-> лис – ліс 
-> сани  – ніс 
-> у воді 
-> на сосні
-> ТВЕРДІ І М’ЯКІ ПРИГОЛОСНІ ЗВУКИ
-> Назви предмети . Як вимовляється перший звук у словах? 
-> Л И С
-> Л І С
->  
-> Театралізуємо 
-> Прочитай або послухай, що розповідають діти про свою 
-> іграшку. Де чия іграшка? 
-> 1
-> 1
-> 2
-> І і
->  би – бі 
-> ви – ві 
-> ни – ні 
-> ри – рі
->  ли – лі 
-> ти – ті 
-> ки – кі 
-> ми – мі
-> Інна
-> Ігор
-> Іванна
-> Вона пухнаста, 
-> мила. Я з нею 
-> сплю.
-> Вона схожа на мене. 
-> У неї є ніс, очі, руки. 
-> І гарні сукні.
-> Я можу 
-> будувати дім.
-> Іван
-> У ній я можу 
-> возити кубики.
+The introduction must be carefully scaffolded to prevent cognitive overload. Follow this sequence strictly.
 
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 46
-> **Score:** 0.50
->
-> СЛОВА — НАЗВИ 
-> (ІМЕННИКИ)
-> ПРЕДМЕТІВ
-> НАВЧАЮСЯ ВИЗНАЧАТИ СЛОВА — НАЗВИ
-> ПРЕДМЕТІВ
-> Я — учителька
-> Хто?
-> Прочитай і розкажи 
-> ; у класі.
-> Я — учитель
-> Що?
-> В українській мові є слова — назви предметів, 
-> які відповідають на питання хто? що?. 
-> Це іменники.
-> Прочитайте вірш Володимира Верховеня. Випишіть 
-> виділені слова — назви предметів за абеткою. На які 
-> питання вони відповідають?
-> Іменник любить називати 
-> завжди на ймення кожну річ: 
-> земля, країна, сонце, мати,
-> Ці слова 
-> близькі за 
-> значенням чи
-> печаль і радість, день і ніч. £ протилежні?
-> Поясніть значення виписаних слів.
-> ____ ✓
-> Поміркуй і скажи, від 
-> якого слова походить 
-> слово іменник.
-> — Хто ти? Що? Твоє ім'я?
-> — Іменна моя сім'я. 
-> Знаємо всіх поімЄнно,
-> а зовуть сім'ю — іменник.
-> Шукаймо іменники навколо! 
-> Хто більше?
-> 46
+1.  **Step 1: Core Verbs & Pronouns:** Introduce the two most critical verbs: `їсти` (to eat) and `пити` (to drink). Teach only the 1st person singular forms: **`Я їм`** (I eat) and **`Я п'ю`** (I drink). (Source `6-klas-ukrmova-betsa-2023_s0206`, Source `ext-ulp_youtube-255`).
 
-## Я — студент (I am a student)
+2.  **Step 2: Basic Nouns (Nominative Case):** Introduce 5-7 essential, high-frequency food and drink nouns in their dictionary (nominative) form. Focus on items that do not require complex explanations.
+    *   `вода` (water), `чай` (tea), `кава` (coffee), `сік` (juice)
+    *   `хліб` (bread), `сир` (cheese), `суп` (soup)
 
-> **Source:** bolshakova, Grade 1
-> **Section:** Сторінка 4
-> **Score:** 0.50
->
-> 4
-> Я ВИВЧАЮ УКРАЇНСЬКУ МОВУ
-> Ми живемо в Україні. Наша мова — українська. 
-> Ми будемо вчитися говорити, читати й писати українською. 
-> Я читаю 
-> українською.
-> Я пишу 
-> українською.
-> Я слухаю 
-> українську.
-> Я говорю 
-> українською.
-> Я вітаюсь і знайомлюсь. 
-> 1
-> Доброго ранку!
-> Мене звати Ганна.
-> Привіт! Я Тарас. 
-> Будемо вчитися разом.
-> Будемо дружити!
+3.  **Step 3: The `це` Construction:** Teach the first complete sentence structure using the verb "to be" (which is omitted in the present tense).
+    *   `Це вода.` (This is water.)
+    *   `Це чай.` (This is tea.)
 
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 37
-> **Score:** 0.50
->
-> Згрупуйте слова за значенням і запишіть за зразком.
-> Назви людей за місцем 
-> проживання
-> Назви 
-> людей за професією
-> албанець
-> Українець, швець, канадець, юрист, австралієць, 
-> китаєць, швачка, японець, журналіст.
-> - Додайте
-> • Поясніть значення слів — назв професій, 
-> свої слова, 
-> скориставшись тлумачним словником.
-> х — 
-> — — — 
-> ___ 
-> ___ 
-> ___ 
-> — — — — ч
-> Швачка — кравчиня, жінка, яка шиє одяг. 
-> Швець — чоботар, майстер, який шиє і 
-> лагодить взуття.
-> г ---------------------- — — — — — — — — — — — —
-> Хвилинка спілкування
-> гандбол
-> теніс
-> баскетбол
-> волейбол
-> гімнастика
-> фігурне катання
-> хокей
-> — Як написати п'ятьма і чотирма 
-> буквами слово, яке означає «робота»?
-> — Чотирма буквами — труд.
-> — А п'ятьма?
-> Продовжте розмову.
-> 37
+4.  **Step 4: Introducing the Accusative Case (Direct Object):** This is the most critical step. Use the high-frequency verb `хотіти` (to want) in the `Я хочу` form.
+    *   **Feminine nouns:** Explicitly show the change `а` → `у`. This is the first and most important case change for learners to master for this topic.
+        *   `вода` → `Я хочу **воду**.`
+        *   `кава` → `Я хочу **каву**.`
+        (Source `ext-ulp_youtube-119`)
+    *   **Masculine/Neuter nouns:** Explain that for inanimate objects, the form *does not change*. This is a point of relief for the learner.
+        *   `сік` → `Я хочу **сік**.`
+        *   `чай` → `Я хочу **чай**.`
+        *   `молоко` → `Я хочу **молоко**.`
+        (Source `ext-ulp_youtube-119`)
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 60
-> **Score:** 0.25
->
-> 58
-> Бачу В, в (ве).  Чую [в].
-> в і н о *
-> * * и в и
-> в и * н і
-> [  = •  | –  • – ]  
-> [ –   –•| – •]  
-> ви-
-> а
-> о
-> у
-> и
-> і
-> В
-> ва
-> во
-> ву
-> ви
-> ві
-> а
-> о
-> у
-> и
-> і
-> ав
-> ов
-> ув
-> ив
-> ів
-> В
-> -во
-> ва-
-> ві-
-> во-ни
-> 	
->   він 	
->               во-на 	
-> 	
->   во-но
-> ни
-> ва
-> ва
-> ми
-> вав
-> вов
-> вув
-> вив
-> вів
-> мо
-> ва
-> ви
-> но
-> ви
-> ви
-> на
-> ни
-> В в
+5.  **Step 5: Active Use with `їм` and `п'ю`:** Now, circle back to the first verbs and apply the new Accusative case knowledge.
+    *   `Я п'ю **воду**.` `Я п'ю **каву**.` `Я п'ю **сік**.`
+    *   `Я їм **хліб**.` `Я їм **сир**.` `Я їм **суп**.`
 
-## Звідки? (Where from?)
+6.  **Step 6: Expanding Vocabulary:** Once the grammatical pattern is established, introduce more food and meal-related vocabulary, including meals of the day.
+    *   Nouns: `сніданок` (breakfast), `обід` (lunch), `вечеря` (dinner), `риба` (fish), `м'ясо` (meat), `салат` (salad), `борщ` (borscht).
+    *   Verbs: `снідати` (to have breakfast), `обідати` (to have lunch), `вечеряти` (to have dinner).
+    (Source `5-klas-ukrmova-uhor-2022-1_s0022`)
 
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 30
-> **Score:** 0.33
->
-> 28
-> Ми — шкіль-на  сі-м’я  є-ди-на,
-> Пи-ше-мо  за  скла-дом  склад:
-> ма-ма,  сон-це,  Бать-ків-щи-
+## Типові помилки L2 (Common L2 Errors)
 
-... (truncated for context window)
+Address these errors proactively in the lesson design.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я хочу вода.` | `Я хочу **воду**.` | **Grammar Transfer:** English has no grammatical case for direct objects, so learners default to using the nominative (dictionary) form. The module must provide extensive drills on changing feminine nouns ending in `-а` to `-у` after verbs like `хочу`, `їм`, `п'ю`. (Source `ext-ulp_youtube-119`) |
+| `Я їсть хліб.` | `Я **їм** хліб.` | **Verb Conjugation:** Learners often confuse the 1st person (`я їм`) and 3rd person (`він/вона їсть`) forms. These must be taught as distinct pairs. The verb `їсти` is irregular and needs special attention. (Source `6-klas-ukrmova-betsa-2023_s0206`) |
+| `Вона п'ю каву.` | `Вона **п'є** каву.` | **Verb Conjugation:** Similar to `їсти`, the verb `пити` (to drink) has a distinct conjugation that must be drilled. `Я п'ю` vs. `Він/Вона п'є`. (Source `ext-ulp_youtube-255`) |
+| `Я п'ю борщ.` | `Я **їм** борщ.` | **Semantic Difference:** In English, soup is "eaten". While `пити бульйон` (to drink broth) is possible, thick soups like `борщ` are almost always paired with the verb `їсти`. (Source `ext-ulp_youtube-80`: "...борщ в Україні їдять...") |
+| `Я люблю їсти...` (pronounced `істи`) | `Я люблю **їсти**...` (pronounced `йісти`) | **Phonetic Interference:** English speakers struggle with the letter `ї`, often reducing it to `і`. It must be explicitly taught that `ї` is *always* pronounced as two sounds: `[йі]`, as in "Yee-sty". (Source `1-klas-bukvar-bolshakova-2018-1_s0072`) |
+| `Мені, будь ласка, піца.` | `Мені, будь ласка, **піцу**.` | **Ordering Phrases:** When ordering, the item is the direct object, even if the verb is implied. This is a very common context for A1 learners. The structure `Мені, будь ласка, [noun in Accusative]` must be drilled. (Source `ext-ulp_youtube-119`, `ext-ulp_youtube-117`) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This section is non-negotiable. The curriculum must teach Ukrainian on its own terms, completely independent of Russian.
+
+-   **No Russian Phonetic Analogues:** Never teach Ukrainian sounds by comparing them to Russian. For example, do not describe Ukrainian `и` as "like Russian ы" or `і` as "like Russian и". Learners must build a new, distinct phonetic system for Ukrainian from zero.
+-   **Vocabulary Purity:** Strictly use Ukrainian vocabulary. The word for coffee is **`кава`**. The word `кофе` is a Russianism and must be actively corrected. The word for sugar is **`цукор`**. The word `сахар` is a Russianism. Use the word lists from Ukrainian textbooks as the source of truth (e.g., Source `5-klas-ukrmova-uhor-2022-1_s0022`).
+-   **`Горілка` vs. Vodka:** When introducing alcoholic beverages (if at all at A1), present `горілка` as a traditional Ukrainian national drink in its own right, not merely as the "Ukrainian word for vodka." (Source `ext-ulp_youtube-123`).
+-   **Cultural Context:** Food idioms and proverbs are deeply tied to culture. While A1 learners won't master them, they should be taught that phrases like `заварити кашу` (to start trouble) or `їсти чужий хліб` (to be dependent on someone) are uniquely Ukrainian cultural expressions and not loan translations. (Source `5-klas-ukrmova-golub-2022_s0059`). The goal is to build respect for Ukrainian as a complete and independent linguistic and cultural system from day one.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for an A1 learner. Stick to these words and avoid introducing more complex items.
+
+**Іменники (Nouns)**
+*   ★★★ (Essential): `вода`, `хліб`, `чай`, `кава`, `сік`, `молоко`, `суп`, `борщ`
+*   ★★ (Useful): `сніданок`, `обід`, `вечеря`, `сир`, `м'ясо`, `риба`, `салат`, `цукор`, `сіль`
+*   ★ (Can wait): `каша`, `картопля`, `яблуко`, `бутерброд`, `пиріг`
+
+**Дієслова (Verbs)**
+*   ★★★ (Essential): `їсти` (to eat), `пити` (to drink), `хотіти` (to want)
+*   ★★ (Useful): `снідати` (to have breakfast), `обідати` (to have lunch), `вечеряти` (to have dinner)
+*   ★ (Can wait): `готувати` (to cook), `замовляти` (to order)
+
+**Прикметники (Adjectives)**
+*   ★★★ (Essential): `смачний` (tasty)
+*   ★★ (Useful): `солодкий` (sweet), `гарячий` (hot), `холодний` (cold)
+*   ★ (Can wait): `солоний` (salty), `кислий` (sour)
+
+(Vocabulary sourced and cross-referenced from `5-klas-ukrmova-uhor-2022-1_s0022`, `ext-ulp_youtube-255`, `ext-ulp_youtube-123`)
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities directly on these proven pedagogical patterns from Ukrainian source materials.
+
+1.  **Q&A Practice (Source `3-klas-ukrainska-mova-ponomarova-2020-1_s0008`):**
+    *   **Prompt:** Ask and answer simple questions about what you drink.
+    *   **Example:**
+        *   `— Яку воду ти вживаєш?` (What water do you consume?)
+        *   `— Я п'ю мінеральну воду.` (I drink mineral water.)
+        *   `— Що ти п'єш на сніданок?` (What do you drink for breakfast?)
+        *   `— Я п'ю чай без цукру.` (I drink tea without sugar.) (Source `ext-ulp_youtube-255`)
+
+2.  **Dialogue for Ordering (Source `ext-ulp_youtube-117`):**
+    *   **Prompt:** Complete the dialogue to order food at a restaurant. Use the Accusative case.
+    *   **Example:**
+        *   `— Ви готові зробити замовлення?` (Are you ready to make an order?)
+        *   `— Так, мені, будь ласка, **пасту** з овочами і **негазовану воду**.` (Yes, pasta with vegetables and non-carbonated water for me, please.)
+
+3.  **Sentence Transformation (Implicit in Source `5-klas-ukrmova-litvinova-2022_s0219`):**
+    *   **Prompt:** Create a sentence using "Я їм" or "Я п'ю". Remember to change the noun if necessary.
+    *   **Example:**
+        *   Noun: `кава` (f.) → Sentence: `Я п'ю **каву**.`
+        *   Noun: `борщ` (m.) → Sentence: `Я їм **борщ**.`
+        *   Noun: `риба` (f.) → Sentence: `Я їм **рибу**.`
+
+4.  **Forming Questions (Source `2-klas-ukrmova-bolshakova-2019-2_s0076`):**
+    *   **Prompt:** Read the statement and write a question for it.
+    *   **Statement:** `Білий ведмідь їсть рибу.` (The polar bear eats fish.)
+    *   **Possible Questions:**
+        *   `**Хто** їсть рибу?` (Who eats fish?)
+        *   `**Що** їсть білий ведмідь?` (What does the polar bear eat?)
+
+## Пов'язані статті (Related Articles)
+-   [Pedagogy A1: Verbs of Being and Wanting](./pedagogy/a1/verbs-of-being-wanting)
+-   [Grammar: The Accusative Case (Direct Object)](./grammar/cases/accusative) (See also external sources `ext-article-0` through `ext-video-5`)
+-   [Phonetics: The Letter Ї](./phonetics/letter-yi)
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -839,7 +582,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Я — студент (I am a student)` (~150 words)
 - `## Звідки? (Where from?)` (~200 words)
 - `## Підсумок — Summary` (~0 words)
-- `## Підсумок — Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -892,7 +634,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -909,6 +651,21 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   GOOD (real reaction): "Дивись, який великий дуб! — Так, старий. А під ним — коза! — Смішна коза."
 
   Use the knowledge packet's textbook excerpts for dialogue patterns. Adapt real situations, don't invent drills.
+- **DIALOGUE VARIETY — CRITICAL.** Each module MUST have DIFFERENT dialogue situations from other modules. Before writing any dialogue, check: have previous modules used this setting? If yes, pick a different one.
+
+  BANNED recurring settings (already used in M01-M09): describing a room (кімната), looking at a table/bed/lamp, generic greetings with no context, labeling objects.
+
+  REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
+
+  **Module-specific dialogue settings (from plan):**
+  1. **Hostel common room — two backpackers meet for the first time**
+     Speakers: Марко (Canadian student), Олена (from Kyiv)
+     Why: Мене звати, Звідки ти? — real first-meeting context
+  2. **University orientation day — students introduce themselves to the group**
+     Speakers: Тарас (new student), Софія (second-year volunteer)
+     Why: Formal vs informal register, professions with Я — студент
+
+  Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
@@ -980,123 +737,50 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~385 words total)
+## Діалоги (Dialogues) (~380 words total)
+- P1 (~100 words): [Dialogue 1: At a hostel. Marko (Canada) and Olena (Kyiv) meet. Introductions using "Привіт!", "Як тебе звати?", "Мене звати Марко", "Звідки ти?", "Я з Канади", and "Дуже приємно!".]
+- P2 (~100 words): [Dialogue 2: At a conference. Formal register. "Добрий день!", "Як вас звати?", "Мене звати Петро", "Мені також!", "Ви з України?", and "Я з Києва".]
+- P3 (~100 words): [Dialogue 3: Introducing someone else. Focusing on third person and identification. "Це Андрій. Він зі Львова. Він — інженер. А це Оксана. Вона з Одеси. Вона — лікарка."]
+- P4 (~80 words): [Analysis of the dialogues: Pointing out the differences between informal (тебе/ти) and formal (вас/ви) greetings and the lack of the verb "to be" in identity statements like "Я з Канади".]
 
-- P1 (~55 words): Framing paragraph — set the scene: three real conversations. Explain that these dialogues model the key phrases of the module. Learner should read, then listen (audio cue), then shadow. Note the difference between informal (hostel) and formal (conference) registers — same meaning, different words.
-
-- Dialogue 1 (~100 words): Hostel, informal. Full exchange:
-  — Привіт! Як тебе звати?
-  — Мене звати Марко. А тебе?
-  — Мене звати Олена. Звідки ти?
-  — Я з Канади. А ти?
-  — Я з України. Дуже приємно!
-  — Мені також!
-  Inline gloss: тебе = you (informal/object), звати = to call, звідки = where from. Short note: Мені також = "Me too / Likewise." No grammar analysis yet — just absorb the pattern.
-
-- Dialogue 2 (~100 words): Conference, formal. Full exchange:
-  — Добрий день! Як вас звати?
-  — Мене звати Петро Коваленко. Дуже приємно!
-  — Мені також! Я — Оксана Мельник. Ви з України?
-  — Так, я з Києва. А ви?
-  — Я з Канади, але я вчу українську.
-  Inline gloss: вас = you (formal/object), але = but. Note: вас replaces тебе — this single swap shifts the entire register from informal to formal.
-
-- Dialogue 3 (~90 words): Introducing someone else (third person). Narrated introduction:
-  — Це Андрій. Він зі Львова. Він — інженер.
-  — А це Оксана. Вона з Одеси. Вона — лікарка.
-  — Дуже приємно познайомитись!
-  Inline gloss: він = he, вона = she, інженер/лікарка = engineer/doctor. Note: Це stays the same regardless of gender — Це Андрій, Це Оксана, Це місто. It never changes.
-
-- Exercise (fill-in, ~40 words): 6 items — complete the mini-dialogue. E.g., "— Як ___ звати? (formal) → вас"; "— Мені ___! → також"; "— Звідки ___? → ти / ви". Tests phrase recall, not grammar analysis.
-
----
-
-## Мене звати... (My name is...) (~275 words total)
-
-- P1 (~80 words): Explain the construction literally: мене = me (object form of я), звати = to call. Literally "me they-call." Ukrainian doesn't use "My name IS X" — there is no verb "to be" and no "my name." The subject (they) is invisible. Contrast with English habit: don't say *Моє ім'я є... — that's an English calque. The correct Ukrainian phrase is simply: Мене звати Тарас.
-
-- P2 (~75 words): Asking someone's name. Two registers:
-  Informal: Як тебе звати? (to a child, friend, peer)
-  Formal: Як вас звати? (to a stranger, elder, professional setting)
-  Third person: Як його звати? (asking about a man) / Як її звати? (asking about a woman)
-  Key insight: тебе/вас/його/її slot changes with person — мене звати stays fixed. Give examples: — Як його звати? — Його звати Богдан.
-
-- P3 (~70 words): Responding and reacting. Дуже приємно! = Very pleased (to meet you). Said AFTER both names are exchanged — not as a greeting. Response: Мені також! = Me too / Likewise. Variant: Приємно познайомитись! = Pleased to meet you (lit. "pleasant to get acquainted"). All three are interchangeable in context. Model the mini-exchange: — Мене звати Марта. — Мене звати Іван. Дуже приємно! — Мені також!
-
-- Exercise (quiz, ~50 words): 6 items — formal or informal? Situation given in English (e.g., "You meet your professor"), learner chooses Як тебе звати? or Як вас звати?. Tests register awareness, the key sociolinguistic skill of this section.
-
----
+## Мене звати... (My name is...) (~270 words total)
+- P1 (~70 words): [Explanation of the "Мене звати" construction. Clarify that it literally means "Me they call" and that Ukrainian does not use "My name IS" (no verb 'є' in this context). Contrast with English "My name is...".]
+- P2 (~70 words): [Asking questions: "Як тебе звати?" (informal) vs "Як вас звати?" (formal). Explain when to use each based on social context (peers vs strangers/elders).]
+- P3 (~60 words): [Talking about others: Introduce "Як його звати?" (his) and "Як її звати?" (her). Note that 'його' and 'її' remain stable here.]
+- P4 (~70 words): [Responses and etiquette: Using "Дуже приємно!" (Very pleasant) or "Приємно познайомитись!" (Pleasant to meet). Explain that these are used AFTER names are exchanged.]
+- <!-- INJECT_ACTIVITY: fill-in-self-intro --> [fill-in, focus: Complete self-introduction using "Мене звати...", "Я з...", "Я —...", 6 items]
 
 ## Це... (This is...) (~220 words total)
+- P1 (~70 words): [Concept of "Це" as a universal identifier for "this is / it is / these are". Emphasize that no verb "to be" is required. Examples: "Це кава", "Це Київ", "Це Андрій".]
+- P2 (~80 words): [Question formation: "Хто це?" (Who is this?) vs "Що це?" (What is this?). Emphasize word order: the question word must come first in Ukrainian.]
+- P3 (~70 words): [Practice with identification: Providing examples of identifying objects and people in the room to solidify the "Це + Noun" pattern.]
+- <!-- INJECT_ACTIVITY: quiz-register-choice --> [quiz, focus: Formal or informal? Choose the right introduction based on the scenario, 6 items]
 
-- P1 (~70 words): Introduce Це as the universal pointer word. Це = this is / it is / these are — one form for all genders and numbers. Examples:
-  Це кава. (This is coffee.)
-  Це Київ. (This is Kyiv.)
-  Це Андрій. (This is Andriy.)
-  Це студенти. (These are students.)
-  Emphasis: Це never changes. Don't try to make it agree with the noun — it doesn't.
+## Особові займенники (Personal Pronouns) (~120 words total)
+- P1 (~60 words): [Introduction to singular pronouns: "я" (I), "ти" (you, informal), "він" (he), "вона" (she), "воно" (it). Explain that these are the anchors for all future sentences.]
+- P2 (~60 words): [Introduction to plural and formal pronouns: "ми" (we), "ви" (you, formal/plural), "вони" (they). Highlight the orthographic rule of capitalizing "Ви" when addressing one person formally in writing.]
 
-- P2 (~75 words): Forming questions. Two question words:
-  Що це? = What is this? (for things, places, concepts)
-  Хто це? = Who is this? (for people and animals)
-  Critical word-order rule: question word goes FIRST. Що це? ✓ — never *Це що? ✗. Same for Хто це? ✓ vs *Це хто? ✗.
-  Practice: show image prompts and model answers. — Що це? — Це університет. / — Хто це? — Це Оксана. Вона — лікарка.
+## Я — студент (I am a student) (~170 words total)
+- P1 (~60 words): [The "Zero Copula" rule: In the present tense, Ukrainian omits the verb "is/am/are". Explain the use of the punctuation dash (—) in writing to mark the missing verb. Examples: "Я — студент", "Він — лікар".]
+- P2 (~60 words): [Gendered professions: Introducing masculine and feminine pairs for jobs. Examples: "студент/студентка", "лікар/лікарка", "вчитель/вчителька", "програміст/програмістка". Stress that feminine forms are standard.]
+- P3 (~50 words): [Nationalities: Basic nominative forms for men and women. Examples: "українець/українка", "американець/американка", "канадієць/канадка".]
+- <!-- INJECT_ACTIVITY: match-up-gendered-professions --> [match-up, focus: Match professions with male/female forms (e.g., лікар -> лікарка), 8 items]
 
-- P3 (~40 words): Negative: Це не кава. Це чай. (This is not coffee. This is tea.) Це не Андрій. Це Тарас. The negative particle не goes directly before the noun — same pattern as the affirmative, just insert не.
+## Звідки? (Where from?) (~220 words total)
+- P1 (~70 words): [Asking "Звідки ти?" (informal) and "Звідки ви?" (formal). Explain that this question focuses on origin/nationality rather than current residence.]
+- P2 (~80 words): [Responding with "Я з..." (I am from...). List examples: "Я з України", "Я з Канади", "Я зі Штатів", "Я з Німеччини". Explain "з" vs "зі" for phonetic ease.]
+- P3 (~70 words): [Pedagogical note: Advise learners to treat these as "memorized chunks" for now. Briefly mention that country names change endings (Genitive) but don't introduce the grammar rules yet.]
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-final --> [fill-in, focus: Complete the dialogue with correct phrases (greetings, name, origin, profession), 6 items]
 
-- Exercise (match-up, ~35 words): 8 items — match the question word (Хто? or Що?) to the noun. E.g., вчителька → Хто, Київ → Що, студент → Хто, кава → Що, лікар → Хто, університет → Що, Олена → Хто, Україна → Що.
+## Підсумок — Summary (~150 words)
+- P1 (~150 words): [Recap of the key "Who Am I" formulas. Self-check bulleted list: 
+  - Як вас звати? — Мене звати...
+  - Хто це? — Це мой друг.
+  - Хто ви? — Я — вчителька.
+  - Звідки ви? — Я з України.
+  - Приємно познайомитись! — Мені також!]
 
----
-
-## Особові займенники (Personal Pronouns) (~115 words total)
-
-- P1 (~115 words): Present all seven nominative pronouns in a structured list with English equivalents and one example sentence each:
-  я — I → Я — студентка.
-  ти — you (informal, singular) → Ти — з Канади?
-  він — he → Він — лікар.
-  вона — she → Вона — з Одеси.
-  ми — we → Ми — з України.
-  ви — you (formal singular OR any plural) → Ви — з Києва?
-  вони — they → Вони — студенти.
-  Two cultural notes inline: (1) Ви (capital В) is used when addressing one person formally — the same word that means "you all" also means "you" politely. (2) In writing, formal Ви to one person is sometimes capitalized — learners will see both. These pronouns anchor every sentence from now on.
-
----
-
-## Я — студент (I am a student) (~165 words total)
-
-- P1 (~75 words): Explain zero copula directly. In English: "I AM a student." In Ukrainian: Я — студент. No verb. The dash (—) marks where "is/am/are" would be in English — Ukrainian omits it entirely in the present tense. It applies to all persons: Він — лікар. Вона — вчителька. Ми — студенти. Ти — програміст? Learners raised on European languages will feel the missing verb — reassure them: the dash IS the grammar signal.
-
-- P2 (~90 words): Vocabulary — nationalities and professions, nominative, gendered pairs:
-  Nationalities: українець / українка, американець / американка, канадієць / канадка, британець / британка, німець / німкеня.
-  Professions: студент / студентка, вчитель / вчителька, лікар / лікарка, програміст / програмістка, інженер / інженерка, журналіст / журналістка.
-  Pattern to notice: -ка / -иця / -ня endings mark the feminine. Learners should memorize pairs, not derive — derivation rules are B1 morphology. For now: hear the pair, know both forms.
-
-- Exercise (match-up, ~embedded in section): Pairs activity already planned under activity_hints — match 8 male/female profession forms. Placed here directly after vocabulary introduction.
-
----
-
-## Звідки? (Where from?) (~225 words total)
-
-- P1 (~75 words): Introduce the question Звідки ти? (informal) / Звідки ви? (formal) = Where are you from? Model the answer pattern: Я з + country. Examples:
-  Я з України.
-  Я з Канади.
-  Я зі Штатів. (note: зі before consonant clusters)
-  Я з Німеччини.
-  Я з Великої Британії.
-  Я з Австралії.
-  Teach these as FIXED CHUNKS. The country forms here are genitive (України = of Ukraine), but learners do NOT need to know that yet — just memorize the phrase. Genitive is A2 grammar (M29).
-
-- P2 (~80 words): Extend to third person and city-level origin:
-  Він з Києва. Вона зі Львова. Вони з Харкова.
-  Combining everything: Це Андрій. Він — інженер. Він з Києва.
-  And Це Марта. Вона — лікарка. Вона з Канади.
-  These "ID sentences" (Це + noun + pronoun + profession + origin) are the full production target of this module — learner can now introduce any person in Ukrainian.
-
-- P3 (~45 words): Boundaries note — what NOT to say yet. Do NOT introduce Де ви живете? (Where do you live?) here. That requires locative case + verb conjugation (taught M16 and M29). Звідки? is about origin — it uses a frozen chunk, no conjugation needed. Learning boundary kept clean.
-
-- Exercise (fill-in, ~25 words): 6 items — complete the self-introduction. E.g., "Мене звати ___. Я з ___. Я — ___." Free-production prompt with word bank. Final synthesis activity of the module.
-
-Grand total: ~1385 words
+Grand total: ~1530 words
 </skeleton>
 
 ## Output Format

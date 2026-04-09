@@ -1,50 +1,50 @@
 ## Linguistic Scan
-One minor lexical issue found: "Познайом свою сім'ю" is used as a calque for English "Introduce your family". In Ukrainian, "знайомити" means to make someone acquainted with someone/something. A more natural phrasing is "Розкажи про свою сім'ю" or "Представ свою сім'ю". All other vocabulary and grammar rules are flawless.
+No linguistic errors found.
 
 ## Exercise Check
-All four `<!-- INJECT_ACTIVITY: ... -->` markers from the plan are present and placed correctly after their respective teaching sections.
-- `match-family-vocab` placed directly after the Vocabulary section.
-- `quiz-u-tebe-ye` placed directly after the "I Have" section.
-- `fill-in-possessives` and `fill-in-family-dialogue` placed directly after the Possessive Pronouns section.
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` is placed after section 1. This activity tests possessive pronouns (`мій`, `твій`), which are not explicitly taught until section 4.
+- `<!-- INJECT_ACTIVITY: match-family -->` is placed correctly after section 2.
+- `<!-- INJECT_ACTIVITY: quiz-possession -->` is placed correctly after section 3.
+- `<!-- INJECT_ACTIVITY: fill-in-possessives -->` is placed correctly after section 4.
+Issue found: The first marker must be moved to the end to respect the PPP flow and test the concept only after it has been taught.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers every content point perfectly, including the exact dialogue structures ("У тебе є брати чи сестри? ↗", "У мене тільки один брат") and the pedagogical sequence. |
-| 2. Linguistic accuracy | 9/10 | Very high quality Ukrainian overall. One semantic calque: "Познайом свою сім'ю" instead of "Розкажи про свою сім'ю" (знайомити requires a complement of who you are introducing them to). |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow and grammar explanations. Deducted slightly for explicit curriculum meta-commentary ("That belongs to A2", "At A1, use only..."), which breaks learner immersion. |
-| 4. Vocabulary coverage | 10/10 | Integrates 100% of both required and recommended vocabulary in natural contexts without resorting to bare lists. |
-| 5. Exercise quality | 10/10 | Markers perfectly align with the plan's activity hints and are positioned logically to test what was just taught. |
-| 6. Engagement & tone | 10/10 | Masterful use of real textbook examples (Захарійчук Grade 1 poem, Вашуленко Grade 3 gender rule) to authenticate the learning experience. |
-| 7. Structural integrity | 10/10 | Sections follow the outline exactly. Clean formatting. |
-| 8. Cultural accuracy | 10/10 | Highlights native conceptualizations (no single word for grandparents, interchangeable use of сім'я/родина, gender matching). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, contextualized, and provide clear communicative templates for the learner to adapt. |
+| 1. Plan adherence | 9/10 | Covers all plan points completely, but the dialogue fill-in activity hint (testing possessives) is mapped to a marker placed before possessives are taught. |
+| 2. Linguistic accuracy | 10/10 | Flawless Ukrainian throughout. No Russianisms, Surzhyk, or calques. `його/її` correctly described as unchanging. |
+| 3. Pedagogical quality | 9/10 | The PPP flow is mostly excellent, but placing an activity that tests unlearned grammar (`твій/мій` in section 1) violates the step-by-step progression. |
+| 4. Vocabulary coverage | 10/10 | 100% of required and recommended vocabulary from the plan is introduced naturally in the text. |
+| 5. Exercise quality | 8/10 | Marker placement for `fill-in-dialogue` asks learners to produce target language before the practice phase. |
+| 6. Engagement & tone | 10/10 | Warm, natural teaching voice. "Expressing possession in Ukrainian requires a completely different mindset..." is great pedagogical framing. |
+| 7. Structural integrity | 10/10 | All H2 headings match the plan exactly. Word count is 1456 (above 1200 target). |
+| 8. Cultural accuracy | 10/10 | Correctly notes that asking about siblings is natural small talk in Ukraine, and explains the lack of a single overarching word for "grandparents". |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly realistic and natural, matching the Anna episode references perfectly. |
 
 ## Findings
-
-[Linguistic accuracy] [Major]
-Location: `Підсумок — Summary` -> "Познайом свою сім'ю у 4–5 реченнях."
-Issue: "Знайомити" means to make someone acquainted with someone/something. Used here as a direct translation of English "Introduce your family," it sounds incomplete without a complement ("з кимось").
-Fix: Change to "Розкажи про свою сім'ю у 4–5 реченнях."
-
-[Pedagogical quality] [Major]
-Location: `У мене є (I Have)` -> "which changes the ending of the noun after it. That belongs to A2. For now, the simplest..."
-Issue: Breaking immersion by explicitly referencing the CEFR level curriculum ("That belongs to A2").
-Fix: Rephrase to simply tell the learner they will learn it later.
-
-[Pedagogical quality] [Major]
-Location: `Мій, моя, моє (Possessive Pronouns)` -> "The forms **наш** (our), **ваш** (your — formal/plural), and **їхній** (their) belong to A2, where you'll learn the full paradigm with case changes. At A1, use only **мій/твій/його/її** in the nominative."
-Issue: Heavy curriculum meta-commentary directly addressing the learner about course levels (A1/A2) instead of focusing on the language itself.
-Fix: Rephrase to "You will learn the forms **наш**... later in your journey. For now, focus on..."
+[5. Exercise quality] [major]
+Location: `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` placed immediately after `## Діалоги — Dialogues`
+Issue: The activity tests possessive pronouns (`твій`, `мій`), which are not explicitly taught until section 4 (`## Мій, моя, моє — Possessive Pronouns`). Placing this exercise in section 1 breaks the PPP flow as it tests a concept before teaching it.
+Fix: Move `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` to the end of the module, after the `Підсумок — Summary` section.
 
 ## Verdict: REVISE
-The content is phenomenally written and uses brilliant authentic textbook references to teach the grammar. It contains only minor curriculum meta-commentary ("belongs to A2") and one slightly unnatural phrasing ("Познайом свою сім'ю") that need to be patched before shipping.
+The content is grammatically and linguistically flawless, but the first activity marker is placed too early, violating the pedagogical sequence. Moving it to the end resolves this entirely.
 
 <fixes>
-- find: "which changes the ending of the noun after it. That belongs to A2. For now,"
-  replace: "which changes the ending of the noun after it. You will learn this later. For now,"
-- find: "The forms **наш** (our), **ваш** (your — formal/plural), and **їхній** (their) belong to A2, where you'll learn the full paradigm with case changes. At A1, use only **мій/твій/його/її** in the nominative."
-  replace: "You will learn the forms **наш** (our), **ваш** (your — formal/plural), and **їхній** (their) later in your journey. For now, focus on mastering **мій**, **твій**, **його**, and **її**."
-- find: "Познайом свою сім'ю у 4–5 реченнях."
-  replace: "Розкажи про свою сім'ю у 4–5 реченнях."
+- find: |
+    mention your siblings.
+
+    <!-- INJECT_ACTIVITY: fill-in-dialogue -->
+
+    ## Сім'я — Family Vocabulary
+  replace: |
+    mention your siblings.
+
+    ## Сім'я — Family Vocabulary
+- find: |
+    state who is in your family.
+  replace: |
+    state who is in your family.
+
+    <!-- INJECT_ACTIVITY: fill-in-dialogue -->
 </fixes>

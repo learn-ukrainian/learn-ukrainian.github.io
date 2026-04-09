@@ -2,414 +2,458 @@ version: '1.0'
 module: transport
 level: a1
 inline:
-- id: quiz-transport-match
-  type: quiz
-  instruction: Який транспорт? (Which transport?)
-  items:
-  - question: Ти у Борисполі. Потрібно їхати до Варшави.
-    options:
-    - автобус
-    - літак
-    - трамвай
-    correct: 1
-  - question: Ти у Києві. Потрібно їхати під землею через місто.
-    options:
-    - маршрутка
-    - метро
-    - потяг
-    correct: 1
-  - question: Ти на вокзалі. Потрібно їхати до Львова.
-    options:
-    - трамвай
-    - потяг
-    - таксі
-    correct: 1
-  - question: Потрібна машина з водієм.
-    options:
-    - автобус
-    - літак
-    - таксі
-    correct: 2
-  - question: На зупинці є маленький мікроавтобус.
-    options:
-    - маршрутка
-    - тролейбус
-    - потяг
-    correct: 0
-  - question: В аеропорту. Їдеш до центру на автобусі номер сімдесят один.
-    options:
-    - трамвай
-    - автобус
-    - маршрутка
-    correct: 1
-  - question: Ти у Львові. Бачиш вагон на рейках у місті.
-    options:
-    - потяг
-    - трамвай
-    - тролейбус
-    correct: 1
-  - question: Транспорт іде електричним дротом над вулицею.
-    options:
-    - таксі
-    - тролейбус
-    - літак
-    correct: 1
-- id: quiz-pattern-choice
-  type: quiz
-  instruction: Автобусом чи на метро? Оберіть правильну форму (Choose the correct
-    form)
-  items:
-  - question: Я їду ___ до центру. (автобус)
-    options:
-    - автобусом
-    - на автобусом
-    - на автобус
-    correct: 0
-  - question: Марко їде ___ на роботу. (метро)
-    options:
-    - метром
-    - на метро
-    - метроєм
-    correct: 1
-  - question: Ми їдемо ___ до вокзалу. (таксі)
-    options:
-    - таксієм
-    - на таксі
-    - таксім
-    correct: 1
-  - question: Оля їде ___ з Києва до Львова. (потяг)
-    options:
-    - потягом
-    - на потяг
-    - на потягом
-    correct: 0
-  - question: Діти їдуть ___ через місто. (трамвай)
-    options:
-    - трамваєм
-    - на трамвай
-    - трамваю
-    correct: 0
-  - question: Як ти їдеш? — ___ (маршрутка)
-    options:
-    - маршруткою
-    - на маршрутку
-    - маршруток
-    correct: 0
-- id: fill-in-ticket
+- id: fill-in-ticket-buying
   type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
+  instruction: Вставте правильне слово (Insert the correct word)
   items:
-  - sentence: Один квиток ___ центру, будь ласка.
-    answer: до
-    options:
-    - до
-    - від
-    - на
-  - sentence: На автобус ___ на потяг?
-    answer: чи
-    options:
-    - чи
-    - і
-    - або
-  - sentence: ___ коштує квиток?
-    answer: Скільки
-    options:
-    - Скільки
-    - Де
-    - Як
-  - sentence: О котрій ___?
-    answer: відправлення
-    options:
-    - відправлення
-    - зупинка
-    - каса
-  - sentence: Де купити ___?
+  - sentence: Один ______ до Львова, будь ласка.
     answer: квиток
     options:
     - квиток
-    - жетон
-    - зупинку
-  - sentence: Коли ___ потяг до Львова?
-    answer: наступний
+    - потяг
+    - автобус
+  - sentence: В один ______ чи туди й назад?
+    answer: бік
     options:
-    - наступний
-    - перший
-    - добрий
+    - бік
+    - назад
+    - квиток
+  - sentence: Туди й ______. Скільки коштує?
+    answer: назад
+    options:
+    - назад
+    - бік
+    - прямо
+  - sentence: Скільки ______ квиток?
+    answer: коштує
+    options:
+    - коштує
+    - їде
+    - рушає
+  - sentence: Є потяг ______ дев'ятій ранку.
+    answer: о
+    options:
+    - о
+    - на
+    - в
+  - sentence: О котрій ______ він рушає?
+    answer: годині
+    options:
+    - годині
+    - зупинці
+    - станції
+- id: quiz-transport-patterns
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Я їду ______.
+    options:
+    - автобусом
+    - на автобусом
+    - автобус
+    correct: 0
+  - question: Ми їдемо ______.
+    options:
+    - на метро
+    - метром
+    - у метро
+    correct: 0
+  - question: Він подорожує ______.
+    options:
+    - потягом
+    - на потягом
+    - поїзд
+    correct: 0
+  - question: Вона їде ______.
+    options:
+    - на таксі
+    - таксієм
+    - в таксію
+    correct: 0
+  - question: Вони їдуть ______.
+    options:
+    - трамваєм
+    - на трамваєм
+    - трамвай
+    correct: 0
+  - question: Ти їдеш ______.
+    options:
+    - маршруткою
+    - на маршруткою
+    - маршрутка
+    correct: 0
+- id: quiz-match-situation
+  type: quiz
+  instruction: Оберіть правильний транспорт для кожної ситуації (Choose the right
+    transport for each situation)
+  items:
+  - question: Ви йдете в аеропорт. Ваш транспорт — це...
+    options:
+    - літак
+    - метро
+    - трамвай
+    - тролейбус
+    correct: 0
+  - question: Ви йдете на вокзал. Ваш транспорт — це...
+    options:
+    - потяг
+    - літак
+    - маршрутка
+    - таксі
+    correct: 0
+  - question: Ви стоїте на зупинці. Ваш транспорт — це...
+    options:
+    - автобус
+    - літак
+    - потяг
+    - метро
+    correct: 0
+  - question: Ви їдете в інше місто (city). Це...
+    options:
+    - потяг
+    - трамвай
+    - метро
+    - зупинка
+    correct: 0
+  - question: Ви їдете прямо в центр містом. Це...
+    options:
+    - тролейбус
+    - літак
+    - потяг
+    - аеропорт
+    correct: 0
+  - question: Ви їдете на...
+    options:
+    - метро
+    - автобусом
+    - маршруткою
+    - трамваєм
+    correct: 0
+  - question: Ви їдете...
+    options:
+    - потягом
+    - на потягом
+    - на потягу
+    - в потягу
+    correct: 0
+  - question: 'Цей транспорт не змінює закінчення:'
+    options:
+    - таксі
+    - автобус
+    - машина
+    - маршрутка
+    correct: 0
 - id: fill-in-directions
   type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
+  instruction: Доповніть фрази (Complete the phrases)
   items:
-  - sentence: ___, як дістатися до вокзалу?
-    answer: Вибачте
-    options:
-    - Вибачте
-    - Дякую
-    - Гаразд
-  - sentence: Їдьте ___.
-    answer: прямо
-    options:
-    - прямо
-    - направо
-    - зупинка
-  - sentence: Поверніть ___.
-    answer: направо
-    options:
-    - направо
-    - прямо
-    - квиток
-  - sentence: Де ___ автобуса?
-    answer: зупинка
-    options:
-    - зупинка
-    - каса
-    - квиток
-  - sentence: Як ___ до метро?
+  - sentence: Вибачте, як ______ до вокзалу?
     answer: дістатися
     options:
     - дістатися
     - їхати
-    - купити
-  - sentence: П'ять ___ пішки.
-    answer: хвилин
-    options:
-    - хвилин
-    - гривень
-    - варіантів
-- id: quiz-which-transport
-  type: quiz
-  instruction: Підсумок — оберіть правильний варіант (Summary — choose the correct
-    option)
-  items:
-  - question: Як сказати «by bus» по-українськи?
-    options:
-    - автобусом
-    - на автобус
-    - автобуса
-    correct: 0
-  - question: Як сказати «by metro» по-українськи?
-    options:
-    - метром
-    - метроєм
-    - на метро
-    correct: 2
-  - question: Як запитати де зупинка?
-    options:
-    - Де є автобус?
-    - Де зупинка автобуса?
-    - Де квиток на автобус?
-    correct: 1
-  - question: Як купити один квиток до центру? (One ticket to the centre, please.)
-    options:
-    - Один квиток до центру, будь ласка.
-    - Квиток центр один, прошу.
-    - Є квиток до центру?
-    correct: 0
-  - question: Що означає «Приємної поїздки!»?
-    options:
-    - Have a good trip!
-    - One ticket, please.
-    - What time is departure?
-    correct: 0
-  - question: Марко спочатку їде ___, а потім на метро.
-    options:
-    - автобусом
-    - потягом
-    - трамваєм
-    correct: 1
-  - question: Як запитати про час відправлення?
-    options:
-    - Скільки коштує відправлення?
-    - О котрій відправлення?
-    - Де відправлення?
-    correct: 1
-  - question: Яка це ___? — Вокзальна.
-    options:
-    - зупинка
-    - каса
-    - станція
-    correct: 2
-workbook:
-- type: match-up
-  instruction: З'єднайте транспорт з формою «їхати ___» (Match each transport with
-    its travel form)
-  pairs:
-  - left: автобус
-    right: автобусом
-  - left: тролейбус
-    right: тролейбусом
-  - left: трамвай
-    right: трамваєм
-  - left: маршрутка
-    right: маршруткою
-  - left: потяг
-    right: потягом
-  - left: метро
-    right: на метро
-  - left: таксі
-    right: на таксі
-- type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: Марко приїхав до Києва вперше.
-    correct: true
-    explanation: Так — у тексті сказано «He has just arrived in Kyiv for the first
-      time».
-  - statement: В аеропорту «Бориспіль» є метро.
-    correct: false
-    explanation: 'Ні — Оля сказала: «Метро нема в аеропорті».'
-  - statement: Марко купив квиток на автобус.
-    correct: false
-    explanation: Ні — каса запитала «На автобус чи на потяг?» і Марко відповів «На
-      потяг».
-  - statement: Квиток на потяг коштував сто двадцять гривень.
-    correct: true
-    explanation: 'Так — каса сказала: «Сто двадцять гривень».'
-  - statement: Від вокзалу до метро — п'ять хвилин пішки.
-    correct: true
-    explanation: 'Так — перехожий сказав: «Прямо, потім направо. П''ять хвилин».'
-  - statement: Станція «Вокзальна» — це зупинка автобуса.
-    correct: false
-    explanation: Ні — «Вокзальна» — це станція метро, не зупинка автобуса.
-- type: fill-in
-  instruction: Доповніть діалог (Complete the dialogue)
-  items:
-  - sentence: — Вибачте, як ___ до метро?
-    answer: дістатися
-    options:
-    - дістатися
-    - купити
-    - їхати
-  - sentence: — Їдьте ___, потім направо.
+    - іти
+  - sentence: Ідіть ______ до зупинки.
     answer: прямо
     options:
     - прямо
     - наліво
-    - навпроти
-  - sentence: — Де ___ трамвая?
-    answer: зупинка
+    - направо
+  - sentence: Поїдьте прямо, а потім поверніть ______.
+    answer: направо
     options:
+    - направо
+    - наліво
+    - прямо
+  - sentence: Станція метро ______.
+    answer: наліво
+    options:
+    - наліво
+    - направо
+    - прямо
+  - sentence: ______ зупинка автобуса?
+    answer: Де
+    options:
+    - Де
+    - Куди
+    - Як
+  - sentence: Який автобус їде в ______?
+    answer: центр
+    options:
+    - центр
     - зупинка
-    - каса
-    - варіант
-  - sentence: '— На метро: «Один ___, будь ласка.»'
-    answer: жетон
-    options:
-    - жетон
-    - відправлення
-    - варіант
-  - sentence: — Яка це ___?
-    answer: станція
-    options:
-    - станція
-    - зупинка
+    - метро
+workbook:
+- type: group-sort
+  instruction: 'Як правильно: Орудний відмінок чи Місцевий з «на»? (How is it correct:
+    Instrumental or Locative with «на»?)'
+  groups:
+  - label: Орудний (автобусом)
+    items:
+    - потяг
     - маршрутка
-  - sentence: — ___ наліво, потім прямо.
-    answer: Поверніть
-    options:
-    - Поверніть
-    - Вибачте
-    - Купіть
-- type: quiz
-  instruction: Оберіть правильний варіант (Choose the correct option)
+    - трамвай
+    - тролейбус
+  - label: на + Місцевий (на метро)
+    items:
+    - метро
+    - таксі
+    - машина
+- type: true-false
+  instruction: Правда чи ні? (True or false?)
   items:
-  - question: В аеропорту «Бориспіль» є метро?
-    options:
-    - Так, є метро.
-    - Ні, метро нема в аеропорті.
-    - Метро є, але дорого.
-    correct: 1
-  - question: Як сказати «by tram» по-українськи?
-    options:
-    - трамваєм
-    - на трамвай
-    - трамвайком
-    correct: 0
-  - question: Як правильно сказати «by minibus»?
-    options:
-    - маршруткою
-    - на маршрутці
-    - маршруток
-    correct: 0
-  - question: Що таке «каса»?
-    options:
-    - a stop
-    - a ticket window
-    - a departure
-    correct: 1
-  - question: Де в Україні є метро?
-    options:
-    - тільки у Львові
-    - у Києві та Харкові
-    - тільки у Варшаві
-    correct: 1
-  - question: Як запитати, де виходити?
-    options:
-    - Де зупинка?
-    - Мені виходити тут?
-    - Яка це станція?
-    correct: 1
+  - statement: Слова «метро» та «таксі» ніколи не змінюють закінчення.
+    correct: true
+    explanation: 'Вони не змінюються. Ми завжди кажемо: на метро, на таксі.'
+  - statement: 'Правильно говорити: «Я їду на автобусом».'
+    correct: false
+    explanation: 'Правильно: «автобусом» або «на машині». Міксувати не можна.'
+  - statement: 'Для потяга ми кажемо: «Він рушає».'
+    correct: true
+    explanation: Дієслово «рушати» дуже добре підходить для потяга.
+  - statement: Ми купуємо квиток «до Львова», а не «в Львів».
+    correct: true
+    explanation: Так, після слова «квиток» ми використовуємо прийменник «до».
+  - statement: Дієслово «відправлятися» — це найкращий вибір для транспорту.
+    correct: false
+    explanation: Це калька. Краще казати «рушає» або «виїжджає».
+  - statement: Ми чекаємо потяг на зупинці.
+    correct: false
+    explanation: Потяг ми чекаємо на вокзалі.
+- type: match-up
+  instruction: З'єднайте транспорт та місце (Match the transport and the place)
+  pairs:
+  - left: літак
+    right: аеропорт
+  - left: потяг
+    right: вокзал
+  - left: автобус
+    right: зупинка
+  - left: метро
+    right: станція
+  - left: рушає
+    right: потяг починає їхати
+  - left: іти пішки
+    right: йти ногами, не машиною
 - type: unjumble
-  instruction: Складіть речення зі слів (Put the words in order)
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
   items:
   - words:
-    - до
-    - квиток
-    - Один
-    - ласка
-    - будь
-    - центру
-    correct_order:
-    - Один
-    - квиток
-    - до
-    - центру
-    - будь
-    - ласка
-  - words:
-    - дістатися
-    - до
-    - вокзалу
+    - вокзалу?
     - Як
+    - до
+    - дістатися
     correct_order:
     - Як
     - дістатися
     - до
-    - вокзалу
+    - вокзалу?
   - words:
-    - автобуса
-    - Де
-    - зупинка
+    - один
+    - В
+    - чи
+    - бік
+    - й
+    - назад?
+    - туди
     correct_order:
-    - Де
-    - зупинка
-    - автобуса
+    - В
+    - один
+    - бік
+    - чи
+    - туди
+    - й
+    - назад?
   - words:
-    - котрій
-    - відправлення
-    - О
+    - зупинка?
+    - Яка
+    - це
     correct_order:
-    - О
-    - котрій
-    - відправлення
+    - Яка
+    - це
+    - зупинка?
   - words:
-    - направо
-    - потім
-    - прямо
-    - Їдьте
+    - наступний
+    - потяг?
+    - Коли
     correct_order:
-    - Їдьте
-    - прямо
-    - потім
-    - направо
+    - Коли
+    - наступний
+    - потяг?
   - words:
-    - потягом
+    - ви
+    - Вибачте,
+    - виходите?
+    correct_order:
+    - Вибачте,
+    - ви
+    - виходите?
+  - words:
+    - їду
+    - Я
+    - на
+    - метро.
+    correct_order:
+    - Я
+    - їду
+    - на
+    - метро.
+- type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
+  items:
+  - sentence: Я їду на автобусом.
+    error: на автобусом
+    correction: автобусом
+    error_type: construction
+    options:
+    - автобусом
+    - на автобусу
+    - автобусі
+    explanation: 'Правильно: «автобусом» або «на автобусі». Міксувати не можна.'
+  - sentence: Він їде метром.
+    error: метром
+    correction: на метро
+    error_type: word
+    options:
+    - на метро
+    - у метро
+    - в метрі
+    explanation: 'Слово «метро» не змінюється. Правильно: «на метро».'
+  - sentence: Один квиток в Київ, будь ласка.
+    error: в Київ
+    correction: до Києва
+    error_type: construction
+    options:
+    - до Києва
+    - у Київ
+    - на Київ
+    explanation: 'Завжди кажемо: квиток «до» (куди?). До Києва.'
+  - sentence: Як дістати до вокзалу?
+    error: дістати
+    correction: дістатися
+    error_type: word
+    options:
+    - дістатися
+    - доїхати
+    - йти
+    explanation: Правильне дієслово — «дістатися» (to get to).
+  - sentence: Потяг відправляється о восьмій.
+    error: відправляється
+    correction: рушає
+    error_type: word
+    options:
+    - рушає
+    - йде
     - їде
-    - до
-    - центру
-    - Марко
-    correct_order:
-    - Марко
-    - їде
-    - потягом
-    - до
-    - центру
+    explanation: '«Відправляється» — це калька. Українською краще: «рушає».'
+  - sentence: Ми їдемо таксієм.
+    error: таксієм
+    correction: на таксі
+    error_type: word
+    options:
+    - на таксі
+    - таксію
+    - на таксієм
+    explanation: 'Слово «таксі» не змінюється. Правильно: «на таксі».'
+- type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: How to get to the station?
+    options:
+    - text: Як дістатися до вокзалу?
+      correct: true
+    - text: Як дістати до вокзалу?
+      correct: false
+  - source: One ticket to Lviv, please.
+    options:
+    - text: Один квиток до Львова, будь ласка.
+      correct: true
+    - text: Один квиток у Львів, будь ласка.
+      correct: false
+  - source: I am going by bus.
+    options:
+    - text: Я їду автобусом.
+      correct: true
+    - text: Я їду на автобусом.
+      correct: false
+  - source: We are going by metro.
+    options:
+    - text: Ми їдемо на метро.
+      correct: true
+    - text: Ми їдемо метром.
+      correct: false
+  - source: When is the next train?
+    options:
+    - text: Коли наступний потяг?
+      correct: true
+    - text: Коли інший потяг?
+      correct: false
+  - source: Excuse me, are you getting off?
+    options:
+    - text: Вибачте, ви виходите?
+      correct: true
+    - text: Вибачте, ви йдете?
+      correct: false
+- type: order
+  instruction: Розставте репліки в правильному порядку (Put the lines in the correct
+    order)
+  items:
+  - — Дякую. О котрій годині він рушає?
+  - — Туди й назад. Скільки коштує?
+  - — Добрий день! Один квиток до Львова, будь ласка.
+  - — П'ятсот гривень. Є потяг о дев'ятій ранку.
+  - — В один бік чи туди й назад?
+  - — О дев'ятій рівно.
+  correct_order:
+  - 2
+  - 4
+  - 1
+  - 3
+  - 0
+  - 5
+- type: quiz
+  instruction: Відповідь на запитання (Answer the questions)
+  items:
+  - question: Де ми чекаємо потяг?
+    options:
+    - На вокзалі
+    - В аеропорту
+    - На зупинці
+    - У центрі
+    correct: 0
+  - question: Як правильно запитати дорогу?
+    options:
+    - Як дістатися до...
+    - Як дістати до...
+    - Де дістати до...
+    - Куди дістатися до...
+    correct: 0
+  - question: Який транспорт їде під землею?
+    options:
+    - Метро
+    - Автобус
+    - Трамвай
+    - Машина
+    correct: 0
+  - question: Що каже касир, коли продає квиток?
+    options:
+    - В один бік чи туди й назад?
+    - Ви виходите?
+    - Яка це зупинка?
+    - Як дістатися?
+    correct: 0
+  - question: Як ми відповідаємо, якщо хтось каже «Дякую!»?
+    options:
+    - На здоров'я!
+    - Будь ласка
+    - Вибачте
+    - Прямо
+    correct: 0
+  - question: Як правильно сказати, що ви їдете автомобілем?
+    options:
+    - Я їду на машині.
+    - Я їду на машиною.
+    - Я їду машиною на.
+    - Я їду в машині.
+    correct: 0

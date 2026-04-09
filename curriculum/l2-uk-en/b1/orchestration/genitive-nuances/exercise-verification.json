@@ -1,0 +1,201 @@
+{
+  "total_items": 216,
+  "grounded_items": 186,
+  "ungrounded": [
+    {
+      "word": "холодної",
+      "exercise_type": "fill-in",
+      "context": "Дайте мені, будь ласка, склянку холодної ____.",
+      "role": "context"
+    },
+    {
+      "word": "відріжте",
+      "exercise_type": "fill-in",
+      "context": "Відріжте мені шматок свіжого ____.",
+      "role": "context"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "fill-in",
+      "context": "Для борщу треба купити пачку ____.",
+      "role": "context"
+    },
+    {
+      "word": "бармен",
+      "exercise_type": "quiz",
+      "context": "Бармен поклав багато ____ у коктейль.",
+      "role": "context"
+    },
+    {
+      "word": "поклав",
+      "exercise_type": "quiz",
+      "context": "Бармен поклав багато ____ у коктейль.",
+      "role": "context"
+    },
+    {
+      "word": "велике",
+      "exercise_type": "error-correction",
+      "context": "Я щиро бажаю вам велике щастя.",
+      "role": "context"
+    },
+    {
+      "word": "головну",
+      "exercise_type": "error-correction",
+      "context": "Вона нарешті досягла свою головну мету.",
+      "role": "context"
+    },
+    {
+      "word": "мету",
+      "exercise_type": "error-correction",
+      "context": "Вона нарешті досягла свою головну мету.",
+      "role": "context"
+    },
+    {
+      "word": "щовечора",
+      "exercise_type": "error-correction",
+      "context": "Він щовечора шукає внутрішній спокій.",
+      "role": "context"
+    },
+    {
+      "word": "внутрішній",
+      "exercise_type": "error-correction",
+      "context": "Він щовечора шукає внутрішній спокій.",
+      "role": "context"
+    },
+    {
+      "word": "спокій",
+      "exercise_type": "error-correction",
+      "context": "Він щовечора шукає внутрішній спокій.",
+      "role": "context"
+    },
+    {
+      "word": "найдавніший",
+      "exercise_type": "error-correction",
+      "context": "Він зміг позбутися свій найдавніший страх.",
+      "role": "context"
+    },
+    {
+      "word": "страх",
+      "exercise_type": "error-correction",
+      "context": "Він зміг позбутися свій найдавніший страх.",
+      "role": "context"
+    },
+    {
+      "word": "увага",
+      "exercise_type": "error-correction",
+      "context": "Цей фільм справді вартий ваша увага.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "fill-in",
+      "context": "Тут є моя сестра. → Тут немає моєї ____.",
+      "role": "context"
+    },
+    {
+      "word": "дощ",
+      "exercise_type": "fill-in",
+      "context": "Вчора був сильний дощ. → Вчора не було сильного ____.",
+      "role": "context"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "match-up",
+      "context": "студент",
+      "role": "answer"
+    },
+    {
+      "word": "київ",
+      "exercise_type": "match-up",
+      "context": "Київ",
+      "role": "answer"
+    },
+    {
+      "word": "зошит",
+      "exercise_type": "match-up",
+      "context": "зошит",
+      "role": "answer"
+    },
+    {
+      "word": "досвід",
+      "exercise_type": "match-up",
+      "context": "досвід",
+      "role": "answer"
+    },
+    {
+      "word": "борщ",
+      "exercise_type": "match-up",
+      "context": "борщ",
+      "role": "answer"
+    },
+    {
+      "word": "вип'ю",
+      "exercise_type": "fill-in",
+      "context": "Я вип'ю чай ____ кави.",
+      "role": "context"
+    },
+    {
+      "word": "чай",
+      "exercise_type": "fill-in",
+      "context": "Я вип'ю чай ____ кави.",
+      "role": "context"
+    },
+    {
+      "word": "десяте",
+      "exercise_type": "true-false",
+      "context": "«Моя відпустка починається десяте серпня» — правильне реченн",
+      "role": "context"
+    },
+    {
+      "word": "дев'яностому",
+      "exercise_type": "true-false",
+      "context": "«Він народився у тисяча дев'ятсот дев'яностому році» — прави",
+      "role": "context"
+    },
+    {
+      "word": "році",
+      "exercise_type": "true-false",
+      "context": "«Він народився у тисяча дев'ятсот дев'яностому році» — прави",
+      "role": "context"
+    },
+    {
+      "word": "завершимо",
+      "exercise_type": "true-false",
+      "context": "«Ми завершимо проєкт наступного тижня» — правильне речення.",
+      "role": "context"
+    },
+    {
+      "word": "автомобіль",
+      "exercise_type": "group-sort",
+      "context": "автомобіль",
+      "role": "answer"
+    },
+    {
+      "word": "біль",
+      "exercise_type": "group-sort",
+      "context": "біль",
+      "role": "answer"
+    },
+    {
+      "word": "вітер",
+      "exercise_type": "group-sort",
+      "context": "вітер",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "відмінок",
+      "гідний",
+      "дата",
+      "заперечення",
+      "кількість",
+      "родовий",
+      "склянка",
+      "частковий"
+    ]
+  },
+  "all_grounded": false
+}

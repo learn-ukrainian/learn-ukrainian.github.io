@@ -1,12 +1,6 @@
 vocabulary:
-- word: питальні слова
-  translation: question words
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: куди́
-  translation: where to (direction)
+  translation: where to
   expression: false
   pos: присл.
   gender: ''
@@ -35,6 +29,24 @@ vocabulary:
   pos: част.
   gender: ''
   verified: true
+- word: тому що
+  translation: because
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: жи́ти
+  translation: to live
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розумі́ти
+  translation: to understand
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: ніхто́
   translation: nobody
   expression: false
@@ -59,95 +71,71 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: нікуди
-  translation: to nowhere, not anywhere
+- word: ви́бачте
+  translation: excuse me
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: центр
+  translation: center
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: іде́
+  translation: goes
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: до́бре
+  translation: good
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: жи́ти
-  translation: to live
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: розумі́ти
-  translation: to understand
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: тому що
-  translation: because
+- word: як пройти
+  translation: how to get to
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: зна́ти
-  translation: to know
+- word: пря́мо
+  translation: straight
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: вивча́ти
-  translation: to study, to learn
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: працюва́ти
-  translation: to work
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: відповіда́ти
-  translation: to answer
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: чу́ти
-  translation: to hear
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: іти́
-  translation: to go (on foot)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ї́хати
-  translation: to go (by vehicle), to drive
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: запере́чення
-  translation: negation
+- word: напра́во
+  translation: to the right
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: подвійне заперечення
-  translation: double negation
-  expression: true
-  pos: ''
-  gender: ''
+- word: студе́нт
+  translation: student
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
-- word: запі́знюватися
-  translation: to be late
+- word: вивча́ти
+  translation: to study
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: Я не знаю.
-  translation: I don't know.
-  expression: true
-  pos: ''
-  gender: ''
+- word: украї́нська
+  translation: Ukrainian (language)
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: вра́нці
   translation: in the morning
@@ -155,9 +143,57 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: уве́чері
-  translation: in the evening
+- word: кни́га
+  translation: book
   expression: false
-  pos: присл.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ма́ма
+  translation: mom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: все
+  translation: everything
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: без
+  translation: without
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: окуля́ри
+  translation: glasses
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спа́ти
+  translation: to sleep
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true

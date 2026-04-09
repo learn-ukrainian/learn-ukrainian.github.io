@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-age -->`
-- `<!-- INJECT_ACTIVITY: fill-in-numbers -->`
+- `<!-- INJECT_ACTIVITY: fill-in-numbers-words -->`
 - `<!-- INJECT_ACTIVITY: quiz-prices -->`
-- `<!-- INJECT_ACTIVITY: fill-in-phone -->`
+- `<!-- INJECT_ACTIVITY: quiz-age-matching -->`
+- `<!-- INJECT_ACTIVITY: fill-in-phone-numbers -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,71 +87,75 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Dialogues
 
-> **Покупець:** Добрий день! Скільки коштує торт? *(Good day! How much does the cake cost?)*
-> **Пекар:** Двісті гривень. *(Two hundred hryvnias.)*
-> **Покупець:** А хліб? *(And the bread?)*
-> **Пекар:** П'ятнадцять гривень. *(Fifteen hryvnias.)*
-> **Покупець:** А три булочки? *(And three buns?)*
-> **Пекар:** Сорок п'ять гривень. *(Forty-five hryvnias.)*
-> **Покупець:** А одне тістечко? *(And one pastry?)*
-> **Пекар:** Двадцять гривень. *(Twenty hryvnias.)*
-> **Покупець:** Добре. Дякую, до побачення! *(Okay. Thank you, goodbye!)*
+Numbers are the invisible architecture of our daily interactions. From the moment you wake up, you are surrounded by quantities, prices, and measurements. When you walk into a traditional Ukrainian bakery, you do not just point at items; you ask for a specific amount. You might need **один хліб** (one bread) for the family dinner, **одна булочка** (one bun) for a quick snack, or perhaps **одне тістечко** (one pastry) as a treat. You will inevitably need to ask the baker, **Скільки коштує торт? А три булочки?** (How much does a cake cost? And three buns?). If you are packing a backpack for a language class, you check your supplies by counting: **один олівець** (one pencil) for taking notes, and **дві ручки** (two pens) just in case one runs out of ink. Numbers allow us to navigate the practical realities of life, whether we are comparing prices or sharing personal details.
 
-Notice the question **Скільки коштує?** (How much does it cost?) — this is the single most useful phrase for shopping in Ukraine. The three nouns in this dialogue are recycled vocabulary from earlier modules: **торт** (cake) is masculine, **булочка** (bun) is feminine, and **тістечко** (pastry) is neuter. You might see that the noun endings change after different numbers — **одне тістечко** but **три булочки**, **п'ятнадцять гривень** but **двісті гривень**. These changes follow a pattern you will memorize as chunks now. The grammar behind them arrives in A2.
+Let us look at how numbers naturally emerge when shopping at a bustling market stall. In this scenario, a customer is looking to buy a bag and needs to ask about the **ціна** (price). Read the dialogue below to see how numbers are used in a real commercial context.
 
-> **Оленка:** Привіт, Тарасе! Скільки тобі років? *(Hi, Taras! How old are you?)*
-> **Тарас:** Мені чотирнадцять. А тобі? *(I'm fourteen. And you?)*
-> **Оленка:** Мені тринадцять. А твоя сестра старша? *(I'm thirteen. Is your sister older?)*
-> **Тарас:** Так, їй вісімнадцять. *(Yes, she's eighteen.)*
-> **Оленка:** А твій брат? *(And your brother?)*
-> **Тарас:** Йому одинадцять. *(He's eleven.)*
+> **Покупець:** Добрий день! **Скільки коштує сумка?** *(Good afternoon! How much does the bag cost?)*
+> **Продавець:** Добрий день! **Двісті гривень.** *(Good afternoon! Two hundred hryvnias.)*
+> **Покупець:** **А маленька?** *(And the small one?)*
+> **Продавець:** **Сто п'ятдесят.** *(One hundred fifty.)*
+> **Покупець:** **Добре, дякую!** *(Good, thank you!)*
 
-The age formula in Ukrainian works like a fixed chunk: **Мені** (I am), **тобі** (you are), **йому** (he is), **їй** (she is) + a number + **років**. Ukrainian uses three different words for "year(s)" depending on the number: **рік** (year) after 1, **роки** (years) after 2–4, and **років** (years) after 5 and above. At A1, memorize these as a pattern — one **рік**, two **роки**, five **років**. No case analysis needed.
+In this exchange, the customer uses the essential phrase **Скільки коштує?** (How much does it cost?) alongside the noun **сумка** (bag) and the adjective **маленька** (small). The seller responds using exact numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty).
 
-<!-- INJECT_ACTIVITY: quiz-age -->
+Numbers are also crucial when meeting someone new and expanding beyond basic greetings. A common follow-up question in any conversation is asking about age.
 
-## Числа 1-20 (Numbers 1-20)
+> **Антон:** Привіт! **Скільки тобі років?** *(Hi! How old are you?)*
+> **Віктор:** Привіт! **Мені двадцять п'ять. А тобі?** *(Hi! I am twenty-five. And you?)*
+> **Антон:** **Мені тридцять два. А твоя сестра?** *(I am thirty-two. And your sister?)*
+> **Віктор:** **Їй вісімнадцять.** *(She is eighteen.)*
 
-The first ten numbers in Ukrainian are: **один** (1), **два** (2), **три** (3), **чотири** (4), **п'ять** (5), **шість** (6), **сім** (7), **вісім** (8), **дев'ять** (9), **десять** (10). Three of these need extra attention when you say them aloud. First, **п'ять** has an apostrophe — the letter **п** is followed by **'ять**, giving it a "p-yat" sound. Second, **сім** is the Ukrainian word for seven — it is NOT "сем," which is a Russian ghost form. Third, **дев'ять** also carries an apostrophe, making it two syllables: "dev-yat." Try counting objects from earlier modules: **один стіл** (one table), **два стільці** (two chairs), **три книги** (three books), **чотири ручки** (four pens), **п'ять зошитів** (five notebooks). The number always comes first, and the nouns are words you already know.
+Here, we see the question **Скільки тобі років?** (How old are you?) and the response pattern **Мені...** (To me is...). They use the numbers **вісімнадцять** (eighteen), **двадцять п'ять** (twenty-five), and **тридцять два** (thirty-two). This formula is a fixed pattern you can memorize right now to share your own details.
 
-Numbers 11–20 follow a clear pattern. Ukrainian textbooks (Vashulenko, Grade 3) list them as a family built from a base number plus the suffix **-надцять**, parallel to the English "-teen": **одинадцять** (11), **дванадцять** (12), **тринадцять** (13), **чотирнадцять** (14), **п'ятнадцять** (15), **шістнадцять** (16), **сімнадцять** (17), **вісімнадцять** (18), **дев'ятнадцять** (19), **двадцять** (20). The stress rule is consistent and simple: stress ALWAYS falls on the **-на-** syllable within **-надцять**. So it is одинáдцять, дванáдцять, тринáдцять, and so on through дев'ятнáдцять. One spelling trap: **шістнадцять** is written without a soft sign before **н** — not "шістьнадцять." A counting rhyme from Kravcova (Grade 2, p. 92) puts numbers 1–7 into context: «Один і два — росла трава, три, чотири — покосили, п'ять — на сонечку сушили, шість — в копичку поскладали, сім — корівку годували...» Reading this aloud is excellent pronunciation practice.
+## Числа 1-20 — Numbers 1-20
 
-With numbers 1–20 in hand, you can already do two practical things. First, count real objects around you: **скільки стільців у кімнаті?** (how many chairs in the room?) **скільки книжок на столі?** (how many books on the table?) Second, answer age questions from the dialogue above: **Мені** + number + **років**. Say your own age, a sibling's age, a friend's age — all using numbers from this section. Combined numbers like **двадцять один** (21) and **тридцять п'ять** (35) come in the next section.
+The absolute foundation of counting relies on the numbers from one to ten. These are the building blocks you will use every single day. The sequence is **один** (one), **два** (two), **три** (three), **чотири** (four), **п'ять** (five), **шість** (six), **сім** (seven), **вісім** (eight), **дев'ять** (nine), and **десять** (ten). Pronunciation here is critical. Pay close attention to the apostrophe in the words **п'ять** and **дев'ять**. The apostrophe tells you to pronounce the preceding consonant sharply and then transition distinctly into the following vowel, creating a slight pause. Furthermore, notice the clear **і** sound in both **сім** and **вісім**. It sounds like the "ee" in "meet" and must never be relaxed into a softer sound. 
 
-<!-- INJECT_ACTIVITY: fill-in-numbers -->
+Unlike English, where numbers are static words, Ukrainian numbers must harmonize with the objects they describe. The number one has three distinct forms that match the gender of the noun. You must say **один стіл** (one table) for a masculine noun, **одна книга** (one book) for a feminine noun, and **одне вікно** (one window) for a neuter noun. The number two also changes, but it only has two forms. You use **два** for both masculine and neuter nouns, such as **два столи** (two tables) or **два вікна** (two windows). However, when counting feminine objects, you must switch to the feminine form, which is **дві**. Therefore, you say **дві книги** (two books).
 
-## Десятки і сотні (Tens and Hundreds)
+Once you have mastered the first ten numbers, learning the teens is remarkably straightforward because they follow a highly predictable pattern. You simply take the base number and add the suffix **-надцять**. The sequence is **одинадцять** (eleven), **дванадцять** (twelve), **тринадцять** (thirteen), **чотирнадцять** (fourteen), **п'ятнадцять** (fifteen), **шістнадцять** (sixteen), **сімнадцять** (seventeen), **вісімнадцять** (eighteen), and **дев'ятнадцять** (nineteen), leading up to **двадцять** (twenty). There is a crucial phonetic rule here: the stress always falls on the syllable **-на-**. You must pronounce it as **одина́дцять** and **дванадця́ть**. 
 
-The tens from 20 to 100 follow a predictable pattern — with two famous exceptions. Here is the full list: **двадцять** (20), **тридцять** (30), **сорок** (40), **п'ятдесят** (50), **шістдесят** (60), **сімдесят** (70), **вісімдесят** (80), **дев'яносто** (90), **сто** (100). Most tens are built from a base number plus a suffix: п'ять → **п'ятдесят**, шість → **шістдесят**. But **сорок** (40) is completely irregular — there is no "чотиридесят" in Ukrainian. Historically, **сорок** referred to a bundle of forty animal pelts used as a trading unit (Голуб, Grade 6). And **дев'яносто** (90) breaks the pattern too — it is not "дев'ятдесят." Memorize both as standalone words. To make combined numbers, place the tens word before the unit with no connector: **двадцять один** (21), **тридцять п'ять** (35), **сорок сім** (47), **вісімдесят дев'ять** (89). Practice examples: **двадцять три студенти** (23 students), **сорок вісім гривень** (48 hryvnias), **дев'яносто дві копійки** (92 kopeks).
+:::caution
+A common mistake for learners is trying to place the stress at the beginning of the word, similar to English. Always emphasize the **-на-** syllable in these numbers.
+:::
 
-For prices above 100, you need the hundreds: **сто** (100), **двісті** (200), **триста** (300), **чотириста** (400), **п'ятсот** (500), **шістсот** (600), **сімсот** (700), **вісімсот** (800), **дев'ятсот** (900), **тисяча** (1000). Notice the pattern shift: at 200 the form is **двісті** (not "двасто"), at 300–400 it is **триста** and **чотириста**, and from 500 onward the suffix is **-сот**. The Ukrainian currency is **гривня** (hryvnia), and it changes form after numbers just like "year" does: **одна гривня** (1), **дві гривні** (2–4), **п'ять гривень** (5+). Important: the currency word is **гривня**, not **гривна** — that is a different word meaning a neck ornament. Memorize three price chunks from the bakery dialogue: **п'ятнадцять гривень** (15₴), **сорок п'ять гривень** (45₴), **двісті гривень** (200₴). The noun changes гривня/гривні/гривень are price chunks for now — case grammar arrives in A2.
+When we count classroom objects, the nouns change their endings based on the number. You do not need to memorize complex grammatical tables yet; simply learn these high-frequency combinations as fixed patterns. Notice how the ending shifts depending on the quantity: **один зошит** (one notebook), **два зошити** (two notebooks), and **п'ять зошитів** (five notebooks). Similarly, we say **один підручник** (one textbook), **два підручники** (two textbooks), and **десять підручників** (ten textbooks). By learning these blocks together, you internalize the rhythm of the language without analyzing the underlying rules.
 
-Ukrainian mobile numbers follow the format 0XX-XXX-XX-XX. Break them into groups for easier reading: **нуль дев'яносто сім** (097) — pause — **три два один** (321) — pause — **сорок п'ять** (45) — pause — **шістдесят сім** (67). Each group is read as a mini-number. A full example: **Мій номер** (my number) — **нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім**.
+<!-- INJECT_ACTIVITY: fill-in-numbers-words -->
+
+## Десятки і сотні — Tens and Hundreds
+
+Larger numbers allow us to discuss broader concepts, prices, and quantities. The tens follow a fairly regular pattern, usually ending in the suffix **-дцять** or **-десят**. The sequence continues with **тридцять** (thirty), **п'ятдесят** (fifty), **шістдесят** (sixty), **сімдесят** (seventy), and **вісімдесят** (eighty). However, there are two critical irregular numbers you must memorize immediately: **сорок** (forty) and **дев'яносто** (ninety). They do not follow the standard suffix rules. To create compound numbers, you simply place the ten and the unit next to each other, exactly as you do in English. For example, you combine them to say **сорок сім** (forty-seven), **двадцять один** (twenty-one), or **дев'яносто дев'ять** (ninety-nine). 
+
+When it comes to purchasing high-value items or discussing large sums, you need the hundreds. The base unit is **сто** (one hundred). The subsequent hundreds are built systematically, but their spellings must be memorized: **двісті** (two hundred), **триста** (three hundred), **чотириста** (four hundred), **п'ятсот** (five hundred), and finally **тисяча** (one thousand). Notice carefully that two hundred is written and pronounced as **двісті**, using the feminine root form, and never as "двасто". These hundreds combine easily with the tens and units you already know. If you want to say three hundred and fifty, you simply say **триста п'ятдесят**. 
+
+:::tip
+The number **тисяча** (thousand) is a feminine noun. If you want to say "one thousand," you must use the feminine form of one: **одна тисяча**.
+:::
+
+These larger numbers are indispensable when dealing with money and currency. The national currency of Ukraine is the **гривня** (hryvnia). Just like the classroom objects we counted earlier, the word for currency changes depending on the exact number preceding it. You must memorize these three core patterns. For amounts ending in one, use the base form: **одна гривня** (one hryvnia). For amounts ending in two, three, or four, the word changes: **дві гривні** (two hryvnias), **три гривні** (three hryvnias), or **чотири гривні** (four hryvnias). For all numbers from five to zero, the form changes again: **п'ять гривень** (five hryvnias), **десять гривень** (ten hryvnias), or **сто гривень** (one hundred hryvnias). Combine these patterns with the essential question **Скільки це коштує?** (How much does this cost?) to handle any shopping scenario confidently.
 
 <!-- INJECT_ACTIVITY: quiz-prices -->
 
-<!-- INJECT_ACTIVITY: fill-in-phone -->
-
 ## Підсумок — Summary
 
-This module built three number systems. First, cardinal numbers 1–20: the base ten (**один** through **десять**), then the **-надцять** teens with stress always on **-на-** (одинáдцять, дванáдцять...). Two apostrophe words to remember: **п'ять** and **дев'ять**. Second, the tens from 20 to 100, with two irregulars that must simply be memorized: **сорок** (40) and **дев'яносто** (90). Third, the hundreds from **сто** to **тисяча**, where the pattern shifts at **двісті** (200) and again at **п'ятсот** (500). Combined numbers never need a connector word — just say the tens then the unit: **двадцять три** (23), **сто сорок п'ять** (145).
+Stating your age in Ukrainian relies on a fixed formula. In Ukrainian, age is not something you "are" or "have"; rather, years are accumulated "to you." The structure **Мені... років** (To me is... years) is a fixed grammatical chunk. You use the dative pronoun **мені** (to me) followed by the number, and then the word for "years". The word for years changes based on the last digit of your age. If your age ends in one (except eleven), you use the singular form: **двадцять один рік** (twenty-one years). If your age ends in two, three, or four, you use the plural form: **тридцять три роки** (thirty-three years). For all other numbers, including zero and the teens, you use the third form: **сорок років** (forty years) or **вісімнадцять років** (eighteen years).
 
-**Prices.** The question is **Скільки коштує?** and the answer is a number plus the right form of **гривня**: **одна гривня** (1₴), **дві гривні** (2–4₴), **п'ять гривень** (5+₴). Three memorized frames: **п'ятнадцять гривень** (bread), **сорок п'ять гривень** (three buns), **двісті гривень** (a cake). You can now ask and answer any price up to **тисяча гривень** (1000₴).
+Numbers are also essential for sharing contact information, specifically phone numbers. The word for a digit or a phone number is **номер** (number). When reciting a phone number, you will frequently use the word **нуль** (zero). Ukrainians typically read phone numbers by grouping the digits into blocks of two or three, rather than reciting them as single digits. For instance, the area code 067 is usually read as a single block: **нуль шістдесят сім** (zero sixty-seven). Alternatively, you might hear the digits separated out distinctly, such as **нуль, дев'ять, сім** (zero, nine, seven), before grouping the remaining digits into pairs like **сорок п'ять, шістдесят сім** (forty-five, sixty-seven).
 
-**Age.** The question is **Скільки тобі років?** and the answer follows the formula: **Мені/Йому/Їй** + number + **рік/роки/років**. Three memorized frames: **Мені чотирнадцять років** (14), **Йому двадцять два роки** (22), **Їй тридцять п'ять років** (35). The switch between рік, роки, and років is a chunk — feel it through repetition, do not analyze it.
+The question word **Скільки** is highly versatile because it functions as both "how many" and "how much," depending on the context. When you ask **Скільки книг?** (How many books?), you are inquiring about the physical quantity of objects. However, when you ask **Скільки коштує книга?** (How much does the book cost?), the focus shifts entirely to the price. This single word serves as the gateway to unlocking both physical inventory and financial transactions in your daily life.
 
-**Phone numbers.** Read Ukrainian mobile numbers in groups of 3–2–2–2. Practice with three sample numbers: (a) 097-321-45-67, (b) 050-112-33-99, (c) 073-456-78-10. Read each one aloud in Ukrainian. The bakery could call you when your cake is ready — just say **Мій номер телефону...** and dictate it.
+Before finishing this module, take a moment to perform a self-check:
+- Can you say your age? (**Мені ... років**)
+- Can you ask for a price? (**Скільки коштує ...?**)
+- Can you count to ten without looking?
+- Can you say your phone number in Ukrainian?
 
-Self-check — answer these in Ukrainian:
-
-- Як сказати 17? → **сімнадцять**
-- Як сказати 40? → **сорок** (not "чотиридесят"!)
-- Як сказати 90? → **дев'яносто** (not "дев'ятдесят"!)
-- Торт коштує 250₴. Як сказати? → **Двісті п'ятдесят гривень.**
-- Скажіть своє ім'я і вік: **Мене звати ___, мені ___ років.**
-- Продиктуйте свій номер телефону по-українськи.
+<!-- INJECT_ACTIVITY: quiz-age-matching -->
+<!-- INJECT_ACTIVITY: fill-in-phone-numbers -->
 
 </module_content>
 
@@ -241,30 +245,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -280,40 +324,62 @@ The learner knows the alphabet and ~200 words. They:
 **Instructions in simple English with Ukrainian key terms in bold.**
 Example: 'Choose the correct form of **мій/моя/моє**'
 
-**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian).
+**Good activity types:** quiz, fill-in (simple sentences), match-up, group-sort, true-false, observe, anagram, translate (English→Ukrainian), error-correction (simple), divide-words, count-syllables, odd-one-out, order.
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-numbers
-- **quiz** — Яке число?: Recognize written number words
-- **fill-in** — Напиши цифру словом: Write the number as a Ukrainian word
-- **match-up** — Цифра → слово: Match digits to their Ukrainian word forms
+### Pattern: grammar-numbers [§4.2.1.3]
+**Числівники** (Numerals)
+- **quiz** — Яке число?: Розпізнати числівники, записані словами / Recognize written number words
+- **fill-in** — Напиши цифру словом: Записати числівник словом по-українськи / Write the number as a Ukrainian word
+- **match-up** — Цифра → слово: Зіставити цифри з їхніми українськими назвами / Match digits to their Ukrainian word forms
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: Числівники складні для написання — давати варіанти на A1
 
-### Pattern: general-vocabulary
-- **match-up** — Слово → переклад: Match Ukrainian words to English translations
-- **fill-in** — Вставте слово: Fill in the missing word from context
-- **anagram** — Склади слово: Rearrange letters to form the target word
-- **odd-one-out** — Четверте зайве: Pick the word that doesn't belong to the semantic group
-- **translate** — Оберіть переклад: Choose correct translation from options
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -345,68 +411,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

@@ -13,7 +13,9 @@ import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -22,142 +24,100 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Що ми зна́ємо? (What Do We Know?)
 
-You have spent six modules building your Ukrainian world — objects, colors, numbers, and more. This module introduces nothing new. No new grammar, no new vocabulary. Instead, it activates everything from M08 through M13 and tests whether it has settled into your memory. Six skills to check: noun gender, adjective agreement, colors (including both blues), numbers and prices, demonstratives, and plurals. The format is simple: self-check questions first, then a reading passage, a grammar reference, and finally a full dialogue that puts it all together.
+By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment. You started by simply recognizing and naming isolated objects, and now you have the vocabulary and grammar to talk about everything from the furniture in your room to the items at a local marketplace. You can confidently identify what things are, what color they are, how many of them there are, and where they are in relation to you. This is the critical difference between knowing a few scattered words and actually building coherent descriptions in a new language. 
 
-How many of these can you answer without looking back?
+Before we test these skills in a real-world situation, let's make sure your vocabulary backpack is neatly organized. Ask yourself these specific questions to verify your progress:
+- Can you name twenty or more common objects around you right now?
+- Can you determine the grammatical gender of a word like **стіл** (table), **кни́га** (book), or **вікно́** (window) just by looking at the ending?
+- Can you differentiate between the two distinct Ukrainian blues, **си́ній** (dark blue) and **блаки́тний** (light blue)?
+- Can you count from one to one hundred and ask for prices in **гри́вні** (hryvnias)?
+- Can you use demonstrative words like "this" and "that" to point at specific items accurately?
 
-- **Gender:** Is **стіл** (table) він, вона́, or воно́?
-- **Agreement:** Which is correct — **вели́кий стіл** or **вели́ка стіл**?
-- **Colors:** What is the difference between **си́ній** (dark blue) and **блаки́тний** (sky blue)?
-- **Numbers:** How do you say "fifty hryvnias" — **п'ятдеся́т гри́вень**?
-- **Demonstratives:** Do you say **цей виши́ва́нка** or **ця вишиванка** (this embroidered shirt)?
-- **Plurals:** What is the plural of **кни́га** (book)?
+If you answered yes to these questions, you are doing great! To truly consolidate this knowledge, we need to sort the words you already know into logical categories. Think about how an adjective like **зеле́ний** (green) functions differently in a sentence from a number like **де́сять** (ten) or a noun like **ла́мпа** (lamp). Grouping these words mentally will help your brain access them much faster when you need to speak in a real conversation.
 
-If all six feel familiar, you are ready for the dialogue at the end. If even one feels shaky, the grammar summary below will set it straight.
-
-<GroupSort client:only="react" groups={{"Предмети (Objects)": ["стіл", "книга", "лампа", "вишиванка", "глечик"], "Кольори (Colors)": ["синій", "червоний", "білий", "жовтий"], "Числа (Numbers)": ["один", "десять", "п'ятдесят", "двісті"]}} instruction={"Sort these words into the correct category: **Предмети** (Objects), **Кольори** (Colors), or **Числа** (Numbers)"} />
+<GroupSort client:only="react" groups={{"Речі (Objects)": ["стіл", "вікно", "лампа", "ручка"], "Кольори (Colors)": ["жовтий", "синій", "зелений", "білий"], "Числа (Numbers)": ["десять", "сто", "два", "три"]}} instruction={"Розподіліть слова за категоріями (Sort the words into categories)"} />
 
 ## Чита́ння (Reading Practice)
 
-Read the text below aloud — at least twice. Every word comes from M08–M13. There is nothing new here. Focus on reading naturally and noticing how gender, agreement, and demonstratives appear together in real sentences.
+Imagine you are visiting a friend's home in Ukraine for the very first time. When you step inside, you immediately notice the objects in their living space, the vibrant colors on the walls, and the arrangement of the furniture. Describing a physical space requires you to combine nouns, adjectives, and plural forms into a smooth, continuous flow of information. Reading a complete text aloud is the best way to practice this flow and internalize the natural rhythm of Ukrainian sentences. Focus on how the descriptive words match the objects they describe, and pay attention to how the endings change.
 
-:::note
-Reading aloud is essential. Your mouth needs to practice the shapes of Ukrainian words just as much as your eyes need to recognize them.
-:::
+Read this short text titled **Моя́ кімна́та** (My room). Every single word in this description uses vocabulary you have already practiced in previous modules. There are no new surprises here. Read it aloud, slowly and clearly, to train your pronunciation and build muscle memory for these sentence structures:
 
-> Це моя́ кімна́та. Мій стіл великий і кори́чневий. На столі́ ла́мпа. Ця лампа бі́ла. А та лампа жо́вта — вона стої́ть у кутку́. У мене́ є три кни́ги. Ці книги нові́ й ціка́ві. На стіні́ ви́си́ть карти́на. Картина си́ня й зеле́на. Вікно́ вели́ке, а две́рі мале́нькі. Моя кімната га́рна!
+- **Це моя кімната.** (This is my room.)
+- **Вона́ вели́ка і сві́тла.** (It is big and bright.)
+- **Ось мій стіл, він нови́й.** (Here is my table, it is new.)
+- **Тут є три си́ні кни́ги і одна́ жо́вта лампа.** (Here are three dark blue books and one yellow lamp.)
+- **Це вікно вели́ке, а те вікно мале́.** (This window is big, and that window is small.)
+- **Мої́ сті́ни бі́лі.** (My walls are white.)
+- **У мене́ є два стільці́.** (I have two chairs.)
+- **Вони́ старі́, але́ зру́чні.** (They are old but comfortable.)
 
-*(This is my room. My table is big and brown. On the table there is a lamp. This lamp is white. And that lamp is yellow — it stands in the corner. I have three books. These books are new and interesting. On the wall hangs a painting. The painting is blue and green. The window is big, and the door is small. My room is nice!)*
+Notice how the description naturally shifts between singular items and groups of objects. Recognizing when to use a singular form versus a plural form is critical when talking about your environment, as it completely changes the endings of the words around the noun.
 
-Notice the patterns at work. **Стіл** (table) is masculine — so its adjective is **великий** (big), with the masculine ending **-ий**. **Лампа** (lamp) is feminine — so it gets **біла** (white), with **-а**. **Вікно** (window) is neuter — so its adjective is **велике** (big), with **-е**. The demonstratives follow the same logic: **ця лампа** (this lamp, feminine) vs. **ці книги** (these books, plural). And the number **три** sits naturally before **книги** (books) without any special changes.
-
-Now answer these three questions by pointing back to the text:
-
-- **Яки́й стіл?** *(What is the table like?)*
-- **Скі́льки книг у кімна́ті?** *(How many books are in the room?)*
-- **Яка лампа в кутку — біла чи жовта?** *(Which lamp is in the corner — white or yellow?)*
+<Quiz client:only="react" questions={[{"question": "Цей великий стіл.", "options": [{"text": "Ці великі столи.", "correct": true}, {"text": "Цей великі стіл.", "correct": false}, {"text": "Ці великі стіли.", "correct": false}]}, {"question": "Ця синя книга.", "options": [{"text": "Ці сині книги.", "correct": true}, {"text": "Ці синя книги.", "correct": false}, {"text": "Ця сині книги.", "correct": false}]}, {"question": "Це нове вікно.", "options": [{"text": "Ці нові вікна.", "correct": true}, {"text": "Це нові вікна.", "correct": false}, {"text": "Ці нове вікна.", "correct": false}]}, {"question": "Ця стара лампа.", "options": [{"text": "Ці старі лампи.", "correct": true}, {"text": "Ті старі лампи.", "correct": false}, {"text": "Ці старий лампи.", "correct": false}]}, {"question": "Той гарний день.", "options": [{"text": "Ті гарні дні.", "correct": true}, {"text": "Ті гарний дні.", "correct": false}, {"text": "Той гарні дні.", "correct": false}]}, {"question": "Цей зручний стілець.", "options": [{"text": "Ці зручні стільці.", "correct": true}, {"text": "Ці зручний стільці.", "correct": false}, {"text": "Цей зручні стільці.", "correct": false}]}, {"question": "Це мале дзеркало.", "options": [{"text": "Ці малі дзеркала.", "correct": true}, {"text": "Ці мале дзеркала.", "correct": false}, {"text": "Це малі дзеркала.", "correct": false}]}, {"question": "Та біла стіна.", "options": [{"text": "Ті білі стіни.", "correct": true}, {"text": "Та білі стіни.", "correct": false}, {"text": "Ті біла стіни.", "correct": false}]}]} instruction={"Оберіть правильну форму множини (Choose the correct plural form)"} />
 
 ## Грама́тика (Grammar Summary)
 
-Five key patterns from A1.2, presented as a quick reference. This is not new instruction — it is a map of what you already know. Each pattern has one rule and examples to confirm your understanding.
+The absolute core of describing your world relies on determining the grammatical gender of a noun. In Ukrainian, every object is categorized as masculine, feminine, or neuter. You can always identify the gender by looking at the final letter of the dictionary form of the word. Masculine nouns usually end in a consonant, like **стіл** (table). Feminine nouns typically end in **-а** or **-я**, like **ру́чка** (pen). Neuter nouns end in **-о** or **-е**, like **дзе́ркало** (mirror). The personal pronouns **він** (he/it), **вона** (she/it), and **воно́** (it) are the essential keys that unlock the rest of the grammar patterns in a sentence.
 
-**Pattern 1 — Noun gender** (the він/вона/воно test): consonant ending → він (**стіл**, **гле́чик**, **зо́шит**). Ending **-а/-я** → вона (**книга**, **вишиванка**, **земля́**). Ending **-о/-е** → воно (**вікно**, **нами́сто**).
+Once you know a noun's gender, you must make sure any adjective describing it agrees with that gender. Adjectives change their endings to match the noun perfectly. For a masculine noun, you use a masculine adjective, as in **га́рний день** (beautiful day). A feminine noun requires a feminine adjective, like **га́рна пі́сня** (beautiful song). A neuter noun takes a neuter adjective, such as **га́рне фо́то** (beautiful photo). Remember that adjectives can have a hard stem, taking the ending **-ий** like **черво́ний** (red), or a soft stem, taking the ending **-ій** like **синій** (dark blue). 
 
-**Pattern 2 — Adjective agreement:** the adjective ending mirrors the noun gender. **Великий стіл** (big table, m), **велика книга** (big book, f), **велике вікно** (big window, n). The adjective always matches.
+When you want to point at a specific object, you use demonstrative pronouns. Just like adjectives, these pointing words must agree with the noun's gender. You use **цей**, **ця**, or **це** to say "this" for masculine, feminine, and neuter nouns respectively. To say "that", you use **той**, **та**, or **те**. When you are talking about multiple items, the rules become much simpler. In the plural form, the gender distinction entirely disappears. Both demonstrative pronouns and adjectives take the exact same plural ending. You will always use **ці** (these) and **ті** (those), and plural adjectives will always end in **-і**, such as **га́рні** (beautiful) or **вели́кі** (big).
 
-:::tip
-Ukrainian textbooks teach: «Прикме́тник за́вжди́ стоїть у тому́ числі́, роді та відмі́нку, що й іме́нник.» The adjective always takes the same number, gender, and case as its noun.
-:::
+Finally, counting objects and discussing prices involves using numbers as fixed vocabulary chunks. For now, you do not need to worry about complex case changes for the numbers themselves. You simply combine the number with the currency, such as **п'ятдеся́т гри́вень** (fifty hryvnias) or **сто гривень** (one hundred hryvnias). Recognizing these basic combinations allows you to handle simple transactions confidently in shops or markets.
 
-**Pattern 3 — Hard vs. soft adjective stems:** hard-stem adjectives end in **-ий/-а/-е**: **черво́ний** (red), **черво́на**, **черво́не**. Soft-stem adjectives end in **-ій/-я/-є**: **синій** (dark blue), **синя**, **си́нє**. This is why **блакитний** (sky blue) takes **-ий** (hard stem) while **синій** takes **-ій** (soft stem) — different base consonants.
-
-**Pattern 4 — Demonstratives:** **цей глечик** (this jug, m), **ця вишиванка** (this embroidered shirt, f), **це намисто** (this necklace, n) for things nearby. **Той/та/те** for things farther away. Gender agreement works exactly like adjectives.
-
-**Pattern 5 — Nominative plurals:** masculine: **столи́**, **гле́чики**; feminine: **книги**, **виши́ва́нки**; neuter: **ві́кна**, **нами́ста**. The adjective plural is always **-і**, regardless of gender — **нові столи**, **нові книги**, **нові вікна**.
-
-**Pattern 6 — Numbers as vocabulary:** **оди́н** (1), **два** (2), **три** (3), **де́сять** (10), **два́дцять** (20), **п'ятдесят** (50), **сто** (100), **дві́сті** (200). At this stage, use them as fixed words — no case changes needed.
-
-These patterns all appear together in natural speech. The next section shows them working in a real conversation.
-
-<Quiz client:only="react" questions={[{"question": "_____ стіл (big)", "options": [{"text": "великий", "correct": true}, {"text": "велика", "correct": false}, {"text": "велике", "correct": false}]}, {"question": "_____ книга (big)", "options": [{"text": "великий", "correct": false}, {"text": "велика", "correct": true}, {"text": "велике", "correct": false}]}, {"question": "_____ вікно (big)", "options": [{"text": "великий", "correct": false}, {"text": "велика", "correct": false}, {"text": "велике", "correct": true}]}, {"question": "_____ лампа (white)", "options": [{"text": "білий", "correct": false}, {"text": "біла", "correct": true}, {"text": "біле", "correct": false}]}, {"question": "_____ намисто (red)", "options": [{"text": "червоний", "correct": false}, {"text": "червона", "correct": false}, {"text": "червоне", "correct": true}]}, {"question": "_____ глечик (small)", "options": [{"text": "маленький", "correct": true}, {"text": "маленька", "correct": false}, {"text": "маленьке", "correct": false}]}, {"question": "_____ вишиванка (new)", "options": [{"text": "новий", "correct": false}, {"text": "нова", "correct": true}, {"text": "нове", "correct": false}]}, {"question": "_____ вікно (interesting)", "options": [{"text": "цікавий", "correct": false}, {"text": "цікава", "correct": false}, {"text": "цікаве", "correct": true}]}, {"question": "_____ стіл (brown)", "options": [{"text": "коричневий", "correct": true}, {"text": "коричнева", "correct": false}, {"text": "коричневе", "correct": false}]}, {"question": "_____ картина (beautiful)", "options": [{"text": "гарний", "correct": false}, {"text": "гарна", "correct": true}, {"text": "гарне", "correct": false}]}]} instruction={"Choose the correct adjective form to match the **рід** (gender) of the noun"} />
-
-<Quiz client:only="react" questions={[{"question": "книга →", "options": [{"text": "книги", "correct": true}, {"text": "книг", "correct": false}, {"text": "книгу", "correct": false}, {"text": "книгах", "correct": false}]}, {"question": "стіл →", "options": [{"text": "столи", "correct": true}, {"text": "столі", "correct": false}, {"text": "столу", "correct": false}, {"text": "стола", "correct": false}]}, {"question": "вікно →", "options": [{"text": "вікну", "correct": false}, {"text": "вікна", "correct": true}, {"text": "вікні", "correct": false}, {"text": "вікном", "correct": false}]}, {"question": "вишиванка →", "options": [{"text": "вишиванок", "correct": false}, {"text": "вишиванки", "correct": true}, {"text": "вишиванці", "correct": false}, {"text": "вишиванку", "correct": false}]}, {"question": "глечик →", "options": [{"text": "глечика", "correct": false}, {"text": "глечику", "correct": false}, {"text": "глечики", "correct": true}, {"text": "глечиків", "correct": false}]}, {"question": "лампа →", "options": [{"text": "ламп", "correct": false}, {"text": "лампи", "correct": true}, {"text": "лампі", "correct": false}, {"text": "лампу", "correct": false}]}, {"question": "намисто →", "options": [{"text": "намисту", "correct": false}, {"text": "намисті", "correct": false}, {"text": "намистах", "correct": false}, {"text": "намиста", "correct": true}]}, {"question": "писанка →", "options": [{"text": "писанок", "correct": false}, {"text": "писанку", "correct": false}, {"text": "писанки", "correct": true}, {"text": "писанці", "correct": false}]}]} instruction={"Choose the correct **plural** (множина) form of each noun"} />
+<Quiz client:only="react" questions={[{"question": "_____ стіл", "options": [{"text": "великий", "correct": true}, {"text": "велика", "correct": false}, {"text": "велике", "correct": false}]}, {"question": "_____ ручка", "options": [{"text": "новий", "correct": false}, {"text": "нова", "correct": true}, {"text": "нове", "correct": false}]}, {"question": "_____ вікно", "options": [{"text": "чистий", "correct": false}, {"text": "чиста", "correct": false}, {"text": "чисте", "correct": true}]}, {"question": "_____ дзеркало", "options": [{"text": "старий", "correct": false}, {"text": "стара", "correct": false}, {"text": "старе", "correct": true}]}, {"question": "_____ день", "options": [{"text": "гарний", "correct": true}, {"text": "гарна", "correct": false}, {"text": "гарне", "correct": false}]}, {"question": "_____ пісня", "options": [{"text": "красивий", "correct": false}, {"text": "красива", "correct": true}, {"text": "красиве", "correct": false}]}, {"question": "_____ фото", "options": [{"text": "новий", "correct": false}, {"text": "нова", "correct": false}, {"text": "нове", "correct": true}]}, {"question": "_____ кімната", "options": [{"text": "великий", "correct": false}, {"text": "велика", "correct": true}, {"text": "велике", "correct": false}]}, {"question": "_____ одяг", "options": [{"text": "новий", "correct": true}, {"text": "нова", "correct": false}, {"text": "нове", "correct": false}]}, {"question": "_____ вишиванка", "options": [{"text": "білий", "correct": false}, {"text": "біла", "correct": true}, {"text": "біле", "correct": false}]}]} instruction={"Оберіть правильну форму прикметника (Choose the correct adjective form)"} />
 
 ## Діало́г (Connected Dialogue)
 
-Іва́нко is a tourist visiting Ukraine for the first time. His friend **Катя́** (Katia) takes him to a **я́рмарок** (street market) — an open-air market selling handmade crafts. The stalls are full of **вишиванки** (embroidered shirts, f), **глечики** (clay jugs, m), **намисто** (necklaces, n), and **писанки́** (decorated eggs, pl). This is the perfect setting to use every A1.2 skill at once: pointing at objects, describing colors and sizes, asking prices, and talking about quantities.
+A traditional Ukrainian street market, known as a **я́рмарок** (market/fair), is the perfect place to practice describing objects, asking for prices, and pointing at things you want to buy. These markets are full of authentic cultural crafts and are a vibrant part of Ukrainian life. You will see items like a **виши́ва́нка** (embroidered shirt), a traditional clay **гле́чик** (jug), a beautiful **нами́сто** (necklace), and colorfully decorated **писанки́** (Easter eggs). Shopping for these items requires you to use every skill you have learned in this phase simultaneously: identifying gender, making adjectives agree, using demonstratives, and understanding numbers.
+
+Read the conversation between Іва́нко, a tourist, and his local friend Катя́ as they browse the craft stalls at a bustling market. Pay attention to how they point at specific items and describe them before asking the vendor for the price.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Катю, диви́сь! Що це таке́? *(Katia, look! What is this?)*</div>
+<div class="dialogue-line"><span class="speaker">Іванко:</span> Подиви́сь! Це вишиванка? *(Look! Is this an embroidered shirt?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Катя:</span> Так, це гарна бі́ла вишиванка. *(Yes, this is a beautiful white embroidered shirt.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Катя:</span> Це вишиванка. Гарна, пра́вда? *(This is an embroidered shirt. Beautiful, right?)*</div>
+<div class="dialogue-line"><span class="speaker">Іванко:</span> А та си́ня? *(And that dark blue one?)*</div>
 
+<div class="dialogue-line"><span class="speaker">Катя:</span> Той о́дяг теж гарний. *(That clothing is also beautiful.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Ду́же! Яка вона — біла чи синя? *(Very! What color is it — white or blue?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Та — біла. А ця — синя й червона. *(That one is white. And this one is blue and red.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Скільки ко́шту́є ця синя вишиванка? *(How much does this blue embroidered shirt cost?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Вона коштує чоти́риста гривень. *(It costs four hundred hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> А той глечик? Він великий чи мале́нький? *(And that jug? Is it big or small?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Той — великий. Цей — маленький. *(That one is big. This one is small.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Один глечик. Маленький. Скільки він коштує? *(One jug. The small one. How much does it cost?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> До́бре. А це що — намисто? *(Good. And what is this — a necklace?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Так! Це червоне намисто. Га́рне, правда? *(Yes! This is a red necklace. Beautiful, right?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Дуже гарне. А писанки? Скільки коштує одна́ пи́санка? *(Very beautiful. And the decorated eggs? How much does one decorated egg cost?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Катя:</span> Двадцять п'ять гривень. Хо́чеш три? *(Twenty-five hryvnias. Want three?)*</div>
-
-
-<div class="dialogue-line"><span class="speaker">Іванко:</span> Так, три писанки, будь ла́ска! *(Yes, three decorated eggs, please!)*</div>
-
+<div class="dialogue-line"><span class="speaker">Катя:</span> А ось ці писанки — ду́же краси́ві! *(And these decorated eggs — very beautiful!)*</div>
 
 </div>
 
-Every A1.2 pattern appears in this dialogue. The demonstratives show gender agreement: **ця** синя вишиванка (f), **той** глечик (m), **це** намисто (n). Adjectives match their nouns: **синя вишиванка**, **великий глечик**, **червоне намисто**. Numbers combine with nouns naturally: **три писанки**, **один глечик**. And the price pattern **Скільки коштує?** + amount + **гривень** runs through the whole scene.
+After choosing what they like, they need to find out how much the items cost to complete their purchase. Notice how the numbers and prices are stated directly and clearly.
 
-:::caution
-**Ця** vs. **та** — both mean "this/that" but signal distance. Катя uses **ця** (this one, near me) for what she is holding and **та** (that one, over there) for what is farther away. This is not random — it mirrors the physical space of the market.
-:::
+<div class="dialogue">
 
-Ukrainian markets — **я́рмарки** — are where craft culture lives. **Вишиванка** (the embroidered shirt) is the most recognizable symbol of Ukrainian identity — worn at celebrations, protests, and everyday life. **Писанки** (decorated eggs) are an ancient tradition stretching back to the Trypillian era, thousands of years before they became associated with Easter. **Глечик** (a clay jug) is a traditional household object found in every Ukrainian home for centuries. When you use Ukrainian words for these objects, you are connecting to something much older than grammar rules.
+<div class="dialogue-line"><span class="speaker">Іванко:</span> Скі́льки ко́шту́є цей глечик? *(How much does this jug cost?)*</div>
 
-<FillIn client:only="react" items={[{"sentence": "— _____ вишиванка синя й червона. (This one, near me — feminine)", "answer": "Ця", "options": ["Ця", "Цей", "Це", "Та"]}, {"sentence": "— _____ глечик великий. (That one, far away — masculine)", "answer": "Той", "options": ["Той", "Та", "Те", "Цей"]}, {"sentence": "— _____ намисто червоне. (This one, near me — neuter)", "answer": "Це", "options": ["Це", "Цей", "Ця", "Те"]}, {"sentence": "— Скільки коштує _____ синя вишиванка?", "answer": "ця", "options": ["ця", "цей", "це", "той"]}, {"sentence": "— Вона коштує _____ гривень. (400)", "answer": "чотириста", "options": ["чотириста", "сорок", "чотири", "сімдесят"]}, {"sentence": "— Маленький глечик коштує _____ гривень. (150)", "answer": "сто п'ятдесят", "options": ["сто п'ятдесят", "п'ятдесят", "двісті", "сто двадцять"]}, {"sentence": "— _____ писанки, будь ласка! (Three)", "answer": "Три", "options": ["Три", "Один", "Два", "Десять"]}, {"sentence": "— Одна писанка коштує двадцять _____ гривень.", "answer": "п'ять", "options": ["п'ять", "п'ятдесят", "двадцять", "десять"]}]} instruction={"Complete the shopping dialogue. Choose the correct word for each blank"} />
+<div class="dialogue-line"><span class="speaker">Катя:</span> Він коштує сто гривень. *(It costs one hundred hryvnias.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Іванко:</span> А ці нами́ста? *(And these necklaces?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Катя:</span> Одне́ намисто — дві́сті гривень. *(One necklace — two hundred hryvnias.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Катя:</span> У мене є три́ста гривень. Купу́ємо! *(I have three hundred hryvnias. We are buying!)*</div>
+
+</div>
+
+<FillIn client:only="react" items={[{"sentence": "Подивись! Це ____ вишиванка?", "answer": "гарна", "options": ["гарна", "гарний", "гарне"]}, {"sentence": "А ____ синя?", "answer": "та", "options": ["той", "та", "те"]}, {"sentence": "Той ____ теж гарний.", "answer": "одяг", "options": ["одяг", "кімната", "вікно"]}, {"sentence": "А ось ____ писанки — дуже красиві!", "answer": "ці", "options": ["цей", "ця", "ці"]}, {"sentence": "Скільки ____ цей глечик?", "answer": "коштує", "options": ["коштує", "є", "стіл"]}, {"sentence": "Він коштує ____ гривень.", "answer": "сто", "options": ["один", "два", "сто"]}, {"sentence": "А ____ намиста?", "answer": "ці", "options": ["цей", "ця", "ці"]}, {"sentence": "У мене є ____ гривень. Купуємо!", "answer": "триста", "options": ["три", "один", "триста"]}]} instruction={"Заповніть пропуски в діалозі (Complete the dialogue)"} />
 
 ## Підсумок — Summary
 
-By completing A1.2, you can now do five things in Ukrainian. First, you can identify the gender of a noun and test it with **він/вона/воно**. Second, you can describe objects with adjectives in the correct form — **нови́й стіл** (new table), **нова́ книга** (new book), **нове́ вікно** (new window). Third, you can point at things near and far — **цей**, **ця**, **це** vs. **той**, **та**, **те**. Fourth, you can count and talk about prices — **один**, **два**, **сто**, **двісті гривень** (two hundred hryvnias). Fifth, you can talk about groups of things — **столи**, **книги**, **вікна**, all with the adjective plural ending **-і**. This is your world in Ukrainian.
+ At the beginning of this phase, you could only name isolated objects and recognize basic letters. Now, you have the grammatical structure to identify exactly what things are, detail precisely what they look like in terms of size and color, specify how many there are, and pinpoint exactly where they are located relative to you. You are no longer just memorizing a static list of nouns; you are building complete, accurate descriptions. This ability to smoothly link nouns, adjectives, demonstratives, and numbers is the absolute core of practical communication.
 
-Your vocabulary milestone is real. You now know 20+ Ukrainian nouns with their genders, 10+ adjectives that you can inflect for gender, both Ukrainian words for blue — **синій** (saturated, dark blue) and **блакитний** (sky blue, light blue) — and a working set of numbers for prices. These words cover your physical world: furniture, clothing, objects, colors, quantities. A Ukrainian speaker could understand you when you describe a room, a market stall, or a price tag.
+Review this checklist to confirm your progress and ensure you are ready before moving to the next level:
+- I can easily identify the gender of any A1 noun based on its final letter.
+- I can describe an object's color and size using the correct matching adjective ending.
+- I can accurately use "this" and "that" to point at specific things near or far from me.
+- I can correctly make nouns plural and describe groups of objects.
+- I can count items up to one hundred and ask for prices in a shop or market.
 
-:::tip
-Two blues, not one. English has "blue" for everything. Ukrainian distinguishes **синій** (the deep blue of the sea or a dark shirt) from **блакитний** (the pale blue of the sky). Both are basic color terms — neither is optional.
-:::
-
-So far, A1.2 has been about things: objects, their appearance, their price, their number. A1.3 shifts to actions — what people do, what they like, what they want. The next module (M15: What I Like) introduces Ukrainian verbs for the first time. The same careful, step-by-step approach applies. You will discover how Ukrainian verbs work through real situations, not grammar tables.
-
-**Ти вже вмі́єш говори́ти про свій світ украї́нською.** *(You can already talk about your world in Ukrainian.)* This is real. You proved it in the dialogue above.
+In the next module, your language skills will become much more dynamic and active. We will move away from simply describing what things are, and begin exploring what people actually do. Get ready for Phase A1.3, where we will introduce action verbs, common hobbies, and how to talk about what you like to do!
 
 </TabItem>
 <TabItem label="Словник">
@@ -166,98 +126,75 @@ So far, A1.2 has been about things: objects, their appearance, their price, thei
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **кни́га** | book (feminine noun) | ім. | ж. |
-| **ла́мпа** | lamp (feminine noun) | ім. | ж. |
-| **карти́на** | painting (feminine noun) | ім. | ж. |
-| **вікно́** | window (neuter noun) | ім. | с. |
-| **две́рі** | door (plural noun) | ім. |  |
-| **кімна́та** | room (feminine noun) | ім. | ж. |
-| **куто́к** | corner (masculine noun) | ім. | ч. |
-| **стіна́** | wall (feminine noun) | ім. | ж. |
-| **виши́ва́нка** | embroidered shirt (feminine noun, symbol of Ukrainian identity) | ім. | ж. |
-| **гле́чик** | clay jug (masculine noun) | ім. | ч. |
-| **нами́сто** | necklace (neuter noun) | ім. | с. |
-| **пи́санка** | decorated egg (feminine noun, ancient Ukrainian tradition) | ім. | ж. |
-| **я́рмарок** | street market, open-air market (masculine noun) | ім. | ч. |
-| **гри́вня** | hryvnia (Ukrainian currency, feminine noun) | ім. | ж. |
-| **зо́шит** | notebook (masculine noun) | ім. | ч. |
-| **земля́** | land, earth (feminine noun with soft stem) | ім. | ж. |
-| **си́ній** | dark blue (soft-stem adjective: синій/синя/синє) | прикм. |  |
-| **блаки́тний** | sky blue, light blue (hard-stem adjective: блакитний/блакитна/блакитне) | прикм. |  |
-| **черво́ний** | red (hard-stem adjective) | прикм. |  |
-| **бі́лий** | white (hard-stem adjective) | прикм. |  |
-| **жо́втий** | yellow (hard-stem adjective) | прикм. |  |
-| **кори́чневий** | brown (hard-stem adjective) | прикм. |  |
-| **зеле́ний** | green (hard-stem adjective) | прикм. |  |
-| **вели́кий** | big, large (hard-stem adjective: великий/велика/велике/великі) | прикм. |  |
-| **мале́нький** | small (hard-stem adjective) | прикм. |  |
-| **нови́й** | new (hard-stem adjective) | прикм. |  |
-| **ціка́вий** | interesting (hard-stem adjective) | прикм. |  |
-| **га́рний** | nice, beautiful (hard-stem adjective) | прикм. |  |
-| **вона́** | she / it (feminine gender pronoun) | ім. | ж. |
-| **воно́** | it (neuter gender pronoun) | ім. | с. |
-| **оди́н** | one (1) | числ. |  |
-| **де́сять** | ten (10) | числ. |  |
-| **два́дцять** | twenty (20) | числ. |  |
-| **п'ятдеся́т** | fifty (50) | числ. |  |
-| **дві́сті** | two hundred (200) | числ. |  |
-| **чоти́риста** | four hundred (400) | числ. |  |
-| **ко́шту́є** | costs (3rd person singular of коштувати) | дієсл. |  |
-| **стої́ть** | stands (3rd person singular of стояти) | дієсл. |  |
-| **ви́си́ть** | hangs (3rd person singular of висіти) | дієсл. |  |
-| **до́бре** | good, OK | присл. |  |
+| **кімна́та** | room | ім. | ж. |
+| **вели́кий** | big | прикм. |  |
+| **сві́тлий** | bright | прикм. |  |
+| **нови́й** | new | прикм. |  |
+| **жо́втий** | yellow | прикм. |  |
+| **мали́й** | small | прикм. |  |
+| **стіна́** | wall | ім. | ж. |
+| **бі́лий** | white | прикм. |  |
+| **стіле́ць** | chair | ім. | ч. |
+| **стари́й** | old | прикм. |  |
+| **зру́чний** | comfortable | прикм. |  |
+| **дзе́ркало** | mirror | ім. | с. |
+| **ру́чка** | pen | ім. | ж. |
+| **га́рний** | beautiful | прикм. |  |
+| **пі́сня** | song | ім. | ж. |
+| **фо́то** | photo | ім. | с. |
+| **черво́ний** | red | прикм. |  |
+| **си́ній** | dark blue | прикм. |  |
+| **блаки́тний** | light blue | прикм. |  |
+| **п'ятдеся́т** | fifty | числ. |  |
+| **сто** | one hundred | числ. |  |
+| **я́рмарок** | market (fair) | ім. | ч. |
+| **виши́ва́нка** | embroidered shirt | ім. | ж. |
+| **гле́чик** | jug | ім. | ч. |
+| **нами́сто** | necklace | ім. | с. |
+| **пи́санка** | Easter egg | ім. | ж. |
+| **о́дяг** | clothing | ім. | ч. |
+| **теж** | also | присл. |  |
 | **ду́же** | very | присл. |  |
-| **пра́вда** | right, true (used in tag questions) | ім. | ж. |
+| **краси́вий** | beautiful | прикм. |  |
+| **дві́сті** | two hundred | числ. |  |
+| **три́ста** | three hundred | числ. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **двадцять п'ять** | twenty-five (25) |
-| **сто п'ятдесят** | one hundred fifty (150) |
-| **будь ласка** | please |
-| **Що це таке?** | What is this? |
-| **Скільки коштує ця...?** | How much does this... cost? |
-| **Гарна, правда?** | Beautiful, right? |
-| **Хочеш...?** | Do you want...? |
+| **Подивись!** | Look! |
+| **Купуємо!** | We are buying! |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "кни́га", back: "book (feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ла́мпа", back: "lamp (feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "карти́на", back: "painting (feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вікно́", back: "window (neuter noun)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "две́рі", back: "door (plural noun)", subtitle: "ім." }, { front: "кімна́та", back: "room (feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "куто́к", back: "corner (masculine noun)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стіна́", back: "wall (feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "виши́ва́нка", back: "embroidered shirt (feminine noun, symbol of Ukrainian identity)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гле́чик", back: "clay jug (masculine noun)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "нами́сто", back: "necklace (neuter noun)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пи́санка", back: "decorated egg (feminine noun, ancient Ukrainian tradition)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "я́рмарок", back: "street market, open-air market (masculine noun)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гри́вня", back: "hryvnia (Ukrainian currency, feminine noun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зо́шит", back: "notebook (masculine noun)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "земля́", back: "land, earth (feminine noun with soft stem)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "си́ній", back: "dark blue (soft-stem adjective: синій/синя/синє)", subtitle: "прикм." }, { front: "блаки́тний", back: "sky blue, light blue (hard-stem adjective: блакитний/блакитна/блакитне)", subtitle: "прикм." }, { front: "черво́ний", back: "red (hard-stem adjective)", subtitle: "прикм." }, { front: "бі́лий", back: "white (hard-stem adjective)", subtitle: "прикм." }, { front: "жо́втий", back: "yellow (hard-stem adjective)", subtitle: "прикм." }, { front: "кори́чневий", back: "brown (hard-stem adjective)", subtitle: "прикм." }, { front: "зеле́ний", back: "green (hard-stem adjective)", subtitle: "прикм." }, { front: "вели́кий", back: "big, large (hard-stem adjective: великий/велика/велике/великі)", subtitle: "прикм." }, { front: "мале́нький", back: "small (hard-stem adjective)", subtitle: "прикм." }, { front: "нови́й", back: "new (hard-stem adjective)", subtitle: "прикм." }, { front: "ціка́вий", back: "interesting (hard-stem adjective)", subtitle: "прикм." }, { front: "га́рний", back: "nice, beautiful (hard-stem adjective)", subtitle: "прикм." }, { front: "вона́", back: "she / it (feminine gender pronoun)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it (neuter gender pronoun)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "оди́н", back: "one (1)", subtitle: "числ." }, { front: "де́сять", back: "ten (10)", subtitle: "числ." }, { front: "два́дцять", back: "twenty (20)", subtitle: "числ." }, { front: "п&#39;ятдеся́т", back: "fifty (50)", subtitle: "числ." }, { front: "дві́сті", back: "two hundred (200)", subtitle: "числ." }, { front: "чоти́риста", back: "four hundred (400)", subtitle: "числ." }, { front: "ко́шту́є", back: "costs (3rd person singular of коштувати)", subtitle: "дієсл." }, { front: "стої́ть", back: "stands (3rd person singular of стояти)", subtitle: "дієсл." }, { front: "ви́си́ть", back: "hangs (3rd person singular of висіти)", subtitle: "дієсл." }, { front: "до́бре", back: "good, OK", subtitle: "присл." }, { front: "ду́же", back: "very", subtitle: "присл." }, { front: "пра́вда", back: "right, true (used in tag questions)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вели́кий", back: "big", subtitle: "прикм." }, { front: "сві́тлий", back: "bright", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "жо́втий", back: "yellow", subtitle: "прикм." }, { front: "мали́й", back: "small", subtitle: "прикм." }, { front: "стіна́", back: "wall", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бі́лий", back: "white", subtitle: "прикм." }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стари́й", back: "old", subtitle: "прикм." }, { front: "зру́чний", back: "comfortable", subtitle: "прикм." }, { front: "дзе́ркало", back: "mirror", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "га́рний", back: "beautiful", subtitle: "прикм." }, { front: "пі́сня", back: "song", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фо́то", back: "photo", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "черво́ний", back: "red", subtitle: "прикм." }, { front: "си́ній", back: "dark blue", subtitle: "прикм." }, { front: "блаки́тний", back: "light blue", subtitle: "прикм." }, { front: "п&#39;ятдеся́т", back: "fifty", subtitle: "числ." }, { front: "сто", back: "one hundred", subtitle: "числ." }, { front: "я́рмарок", back: "market (fair)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "виши́ва́нка", back: "embroidered shirt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "гле́чик", back: "jug", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "нами́сто", back: "necklace", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пи́санка", back: "Easter egg", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́дяг", back: "clothing", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теж", back: "also", subtitle: "присл." }, { front: "ду́же", back: "very", subtitle: "присл." }, { front: "краси́вий", back: "beautiful", subtitle: "прикм." }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "три́ста", back: "three hundred", subtitle: "числ." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "стіл", "right": "він"}, {"left": "книга", "right": "вона"}, {"left": "вікно", "right": "воно"}, {"left": "глечик", "right": "він"}, {"left": "лампа", "right": "вона"}, {"left": "намисто", "right": "воно"}, {"left": "вишиванка", "right": "вона"}, {"left": "зошит", "right": "він"}]} instruction={"Match each noun to the correct **займенник** (pronoun): **він**, **вона**, or **воно**"} />
+<MatchUp client:only="react" pairs={[{"left": "стіл", "right": "він"}, {"left": "лампа", "right": "вона"}, {"left": "вікно", "right": "воно"}, {"left": "стільці", "right": "вони"}, {"left": "дзеркало", "right": "воно"}, {"left": "ручка", "right": "вона"}, {"left": "одяг", "right": "він"}, {"left": "книги", "right": "вони"}]} instruction={"З'єднайте іменник із займенником (Match the noun to the pronoun)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "The table in the room is big and brown.", "isTrue": true, "explanation": "The text says: «Мій стіл великий і коричневий.»"}, {"statement": "The white lamp is in the corner.", "isTrue": false, "explanation": "The yellow lamp is in the corner: «А та лампа жовта — вона стоїть у кутку.»"}, {"statement": "There are three books in the room.", "isTrue": true, "explanation": "The text says: «У мене є три книги.»"}, {"statement": "The painting on the wall is red and green.", "isTrue": false, "explanation": "The painting is blue and green: «Картина синя й зелена.»"}, {"statement": "The window is big and the door is small.", "isTrue": true, "explanation": "The text says: «Вікно велике, а двері маленькі.»"}, {"statement": "The books are new and interesting.", "isTrue": true, "explanation": "The text says: «Ці книги нові й цікаві.»"}]} instruction={"Read the room description again. True or false?"} />
+<GroupSort client:only="react" groups={{"Він (Masculine)": ["одяг", "глечик", "стіл", "день"], "Вона (Feminine)": ["вишиванка", "кімната", "стіна", "ручка"], "Воно (Neuter)": ["дзеркало", "намисто", "фото", "вікно"]}} instruction={"Розподіліть слова за родами (Sort the words by gender)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Це великий книга.", "errorWord": "великий", "correctForm": "велика", "options": ["велика", "велике", "великі"], "explanation": "Книга is feminine (вона), so the adjective must end in -а: велика."}, {"sentence": "Мій лампа біла.", "errorWord": "Мій", "correctForm": "Моя", "options": ["Моя", "Моє", "Мої"], "explanation": "Лампа is feminine (вона), so the possessive must be моя."}, {"sentence": "Це червона намисто.", "errorWord": "червона", "correctForm": "червоне", "options": ["червоне", "червоний", "червоні"], "explanation": "Намисто is neuter (воно), so the adjective must end in -е: червоне."}, {"sentence": "Цей вишиванка синя.", "errorWord": "Цей", "correctForm": "Ця", "options": ["Ця", "Це", "Ці"], "explanation": "Вишиванка is feminine (вона), so the demonstrative must be ця."}, {"sentence": "Новий книги цікаві.", "errorWord": "Новий", "correctForm": "Нові", "options": ["Нові", "Нова", "Нове"], "explanation": "Книги is plural. The adjective plural ending is always -і: нові книги."}, {"sentence": "Той намисто гарне.", "errorWord": "Той", "correctForm": "Те", "options": ["Те", "Та", "Це"], "explanation": "Намисто is neuter (воно), so the far demonstrative must be те."}]} instruction={"Find and correct the agreement error in each sentence"} />
+<TrueFalse client:only="react" items={[{"statement": "гарна стіл", "isTrue": false, "explanation": "Стіл is masculine (він), so it should be гарний стіл."}, {"statement": "велике вікно", "isTrue": true, "explanation": "Вікно is neuter (воно), and велике is the correct neuter adjective."}, {"statement": "старий ручка", "isTrue": false, "explanation": "Ручка is feminine (вона), so it should be стара ручка."}, {"statement": "нові книги", "isTrue": true, "explanation": "Книги is plural (вони), and нові is the correct plural adjective."}, {"statement": "ця дзеркало", "isTrue": false, "explanation": "Дзеркало is neuter (воно), so it should be це дзеркало."}, {"statement": "той день", "isTrue": true, "explanation": "День is masculine (він), and той is the correct masculine demonstrative."}]} instruction={"Чи правильно узгоджені слова? (Are the words agreed correctly?)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "стіл", "right": "столи"}, {"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "лампа", "right": "лампи"}, {"left": "вишиванка", "right": "вишиванки"}, {"left": "глечик", "right": "глечики"}, {"left": "намисто", "right": "намиста"}, {"left": "картина", "right": "картини"}]} instruction={"Match each noun to its correct **plural** (множина) form"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "У мене є два стілець.", "errorWord": "стілець", "correctForm": "стільці", "options": ["стільці", "стілеці", "стільця"], "explanation": "Після 'два' потрібна форма множини."}, {"sentence": "Скільки коштує ця глечик?", "errorWord": "ця", "correctForm": "цей", "options": ["цей", "це", "ці"], "explanation": "Глечик is masculine (він), so use цей."}, {"sentence": "Це гарний вишиванка.", "errorWord": "гарний", "correctForm": "гарна", "options": ["гарна", "гарне", "гарні"], "explanation": "Вишиванка is feminine (вона), so use гарна."}, {"sentence": "Там є три синій книги.", "errorWord": "синій", "correctForm": "сині", "options": ["сині", "синя", "синє"], "explanation": "Книги is plural (вони), so use сині."}, {"sentence": "Той намисто коштує сто гривень.", "errorWord": "Той", "correctForm": "Те", "options": ["Те", "Та", "Ті"], "explanation": "Намисто is neuter (воно), so use те."}, {"sentence": "Ця вікно дуже велике.", "errorWord": "Ця", "correctForm": "Це", "options": ["Це", "Цей", "Ці"], "explanation": "Вікно is neuter (воно), so use це."}]} instruction={"Знайдіть і виправте помилку (Find and fix the error)"} />
 
-<Quiz client:only="react" questions={[{"question": "_____ глечик (this one, near me — masculine)", "options": [{"text": "Цей", "correct": true}, {"text": "Ця", "correct": false}, {"text": "Це", "correct": false}, {"text": "Той", "correct": false}]}, {"question": "_____ вишиванка (this one, near me — feminine)", "options": [{"text": "Цей", "correct": false}, {"text": "Ця", "correct": true}, {"text": "Це", "correct": false}, {"text": "Та", "correct": false}]}, {"question": "_____ намисто (this one, near me — neuter)", "options": [{"text": "Цей", "correct": false}, {"text": "Ця", "correct": false}, {"text": "Це", "correct": true}, {"text": "Те", "correct": false}]}, {"question": "_____ стіл (that one, far away — masculine)", "options": [{"text": "Цей", "correct": false}, {"text": "Той", "correct": true}, {"text": "Та", "correct": false}, {"text": "Те", "correct": false}]}, {"question": "_____ лампа (that one, far away — feminine)", "options": [{"text": "Ця", "correct": false}, {"text": "Той", "correct": false}, {"text": "Та", "correct": true}, {"text": "Те", "correct": false}]}, {"question": "_____ вікно (that one, far away — neuter)", "options": [{"text": "Це", "correct": false}, {"text": "Той", "correct": false}, {"text": "Та", "correct": false}, {"text": "Те", "correct": true}]}, {"question": "_____ книги (these — plural)", "options": [{"text": "Цей", "correct": false}, {"text": "Ця", "correct": false}, {"text": "Ці", "correct": true}, {"text": "Ті", "correct": false}]}, {"question": "Катя is holding a necklace and says: «_____ намисто червоне.»", "options": [{"text": "Те", "correct": false}, {"text": "Той", "correct": false}, {"text": "Це", "correct": true}, {"text": "Та", "correct": false}]}]} instruction={"Choose the correct demonstrative: **цей/ця/це** (this, nearby) or **той/та/те** (that, far away)"} />
+<Translate client:only="react" questions={[{"source": "This is my room.", "options": [{"text": "Це моя кімната.", "correct": true}, {"text": "Це мій кімната.", "correct": false}, {"text": "Це моє кімната.", "correct": false}]}, {"source": "How much does this cost?", "options": [{"text": "Скільки це коштує?", "correct": true}, {"text": "Скільки це є?", "correct": false}, {"text": "Де це коштує?", "correct": false}]}, {"source": "I have one hundred hryvnias.", "options": [{"text": "У мене є сто гривень.", "correct": true}, {"text": "У мене є одна гривня.", "correct": false}, {"text": "Я маю сто гривня.", "correct": false}]}, {"source": "This window is big.", "options": [{"text": "Це вікно велике.", "correct": true}, {"text": "Ця вікно велика.", "correct": false}, {"text": "Цей вікно великий.", "correct": false}]}, {"source": "These are beautiful shirts.", "options": [{"text": "Ці вишиванки гарні.", "correct": true}, {"text": "Ця вишиванка гарна.", "correct": false}, {"text": "Ці вишиванки гарний.", "correct": false}]}, {"source": "Here is my table.", "options": [{"text": "Ось мій стіл.", "correct": true}, {"text": "Тут моя стіл.", "correct": false}, {"text": "Ось моє стіл.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
+<Unjumble client:only="react" items={[{"words": "велика / і / Вона / світла.", "answer": "Вона велика і світла."}, {"words": "стіл. / мій / Ось", "answer": "Ось мій стіл."}, {"words": "є / сто / мене / У / гривень.", "answer": "У мене є сто гривень."}, {"words": "цей / коштує / Скільки / глечик?", "answer": "Скільки коштує цей глечик?"}, {"words": "красиві! / А / ці / дуже / писанки", "answer": "А ці писанки дуже красиві!"}, {"words": "є / два / У / мене / стільці.", "answer": "У мене є два стільці."}]} instruction={"Складіть правильне речення (Build the correct sentence)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- Synthesis of M08-M13 content
-  _No new material — review and integration of A1.2 phase._
-
-**Граматика — Grammar (МійКлас)**
-
-- [МійКлас: Приголосні м'які й тверді, дзвінкі й глухі](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
-- [МійКлас: Основа слова і закінчення](https://miyklas.com.ua/p/ukrainska-mova/5-klas/budova-slova-40702/osnova-slova-i-zakinchennia-40400) (miyklas.com.ua)
-- [МійКлас: Діалог](https://miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/dialog-37999) (miyklas.com.ua)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Ukrainian Tongue Twisters (Скоромовки)](https://www.ukrainianlessons.com/tonguetwisters/)
-- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=165), стор. 165
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=80), стор. 80
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=26), стор. 26
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=161), стор. 161
+- [Ворон А. А. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-voron-2019.pdf#page=8), стор. 8
 
 </TabItem>
 </Tabs>

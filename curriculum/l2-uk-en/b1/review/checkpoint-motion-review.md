@@ -1,57 +1,63 @@
 ## Linguistic Scan
-Linguistic scan complete. The text demonstrates an exceptionally high level of grammatical accuracy, correctly explaining very complex morphological rules (aspect derivation of motion verbs, consonant mutations) without error.
-- "їзджу" and other incorrect forms flagged by VESUM are intentionally included in the text as negative examples (`їжджу (I ride), а не «їзджу»`), which is pedagogically correct.
-- Found minor stylistic pleonasms and slightly unnatural phrasing ("колеги по роботі", "логістичний маршрут по великому місту"), detailed in the findings below.
+Found one Russianism/colloquial borrowing ("парковці"). No other linguistic errors, Surzhyk, calques, or Russian characters were found.
 
 ## Exercise Check
-- Marker `<!-- INJECT_ACTIVITY: quiz -->` placed after Block 1 (Prepositions).
-- Marker `<!-- INJECT_ACTIVITY: error-correction -->` placed after Block 2 (Base pairs).
-- Marker `<!-- INJECT_ACTIVITY: group-sort -->` placed after Block 3 (Prefixes 1).
-- Marker `<!-- INJECT_ACTIVITY: match-up -->` placed after Block 4 (Prefixes 2).
-- Marker `<!-- INJECT_ACTIVITY: free-write -->` placed after Block 6 (Stories).
-- Marker `<!-- INJECT_ACTIVITY: fill-in -->` placed in Summary.
-*Issue*: The plan requested exactly 6 activities, and the generator placed exactly 6 markers. However, because there are 6 content blocks + 1 summary, Block 5 (Air/Water/Figurative) is left without an activity marker. Furthermore, the `quiz` hint in the plan is designated as a "Mixed quiz: M27-M36", but it is injected immediately after Block 1, which is premature for a mixed assessment.
+The plan provided exactly 6 `activity_hints`. The writer generated 13 `<!-- INJECT_ACTIVITY: {id} -->` markers, fragmenting the exercises unnecessarily and deviating from the planned comprehensive mixed tasks. The IDs also do not neatly match the plan's expected format (e.g., the plan called for a single 12-item mixed quiz covering M27-M36, but the writer split it into 5 separate markers). I have issued a finding to consolidate them back to the 6 planned markers.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The module covers all required topics, grammar points, and vocabulary from the plan flawlessly. However, the deterministic word count is 4901, which is 22% over the target of 4000 words. |
-| 2. Linguistic accuracy | 9/10 | Grammatical explanations are perfectly accurate. Minor stylistic deductions for pleonasms: "колеги по роботі" and the slightly unnatural "логістичний маршрут по великому місту". |
-| 3. Pedagogical quality | 9/10 | Outstanding, clear explanations of complex concepts (unidirectional vs multidirectional, perfective prefixation). Deducting 1 point because Block 5 lacks an injected activity marker, leaving a practice gap for figurative motion. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are naturally integrated into the text (e.g., "контрольна робота", "подорож", "самооцінка", "розклад"). |
-| 5. Exercise quality | 9/10 | All 6 markers requested by the plan are present. Deducting 1 point for sequencing: placing a "Mixed quiz" after Block 1 is pedagogically premature, as the student hasn't reviewed Blocks 2-6 yet. |
-| 6. Engagement & tone | 9/10 | Very engaging and supportive tone. Deducting 1 point for occasional corporate phrasing in a conversational context ("логістичний маршрут", "політика чесності"). |
-| 7. Structural integrity | 9/10 | Markdown structure exactly matches the `content_outline`. Deducting 1 point because the word count (4901) significantly exceeds the target. |
-| 8. Cultural accuracy | 10/10 | Excellent use of authentic Ukrainian proverbs ("Сім разів відмір — один раз відріж", "Час летить — не наздоженеш") and realistic travel routes. |
-| 9. Dialogue & conversation quality | 10/10 | The "Oral exam" dialogue is highly realistic, seamlessly incorporating all target motion verbs and prefixes into a natural exchange. |
+| 1. Plan adherence | 10/10 | The writer successfully covered all outline sections, including preposition vs. adverb nuances and all groups of prefixed verbs ("Коли ви хочете описати близькість... є кілька чудових варіантів на вибір: «біля»... «коло»... «поруч з»"). |
+| 2. Linguistic accuracy | 8/10 | Found a colloquial borrowing/Russianism: "на безпечній парковці". VESUM confirms this word form does not exist in standard Ukrainian. The standard word is "автостоянці". |
+| 3. Pedagogical quality | 10/10 | Excellent breakdown and scaffolding. The distinction between prepositions and adverbs is explained with perfect clarity: ("Він стояв навпроти школи... Але у реченні «Я живу навпроти» — це самостійний прислівник"). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary terms from the plan are introduced naturally within the text (e.g., "односпрямований рух", "маршрут", "переносне значення"). |
+| 5. Exercise quality | 7/10 | The writer over-generated 13 `INJECT_ACTIVITY` markers instead of the 6 comprehensive ones requested in the `activity_hints` plan. This fragments the exercises and risks failing the YAML generator mapping. |
+| 6. Engagement & tone | 10/10 | The tone is highly supportive, warm, and natural for a teacher conducting a final review ("Не поспішайте, аналізуйте кожну свою помилку і радійте правильним відповідям!"). |
+| 7. Structural integrity | 10/10 | The module is exceptionally well-structured. The word count is 4354 words (comfortably over the 4000-word target), and all markdown tags and headers correctly follow the plan. |
+| 8. Cultural accuracy | 10/10 | Uses perfectly authentic Ukrainian geographical settings (Київ, Рівне, Львів, Карпати, Яремче, Бориспіль) and features a highly plausible, decolonized domestic travel narrative. |
+| 9. Dialogue & conversation quality | 8/10 | The student's response in the "Oral exam" dialogue is entirely robotic because the writer simply copy-pasted the exact prompt instruction from the plan rather than expanding it into a natural spoken sentence. |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: Entire module
-Issue: Word count is 4901 words, which exceeds the target of 4000 words by over 20%. The content is excellent, but the pacing is overly dense for a single checkpoint.
-Fix: Addressed via pipeline scaling (no direct text replacement provided as removing 900 words requires structural edits, but issue is logged for tracking).
 
-[2. Linguistic accuracy] [minor]
-Location: Блок 6: Подорожні розповіді — "Екзаменатор просить студента детально описати свій логістичний маршрут по великому місту,"
-Issue: "Логістичний маршрут" is overly corporate/clunky for this context. "по великому місту" is acceptable but stylistically inferior to the instrumental case of space ("великим містом").
-Fix: Change to "маршрут великим містом".
+[Linguistic accuracy] [CRITICAL]
+Location: Блок 6: Подорожні розповіді ("Ми залишили нашу машину на безпечній парковці навпроти готелю")
+Issue: The word "парковці" is a Russianism/colloquial borrowing not attested in standard dictionaries like СУМ or VESUM. The standard Ukrainian word is "автостоянка" or "стоянка".
+Fix: Replace with "на безпечній автостоянці".
 
-[2. Linguistic accuracy] [minor]
-Location: Блок 5: Повітряний і водний рух та переносне значення — "вас обов'язково зустрінуть друзі або колеги по роботі."
-Issue: "Колеги по роботі" is a recognized stylistic pleonasm in Ukrainian (a colleague is already someone from work).
-Fix: Remove "по роботі".
+[Exercise quality] [MAJOR]
+Location: Throughout the module (e.g., `<!-- INJECT_ACTIVITY: quiz-case-agreement-and-preposition-choice -->`, `<!-- INJECT_ACTIVITY: travel-comprehension-questions -->`)
+Issue: The writer injected 13 activity markers, fragmenting the practice into tiny pieces. The plan's `activity_hints` explicitly requests exactly 6 comprehensive exercises. Injecting 13 random IDs will break the pipeline's YAML generator mapping.
+Fix: Delete the 7 redundant markers and rename the remaining ones to match the 6 planned hints (`quiz-mixed-motion`, `match-up-prefixes`, `group-sort-prefixes`, `error-correction-motion`, `fill-in-travel-narrative`, `free-write-journey`).
 
-[5. Exercise quality] [minor]
-Location: Блок 5: Повітряний і водний рух та переносне значення
-Issue: No activity marker is injected after Block 5, leaving figurative and air/water motion without immediate practice. (Note: caused by the plan only providing 6 activity hints for 7 sections).
-Fix: No action required in text; issue stems from plan constraints.
+[Dialogue & conversation quality] [MAJOR]
+Location: Блок 6: Подорожні розповіді ("> — **Студент:** Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова, обійшов центр і зайшов у кав'ярню.")
+Issue: The student's response is completely robotic and transactional because the writer simply pasted the exact setting string from the plan rather than expanding it into a natural conversational sentence.
+Fix: Expand the dialogue response to sound like a natural spoken answer while retaining the requested sequence of prefixed verbs.
 
 ## Verdict: REVISE
-The module is of exceptionally high quality, offering some of the best grammatical explanations of Ukrainian motion verbs. However, the presence of minor stylistic pleonasms and the significant word count overage require a REVISE verdict to polish the final text.
+The content is extremely detailed, well-paced, and comprehensive, but it contains a critical vocabulary error (парковці), robotic dialogue, and a major formatting issue with the exercise markers that will disrupt the downstream pipeline. Applying the determinative fixes below will bring this module up to standard.
 
 <fixes>
-- find: "описати свій логістичний маршрут по великому місту,"
-  replace: "описати свій маршрут великим містом,"
-- find: "зустрінуть друзі або колеги по роботі."
-  replace: "зустрінуть друзі або колеги."
+- find: "на безпечній парковці навпроти готелю"
+  replace: "на безпечній автостоянці навпроти готелю"
+- find: "<!-- INJECT_ACTIVITY: quiz-case-agreement-and-preposition-choice -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: quiz-verb-choice-base-pairs -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: fill-in-conjugation-drill-motion -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: prefix-selection-arrival-departure -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: aspect-pair-generation -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: prefix-selection-all-groups -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz-mixed-motion -->"
+- find: "<!-- INJECT_ACTIVITY: matching-prefix-meanings -->"
+  replace: "<!-- INJECT_ACTIVITY: match-up-prefixes -->"
+- find: "<!-- INJECT_ACTIVITY: literal-vs-figurative-id -->\n"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: travel-comprehension-questions -->\n"
+  replace: ""
+- find: "> — **Студент:** Я вийшов з дому, пішов до зупинки, доїхав до вокзалу, приїхав до Львова, обійшов центр і зайшов у кав'ярню."
+  replace: "> — **Студент:** Зранку я вийшов з дому і відразу пішов до зупинки. Звідти я швидко доїхав до вокзалу. Коли я нарешті приїхав до Львова, я із задоволенням обійшов увесь центр міста, а ввечері зайшов у кав'ярню."
 </fixes>

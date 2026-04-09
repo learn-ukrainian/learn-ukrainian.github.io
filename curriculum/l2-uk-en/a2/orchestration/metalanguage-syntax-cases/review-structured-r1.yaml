@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The text misses the "Complete metalanguage glossary" in the "Підсумок"
+    section. It omitted "сполучні слова" from the "Складне речення" section. It also
+    omitted the required examples ("Тарасе! Маріє! Д
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Pervasive use of Russian calques: "Давайте" + verb (6 instances) and
+    "Задаємо питання".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Strong PPP flow and excellent analogies (commander/subordinate for словосполучення).
+    Good use of visual mnemonics.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required and recommended vocabulary items were included naturally,
+    except for "сполучне слово" which was skipped.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Hallucinated a `mark-the-words-combinations` exercise and forgot the required
+    `fill-in` activity for determining cases.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very supportive, natural teacher tone. Good analogies (building a house,
+    energetic centers) that do not feel gamified.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, high word count, and well-paced sections. All H2 headings
+    perfectly match the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately reflects Ukrainian Grade 5 pedagogical approaches and syntactic
+    traditions (e.g., underline styles, structural parsing).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: The dialogue completely ignored the plan's strict requirement to use "підмет,
+    присудок, додаток, означення, обставина", and to parse a newspaper sentence. Instead,
+    it only redundantly repeated the exp
+findings: []

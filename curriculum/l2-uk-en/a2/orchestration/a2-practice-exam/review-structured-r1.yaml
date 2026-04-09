@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers almost all points, but missed explicitly mentioning "negative pronouns",
+    "conjunctions", and "numeral agreement" in the Grammar review section.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Contains a factually incorrect claim: "Для опису стану здоров''я українці
+    використовують безособову конструкцію «У мене болить + називний відмінок»." The
+    phrase "У мене болить голова" is a standard two'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of grammatical constructions (Direction, Absence,
+    Place) and L2 pitfalls, but the mislabeling of the syntax construction slightly
+    detracts from it.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (іспит, завдання, відповідь, питання, читання, письмо,
+    граматика, результат) and recommended words (самооцінка, оцінка, правильний) are
+    naturally integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan's `activity_hints` in type and focus,
+    and are placed logically after the relevant instruction.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Uses a forbidden self-congratulatory opener ("Вітаємо! Ви майже завершили
+    рівень А2.").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, 2318 words (well above target), all plan H2 headings are
+    present and correctly ordered.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highly accurate and respectful depiction of Ukrainian Christmas traditions
+    (кутя, 12 страв, перша зірка, колядки) without any Russian framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The mock exam dialogue is natural, multi-turn, and perfectly simulates
+    the intended A2 speaking situations.
+findings: []

@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Skeleton Prompt — Module Structure Planning
 
 You are planning the detailed paragraph-level structure of a Ukrainian language module. Do NOT write the full content — only plan the structure.
@@ -153,251 +153,284 @@ references:
 
 ---
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief
 
-Skim these for content ideas. Reference specific examples you plan to use.
+Skim this for the key concepts, paradigms, and examples you must cover. Reference specific examples from the article that you plan to use in each paragraph.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Checkpoint: Places
-**Module:** checkpoint-places | **Phase:** A1.5 [Places]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: Checkpoint: Places
+**Module:** checkpoint-places | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/checkpoint-places.md
+
+# Педагогіка A1: Checkpoint Places
+
+
+
+## Методичний підхід (Methodological Approach)
+
+Навчання теми "Місця" для рівня А1 зосереджується на функціональності та негайному використанні. Українська педагогіка для молодших класів вводить цю концепцію через три фундаментальні питання, що визначають просторові відношення: **Де?**, **Куди?**, і **Звідки?**. Цей підхід дозволяє учням будувати прості, але граматично правильні фрази, ще до повного засвоєння відмінкової системи.
+
+Основа методу — зв'язок дієслова з прислівником місця. У підручниках для 4-го класу прислівник визначається як частина мови, що відповідає на ці ключові питання (Source `4-klas-ukrmova-zaharijchuk_s0165`). Наприклад: `засяяло (де?) угорі`, `повіяв (звідки?) здалеку`. Це створює міцну інтуїтивну базу.
+
+Спочатку вводяться прості діалоги, що моделюють природне спілкування. Вірш-діалог "Струмок" з підручника для 2-го класу є ідеальним зразком: запитання `— Ти куди біжиш, струмок?` отримує відповідь `— Через поле у ярок`, демонструючи зв'язок питання про напрямок (`куди?`) з відповіддю, що містить прийменник та місце (`у ярок`) (Source `2-klas-ukrmova-vashulenko-2019-2_s0095`). Такий підхід "запитання-відповідь" є центральним.
+
+На цьому етапі граматика подається імпліцитно. Учень запам'ятовує готові конструкції (`я йду в парк`, `я живу в Києві`), а не таблиці відмінювання. Основна мета — щоб учень міг відповісти на прості запитання про своє місцезнаходження, походження та пункт призначення.
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Крок 1: Введення трьох ключових питань.** Пояснити різницю між статичним місцем (`Де?`), напрямком руху до місця (`Куди?`) та походженням з місця (`Звідки?`). Ці три питання є основою всієї теми (Sources `9-klas-ukrmova-zabolotnyi-2017_s0135`, `5-klas-ukrmova-avramenko-2022_s0161`). Почати з найпростіших прислівників:
+    *   `Де ти?` — `Я тут.` / `Я вдома.`
+    *   `Куди ти йдеш?` — `Я йду додому.`
+    *   `Звідки ти?` — `Я з України.`
+
+2.  **Крок 2: `Де?` + Прийменник `у/в` + Місцевий відмінок.** Це найчастотніше питання. Вводьте лексику місць (парк, магазин, школа) у готових фразах.
+    *   `Я в парку.`
+    *   `Він у магазині.`
+    *   `Ми в школі.`
+    На цьому етапі важливо, щоб учні розпізнавали закінчення `-у/-ю` та `-і` як маркер місця, а не вивчали правила їх утворення (Source `ext-other_blogs-46`).
+
+3.  **Крок 3: `Куди?` + Прийменники `у/в/на` + Знахідний відмінок.** Важливо протиставити `Де?` і `Куди?`, щоб уникнути плутанини.
+    *   Поясніть різницю між `у/в` (всередину, в закритий простір: `у магазин`, `у кінотеатр`) та `на` (на відкритий простір, подію або абстрактне поняття: `на вулицю`, `на роботу`, `на концерт`) (Source `ext-ulp_youtube-197`).
+    *   Використовуйте практичні фрази: `Мені треба на вулицю Архипенка` (Source `ext-ulp_youtube-221`).
+
+4.  **Крок 4: `Звідки?` + Прийменник `з/із/зі` + Родовий відмінок.** Це питання завершує тріаду.
+    *   Почніть з країн та міст: `Я з Канади.`, `Він з Києва.`
+    *   Використовуйте прості приклади з підручників: `З-під снігу` (Source `2-klas-ukrmova-vashulenko-2019-2_s0095`), `повернутися зі школи` (Source `7-klas-ukrmova-litvinova-2024_s0188`).
+
+5.  **Крок 5: Інтеграція в діалогах.** Створюйте міні-діалоги, що комбінують усі три питання, щоб учні тренувалися переключатися між ними. Моделюйте діалоги за зразком простих вправ з підручників (e.g., `6-klas-ukrmova-betsa-2023_s0014`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+Для англомовних учнів основні труднощі полягають у розрізненні понять, які в англійській мові передаються одним словом, та у засвоєнні відмінкової системи.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Де ти йдеш?` | `Куди ти йдеш?` | Англійське "Where are you going?" змішує місце і напрямок. В українській мові для напрямку руху використовується виключно `Куди?`, тоді як `Де?` позначає статичне місцезнаходження. Плутанина цих питань є фундаментальною помилкою (Source `9-klas-ukrajinska-mova-voron-2017_s0094`). |
+| `Я в Київ.` (відповідаючи на "Де ти?") | `Я в Києві.` | Англійська мова не використовує відмінки після прийменників. Учні часто забувають змінювати іменник, вживаючи називний відмінок. Необхідно наголосити, що прийменник `в/у` з питанням `Де?` вимагає місцевого відмінка (закінчення `-і` або `-у/-ю`) (Source `ext-other_blogs-46`). |
+| `Я їду в робота.` | `Я їду на роботу.` | Неправильний вибір прийменника. Англійське "to" не розрізняє `в` (всередину) і `на` (на поверхню, на подію, на абстрактне поняття). Правило: `в/у` для закритих просторів (будинок, магазин), `на` для відкритих просторів, подій та понять (вулиця, концерт, робота, стадіон) (Source `ext-ulp_youtube-197`). |
+| `Я говорю з друзями в телефон.` | `Я говорю з друзями по телефону.` | Прямий переклад з англійської "in the phone". Для позначення засобу зв'язку в українській мові використовується прийменник `по`. <!-- VERIFY --> |
+| `Ми були в театр.` / `Ми були з школа.` | `Ми були в театрі.` / `Ми були зі школи.` | Це комбінація двох помилок: ігнорування відмінків та ігнорування правил милозвучності. Потрібно змінювати іменник (`театрі`) і використовувати правильний варіант прийменника (`зі`) перед сполученням приголосних для уникнення важковимовних конструкцій (Sources `5-klas-ukrmova-litvinova-2022_s0266`, `7-klas-ukrmova-zabolotnyi-2024_s0193`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**Це обов'язковий розділ. Ігнорування цих пунктів призведе до створення неякісного, шкідливого контенту.**
+
+1.  **Жодних порівнянь з російською мовою.** Категорично заборонено пояснювати українську граматику через російську. Фрази на кшталт "це як у російській, але..." є неприпустимими. Українська система відмінків, фонетика та лексика мають вивчатися як самостійне явище. Українська мова розвинулася безпосередньо з діалектів Давньої Русі, а не як відгалуження "спільної давньоруської мови", яка потім розпалася (Source `ext-istoria_movy-25`).
+2.  **Тільки українська топоніміка.** Використовуйте виключно українські назви міст: `Київ`, `Львів`, `Харків`, а не їхні екзоніми (`Kiev`, `Lviv`, `Kharkiv`). Це питання поваги та політичної коректності.
+3.  **Вимова — українська, не російська.** Наголошуйте на правильній вимові українських звуків, які часто спотворюються під впливом російської:
+    *   `и` — це не російське `ы`.
+    *   `і` — завжди чітке, не редукується.
+    *   `г` — дзвінкий гортанний фрикативний, а не проривний `ґ`.
+    *   `ч` — завжди твердий.
+4.  **Лексична чистота.** Уникайте поширених русизмів для позначення місць. Навмисно вводьте правильні українські відповідники.
+    *   `зупинка`, а не `остановка` (Source `5-klas-ukrmova-avramenko-2022_s0161`).
+    *   `будь ласка`, а не `пожалуйста`.
+    *   `наступний`, а не `слідуючий`.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+На рівні А1 вводьте тільки високочастотну лексику, що стосується безпосереднього оточення учня.
+
+#### Іменники (Nouns)
+
+*   ★★★ (essential): `місто`, `вулиця`, `дім` (or `будинок`), `парк`, `школа`, `магазин`, `робота`, `Україна`, `Київ`, `дім`/`вдома`.
+*   ★★ (useful): `аеропорт` (Source `ext-ulp_youtube-221`), `театр`, `кінотеатр` (Source `ext-ulp_youtube-197`), `ресторан` (Source `ext-ulp_youtube-197`), `готель` (Source `ext-ulp_youtube-221`), `лікарня` (Source `6-klas-ukrmova-betsa-2023_s0018`), `університет` (Source `6-klas-ukrmova-betsa-2023_s0018`), `зупинка` (Source `5-klas-ukrmova-avramenko-2022_s0161`), `центр`.
+*   ★ (can wait): `бібліотека`, `музей`, `церква`, `пошта`, `банк`, `стадіон`, `аптека`.
+
+#### Прислівники (Adverbs)
+
+*   ★★★: `тут`, `там`, `вдома`, `далеко`, `близько`.
+*   ★★: `праворуч` (справа), `ліворуч` (зліва) (Source `6-klas-ukrmova-betsa-2023_s0018`).
+*   ★: `вгорі`, `внизу`, `поряд`.
+
+#### Дієслова (Verbs)
+
+*   ★★★: `бути`, `жити`, `йти`, `їхати`, `працювати`, `бачити`.
+*   ★★: `знаходитися` (Source `ext-ulp_youtube-197`), `починатися` (Source `9-klas-ukrajinska-mova-voron-2017_s0094`), `любити`.
+
+## Приклади з підручників (Textbook Examples)
+
+Ці формати вправ є перевіреними в українській шкільній системі і повинні бути адаптовані для L2 учнів.
+
+1.  **Вправа "Питання-Відповідь" (за моделлю діалогу).**
+    Створіть простий діалог за зразком вірша "Струмок" (Source `2-klas-ukrmova-vashulenko-2019-2_s0095`).
+    *   **Завдання:** Прочитайте діалог за ролями.
+    *   `— Привіт, Оксано! Куди ти йдеш?`
+    *   `— Привіт, Тарасе! Я йду в парк.`
+    *   `— А звідки ти йдеш?`
+    *   `— Я йду зі школи.`
+    *   `— А де твій брат?`
+    *   `— Він уже вдома.`
+
+2.  **Вправа "Доповни речення" (з вибором).**
+    На основі вправ на підрядні речення місця (Source `9-klas-ukrmova-zabolotnyi-2017_s0135`).
+    *   **Завдання:** Виберіть правильне слово: `де`, `куди` або `звідки`.
+    1.  `Це місто, ______ я живу.` (де)
+    2.  `Покажи, ______ нам іти.` (куди)
+    3.  `Я не знаю, ______ він приїхав.` (звідки)
+
+3.  **Вправа "Виправ помилку".**
+    Завдання на відпрацювання типових помилок.
+    *   **Завдання:** Знайдіть і виправте помилки в реченнях.
+    1.  `Я зараз в магазин.` -> `Я зараз в магазині.`
+    2.  `Ми йдемо в робота.` -> `Ми йдемо на роботу.`
+    3.  `Де ти їдеш?` -> `Куди ти їдеш?`
+
+4.  **Вправа "Склади розповідь" (монолог).**
+    Адаптація вправи на трансформацію діалогу в монолог (Source `6-klas-ukrmova-betsa-2023_s0018`, вправа 35).
+    *   **Завдання:** Подивіться на картинку (зображення міста/парку). Розкажіть, що ви бачите. Використовуйте слова `тут`, `там`, `ліворуч`, `праворуч`.
+    *   **Приклад:** `Це парк. Тут є дерева. Там є озеро. Ліворуч граються діти. Праворуч стоїть лавка.`
+
+## Пов'язані статті
+
+-   `pedagogy-a1-verbs-of-motion`
+-   `grammar-locative-case`
+-   `grammar-accusative-case-direction`
+-   `grammar-prepositions-of-location`
+-   `phonetics-euphony-rules`
 
 ---
 
-## Що ми знаємо? (What Do We Know?)
+### Вікі: pedagogy/a1/checkpoint-first-contact.md
 
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 143
-> **Score:** 0.50
->
-> І якраз у яму 
-> втрапить. А ми вже вириємо, постараємося.
-
-## Читання (Reading Practice)
-
-> **Source:** savchenko, Grade 4
-> **Section:** Сторінка 157
-> **Score:** 0.50
->
-> 157
-> ЗМICТ
-> ЧИТАЄМО Й РОЗПОВІДАЄМО
-> ПРО СВОЇ ЗАХОПЛЕННЯ
-> Ліна Костенко. Вже брами літа замикає осінь…  . . . . . . . . . . . . . . . 5
-> Олександра Савченко. Як читають книжки? . . . . . . . . . . . . . . . . . . 6
-> Марія Манеру. Читач Максимко . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7 
-> ВЕСЕЛЕ СЛОВО. Василь Марсюк. Диктант . . . . . . . . . . . . . . . . . . . 8
-> Медіавіконце: види і джерела інформації . . . . . . . . . . . . . . . . . 9
-> Давид Гуліа. Розум, знання і сила . . . . . . . . . . . . . . . . . . . . . . . . . . 10
-> ПРАГНЕМО ЗРОЗУМІТИ СВОЇХ ПРЕДКІВ
-> Як ще не було початку світа… 
-> (Українська народна обрядова пісня) . . . . . . . . . . . . . . . . . . . . . . . 13
-> Створення світу (За єгипетськими міфами). Переповіла Ольга Бондарук . . . . . . . . . . . . . . . . . . . . .
-
-> **Source:** kovalenko, Grade 6
-> **Section:** Сторінка 257
-> **Score:** 0.50
->
-> 1
-> Правила  читання
-> 1
-> Першочергово у тексті твору шукай відповіді 
-> на запитання:
-> • Хто діє? Які його / її вчинки?
-> • Де і коли відбуваються події?
-> • Кого або що описує автор/авторка?
-> 2
->  
-> При повторному читанні:
-> 1. Виділи деталі в тексті (портреті, пейзажі, 
-> описі предмета чи приміщення).
-> 2. Проаналізуй, яку роль вона відіграє:
-> • у портреті: передає зовнішню 
-> характеристику чи звертає увагу на 
-> внутрішні якості героя / героїні;
-> • у пейзажі: відтворює різноманітні стани 
-> природи чи внутрішній стан героя / героїні;
-> • в інтер’єрі: описує вигляд предмета чи 
-> приміщення або через деталь допомагає 
-> зрозуміти звички й уподобання 
-> героя/героїні.
-> 3. Поміркуй, як деталь пов’язана з попередніми 
-> епізодами.
-> 4.
-
-## Граматика (Grammar Summary)
-
-## Діалог (Connected Dialogue)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 120
-> **Score:** 0.50
->
-> 120
-> ЖИВИЛЬНІ  ДЖЕРЕЛА  МУДРИХ  КНИЖОК
-> — Тю, — ледве сказав Ява.
-> — Тьху, — ледве сказав я. 
-> Це вся розмова, на яку ми спро­моглися.
-> І тільки за хвилин двадцять ми нарешті отямились і змогли обміняти-
-> ся думками з приводу того, що сталося.
-> — Так ... — зітхнув Ява. — Можна сказати, зіпсував ти мені кар’єру. 
-> А що?! Хто ж мене тепер у міліцію візьме...
->  
-> 1.	 Хрещатик «утикається» на Європейській площі в
-> А	 метро «Арсенальна»
-> Б	 метро «Хрещатик»
-> В	   колишній костел
-> Г	   філармонію
-> 2.	 	Репліка «Лізь, голубе, під землю, як усі люди» адресована
-> А	 інтелігентному дідусеві 
-> Б	 опасистому дядьку
-> В  	міліціонерові
-> Г  	 інтуристу
-> 3.	 Установіть відповідність.
-> Ге­рой по­віс­ті
-> Опис зов­ніш­нос­ті 
-> 1	 мі­лі­ці­о­нер
-> 2	 дядь­ко  в мет­ро
-> 3	 ін­ту­рист	
-> А	 «...
-
-> **Source:** litvinova, Grade 6
-> **Section:** Сторінка 126
-> **Score:** 0.25
->
-> Розділ 5. Іменник 
-> 126
-> Пирогів варто відвідати в пе-
-> ріод релігійних свят — Різдва, 
-> Великодня, 
-> Івана 
-> Купала 
-> чи 
-> Спаса, адже в цей час у музеї 
-> проходять 
-> надзвичайно 
-> цікаві 
-> й  колоритні дійства.
-> Дістатися до музею можна ав-
-> тобусом № 27 від станції метро 
-> «Либідська».
->  (За матеріалами туристичного 
-> порталу «IGotoWorld»)
-> 2. Випишіть із тексту власні назви, поясніть їхній правопис. Над кожною 
-> назвою надпишіть номер правила, яке регулює написання великої лі-
-> тери (за правилами на с. 123—124).
-> 3. Випишіть у  словничок незнайомі вам слова.
-> 4. Сформулюйте основну думку тексту. Запишіть ключові слова — теги, 
-> за якими би ви шукали інформацію про музей в  інтернеті. Стисло пе-
-> рекажіть текст так, щоб розповідь могла зацікавити ваших друзів чи 
-> подруг.
-> 5.
-
-## Підсумок — Summary
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 3
-> **Score:** 0.25
->
-> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . . . 86
-> ФРАЗЕОЛОГІЯ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
-> Фразеологізми . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 88
-> Різновиди фразеологічних одиниць . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 96
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 4
-> **Score:** 0.50
->
-> 4
-> Зміст
-> Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100
-> Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . . . 102
-> ФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ . . . . . . . . . 103
-> Фонетика. Звуки мовлення . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 104
-> Транскрипція  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 107
-> Голосні та приголосні звуки . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 110
-> Голосні наголошені й  ненаголошені  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
-> Особливості вимови ненаголошених  голосних . . . . . . . . . . . . . . .
-
-## Grammar Reference
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 107
-> **Score:** 0.50
->
-> 107
-> ТВОРИ НА ІСТОРИЧНУ ТЕМАТИКУ
-> – Хто я такий, питаєте? – і кивнув на хлопців, що зніче-
-> но переминалися з ноги на ногу. – Ото в них краще 
-> поцікавтесь. Вони, бач, гадають, що я якийсь Тишкевич. 
-> А я того Тишкевича і в очі не бачив. Мені треба до Демида, 
-> товариша мого давнього. Чули про такого?
-> Василь Байлемів замислився.
-> – Здається, чув. Тільки він далеко звідсіля. Десь внизу 
-> оселився, і не на острові, а в плавнях... То ти таки не Тиш-
-> кевич?
-> – І не був ніколи. Я Семен Задорожний із Байбузівки, 
-> є таке село за Черкасами. Може, чули? Ну от. Вирішили 
-> ми з друзями моїми до Демида дістатися, теж трохи поко-
-> закувати. От. А сюди я зайшов, аби запитати, де той бісів 
-> Демид оселився цього літа.
-> – А хутро хто брав? – запитав Грицик.
-> – Яке хутро? – здивувався в’язень.
-
-> **Source:** zaharijchuk, Grade 4
-> **Section:** Сторінка 33
-> **Score:** 0.33
->
-> 33
-> Мої навчальні досягнення
-> Карта пам’яті: від тексту — до мене
-> Прочитайте текст.
-> Був ясний осінній день. У по-
-> вітрі пливли тоненькі павутинки. 
-> Д..рева скидали золоті л..стки. 
-> Високо в небі з’явився ключ жу-
-> равлів. Вони приземлилися на 
-> лузі, немов радилися. Старий ле-
-> лека злітав, кружляв у небі й знову 
-> прилітав до родичів. Беззахисні 
-> молоді лелеки вперше летять у 
-> теплий край. У теплий, але чужий 
-> край. Бо Батьківщина там, де на-
-> родився, зріс і почав літати (За 
-> В. Сухомлинським).
-> Зміст
-> 1.	 Де й коли відбуваються події?
-> 2.	Куди вирушають журавлі?
-> Префікси
-> 1. Випиши два слова з префіксом при-. Познач його.
-> 2. Випиши слово з апострофом після префікса.
-> 3. Випиши слово з подвоєнням приголосних на 
-> межі префікса та кореня.
-> 4. Випиши слово з префіксом з-.
-> Суфікси
-> 1.
+# Педагогіка A1: Checkpoint First Contact
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Співвідношення звуків і букв
-> **Source:** МійКлас — [Співвідношення звуків і букв](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/spivvidnoshennia-zvukiv-i-bukv-41281)
+The Ukrainian pedagogical approach to teaching initial introductions is fundamentally communicative and context-driven. Even from the first lesson, the goal is to enable a learner to participate in a simple, formulaic dialogue (`діалог`). The core concepts of **ім'я** (first name), **прізвище** (surname), and **по батькові** (patronymic) are introduced as functional chunks of language needed to complete a real-world task, such as introducing oneself or filling out a simple form (Джерело: `4-klas-ukrayinska-mova-varzatska-2021-1_s0159`, `6-klas-ukrmova-zabolotnyi-2020_s0032`).
 
-### Теорія:
+Ukrainian textbooks for early grades (1-2) establish this pattern by immediately presenting model dialogues. They use a "question-and-answer" format that is easy to memorize and adapt (Джерело: `5-klas-ukrmova-uhor-2022-1_s0107`, `6-klas-ukrmova-betsa-2023_s0014`). For example, the structure `— Як тебе звуть? — Мене звуть ... .` is presented as a fixed pair to be practiced with a partner (`Розіграйте діалог із сусідом / сусідкою за партою`) (Джерело: `6-klas-ukrmova-betsa-2023_s0014`).
 
-*www.ua.pistacja.tv*  
- 
-Як ти вже знаєш, в українській мові є  38  **звуків** і 33  **літери** для передачі цих звуків на письмі.
-Чому така різниця між кількістю звуків і букв?
-Деякі букви \(я, ю, є\) позначають **два** звуки у певних позиціях.
+Key methodological principles are:
+1.  **Dialogue First:** The primary mode of instruction is the dialogue or poly-dialogue (`полілог`), where students learn by playing roles in a given situation (`Ситуація`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `5-klas-ukrmova-avramenko-2022_s0011`). This makes the language immediately useful.
+2.  **Structural Repetition:** Core phrases like `Мене звати...` and `Моє прізвище...` are drilled through repetition, not grammatical analysis at first. The focus is on automaticity. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`).
+3.  **Immediate Introduction of Capitalization:** From the outset, learners are shown that names, patronymics, and surnames are proper nouns written with a capital letter (`пишуть з великої літери`) (Джерело: `2-klas-ukrmova-kravcova-2019-1_s0070`, `2-klas-ukrmova-bolshakova-2019-2_s0023`). This is treated as a fundamental orthographic rule, not an advanced topic.
+4.  **Implicit Grammar:** The accusative case in `Мене звати...` and the vocative case in direct address (`Оксано!`) are introduced implicitly through model phrases. Formal grammatical explanation is delayed until the learner is comfortable with the functional use of the phrases (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`, `6-klas-ukrmova-litvinova-2023_s0148`).
 
-Букви ї, щ завж
+## Послідовність введення (Introduction Sequence)
 
-... (truncated for context window)
+The introduction of "first contact" language should follow a logical progression from simple to complex, mirroring the approach in Ukrainian native-speaker textbooks.
+
+1.  **Step 1: Foundational Phrases & Pronouns.** Start with greetings (`Добрий день!`) and the core construction `Мене звати...` (My name is...). This immediately introduces the personal pronoun in the accusative case (`мене`) in a fixed, unanalyzed chunk (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). Contrast `Як тебе звати?` (informal 'you') with `Як вас звати?` (formal/plural 'you').
+
+2.  **Step 2: Adding the Surname.** Introduce the concept of `прізвище` (surname) with the parallel construction `Моє прізвище...` (My surname is...). Practice this in a simple dialogue format (Джерело: `6-klas-ukrmova-betsa-2023_s0014`, `5-klas-ukrmova-uhor-2022-1_s0107`). At this stage, learners practice asking and answering both questions in a sequence.
+
+3.  **Step 3: The Vocative Case (Кличний відмінок) for Direct Address.** This is a critical element of natural Ukrainian speech and must be introduced early. Instead of just saying a name, learners must be taught to use the vocative form to call someone.
+    *   For feminine names ending in `-а`, it changes to `-о`: `Анна → Анно!`, `Оксана → Оксано!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   For masculine names ending in a consonant, it changes to `-е`: `Тарас → Тарасе!`, `Павло → Павле!` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`).
+    *   Introduce formal address with `пан/пані`: `пане Іваненку`, `пані Оксано` (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`). This immediately elevates the learner's politeness and authenticity.
+
+4.  **Step 4: Introducing the Patronymic (По батькові).** Explain that `по батькові` is a name derived from one's father's name and is used in formal or respectful situations. Show the full formal structure: `Прізвище, Ім’я, По батькові` (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`). Explain the common suffixes: `-ович` (masculine) and `-івна` (feminine) (Джерело: `6-klas-ukrmova-betsa-2023_s0016`). The goal at A1 is recognition, not productive use. Learners should understand what it is when they see it on a form or hear it in a formal introduction.
+
+5.  **Step 5: Contextual Application.** Embed these skills in practical scenarios like booking a table (`Скажіть будь ласка ваше прізвище`) or making a doctor's appointment (`ваше прізвище ім'я і номер телефону будь ласка`) (Джерело: `ext-ulp_youtube-120`, `ext-ulp_youtube-58`). This reinforces the utility of the language.
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers often make predictable errors when learning to introduce themselves. The curriculum should proactively address these.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Я звати Анна.` | `Мене звати Анна.` | This is a direct translation of "I am called Anna." English speakers must learn the fixed Ukrainian construction which uses the accusative pronoun `мене` (me). (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`) |
+| `Привіт, Марія.` | `Привіт, Маріє!` | Forgetting the vocative case (`Кличний відмінок`) in direct address. It sounds unnatural and blunt to a native speaker. The ending must change (`-ія` -> `-іє`, `-а` -> `-о`, consonant -> `-е`). (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`) |
+| `Моє ім'я є Тарас.` | `Моє ім'я — Тарас.` or `Мене звати Тарас.` | Overuse of the verb `бути` (`є`) where it's typically omitted in the present tense for identity statements. The dash (`—`) is the correct punctuation, or the `Мене звати` structure should be used. <!-- VERIFY --> |
+| `Прізвище моє Ковальчук.` | `Моє прізвище — Ковальчук.` | Unnatural word order based on English. While grammatically possible, the standard, neutral response is `Моє прізвище...` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0106`). |
+| "What is your middle name?" (asking about `по батькові`) | "Як вас по батькові?" | Equating the patronymic with an Anglo-American "middle name." A middle name is a second personal name; a patronymic is a grammatical and cultural construct derived from the father's name. This distinction is crucial. (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0023`) |
+| `Пан Шевченко...` (when ordering should be name first) | `Пан Тарас...` | In many formal contexts, the correct address is `пан/пані` + First Name. However, in official documents, it is always Last Name first (`прізвище, ім'я`) (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0278`, `9-klas-ukrajinska-mova-avramenko-2017_s0211`). The brief should clarify the context. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian from a decolonized perspective is non-negotiable. This is especially important in foundational topics where Russian-centric habits can form.
+
+1.  **Teach Ukrainian on Its Own Terms:** Never introduce Ukrainian letters or sounds as "like the Russian X." Learners must build a clean Ukrainian phonetic and orthographic foundation from zero. Russian has different letters (e.g., `ы`, `э`) and different pronunciations for shared letters (e.g., `и`, `г`). Using Russian as a reference point pollutes the learning process from day one.
+2.  **Patronymics are East Slavic, Not Russian:** Explicitly state that patronymics (`по батькові`) are a feature of Ukrainian, Belarusian, and Russian cultures. Frame it as a shared heritage, not a Russian import. Highlight the distinct Ukrainian suffixes (`-ович`, `-івна`) as seen in textbooks (Джерело: `6-klas-ukrmova-betsa-2023_s0016`).
+3.  **Correct Transliteration:** Emphasize the official Ukrainian transliteration system (and the common informal one) which differs from Russian. Key examples: `Г` is `H`, not `G`; `И` is `Y`, not `I`; `І` is `I`. This prevents learners from writing Ukrainian names with Russian spelling conventions.
+4.  **Surname Origins:** When discussing surnames, highlight authentic Ukrainian origins related to professions (`Коваль`, `Бондар`, `Гончар`), features, or Cossack history, not just those shared with Russian (Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0025`, `3-klas-ukrainska-mova-vashulenko-2020-2_s0158`).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is the absolute essential minimum for the "First Contact" module.
+
+*   **Іменники (Nouns):**
+    *   ім'я ★★★ (first name)
+    *   прізвище ★★★ (surname)
+    *   по батькові ★★ (patronymic)
+    *   учень / учениця ★★★ (student m/f)
+    *   вчитель / вчителька ★★★ (teacher m/f)
+    *   друг / подруга ★★ (friend m/f)
+    *   пан / пані / панно ★★★ (Mr. / Mrs. / Miss)
+    *   номер (телефону) ★★ (phone number)
+*   **Дієслова (Verbs):**
+    *   звати ★★★ (to be called)
+    *   бути ★★★ (to be - often omitted in present)
+    *   знати ★★ (to know)
+    *   жити ★ (to live)
+*   **Займенники (Pronouns):**
+    *   я, ти, він, вона, ми, ви, вони ★★★ (Nominative: I, you, he, she, etc.)
+    *   мене, тебе, його, її, нас, вас, їх ★★★ (Accusative: me, you, him, her, etc.)
+    *   мій/моя/моє, твій/твоя/твоє ★★★ (my, your)
+*   **Ключові фрази (Key Phrases):**
+    *   Добрий день. / Привіт. ★★★
+    *   Як тебе/вас звати? ★★★
+    *   Мене звати... ★★★
+    *   Як твоє/ваше прізвище? ★★★
+    *   Моє прізвище... ★★★
+    *   Дуже приємно. / Радий (рада) знайомству. ★★
+    *   Так / Ні ★★★
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises are models for the content writer, demonstrating the native Ukrainian pedagogical methodology.
+
+1.  **Basic Dialogue Completion (from Source `6-klas-ukrmova-betsa-2023_s0014`)**
+    *   **Task:** Побудуйте діалог за зразком. Запишіть. Розіграйте діалог із сусідом / сусідкою за партою.
+    *   **Model:**
+        > — Як тебе звуть?
+        > — Мене звуть … .
+        > — Як твоє прізвище?
+        > — Моє прізвище … .
+    *   **Pedagogical Value:** This simple, repetitive task builds automaticity for the most fundamental introductory exchange. It encourages active, paired practice.
+
+2.  **Identifying Name Components (from Source `5-klas-ukrmova-uhor-2022-1_s0107`)**
+    *   **Task:** Уточніть, де ім’я, де по батькові, де прізвище.
+    *   **Model:**
+        > — Франко — це ім’я?
+        > — Ні, це прізвище. Його звати Іван Якович.
+    *   **Pedagogical Value:** This exercise moves from simple production to comprehension and analysis. It teaches learners to differentiate between the three components of a full formal name and introduces the structure `Його звати...`.
+
+3.  **Table Fill-in (from Source `2-klas-ukrmova-bolshakova-2019-2_s0023`)**
+    *   **Task:** Заповни таблицю за зразком.
+    *   **Input:** `Григоренко Святослав Андрійович, Телюк Наталія Григорівна, Шевченко Тарас Григорович.`
+    *   **Table Structure:**
+| Прізвище | Ім’я | По батькові |
+| :--- | :--- | :--- |
+| Бондар | Лариса | Вікторівна |
+    *   **Pedagogical Value:** This is a classic exercise for reinforcing the structure and order of formal Ukrainian names and practicing reading/writing them correctly.
+
+4.  **Contextual Role-Play (from Source `6-klas-ukrmova-zabolotnyi-2020_s0032`)**
+    *   **Task:** Складіть діалог (6–8 реплік) в офіційно-діловому стилі... Ви прийшли записатися до бібліотеки. Повідомте мету свого візиту, а також на прохання бібліотекарки – своє прізвище та ім’я, дату народження, місце проживання (для оформлення картки читача).
+    *   **Pedagogical Value:** This places the language skill in a highly realistic, official context (`офіційно-діловий стиль`). It moves beyond simple introductions to a multi-turn conversation where personal information is requested and provided for a clear purpose. This demonstrates the practical value of what has been learned.
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/alphabet`
+- `pedagogy/a1/greetings-and-farewells`
+- `grammar/nouns/vocative-case`
+- `grammar/pronouns/personal-pronouns`
+- `culture/names-and-address`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -413,12 +446,13 @@ Be SPECIFIC about what each paragraph covers — not "explain grammar" but "expl
 ## Section Title (~XXX words total)
 - P1 (~XX words): [specific content — what concept, what examples, what comparison]
 - P2 (~XX words): [specific content]
-- Exercise: [type from activity_hints, focus, number of items]
+- <!-- INJECT_ACTIVITY: activity-id --> [type from activity_hints, focus, number of items]
 - P3 (~XX words): [specific content]
 ...
 
 ## Section Title (~XXX words total)
 - P1 (~XX words): [specific content]
+- <!-- INJECT_ACTIVITY: activity-id --> [type, focus]
 ...
 
 ## Підсумок (~150 words)
@@ -433,7 +467,7 @@ Grand total: ~1200 words
 1. **Every paragraph has ONE clear purpose.** If you can't describe it in one sentence, split it.
 2. **Word budgets must sum to 1200+.** Aim for ~10% overshoot (1320 words) — writers tend to undershoot.
 3. **Section budgets must match the plan's `content_outline` word allocations** (±10%).
-4. **Spread exercises evenly.** Place one after each key teaching point, matching the plan's `activity_hints`.
+4. **Place exercise injection markers in the correct section.** Each activity hint in the plan may have a `section:` field that tells you which section it belongs in. Place `<!-- INJECT_ACTIVITY: descriptive-id -->` AFTER the teaching content of that section, never before. Use a descriptive kebab-case id (e.g., `fill-in-genitive`, `quiz-aspect-choice`). If no `section:` is specified, place the marker after the most relevant teaching point. **CRITICAL: An exercise must ONLY test concepts already taught above it. Never test a concept from a later section. Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY: id -->` marker in the skeleton.**
 5. **Name specific Ukrainian examples** you plan to use in each paragraph. This prevents vague skeletons that produce vague content.
 6. **Dialogues count as paragraphs.** Budget 80-120 words per multi-turn dialogue.
 7. **No meta-commentary.** Output only the `<skeleton>` block, nothing else.

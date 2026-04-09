@@ -1,0 +1,483 @@
+{
+  "total_items": 196,
+  "grounded_items": 118,
+  "ungrounded": [
+    {
+      "word": "цікавіша",
+      "exercise_type": "fill-in",
+      "context": "цікавіша",
+      "role": "answer"
+    },
+    {
+      "word": "книжка",
+      "exercise_type": "fill-in",
+      "context": "Ця книжка цікава, але нова книжка ____.",
+      "role": "context"
+    },
+    {
+      "word": "светр",
+      "exercise_type": "fill-in",
+      "context": "Мій светр теплий, але твій светр ____.",
+      "role": "context"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "error-correction",
+      "context": "Твій",
+      "role": "answer"
+    },
+    {
+      "word": "комп'ютер",
+      "exercise_type": "unjumble",
+      "context": "комп'ютер",
+      "role": "answer"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "fill-in",
+      "context": "Брат високий, але його друг ще ____.",
+      "role": "context"
+    },
+    {
+      "word": "будинок",
+      "exercise_type": "match-up",
+      "context": "будинок",
+      "role": "answer"
+    },
+    {
+      "word": "коротша",
+      "exercise_type": "fill-in",
+      "context": "коротша",
+      "role": "answer"
+    },
+    {
+      "word": "коротка",
+      "exercise_type": "fill-in",
+      "context": "Моя дорога коротка, але твоя ще ____.",
+      "role": "context"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "fill-in",
+      "context": "Моя дорога коротка, але твоя ще ____.",
+      "role": "context"
+    },
+    {
+      "word": "магазин",
+      "exercise_type": "fill-in",
+      "context": "Цей магазин близький, але супермаркет ще ____.",
+      "role": "context"
+    },
+    {
+      "word": "супермаркет",
+      "exercise_type": "fill-in",
+      "context": "Цей магазин близький, але супермаркет ще ____.",
+      "role": "context"
+    },
+    {
+      "word": "того",
+      "exercise_type": "true-false",
+      "context": "Цей телефон дорожчий того.",
+      "role": "context"
+    },
+    {
+      "word": "кімната",
+      "exercise_type": "true-false",
+      "context": "Ця кімната більша за ту.",
+      "role": "context"
+    },
+    {
+      "word": "розумніший",
+      "exercise_type": "true-false",
+      "context": "Мій брат розумніший, ніж я.",
+      "role": "context"
+    },
+    {
+      "word": "кава",
+      "exercise_type": "true-false",
+      "context": "Ця кава значно солодша за чай.",
+      "role": "context"
+    },
+    {
+      "word": "солодша",
+      "exercise_type": "true-false",
+      "context": "Ця кава значно солодша за чай.",
+      "role": "context"
+    },
+    {
+      "word": "найшвидший",
+      "exercise_type": "match-up",
+      "context": "найшвидший",
+      "role": "context"
+    },
+    {
+      "word": "найгарніший",
+      "exercise_type": "match-up",
+      "context": "найгарніший",
+      "role": "context"
+    },
+    {
+      "word": "найтепліший",
+      "exercise_type": "match-up",
+      "context": "найтепліший",
+      "role": "context"
+    },
+    {
+      "word": "добра",
+      "exercise_type": "quiz",
+      "context": "Ця кава добра, але в новому кафе вона _____.",
+      "role": "context"
+    },
+    {
+      "word": "вчора",
+      "exercise_type": "quiz",
+      "context": "Вчора погода була погана, а сьогодні вона ще _____.",
+      "role": "context"
+    },
+    {
+      "word": "погана",
+      "exercise_type": "quiz",
+      "context": "Вчора погода була погана, а сьогодні вона ще _____.",
+      "role": "context"
+    },
+    {
+      "word": "мала",
+      "exercise_type": "quiz",
+      "context": "Ця проблема мала, але та проблема значно _____.",
+      "role": "context"
+    },
+    {
+      "word": "знайомі",
+      "exercise_type": "quiz",
+      "context": "Це мій _____ друг, ми знайомі 10 років!",
+      "role": "context"
+    },
+    {
+      "word": "років",
+      "exercise_type": "quiz",
+      "context": "Це мій _____ друг, ми знайомі 10 років!",
+      "role": "context"
+    },
+    {
+      "word": "йому",
+      "exercise_type": "quiz",
+      "context": "У мене є _____ брат, йому тільки 5 років.",
+      "role": "context"
+    },
+    {
+      "word": "втратив",
+      "exercise_type": "quiz",
+      "context": "Це _____ день у моєму житті, я втратив роботу і ключі.",
+      "role": "context"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "quiz",
+      "context": "Це _____ день у моєму житті, я втратив роботу і ключі.",
+      "role": "context"
+    },
+    {
+      "word": "ключі",
+      "exercise_type": "quiz",
+      "context": "Це _____ день у моєму житті, я втратив роботу і ключі.",
+      "role": "context"
+    },
+    {
+      "word": "найцікавіша",
+      "exercise_type": "error-correction",
+      "context": "найцікавіша",
+      "role": "answer"
+    },
+    {
+      "word": "сама",
+      "exercise_type": "error-correction",
+      "context": "Ця книжка сама цікава в бібліотеці.",
+      "role": "context"
+    },
+    {
+      "word": "бібліотеці",
+      "exercise_type": "error-correction",
+      "context": "Ця книжка сама цікава в бібліотеці.",
+      "role": "context"
+    },
+    {
+      "word": "мегаполіс",
+      "exercise_type": "error-correction",
+      "context": "Київ — це самий великий мегаполіс України.",
+      "role": "context"
+    },
+    {
+      "word": "україни",
+      "exercise_type": "error-correction",
+      "context": "Київ — це самий великий мегаполіс України.",
+      "role": "context"
+    },
+    {
+      "word": "місті",
+      "exercise_type": "error-correction",
+      "context": "Це самий кращий ресторан у місті.",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "match-up",
+      "context": "книга",
+      "role": "answer"
+    },
+    {
+      "word": "працюю",
+      "exercise_type": "match-up",
+      "context": "працюю швидше",
+      "role": "context"
+    },
+    {
+      "word": "ти",
+      "exercise_type": "match-up",
+      "context": "ти",
+      "role": "answer"
+    },
+    {
+      "word": "читаєш",
+      "exercise_type": "match-up",
+      "context": "читаєш краще",
+      "role": "context"
+    },
+    {
+      "word": "знає",
+      "exercise_type": "match-up",
+      "context": "знає більше",
+      "role": "context"
+    },
+    {
+      "word": "робить",
+      "exercise_type": "match-up",
+      "context": "робить гірше",
+      "role": "context"
+    },
+    {
+      "word": "купуємо",
+      "exercise_type": "match-up",
+      "context": "купуємо дешевше",
+      "role": "context"
+    },
+    {
+      "word": "дешевше",
+      "exercise_type": "match-up",
+      "context": "купуємо дешевше",
+      "role": "context"
+    },
+    {
+      "word": "живуть",
+      "exercise_type": "match-up",
+      "context": "живуть комфортніше",
+      "role": "context"
+    },
+    {
+      "word": "знаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми знаємо більше за ____.",
+      "role": "context"
+    },
+    {
+      "word": "живете",
+      "exercise_type": "fill-in",
+      "context": "Ви живете комфортніше, ніж ____.",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "fill-in",
+      "context": "тебе",
+      "role": "answer"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "fill-in",
+      "context": "Він говорить повільніше за ____.",
+      "role": "context"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина",
+      "role": "context"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина",
+      "role": "context"
+    },
+    {
+      "word": "олено",
+      "exercise_type": "quiz",
+      "context": "Олено Іванівно, _____ працюєте набагато швидше, ніж я.",
+      "role": "context"
+    },
+    {
+      "word": "іванівно",
+      "exercise_type": "quiz",
+      "context": "Олено Іванівно, _____ працюєте набагато швидше, ніж я.",
+      "role": "context"
+    },
+    {
+      "word": "працюєте",
+      "exercise_type": "quiz",
+      "context": "Олено Іванівно, _____ працюєте набагато швидше, ніж я.",
+      "role": "context"
+    },
+    {
+      "word": "друже",
+      "exercise_type": "quiz",
+      "context": "Друже, _____ маєш кращий телефон, ніж у мене.",
+      "role": "context"
+    },
+    {
+      "word": "маєш",
+      "exercise_type": "quiz",
+      "context": "Друже, _____ маєш кращий телефон, ніж у мене.",
+      "role": "context"
+    },
+    {
+      "word": "пане",
+      "exercise_type": "quiz",
+      "context": "Пане директоре, чи _____ можете дати мені цікавіший проєкт?",
+      "role": "context"
+    },
+    {
+      "word": "директоре",
+      "exercise_type": "quiz",
+      "context": "Пане директоре, чи _____ можете дати мені цікавіший проєкт?",
+      "role": "context"
+    },
+    {
+      "word": "дати",
+      "exercise_type": "quiz",
+      "context": "Пане директоре, чи _____ можете дати мені цікавіший проєкт?",
+      "role": "context"
+    },
+    {
+      "word": "оксано",
+      "exercise_type": "quiz",
+      "context": "Оксано, _____ готуєш солодший чай, ніж моя мама.",
+      "role": "context"
+    },
+    {
+      "word": "готуєш",
+      "exercise_type": "quiz",
+      "context": "Оксано, _____ готуєш солодший чай, ніж моя мама.",
+      "role": "context"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "quiz",
+      "context": "Оксано, _____ готуєш солодший чай, ніж моя мама.",
+      "role": "context"
+    },
+    {
+      "word": "шановні",
+      "exercise_type": "quiz",
+      "context": "Шановні клієнти, _____ знайдете тут найкращі ціни.",
+      "role": "context"
+    },
+    {
+      "word": "клієнти",
+      "exercise_type": "quiz",
+      "context": "Шановні клієнти, _____ знайдете тут найкращі ціни.",
+      "role": "context"
+    },
+    {
+      "word": "знайдете",
+      "exercise_type": "quiz",
+      "context": "Шановні клієнти, _____ знайдете тут найкращі ціни.",
+      "role": "context"
+    },
+    {
+      "word": "мамо",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ завжди даєш найкращі поради.",
+      "role": "context"
+    },
+    {
+      "word": "даєш",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ завжди даєш найкращі поради.",
+      "role": "context"
+    },
+    {
+      "word": "поради",
+      "exercise_type": "quiz",
+      "context": "Мамо, _____ завжди даєш найкращі поради.",
+      "role": "context"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "error-correction",
+      "context": "стара",
+      "role": "answer"
+    },
+    {
+      "word": "коротше",
+      "exercise_type": "fill-in",
+      "context": "коротше",
+      "role": "answer"
+    },
+    {
+      "word": "завдання",
+      "exercise_type": "fill-in",
+      "context": "Це завдання _____, ніж я думав.",
+      "role": "context"
+    },
+    {
+      "word": "думав",
+      "exercise_type": "fill-in",
+      "context": "Це завдання _____, ніж я думав.",
+      "role": "context"
+    },
+    {
+      "word": "гарніше",
+      "exercise_type": "fill-in",
+      "context": "гарніше",
+      "role": "answer"
+    },
+    {
+      "word": "плаття",
+      "exercise_type": "fill-in",
+      "context": "Її плаття _____, ніж моє.",
+      "role": "context"
+    },
+    {
+      "word": "моє",
+      "exercise_type": "fill-in",
+      "context": "Її плаття _____, ніж моє.",
+      "role": "context"
+    },
+    {
+      "word": "рішення",
+      "exercise_type": "error-correction",
+      "context": "Це найкращий рішення у моєму житті.",
+      "role": "context"
+    },
+    {
+      "word": "атмосферу",
+      "exercise_type": "error-correction",
+      "context": "Нове ресторан має тепліший атмосферу.",
+      "role": "context"
+    },
+    {
+      "word": "твої",
+      "exercise_type": "error-correction",
+      "context": "Твої комп'ютер дуже старий.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "порівняння",
+      "трохи"
+    ]
+  },
+  "all_grounded": false
+}

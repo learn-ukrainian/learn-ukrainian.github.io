@@ -1,0 +1,223 @@
+vocabulary:
+- word: споча́тку
+  translation: at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: сувені́р
+  translation: souvenir
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́дорож
+  translation: trip, journey
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ро́зповідь
+  translation: narrative
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тра́питися
+  translation: to happen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Що трапилося?
+  translation: What happened?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: я злякався / я злякалася
+  translation: I got scared
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: я здивувався / я здивувалася
+  translation: I was surprised
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вокза́л
+  translation: station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́тяг
+  translation: train
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Карпа́ти
+  translation: the Carpathians
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: забронювати хатинку
+  translation: to book a cabin
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ди́хати
+  translation: to breathe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: залізни́ця
+  translation: railway
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: літа́к
+  translation: airplane
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: аеропо́рт
+  translation: airport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Де ти був?
+  translation: Where were you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: куди ти їздив?
+  translation: where did you go?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дої́хати
+  translation: to reach by vehicle
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пляж
+  translation: beach
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мо́ре
+  translation: sea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зупини́тися
+  translation: to stay, to stop
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відві́дати
+  translation: to visit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сподо́батися
+  translation: to like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вра́ження
+  translation: impression
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: отримати багато вражень
+  translation: to get many impressions
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: було чудово
+  translation: it was wonderful
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: було дуже весело
+  translation: it was very fun
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: двіре́ць
+  translation: station (Lviv dialect)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зупи́нка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ста́нція
+  translation: station (train/metro)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Минулого літа
+  translation: Last summer
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

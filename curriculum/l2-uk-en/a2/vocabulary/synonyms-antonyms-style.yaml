@@ -1,0 +1,193 @@
+vocabulary:
+- word: стилі́стика
+  translation: stylistics
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відті́нок
+  translation: shade, nuance
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прислі́в'я
+  translation: proverb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вира́зність
+  translation: expressiveness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сино́нім
+  translation: synonym
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: анто́нім
+  translation: antonym
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: епі́тет
+  translation: epithet
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мета́фора
+  translation: metaphor
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зме́ншувальний
+  translation: diminutive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: е́ліпсис
+  translation: ellipsis
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: повто́р
+  translation: repetition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́бразний
+  translation: figurative, expressive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ласка́вий
+  translation: tender, affectionate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бала́кати
+  translation: to chat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вродли́вий
+  translation: handsome, beautiful (of a person)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кри́хітний
+  translation: tiny
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тавтоло́гія
+  translation: tautology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ли́хо
+  translation: trouble, misfortune
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: добро́
+  translation: good, well-being
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пряме значення
+  translation: literal meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переносне значення
+  translation: figurative meaning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: персоніфіка́ція
+  translation: personification
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пестли́вий
+  translation: affectionate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тире́
+  translation: dash
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: га́сло
+  translation: slogan
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: золоті руки
+  translation: skilful hands
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: палке серце
+  translation: passionate heart
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: море квітів
+  translation: a sea of flowers
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сонце сміється
+  translation: the sun laughs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хліб-сіль
+  translation: bread and salt (hospitality)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я — каву, а ти?
+  translation: I'll have coffee, and you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

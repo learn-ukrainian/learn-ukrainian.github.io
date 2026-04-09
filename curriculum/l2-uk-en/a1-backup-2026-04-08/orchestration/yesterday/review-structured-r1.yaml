@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present and in correct order. All 8 required
+    vocabulary items used naturally in prose (учора, зранку, вдень, ввечері, потім,
+    прокинутися, поснідати, обідати). All 8 reco
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 44 key Ukrainian words batch-verified against VESUM — 44/44 found.
+    Irregular forms пішов (піти past:m) and ліг (лягти past:m) confirmed. Gender agreement
+    correct throughout all dialogues and narra
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: Dialogues present past narration in context → "Розповідь
+    про день" extracts patterns (time markers, sequencing words, verb table) → "Мій
+    учорашній день" provides model narrative then '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required vocab items appear in natural prose contexts (not as bare
+    lists): учора in Anna''s narrative opener, зранку/вдень/ввечері as the "spine"
+    metaphor, потім in sequencing explanation, прокин'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 3 markers match plan's 3 activity_hints exactly in type and focus. Ordering
+    activity placed after verb teaching (tests sequencing skill). Fill-in activities
+    placed after model narrative (tests time ma
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Zero motivational openers, zero meta-commentary, zero generic enthusiasm.
+    The prose is direct and instructive: "These three time markers are the spine of
+    every past-day story in Ukrainian" — concrete '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 4 H2 sections present in plan order: Dialogues → Розповідь про день
+    → Мій учорашній день → Summary. Clean markdown with proper dialogue div formatting.
+    No duplicate sections, no meta-commentary se'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian" comparisons.
+    "файно" (Western Ukrainian regional form, VESUM-confirmed adv) adds authentic
+    flavor. The police dialogue uses real Ukrain
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Three dialogues, all with named speakers and natural flow. Dialogue 1:
+    friend asks about day, natural question chain (зранку? → вдень? → ввечері?). Dialogue
+    2: enthusiastic weekend retelling with "Роз'
+findings: []

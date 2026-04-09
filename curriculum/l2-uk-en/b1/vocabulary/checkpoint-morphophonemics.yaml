@@ -1,4 +1,16 @@
 vocabulary:
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: спро́щення
+  translation: simplification
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: відмі́на
   translation: declension type
   expression: false
@@ -12,16 +24,64 @@ vocabulary:
   gender: с.
   verified: true
 - word: однина́
-  translation: singular
+  translation: singular number
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: множина́
-  translation: plural
+  translation: plural number
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: здоро́в'я
+  translation: health
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ска́ржитися
+  translation: to complain
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нульове закінчення
+  translation: zero ending
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шипля́чий
+  translation: hissing consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: губни́й
+  translation: labial consonant
+  expression: false
+  pos: прикм.
+  gender: ''
   verified: true
 - word: соно́рний
   translation: sonorant consonant
@@ -29,170 +89,38 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: боли́ть
-  translation: it hurts
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: скаржитися на
-  translation: to complain about
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: рік
-  translation: year
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: кінь
-  translation: horse
+- word: реце́пт
+  translation: prescription
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: о́сінь
-  translation: autumn
+- word: діа́гноз
+  translation: diagnosis
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: температу́ра
+  translation: temperature
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: у́чень
-  translation: student
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: пісо́к
-  translation: sand
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ві́тер
-  translation: wind
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: теа́тр
-  translation: theatre
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: коза́к
-  translation: Cossack
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: рука́
-  translation: hand
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: горо́х
-  translation: peas
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сиді́ти
-  translation: to sit
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: писа́ти
-  translation: to write
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: хоті́ти
-  translation: to want
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: плака́ти
-  translation: to cry
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: ти́ждень
-  translation: week
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ща́стя
-  translation: happiness
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: щасли́вий
-  translation: happy
+- word: щи́рий
+  translation: sincere
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: че́сний
-  translation: honest
+- word: врівнова́жений
+  translation: balanced
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: сто́рож
-  translation: guard
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: това́риш
-  translation: friend/comrade
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вчи́тель
-  translation: teacher
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: слуха́ч
-  translation: listener
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ма́ти
-  translation: mother
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: по́дорож
-  translation: journey
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ра́дість
-  translation: joy
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: любо́в
-  translation: love
+- word: зо́внішність
+  translation: appearance
   expression: false
   pos: ім.
   gender: ж.
@@ -203,26 +131,14 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: но́жиці
-  translation: scissors
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: Карпа́ти
-  translation: Carpathians
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
 - word: воро́та
   translation: gates
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: кані́кули
-  translation: holidays/vacation
+- word: но́жиці
+  translation: scissors
   expression: false
   pos: ім.
   gender: ''
@@ -233,38 +149,20 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: ніс
-  translation: nose
+- word: кані́кули
+  translation: vacation
   expression: false
-  pos: дієсл.
+  pos: ім.
   gender: ''
   verified: true
-- word: ву́хо
-  translation: ear
+- word: Карпа́ти
+  translation: Carpathians
   expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: о́ко
-  translation: eye
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мазь
-  translation: ointment
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кра́плі
-  translation: drops
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
+  pos: ''
+  gender: ''
+  verified: false
 - word: хворіти на
-  translation: to be ill with
+  translation: to be sick with
   expression: true
   pos: ''
   gender: ''
@@ -281,57 +179,39 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
+- word: мазь
+  translation: ointment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кра́плі
+  translation: drops
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: призначення ліків
+  translation: prescription of medicine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ведучий вікторини
+  translation: quiz host
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: вночі́
   translation: at night
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: граблі́
-  translation: rake
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: вершки́
-  translation: cream
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: дрі́жджі
-  translation: yeast
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: розрахуватися з
-  translation: to settle accounts with
+- word: з радістю
+  translation: with joy
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: третя відміна
-  translation: third declension
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: pluralia tantum
-  translation: nouns with only plural form
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: па́морозь
-  translation: hoarfrost
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лікува́ння
-  translation: treatment
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true

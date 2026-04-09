@@ -1,0 +1,253 @@
+vocabulary:
+- word: ї́жа
+  translation: food
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: напо́ї
+  translation: drinks
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: варе́ники
+  translation: dumplings
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: сала́т
+  translation: salad
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пі́ца
+  translation: pizza
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ша
+  translation: porridge
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: яє́чня
+  translation: fried eggs
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: котле́та
+  translation: cutlet
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вода́
+  translation: water
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сніда́нок
+  translation: breakfast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: раху́нок
+  translation: bill (at a restaurant)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гри́вня
+  translation: hryvnia (Ukrainian currency, 1)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гри́вні
+  translation: hryvnias (2–4)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гри́вень
+  translation: hryvnias (5+, genitive plural)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: помідо́ри
+  translation: tomatoes
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: я́блука
+  translation: apples
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: смета́на
+  translation: sour cream
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: офіціа́нт
+  translation: waiter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: продаве́ць
+  translation: seller, vendor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сма́чно
+  translation: tasty, delicious
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: до́рого
+  translation: expensive
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ві́льно
+  translation: free, available (of a seat)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: звича́йно
+  translation: of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́зом
+  translation: together
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: підхо́дити
+  translation: to approach, to come up to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: замовля́ти
+  translation: to order
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ко́штува́ти
+  translation: to cost
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: купува́ти
+  translation: to buy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кілогра́м
+  translation: kilogram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ка́ртка
+  translation: card (payment card)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: борщ зі сметаною
+  translation: borscht with sour cream
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хліб із сиром
+  translation: bread with cheese
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені ___, будь ласка.
+  translation: I'll have ___, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте ___, будь ласка.
+  translation: Give [me] ___, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Тут вільно?
+  translation: Is this seat free?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Сідайте!
+  translation: Sit down! (polite)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

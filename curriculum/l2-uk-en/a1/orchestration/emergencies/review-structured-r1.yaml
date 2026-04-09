@@ -2,56 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: 'All 4 content_outline sections present with correct headings. Dialogue
-    1 (calling 112) matches plan verbatim — "Служба порятунку, слухаю вас" through
-    "Залишайтеся на місці." Dialogue 2 (lost passport '
+  score: 9
+  evidence: Covered all major points and dialogues. The phrase "Я в метро..." wasn't
+    explicitly taught as a bullet point as requested in the plan, but it was successfully
+    integrated into the police station dialog
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: 'All 110 Ukrainian words VESUM-verified. Imperative forms correct: допоможіть
-    (допомогти, pf), викличте (викликати, impf), повторіть (повторити, pf), говоріть
-    (говорити, impf), заповніть (заповнити, pf'
+  score: 8
+  evidence: Falsely claims that the formal plural imperative consistently ends in
+    "-іть", ignoring "-те" ("Викличте"), which is taught immediately after. Also uses
+    "пожежна допомога" instead of the standard "поже
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent chunk-first approach — "Do not analyze the grammar — just learn
-    them whole" for emergency phrases. This aligns with the plan's instruction "Мені
-    потрібен/потрібна (I need — chunk, no grammar
+  score: 9
+  evidence: Excellent breakdown of the "У мене болить..." structure and strong advice
+    on learning chunks for high-stress situations. The incorrect imperative rule deducts
+    a point.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: '**Required (8/8):** допомога (in "Мені потрібна допомога"), допоможіть
-    (dialogue + phrase list), швидка ("Швидка вже їде"), поліція (dialogue 2 + phrase
-    list), лікарня ("At a hospital (лікарня)"), ава'
+  evidence: All required and recommended vocabulary items are naturally integrated
+    into the dialogues and prose.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 'All 4 plan activity_hints have matching markers. Quiz tests choosing
-    the right phrase for a situation (language skill ✅). Fill-ins have plausible distractors
-    — e.g., "Допоможіть/Дякую/Вибачте" for an '
+  score: 10
+  evidence: Markers match the plan and are placed logically after the sections they
+    test.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no meta-commentary, no gamified language. Specific
-    cultural details: Хрещатик, Майдан Незалежності, Прем''єр Палас hotel. Practical
-    advice: "save these numbers in your phone," '
+  score: 10
+  evidence: The tone is appropriately urgent and practical, emphasizing communication
+    speed over grammatical perfection.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Four H2 headings matching plan sections (Dialogues, Екстрені ситуації,
-    Допомога, Summary). Clean markdown with proper `<div class="dialogue">` formatting.
-    No duplicate sections, no meta-commentary blo
+  evidence: Well-structured markdown with 1703 words (exceeding the 1200 target).
+    Callouts are used effectively.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Emergency numbers accurate (112, 103, 102). Real Kyiv locations (Хрещатик,
-    Майдан Незалежності). No "like Russian but..." framing. Ukrainian presented on
-    its own terms throughout. Hotel name (Прем''єр '
+  evidence: The note distinguishing modern 101, 102, 103 from Soviet lines is a great
+    cultural/safety detail. Addresses are explained correctly.
 - dimension: 9
-  name: Dialogue quality
+  name: Dialogue & conversation quality
   score: 10
-  evidence: Named speakers throughout (Адам, Оператор, Перехожий, Офіцер). Dialogue
-    1 is a realistic emergency call — short urgent phrases, location before personal
-    info, natural operator responses. Dialogue 2 is
+  evidence: The emergency call and police report dialogues are natural, direct, and
+    realistic for the situations described.
 findings: []

@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all 6 points and themes from the plan. Deducting 1 point because
+    the deterministic word count (1483) is >20% over the target (1200).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Good use of target grammar. Deducting 1 point for a minor stylistic calque
+    ("На столі є лампа") and a missing typological dash in parallel syntax ("Та біла.
+    А ця — синя").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent summary format for a Checkpoint. Clear patterns, strong rule
+    definitions, and highly contextual examples that stick strictly to M08-M13 limits.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required cultural vocab (вишиванка, глечик, писанки, намисто) effectively
+    contextualized in the market dialogue. Good reuse of colors and numbers.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 activity markers injected at the correct logical points (after instruction/review
+    blocks).
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Conversational and supportive tone. A little bit of "telling instead of
+    showing" at the end ("Your vocabulary milestone is real..."), but acceptable for
+    a checkpoint milestone.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean Markdown and good flow, but deducting 1 point due to exceeding the
+    word count budget significantly (+283 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent authentic cultural details regarding ярмарки, вишиванки, and
+    глечики.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural shopping interaction. Good illustration of "цей" vs "той" distance
+    mechanics in practice.
+findings: []

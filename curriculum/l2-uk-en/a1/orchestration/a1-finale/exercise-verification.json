@@ -1,26 +1,329 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 109,
+  "grounded_items": 57,
+  "ungrounded": [
+    {
+      "word": "гуляю",
+      "exercise_type": "fill-in",
+      "context": "гуляю",
+      "role": "answer"
+    },
+    {
+      "word": "гарно",
+      "exercise_type": "fill-in",
+      "context": "Зараз я _____ по Хрещатику, тут дуже гарно!",
+      "role": "context"
+    },
+    {
+      "word": "купив",
+      "exercise_type": "fill-in",
+      "context": "купив",
+      "role": "answer"
+    },
+    {
+      "word": "учора",
+      "exercise_type": "fill-in",
+      "context": "Учора я _____ квиток на поїзд.",
+      "role": "context"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "fill-in",
+      "context": "Учора я _____ квиток на поїзд.",
+      "role": "context"
+    },
+    {
+      "word": "україні",
+      "exercise_type": "fill-in",
+      "context": "Завтра я _____ по Україні.",
+      "role": "context"
+    },
+    {
+      "word": "гуляли",
+      "exercise_type": "fill-in",
+      "context": "гуляли",
+      "role": "answer"
+    },
+    {
+      "word": "була",
+      "exercise_type": "fill-in",
+      "context": "Учора була гарна погода, і ми _____ в парку.",
+      "role": "context"
+    },
+    {
+      "word": "парку",
+      "exercise_type": "fill-in",
+      "context": "Учора була гарна погода, і ми _____ в парку.",
+      "role": "context"
+    },
+    {
+      "word": "рівня",
+      "exercise_type": "fill-in",
+      "context": "Я вже _____ до рівня А2! Вітаю!",
+      "role": "context"
+    },
+    {
+      "word": "допоможіть",
+      "exercise_type": "match-up",
+      "context": "Допоможіть! Викличте швидку!",
+      "role": "context"
+    },
+    {
+      "word": "викличте",
+      "exercise_type": "match-up",
+      "context": "Допоможіть! Викличте швидку!",
+      "role": "context"
+    },
+    {
+      "word": "швидку",
+      "exercise_type": "match-up",
+      "context": "Допоможіть! Викличте швидку!",
+      "role": "context"
+    },
+    {
+      "word": "дайте",
+      "exercise_type": "match-up",
+      "context": "Дайте, будь ласка, таблетки від головного болю.",
+      "role": "context"
+    },
+    {
+      "word": "таблетки",
+      "exercise_type": "match-up",
+      "context": "Дайте, будь ласка, таблетки від головного болю.",
+      "role": "context"
+    },
+    {
+      "word": "від",
+      "exercise_type": "match-up",
+      "context": "Дайте, будь ласка, таблетки від головного болю.",
+      "role": "context"
+    },
+    {
+      "word": "головного",
+      "exercise_type": "match-up",
+      "context": "Дайте, будь ласка, таблетки від головного болю.",
+      "role": "context"
+    },
+    {
+      "word": "болю",
+      "exercise_type": "match-up",
+      "context": "Дайте, будь ласка, таблетки від головного болю.",
+      "role": "context"
+    },
+    {
+      "word": "запитати",
+      "exercise_type": "quiz",
+      "context": "Як запитати про ціну квитка? (How do you ask about the price",
+      "role": "context"
+    },
+    {
+      "word": "ціну",
+      "exercise_type": "quiz",
+      "context": "Як запитати про ціну квитка? (How do you ask about the price",
+      "role": "context"
+    },
+    {
+      "word": "квитка",
+      "exercise_type": "quiz",
+      "context": "Як запитати про ціну квитка? (How do you ask about the price",
+      "role": "context"
+    },
+    {
+      "word": "запрошуєте",
+      "exercise_type": "quiz",
+      "context": "Ви запрошуєте друга в кафе. Що ви скажете? (You are inviting",
+      "role": "context"
+    },
+    {
+      "word": "друга",
+      "exercise_type": "quiz",
+      "context": "Ви запрошуєте друга в кафе. Що ви скажете? (You are inviting",
+      "role": "context"
+    },
+    {
+      "word": "скажете",
+      "exercise_type": "quiz",
+      "context": "Ви запрошуєте друга в кафе. Що ви скажете? (You are inviting",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Як сказати 'My head hurts'? (How do you say 'My head hurts'?",
+      "role": "context"
+    },
+    {
+      "word": "хтось",
+      "exercise_type": "quiz",
+      "context": "Хтось питає 'Де ви?'. Як ви відповісте? (Someone asks 'Де ви",
+      "role": "context"
+    },
+    {
+      "word": "питає",
+      "exercise_type": "quiz",
+      "context": "Хтось питає 'Де ви?'. Як ви відповісте? (Someone asks 'Де ви",
+      "role": "context"
+    },
+    {
+      "word": "де",
+      "exercise_type": "quiz",
+      "context": "Хтось питає 'Де ви?'. Як ви відповісте? (Someone asks 'Де ви",
+      "role": "context"
+    },
+    {
+      "word": "відповісте",
+      "exercise_type": "quiz",
+      "context": "Хтось питає 'Де ви?'. Як ви відповісте? (Someone asks 'Де ви",
+      "role": "context"
+    },
+    {
+      "word": "який",
+      "exercise_type": "quiz",
+      "context": "Який час у реченні 'Завтра я буду читати книгу'? (What tense",
+      "role": "context"
+    },
+    {
+      "word": "час",
+      "exercise_type": "quiz",
+      "context": "Який час у реченні 'Завтра я буду читати книгу'? (What tense",
+      "role": "context"
+    },
+    {
+      "word": "реченні",
+      "exercise_type": "quiz",
+      "context": "Який час у реченні 'Завтра я буду читати книгу'? (What tense",
+      "role": "context"
+    },
+    {
+      "word": "книгу'",
+      "exercise_type": "quiz",
+      "context": "Який час у реченні 'Завтра я буду читати книгу'? (What tense",
+      "role": "context"
+    },
+    {
+      "word": "погоду",
+      "exercise_type": "quiz",
+      "context": "Як запитати про погоду? (How do you ask about the weather?)",
+      "role": "context"
+    },
+    {
+      "word": "читаю",
+      "exercise_type": "fill-in",
+      "context": "_____ читаю цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "fill-in",
+      "context": "_____ читаю цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "fill-in",
+      "context": "_____ читаю цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "працюємо",
+      "exercise_type": "fill-in",
+      "context": "_____ працюємо в офісі.",
+      "role": "context"
+    },
+    {
+      "word": "офісі",
+      "exercise_type": "fill-in",
+      "context": "_____ працюємо в офісі.",
+      "role": "context"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "fill-in",
+      "context": "Вона",
+      "role": "answer"
+    },
+    {
+      "word": "гуляє",
+      "exercise_type": "fill-in",
+      "context": "_____ гуляє в парку з собакою.",
+      "role": "context"
+    },
+    {
+      "word": "собакою",
+      "exercise_type": "fill-in",
+      "context": "_____ гуляє в парку з собакою.",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "fill-in",
+      "context": "Вони",
+      "role": "answer"
+    },
+    {
+      "word": "дивляться",
+      "exercise_type": "fill-in",
+      "context": "_____ дивляться український фільм.",
+      "role": "context"
+    },
+    {
+      "word": "живете",
+      "exercise_type": "fill-in",
+      "context": "Де _____ живете?",
+      "role": "context"
+    },
+    {
+      "word": "неформально",
+      "exercise_type": "group-sort",
+      "context": "Неформально (Ти - Informal)",
+      "role": "context"
+    },
+    {
+      "word": "твої",
+      "exercise_type": "group-sort",
+      "context": "Як твої справи?",
+      "role": "answer"
+    },
+    {
+      "word": "справи",
+      "exercise_type": "group-sort",
+      "context": "Як твої справи?",
+      "role": "answer"
+    },
+    {
+      "word": "бувай",
+      "exercise_type": "group-sort",
+      "context": "Бувай!",
+      "role": "answer"
+    },
+    {
+      "word": "ввічливо",
+      "exercise_type": "group-sort",
+      "context": "Ввічливо (Ви - Polite)",
+      "role": "context"
+    },
+    {
+      "word": "добрий",
+      "exercise_type": "group-sort",
+      "context": "Добрий день!",
+      "role": "answer"
+    },
+    {
+      "word": "ваші",
+      "exercise_type": "group-sort",
+      "context": "Як ваші справи?",
+      "role": "answer"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 10,
     "not_tested": [
-      "вітаю",
-      "готель",
-      "готовий",
       "зустріти",
-      "карта",
-      "квиток",
-      "круасан",
       "лавра",
       "лінія",
-      "подорожувати",
-      "познайомитися",
-      "початок",
-      "сувенір",
-      "фільм"
+      "познайомитися"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

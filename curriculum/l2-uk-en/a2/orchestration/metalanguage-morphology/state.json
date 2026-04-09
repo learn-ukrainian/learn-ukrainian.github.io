@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "metalanguage-morphology",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-08T21:52:58.923633+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-08T21:52:58.937987+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-08T21:53:35.660355+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-08T21:55:54.138474+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-08T22:04:21.097451+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T22:04:21.097734+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-08T22:10:20.311254+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T22:10:20.360092+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-08T22:10:20.375439+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-08T22:10:58.253759+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-08T22:10:58.253907+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-08T22:10:58.589960+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-08T22:12:08.339441+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-08T22:12:08.585989+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-08T22:12:10.763250+00:00"
+    }
+  }
+}

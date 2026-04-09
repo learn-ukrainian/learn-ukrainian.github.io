@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct structure. Dialogue
+    1 matches plan almost verbatim (Що тут є? Столи, стільці і вікна...). Dialogue
+    2 captures the supply-shopping scenario. Большако
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All 110 Ukrainian word forms VESUM-verified. Plural formations correct:
+    стіл→столи, книга→книги, вікно→вікна, стілець→стільці, олівець→олівці all confirmed.
+    Adjective plural rule (always -і) is correc'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: dialogues present plurals in context (Presentation),
+    tables + explanations systematize the patterns (Practice setup), self-check +
+    writing prompt provide Practice/Production. Each '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 8 required vocab items used naturally in prose: столи (Dialogue 1),
+    книги (Section 2 table), вікна (Dialogue 1 + tables), стільці (Dialogue 1), ці/ті/мої
+    (Section 3 examples), які (Dialogue 1). Al'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 markers for 4 plan hints — count matches. Placement is logical: fill-in
+    after noun teaching, fill-in after adjective teaching, group-sort in summary.
+    Markers are spread evenly (one per section). Min'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no gamified language, no "Let us explore..."
+    meta-commentary. Direct, specific instruction: "Notice what just happened" is
+    genuine pedagogical pointing, not filler. Dialogues '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 H2 sections from plan present in correct order. Clean markdown throughout.
+    No duplicate summaries, no meta-commentary sections, no stray tags. Word count
+    1459 vs 1200 target — 22% above, well wi
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented entirely on its own terms. No "like Russian but..."
+    or "similar to English..." comparisons. Grammar terminology uses Ukrainian categories
+    (однина/множина, not "singular/plural" as '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two multi-turn dialogues with named speakers (Олена, Іван). Real situation:
+    setting up a classroom, counting supplies. Natural exchanges — not interrogation-style.
+    Dialogue 2 has genuine back-and-fort'
+findings: []

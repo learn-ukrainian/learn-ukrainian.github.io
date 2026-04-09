@@ -143,72 +143,6 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: ти́ждень
-  translation: week
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ти́жня
-  translation: of the week
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: тижне́вий
-  translation: weekly
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: прої́зд
-  translation: passage / thoroughfare
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: проїзни́й
-  translation: travel pass
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ви́їзд
-  translation: exit / departure
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: виїзни́й
-  translation: exit / outgoing
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ща́стя
-  translation: happiness
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: щасли́вий
-  translation: happy
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ле́стощі
-  translation: flattery
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: уле́сливий
-  translation: flattering
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
 - word: ра́дість
   translation: joy
   expression: false
@@ -246,7 +180,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: ко́ри́сть
-  translation: benefit / use
+  translation: benefit
   expression: false
   pos: ім.
   gender: ж.
@@ -257,23 +191,101 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: вість
-  translation: news / tidings
+- word: ща́стя
+  translation: happiness
   expression: false
   pos: ім.
-  gender: ж.
+  gender: с.
   verified: true
-- word: ві́сник
-  translation: herald / messenger
+- word: щасли́вий
+  translation: happy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сибіля́нт
+  translation: sibilant
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: ві́стка
-  translation: piece of news
+- word: соно́рний
+  translation: sonorant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ле́стощі
+  translation: flattery
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ''
+  verified: true
+- word: уле́сливий
+  translation: flattering
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: прої́зд
+  translation: passage
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: проїзни́й
+  translation: transit card
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ви́їзд
+  translation: departure
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виїзни́й
+  translation: mobile
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ти́ждень
+  translation: week
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тижне́вий
+  translation: weekly
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дієсло́во
+  translation: verb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ти́снути
+  translation: to press
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: блиск
+  translation: shine
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бли́снути
+  translation: to flash
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: бри́зки
   translation: splashes
@@ -282,37 +294,55 @@ vocabulary:
   gender: ж.
   verified: true
 - word: бри́знути
-  translation: to splash / to squirt
+  translation: to splash
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: тиск
-  translation: pressure
+- word: брязк
+  translation: clatter
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: ти́снути
-  translation: to press / to squeeze
+- word: бря́знути
+  translation: to slam
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: ма́сло
-  translation: butter / oil
+  translation: butter
   expression: false
   pos: ім.
   gender: с.
   verified: true
 - word: масни́й
-  translation: greasy / oily
+  translation: greasy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: діагностичний алгоритм
+  translation: diagnostic algorithm
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: орфографічна пастка
+  translation: orthographic trap
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кістля́вий
+  translation: bony
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: пестли́вий
-  translation: affectionate / tender
+  translation: affectionate
   expression: false
   pos: прикм.
   gender: ''
@@ -323,26 +353,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
-- word: кістля́вий
-  translation: bony
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: кі́стка
-  translation: bone
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: хва́стати
-  translation: to boast
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
 - word: шістна́дцять
   translation: sixteen
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: шістсо́т
+  translation: six hundred
   expression: false
   pos: числ.
   gender: ''
@@ -353,46 +371,58 @@ vocabulary:
   pos: числ.
   gender: ''
   verified: true
-- word: зап'я́стний
-  translation: wrist-related
-  expression: false
-  pos: прикм.
+- word: іншомовне походження
+  translation: foreign origin
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: зап'я́стя
-  translation: wrist
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: контра́стний
-  translation: contrastive
+  translation: contrasting
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: бала́стний
-  translation: ballast-related
+  translation: ballast
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: контра́ст
-  translation: contrast
+- word: аге́нтство
+  translation: agency
   expression: false
   pos: ім.
-  gender: ч.
+  gender: с.
   verified: true
-- word: компо́стний
-  translation: compost-related
+- word: тури́стський
+  translation: tourist
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: форпо́стний
-  translation: outpost-related
+- word: швидке мовлення
+  translation: fast speech
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неві́стка
+  translation: daughter-in-law
   expression: false
-  pos: прикм.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: арти́стка
+  translation: female artist
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: етимологічне спрощення
+  translation: etymological simplification
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: со́нце
@@ -401,47 +431,29 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: серди́тий
-  translation: angry
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
 - word: серде́чний
   translation: heartfelt
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: нена́висть
-  translation: hatred
+- word: черне́ць
+  translation: monk
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: нена́висний
-  translation: hateful
+- word: ченці́
+  translation: monks
   expression: false
-  pos: прикм.
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: щоти́жня
+  translation: every week
+  expression: false
+  pos: присл.
   gender: ''
-  verified: true
-- word: со́вість
-  translation: conscience
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: со́вісний
-  translation: conscientious
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: о́бласть
-  translation: region
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: обласни́й
   translation: regional
@@ -449,45 +461,51 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: блиск
-  translation: sparkle
+- word: шви́дкісний
+  translation: high-speed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: со́вісний
+  translation: conscientious
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нена́висний
+  translation: hateful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кличний відмінок
+  translation: vocative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дру́же
+  translation: friend (vocative)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: бли́снути
-  translation: to flash / to sparkle
+- word: со́нячний
+  translation: sunny
   expression: false
-  pos: дієсл.
+  pos: прикм.
   gender: ''
   verified: true
-- word: щоти́жня
-  translation: weekly / every week
+- word: че́сно
+  translation: honestly
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: ви́мовити
-  translation: to pronounce
+- word: щасли́во
+  translation: happily
   expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зворотний аналіз
-  translation: reverse engineering
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: закріплений на письмі
-  translation: fixed in writing
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: спрощення приголосних
-  translation: simplification of consonants
-  expression: true
-  pos: ''
+  pos: присл.
   gender: ''
   verified: true

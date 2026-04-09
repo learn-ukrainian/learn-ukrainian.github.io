@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: The text misses recommended vocabulary "обидва/обидві" and "десяток".
+    The reading practice section completely omits the required "ages of historical
+    figures" and "distances between cities", focusing s
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Good overall syntax and declension tables, but contains Russian calques
+    for imperative verbs ("Давайте подивимося", "Давайте попрактикуємо") and Surzhyk
+    introductory words ("Значить" instead of "Отже"
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent grammar progression. The explanation of the "1-2-5" rule is
+    clear and logical. However, modeling the "Давайте" imperative teaches learners
+    bad habits.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All required vocabulary is used in clear context, but recommended words
+    "обидва/обидві" and "десяток" are omitted entirely.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The writer injected 6 markers instead of the 4 requested by the plan,
+    disrupting the pipeline's 1:1 mapping for `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is warm and encouraging ("Це дуже красива граматична особливість").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All required H2 sections are present in order. Word count is reported
+    as 2528, safely above the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Appropriately references Ukrainian holidays (Independence Day, Constitution
+    Day) and acknowledges the modern December 25th date for Christmas.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The generated dialogue missed the planned motivational context ("Organizing
+    a school sports day"), resulting in a generic transaction that didn't showcase
+    the required ordinal expressions.
+findings: []

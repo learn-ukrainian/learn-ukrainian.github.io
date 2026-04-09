@@ -1,0 +1,163 @@
+vocabulary:
+- word: питальні слова
+  translation: question words
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: куди́
+  translation: where to (direction)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: чому́
+  translation: why
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: як
+  translation: how
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ні
+  translation: 'no'
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: ніхто́
+  translation: nobody
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ні́чого
+  translation: nothing
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ніколи
+  translation: never
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ніде
+  translation: nowhere
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: нікуди
+  translation: to nowhere, not anywhere
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: жи́ти
+  translation: to live
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розумі́ти
+  translation: to understand
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: тому що
+  translation: because
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вивча́ти
+  translation: to study, to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відповіда́ти
+  translation: to answer
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чу́ти
+  translation: to hear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іти́
+  translation: to go (on foot)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́хати
+  translation: to go (by vehicle), to drive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: запере́чення
+  translation: negation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: подвійне заперечення
+  translation: double negation
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: запі́знюватися
+  translation: to be late
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Я не знаю.
+  translation: I don't know.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вра́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: уве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true

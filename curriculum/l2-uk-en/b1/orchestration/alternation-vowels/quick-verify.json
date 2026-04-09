@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 4/14 required vocab: нуль звука (zero sound — absence of a vowel in an alternation), шиплячий (hushing consonant — ж, ч, ш, дж), орфограма (orthographic rule — a spelling pattern requiring a rule), форма слова (word form — a specific inflected variant of a word)"
+    }
+  ],
+  "timestamp": "2026-04-09T03:58:58.912595+00:00"
+}

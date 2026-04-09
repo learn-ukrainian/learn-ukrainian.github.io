@@ -2,50 +2,48 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: '**Critical deviation**: Plan says "9 pairs: Д/Д'', Т/Т'', З/З'', С/С'',
-    Ц/Ц'', Л/Л'', Н/Н'', **Р/Р''**, ДЗ/ДЗ''" — module drops Р entirely, says "exactly
-    8 consonants." The Літвінова mnemonic correctly encodes'
+  score: 6
+  evidence: Missing the `лист` vs `ліс` minimal pair. Violated a strict negative scope
+    constraint by including prefix apostrophe examples (з'їзд, під'їзд) in a caution
+    box. Factually miscounted the mnemonic lette
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'The Р omission is a factual error about Ukrainian phonetics. Правопис
-    §26 explicitly lists "після букв д, т, з, с, дз, ц, л, н та **р**" for Ь before
-    О. Авраменко Grade 5 p.75 lists [р''] among м''які. '
+  score: 7
+  evidence: Used `брать` as a minimal pair example for A1 learners, which is indistinguishable
+    from the Russian verb "to take", creating a severe conceptual Russicism for beginners.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Strong PPP flow: concept → explanation → examples → practice in every
-    section. Three-way consonant distinction well-presented. Apostrophe section builds
-    beautifully from contrastive pair (пісня vs м''я'
+  score: 8
+  evidence: Misplaced exercise marker. The explanation of `м'який` is slightly confusing
+    but acceptable. Otherwise, concepts are explained beautifully with solid mechanics.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 7 required words used naturally: сім''я (apostrophe section), день
-    (soft sign section), сіль (soft sign opening), м''ясо (apostrophe walkthrough),
-    п''ять (apostrophe walkthrough), гарно (Г section), '
+  evidence: All required and recommended words are seamlessly integrated into the
+    text.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 'All 7 plan activity_hints have corresponding markers. Types match: odd-one-out,
-    fill-in, error-correction, group-sort, match-up, true-false, quiz. Placement is
-    pedagogically sound — each exercise imme'
+  score: 8
+  evidence: '`match-up-voiced-voiceless` is injected in the wrong section, testing
+    content not covered in its immediate preceding text.'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers, no "magic of" language, no gamification. Direct,
-    teacher-like tone throughout: "Now meet a letter that breaks that rule" is engaging
-    without being cheesy. The "Place your fing'
+  score: 10
+  evidence: Excellent metaphors ("solid brick wall", "gentle instruction") and an
+    encouraging teacher persona.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All 5 H2 headings from plan present in correct order. Clean markdown.
-    No duplicate summaries, no meta-commentary, no stray tags. Word count 1407 exceeds
-    1200 target. :::tip, :::note, :::caution blocks
+  evidence: Word count (2003) far exceeds the 1200 target. Sections are well-organized
+    and correctly ordered.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Fully decolonized — Ukrainian presented on its own terms. "И [...] exists
-    on its own terms" — never compared to Russian И. "Ґ is uniquely Ukrainian" reinforced.
-    The :::caution about not calling Г "sof
+  evidence: Phonetics are taught on their own terms. Excellent framing of the Ukrainian
+    Г vs Ґ distinction.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogues successfully integrate phonetic pairs, but English translations
+    are slightly robotic ("This is a father", "And is a goat there?").
 findings: []

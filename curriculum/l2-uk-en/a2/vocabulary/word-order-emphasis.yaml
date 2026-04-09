@@ -1,0 +1,187 @@
+vocabulary:
+- word: виділя́ти
+  translation: to highlight, to single out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: озна́чення
+  translation: attribute, modifier
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нейтра́льний
+  translation: neutral
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: емфати́чний
+  translation: emphatic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: акце́нт
+  translation: accent, emphasis
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поря́док
+  translation: order
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: те́ма
+  translation: theme, topic (linguistics)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ре́ма
+  translation: rheme, new information
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: на́голос
+  translation: stress, emphasis
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: інве́рсія
+  translation: inversion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: контра́ст
+  translation: contrast
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: підкре́слювати
+  translation: to emphasize, to underline
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поча́ток
+  translation: beginning
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кіне́ць
+  translation: end
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ві́льний
+  translation: free
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: порядок слів
+  translation: word order
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підмет
+  translation: subject
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: при́судок
+  translation: predicate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дода́ток
+  translation: object
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сусідки по кімнаті
+  translation: roommates
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: домашні обов'язки
+  translation: household chores
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фокус повідомлення
+  translation: focus of the message
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: закі́нчення
+  translation: ending
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відмі́нок
+  translation: case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прямий порядок слів
+  translation: direct word order
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: обста́вина
+  translation: adverbial modifier
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прислі́вник
+  translation: adverb
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: числі́вник
+  translation: numeral
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прибли́зний
+  translation: approximate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: логічний наголос
+  translation: logical stress
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шабло́н
+  translation: template
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

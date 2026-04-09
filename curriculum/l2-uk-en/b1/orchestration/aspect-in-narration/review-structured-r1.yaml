@@ -1,0 +1,56 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module covers every single outline point from the plan, uses the exact
+    diagnostic test text provided, correctly introduces the "theater" visual metaphor
+    for background/foreground, and uses all req
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The module is largely written in rich, natural Ukrainian, but it contains
+    a clear Russian calque ("прийняла рішення" instead of "ухвалила рішення") and
+    a morphologically unnatural active present parti
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The module explicitly shows learners *why*
+    aspect matters for storytelling (e.g., the contrast between "нудна історія" vs
+    "поліцейський звіт"), provides clear TTT scaffoldi
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All vocabulary from the plan is naturally woven into the prose. Words
+    like "тло", "передній план", "оповідання", "нарешті", "раптом", and "послідовність"
+    are introduced clearly with inline translation
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 injected activities are placed perfectly at the ends of their respective
+    conceptual blocks to test what was just taught. The pacing allows learners to
+    build their understanding progressively.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly engaging and effectively uses an encouraging teacher
+    persona ("Уявіть собі звичайний театр", "Давайте одразу перевіримо вашу мовну
+    інтуїцію"). It strictly avoids generic corporate/g
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Headings are correct and word count is robust. However, there is a critical
+    typographical error where an invalid character (`╽`) breaks the word "повсякденного".
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Cultural representation is authentic. The text grounds its examples in
+    standard, everyday Ukrainian reality (e.g., mentioning "Бережани" as a typical
+    small town).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between Юлія and Катерина perfectly demonstrates the narrative
+    functions of both aspects in a natural, collaborative conversation, matching the
+    plan's prompt exactly.
+findings: []

@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct headings. Dialogue
+    1 follows plan exactly (breakfast: каша, кава, хліб з маслом, чай, яйця, молоко
+    — all plan points). Dialogue 2 matches plan (суп,'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All conjugation forms verified against VESUM. їсти: їм, їси, їсть, їмо,
+    їсте, їдять — exact match. пити: п''ю, п''єш, п''є, п''ємо, п''єте, п''ють — exact
+    match. Accusative forms correct: каву, воду, рибу, '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogues present the pattern in context → explicit
+    grammar tables with examples → practice exercises. Each grammar point has 3+ examples
+    (їсти has 3 anchor sentences, пити has 3, acc'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: '**Required vocab:** їсти ✓, пити ✓, їм ✓, п''ю ✓, каву ✓, воду ✓, рибу
+    ✓ — all used naturally in prose. **Recommended vocab:** кашу ✓, картоплю ✓, сметану
+    ✓, їсть ✓, п''є ✓, їдять ✓, п''ють ✓ — all prese'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 activity markers matching all 4 plan activity_hints in type and focus.
+    Placement after relevant teaching sections. Inline self-test in Summary with mixed
+    masculine/feminine items. No issues with exe
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Clean, direct teaching voice. No motivational openers or meta-commentary.
+    Good hooks: "What do they eat? What do they drink?" and "Look back at both dialogues
+    and answer these questions aloud." The te'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 H2 headings match plan. Clean markdown with proper dialogue formatting.
+    Word count 1264 ≥ 1200 target ✓. Tables render correctly. Tip box properly formatted.
+    No stray tags or formatting artifact
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms — no "like Russian" comparisons.
+    Food vocabulary is culturally appropriate Ukrainian (каша, борщ absent but not
+    expected at this scope — хліб з маслом, сметана, ка
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Named speakers (Марія, Олег, Колега 1, Колега 2) — good. Multi-turn exchanges
+    with natural flow. Dialogue 2 has a satisfying closing ("Добре, замовляй!"). **Deduction:**
+    The framing paragraph says "Tw
+findings: []

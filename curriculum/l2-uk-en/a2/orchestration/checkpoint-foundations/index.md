@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-foundations (A2)
 
-Generated: 2026-04-07 23:06
+Generated: 2026-04-09 01:22
 
 ## Pipeline Phases
 
@@ -20,6 +20,7 @@ Generated: 2026-04-07 23:06
 | review | complete | 2026-04-07 21:06:47 |
 | stress | complete | 2026-04-07 21:06:47 |
 | publish | complete | 2026-04-07 21:06:49 |
+| skeleton | complete | 2026-04-08 23:22:43 |
 
 ## Reviews
 
@@ -33,6 +34,8 @@ Generated: 2026-04-07 23:06
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (auto) | 232s | ✅ |
 | skeleton | gemini (auto) | 300s | ❌ |
+| skeleton | gemini (gemini-3-flash-preview) | 300s | ❌ |
+| skeleton | gemini (gemini-3-flash-preview) | 241s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 137s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | vocab | gemini (auto) | 386s | ✅ |
@@ -40,11 +43,13 @@ Generated: 2026-04-07 23:06
 
 ## Files
 
+- `.build.lock`
 - `exercise-verification.json`
 - `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
 - `v6-pre-verify-prompt.md`

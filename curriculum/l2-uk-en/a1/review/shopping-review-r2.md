@@ -1,69 +1,50 @@
 ## Linguistic Scan
-Linguistic errors found:
-- Explicit teaching of incorrect stress patterns: `копійки́` (should be `копі́йки`), `копійо́к` (should be `копі́йок`).
-- Wrong stress placed on a pronoun following a preposition: `У мене́` (should be `У ме́не`).
-- Wrong stress on noun plural after a numeral: `дві пачки́` (should be `дві па́чки`).
-- Stray formatting artifacts: Impossible double-stress marks on single words (`ко́шту́є`, `ко́штува́ти`, `ко́шту́ють`). 
+No linguistic errors found. All Ukrainian text is grammatically correct and uses natural phrasing.
 
 ## Exercise Check
-All four `<!-- INJECT_ACTIVITY: {id} -->` markers are present and placed logically after their corresponding topics. The IDs match the `activity_hints` plan points exactly.
-The `fill-in-prices` exercise asks the student to choose the nominative form. Since genitive noun-chunks are formally taught *after* this activity, the student is expected to fall back on the dictionary form they already know, making the test a fair application of the current knowledge scope.
+- `<!-- INJECT_ACTIVITY: quiz-currency-choice -->`: Placed correctly after the currency explanation.
+- `<!-- INJECT_ACTIVITY: fill-in-prices -->`: Placed correctly after the price agreement patterns.
+- `<!-- INJECT_ACTIVITY: fill-in-quantities -->`: Placed correctly after the quantity words.
+- `<!-- INJECT_ACTIVITY: match-up-shops -->`: Placed correctly after the shop locations vocabulary.
+All 4 plan-mandated activity markers are present, appropriately distributed, and logically placed after the relevant instructional content.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covered all 4 sections (Діалоги, Скільки коштує, Де купити, Підсумок). |
-| 2. Linguistic accuracy | 5/10 | The text explicitly teaches the WRONG stress for plural kopecks: `2 копійки́, 5 копійо́к` instead of `копі́йки, копі́йок`. Also teaches wrong stress for `у ме́не` (`у мене́`) and `дві па́чки` (`дві пачки́`). |
-| 3. Pedagogical quality | 9/10 | Good use of PPP pedagogy. Clear introduction of numbers and currency agreement before introducing quantity chunks. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items are naturally integrated into the text. |
-| 5. Exercise quality | 9/10 | Good coverage of grammar points in the markers, matching the activity hints accurately. |
-| 6. Engagement & tone | 9/10 | Good situational dialogues (outdoor market and supermarket). Natural flow. |
-| 7. Structural integrity | 6/10 | Contains stray formatting artifacts (double stress marks `ко́штува́ти`, `ко́шту́ють`). Also, the word count is 1593, which is >30% over the 1200 target, padded slightly by repetitive explanations at the end of section 3. |
-| 8. Cultural accuracy | 10/10 | Accurate presentation of hryvnia/kopeck patterns and Ukrainian shop types (крамниця, ринок). |
-| 9. Dialogue & conversation quality | 9/10 | Natural exchanges with realistic transactional phrases (Є знижка?, Можна карткою?, Дорого!). |
+| 1. Plan adherence | 9/10 | The module covers all required sections and topics. However, it claims that certain words appeared in the dialogues when they did not ("ковбаса" and "масло"). |
+| 2. Linguistic accuracy | 10/10 | All Ukrainian text is correct. No Russianisms, Surzhyk, or calques were detected. |
+| 3. Pedagogical quality | 8/10 | The explanation of currency pluralization is slightly imprecise ("For the number five and any number above it" instead of specifying the final digit), which could confuse learners about numbers like 21 or 32. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are integrated naturally into the text. |
+| 5. Exercise quality | 10/10 | The injected markers align perfectly with the plan's activity hints and are positioned exactly where they should be. |
+| 6. Engagement & tone | 10/10 | Excellent, encouraging tone. The cultural notes about the market atmosphere and the use of diminutives (картопелька, яблучка) are fantastic. |
+| 7. Structural integrity | 10/10 | Clean markdown, appropriate use of callouts, and the word count exceeds the target. |
+| 8. Cultural accuracy | 10/10 | The distinction between "ринок" and "супермаркет", as well as the historical note about the "шаг" coin, are highly accurate and culturally enriching. |
+| 9. Dialogue & conversation quality | 7/10 | The dialogues are natural and communicative, but the first dialogue contains a mathematical error in the total price calculation (75 instead of 110). |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: Section "Скільки коштує?" — "The smaller unit, **копі́йка** (kopeck), follows a similar pattern: 1 **копійка**, 2 **копійки́**, 5 **копійо́к**."
-Issue: Teaches the wrong phonetic stress for "копійка" in plural. The stress remains on the stem (копі́йки, копі́йок).
-Fix: Change `копійки́` to `копі́йки` and `копійо́к` to `копі́йок`.
+[Plan adherence] [minor]
+Location: `The core food items that appeared in these conversations are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter).`
+Issue: The text claims all these items appeared in the conversations, but "ковбаса" and "масло" were actually omitted from the dialogues.
+Fix: Adjust the sentence to acknowledge that some items are additional.
 
-[2. Linguistic accuracy] [Critical]
-Location: Section "Де купити?" — "Дайте, будь ласка, дві пачки́ ка́ви."
-Issue: Teaches the wrong phonetic stress for "пачка" after a numeral. The stress remains on the stem in the nominative plural (па́чки).
-Fix: Change `пачки́` to `па́чки`.
+[Pedagogical quality] [major]
+Location: `For the number five and any number above it, including all the tens and teens (11-19), we use the "many" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias).`
+Issue: The phrasing "any number above it" is inaccurate because it implies numbers like 21 or 32 take the "many" form, unless the reader infers "ending in". It should explicitly state numbers ending in 5, 6, 7, 8, 9, or 0.
+Fix: Update the sentence to clarify it applies to the last digit.
 
-[2. Linguistic accuracy] [Critical]
-Location: Section "Де купити?" — "У мене́ нема́є грошей"
-Issue: Wrong phonetic stress. The stress in the pronoun "мене" shifts to the first syllable when governed by a preposition (у ме́не).
-Fix: Change `мене́` to `ме́не`.
-
-[7. Structural integrity] [Major]
-Location: Section "Діалоги" — "Скі́льки ко́шту́є кілогра́м я́блук?" and Section "Скільки коштує?" — "**ко́штува́ти**" and "**Скільки ко́шту́ють?**"
-Issue: Stray formatting artifacts. The writer placed double stress marks on single words, which is orthographically impossible and confusing for learners.
-Fix: Remove the extra stress marks (`ко́шту́є` -> `ко́штує`, `ко́штува́ти` -> `ко́штувати`, `ко́шту́ють` -> `ко́штують`).
-
-[7. Structural integrity] [Minor]
-Location: Section "Де купити?" — "The quantity word changes form with the number (**кілограм** → **два кілограми**)... For now, just copy these chunks as whole units."
-Issue: Redundant paragraph that repeats an explanation already given 100 words earlier ("You will see these genitive endings again in A2. For now, learn the chunks"). This artificially inflates the word count (1593 vs target 1200).
-Fix: Remove the redundant paragraph entirely.
+[Dialogue & conversation quality] [critical]
+Location: `> **Продавець:** Сімдесят п'ять гривень. *(Seventy-five hryvnias.)*`
+Issue: Math error. The buyer asks for 2 kg of tomatoes (35 грн/kg) and 1 kg of apples (40 грн/kg). The total should be 2*35 + 40 = 110 грн. The seller asks for 75, which is factually incorrect.
+Fix: Change the total to 110 (Сто десять гривень).
 
 ## Verdict: REVISE
-The module contains critical phonetic errors explicitly taught to learners via incorrect stress marks. Additionally, it contains impossible double-stress formatting artifacts and a redundant paragraph unnecessarily inflating the word count. Needs revision using the provided fixes.
+The module is beautifully written with excellent cultural and pedagogical notes, but contains a critical mathematical error in a dialogue and a major imprecision in a grammar rule. These must be corrected.
 
 <fixes>
-- find: "Скі́льки ко́шту́є кілогра́м я́блук?"
-  replace: "Скі́льки ко́штує кілогра́м я́блук?"
-- find: "uses the verb **ко́штува́ти** (to cost) in third person singular"
-  replace: "uses the verb **ко́штувати** (to cost) in third person singular"
-- find: "the verb changes: **Скільки ко́шту́ють?** (How much do they cost?)"
-  replace: "the verb changes: **Скільки ко́штують?** (How much do they cost?)"
-- find: "follows a similar pattern: 1 **копійка**, 2 **копійки́**, 5 **копійо́к**."
-  replace: "follows a similar pattern: 1 **копійка**, 2 **копі́йки**, 5 **копі́йок**."
-- find: "**Дайте, будь ласка, дві пачки́ ка́ви.** (Please give me two packs of coffee.)"
-  replace: "**Дайте, будь ласка, дві па́чки ка́ви.** (Please give me two packs of coffee.)"
-- find: "You can also hear: **У мене́ нема́є грошей** (I don't have money)"
-  replace: "You can also hear: **У ме́не нема́є грошей** (I don't have money)"
-- find: "The quantity word changes form with the number (**кілограм** → **два кілограми**), and the item after the quantity also has a special form (you will learn why in A2). For now, just copy these chunks as whole units."
-  replace: ""
+- find: "The core food items that appeared in these conversations are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter)."
+  replace: "The core food items that appeared in these conversations, along with a few others, are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter)."
+- find: "For the number five and any number above it, including all the tens and teens (11-19), we use the \"many\" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias)."
+  replace: "For numbers ending in 5, 6, 7, 8, 9, or 0, as well as all the teens (11-19), we use the \"many\" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias)."
+- find: "> **Продавець:** Сімдесят п'ять гривень. *(Seventy-five hryvnias.)*"
+  replace: "> **Продавець:** Сто десять гривень. *(One hundred ten hryvnias.)*"
 </fixes>

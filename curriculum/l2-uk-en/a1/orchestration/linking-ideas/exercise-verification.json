@@ -1,22 +1,86 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 86,
+  "grounded_items": 74,
+  "ungrounded": [
+    {
+      "word": "додавання",
+      "exercise_type": "group-sort",
+      "context": "Додавання (Addition)",
+      "role": "context"
+    },
+    {
+      "word": "контраст",
+      "exercise_type": "group-sort",
+      "context": "Контраст (Contrast)",
+      "role": "context"
+    },
+    {
+      "word": "причина",
+      "exercise_type": "group-sort",
+      "context": "Причина (Reason)",
+      "role": "context"
+    },
+    {
+      "word": "вибір",
+      "exercise_type": "group-sort",
+      "context": "Вибір (Choice)",
+      "role": "context"
+    },
+    {
+      "word": "вчу",
+      "exercise_type": "fill-in",
+      "context": "Я вчу українську, ___ я люблю Україну.",
+      "role": "context"
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "fill-in",
+      "context": "Він п'є каву, ___ він дуже втомлений.",
+      "role": "context"
+    },
+    {
+      "word": "хоче",
+      "exercise_type": "true-false",
+      "context": "Марко хоче каву, бо він втомлений.",
+      "role": "context"
+    },
+    {
+      "word": "цукром",
+      "exercise_type": "true-false",
+      "context": "Олена хоче чай з цукром.",
+      "role": "context"
+    },
+    {
+      "word": "магазині",
+      "exercise_type": "true-false",
+      "context": "Іван не відповів на телефон, бо він був у магазині.",
+      "role": "context"
+    },
+    {
+      "word": "поїдуть",
+      "exercise_type": "true-false",
+      "context": "Віктор і Марія поїдуть у Карпати.",
+      "role": "context"
+    },
+    {
+      "word": "карпатах",
+      "exercise_type": "true-false",
+      "context": "У Карпатах дорого.",
+      "role": "context"
+    },
+    {
+      "word": "дорого",
+      "exercise_type": "true-false",
+      "context": "У Карпатах дорого.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 10,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 9,
     "not_tested": [
-      "або",
-      "але",
-      "бо",
-      "та",
-      "також",
-      "теж",
-      "тому",
-      "чи",
-      "чому",
-      "що"
+      "чому"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

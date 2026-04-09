@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The text failed to use the exact 30 pairs organized into the specific
+    groups defined in the plan (e.g., missed `робити/зробити`, `писати/написати` in
+    Group A; missed `казати/сказати` in Group B). Dial
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: General usage is flawless, but the morphological claim that "звуки «ог»
+    змінюються на «ага»" in `допомогти/допомагати` is a factual linguistic error.
+    The alternation is the root vowel `о` -> `а` and t
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent explanations of aspect logic and clear minimal pairs ("Я варив
+    борщ годину" vs "Я зварив борщ"), but slightly marred by the clunky morphology
+    explanation.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Uses the majority of the vocabulary naturally, but failed to include all
+    30 pairs exactly as stipulated in the plan's section 2 outline.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers are correctly placed, correspond to the plan's hints, and
+    test the concepts just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Great teacher persona, encouraging and clear without useless filler or
+    fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 3056 (well above the 2000 target). All headers are present
+    and logically ordered.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Contexts and examples are natural, appropriate, and authentic.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are highly natural and demonstrate the grammar perfectly, though
+    the second dialogue deviated from the plan's required prompt.
+findings: []

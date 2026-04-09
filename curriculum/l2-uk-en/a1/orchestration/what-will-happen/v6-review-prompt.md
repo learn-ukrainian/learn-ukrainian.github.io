@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 50: What Will Happen? (A1, A1.8 [Past, Future, Graduation])
-**Writer:** Claude
+**Writer:** Gemini
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -151,95 +151,125 @@ references:
 
 <generated_module_content>
 ## Dialogues
-A fair. Music. Bright lights. A woman in a shawl sits behind a crystal ball. She looks up at you and smiles.
-> — **Воро́жка:** Ти бу́деш бага́то подорожува́ти. *(You will travel a lot.)*
-> — **Ворожка:** Будеш знахо́дити нови́х дру́зів. *(You will find new friends.)*
-> — **Ворожка:** Будеш отри́мувати подару́нки. *(You will receive gifts.)*
-> — **Ворожка:** Будеш щасли́вий! Будеш щасли́ва! *(You will be happy! [m/f])*
-> — **Кліє́нт:** Спра́вді? А коли́ це бу́де? *(Really? And when will that be?)*
-> — **Ворожка:** Ско́ро! Твоє́ майбу́тнє — яскра́ве! *(Soon! Your future is bright!)*
 
-The **ворожка** (fortune teller) keeps repeating one word: **будеш** — "you will." Every prediction follows the same pattern: **будеш** + infinitive. The infinitive is the base form of a verb — the "-ти" form you already know: **подорожувати** (to travel), **знаходити** (to find), **отримувати** (to receive). This is the Ukrainian future tense, and it is remarkably simple.
-Now listen to two friends planning their week. Every form of **бу́ду** appears in this conversation — count them.
-> — **Андрі́й:** Що ти будеш роби́ти за́втра? *(What will you do tomorrow?)*
-> — **Мари́на:** Завтра я буду працюва́ти. *(Tomorrow I will work.)*
-> — **Андрій:** А вве́чері? *(And in the evening?)*
-> — **Марина:** Ввечері я буду готува́ти вече́рю. *(In the evening I will cook dinner.)*
-> — **Андрій:** А що буде робити Оле́на? *(And what will Olena do?)*
-> — **Марина:** Вона́ буде чита́ти. *(She will read.)*
-> — **Андрій:** А ви бу́дете гуля́ти? *(And will you [all] go for a walk?)*
-> — **Марина:** Так, ми бу́демо гуляти в парку! *(Yes, we will walk in the park!)*
-> — **Андрій:** А ді́ти? *(And the kids?)*
-> — **Марина:** Вони́ бу́дуть гра́ти у дворі́. *(They will play in the yard.)*
+When we talk about our lives, we constantly shift between the past, the present, and the future. In the previous lessons, we focused heavily on what already happened. We learned to describe completed actions and past states using past tense verbs that change based on gender. We talked about yesterday, last week, and what we did during our time off. But human conversations are equally focused on what comes next. We make plans, we set goals, and we imagine future possibilities. Moving from what we did to what we will do requires a new grammatical tool. In Ukrainian, talking about the future is surprisingly straightforward, especially when we focus on ongoing plans and intentions. Observe how native speakers discuss their upcoming activities in different real-world situations.
 
-*All six forms of **буду** appear in this dialogue — **буду**, **будеш**, **буде**, **будемо**, **будете**, **будуть**. Did you catch them all?*
-Here is another conversation — weekend plans between colleagues.
-> — **Окса́на:** Що ви будете робити на вихідни́х? *(What will you do on the weekend?)*
-> — **Тара́с:** У субо́ту ми будемо відпочива́ти. *(On Saturday we will rest.)*
-> — **Оксана:** А в неді́лю? *(And on Sunday?)*
-> — **Тарас:** У неділю я буду готувати. *(On Sunday I will cook.)*
-> — **Тарас:** А чолові́к буде гуляти з ді́тьми. *(And my husband will walk with the kids.)*
-> — **Оксана:** Чудо́во! А я буду диви́тися футбо́л. *(Wonderful! And I will watch football.)*
-> — **Тарас:** Ти за́вжди́ будеш дивитися футбол! *(You will always watch football!)*
-
-*Notice **«Чудово!»** — a useful reaction meaning "Wonderful!" And the playful teasing at the end: **завжди будеш дивитися** — "you'll always watch."*
-<!-- INJECT_ACTIVITY: match-buty-future-forms -->
-## Майбу́тній час (Future Tense)
-Ukrainian textbooks call this **майбутній час** (future tense). Ukrainian actually has two ways to form the future, but at A1 you only need one: the **скла́дений майбутній** (analytic future). The pattern is straightforward — take the helper verb **буду** (conjugated for person) and add any infinitive after it. Think of it like English "will + verb": **Я буду читати** = "I will read." The infinitive **читати** never changes. Only **буду** shifts to match the subject.
-Here is the full conjugation — six forms of **бу́ти** (to be) in the future, each paired with the infinitive **читати** (to read):
-| Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | **я буду читати** | **ми будемо читати** |
-| 2nd | **ти будеш читати** | **ви будете читати** |
-| 3rd | **він / вона буде читати** | **вони будуть читати** |
-The pattern is always the same: one of the six forms of **бути** + the infinitive. The infinitive stays identical every time — **читати**, **працювати**, **гуляти** — it does not matter which verb follows. Only **буду** carries the person information.
-Now compare all three tenses you know, using the same verb **читати**:
-- **Мину́лий** (past): **Я чита́в / чита́ла кни́жку вчо́ра.** *(I read a book yesterday.)* — The verb takes a gender ending, as you learned in M49.
-- **Тепе́рішній** (present): **Я чита́ю книжку за́раз.** *(I am reading a book now.)* — The verb takes a person ending.
-- **Майбутній** (future): **Я буду читати книжку завтра.** *(I will read a book tomorrow.)* — The helper **буду** carries person; the main verb stays as the infinitive.
-Three tenses, three different strategies: past relies on gender, present on person endings, and future on the helper verb **буду** + infinitive.
 :::note
-You may hear forms like **чита́тиму** or **роби́тиму** — this is the synthetic future, another way to express the same meaning. It is natural and common, but it is A2 material. At A1, always use **буду + infinitive** — it works in every situation and is fully correct. Ukrainian textbooks present both forms as standard ways to express the future.
+The future tense is essential for making plans. Notice how the speakers in these dialogues use a special form of the verb "to be" combined with an action verb.
 :::
-## Пра́ктика (Practice)
-The beauty of the analytic future is its predictability. Take any verb you know, keep it in the infinitive, and put the right form of **буду** before it. Here are six core verbs — all six persons for each:
-- **читати** (to read) → **буду читати, будеш читати, буде читати, будемо читати, будете читати, будуть читати**
-- **працювати** (to work) → **буду працювати, будеш працювати, буде працювати, будемо працювати, будете працювати, будуть працювати**
-- **готувати** (to cook) → **буду готувати, будеш готувати, буде готувати, будемо готувати, будете готувати, будуть готувати**
-- **гуляти** (to walk) → **буду гуляти, будеш гуляти, буде гуляти, будемо гуляти, будете гуляти, будуть гуляти**
-- **дивитися** (to watch) → **буду дивитися, будеш дивитися, буде дивитися, будемо дивитися, будете дивитися, будуть дивитися**
-- **говори́ти** (to speak) → **буду говорити, будеш говорити, буде говорити, будемо говорити, будете говорити, будуть говорити**
-The infinitive form stays identical regardless of which verb follows **буду**. The only thing you conjugate is **бути** itself.
-<!-- INJECT_ACTIVITY: fill-in-analytic-future -->
-Now build full sentences. Pay attention to the **time expressions** — they tell the listener *when* the action will happen:
-- **Завтра** я буду працювати з дев'я́тої до п'я́тої. *(Tomorrow I will work from nine to five.)*
-- **Ввечері** ми будемо дивитися фільм. *(In the evening we will watch a film.)*
-- **У суботу** вони будуть гуляти в парку. *(On Saturday they will walk in the park.)*
-- Що ви будете ї́сти **на вечерю**? *(What will you eat for dinner?)*
-- **Насту́пного ти́жня** він буде відпочивати. *(Next week he will rest.)*
-- **Вра́нці** вона буде готувати сніда́нок. *(In the morning she will cook breakfast.)*
-:::tip
-Key time words for the future: **завтра** (tomorrow), **ввечері** (in the evening), **вранці** (in the morning), **у суботу** (on Saturday), **наступного тижня** (next week).
-:::
-<!-- INJECT_ACTIVITY: fill-in-tense-distinction -->
+
+> **Ворожка:** Сідай. Я бачу твоє майбутнє. *(Sit down. I see your future.)*
+> **Клієнт:** Що там? Що ви бачите? *(What is there? What do you see?)*
+> **Ворожка:** Ти **будеш** багато **подорожувати**. *(You will travel a lot.)*
+> **Клієнт:** Це добре. А робота? *(That is good. And work?)*
+> **Ворожка:** У тебе **буде** цікава робота. Ти **будеш знаходити** нових друзів. *(You will have interesting work. You will find new friends.)*
+> **Клієнт:** А гроші? *(And money?)*
+> **Ворожка:** Ти **будеш отримувати** подарунки. Ти **будеш** щасливий! *(You will receive gifts. You will be happy!)*
+
+Notice how the fortune teller uses the word **будеш** (you will) before every action. Now, observe two friends discussing a much closer future — tomorrow.
+
+> **Максим:** Що ти **будеш робити завтра**? *(What will you do tomorrow?)*
+> **Олег:** **Завтра** я **буду працювати**. *(Tomorrow I will work.)*
+> **Максим:** А **ввечері**? *(And in the evening?)*
+> **Олег:** **Ввечері** я **буду готувати** вечерю. А що **буде робити** Олена? *(In the evening I will prepare dinner. And what will Olena do?)*
+> **Максим:** Вона **буде читати**. *(She will read.)*
+> **Олег:** А ви **будете гуляти**? *(And will you walk?)*
+> **Максим:** Так, ми **будемо гуляти** в парку! *(Yes, we will walk in the park!)*
+
+Finally, observe how families plan their weekends. The pattern remains consistent even when multiple people are involved.
+
+> **Анна:** Що ви **будете робити на вихідних**? *(What will you do on the weekend?)*
+> **Ігор:** У суботу ми **будемо відпочивати**. *(On Saturday we will rest.)*
+> **Анна:** А в неділю? *(And on Sunday?)*
+> **Ігор:** У неділю я **буду готувати**. Чоловік **буде гуляти** з дітьми. *(On Sunday I will cook. My husband will walk with the children.)*
+> **Анна:** Звучить добре! А я **буду дивитися футбол**. *(Sounds good! And I will watch football.)*
+> **Ігор:** Ти завжди **будеш дивитися футбол**! *(You will always watch football!)*
+
+## Майбутній час (Future Tense)
+
+Grade 3-4 textbooks in Ukrainian schools introduce the concept of **майбутній час** (future tense) using a systematic approach. Ukrainian actually has two different ways to form the future tense, depending on whether you are talking about an ongoing process or a single completed result. At the A1 level, we focus exclusively on one — the analytic future form. This is the most common and accessible way to express future plans, intentions, and ongoing actions in tomorrow's schedule. If you understand how the English future tense works with the word "will," you already have a solid mental anchor for this Ukrainian structure. In English, you take the word "will" and add a base verb, like "will read" or "will work." Ukrainian does exactly the same thing, but instead of a single word like "will," we use a conjugated form of the verb **бути** (to be) followed by the infinitive of your main action verb.
+
+To use this structure, you only need to memorize six forms of the verb **бути**. These forms act as your future tense helpers. Notice how their endings closely resemble the present tense endings you already know from standard first-conjugation verbs.
+
+| Займенник (Pronoun) | Дієслово бути (Verb 'to be') | Значення (Meaning) |
+| :--- | :--- | :--- |
+| **я** | **буду** | I will |
+| **ти** | **будеш** | you will (informal/singular) |
+| **він / вона / воно** | **буде** | he / she / it will |
+| **ми** | **будемо** | we will |
+| **ви** | **будете** | you will (formal/plural) |
+| **вони** | **будуть** | they will |
+
+<!-- INJECT_ACTIVITY: matching-pronoun-to-be -->
+
+The most important rule of the analytic future is the invariant infinitive rule. When you build a sentence using this structure, the main action verb — words like **читати** (to read), **працювати** (to work), or **відпочивати** (to rest) — never changes its ending. It stays frozen in its dictionary form. The only word that changes to match the speaker is your helper verb.
+*   Я **буду читати**. (I will read.)
+*   Ти **будеш читати**. (You will read.)
+*   Він / вона **буде читати**. (He / she will read.)
+*   Ми **будемо читати**. (We will read.)
+*   Ви **будете читати**. (You will read.)
+*   Вони **будуть читати**. (They will read.)
+
+As you can see, the infinitive remains exactly the same in every sentence. Contrast this new future form with the tenses you already know. The past tense relies on gender endings, the present tense relies on person endings attached directly to the verb, and the future tense relies on **буду** plus the infinitive.
+*   Минулий (past): Я **читав** книжку. (I read a book. - masculine speaker)
+*   Минулий (past): Я **читала** книжку. (I read a book. - feminine speaker)
+*   Теперішній (present): Я **читаю** книжку. (I am reading a book.)
+*   Майбутній (future): Я **буду читати** книжку. (I will read a book.)
+
+Note that the synthetic future (like **прочитаю**) exists in the language, but it is material for the A2 level. For now, the analytic form gives you everything you need to talk about your plans.
+
+## Практика (Practice)
+
+With the mechanics of the analytic future established, grouping and practicing the core A1 verbs solidifies the pattern. Because the infinitive never changes, you can take any action verb you have learned so far and instantly talk about your future plans. You simply plug the infinitive into the structure after your chosen form of **бути**. Here is how our most frequent daily verbs look in action:
+*   **читати** (to read) → я **буду читати**, ти **будеш читати**, він **буде читати**
+*   **працювати** (to work) → я **буду працювати**, ти **будеш працювати**, вона **буде працювати**
+*   **готувати** (to cook) → я **буду готувати**, ти **будеш готувати**, ми **будемо готувати**
+*   **гуляти** (to walk) → я **буду гуляти**, ти **будеш гуляти**, ви **будете гуляти**
+*   **дивитися** (to watch) → я **буду дивитися**, ти **будеш дивитися**, вони **будуть дивитися**
+*   **говорити** (to speak) → я **буду говорити**, ти **будеш говорити**, ми **будемо говорити**
+
+To make your sentences specific, you need time markers. These are the adverbs and phrases that signal exactly when your future action will happen. These words naturally trigger the use of the future tense.
+*   **завтра** (tomorrow)
+*   **наступного тижня** (next week)
+*   **у суботу** (on Saturday)
+*   **ввечері** (in the evening)
+*   **скоро** (soon)
+
+<!-- INJECT_ACTIVITY: fill-in-future-formation -->
+
+When you want to know about someone else's plans, you will rely on a standard, highly frequent question format. The most common way to ask about future intentions is: **Що ти будеш робити?** (What will you do?). If you are speaking formally or addressing a group, you simply change the pronoun and the helper verb: **Що ви будете робити?** (What will you do?). The word order in Ukrainian questions is flexible, but starting with the question word **що** (what) followed by the pronoun, the helper verb, and the main verb is standard and natural.
+
+Building natural sentences about intentions and full-day plans requires combining time markers with the future structure. By using familiar vocabulary, you can describe a complete schedule step by step.
+*   **Завтра** я **буду працювати** з дев'ятої до п'ятої. (Tomorrow I will work from nine to five.)
+*   **Ввечері** ми **будемо дивитися** фільм. (In the evening we will watch a film.)
+*   **У суботу** вони **будуть гуляти** в парку. (On Saturday they will walk in the park.)
+*   Що ви **будете їсти** на вечерю? (What will you eat for dinner?)
+*   Вранці я **буду снідати**. (In the morning I will have breakfast.)
+*   Вдень я **буду працювати**. (In the afternoon I will work.)
+*   Ввечері ми **будемо відпочивати**. (In the evening we will rest.)
+
 ## Summary
-To form the analytic future in Ukrainian, take **буду** (conjugated for person) and add the infinitive of any verb. The infinitive never changes — regardless of gender, number, or person. There are six forms of **бути** in the future: **буду, будеш, буде, будемо, будете, будуть**. That is the entire system. Pick the right form of **бути**, add any infinitive, and you have the future tense.
-Here are all three tenses side by side, using the same verb **читати**:
-- **Учо́ра я читав / читала.** → Минулий час (gender ending)
-- **Зараз я читаю.** → Теперішній час (person ending)
-- **Завтра я буду читати.** → Майбутній час (**буду** + infinitive)
-You can now speak about yesterday, today, and tomorrow in Ukrainian.
-The single most useful future-tense question at A1 is **«Що ти будеш робити?»** — "What will you do?" Memorise it as a chunk. Here are three model exchanges:
-> **— Що ти будеш робити завтра?** *(What will you do tomorrow?)*
-> **— Завтра я буду працювати.** *(Tomorrow I will work.)*
-> **— Що вона буде робити ввечері?** *(What will she do in the evening?)*
-> **— Вона буде читати книжку.** *(She will read a book.)*
-> **— Що ви будете робити у суботу?** *(What will you do on Saturday?)*
-> **— У суботу ми будемо відпочивати.** *(On Saturday we will rest.)*
 
-**Deterministic word count: 1239 words** (calculated by pipeline, do NOT estimate manually)
+The essential mechanics of discussing future plans rely on a simple two-part formula. The analytic future formation requires the conjugated auxiliary verb **бути** (**буду** / **будеш** / **буде** / **будемо** / **будете** / **будуть**) followed by an infinitive. The infinitive is the basic, unaltered "dictionary form" of the verb, ending in **-ти** (like **читати**, **робити**, **відпочивати**). This infinitive never changes its ending, regardless of who is speaking or how many people are involved. Only the **буду** part conjugates to match the subject. This grammatical structure is your primary tool at the A1 level for talking about processes, ongoing actions, and personal intentions that will happen tomorrow, next week, or next year.
 
+With the addition of this future structure, you now have a complete framework to describe any event in time. Each tense has its own unique structural marker that makes it instantly recognizable. The past tense is marked by gender endings (**-в**, **-ла**, **-ло**, **-ли**) attached to the verb stem. The present tense is marked by person endings attached directly to the verb stem, requiring you to modify the word based on the pronoun. The future tense stands apart because it uses a separate helper word (**буду**) plus the infinitive.
+
+Observe the three tenses in action with the verb **читати**:
+*   Учора я **читав**. (Past — gender)
+*   Зараз я **читаю**. (Present — person)
+*   Завтра я **буду читати**. (Future — буду + infinitive)
+
+The core question to spark any conversation about the future is: **Що ти будеш робити?** (What will you do?). To answer, you simply reply with **Я буду** plus your intended action.
+
+Now, perform a final self-check to ensure you can apply these rules to your own life:
+*   Що ти **будеш робити завтра** вранці? (What will you do tomorrow morning?)
+*   Що ти **будеш робити наступного тижня**? (What will you do next week?)
+*   Що **будуть робити** твої друзі ввечері? (What will your friends do in the evening?)
+
+<!-- INJECT_ACTIVITY: fill-in-tense-distinction -->
 </generated_module_content>
+
+**PIPELINE NOTE — Word count: 1720 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -327,8 +357,8 @@ Rate each dimension 1-10 with SPECIFIC evidence (cite the section/paragraph, quo
 | 3 | **Pedagogical quality** | 15% | DEDUCT for: grammar rules presented as bare lists without examples, concepts taught before prerequisite knowledge, >100 words of English theory without a Ukrainian example, bare vocabulary lists instead of contextualized introduction. REWARD for: PPP flow (situation→pattern→practice), 3+ examples per grammar point, textbook pedagogy (Большакова, Захарійчук), grammar scope respected. |
 | 4 | **Vocabulary coverage** | 10% | All required vocab from plan used naturally in prose? Recommended vocab included? New words introduced in context, not as lists? |
 | 5 | **Exercise quality** | 15% | DEDUCT for: all correct answers at the same index position, trivially easy exercises (1:9 group sort ratios, every answer is the same word), exercises that test content recall instead of language skill, items fewer than plan's activity_hints count, exercises placed before the concept is taught. REWARD for: varied answer positions, plausible distractors, exercises testing what was just taught, matching plan's activity_hints type and focus exactly. |
-| 6 | **Engagement & tone** | 10% | DEDUCT for: motivational openers ("Numbers unlock the real Ukraine!"), meta-commentary ("Let us look at...", "Let us now explore..."), generic enthusiasm ("incredibly melodic", "hugely important"), telling instead of showing ("You now possess...", "You have unlocked..."), gamified language ("unlocked the ability"), corporate-speak ("precision and accuracy"), "The magic of...", any sentence that could apply to any language course unchanged. REWARD for: specific cultural details, natural dialogues, humor, concrete examples, teacher demonstrating rather than lecturing about how great the content is. |
-| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count outside target range, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count in range. |
+| 6 | **Engagement & tone** | 10% | The writer's persona is an encouraging teacher — natural teacher phrasing like "Let us look at..." or "Have you noticed..." is FINE and should NOT be penalized. DEDUCT ONLY for: self-congratulatory openers ("Welcome to A2! Congratulations on completing..."), gamified/corporate language ("You have unlocked...", "You now possess...", "Your journey begins..."), empty filler that adds words but zero information ("This is a very important concept that you will use frequently in your daily life"), generic enthusiasm not specific to Ukrainian ("incredibly beautiful language", "wonderfully consistent system"). REWARD for: teacher warmth with substance, specific cultural details, humor, concrete Ukrainian examples, natural classroom energy. |
+| 7 | **Structural integrity** | 5% | DEDUCT for: missing H2 headings from plan, duplicate summary sections, meta-commentary sections ("Content notes:"), word count BELOW 1200 (more content is always welcome — never penalize for exceeding the target), dangling/incomplete sentences, stray tags or formatting artifacts. REWARD for: clean markdown, all sections present and ordered correctly, word count at or above target. |
 | 8 | **Cultural accuracy** | 5% | Decolonized (Ukrainian on its own terms, never "like Russian but...")? Factually correct claims about Ukrainian? Respectful representation? |
 | 9 | **Dialogue & conversation quality** | 10% | DEDUCT for: purely transactional exchanges ("Do you have X? Yes."), dialogues where one speaker interrogates the other, anonymous em dashes instead of named speakers, stilted/textbook-robotic phrasing. REWARD for: natural multi-turn conversations, real situations (searching for keys, ordering at a cafe, meeting a friend), culturally appropriate responses, named speakers with distinct voices. |
 
@@ -415,61 +445,14 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 81 words | Not found: 58 words
+Verified: 89 words | Not found: 3 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Андрі — NOT IN VESUM
-  ✗ Андрій — NOT IN VESUM
-  ✗ Воро — NOT IN VESUM
-  ✗ Вра — NOT IN VESUM
-  ✗ Кліє — NOT IN VESUM
-  ✗ Майбу — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Пра — NOT IN VESUM
-  ✗ Ско — NOT IN VESUM
-  ✗ Спра — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Тепе — NOT IN VESUM
-  ✗ Учо — NOT IN VESUM
-  ✗ бага — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ вді — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ вжди — NOT IN VESUM
-  ✗ вихідни — NOT IN VESUM
-  ✗ втра — NOT IN VESUM
-  ✗ вчо — NOT IN VESUM
-  ✗ готува — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ дев'я — NOT IN VESUM
-  ✗ дений — NOT IN VESUM
-  ✗ дете — NOT IN VESUM
-  ✗ деш — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ жка — NOT IN VESUM
-  ✗ жку — NOT IN VESUM
-  ✗ жня — NOT IN VESUM
-  ✗ знахо — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ ктика — NOT IN VESUM
-  ✗ майбу — NOT IN VESUM
-  ✗ мувати — NOT IN VESUM
-  ✗ неді — NOT IN VESUM
-  ✗ нки — NOT IN VESUM
-  ✗ нови — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нці — NOT IN VESUM
-  ✗ п'я — NOT IN VESUM
-  ✗ пного — NOT IN VESUM
-  ✗ подару — NOT IN VESUM
-  ✗ подорожува — NOT IN VESUM
-  ✗ працюва — NOT IN VESUM
-  ✗ рішній — NOT IN VESUM
-  ✗ сти — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
+  ✗ Олег — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
 
-All 81 other words are confirmed to exist in VESUM.
+All 89 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

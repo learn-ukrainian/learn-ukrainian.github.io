@@ -1,4 +1,28 @@
 vocabulary:
+- word: ось
+  translation: here is / look
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: там
+  translation: there
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вона́
+  translation: she
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: воно́
+  translation: it
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: цей
   translation: this (masculine)
   expression: false
@@ -18,7 +42,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: та
-  translation: that (feminine); and (conjunction)
+  translation: that (feminine)
   expression: false
   pos: спол.
   gender: ''
@@ -29,47 +53,23 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: ось
-  translation: here is, look (pointing word)
-  expression: false
-  pos: част.
-  gender: ''
-  verified: true
-- word: там
-  translation: there
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: тут
-  translation: here
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: вона́
-  translation: she
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: воно́
-  translation: it
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: консульта́нт
-  translation: shop assistant, consultant
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: су́мка
   translation: bag
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: черво́ний
+  translation: red
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ній
+  translation: blue
+  expression: false
+  pos: прикм.
+  gender: ''
   verified: true
 - word: рюкза́к
   translation: backpack
@@ -77,8 +77,14 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: стіле́ць
-  translation: chair
+- word: телефо́н
+  translation: phone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: смартфо́н
+  translation: smartphone
   expression: false
   pos: ім.
   gender: ч.
@@ -89,68 +95,14 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: вікно́
-  translation: window
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: телефо́н
-  translation: phone
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ноутбу́к
-  translation: laptop
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: оліве́ць
-  translation: pencil
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ка́мера
-  translation: camera
+- word: кімна́та
+  translation: room
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ру́чка
-  translation: pen
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ра́діо
-  translation: radio
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мі́сто
-  translation: city
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: кни́га
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: дві́сті
-  translation: two hundred
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: зру́чний
-  translation: comfortable
+- word: га́рний
+  translation: nice / beautiful
   expression: false
   pos: прикм.
   gender: ''
@@ -161,20 +113,98 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: стари́й
   translation: old
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: вказівні займенники
-  translation: demonstrative pronouns
+- word: ша́фа
+  translation: wardrobe / cupboard
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вели́кий
+  translation: big
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: бі́лий
+  translation: white
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: оліве́ць
+  translation: pencil
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ціка́вий
+  translation: interesting
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нудни́й
+  translation: boring
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жі́нка
+  translation: woman
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Скільки коштує?
+  translation: How much does it cost?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Беру цей.
-  translation: I'll take this one.
+- word: Яка гарна кімната!
+  translation: What a nice room!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий день!
+  translation: Good afternoon!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякую
+  translation: Thank you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: книжкова полиця
+  translation: bookshelf
   expression: true
   pos: ''
   gender: ''

@@ -6,97 +6,79 @@ vocabulary:
   gender: ж.
   verified: true
 - word: котра́
-  translation: which (feminine, used in time questions)
+  translation: which (feminine)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: Котра година?
-  translation: What time is it?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: О котрій?
-  translation: At what time?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: О котрій годині?
-  translation: At what time? (full form)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: пе́рша
-  translation: one o'clock; 1st (feminine ordinal)
+  translation: one o'clock (first)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: дру́га
-  translation: two o'clock; 2nd (feminine ordinal)
+  translation: two o'clock (second)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: тре́тя
-  translation: three o'clock; 3rd (feminine ordinal)
+  translation: three o'clock (third)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: четве́рта
-  translation: four o'clock; 4th (feminine ordinal)
+  translation: four o'clock (fourth)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: п'ята́
-  translation: five o'clock; 5th (feminine ordinal)
+  translation: five o'clock (fifth)
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: шо́ста
-  translation: six o'clock; 6th (feminine ordinal)
+  translation: six o'clock (sixth)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: сьома
-  translation: seven o'clock; 7th (feminine ordinal)
+  translation: seven o'clock (seventh)
   expression: false
   pos: числ.
   gender: ''
   verified: true
 - word: во́сьма
-  translation: eight o'clock; 8th (feminine ordinal)
+  translation: eight o'clock (eighth)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: дев'я́та
-  translation: nine o'clock; 9th (feminine ordinal)
+  translation: nine o'clock (ninth)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: деся́та
-  translation: ten o'clock; 10th (feminine ordinal)
+  translation: ten o'clock (tenth)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: одина́дцята
-  translation: eleven o'clock; 11th (feminine ordinal)
+  translation: eleven o'clock (eleventh)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: двана́дцята
-  translation: twelve o'clock; 12th (feminine ordinal)
+  translation: twelve o'clock (twelfth)
   expression: false
   pos: прикм.
   gender: ''
@@ -107,38 +89,8 @@ vocabulary:
   pos: числ.
   gender: ''
   verified: true
-- word: пів на
-  translation: half past (halfway to the next hour)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: чверть
   translation: quarter
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: чверть на
-  translation: quarter past (a quarter of the way to the next hour)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: за чверть
-  translation: quarter to (a quarter before the next hour)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: опі́вдні
-  translation: at noon
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: опі́вночі
-  translation: at midnight
   expression: false
   pos: ім.
   gender: ж.
@@ -161,26 +113,14 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ра́нку
-  translation: in the morning (time-of-day qualifier)
+- word: опі́вдні
+  translation: at noon
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: присл.
+  gender: ''
   verified: true
-- word: дня
-  translation: in the afternoon (time-of-day qualifier)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ве́чора
-  translation: in the evening (time-of-day qualifier)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: но́чі
-  translation: at night (time-of-day qualifier)
+- word: опі́вночі
+  translation: at midnight
   expression: false
   pos: ім.
   gender: ж.
@@ -191,8 +131,8 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: зазвича́й
-  translation: usually
+- word: ско́ро
+  translation: soon
   expression: false
   pos: присл.
   gender: ''
@@ -203,92 +143,32 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: коли́
-  translation: when
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: зрозумі́ло
-  translation: got it; understood
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: мо́же
-  translation: maybe
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зу́стріч
-  translation: meeting
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зустрі́немося
-  translation: let's meet; we'll meet
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зачека́й
-  translation: wait (informal imperative)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: хвили́нка
-  translation: a moment (diminutive of хвилина)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зачекай хвилинку
-  translation: wait a moment
+- word: Котра година?
+  translation: What time is it?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: підхо́дить
-  translation: that works; that suits
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: сні́дати
-  translation: to eat breakfast
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: обі́дати
-  translation: to eat lunch
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вече́ряти
-  translation: to eat dinner
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: розклад дня
-  translation: daily schedule
+- word: О котрій годині?
+  translation: At what time?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: алло́
-  translation: hello (answering the phone)
-  expression: false
-  pos: виг.
+- word: пів на другу
+  translation: half past one (1:30)
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: тоді о першій
-  translation: then at one (used to confirm a meeting time)
+- word: чверть на третю
+  translation: quarter past two (2:15)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за чверть третя
+  translation: quarter to three (2:45)
   expression: true
   pos: ''
   gender: ''

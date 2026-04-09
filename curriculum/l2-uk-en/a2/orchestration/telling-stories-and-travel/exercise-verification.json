@@ -1,0 +1,282 @@
+{
+  "total_items": 156,
+  "grounded_items": 112,
+  "ungrounded": [
+    {
+      "word": "телевізор",
+      "exercise_type": "quiz",
+      "context": "Вчора ввечері ми довго _____ телевізор.",
+      "role": "context"
+    },
+    {
+      "word": "загублений",
+      "exercise_type": "quiz",
+      "context": "Нарешті я _____ свій загублений квиток!",
+      "role": "context"
+    },
+    {
+      "word": "вокзалі",
+      "exercise_type": "unjumble",
+      "context": "вокзалі",
+      "role": "answer"
+    },
+    {
+      "word": "розмовляли",
+      "exercise_type": "quiz",
+      "context": "Ми повільно _____ по місту і розмовляли.",
+      "role": "context"
+    },
+    {
+      "word": "побачив",
+      "exercise_type": "quiz",
+      "context": "Коли я побачив море, я дуже _____.",
+      "role": "context"
+    },
+    {
+      "word": "столиці",
+      "exercise_type": "match-up",
+      "context": "Рух до столиці України",
+      "role": "answer"
+    },
+    {
+      "word": "води",
+      "exercise_type": "match-up",
+      "context": "Відпочинок біля води влітку",
+      "role": "answer"
+    },
+    {
+      "word": "влітку",
+      "exercise_type": "match-up",
+      "context": "Відпочинок біля води влітку",
+      "role": "answer"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "match-up",
+      "context": "Купити пропуск на потяг",
+      "role": "answer"
+    },
+    {
+      "word": "пропуск",
+      "exercise_type": "match-up",
+      "context": "Купити пропуск на потяг",
+      "role": "answer"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "match-up",
+      "context": "йти на вокзал",
+      "role": "context"
+    },
+    {
+      "word": "виїхати",
+      "exercise_type": "match-up",
+      "context": "виїхати зі Львова",
+      "role": "context"
+    },
+    {
+      "word": "небі",
+      "exercise_type": "match-up",
+      "context": "Подорожувати високо в небі",
+      "role": "answer"
+    },
+    {
+      "word": "залізниці",
+      "exercise_type": "match-up",
+      "context": "Подорожувати по залізниці",
+      "role": "answer"
+    },
+    {
+      "word": "пляжу",
+      "exercise_type": "fill-in",
+      "context": "Вдень ми багато _____ по пляжу і просто дивилися на воду.",
+      "role": "context"
+    },
+    {
+      "word": "воду",
+      "exercise_type": "fill-in",
+      "context": "Вдень ми багато _____ по пляжу і просто дивилися на воду.",
+      "role": "context"
+    },
+    {
+      "word": "наші",
+      "exercise_type": "fill-in",
+      "context": "_____ хтось гучно постукав у наші двері.",
+      "role": "context"
+    },
+    {
+      "word": "сказала",
+      "exercise_type": "error-correction",
+      "context": "сказала",
+      "role": "answer"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "error-correction",
+      "context": "Олена сказав: «Я поїхала до Києва».",
+      "role": "context"
+    },
+    {
+      "word": "поїхала",
+      "exercise_type": "error-correction",
+      "context": "Олена сказав: «Я поїхала до Києва».",
+      "role": "context"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "error-correction",
+      "context": "Ми поїдемо на Львів завтра вранці.",
+      "role": "context"
+    },
+    {
+      "word": "люблю",
+      "exercise_type": "error-correction",
+      "context": "Я дуже люблю літати з літаком.",
+      "role": "context"
+    },
+    {
+      "word": "літати",
+      "exercise_type": "error-correction",
+      "context": "Я дуже люблю літати з літаком.",
+      "role": "context"
+    },
+    {
+      "word": "читала",
+      "exercise_type": "error-correction",
+      "context": "Вчора Тарас довго читала цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "подорожував",
+      "exercise_type": "true-false",
+      "context": "Марко подорожував до моря літаком.",
+      "role": "context"
+    },
+    {
+      "word": "зупинився",
+      "exercise_type": "true-false",
+      "context": "Він зупинився у своїх друзів.",
+      "role": "context"
+    },
+    {
+      "word": "своїх",
+      "exercise_type": "true-false",
+      "context": "Він зупинився у своїх друзів.",
+      "role": "context"
+    },
+    {
+      "word": "кожного",
+      "exercise_type": "true-false",
+      "context": "Кожного дня Марко багато ходив.",
+      "role": "context"
+    },
+    {
+      "word": "сонячна",
+      "exercise_type": "true-false",
+      "context": "Погода завжди була сонячна і тепла.",
+      "role": "context"
+    },
+    {
+      "word": "тепла",
+      "exercise_type": "true-false",
+      "context": "Погода завжди була сонячна і тепла.",
+      "role": "context"
+    },
+    {
+      "word": "сувеніри",
+      "exercise_type": "true-false",
+      "context": "Марко купив сувеніри в кінці своєї подорожі.",
+      "role": "context"
+    },
+    {
+      "word": "кінці",
+      "exercise_type": "true-false",
+      "context": "Марко купив сувеніри в кінці своєї подорожі.",
+      "role": "context"
+    },
+    {
+      "word": "своєї",
+      "exercise_type": "true-false",
+      "context": "Марко купив сувеніри в кінці своєї подорожі.",
+      "role": "context"
+    },
+    {
+      "word": "зупинятися",
+      "exercise_type": "group-sort",
+      "context": "зупинятися",
+      "role": "answer"
+    },
+    {
+      "word": "траплятися",
+      "exercise_type": "group-sort",
+      "context": "траплятися",
+      "role": "answer"
+    },
+    {
+      "word": "доїжджати",
+      "exercise_type": "group-sort",
+      "context": "доїжджати",
+      "role": "answer"
+    },
+    {
+      "word": "подобатися",
+      "exercise_type": "group-sort",
+      "context": "подобатися",
+      "role": "answer"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "unjumble",
+      "context": "купили",
+      "role": "answer"
+    },
+    {
+      "word": "нових",
+      "exercise_type": "unjumble",
+      "context": "нових",
+      "role": "answer"
+    },
+    {
+      "word": "вихідних",
+      "exercise_type": "quiz",
+      "context": "На вихідних ми багато _____ в горах.",
+      "role": "context"
+    },
+    {
+      "word": "цілий",
+      "exercise_type": "quiz",
+      "context": "Завтра у Львові ми цілий день _____ на екскурсії.",
+      "role": "context"
+    },
+    {
+      "word": "день",
+      "exercise_type": "quiz",
+      "context": "Завтра у Львові ми цілий день _____ на екскурсії.",
+      "role": "context"
+    },
+    {
+      "word": "онлайн",
+      "exercise_type": "quiz",
+      "context": "Я швидко _____ хатинку в Карпатах онлайн.",
+      "role": "context"
+    },
+    {
+      "word": "друзям",
+      "exercise_type": "quiz",
+      "context": "Ввечері я довго _____ друзям про свою подорож.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "враження",
+      "потім",
+      "сувенір",
+      "тим",
+      "часом"
+    ]
+  },
+  "all_grounded": false
+}

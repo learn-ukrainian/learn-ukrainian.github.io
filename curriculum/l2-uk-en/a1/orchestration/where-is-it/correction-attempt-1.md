@@ -1,7 +1,7 @@
 <correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
+CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
-- FIX: Missing 3/6 required vocab: робота → на роботі (work), магазин → у/в магазині (shop), місто → у/в місті (city)
+- FIX: Missing 6/6 required vocab: школа → в школі (school), робота → на роботі (work), банк → у банку (bank), магазин → у/в магазині (shop), вулиця → на вулиці (street)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

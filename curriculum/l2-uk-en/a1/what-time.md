@@ -1,148 +1,77 @@
-## Діало́ги (Dialogues)
+## Діало́ги
 
-Ukrainian splits time into two questions. **Котра́ годи́на?** (what time is it?) asks about *right now*. **О котрі́й?** (at what time?) asks about *when something happens*. Both questions appear in the dialogues below — spot them as you read.
+In Ukrainian, we talk about time using two main questions. We use one to ask for the current time, and another to schedule an event. A typical telephone conversation between colleagues illustrates how these questions function when people coordinate their schedules and find a time to meet.
 
-### Діало́г 1 — Зу́стріч (A Meeting)
+> **Мари́на:** Приві́т, Олексі́ю! **Котра́ годи́на**? *(Hi, Oleksiy! What time is it?)*
+> **Олексі́й:** Привіт! **Деся́та**. *(Hi! Ten o'clock.)*
+> **Марина:** **О котрі́й** ти **працю́єш**? *(At what time do you work?)*
+> **Олексій:** **О дев'я́тій**. А ти? *(At nine. And you?)*
+> **Марина:** Я працю́ю **о деся́тій**. *(I work at ten.)*
+> **Олексій:** **До́бре**, **тоді́** **о пе́ршій**? *(Good, then at one?)*
+> **Марина:** Так! *(Yes!)*
 
-> — **Мари́на:** А́лло, Олексі́ю! Котра година? *(Hello, Oleksiy! What time is it?)*
-> — **Олексі́й:** Деся́та. *(Ten o'clock.)*
-> — **Марина:** О котрій ти зазвича́й працю́єш? *(What time do you usually work?)*
-> — **Олексій:** О дев'я́тій. А ти? *(At nine. And you?)*
-> — **Марина:** Я працю́ю о деся́тій. *(I work at ten.)*
-> — **Олексій:** Зрозумі́ло. *(Got it.)*
-> — **Марина:** Мо́же, зустрі́немося о пе́ршій? *(Maybe we meet at one?)*
-> — **Олексій:** Зачека́й хвили́нку... Так, підхо́дить! *(Wait a moment... Yes, that works!)*
-> — **Марина:** До́бре, тоді́ о першій! *(Good, then at one!)*
+The specific communicative functions of these questions show a clear division. The phrase **котра година** identifies the current time on the clock, much like asking for a name in an ordered sequence. Marina wants to know the exact hour right now. On the other hand, the question **о котрій** asks for a specific point on a timeline. Speakers use this when scheduling an event or an action. You should contrast the English phrases "At what time?" versus "What time is it?". While English uses the noun "time" for both concepts, Ukrainian relies on two distinct structures to differentiate between identifying the current moment and setting an appointment.
 
+A discussion about daily schedules between two university students shows how time phrases work with familiar verbs. This scenario integrates verbs from your previous vocabulary, such as **сні́дати** (to eat breakfast), **обі́дати** (to eat lunch), **вече́ряти** (to eat dinner), and **відпочива́ти** (to rest), directly with these new time chunks.
 
-Марина needs to find a gap in both schedules. She uses **Котра година?** to check the current time, then **О котрій ти працюєш?** to ask about Олексі́й's schedule. The final agreement — **тоді о першій** — is a chunk you'll use constantly: *тоді* (then) + the meeting time.
+> **Студе́нт А:** **Ко́ли** ти сні́даєш? *(When do you eat breakfast?)*
+> **Студент Б:** **О во́сьмій ра́нку**. *(At eight in the morning.)*
+> **Студент А:** А обі́даєш? *(And eat lunch?)*
+> **Студент Б:** **О першій**. Вече́ряю **о сьо́мій**. *(At one. I eat dinner at seven.)*
 
-### Діалог 2 — Ро́зклад дня (Daily Schedule)
+Here, the students use the question word **коли** (when) interchangeably with scheduling questions. The answers form neat, fixed chunks that specify exactly when each routine action takes place during the day.
 
-> — **Олексій:** Ко́ли ти сні́даєш? *(When do you eat breakfast?)*
-> — **Марина:** О во́сьмій ра́нку. *(At eight in the morning.)*
-> — **Олексій:** А обі́даєш? *(And lunch?)*
-> — **Марина:** О першій дня. *(At one in the afternoon.)*
-> — **Олексій:** О котрій вече́ряєш? *(What time do you eat dinner?)*
-> — **Марина:** О сьо́мій. А ти? *(At seven. And you?)*
-> — **Олексій:** Я вече́ряю о восьмій ве́чора. *(I eat dinner at eight in the evening.)*
+## Котра година?
 
+When you want to know the current time, the standard and natural question to ask a Ukrainian speaker is **Котра година?**. The word **котра** means "which" specifically for an ordered sequence, and it is a feminine word. We use this instead of **яка** (what kind of) or **скі́льки** (how much). You are literally asking "Which hour is it?" in a sequence of twenty-four hours. You must avoid the common errors **яки́й за́раз час** (what kind of time is it now) or **скільки годи́н** (how many hours), as these do not sound natural to a native speaker.
 
-Here the verbs **сні́дати** (to eat breakfast), **обі́дати** (to eat lunch), and **вече́ряти** (to eat dinner) connect directly with time expressions. These verbs appeared in A1.3 — now you're combining them with specific hours. Notice the time-of-day words after each hour: **ранку** (morning), **дня** (afternoon), **вечора** (evening). These remove ambiguity, just like "AM" and "PM" in English.
+To answer this question for the full hours from one to twelve, we use feminine ordinal numbers. Because the word **година** (hour) is feminine, the numbers must agree with it. You simply list the hour as the "first," "second," or "third" hour. Here are the core forms: **пе́рша** (1:00), **дру́га** (2:00), **тре́тя** (3:00), **четве́рта** (4:00), **п'ята́** (5:00), **шо́ста** (6:00), **сьома** (7:00), **во́сьма** (8:00), **дев'я́та** (9:00), **десята** (10:00), **одина́дцята** (11:00), and **двана́дцята** (12:00). You must contrast these sequence words with regular cardinal numbers like **оди́н** (one) or **два** (two), which are never used to state the hour.
 
-Two patterns emerged from both dialogues. First: **Котра година?** gets a bare ordinal answer — **Десята.** Second: **О котрій?** gets **о** plus a shifted form — **О десятій.** The same hour appears in two shapes: *десята* vs. *о десятій*. The ending flips from **-а** to **-ій**. The next sections break down exactly how each form works.
+Telling half-hours in Ukrainian relies on a specific structural pattern using the word **пів** (half). We use the phrase **пів на** (half towards) followed by the ordinal number for the next hour. The ordinal number takes the accusative case, ending in a "у" or "ю" sound. You must focus on the mental concept of moving "half towards the next hour". For example, 1:30 is **пів на дру́гу** (literally "half to the second"), 6:30 is **пів на сьому** (half to the seventh), and 11:30 is **пів на двана́дцяту** (half to the twelfth). You should remember that saying something like "пів во́сьмої" is a direct mistake.
 
-## Котра година? (What Time Is It?)
+For now, you only need to recognize quarters, using the word **чверть** (quarter). You will hear **чверть на** (a quarter past) and **за чверть** (a quarter to). For example, 2:15 is **чверть на тре́тю** (a quarter onto the third) and 2:45 is **за чверть третя** (in a quarter, the third). You must avoid using the word "без" (without) for time, which is a common Russianism and incorrect in standard Ukrainian.
 
-The question **Котра година?** literally asks "which hour?" The word **котра** (which) is feminine because **година** (hour) is a feminine noun. The answer is a feminine ordinal number — just the number, nothing else. Where English says "It is ten o'clock," Ukrainian says **Десята** — "The tenth [hour]." One word is enough.
+<!-- INJECT_ACTIVITY: quiz-clock-matching -->
+<!-- INJECT_ACTIVITY: match-up-digits -->
 
-- **Котра за́раз година? — Дев'я́та.** *(What time is it now? — Nine o'clock.)*
+## О котрій?
 
-Here are all twelve hours as feminine ordinals. Learn them the way you learn months — as a set of twelve labels, not as grammar:
+When you need to talk about scheduling an event, you ask **О котрій годи́ні?**. This introduces the preposition **о** or **об** (at). The rule for choosing between them is simple: use **об** before vowels to make the pronunciation smooth, like in the phrase **об одина́дцятій**, and use **о** before consonants. You must never use the prepositions "в" or "у" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid.
 
-| | | |
-|---|---|---|
-| **пе́рша** (1:00) | **дру́га** (2:00) | **тре́тя** (3:00) |
-| **четве́рта** (4:00) | **п'ята́** (5:00) | **шо́ста** (6:00) |
-| **сьома** (7:00) | **во́сьма** (8:00) | **дев'ята** (9:00) |
-| **десята** (10:00) | **одина́дцята** (11:00) | **двана́дцята** (12:00) |
+The answers to this scheduling question are locative time chunks. You should learn to treat these as fixed vocabulary units right now. They combine the preposition with the locative case ending for the hour. The complete list of chunks is: **о першій**, **о дру́гій**, **о тре́тій**, **о четве́ртій**, **о п'я́тій**, **о шо́стій**, **о сьомій**, **о восьмій**, **о дев'ятій**, **о десятій**, **об одинадцятій**, and **о двана́дцятій**. Memorizing these phrases as whole pieces will make speaking about your daily plans much easier and much more natural in conversation without needing to think about complex grammar rules.
 
-You are not learning the cardinal number "ten" here — you are learning the word **десята**, which means "10 o'clock." Think of each as a label for a point on the clock. A quick pronunciation note: **одинадцята** has five syllables (о-ди-над-ця-та), so take your time with it.
+To be more precise, you can refine your time expressions with time of day words. The base words are **ра́нок** (morning, m), **день** (day, m), **ве́чір** (evening, m), and **ніч** (night, f). Ukrainian uses their genitive forms as markers to specify the part of the day: **ранку** (of the morning), **дня** (of the day or afternoon), **ве́чора** (of the evening), and **но́чі** (of the night). You add these directly after the hour chunk. For examples, you can say **о сьомій ранку** (at 7 AM), **о третій дня** (at 3 PM), or **о десятій вечора** (at 10 PM). This is how speakers distinguish morning and afternoon clearly.
 
-<!-- INJECT_ACTIVITY: match-up-times -->
+There are also special time markers for noon and midnight. You can learn **опі́вдні** (at noon) and **опі́вночі** (at midnight) as single-word vocabulary chunks. When talking about the middle of the day, you have a choice: you can use the full phrase **о дванадцятій дня** (at twelve of the day), or you can simply use the single word **опівдні** to mean exactly the same thing. You will also frequently hear the words **зараз** (now) and **ско́ро** (soon) when people discuss their immediate plans or describe events that are happening very shortly.
 
-### Пів на... (Half Past)
-
-The half-hour pattern is **пів на** + the *next* hour. The logic: you are halfway *toward* the next hour.
-
-- **Пів на дру́гу** = 1:30 (halfway to the second hour)
-- **Пів на во́сьму** = 7:30 (halfway to the eighth hour)
-- **Пів на дев'я́ту** = 8:30 — from Захарійчук Grade 4: *О пів на дев'яту продзвені́в дзвіно́к* (At 8:30 the bell rang)
-
-At A1, full hours and **пів на** are the core skill. Practice:
-
-- **Зараз пів на тре́тю.** *(It's 2:30 now.)*
-
-### Чверть (Quarter Hours) — Recognition Only
-
-From Ponomarova Grade 4: *Сьома година п'ятна́дцять хвили́н, або́ чверть на восьму* (7:15, or a quarter past seven). And *за чверть восьма* = 7:45 (a quarter to eight). Two forms exist: **чверть на** (quarter past — looking forward to the next hour) and **за чверть** (quarter to — counting down). You don't need to produce these yet — just recognize them when you hear them.
-
-<!-- INJECT_ACTIVITY: quiz-clock-faces -->
-
-## О котрій? (At What Time?)
-
-The scheduling question is **О котрій годи́ні?** — "At what time?" The preposition **о** (or **об** before a vowel) transforms the bare ordinal into a when-it-happens expression. Compare the two questions side by side:
-
-- **Котра година? — Десята.** *(What time is it? — Ten.)*
-- **О котрій зустріч? — О десятій.** *(At what time is the meeting? — At ten.)*
-
-Two questions, two forms of the same hour. Here is the complete set of **о** + hour forms. Memorize these as ready-made phrases — not as grammar:
-
-| | |
-|---|---|
-| **о першій** (at 1:00) | **о сьомій** (at 7:00) |
-| **о дру́гій** (at 2:00) | **о восьмій** (at 8:00) |
-| **о тре́тій** (at 3:00) | **о дев'ятій** (at 9:00) |
-| **о четве́ртій** (at 4:00) | **о десятій** (at 10:00) |
-| **о п'я́тій** (at 5:00) | **об одина́дцятій** (at 11:00) |
-| **о шо́стій** (at 6:00) | **о двана́дцятій** (at 12:00) |
-
-One detail: **об одинадцятій** uses **об** instead of **о** because *одинадцятій* starts with a vowel. From Захарійчук Grade 4: *Чека́тиму об одинадцятій годині.* All other hours use **о**. The pattern shortcut: if the answer to **Котра?** is *десята*, the answer to **О котрій?** is *о десятій* — the ending **-а** flips to **-ій**. Spot the pattern, don't memorize a rule.
-
-<!-- INJECT_ACTIVITY: fill-in-o-kotrij -->
-
-### Ранку, дня, вечора, но́чі (Time of Day)
-
-After the hour, add a time-of-day word to remove ambiguity — just like "AM" and "PM" in English. There are four words:
-
-- **ранку** — in the morning
-- **дня** — in the afternoon
-- **вечора** — in the evening
-- **ночі** — at night
-
-From Захарійчук Grade 4: *Проки́нувся о сьомій годині ранку.* (He woke up at seven in the morning.) Here is the full picture:
-
-- **О сьомій ранку** — 7 AM
-- **О третій дня** — 3 PM
-- **О десятій вечора** — 10 PM
-- **О другій ночі** — 2 AM
-
-Two special words stand alone without **о**: **опі́вдні** (at noon) and **опі́вночі** (at midnight). You simply say *Зустрінемося опівдні* — no preposition needed.
-
-The words **ранку**, **дня**, **вечора**, **ночі** are fixed phrases here. You don't need to know why they look the way they do — just attach them after the hour. This is how Ukrainian children learn time: phrase first, grammar later. Think of each combination as a single unit: *о восьмій ранку* is one chunk, not three separate words.
-
+<!-- INJECT_ACTIVITY: fill-in-o-kotrii -->
 <!-- INJECT_ACTIVITY: quiz-time-of-day -->
 
 ## Підсумок — Summary
 
-Two questions, two answer shapes:
+This summary table helps you contrast the question structures and the correct answer structures for telling time.
 
-**Котра година?** → answer with a bare ordinal:
-- **Десята. Сьома. Пів на третю.**
+| Question | Ukrainian Answer | English Meaning |
+| :--- | :--- | :--- |
+| **Котра година?** | **Десята.** | What time? — Ten o'clock. |
+| **О котрій годині?** | **О десятій.** | At what time? — At ten. |
+| **Котра година?** | **Пів на другу.** | What time? — 1:30. |
+| **О котрій годині?** | **О пів на другу.** | At what time? — At 1:30. |
 
-**О котрій?** → answer with **о** + the shifted form:
-- **О десятій. О сьомій. О пів на третю.**
+Remember the common pitfalls: there is no "без" for minutes, there is no "в" for scheduling hours, and you must never use basic cardinal numbers to identify the hour.
 
-The shift at a glance:
+Use this self-check checklist to verify your understanding of the material before you move on to the next module. Read each point carefully and try to answer out loud.
 
-| Котра година? | О котрій? |
-|---|---|
-| **перша** | **о першій** |
-| **дев'ята** | **о дев'ятій** |
-| **одинадцята** | **об одинадцятій** |
+*   Can you say what time it is right now? Answer the question: **Котра зараз година?**
+*   Can you state exactly what time you wake up in the morning? Try to answer: **О котрій ти прокида́єшся?**
+*   Can you say the phrase "half past four" in Ukrainian? Ensure you use the correct pattern: **Пів на п'яту́.**
+*   Do you know when you must use the preposition **об** instead of the standard **о**? You use it before vowels for smoother pronunciation.
 
-One anchor: whenever you see **о котрій**, the answer ends in **-ій**.
+For your final writing task, you should create a simple three-sentence schedule describing your own typical day. This will help you practice combining verbs with the time chunks you have just learned. Review the use of ordinal forms and prepositions as you write.
 
-Here is your complete time vocabulary from this module, grouped by type. Hours: **перша**, **друга**, **третя**, **четверта**, **п'ята**, **шоста**, **сьома**, **восьма**, **дев'ята**, **десята**, **одинадцята**, **дванадцята**. Half hour: **пів на** + the next hour. Time of day: **ранку** (morning), **дня** (afternoon), **вечора** (evening), **ночі** (night). The four nouns behind them: **ра́нок** (morning), **день** (day), **ве́чір** (evening), **ніч** (night). Special: **опівдні** (at noon), **опівночі** (at midnight). Questions: **Котра година?** and **О котрій годині?** — your scheduling toolkit.
+Here is a model example to guide you:
+*   **Я прокида́юся о сьомій ранку.** (I wake up at seven in the morning.)
+*   **Я обі́даю о першій дня.** (I eat lunch at one in the afternoon.)
+*   **Я вечеряю о восьмій вечора.** (I eat dinner at eight in the evening.)
 
-Test yourself — answer each question out loud in Ukrainian before reading the model answer:
-
-- **Котра година зараз?** → Look at your clock. Say the time: e.g., *Зараз третя.*
-- **О котрій ти прокида́єшся?** → e.g., *Я прокида́юся о сьомій ранку.*
-- **О котрій ти обідаєш?** → e.g., *Я обі́даю о першій дня.*
-- **О котрій ти ляга́єш спа́ти?** → e.g., *Я ляга́ю спати о десятій вечора.*
-- **Як сказа́ти 8:30?** → *Пів на дев'яту.*
-
-Aim to answer all five without scrolling back. If you hesitate on any hour form, review the table in section 2.
-
-You can now say *what time* something happens. The next step is *what day* and *what month*. In Module 23, you'll combine time with days: **У понеді́лок о дев'ятій ранку** — the full coordinate of a plan. Ukrainian scheduling vocabulary builds one layer at a time.
+Try writing three similar sentences using your own daily routine and time expressions!

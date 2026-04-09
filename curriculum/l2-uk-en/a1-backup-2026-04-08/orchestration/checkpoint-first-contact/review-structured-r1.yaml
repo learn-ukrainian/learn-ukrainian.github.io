@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covered most points in the outline and maintained correct budgeting, but
+    hallucinated an activity (`quiz-sounds-vs-letters`) that was not in the plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: 'CRITICAL errors: The stress rules for "руки" are taught completely backwards.
+    "сестра" is wrongly used as an example of meaning-changing stress (it is always
+    сестра́). "лікарка" is incorrectly stated '
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The module uses excellent self-reflection framing ("This module is not
+    a test. It is a mirror"), but explicitly teaching factually incorrect pronunciation
+    rules is a massive pedagogical failure.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required A1 vocab is correctly used and appropriately recycled in context.
+    No unauthorized words are introduced.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: Hallucinated a `quiz-sounds-vs-letters` marker and clustered all 3 actual
+    plan markers at the very end of the document, violating the instruction to pace
+    them out.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Friendly, supportive tone, with natural transitions and minimal meta-commentary.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all sections are present and ordered correctly, word count
+    appears appropriate.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural use of Ukrainian names and real locations (Lviv, Kharkiv, Dnipro).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The capstone dialogue is highly natural, uses vocatives correctly (Богдане,
+    Соломіє), and features good conversational turn-taking.
+findings: []

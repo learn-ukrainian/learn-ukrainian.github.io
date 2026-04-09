@@ -1,0 +1,670 @@
+{
+  "total_items": 411,
+  "grounded_items": 303,
+  "ungrounded": [
+    {
+      "word": "починають",
+      "exercise_type": "true-false",
+      "context": "Українські діти обов'язково починають навчатися в школі у ві",
+      "role": "context"
+    },
+    {
+      "word": "п'ять",
+      "exercise_type": "true-false",
+      "context": "Початкова школа в Україні триває п'ять років.",
+      "role": "context"
+    },
+    {
+      "word": "дев'ятого",
+      "exercise_type": "true-false",
+      "context": "Після дев'ятого класу учні отримують свідоцтво про базову се",
+      "role": "context"
+    },
+    {
+      "word": "класу",
+      "exercise_type": "true-false",
+      "context": "Після дев'ятого класу учні отримують свідоцтво про базову се",
+      "role": "context"
+    },
+    {
+      "word": "загальне",
+      "exercise_type": "true-false",
+      "context": "Нова українська школа передбачає загальне навчання протягом ",
+      "role": "context"
+    },
+    {
+      "word": "одинадцяти",
+      "exercise_type": "true-false",
+      "context": "Нова українська школа передбачає загальне навчання протягом ",
+      "role": "context"
+    },
+    {
+      "word": "магістратура",
+      "exercise_type": "true-false",
+      "context": "Перший рівень вищої освіти в Україні називається магістратур",
+      "role": "context"
+    },
+    {
+      "word": "зосереджений",
+      "exercise_type": "true-false",
+      "context": "Інститут зазвичай глибоко зосереджений на одній конкретній г",
+      "role": "context"
+    },
+    {
+      "word": "абревіатурою",
+      "exercise_type": "true-false",
+      "context": "Слово «виш» є абревіатурою, що означає вищий навчальний закл",
+      "role": "context"
+    },
+    {
+      "word": "щомісячну",
+      "exercise_type": "true-false",
+      "context": "Студенти, які успішно вчаться «на бюджеті», отримують щоміся",
+      "role": "context"
+    },
+    {
+      "word": "студенту",
+      "exercise_type": "true-false",
+      "context": "Контрактна форма передбачає, що університет платить студенту",
+      "role": "context"
+    },
+    {
+      "word": "гроші",
+      "exercise_type": "true-false",
+      "context": "Контрактна форма передбачає, що університет платить студенту",
+      "role": "context"
+    },
+    {
+      "word": "позначення",
+      "exercise_type": "quiz",
+      "context": "Яке слово використовують для позначення студента, що вивчає ",
+      "role": "context"
+    },
+    {
+      "word": "вивчає",
+      "exercise_type": "quiz",
+      "context": "Яке слово використовують для позначення студента, що вивчає ",
+      "role": "context"
+    },
+    {
+      "word": "магістерську",
+      "exercise_type": "quiz",
+      "context": "Яке слово використовують для позначення студента, що вивчає ",
+      "role": "context"
+    },
+    {
+      "word": "фінансова",
+      "exercise_type": "quiz",
+      "context": "Як називається фінансова допомога, яку отримують студенти бю",
+      "role": "context"
+    },
+    {
+      "word": "допомога",
+      "exercise_type": "quiz",
+      "context": "Як називається фінансова допомога, яку отримують студенти бю",
+      "role": "context"
+    },
+    {
+      "word": "бюджетної",
+      "exercise_type": "quiz",
+      "context": "Як називається фінансова допомога, яку отримують студенти бю",
+      "role": "context"
+    },
+    {
+      "word": "аспірантурі",
+      "exercise_type": "quiz",
+      "context": "Що пише молодий науковець в аспірантурі, щоб отримати найвищ",
+      "role": "context"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "quiz",
+      "context": "Як найкраще перекласти фразу «read textbook» українською мов",
+      "role": "context"
+    },
+    {
+      "word": "перекласти",
+      "exercise_type": "quiz",
+      "context": "Як найкраще перекласти фразу «read textbook» українською мов",
+      "role": "context"
+    },
+    {
+      "word": "словосолучення",
+      "exercise_type": "quiz",
+      "context": "Що точно означає словосолучення «державне замовлення» в осві",
+      "role": "context"
+    },
+    {
+      "word": "освіті",
+      "exercise_type": "quiz",
+      "context": "Що точно означає словосолучення «державне замовлення» в осві",
+      "role": "context"
+    },
+    {
+      "word": "лікування",
+      "exercise_type": "match-up",
+      "context": "наука про лікування людей",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютери",
+      "exercise_type": "match-up",
+      "context": "наука про комп'ютери та сучасне програмування",
+      "role": "context"
+    },
+    {
+      "word": "сучасне",
+      "exercise_type": "match-up",
+      "context": "наука про комп'ютери та сучасне програмування",
+      "role": "context"
+    },
+    {
+      "word": "природнича",
+      "exercise_type": "match-up",
+      "context": "природнича наука про всі живі організми",
+      "role": "context"
+    },
+    {
+      "word": "живі",
+      "exercise_type": "match-up",
+      "context": "природнича наука про всі живі організми",
+      "role": "context"
+    },
+    {
+      "word": "організми",
+      "exercise_type": "match-up",
+      "context": "природнича наука про всі живі організми",
+      "role": "context"
+    },
+    {
+      "word": "фінанси",
+      "exercise_type": "match-up",
+      "context": "наука про гроші, фінанси та господарство",
+      "role": "context"
+    },
+    {
+      "word": "господарство",
+      "exercise_type": "match-up",
+      "context": "наука про гроші, фінанси та господарство",
+      "role": "context"
+    },
+    {
+      "word": "світу",
+      "exercise_type": "match-up",
+      "context": "наука про загальні закони розвитку світу і суспільства",
+      "role": "context"
+    },
+    {
+      "word": "поведінку",
+      "exercise_type": "match-up",
+      "context": "наука про поведінку та складний розум людини",
+      "role": "context"
+    },
+    {
+      "word": "розум",
+      "exercise_type": "match-up",
+      "context": "наука про поведінку та складний розум людини",
+      "role": "context"
+    },
+    {
+      "word": "людини",
+      "exercise_type": "match-up",
+      "context": "наука про поведінку та складний розум людини",
+      "role": "context"
+    },
+    {
+      "word": "минуле",
+      "exercise_type": "match-up",
+      "context": "наука про минуле людства та важливі події",
+      "role": "context"
+    },
+    {
+      "word": "людства",
+      "exercise_type": "match-up",
+      "context": "наука про минуле людства та важливі події",
+      "role": "context"
+    },
+    {
+      "word": "події",
+      "exercise_type": "match-up",
+      "context": "наука про минуле людства та важливі події",
+      "role": "context"
+    },
+    {
+      "word": "точна",
+      "exercise_type": "match-up",
+      "context": "точна наука про числа, формули і фігури",
+      "role": "context"
+    },
+    {
+      "word": "числа",
+      "exercise_type": "match-up",
+      "context": "точна наука про числа, формули і фігури",
+      "role": "context"
+    },
+    {
+      "word": "формули",
+      "exercise_type": "match-up",
+      "context": "точна наука про числа, формули і фігури",
+      "role": "context"
+    },
+    {
+      "word": "фігури",
+      "exercise_type": "match-up",
+      "context": "точна наука про числа, формули і фігури",
+      "role": "context"
+    },
+    {
+      "word": "творче",
+      "exercise_type": "match-up",
+      "context": "творче відображення дійсності художніми образами",
+      "role": "context"
+    },
+    {
+      "word": "відображення",
+      "exercise_type": "match-up",
+      "context": "творче відображення дійсності художніми образами",
+      "role": "context"
+    },
+    {
+      "word": "дійсності",
+      "exercise_type": "match-up",
+      "context": "творче відображення дійсності художніми образами",
+      "role": "context"
+    },
+    {
+      "word": "художніми",
+      "exercise_type": "match-up",
+      "context": "творче відображення дійсності художніми образами",
+      "role": "context"
+    },
+    {
+      "word": "образами",
+      "exercise_type": "match-up",
+      "context": "творче відображення дійсності художніми образами",
+      "role": "context"
+    },
+    {
+      "word": "багатьом",
+      "exercise_type": "fill-in",
+      "context": "Теоретичне заняття, де професор детально пояснює матеріал ба",
+      "role": "context"
+    },
+    {
+      "word": "студентських",
+      "exercise_type": "fill-in",
+      "context": "Інтерактивне практичне заняття у невеликих студентських груп",
+      "role": "context"
+    },
+    {
+      "word": "медики",
+      "exercise_type": "fill-in",
+      "context": "Студенти-медики обов'язково мають практичні заняття, що мают",
+      "role": "context"
+    },
+    {
+      "word": "практичні",
+      "exercise_type": "fill-in",
+      "context": "Студенти-медики обов'язково мають практичні заняття, що мают",
+      "role": "context"
+    },
+    {
+      "word": "швидкої",
+      "exercise_type": "fill-in",
+      "context": "Форма швидкої перевірки знань без конкретної числової оцінки",
+      "role": "context"
+    },
+    {
+      "word": "серйозна",
+      "exercise_type": "fill-in",
+      "context": "Серйозна перевірка знань з оцінкою, що визначає ваш загальни",
+      "role": "context"
+    },
+    {
+      "word": "перевірка",
+      "exercise_type": "fill-in",
+      "context": "Серйозна перевірка знань з оцінкою, що визначає ваш загальни",
+      "role": "context"
+    },
+    {
+      "word": "оцінкою",
+      "exercise_type": "fill-in",
+      "context": "Серйозна перевірка знань з оцінкою, що визначає ваш загальни",
+      "role": "context"
+    },
+    {
+      "word": "визначає",
+      "exercise_type": "fill-in",
+      "context": "Серйозна перевірка знань з оцінкою, що визначає ваш загальни",
+      "role": "context"
+    },
+    {
+      "word": "адміністративний",
+      "exercise_type": "fill-in",
+      "context": "Адміністративний центр факультету, куди ви звертаєтеся за до",
+      "role": "context"
+    },
+    {
+      "word": "центр",
+      "exercise_type": "fill-in",
+      "context": "Адміністративний центр факультету, куди ви звертаєтеся за до",
+      "role": "context"
+    },
+    {
+      "word": "довідками",
+      "exercise_type": "fill-in",
+      "context": "Адміністративний центр факультету, куди ви звертаєтеся за до",
+      "role": "context"
+    },
+    {
+      "word": "постійно",
+      "exercise_type": "unjumble",
+      "context": "постійно",
+      "role": "answer"
+    },
+    {
+      "word": "перше",
+      "exercise_type": "fill-in",
+      "context": "Перше серйозне наукове дослідження студента в університеті —",
+      "role": "context"
+    },
+    {
+      "word": "наукове",
+      "exercise_type": "fill-in",
+      "context": "Перше серйозне наукове дослідження студента в університеті —",
+      "role": "context"
+    },
+    {
+      "word": "оцінок",
+      "exercise_type": "fill-in",
+      "context": "Офіційний документ, у якому фіксується вся історія оцінок ст",
+      "role": "context"
+    },
+    {
+      "word": "міжнародний",
+      "exercise_type": "fill-in",
+      "context": "Міжнародний захід, де молоді дослідники презентують свої про",
+      "role": "context"
+    },
+    {
+      "word": "захід",
+      "exercise_type": "fill-in",
+      "context": "Міжнародний захід, де молоді дослідники презентують свої про",
+      "role": "context"
+    },
+    {
+      "word": "цікавий",
+      "exercise_type": "error-correction",
+      "context": "Він дуже цікавий і багато читаючий студент на нашому факульт",
+      "role": "context"
+    },
+    {
+      "word": "нашому",
+      "exercise_type": "error-correction",
+      "context": "Він дуже цікавий і багато читаючий студент на нашому факульт",
+      "role": "context"
+    },
+    {
+      "word": "бажають",
+      "exercise_type": "error-correction",
+      "context": "які бажають",
+      "role": "answer"
+    },
+    {
+      "word": "бажаючі",
+      "exercise_type": "error-correction",
+      "context": "Усі абітурієнти, бажаючі вступити до магістратури, повинні о",
+      "role": "context"
+    },
+    {
+      "word": "вступити",
+      "exercise_type": "error-correction",
+      "context": "Усі абітурієнти, бажаючі вступити до магістратури, повинні о",
+      "role": "context"
+    },
+    {
+      "word": "корпусу",
+      "exercise_type": "error-correction",
+      "context": "Підходячи до головного корпусу університету, у мене несподів",
+      "role": "context"
+    },
+    {
+      "word": "несподівано",
+      "exercise_type": "error-correction",
+      "context": "Підходячи до головного корпусу університету, у мене несподів",
+      "role": "context"
+    },
+    {
+      "word": "досліджуюча",
+      "exercise_type": "error-correction",
+      "context": "Це дуже добре досліджуюча наукова проблема в сучасній україн",
+      "role": "context"
+    },
+    {
+      "word": "сучасній",
+      "exercise_type": "error-correction",
+      "context": "Це дуже добре досліджуюча наукова проблема в сучасній україн",
+      "role": "context"
+    },
+    {
+      "word": "літературі",
+      "exercise_type": "error-correction",
+      "context": "Це дуже добре досліджуюча наукова проблема в сучасній україн",
+      "role": "context"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "error-correction",
+      "context": "який читав",
+      "role": "answer"
+    },
+    {
+      "word": "читавший",
+      "exercise_type": "error-correction",
+      "context": "Новий професор, читавший нам першу лекцію, відповів на всі с",
+      "role": "context"
+    },
+    {
+      "word": "відповів",
+      "exercise_type": "error-correction",
+      "context": "Новий професор, читавший нам першу лекцію, відповів на всі с",
+      "role": "context"
+    },
+    {
+      "word": "закінчував",
+      "exercise_type": "error-correction",
+      "context": "Коли він закінчував",
+      "role": "answer"
+    },
+    {
+      "word": "закінчуючи",
+      "exercise_type": "error-correction",
+      "context": "Закінчуючи університет з відзнакою, йому запропонували прест",
+      "role": "context"
+    },
+    {
+      "word": "відзнакою",
+      "exercise_type": "error-correction",
+      "context": "Закінчуючи університет з відзнакою, йому запропонували прест",
+      "role": "context"
+    },
+    {
+      "word": "запропонували",
+      "exercise_type": "error-correction",
+      "context": "Закінчуючи університет з відзнакою, йому запропонували прест",
+      "role": "context"
+    },
+    {
+      "word": "біологічного",
+      "exercise_type": "error-correction",
+      "context": "Для цього важливого біологічного дослідження мені терміново ",
+      "role": "context"
+    },
+    {
+      "word": "терміново",
+      "exercise_type": "error-correction",
+      "context": "Для цього важливого біологічного дослідження мені терміново ",
+      "role": "context"
+    },
+    {
+      "word": "юріспруденція",
+      "exercise_type": "error-correction",
+      "context": "Моя майбутня спеціальність на цьому великому факультеті — це",
+      "role": "context"
+    },
+    {
+      "word": "типи",
+      "exercise_type": "group-sort",
+      "context": "Типи навчальних закладів",
+      "role": "context"
+    },
+    {
+      "word": "спеціаліст",
+      "exercise_type": "group-sort",
+      "context": "спеціаліст",
+      "role": "answer"
+    },
+    {
+      "word": "великими",
+      "exercise_type": "unjumble",
+      "context": "великими",
+      "role": "answer"
+    },
+    {
+      "word": "спеціальностями",
+      "exercise_type": "unjumble",
+      "context": "спеціальностями.",
+      "role": "answer"
+    },
+    {
+      "word": "європейській",
+      "exercise_type": "unjumble",
+      "context": "європейській",
+      "role": "answer"
+    },
+    {
+      "word": "базовий",
+      "exercise_type": "unjumble",
+      "context": "базовий",
+      "role": "answer"
+    },
+    {
+      "word": "чотирирічний",
+      "exercise_type": "unjumble",
+      "context": "чотирирічний",
+      "role": "answer"
+    },
+    {
+      "word": "навчальну",
+      "exercise_type": "unjumble",
+      "context": "навчальну",
+      "role": "answer"
+    },
+    {
+      "word": "довгоочікуваний",
+      "exercise_type": "unjumble",
+      "context": "довгоочікуваний",
+      "role": "answer"
+    },
+    {
+      "word": "вчасно",
+      "exercise_type": "unjumble",
+      "context": "вчасно",
+      "role": "answer"
+    },
+    {
+      "word": "найуспішнішого",
+      "exercise_type": "unjumble",
+      "context": "найуспішнішого",
+      "role": "answer"
+    },
+    {
+      "word": "повне",
+      "exercise_type": "unjumble",
+      "context": "повне",
+      "role": "answer"
+    },
+    {
+      "word": "лекційні",
+      "exercise_type": "unjumble",
+      "context": "лекційні",
+      "role": "answer"
+    },
+    {
+      "word": "цікаві",
+      "exercise_type": "unjumble",
+      "context": "цікаві",
+      "role": "answer"
+    },
+    {
+      "word": "спеціалізованій",
+      "exercise_type": "unjumble",
+      "context": "спеціалізованій",
+      "role": "answer"
+    },
+    {
+      "word": "улюблені",
+      "exercise_type": "unjumble",
+      "context": "улюблені",
+      "role": "answer"
+    },
+    {
+      "word": "роботах",
+      "exercise_type": "unjumble",
+      "context": "роботах.",
+      "role": "answer"
+    },
+    {
+      "word": "лабораторних",
+      "exercise_type": "unjumble",
+      "context": "лабораторних",
+      "role": "answer"
+    },
+    {
+      "word": "практичних",
+      "exercise_type": "unjumble",
+      "context": "практичних",
+      "role": "answer"
+    },
+    {
+      "word": "обов'язкових",
+      "exercise_type": "unjumble",
+      "context": "обов'язкових",
+      "role": "answer"
+    },
+    {
+      "word": "залу",
+      "exercise_type": "unjumble",
+      "context": "залу.",
+      "role": "answer"
+    },
+    {
+      "word": "тихого",
+      "exercise_type": "unjumble",
+      "context": "тихого",
+      "role": "answer"
+    },
+    {
+      "word": "читального",
+      "exercise_type": "unjumble",
+      "context": "читального",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 29,
+    "tested_in_exercises": 20,
+    "not_tested": [
+      "дипломна",
+      "дисертація",
+      "конспект",
+      "монографія",
+      "освіта",
+      "підручник",
+      "розклад",
+      "стипендія",
+      "факультет"
+    ]
+  },
+  "all_grounded": false
+}

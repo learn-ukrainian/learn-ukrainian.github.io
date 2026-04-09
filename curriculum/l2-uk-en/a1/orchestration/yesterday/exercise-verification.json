@@ -1,28 +1,151 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 87,
+  "grounded_items": 65,
+  "ungrounded": [
+    {
+      "word": "десятій",
+      "exercise_type": "fill-in",
+      "context": "О десятій я ____ спати.",
+      "role": "context"
+    },
+    {
+      "word": "він",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий рід (Він)",
+      "role": "context"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "group-sort",
+      "context": "Жіночий рід (Вона)",
+      "role": "context"
+    },
+    {
+      "word": "вкрав",
+      "exercise_type": "quiz",
+      "context": "Що вкрав чоловік у свідка?",
+      "role": "context"
+    },
+    {
+      "word": "чоловік",
+      "exercise_type": "quiz",
+      "context": "Що вкрав чоловік у свідка?",
+      "role": "context"
+    },
+    {
+      "word": "свідка",
+      "exercise_type": "quiz",
+      "context": "Що вкрав чоловік у свідка?",
+      "role": "context"
+    },
+    {
+      "word": "де",
+      "exercise_type": "quiz",
+      "context": "Де свідок припаркував велосипед?",
+      "role": "context"
+    },
+    {
+      "word": "куди",
+      "exercise_type": "quiz",
+      "context": "Куди Тарас пішов зранку?",
+      "role": "context"
+    },
+    {
+      "word": "ким",
+      "exercise_type": "quiz",
+      "context": "З ким обідав Тарас?",
+      "role": "context"
+    },
+    {
+      "word": "котрій",
+      "exercise_type": "quiz",
+      "context": "О котрій годині Анна лягла спати?",
+      "role": "context"
+    },
+    {
+      "word": "годині",
+      "exercise_type": "quiz",
+      "context": "О котрій годині Анна лягла спати?",
+      "role": "context"
+    },
+    {
+      "word": "анна",
+      "exercise_type": "quiz",
+      "context": "О котрій годині Анна лягла спати?",
+      "role": "context"
+    },
+    {
+      "word": "кепка",
+      "exercise_type": "match-up",
+      "context": "кепка",
+      "role": "answer"
+    },
+    {
+      "word": "офіс",
+      "exercise_type": "match-up",
+      "context": "офіс",
+      "role": "answer"
+    },
+    {
+      "word": "пізно",
+      "exercise_type": "error-correction",
+      "context": "Анна ліг спати пізно.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "error-correction",
+      "context": "Свідок сказав: Я бачила чоловіка.",
+      "role": "context"
+    },
+    {
+      "word": "бачила",
+      "exercise_type": "error-correction",
+      "context": "Свідок сказав: Я бачила чоловіка.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "error-correction",
+      "context": "Моя подруга купив продукти.",
+      "role": "context"
+    },
+    {
+      "word": "купив",
+      "exercise_type": "error-correction",
+      "context": "Моя подруга купив продукти.",
+      "role": "context"
+    },
+    {
+      "word": "снідала",
+      "exercise_type": "true-false",
+      "context": "Анна снідала салатом і соком.",
+      "role": "context"
+    },
+    {
+      "word": "салатом",
+      "exercise_type": "true-false",
+      "context": "Анна снідала салатом і соком.",
+      "role": "context"
+    },
+    {
+      "word": "соком",
+      "exercise_type": "true-false",
+      "context": "Анна снідала салатом і соком.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 10,
     "not_tested": [
-      "ввечері",
-      "вдень",
-      "звичайний",
-      "зранку",
       "колега",
       "лягти",
-      "нарешті",
       "обідати",
       "повернутися",
       "поснідати",
-      "потім",
-      "продукти",
-      "прокинутися",
-      "серіал",
-      "спочатку",
-      "учора"
+      "прокинутися"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

@@ -1,54 +1,60 @@
 ## Linguistic Scan
-Linguistic errors found (LLM-generated stress mark errors):
-- `су́мки́` (double stress mark)
-- `за́вжди́` (double stress mark)
-- `У́твори` (incorrect stress on imperative, should be `Утвори́`)
-All other words in the "NOT IN VESUM" list are false positives caused by the LLM's valid stress marks (`´`) splitting the tokens. 
+No linguistic errors found. All Ukrainian forms, vocabulary choices, and phonetic descriptions are accurate and natural. No Russianisms or Surzhyk detected.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-plural -->`: Correctly placed after the Noun Plurals section. Tests singular to plural.
-- `<!-- INJECT_ACTIVITY: fill-in-adj-plural -->`: Correctly placed after introducing adjective plurals, testing the `-і` rule.
-- `<!-- INJECT_ACTIVITY: quiz-plural-nouns -->`: Placed at the end of the Adjectives section, but tests noun plurals. Acceptable as mixed review before the summary.
-- `<!-- INJECT_ACTIVITY: group-sort-singular-plural -->`: Correctly placed at the end of the Summary.
-All marker IDs map properly to the plan's `activity_hints`. Logic is sound.
+- Marker `noun-plural-formation` matches the `fill-in` plan hint.
+- Marker `plural-choice-quiz` matches the `quiz` plan hint.
+- Marker `singular-plural-sort` matches the `group-sort` plan hint.
+- Marker `adjective-plural-agreement` matches the `fill-in` plan hint.
+- **Issue:** Three activity markers are heavily clustered right before the summary table in the "Один → багато" section. They should be distributed to pace the practice better.
+- **Issue:** The self-check quiz at the end contains a logical error. The question asks the learner to translate "These blue notebooks" but mistakenly provides the Ukrainian answer «Ці сині зошити» in the prompt itself.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The text follows the `content_outline` structure perfectly, includes all quotes and textbook references (Большакова, Вашуленко), and covers every required topic. |
-| 2. Linguistic accuracy | 9/10 | General grammar and vocabulary are flawless. However, the writer improperly added hardcoded stress marks throughout, creating three specific errors: double primary stresses on `су́мки́` and `за́вжди́`, and incorrect stress on the imperative `У́твори`. |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow. Plurals are introduced naturally in dialogue, patterns are explained cleanly by gender, and adjectives are simplified brilliantly ("one ending covers everything"). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (столи, книги, вікна, мої, ті, etc.) are embedded naturally in sentences and dialogues. |
-| 5. Exercise quality | 10/10 | All 4 exercise hints are represented. Placements act as good pedagogical checkpoints following the taught theory. |
-| 6. Engagement & tone | 10/10 | The classroom setup dialogue acts as an engaging anchor. The tone is encouraging, and the final self-reflection ties the concepts to the learner's real environment. |
-| 7. Structural integrity | 10/10 | Clean markdown, precise section headers mapping to the plan. |
-| 8. Cultural accuracy | 10/10 | Natural names (Олена, Іван), standard Ukrainian phrasing, completely free of Russianisms. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogue feels authentic to the scenario (setting up a classroom) and demonstrates the grammatical target naturally. |
+| 1. Plan adherence | 10/10 | Perfectly covers all 4 sections from the outline, integrates all required and recommended vocabulary, and successfully implements the textbook references (Большакова, Вашуленко). Word count is excellent (1314). |
+| 2. Linguistic accuracy | 10/10 | Flawless. Pluralization rules for nouns and adjectives are accurate. Demonstratives and possessives are used correctly. Verified against VESUM. |
+| 3. Pedagogical quality | 10/10 | Excellent PPP flow. Introduces plurals through a natural dialogue, clearly breaks down the rules by gender, provides the consonant guideline, and finishes with the simplified adjective rule. |
+| 4. Vocabulary coverage | 10/10 | All required words (столи, книги, вікна, стільці, ці, ті, мої, які) and recommended words are introduced naturally within the context of classrooms and shopping. |
+| 5. Exercise quality | 8/10 | Deducting points for the clustering of three activity markers back-to-back, and for a logical error in the self-check exercise where the prompt gives away the answer (`Перекладіть: «Ці сині зошити»`). |
+| 6. Engagement & tone | 8/10 | Generally warm and encouraging. Deducting points for mild instances of generic enthusiasm and empty filler (e.g., "beautifully transforms into вікна", "creates a rhythmic, melodic sound"). |
+| 7. Structural integrity | 9/10 | Clean markdown and excellent organization, but the prose contains one redundant, repetitive sentence that restates an example just given in the preceding line. |
+| 8. Cultural accuracy | 10/10 | Natural references to Ukrainian Grade 2 and Grade 3 textbooks, aligning with the project's authentic, decolonized pedagogical goals. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, conversational, and highly contextualized (setting up a classroom, buying supplies in a store). |
 
 ## Findings
-[Linguistic accuracy] [Critical]
-Location: Section "Один → багато", table row for сумка
-Issue: The plural of "сумка" was generated with two primary stress marks ("су́мки́"). In Ukrainian, the word has one stress on the first syllable ("су́мки").
-Fix: Remove the second stress mark.
+[DIMENSION 5] [SEVERITY: major]
+Location: `<!-- INJECT_ACTIVITY: noun-plural-formation --> \n\n <!-- INJECT_ACTIVITY: plural-choice-quiz --> \n\n <!-- INJECT_ACTIVITY: singular-plural-sort -->`
+Issue: Three activity markers are clustered consecutively at the end of the "Один → багато" section, instead of being spread out to break up the text and test incrementally.
+Fix: Move `singular-plural-sort` before the summary table, and place `noun-plural-formation` and `plural-choice-quiz` after the table.
 
-[Linguistic accuracy] [Critical]
-Location: Section "Підсумок — Summary", self-check question about adjective endings
-Issue: The word "завжди" was generated with two primary stress marks ("за́вжди́"). A single word cannot carry two primary stresses simultaneously in writing.
-Fix: Remove the first stress mark to read "завжди́".
+[DIMENSION 5] [SEVERITY: major]
+Location: `*   **Q:** Перекладіть: «Ці сині зошити». *(Translate: "These blue notebooks".)*`
+Issue: The self-check translation question provides the Ukrainian answer in the prompt itself, making the exercise nonsensical.
+Fix: Change the question prompt to ask for the translation of the English string `"These blue notebooks"`.
 
-[Linguistic accuracy] [Critical]
-Location: Section "Підсумок — Summary", self-check practice sentence
-Issue: The imperative of "утворити" was generated with incorrect stress on the first syllable ("У́твори"). The correct stress is on the final syllable ("Утвори́").
-Fix: Move the stress mark to the correct syllable.
+[DIMENSION 6] [SEVERITY: minor]
+Location: `The neuter ending **-о** changes to **-а** (**вікно** → **вікна**)... A common example is **вікно** (window), which beautifully transforms into **вікна** (windows).`
+Issue: The text repeats the exact same example back-to-back using flowery filler language ("beautifully transforms").
+Fix: Remove the repetitive sentence.
+
+[DIMENSION 6] [SEVERITY: minor]
+Location: `The uniform ending creates a rhythmic, melodic sound when you speak Ukrainian.`
+Issue: Generic enthusiasm and filler that adds no educational value.
+Fix: Remove the sentence.
 
 ## Verdict: REVISE
-The module is exceptionally well-written, with perfect pacing and textbook integration. However, the writer manually injected stress marks across the text and introduced three factual linguistic errors (double stresses and wrong imperative stress). Because these are linguistic errors that teach incorrect forms, they must be fixed via the deterministic pipeline before the module can pass.
+The module is extremely strong conceptually, linguistically, and pedagogically. However, it requires a REVISE verdict due to the broken self-check question, clustered activity markers, and minor instances of repetitive filler text. These can all be fixed deterministically.
 
 <fixes>
-- find: "| су́мка (f) — bag | → | су́мки́ — bags |"
-  replace: "| су́мка (f) — bag | → | су́мки — bags |"
-- find: "Яке закі́нчення ма́ють прикметники у множині? → за́вжди́ **-і**"
-  replace: "Яке закі́нчення ма́ють прикметники у множині? → завжди́ **-і**"
-- find: "У́твори множину: великий стіл → ? → **великі столи**"
-  replace: "Утвори́ множину: великий стіл → ? → **великі столи**"
+- find: "The neuter ending **-о** changes to **-а** (**вікно** → **вікна**). The neuter ending **-е** changes to **-я**, though words with this ending are not covered yet. A common example is **вікно** (window), which beautifully transforms into **вікна** (windows). Similarly, **ліжко** (bed) becomes **ліжка** (beds), **крісло** (armchair) shifts to **крісла** (armchairs), and **дзеркало** (mirror) changes to **дзеркала** (mirrors)."
+  replace: "The neuter ending **-о** changes to **-а** (**вікно** → **вікна**). The neuter ending **-е** changes to **-я**, though words with this ending are not covered yet. Similarly, **ліжко** (bed) becomes **ліжка** (beds), **крісло** (armchair) shifts to **крісла** (armchairs), and **дзеркало** (mirror) changes to **дзеркала** (mirrors)."
+- find: "<!-- INJECT_ACTIVITY: noun-plural-formation -->\n\n<!-- INJECT_ACTIVITY: plural-choice-quiz -->\n\n<!-- INJECT_ACTIVITY: singular-plural-sort -->\n\nThe table below summarizes these essential noun endings."
+  replace: "<!-- INJECT_ACTIVITY: singular-plural-sort -->\n\nThe table below summarizes these essential noun endings."
+- find: "| Середній рід (Neuter) | **вікно**, **ліжко** | **вікна**, **ліжка** |\n\n## Прикметники у множині — Adjectives in Plural"
+  replace: "| Середній рід (Neuter) | **вікно**, **ліжко** | **вікна**, **ліжка** |\n\n<!-- INJECT_ACTIVITY: noun-plural-formation -->\n\n<!-- INJECT_ACTIVITY: plural-choice-quiz -->\n\n## Прикметники у множині — Adjectives in Plural"
+- find: "in your kitchen. The uniform ending creates a rhythmic, melodic sound when you speak Ukrainian.\n\n:::note"
+  replace: "in your kitchen.\n\n:::note"
+- find: "*   **Q:** Перекладіть: «Ці сині зошити». *(Translate: \"These blue notebooks\".)*\n*   **A:** **Ці сині зошити**."
+  replace: "*   **Q:** Перекладіть: \"These blue notebooks\". *(Translate: \"These blue notebooks\".)*\n*   **A:** **Ці сині зошити**."
 </fixes>

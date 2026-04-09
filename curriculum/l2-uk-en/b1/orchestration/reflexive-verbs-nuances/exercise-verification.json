@@ -1,0 +1,542 @@
+{
+  "total_items": 279,
+  "grounded_items": 192,
+  "ungrounded": [
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть дієслово без активної пари:",
+      "role": "context"
+    },
+    {
+      "word": "активної",
+      "exercise_type": "quiz",
+      "context": "Оберіть дієслово без активної пари:",
+      "role": "context"
+    },
+    {
+      "word": "знайдіть",
+      "exercise_type": "quiz",
+      "context": "Знайдіть дієслово, що завжди має зворотну форму:",
+      "role": "context"
+    },
+    {
+      "word": "незворотної",
+      "exercise_type": "quiz",
+      "context": "Оберіть дієслово без незворотної пари:",
+      "role": "context"
+    },
+    {
+      "word": "підмета",
+      "exercise_type": "group-sort",
+      "context": "Безособові (без підмета)",
+      "role": "context"
+    },
+    {
+      "word": "олені",
+      "exercise_type": "fill-in",
+      "context": "Вона щиро _____ Олені.",
+      "role": "context"
+    },
+    {
+      "word": "другові",
+      "exercise_type": "fill-in",
+      "context": "Вона привітно _____ другові.",
+      "role": "context"
+    },
+    {
+      "word": "зустрілися",
+      "exercise_type": "fill-in",
+      "context": "зустрілися",
+      "role": "answer"
+    },
+    {
+      "word": "зустрілись",
+      "exercise_type": "fill-in",
+      "context": "зустрілись",
+      "role": "answer"
+    },
+    {
+      "word": "аж",
+      "exercise_type": "fill-in",
+      "context": "Вони вперше _____ аж уранці.",
+      "role": "context"
+    },
+    {
+      "word": "уранці",
+      "exercise_type": "fill-in",
+      "context": "Вони вперше _____ аж уранці.",
+      "role": "context"
+    },
+    {
+      "word": "домовилися",
+      "exercise_type": "fill-in",
+      "context": "домовилися",
+      "role": "answer"
+    },
+    {
+      "word": "домовились",
+      "exercise_type": "fill-in",
+      "context": "домовились",
+      "role": "answer"
+    },
+    {
+      "word": "пішли",
+      "exercise_type": "fill-in",
+      "context": "Ми швидко _____ і пішли гуляти.",
+      "role": "context"
+    },
+    {
+      "word": "гуляти",
+      "exercise_type": "fill-in",
+      "context": "Ми швидко _____ і пішли гуляти.",
+      "role": "context"
+    },
+    {
+      "word": "запізнення",
+      "exercise_type": "error-correction",
+      "context": "Я дуже вибачаюся за своє запізнення.",
+      "role": "context"
+    },
+    {
+      "word": "допомогу",
+      "exercise_type": "error-correction",
+      "context": "Я вам дуже щиро дякуюся за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "боїться",
+      "exercise_type": "error-correction",
+      "context": "боїться",
+      "role": "answer"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "error-correction",
+      "context": "Моя мала сестра дуже боїть темряви.",
+      "role": "context"
+    },
+    {
+      "word": "мала",
+      "exercise_type": "error-correction",
+      "context": "Моя мала сестра дуже боїть темряви.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "error-correction",
+      "context": "Моя мала сестра дуже боїть темряви.",
+      "role": "context"
+    },
+    {
+      "word": "боїть",
+      "exercise_type": "error-correction",
+      "context": "Моя мала сестра дуже боїть темряви.",
+      "role": "context"
+    },
+    {
+      "word": "темряви",
+      "exercise_type": "error-correction",
+      "context": "Моя мала сестра дуже боїть темряви.",
+      "role": "context"
+    },
+    {
+      "word": "одягається",
+      "exercise_type": "error-correction",
+      "context": "одягається",
+      "role": "answer"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "error-correction",
+      "context": "Кожного ранку мій брат довго одягає.",
+      "role": "context"
+    },
+    {
+      "word": "сміялися",
+      "exercise_type": "error-correction",
+      "context": "сміялися",
+      "role": "answer"
+    },
+    {
+      "word": "сміяли",
+      "exercise_type": "error-correction",
+      "context": "Вони дуже весело сміяли на вулиці.",
+      "role": "context"
+    },
+    {
+      "word": "передавати",
+      "exercise_type": "match-up",
+      "context": "передавати знання комусь (to teach someone)",
+      "role": "context"
+    },
+    {
+      "word": "студентом",
+      "exercise_type": "match-up",
+      "context": "бути студентом або здобувати знання (to study generally)",
+      "role": "context"
+    },
+    {
+      "word": "колекціонувати",
+      "exercise_type": "match-up",
+      "context": "колекціонувати якісь предмети (to collect)",
+      "role": "context"
+    },
+    {
+      "word": "якісь",
+      "exercise_type": "match-up",
+      "context": "колекціонувати якісь предмети (to collect)",
+      "role": "context"
+    },
+    {
+      "word": "предмети",
+      "exercise_type": "match-up",
+      "context": "колекціонувати якісь предмети (to collect)",
+      "role": "context"
+    },
+    {
+      "word": "готуватися",
+      "exercise_type": "match-up",
+      "context": "мати намір або готуватися до поїздки (to intend / get ready)",
+      "role": "context"
+    },
+    {
+      "word": "напрямок",
+      "exercise_type": "match-up",
+      "context": "змінювати напрямок руху автомобіля (to turn something)",
+      "role": "context"
+    },
+    {
+      "word": "руху",
+      "exercise_type": "match-up",
+      "context": "змінювати напрямок руху автомобіля (to turn something)",
+      "role": "context"
+    },
+    {
+      "word": "автомобіля",
+      "exercise_type": "match-up",
+      "context": "змінювати напрямок руху автомобіля (to turn something)",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "match-up",
+      "context": "йти або їхати назад додому (to return)",
+      "role": "context"
+    },
+    {
+      "word": "їхати",
+      "exercise_type": "match-up",
+      "context": "йти або їхати назад додому (to return)",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "match-up",
+      "context": "робити чистим брудний посуд або вікно (to wash objects)",
+      "role": "context"
+    },
+    {
+      "word": "чистим",
+      "exercise_type": "match-up",
+      "context": "робити чистим брудний посуд або вікно (to wash objects)",
+      "role": "context"
+    },
+    {
+      "word": "брудний",
+      "exercise_type": "match-up",
+      "context": "робити чистим брудний посуд або вікно (to wash objects)",
+      "role": "context"
+    },
+    {
+      "word": "приймати",
+      "exercise_type": "match-up",
+      "context": "приймати душ, очищати себе (to wash oneself)",
+      "role": "context"
+    },
+    {
+      "word": "душ",
+      "exercise_type": "match-up",
+      "context": "приймати душ, очищати себе (to wash oneself)",
+      "role": "context"
+    },
+    {
+      "word": "очищати",
+      "exercise_type": "match-up",
+      "context": "приймати душ, очищати себе (to wash oneself)",
+      "role": "context"
+    },
+    {
+      "word": "допомагати",
+      "exercise_type": "match-up",
+      "context": "допомагати маленькій дитині вдягнути куртку (to dress someon",
+      "role": "context"
+    },
+    {
+      "word": "маленькій",
+      "exercise_type": "match-up",
+      "context": "допомагати маленькій дитині вдягнути куртку (to dress someon",
+      "role": "context"
+    },
+    {
+      "word": "дитині",
+      "exercise_type": "match-up",
+      "context": "допомагати маленькій дитині вдягнути куртку (to dress someon",
+      "role": "context"
+    },
+    {
+      "word": "вдягнути",
+      "exercise_type": "match-up",
+      "context": "допомагати маленькій дитині вдягнути куртку (to dress someon",
+      "role": "context"
+    },
+    {
+      "word": "куртку",
+      "exercise_type": "match-up",
+      "context": "допомагати маленькій дитині вдягнути куртку (to dress someon",
+      "role": "context"
+    },
+    {
+      "word": "вдягати",
+      "exercise_type": "match-up",
+      "context": "самостійно вдягати одяг на себе (to dress oneself)",
+      "role": "context"
+    },
+    {
+      "word": "одяг",
+      "exercise_type": "match-up",
+      "context": "самостійно вдягати одяг на себе (to dress oneself)",
+      "role": "context"
+    },
+    {
+      "word": "сьомій",
+      "exercise_type": "fill-in",
+      "context": "Я щодня _____ о сьомій годині ранку.",
+      "role": "context"
+    },
+    {
+      "word": "веселими",
+      "exercise_type": "fill-in",
+      "context": "Ти часто _____ над його веселими жартами?",
+      "role": "context"
+    },
+    {
+      "word": "жартами",
+      "exercise_type": "fill-in",
+      "context": "Ти часто _____ над його веселими жартами?",
+      "role": "context"
+    },
+    {
+      "word": "молодший",
+      "exercise_type": "fill-in",
+      "context": "Мій молодший брат довго _____ перед школою.",
+      "role": "context"
+    },
+    {
+      "word": "школою",
+      "exercise_type": "fill-in",
+      "context": "Мій молодший брат довго _____ перед школою.",
+      "role": "context"
+    },
+    {
+      "word": "зустрічаємося",
+      "exercise_type": "fill-in",
+      "context": "зустрічаємося",
+      "role": "answer"
+    },
+    {
+      "word": "хвилюєтеся",
+      "exercise_type": "fill-in",
+      "context": "хвилюєтеся",
+      "role": "answer"
+    },
+    {
+      "word": "цим",
+      "exercise_type": "fill-in",
+      "context": "Ви дуже _____ перед цим важливим іспитом?",
+      "role": "context"
+    },
+    {
+      "word": "знайомляться",
+      "exercise_type": "fill-in",
+      "context": "знайомляться",
+      "role": "answer"
+    },
+    {
+      "word": "аудиторії",
+      "exercise_type": "fill-in",
+      "context": "Нові студенти зараз активно _____ в аудиторії.",
+      "role": "context"
+    },
+    {
+      "word": "безособових",
+      "exercise_type": "true-false",
+      "context": "У безособових реченнях, як-от «мені не спиться», граматичний",
+      "role": "context"
+    },
+    {
+      "word": "типу",
+      "exercise_type": "true-false",
+      "context": "Закінчення «-шся» у формах типу «ти вчишся» читається як м'я",
+      "role": "context"
+    },
+    {
+      "word": "ввічливим",
+      "exercise_type": "true-false",
+      "context": "Слово «вибачаюся» є ввічливим і найправильнішим варіантом пр",
+      "role": "context"
+    },
+    {
+      "word": "найправильнішим",
+      "exercise_type": "true-false",
+      "context": "Слово «вибачаюся» є ввічливим і найправильнішим варіантом пр",
+      "role": "context"
+    },
+    {
+      "word": "прохання",
+      "exercise_type": "true-false",
+      "context": "Слово «вибачаюся» є ввічливим і найправильнішим варіантом пр",
+      "role": "context"
+    },
+    {
+      "word": "прощення",
+      "exercise_type": "true-false",
+      "context": "Слово «вибачаюся» є ввічливим і найправильнішим варіантом пр",
+      "role": "context"
+    },
+    {
+      "word": "миється",
+      "exercise_type": "match-up",
+      "context": "Він дуже довго миється у ванній кімнаті.",
+      "role": "answer"
+    },
+    {
+      "word": "кімнаті",
+      "exercise_type": "match-up",
+      "context": "Він дуже довго миється у ванній кімнаті.",
+      "role": "answer"
+    },
+    {
+      "word": "фізична",
+      "exercise_type": "match-up",
+      "context": "Власне зворотне (фізична дія на себе)",
+      "role": "context"
+    },
+    {
+      "word": "обнімаємося",
+      "exercise_type": "match-up",
+      "context": "Ми радісно обнімаємося при кожній зустрічі.",
+      "role": "answer"
+    },
+    {
+      "word": "при",
+      "exercise_type": "match-up",
+      "context": "Ми радісно обнімаємося при кожній зустрічі.",
+      "role": "answer"
+    },
+    {
+      "word": "кожній",
+      "exercise_type": "match-up",
+      "context": "Ми радісно обнімаємося при кожній зустрічі.",
+      "role": "answer"
+    },
+    {
+      "word": "зустрічі",
+      "exercise_type": "match-up",
+      "context": "Ми радісно обнімаємося при кожній зустрічі.",
+      "role": "answer"
+    },
+    {
+      "word": "взаємне",
+      "exercise_type": "match-up",
+      "context": "Взаємне (дія рівноправна між людьми)",
+      "role": "context"
+    },
+    {
+      "word": "рівноправна",
+      "exercise_type": "match-up",
+      "context": "Взаємне (дія рівноправна між людьми)",
+      "role": "context"
+    },
+    {
+      "word": "сердиться",
+      "exercise_type": "match-up",
+      "context": "Студент завжди сердиться через ранковий затор.",
+      "role": "answer"
+    },
+    {
+      "word": "ранковий",
+      "exercise_type": "match-up",
+      "context": "Студент завжди сердиться через ранковий затор.",
+      "role": "answer"
+    },
+    {
+      "word": "затор",
+      "exercise_type": "match-up",
+      "context": "Студент завжди сердиться через ранковий затор.",
+      "role": "answer"
+    },
+    {
+      "word": "емоційне",
+      "exercise_type": "match-up",
+      "context": "Стан (внутрішнє емоційне переживання)",
+      "role": "context"
+    },
+    {
+      "word": "їсти",
+      "exercise_type": "match-up",
+      "context": "Мені сьогодні зовсім не хочеться їсти.",
+      "role": "answer"
+    },
+    {
+      "word": "безособове",
+      "exercise_type": "match-up",
+      "context": "Безособове (стан незалежний від власної волі)",
+      "role": "context"
+    },
+    {
+      "word": "незалежний",
+      "exercise_type": "match-up",
+      "context": "Безособове (стан незалежний від власної волі)",
+      "role": "context"
+    },
+    {
+      "word": "власної",
+      "exercise_type": "match-up",
+      "context": "Безособове (стан незалежний від власної волі)",
+      "role": "context"
+    },
+    {
+      "word": "пасивноподібне",
+      "exercise_type": "match-up",
+      "context": "Пасивноподібне (дія над неживим об'єктом)",
+      "role": "context"
+    },
+    {
+      "word": "неживим",
+      "exercise_type": "match-up",
+      "context": "Пасивноподібне (дія над неживим об'єктом)",
+      "role": "context"
+    },
+    {
+      "word": "повернуся",
+      "exercise_type": "match-up",
+      "context": "Я обов'язково повернуся додому вчасно.",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 28,
+    "tested_in_exercises": 21,
+    "not_tested": [
+      "безособовий",
+      "вмиватися",
+      "здаватися",
+      "знайомитися",
+      "прокидатися",
+      "прощатися",
+      "соромитися"
+    ]
+  },
+  "all_grounded": false
+}

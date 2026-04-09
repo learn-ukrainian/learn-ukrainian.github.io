@@ -1,0 +1,21 @@
+{
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 9,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "вибачте",
+      "дістатися",
+      "поруч",
+      "пішки",
+      "район",
+      "хвилина",
+      "центр",
+      "ідіть",
+      "їдьте"
+    ]
+  },
+  "all_grounded": true
+}

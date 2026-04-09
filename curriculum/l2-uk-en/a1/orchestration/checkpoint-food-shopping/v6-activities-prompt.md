@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-accusative-check -->`
-- `<!-- INJECT_ACTIVITY: fill-in-cafe-market -->`
-- `<!-- INJECT_ACTIVITY: group-sort-accusative -->`
-- `<!-- INJECT_ACTIVITY: quiz-shopping-cafe -->`
+- `<!-- INJECT_ACTIVITY: group-sort-accusative-type -->`
+- `<!-- INJECT_ACTIVITY: quiz-shopping-situations -->`
+- `<!-- INJECT_ACTIVITY: quiz-accusative-forms -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -187,148 +187,111 @@ required: []
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-Welcome to the checkpoint module for phase A1.6. This is where we pause to review and consolidate your knowledge. A1.6 covered five essential topics. Let's see what you can do! Can you comfortably perform these tasks in Ukrainian?
+The Food and Shopping phase combines vocabulary and grammar for practical use. Over the last five modules, you learned how to identify everyday foods, order a meal at a cafe, and navigate a local market. You also learned how to introduce the people around you. The primary goal of this checkpoint is to integrate talking about food, buying things, and interacting with people into a single, natural flow of communication.
 
-- [x] Name 10 foods and 5 drinks (М36)
-- [x] Say what you eat and drink using the accusative case (М37)
-- [x] Order food and drinks at a café (М38)
-- [x] Ask for prices and buy things at a market (М39)
-- [x] Use the accusative case for people (М40)
+First, review your core vocabulary foundation. You should comfortably recognize general categories like **їжа** (food) and **напої** (drinks), as well as ten essential food items: **хліб** (bread), **сир** (cheese), **молоко** (milk), **яблуко** (apple), **помідор** (tomato), **картопля** (potato), **яйце** (egg), **м'ясо** (meat), **риба** (fish), and **цукор** (sugar). You also need to know five basic drinks: **вода** (water), **сік** (juice), **чай** (tea), **кава** (coffee), and **пиво** (beer). These words are the building blocks you need before we change their endings.
 
-Here is a quick vocabulary warm-up. Cover the English words below. Can you recall 10 foods and 5 drinks in Ukrainian without looking? Then you are ready.
+In practical situations, you rely heavily on fixed functional phrases. At a cafe, the most important pattern is **Мені каву, будь ласка** (Coffee for me, please) when ordering your drink. At a market, your essential question is **Скільки коштує...?** (How much does ... cost?) when checking prices. When paying, always remember that the national currency of Ukraine is the **гривня** (hryvnia).
 
-**Їжа** (food): **борщ** (borscht), **вареники** (dumplings), **салат** (salad), **хліб** (bread), **сир** (cheese), **піца** (pizza), **каша** (porridge), **яєчня** (fried eggs), **суп** (soup), **котлета** (cutlet).
-**Напої** (drinks): **кава** (coffee), **чай** (tea), **вода** (water), **сік** (juice), **молоко** (milk).
+:::tip
+The word **гривня** behaves like a regular feminine noun. It changes its ending based on numbers, which is an essential grammar rule for shopping!
+:::
 
-Let's do a quick grammar warm-up. Check if these four patterns feel completely natural to you:
-1. Я їм ___: **борщ** (borscht) → **борщ**, **салат** (salad) → **салат**, **суп** (soup) → **суп**.
-2. Я п'ю ___: **кава** (coffee) → **каву**, **вода** (water) → **воду**, **сік** (juice) → **сік**.
-3. Мені ___, будь ласка: **піца** (pizza) → **піцу**, **кава** (coffee) → **каву**.
-4. Я бачу ___: **Олена** (Olena) → **Олену**, **брат** (brother) → **брата**, **друг** (friend) → **друга**.
+Evaluate your own progress. Can you confidently answer "yes" to these questions?
+* Can you name 10 foods and 5 drinks in Ukrainian?
+* Can you say what you eat and drink using the accusative case?
+* Can you order a meal and a drink at a cafe?
+* Can you ask for prices and buy products at a market?
+* Can you introduce a person using the correct accusative form?
 
-If all four feel natural, you are in a great place. If not, revisit modules M37 and M40. Let's test your knowledge!
-
-<!-- INJECT_ACTIVITY: quiz-accusative-check -->
+<!-- INJECT_ACTIVITY: group-sort-accusative-type -->
 
 ## Читання (Reading Practice)
 
-Read about Anna's day. Notice how she uses the accusative case for food, drinks, and people. Try to find at least six accusative forms as you read.
+Read the following text to put your skills into context. Meet Anna. She is a university student living in Kyiv. On a typical Saturday morning, she follows a classic routine: she goes to the local market to buy fresh food, stops by a small cafe for lunch, and then meets a friend. This short story tests every single skill you learned in this phase.
 
-**День Анни** (Anna's Day)
-Анна прокидається. Вона їсть **кашу** (porridge) і п'є **каву з молоком** (coffee with milk) на сніданок. Потім вона іде на **ринок** (market).
-— Скільки коштують помідори?
-— Тридцять гривень кілограм.
-— Дайте кілограм, будь ласка.
-Анна купує **хліб** (bread), **сир** (cheese), **яблука** (apples), і **салат** (salad).
+First, Anna goes to the market to buy some vegetables. She talks to the seller (**продавець**).
+> **Анна:** Скільки коштують ці помідори? *(How much do these tomatoes cost?)*
+> **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
+> **Анна:** Це дуже дешево. Дайте кілограм, будь ласка. *(This is very cheap. Give me a kilogram, please.)*
+> **Анна:** А скільки коштують огірки? *(And how much do the cucumbers cost?)*
+> **Продавець:** Сорок гривень. *(Forty hryvnias.)*
+> **Анна:** Добре, дайте кілограм. *(Good, give me a kilogram.)*
 
-Потім вона іде в **кафе** (café).
-— Тут вільно?
-— Так, сідайте.
-— Мені **борщ** (borscht) і **воду** (water), будь ласка.
-Раптом вона бачить подругу:
-— О, я бачу **Олену** (Olena)! Олено, привіт!
-Олена підходить до неї. Анна каже:
-— Ти знаєш мого **брата Михайла** (brother Mykhailo)? Це мій брат.
-Вони обідають разом.
-— Рахунок, будь ласка. Можна карткою?
-— Звичайно.
+After finishing her shopping, Anna transitions to a small cafe called «Смачно». She finds a free table.
+> **Продавець:** Що ви хочете? *(What do you want?)*
+> **Анна:** Мені борщ і воду з лимоном, будь ласка. *(Borsch and water with lemon for me, please.)*
+> **Продавець:** Це все? *(Is that all?)*
+> **Анна:** Так, дякую. Рахунок, будь ласка. *(Yes, thank you. The bill, please.)*
+> **Анна:** Можна карткою? *(Is it possible by card?)*
+> **Продавець:** Так, звичайно. *(Yes, of course.)*
 
-Check your understanding. Answer these three questions using full Ukrainian sentences. Try to answer them aloud before moving on.
-1. Що Анна купує на ринку?
-2. Що вона замовляє в кафе?
-3. Кого вона бачить у кафе?
+:::note
+Notice the use of **звичайно** (of course). It is a very common, polite way to agree or accept a request in conversational Ukrainian.
+:::
 
-<!-- INJECT_ACTIVITY: fill-in-cafe-market -->
+Finally, Anna sees her friend Olena and introduces her brother Taras.
+> **Анна:** Олено, привіт! *(Olena, hi!)*
+> **Олена:** Привіт, Анно! Як справи? *(Hi, Anna! How are things?)*
+> **Анна:** Добре. Олено, ти знаєш мого брата Тараса? *(Good. Olena, do you know my brother Taras?)*
+> **Олена:** Ні, я не знаю Тараса. Дуже приємно! *(No, I do not know Taras. Very nice to meet you!)*
+
+<!-- INJECT_ACTIVITY: quiz-shopping-situations -->
 
 ## Граматика (Grammar Summary)
 
-**Шість ключових шаблонів A1.6**
-You learned all of these patterns in modules M36 through M40. Here is a quick-reference summary so you have everything in one place.
+To describe your daily routine, use the nouns **їжа** (food) and **напої** (drinks), along with specific meals: **сніданок** (breakfast), **обід** (lunch), and **вечеря** (dinner). When you eat or buy something, the object is the direct target of your action, requiring the accusative case. Masculine and neuter inanimate nouns do not change their endings: you buy **борщ** (borsch), **сік** (juice), or **яблуко** (apple). Feminine nouns ending in **-а** or **-я** change to **-у** or **-ю**. Therefore, **кава** becomes **каву**, and **вода** becomes **воду**.
 
-**Pattern 1: Food and drink vocabulary chunks**
-You know words for **їжа** (food), **напої** (drinks), and meals: **сніданок** (breakfast), **обід** (lunch), **вечеря** (dinner).
-Notice how we group words using the instrumental case to say "with": **кава з молоком** (coffee with milk), **борщ зі сметаною** (borscht with sour cream), **хліб із сиром** (bread with cheese).
-- Я їм кашу на сніданок. (I eat porridge for breakfast.)
-- Я п'ю каву з молоком. (I drink coffee with milk.)
+The grammar rules shift slightly when the target of your action is a person. For animate nouns, feminine words follow the exact same pattern as objects: the ending **-а** changes to **-у**. You see **маму** (mom) and you know **Олену** (Olena). However, masculine animate nouns take the genitive ending **-а** or **-я**. You see **брата** (brother) or wait for **друга** (friend).
 
-**Pattern 2: Accusative case for inanimate nouns**
-When an object receives an action (like being eaten, bought, or ordered), its ending changes. Masculine inanimate nouns do not change. They look exactly like their dictionary forms: **борщ** → **борщ**, **хліб** → **хліб**, **сік** → **сік**. Feminine nouns ending in -а/-я change to -у/-ю: **кава** → **каву**, **вода** → **воду**, **піца** → **піцу**, **яєчня** → **яєчню**.
+When asking about prices, use the question **Скільки коштує?** (How much does it cost?). The form of the currency **гривня** changes depending on the number. For the number one, it is **одна гривня** (one hryvnia). For two, three, and four, the form is **дві гривні**, **три гривні**, **чотири гривні**. For five or more, it changes to **п'ять гривень**, **десять гривень**, **двадцять гривень**. 
 
-| Nominative (Що це?) | Accusative (Що ти їш?) | Example Sentence |
-|---|---|---|
-| **вода** (water) | **воду** | Я п'ю **воду**. (I am drinking water.) |
-| **піца** (pizza) | **піцу** | Я їм **піцу**. (I am eating pizza.) |
-| **суп** (soup) | **суп** | Я замовляю **суп**. (I am ordering soup.) |
-| **каша** (porridge) | **кашу** | Я їм **кашу**. (I am eating porridge.) |
+Finally, remember that some phrases are best learned as complete chunks. When you order, say **Мені каву, будь ласка** (Coffee for me, please). Use the instrumental preposition **з** (with) for combinations like **кава з молоком** (coffee with milk). For quantities, use chunks like **кілограм яблук** (a kilogram of apples). Learn them as single vocabulary items right now without worrying about the underlying case rules.
 
-**Pattern 3: Ordering and prices**
-You can navigate a café and a market using these fixed phrases. Note how they build on the vocabulary you already know:
-- **Мені ___, будь ласка.** (To me ___, please. / I'll have ___, please.)
-- **Скільки коштує?** (How much does it cost?)
-- **Скільки коштують помідори?** (How much do the tomatoes cost?)
-- **Дайте ___, будь ласка.** (Give [me] ___, please.)
-- **Рахунок, будь ласка.** (The bill, please.)
-- **Можна карткою?** (Can I pay by card?)
-
-Remember the currency forms depending on the number: **одна гривня** (1), **дві гривні** (2), **п'ять гривень** (5+). Always use the soft declension for money.
-
-**Pattern 4: Accusative case for animate nouns**
-When a person is the object of an action (whom you see or know), the rules differ. Feminine animate nouns follow the same rule as inanimate: **Олена** → **Олену**, **мама** → **маму**. Masculine animate nouns take the genitive ending (-а/-я): **брат** → **брата**, **лікар** → **лікаря**, **друг** → **друга**, **вчитель** → **вчителя**.
-
-Compare these two sentences. One uses an inanimate object, and the other uses an animate object:
-- Я бачу **борщ**. (I see the borscht. — inanimate, masculine, no change)
-- Я бачу **брата**. (I see the brother. — animate, masculine, ends in -а)
-
-<!-- INJECT_ACTIVITY: group-sort-accusative -->
+<!-- INJECT_ACTIVITY: quiz-accusative-forms -->
 
 ## Діалог (Connected Dialogue)
 
-Наталя та Дмитро починають день. Читайте і стежте за відмінками. (Natalia and Dmytro start their day. Read and watch the cases.)
+Consider a complete, realistic scenario: hosting a dinner party (**вечеря**) at your home. This situation involves the full cycle of preparation. You start with your morning breakfast, go to the local market to buy fresh ingredients, stop at a cafe for a quick break, and interact with a friend.
 
-**(Сніданок / Breakfast)**
-> **Наталя:** Що ти їш на сніданок? *(What are you eating for breakfast?)*
-> **Дмитро:** Я їм кашу і п'ю каву з молоком. А ти? *(I am eating porridge and drinking coffee with milk. And you?)*
-> **Наталя:** Я їм яєчню і хліб із сиром. *(I am eating fried eggs and bread with cheese.)*
+Read this connected sequence of conversations. A host (**Господиня**) interacts with different people throughout the day.
 
-**(На ринку / At the market)**
-> **Наталя:** Скільки коштують помідори? *(How much do the tomatoes cost?)*
-> **Продавець:** П'ятнадцять гривень кілограм. *(Fifteen hryvnias a kilo.)*
-> **Наталя:** Дорого! А яблука? *(Expensive! And the apples?)*
-> **Продавець:** Двадцять гривень. Дуже смачні! *(Twenty hryvnias. Very tasty!)*
-> **Наталя:** Добре, дайте кілограм яблук, будь ласка. *(Okay, give me a kilo of apples, please.)*
+First, she talks to a friend (**Друг**) at breakfast:
+> **Друг:** Що ти їш на сніданок? *(What do you eat for breakfast?)*
+> **Господиня:** Я їм кашу. І п'ю каву з молоком. *(I eat porridge. And I drink coffee with milk.)*
 
-**(У кафе / At the café)**
-> **Дмитро:** Тут вільно? *(Is it free here?)*
-> **Офіціант:** Так, сідайте! *(Yes, sit down!)*
-> **Дмитро:** Мені борщ і воду, будь ласка. *(I'll have borscht and water, please.)*
-> **Наталя:** О, я бачу Олену! Олено, привіт! Ти знаєш мого брата Дмитра? *(Oh, I see Olena! Olena, hi! Do you know my brother Dmytro?)*
-> **Олена:** Ні, не знаю. Дуже приємно, Дмитре! *(No, I don't. Very nice to meet you, Dmytro!)*
-> **Дмитро:** Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*
-> **Офіціант:** Звичайно. *(Of course.)*
-> **Наталя:** Все було дуже смачно! *(Everything was very tasty!)*
+Then, she talks to a seller (**Продавець**) at the market:
+> **Господиня:** Потім іду на ринок. Скільки коштують помідори? *(Then I go to the market. How much do the tomatoes cost?)*
+> **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
+> **Господиня:** Дайте кілограм, будь ласка. *(Give me a kilogram, please.)*
 
-Did you spot all the key grammar patterns in the dialogue? Let's highlight a few:
-1. Accusative inanimate nouns: **кашу**, **яєчню**, **воду**, **борщ**.
-2. Accusative animate nouns: **Олену**, **брата Дмитра**.
-3. Everyday café and market phrases: **Мені борщ**, **Дайте кілограм**, **Рахунок, будь ласка**.
+Later, ordering at a cafe:
+> **Господиня:** Потім у кафе. Мені борщ і воду, будь ласка. *(Then in the cafe. Borsch and water for me, please.)*
 
-<!-- INJECT_ACTIVITY: quiz-shopping-cafe -->
+Finally, she meets her friend Olena:
+> **Господиня:** О, я бачу Олену! Олено, привіт! Ти знаєш мого брата? *(Oh, I see Olena! Olena, hi! Do you know my brother?)*
+
+:::caution
+Do not translate the English phrase "I will have...". Instead, use the direct request **Дайте, будь ласка** (Give me, please) or state your desire with **Я хочу** (I want). This is the authentic way to communicate in a store or cafe.
+:::
+
+Notice how the dialogue focuses on concrete statements. Using verbs like **хотіти** (to want) and **давати** (to give) makes your speech clear and direct.
+
+<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
 
 ## Підсумок — Summary
 
-You have successfully completed phase A1.6 — Food and Shopping. You have expanded your vocabulary and grammar significantly. Here is exactly what you can now do in Ukrainian:
+The Food and Shopping phase covers essential daily interactions. You started by identifying simple foods, and you can now navigate a busy market, order a full meal at a cafe, pay your bill correctly, and introduce your friends to each other. You have built functional communicative competence.
 
-- ✓ Talk about **їжа та напої** (food and drinks) and meals (М36).
-- ✓ Use the accusative case for inanimate nouns to describe what you eat and drink: **борщ**, **каву**, **воду**, **піцу** (М37).
-- ✓ Order at a **кафе** (café) with confidence: «Мені борщ, будь ласка» / «Рахунок, будь ласка» / «Можна карткою?» (М38).
-- ✓ Shop at the **ринок** (market): «Скільки коштує?» / «Дайте кілограм» / **гривня**, **гривні**, **гривень** (М39).
-- ✓ Use the accusative case for animate nouns to talk about people: «Я бачу Олену» / «Я знаю брата» (М40).
+Verify that you can confidently do the following:
+* You can talk about common food and drinks.
+* You can use the accusative case correctly for inanimate objects.
+* You can use the accusative case correctly for people.
+* You can order food at a cafe and ask for the bill.
+* You can shop at a market and ask for prices.
+* You can pay for things using the correct form of the currency.
 
-**Наступний крок — A1.7: Спілкування.** (Next step — A1.7: Communication.) You will learn to make plans, write messages, and talk on the phone. Ukrainian is becoming your language, step by step!
-
-## Підсумок
-
-This section serves as your final self-check for the module. Take a moment to review all the material covered in A1.6. Can you confidently form sentences using both animate and inanimate accusative nouns? Can you comfortably ask for the bill, order your favorite dish, and buy groceries? Do you remember the difference between **гривня**, **гривні**, and **гривень**? If you feel confident in these areas, you are ready to move forward. Keep practicing these phrases in your daily life, and you will continue to build fluency!
+Next: A1.7 — Communication. You will learn how to make phone calls, write simple emails, and make plans with your friends.
 
 </module_content>
 
@@ -451,25 +414,37 @@ workbook:
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
-- **order**: Sentence/line ordering. Required: instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -489,28 +464,63 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-cases
-- **fill-in** — Який відмінок?: Fill in the correct case ending for a noun in context
+### Pattern: grammar-cases [§4.2.3.1, §4.2.3.2, §4.2.3.3]
+**Відмінки іменників** (Noun cases)
+- **fill-in** — Який відмінок?: Вставити іменник у правильній відмінковій формі / Fill in the correct case ending for a noun in context
   - Instruction: *Вставте іменник у правильній формі*
-- **quiz** — Визнач відмінок: Identify which case a highlighted noun is in
-- **group-sort** — Розподіли за відмінками: Sort noun forms by their case
-- **error-correction** — Знайди помилку у відмінку: Find wrong case ending and correct it
+- **quiz** — Визнач відмінок: Визначити, у якому відмінку стоїть виділений іменник / Identify which case a highlighted noun is in
+- **group-sort** — Розподіли за відмінками: Розподілити форми іменників за відмінками / Sort noun forms by their case
+- **error-correction** — Знайди помилку у відмінку: Знайти неправильне відмінкове закінчення та виправити / Find wrong case ending and correct it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Учні мають ПРОДУКУВАТИ форми, а не тільки розпізнавати. Обов'язково fill-in
+- ❌ translate: Англійська не має відмінків — переклад не тестує відмінювання
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: grammar-pluralization [§4.2.1.1]
+**Множина іменників** (Noun plurals)
+- **fill-in** — Утвори множину: Утворити множину іменника — закінчення -и vs -і залежно від приголосного / Form noun plural — -и vs -і endings depending on consonant
+  - Instruction: *Напишіть множину*
+- **group-sort** — Закінчення -и чи -і?: Розподілити іменники за типом закінчення множини / Sort nouns by plural ending type
+  - Instruction: *Розподіліть*
+- **match-up** — Однина → множина: Зіставити форму однини з формою множини / Match singular form to plural form
+  - Instruction: *З'єднайте*
+- **error-correction** — Виправ множину: Знайти неправильну форму множини та виправити / Find incorrect plural form and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Множина — це словотворення. Учні мають продукувати форми, а не тільки вибирати
+- ❌ fill-in-no-options: На A1 завжди давати варіанти — учень ще не знає всіх закінчень
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -542,68 +552,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

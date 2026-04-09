@@ -1,21 +1,207 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 95,
+  "grounded_items": 63,
+  "ungrounded": [
+    {
+      "word": "він",
+      "exercise_type": "match-up",
+      "context": "Він у центрі.",
+      "role": "context"
+    },
+    {
+      "word": "ні",
+      "exercise_type": "match-up",
+      "context": "Ні, близько. П'ять хвилин пішки.",
+      "role": "context"
+    },
+    {
+      "word": "йдете",
+      "exercise_type": "match-up",
+      "context": "Куди ви йдете?",
+      "role": "answer"
+    },
+    {
+      "word": "живеш",
+      "exercise_type": "match-up",
+      "context": "Де ти живеш?",
+      "role": "answer"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "quiz",
+      "context": "Вона йде в...",
+      "role": "context"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "quiz",
+      "context": "Вона йде в...",
+      "role": "context"
+    },
+    {
+      "word": "музею",
+      "exercise_type": "unjumble",
+      "context": "музею?",
+      "role": "answer"
+    },
+    {
+      "word": "там",
+      "exercise_type": "fill-in",
+      "context": "Потім ідіть _____, школа там.",
+      "role": "context"
+    },
+    {
+      "word": "йдіть",
+      "exercise_type": "fill-in",
+      "context": "Йдіть прямо, а потім _____.",
+      "role": "context"
+    },
+    {
+      "word": "їде",
+      "exercise_type": "fill-in",
+      "context": "Вона їде на роботу _____.",
+      "role": "context"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "fill-in",
+      "context": "Парк близько, ми йдемо _____.",
+      "role": "context"
+    },
+    {
+      "word": "їдемо",
+      "exercise_type": "fill-in",
+      "context": "Ми їдемо в ресторан _____.",
+      "role": "context"
+    },
+    {
+      "word": "магазині",
+      "exercise_type": "error-correction",
+      "context": "Я йду в магазині.",
+      "role": "context"
+    },
+    {
+      "word": "працює",
+      "exercise_type": "error-correction",
+      "context": "Вона працює в офіс.",
+      "role": "context"
+    },
+    {
+      "word": "роботі",
+      "exercise_type": "error-correction",
+      "context": "Потім їду на роботі.",
+      "role": "context"
+    },
+    {
+      "word": "зупинці",
+      "exercise_type": "fill-in",
+      "context": "Я зараз _____ зупинці.",
+      "role": "context"
+    },
+    {
+      "word": "знаходиться",
+      "exercise_type": "fill-in",
+      "context": "Театр знаходиться _____ площі.",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "fill-in",
+      "context": "Вони йдуть _____ метро.",
+      "role": "context"
+    },
+    {
+      "word": "йдуть",
+      "exercise_type": "fill-in",
+      "context": "Вони йдуть _____ метро.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "role": "context"
+    },
+    {
+      "word": "ідіть'",
+      "exercise_type": "true-false",
+      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "true-false",
+      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "role": "context"
+    },
+    {
+      "word": "пішки'",
+      "exercise_type": "true-false",
+      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "role": "context"
+    },
+    {
+      "word": "їдьте'",
+      "exercise_type": "true-false",
+      "context": "Слово 'їдьте' — це для 'пішки'.",
+      "role": "context"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "true-false",
+      "context": "'Де?' — це форма 'в парку'.",
+      "role": "context"
+    },
+    {
+      "word": "парку'",
+      "exercise_type": "true-false",
+      "context": "'Де?' — це форма 'в парку'.",
+      "role": "context"
+    },
+    {
+      "word": "площі'",
+      "exercise_type": "true-false",
+      "context": "'Куди?' — це форма 'на площі'.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "'П'ять хвилин пішки' означає 'далеко'.",
+      "role": "context"
+    },
+    {
+      "word": "далеко'",
+      "exercise_type": "true-false",
+      "context": "'П'ять хвилин пішки' означає 'далеко'.",
+      "role": "context"
+    },
+    {
+      "word": "одне",
+      "exercise_type": "true-false",
+      "context": "Автовокзал і залізничний вокзал — це одне місце.",
+      "role": "context"
+    },
+    {
+      "word": "місце",
+      "exercise_type": "true-false",
+      "context": "Автовокзал і залізничний вокзал — це одне місце.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 9,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 7,
     "not_tested": [
-      "вибачте",
-      "дістатися",
-      "поруч",
-      "пішки",
       "район",
-      "хвилина",
-      "центр",
-      "ідіть",
-      "їдьте"
+      "хвилина"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

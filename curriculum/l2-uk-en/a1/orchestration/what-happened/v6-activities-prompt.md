@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,10 +27,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-past-tense -->`
-- `<!-- INJECT_ACTIVITY: matching-past-tense -->`
-- `<!-- INJECT_ACTIVITY: fill-in-past-tense-core -->`
-- `<!-- INJECT_ACTIVITY: fill-in-gender-based -->`
+- `<!-- INJECT_ACTIVITY: matching-pronoun-ending -->`
+- `<!-- INJECT_ACTIVITY: fill-in-past-tense-forms -->`
+- `<!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -102,186 +101,105 @@ required:
 <module_content>
 ## Dialogues
 
-Monday morning. Оксана and Дмитро meet by the coffee machine at work. They haven't seen each other since Friday — time to catch up on the weekend.
+Monday morning at the office is the perfect time to catch up with coworkers about their weekend activities. Listen closely to how Taras and Olena ask each other about what they did. Pay special attention to the endings of the verbs. Notice how the exact same action has a different ending depending on who performed it.
 
-> **Оксана:** Привіт, Дмитре! Що ти робив учора? *(Hi, Dmytro! What did you do yesterday?)*
-> **Дмитро:** Привіт! Я читав книжку. *(Hi! I read a book.)*
-> **Оксана:** А яку? *(Which one?)*
-> **Дмитро:** Детектив. А ти? *(A detective novel. And you?)*
-> **Оксана:** Я готувала вечерю. *(I cooked dinner.)*
-> **Дмитро:** А що робив Тарас? *(And what did Taras do?)*
-> **Оксана:** Він гуляв у парку. *(He walked in the park.)*
-> **Дмитро:** А Олена? *(And Olena?)*
-> **Оксана:** Вона працювала весь день. *(She worked all day.)*
+> **Олена:** Привіт, Тарасе! **Що ти робив учора?** *(Hi, Taras! What did you do yesterday?)*
+> **Тарас:** Привіт! **Я читав книжку. А ти?** *(Hi! I read a book. And you?)*
+> **Олена:** **Я готувала вечерю. А що робив Іван?** *(I cooked dinner. And what did Ivan do?)*
+> **Тарас:** **Він гуляв у парку. А Марія?** *(He walked in the park. And Mariia?)*
+> **Олена:** **Вона працювала.** *(She worked.)*
 
-Notice the verb **робити** (to do). Дмитро says **робив** — because he is male. Оксана would say **робила** — because she is female. Same verb, different ending. This is the key to Ukrainian past tense: the ending tells you the speaker's gender, not who they are grammatically.
+Look at the linguistic patterns in that conversation. The core activity remains the same, but the verb ending changes based on whether **Тарас** (Taras) or **Олена** (Olena) is speaking. When Taras talks about himself, he uses the masculine ending. When Olena talks about herself, she uses the feminine ending. In Ukrainian, the past tense must agree with the gender of the person performing the action.
 
-The next day, Богдан and Марія compare how they spent the full weekend. Богдан asks **«Як ти провела вихідні?»** (How did you spend the weekend?) — using **провела** because he's asking a woman.
+Consider another conversation. This time, two colleagues are discussing their entire weekend. Notice what happens when they talk about doing things together as a group.
 
-> **Богдан:** Як ти провела вихідні? *(How did you spend the weekend?)*
-> **Марія:** Чудово! У суботу я ходила в кафе. *(Great! On Saturday I went to a café.)*
-> **Богдан:** А в неділю? *(And on Sunday?)*
-> **Марія:** У неділю я дивилася фільм вдома. А ти? *(On Sunday I watched a film at home. And you?)*
-> **Богдан:** Я провів суботу вдома. Готував і читав. *(I spent Saturday at home. I cooked and read.)*
-> **Марія:** А в неділю? *(And on Sunday?)*
-> **Богдан:** У неділю ми гуляли в парку. *(On Sunday we walked in the park.)*
-> **Марія:** Як приємно! *(How nice!)*
+> **Олена:** Привіт, Тарасе! **Як ти провів вихідні?** *(Hi, Taras! How did you spend the weekend?)*
+> **Тарас:** Добре! **У суботу я гуляв у місті.** *(Good! On Saturday I walked in the city.)*
+> **Олена:** А в неділю? *(And on Sunday?)*
+> **Тарас:** **У неділю я дивився фільм. А ти?** *(On Sunday I watched a film. And you?)*
+> **Олена:** **Я ходила в кафе з подругою.** *(I went to a cafe with a friend.)* **Ми їли торт і пили каву.** *(We ate cake and drank coffee.)*
 
-Марія uses feminine forms: **ходила**, **провела**, **дивилася**. Богдан uses masculine forms: **провів**, **готував**. When Богдан says **ми гуляли** (we walked), the ending is **-ли** — the plural form, which is the same regardless of gender.
-
-Every verb in these dialogues changed its ending depending on who was speaking — and that is exactly what you will learn now.
-
-<!-- INJECT_ACTIVITY: fill-in-past-tense -->
+In natural conversation, you will frequently transition from the present to the past. Compare the present tense **я зараз працюю** (I am working right now) with the past tense **учора я працював** (yesterday I worked). The rules for building these two tenses are completely different, requiring a new approach.
 
 ## Минулий час (Past Tense)
 
-Here is the core insight: Ukrainian past tense does not mark **person** — it marks **gender**. This is completely different from present tense. Compare:
+The formal rule for forming the **минулий час** (past tense) is wonderfully simple and mechanical. First, take the infinitive form of the verb and remove the final **-ти** ending to find the core stem. Then, you simply add one of four suffixes to that stem: **-в** for masculine subjects, **-ла** for feminine subjects, **-ло** for neuter subjects, and **-ли** for plural subjects. For example, take the model verb **читати** (to read). Drop the **-ти** to get the stem **чита-**. Then add the suffix to create **читав**, **читала**, **читало**, or **читали**.
 
-| | Present tense (person changes) | Past tense (gender changes) |
-|---|---|---|
-| я | читаю | читав (♂) / читала (♀) |
-| ти | читаєш | читав (♂) / читала (♀) |
-| він / вона | читає / читає | читав (♂) / читала (♀) |
+This brings us to a crucial pedagogical shift. Unlike the present tense, which changes its ending based on the grammatical person (first, second, or third person like **я читаю**, **ти читаєш**), the past tense does not care about person at all. The past tense only cares about gender. If a man is speaking, he says **я читав** (I read). If a woman is speaking, she says **я читала** (I read). Both use the pronoun **я**, but the verb ending changes to match their gender. 
 
-In present tense, **я читаю** and **ти читаєш** have different endings — the ending shows the person. In past tense, **я читав** and **він читав** are identical — both masculine. The ending shows gender, not person.
+*   **Я читав цікаву книжку.** *(I read an interesting book.)* [male speaker]
+*   **Я читала цікаву книжку.** *(I read an interesting book.)* [female speaker]
+*   **Ти добре працював.** *(You worked well.)* [to a male]
+*   **Ти добре працювала.** *(You worked well.)* [to a female]
 
-### How to form the past tense
+The most common verb you will use in the past tense is the verb **бути** (to be). It follows the exact same pattern. The paradigms are **був** (masculine), **була** (feminine), **було** (neuter), and **були** (plural). If you want to translate the English phrase "I was," a male speaker says **я був**, and a female speaker says **я була**. 
 
-The rule is straightforward. Take any infinitive, remove **-ти**, and add the gender ending:
+*   **Учора він був удома.** *(Yesterday he was at home.)*
+*   **Учора вона була на роботі.** *(Yesterday she was at work.)*
+*   **У неділю ми були в кафе.** *(On Sunday we were in a cafe.)*
 
-- **-в** → він (masculine singular)
-- **-ла** → вона (feminine singular)
-- **-ло** → воно (neuter singular)
-- **-ли** → вони (plural, all genders)
+Remember that the present tense word **є** (is/are) is never used when talking about the past.
 
-Walk through it with **читати** (to read): **читати** → **чита-** → **він читав** / **вона читала** / **воно читало** / **вони читали**.
-
-The same pattern works for **гуляти** (to walk): **гуляти** → **гуля-** → **він гуляв** / **вона гуляла** / **воно гуляло** / **вони гуляли**.
-
-And for **працювати** (to work): **працювати** → **працюва-** → **він працював** / **вона працювала** / **воно працювало** / **вони працювали**.
-
-:::tip
-Four endings — that's all: **-в**, **-ла**, **-ло**, **-ли**.
-:::
-
-### Reflexive verbs
-
-Reflexive verbs like **дивитися** (to watch) keep the **-ся** particle after the gender ending: **він дивився** / **вона дивилася** / **воно дивилося** / **вони дивилися**. Two example sentences show the pattern:
-
-- **Тарас дивився фільм.** — Taras watched a film.
-- **Ірина дивилася серіал.** — Iryna watched a series.
-
-Compare with non-reflexive **читати**: він читав / вона читала — no **-ся** at the end. With reflexive verbs, the **-ся** simply tags along after the gender suffix.
-
-### Gender reveals the speaker
-
-The same speaker uses different endings depending on their own gender. A male speaker says **«Я читав книжку»** (I read a book). A female speaker says **«Я читала книжку»** — same meaning, same person **я**, different ending.
-
-This means the question **«Що ти робив?»** is directed at a male, while **«Що ти робила?»** is directed at a female. Both mean "What did you do?" — the ending matches the listener's gender.
-
-One more thing: **вони** (they) always takes **-ли**, regardless of whether the group is male, female, or mixed:
-
-- **Він читав.** — He read.
-- **Вона читала.** — She read.
-- **Я читав.** — I (male) read.
-- **Я читала.** — I (female) read.
-- **Вони читали.** — They read. (always **-ли**)
-
-<!-- INJECT_ACTIVITY: matching-past-tense -->
+The neuter and plural forms are equally straightforward. You will often use the neuter pronoun **воно** (it) and the **-ло** ending for impersonal expressions about the weather or environment, such as **було тепло** (it was warm) or **було холодно** (it was cold). The plural ending **-ли** is used for groups of people. A wonderful feature of the plural past tense is that gender distinctions completely disappear. Whether you say **ми гуляли** (we walked), **ви гуляли** (you walked), or **вони гуляли** (they walked), the ending is always exactly the same.
 
 ## Практика (Practice)
 
-Here are the six core verbs you already know from earlier modules — now in their full past tense forms:
+You must drill these core patterns using the verbs you already know. The transformation is consistent across almost all basic verbs. 
 
-| Infinitive | він (♂) | вона (♀) | воно (n.) | вони (pl.) |
-|---|---|---|---|---|
-| читати | читав | читала | читало | читали |
-| працювати | працював | працювала | працювало | працювали |
-| гуляти | гуляв | гуляла | гуляло | гуляли |
-| готувати | готував | готувала | готувало | готували |
-| дивитися | дивився | дивилася | дивилося | дивилися |
-| говорити | говорив | говорила | говорило | говорили |
+*   **працювати** (to work) → **він працював**, **вона працювала**, **вони працювали**
+*   **гуляти** (to walk) → **він гуляв**, **вона гуляла**, **вони гуляли**
+*   **готувати** (to cook) → **він готував**, **вона готувала**, **вони готували**
+*   **читати** (to read) → **він читав**, **вона читала**, **вони читали**
+*   **говорити** (to speak) → **він говорив**, **вона говорила**, **вони говорили**
 
-The stems are familiar — you have used these verbs in present tense throughout A1. The only new piece is the ending: **-в**, **-ла**, **-ло**, **-ли** (and **-ся** sticking to reflexive verbs).
+For reflexive verbs like **дивитися** (to watch), the reflexive suffix **-ся** remains at the very end of the word, after the gender suffix. While the suffix changes to **-сь** in the feminine and plural forms in some dialects, you should focus on the standard forms: **він дивився**, **вона дивилася**, and **вони дивилися**.
 
-<!-- INJECT_ACTIVITY: fill-in-past-tense-core -->
+To ground your sentences in the past, you need time markers. The two most essential phrases at this level are **учора** (yesterday) and **минулого тижня** (last week). Notice that the adjective **минулого** (last/past) is in the genitive case, agreeing with the masculine noun **тиждень** (week). 
 
-### Talking about the past
+*   **Учора я працював.** *(Yesterday I worked.)*
+*   **Минулого тижня вона готувала борщ.** *(Last week she cooked borscht.)*
+*   **Учора ввечері ми дивилися фільм.** *(Yesterday evening we watched a film.)*
+*   **У неділю вранці він читав новини.** *(On Sunday morning he read the news.)*
+*   **У суботу вони гуляли разом.** *(On Saturday they walked together.)*
 
-To describe past events, place a time word at the beginning of the sentence. Two essential time expressions: **учора** (yesterday) and **минулого тижня** (last week). The time word doesn't change the verb form — it just sets the scene:
+<!-- INJECT_ACTIVITY: matching-pronoun-ending -->
 
-- **Учора я читав цікаву книжку.** — Yesterday I read an interesting book.
-- **Минулого тижня вона працювала в офісі.** — Last week she worked in the office.
-- **У суботу ми гуляли в парку.** — On Saturday we walked in the park.
-- **В неділю вони готували вечерю разом.** — On Sunday they cooked dinner together.
+<!-- INJECT_ACTIVITY: fill-in-past-tense-forms -->
 
-Notice how the time word (**учора**, **у суботу**, **в неділю**) sits at the front of the sentence. This is natural Ukrainian word order — time comes first for emphasis, but the verb ending stays the same no matter where the time word is placed.
+Question formation in the past tense is very direct. To ask someone "What did you do?", you must use the verb **робити** (to do). However, because the past tense requires gender agreement, the question itself reveals the gender of the person you are talking to. To ask a man, you say **Що ти робив?**. To ask a woman, you say **Що ти робила?**. The response pattern simply reverses this: start with **я**, add the verb with your own gender ending, and finish with the object. 
 
-<!-- INJECT_ACTIVITY: fill-in-gender-based -->
+*   **Що ви робили учора?** *(What did you do yesterday?)* [plural]
+*   **Ми працювали в офісі.** *(We worked in the office.)*
+*   **Як вона провела вихідні?** *(How did she spend the weekend?)*
+*   **Вона гуляла в парку.** *(She walked in the park.)*
 
-### Putting it all together
+<!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement -->
 
-Now try building short exchanges using **«Що ти робив/робила учора?»** (What did you do yesterday?):
-
-> **Оксана:** Що ти робив учора, Андрію? *(What did you do yesterday, Andrii?)*
-> **Андрій:** Я читав і гуляв у парку. *(I read and walked in the park.)*
-> **Оксана:** А ввечері? *(And in the evening?)*
-> **Андрій:** Ввечері я дивився фільм. *(In the evening I watched a film.)*
-
-And the female version:
-
-> **Тарас:** Що ти робила учора, Оксано? *(What did you do yesterday, Oksana?)*
-> **Оксана:** Я готувала вечерю. Потім говорила з мамою. *(I cooked dinner. Then I talked with mom.)*
-
-The question changes — **робив** for a male listener, **робила** for a female listener. The answers change too, matching the speaker's own gender.
+English speakers often fall into a few common pitfalls when learning this system. First, avoid the direct translation of the English "I was doing." You should never say **я є був** or combine **був** with another verb. Just use the past tense of the main verb directly. Second, because English verbs do not change based on the speaker's gender, learners sometimes accidentally use the masculine **-в** form as a default for everything. If the word **я** refers to a woman, she must actively remember to say **я працювала**, not **я працював**.
 
 ## Summary
 
-### The formation rule
+The Ukrainian past tense requires you to think differently than the present tense. Instead of matching the grammatical person, the verb ending must always agree with the gender of the subject. The mechanical transformation is highly consistent: you take the infinitive stem of the verb and add the appropriate gender suffix. 
 
-Past tense in Ukrainian follows one simple pattern: take the infinitive stem (remove **-ти**) and add the gender ending — **-в** (він), **-ла** (вона), **-ло** (воно), **-ли** (вони).
+| Займенник (Pronoun) | Закінчення (Ending) | Приклад (Example: читати) |
+| :--- | :--- | :--- |
+| **Він** (He) | **-в** | **він читав** |
+| **Вона** (She) | **-ла** | **вона читала** |
+| **Воно** (It) | **-ло** | **воно читало** |
+| **Вони** (They) | **-ли** | **вони читали** |
+
+Always remember this fundamental rule: the past tense shows gender. A male speaker and a female speaker will use different verb endings even though they both use the exact same pronoun **я**.
+
+Before moving on to the next module, test your understanding of these concepts. Ask yourself the following self-check questions to ensure you have internalized the core rules.
+
+*   **Як ми утворюємо минулий час?** *(How do we form the past tense?)* You take the infinitive stem of the verb and add the correct gender suffix.
+*   **Яке закінчення має жіночий рід?** *(What ending does the feminine gender have?)* The feminine ending is always **-ла**.
+*   **Як запитати друга про вчорашній день?** *(How to ask a male friend about yesterday?)* You would ask him: **Що ти робив учора?**
 
 :::note
-In Ukrainian, the past tense ending agrees with the **gender** of the subject — not the grammatical person. **Я читав** and **він читав** are identical because both subjects are masculine. **Я читала** and **вона читала** are identical because both are feminine.
+**Your Production Task**
+Find a language partner, or simply practice speaking aloud to yourself. Tell them three things you did yesterday, making sure to use three different verbs. For example, a male learner might say: **Учора я снідав. Потім я гуляв у парку. Увечері я читав цікаву книжку.** Pay close attention to your verb endings!
 :::
-
-English has no equivalent — "I read" and "she read" look the same regardless of gender. Ukrainian always tells you who is speaking.
-
-### All six verbs at a glance
-
-| Verb | він (♂) | вона (♀) | вони (pl.) |
-|---|---|---|---|
-| читати | читав | читала | читали |
-| працювати | працював | працювала | працювали |
-| гуляти | гуляв | гуляла | гуляли |
-| готувати | готував | готувала | готували |
-| дивитися | дивився | дивилася | дивилися |
-| говорити | говорив | говорила | говорили |
-
-The endings are consistent: **-в / -ла / -ло / -ли**. The plural **вони** always ends in **-ли** — no gender distinction in plural.
-
-### Useful phrases for talking about the past
-
-Four ready-made conversation starters you can use right away:
-
-- **Що ти робив/робила учора?** — What did you do yesterday? (use **робив** for a male, **робила** for a female)
-- **Як ти провів/провела вихідні?** — How did you spend the weekend? (same pattern — **провів** ♂ / **провела** ♀)
-- **Учора я читав/читала книжку.** — Yesterday I read a book. (match YOUR gender)
-- **Ми гуляли разом.** — We walked together. (plural = always **-ли**)
-
-Each question comes in a pair — one masculine form, one feminine form. Choose the one that matches the person you are speaking to.
-
-## Підсумок
-
-Check yourself against these questions:
-
-- Can you form the past tense of **читати** for all four forms? → **читав** / **читала** / **читало** / **читали**
-- What ending does **вони** always take? → **-ли**
-- What past-tense form would a female speaker use for "I worked"? → **я працювала**
-- How do you ask "What did you do?" to a male friend? → **Що ти робив?**
-- How do you ask a female friend? → **Що ти робила?**
-
-**Your turn:** Tell your partner three things you did last week using three different verbs. Remember to use the correct gender ending for **я** — if you are male, every verb ends in **-в**; if you are female, every verb ends in **-ла**. For example: **«Учора я читав книжку. У суботу я гуляв у парку. В неділю я готував вечерю.»** Now swap the endings if you are female!
 
 </module_content>
 
@@ -371,30 +289,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -414,37 +372,61 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-gender
-- **group-sort** — Він, вона чи воно?: Sort nouns by grammatical gender using ending rules
+### Pattern: grammar-gender [§4.2.1.1, §4.2.2]
+**Рід іменників** (Noun gender)
+- **group-sort** — Він, вона чи воно?: Розподілити іменники за граматичним родом за закінченням / Sort nouns by grammatical gender using ending rules
   - Instruction: *Розподіліть слова за родами*
-- **quiz** — Який рід?: Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
-- **fill-in** — Мій, моя чи моє?: Choose possessive that matches noun gender
+- **quiz** — Який рід?: Визначити рід за закінченням: приголосний=чол., -а/-я=жін., -о/-е=серед. / Determine gender from ending — consonant=masc, -а/-я=fem, -о/-е=neut
+- **fill-in** — Мій, моя чи моє?: Обрати присвійний займенник, що узгоджується з родом іменника / Choose possessive that matches noun gender
   - Instruction: *Вставте правильне слово*
-- **match-up** — Іменник + займенник: Match nouns to він/вона/воно
+- **match-up** — Іменник + займенник: Зіставити іменники з він/вона/воно / Match nouns to він/вона/воно
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in-no-options: На рівні A1 завжди давати варіанти для вибору
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -476,68 +458,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

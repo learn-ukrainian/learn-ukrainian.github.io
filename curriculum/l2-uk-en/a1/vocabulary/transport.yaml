@@ -1,15 +1,51 @@
 vocabulary:
+- word: трамва́й
+  translation: tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: маршру́тка
+  translation: minibus
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: літа́к
+  translation: plane
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: напра́во
+  translation: right
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: налі́во
+  translation: left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пря́мо
+  translation: straight
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: діста́тися
+  translation: to get to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: авто́бус
   translation: bus
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: метро́
-  translation: metro
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: таксі́
   translation: taxi
@@ -30,52 +66,10 @@ vocabulary:
   gender: ч.
   verified: true
 - word: зупи́нка
-  translation: stop (bus/tram stop)
+  translation: stop
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: трамва́й
-  translation: tram
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: маршру́тка
-  translation: minibus
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: літа́к
-  translation: plane
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: напра́во
-  translation: right (direction)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: налі́во
-  translation: left (direction)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: пря́мо
-  translation: straight (direction)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: діста́тися
-  translation: to get to (a destination)
-  expression: false
-  pos: дієсл.
-  gender: ''
   verified: true
 - word: троле́йбус
   translation: trolleybus
@@ -83,122 +77,68 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: ка́са
-  translation: ticket window
+- word: аеропо́рт
+  translation: airport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: маши́на
+  translation: car
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: відпра́влення
-  translation: departure
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: жето́н
-  translation: metro token
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ста́нція
-  translation: station (metro)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вокза́л
-  translation: railway station
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: перехо́жий
-  translation: passer-by
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: навпро́ти
-  translation: across the street, opposite
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: насту́пний
-  translation: next
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: варіа́нт
-  translation: option
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: авто́бусом
-  translation: by bus (travel form)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: троле́йбусом
-  translation: by trolleybus (travel form)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: трамва́єм
-  translation: by tram (travel form)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: маршру́ткою
-  translation: by minibus (travel form)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: по́тягом
-  translation: by train (travel form)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Як дістатися до...?
-  translation: How do I get to...?
+- word: громадський транспорт
+  translation: public transport
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Де зупинка автобуса?
-  translation: Where is the bus stop?
+- word: як дістатися до...?
+  translation: how to get to...?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Один квиток, будь ласка.
-  translation: One ticket, please.
+- word: На здоров'я!
+  translation: You are welcome!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Скільки коштує квиток?
-  translation: How much is a ticket?
+- word: в один бік
+  translation: one way
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: О котрій відправлення?
-  translation: What time is the departure?
+- word: туди й назад
+  translation: round trip
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Приємної поїздки!
-  translation: Have a good trip!
+- word: Скільки коштує?
+  translation: How much does it cost?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: о котрій годині?
+  translation: at what time?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: іти пішки
+  translation: to go on foot
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де зупинка...?
+  translation: Where is the ... stop?
   expression: true
   pos: ''
   gender: ''
@@ -209,57 +149,15 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Мені виходити тут?
-  translation: Do I get off here?
+- word: Ви виходите?
+  translation: Are you getting off?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Їдьте прямо.
-  translation: Go straight.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Поверніть направо.
-  translation: Turn right.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Поверніть наліво.
-  translation: Turn left.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Коли наступний потяг до...?
-  translation: When is the next train to...?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Яка це станція?
-  translation: What station is this?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: їхати на метро
-  translation: to go by metro
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: їхати на таксі
-  translation: to go by taxi
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: їхати на машині
-  translation: to go by car
-  expression: true
-  pos: ''
+- word: руша́ти
+  translation: to depart
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true

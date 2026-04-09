@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Missed specific required phrases ("Яка сьогодні погода?", "Температура
+    — п'ять градусів", "Цієї зими я планую..."), as well as required holidays ("Вербна
+    неділя", "День Конституції").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or Calques found. Grammar and usage are idiomatic
+    and accurate.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of grammatical exceptions like "навесні" vs "у весні"
+    and proper explanations of genitive case usage for dates.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are included seamlessly into the narrative.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All injection markers are present and correctly mapped to the outline.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm and culturally respectful without resorting to overly
+    gamified or corporate tropes.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Meets the word count (2356 > 2000 target) and uses H2 headers perfectly
+    aligned with the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Factually correct context about contemporary date shifts (Christmas on
+    Dec 25), correctly representing holidays like Ivan Kupala and Pokrova.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: The module includes a very generic dialogue about seasons but completely
+    omitted the specific plan-mandated dialogue setting featuring a family and a foreign
+    guest discussing Ivan Kupala, Christmas, a
+findings: []

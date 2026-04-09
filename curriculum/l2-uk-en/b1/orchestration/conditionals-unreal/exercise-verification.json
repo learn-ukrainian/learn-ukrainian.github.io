@@ -1,0 +1,208 @@
+{
+  "total_items": 169,
+  "grounded_items": 139,
+  "ungrounded": [
+    {
+      "word": "мала",
+      "exercise_type": "fill-in",
+      "context": "Якби вона мала гроші, вона _____ квиток.",
+      "role": "context"
+    },
+    {
+      "word": "нагоду",
+      "exercise_type": "fill-in",
+      "context": "Якби я мав нагоду, я _____ на фестиваль.",
+      "role": "context"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "fill-in",
+      "context": "Якби ми вийшли раніше, ми _____ на поїзд.",
+      "role": "context"
+    },
+    {
+      "word": "здали",
+      "exercise_type": "fill-in",
+      "context": "здали б",
+      "role": "answer"
+    },
+    {
+      "word": "вчили",
+      "exercise_type": "fill-in",
+      "context": "Якби вони вчили слова, вони _____ тест.",
+      "role": "context"
+    },
+    {
+      "word": "гралося",
+      "exercise_type": "fill-in",
+      "context": "гралося б",
+      "role": "answer"
+    },
+    {
+      "word": "світило",
+      "exercise_type": "fill-in",
+      "context": "Якби сонце світило, дитя _____ надворі.",
+      "role": "context"
+    },
+    {
+      "word": "надворі",
+      "exercise_type": "fill-in",
+      "context": "Якби сонце світило, дитя _____ надворі.",
+      "role": "context"
+    },
+    {
+      "word": "передала",
+      "exercise_type": "fill-in",
+      "context": "передала б",
+      "role": "answer"
+    },
+    {
+      "word": "побачила",
+      "exercise_type": "fill-in",
+      "context": "Якби я побачила Олену, я _____ їй книгу.",
+      "role": "context"
+    },
+    {
+      "word": "центрального",
+      "exercise_type": "match-up",
+      "context": "ми б пішли гуляти до центрального парку.",
+      "role": "context"
+    },
+    {
+      "word": "парку",
+      "exercise_type": "match-up",
+      "context": "ми б пішли гуляти до центрального парку.",
+      "role": "context"
+    },
+    {
+      "word": "успішним",
+      "exercise_type": "match-up",
+      "context": "я б працював успішним дипломатом.",
+      "role": "context"
+    },
+    {
+      "word": "знайшов",
+      "exercise_type": "unjumble",
+      "context": "знайшов",
+      "role": "answer"
+    },
+    {
+      "word": "зустрілися",
+      "exercise_type": "unjumble",
+      "context": "зустрілися.",
+      "role": "answer"
+    },
+    {
+      "word": "зателефонував",
+      "exercise_type": "unjumble",
+      "context": "зателефонував,",
+      "role": "answer"
+    },
+    {
+      "word": "робив",
+      "exercise_type": "error-correction",
+      "context": "Якщо б я знав, я б не робив цього.",
+      "role": "context"
+    },
+    {
+      "word": "відчинити",
+      "exercise_type": "quiz",
+      "context": "____ ви відчинити вікно?",
+      "role": "context"
+    },
+    {
+      "word": "виглядаєш",
+      "exercise_type": "quiz",
+      "context": "Ти ____ до лікаря, ти виглядаєш дуже втомленим.",
+      "role": "context"
+    },
+    {
+      "word": "втомленим",
+      "exercise_type": "quiz",
+      "context": "Ти ____ до лікаря, ти виглядаєш дуже втомленим.",
+      "role": "context"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "quiz",
+      "context": "____ мені новий бланк, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "ласка",
+      "exercise_type": "quiz",
+      "context": "____ мені новий бланк, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "замовити",
+      "exercise_type": "quiz",
+      "context": "Я ____ замовити чашку міцної кави.",
+      "role": "context"
+    },
+    {
+      "word": "чашку",
+      "exercise_type": "quiz",
+      "context": "Я ____ замовити чашку міцної кави.",
+      "role": "context"
+    },
+    {
+      "word": "міцної",
+      "exercise_type": "quiz",
+      "context": "Я ____ замовити чашку міцної кави.",
+      "role": "context"
+    },
+    {
+      "word": "кави",
+      "exercise_type": "quiz",
+      "context": "Я ____ замовити чашку міцної кави.",
+      "role": "context"
+    },
+    {
+      "word": "залишитися",
+      "exercise_type": "quiz",
+      "context": "Ми ____ залишитися тут ще на один день.",
+      "role": "context"
+    },
+    {
+      "word": "день",
+      "exercise_type": "quiz",
+      "context": "Ми ____ залишитися тут ще на один день.",
+      "role": "context"
+    },
+    {
+      "word": "допомогти",
+      "exercise_type": "quiz",
+      "context": "Ви ____ допомогти мені з цим складним завданням?",
+      "role": "context"
+    },
+    {
+      "word": "складним",
+      "exercise_type": "quiz",
+      "context": "Ви ____ допомогти мені з цим складним завданням?",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 27,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "аби",
+      "впасти",
+      "впоратися",
+      "досконало",
+      "жаль",
+      "могла",
+      "мрія",
+      "нагода",
+      "нереальний",
+      "перешкода",
+      "прислів'я",
+      "підстелити",
+      "соломка",
+      "фантазія",
+      "шкода"
+    ]
+  },
+  "all_grounded": false
+}

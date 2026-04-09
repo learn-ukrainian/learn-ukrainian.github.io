@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module covers almost all points, but explicitly misses teaching the
+    intonation pattern for cause (тому що/бо) which was requested in the plan points
+    ("subordinate clause with тому що/бо has a slig
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Found an artificial adverb "інтригуюче" (NOT IN VESUM) and a redundant
+    calque "зверніть свою увагу". The rest of the module is highly accurate and natural.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent metaphors (the comma as a border guard) and a solid PPP flow.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required and recommended vocabulary like `допуст` are used naturally in
+    context.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The markers for the quiz and group sort are misplaced before the required
+    knowledge is taught, breaking the "can a learner complete this with knowledge
+    taught so far" rule.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, supportive, and highly engaging. Excellent conversational
+    examples.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, word count of 2581 comfortably exceeds the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses authentic literary quotes (В. Сосюра) and cultural examples (бджоляр
+    Петро Прокопович).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening dialogue is natural and clearly establishes the target grammar.
+findings: []

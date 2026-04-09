@@ -2,56 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 4 content_outline sections present with correct ordering. Dialogue
-    1 covers meeting + origins (план: "Звідки ти? — Я з України, з Києва" ✓). Dialogue
-    2 covers direction FROM (план: "Звідки ти йдеш'
+  score: 10
+  evidence: The module perfectly covers all points in the `content_outline`. The word
+    count is 1597, safely exceeding the 1200 target.
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'All Ukrainian forms verified via VESUM (83/83 common words confirmed;
-    39 proper nouns expected not-in-VESUM). Genitive chunks correct: з Києва, зі Львова,
-    з Одеси, з Харкова, з Дніпра, із Запоріжжя. з'
+  score: 8
+  evidence: 'There is a factual phonetic error when explaining euphony rules: "especially
+    those starting with z, s, or sh, you use зі, which is why we say зі Львова". "Львів"
+    does not start with a sibilant, it sta'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Excellent PPP flow: dialogues present the situation naturally, then the
-    Звідки? section extracts the pattern (trio table), then activities practice. The
-    "memorize as chunks" approach is pedagogically '
+  score: 8
+  evidence: 'The caution block warns: "Never say Я в України to mean ''I am from Ukraine''".
+    English speakers would not naturally invent "в" + Genitive to translate "from".
+    It''s much more helpful to warn against usi'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All required vocab present in prose: звідки ✓, з/із/зі ✓, Україна ✓,
-    Київ ✓, Львів ✓, Канада ✓. All recommended vocab included: Одеса ✓, Харків ✓,
-    США ✓, Англія ✓, Німеччина ✓, Польща ✓, додому ✓. Wor'
+  evidence: All required and recommended vocabulary items (звідки, з/із/зі, Україна,
+    Київ, Львів, Канада, Одеса, Харків, США, Англія, Німеччина, Польща, додому) are
+    perfectly integrated into contextual examples.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: All 4 plan activity_hints have corresponding markers with correct placement.
-    fill-in-zvidky after dialogues tests the just-taught з + country/city pattern.
-    group-sort-location-trio after Звідки? secti
+  score: 10
+  evidence: Markers perfectly align with the plan, are well-spaced, and test the target
+    grammar logically.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational filler, no "unlock" language, no generic enthusiasm.
-    Tone is teacher-like and direct. Cultural detail: "Київ takes its name from Кий,
-    a legendary Polanian prince. Львів is named for Pr'
+  score: 10
+  evidence: Tone is encouraging and natural. The introduction ("An international student
+    mixer at a university in Kyiv...") is an excellent framing device.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'All 4 H2 sections from plan present in correct order: Діалоги → Звідки?
-    → Країни і міста → Підсумок. Clean markdown. No duplicate sections. No meta-commentary.
-    No stray tags. Word count 1380, well wit'
+  evidence: Markdown is clean, headers exactly match the plan, and there is no meta-commentary.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Fully decolonized. Germany presented as "Німеччина (not 'Германія')" —
-    explicitly rejects the Russian form. Ukrainian city names with historical context
-    (Кий, Лев Данилович). No "like Russian" compari
+  evidence: Excellent integration of a decolonized cultural note regarding the etymology
+    of "Україна" and its contrast with Russian imperialist myths.
 - dimension: 9
-  name: Dialogue quality
+  name: Dialogue & conversation quality
   score: 10
-  evidence: 'Both dialogues have named speakers with distinct voices. Dialogue 1:
-    multi-speaker group mixer (Тарас, Лена, Кенджі) — natural university setting,
-    culturally appropriate. Dialogue 2: street encounter '
+  evidence: Dialogues are natural, use named speakers, and provide great contrast
+    between the "meeting someone new" context and the "daily routine movements" context.
 findings: []

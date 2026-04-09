@@ -1,53 +1,41 @@
 ## Linguistic Scan
-Two linguistic errors found:
-1. `люблю` (любити) is falsely classified as a Group I verb in the dialogue analysis.
-2. `То́бі` has an incorrect stress mark on the first syllable (it should be `Тобі́`).
-All other Ukrainian vocabulary, stress marks, and grammar patterns are correct and well-contextualized.
+No linguistic errors found.
 
 ## Exercise Check
-All 4 `<!-- INJECT_ACTIVITY: {id} -->` markers are present and correctly placed:
-- `group-sort-verb-groups` and `quiz-mixed-conjugation` are placed directly after the Grammar Summary.
-- `fill-in-dialogue-completion` is placed immediately after the Dialogue section.
-- `fill-in-describe-your-day` is placed at the end of the Summary.
-The marker IDs reflect the `focus` defined in the plan's `activity_hints`. No issues found.
+All activity markers (`fill-in-describe-day`, `group-sort-verbs`, `quiz-mixed-conjugation`, `fill-in-dialogue-completion`) are correctly placed after the relevant sections and exactly match the type and focus requested in the plan's `activity_hints`. There are enough exercise markers total and they test the concepts introduced immediately before them.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The writer covered all 5 sections exactly as outlined in the `content_outline`. The dialogue uses the "Meeting + plans scenario" specified in the points. All questions (M15-M20) are addressed. |
-| 2. Linguistic accuracy | 7/10 | Identified two errors: 1. "Люблю" (любити) is falsely classified as a Group I verb in the dialogue analysis. It takes Group II endings. 2. Incorrect stress mark on "тобі" ("То́бі" instead of "Тобі́"). |
-| 3. Pedagogical quality | 8/10 | Good overall PPP flow, but the rule for recognizing conjugation groups is oversimplified to the point of being incorrect/confusing ("Group I ends in -ють, Group II ends in -ять", ignoring -уть/-ать), especially when "-уть" is immediately introduced in the tip block below it. |
-| 4. Vocabulary coverage | 10/10 | The plan did not require specific words, but the review of M15-M20 concepts integrates vocabulary flawlessly and contextually. |
-| 5. Exercise quality | 10/10 | All 4 exercise markers from `activity_hints` are injected at logical points after their corresponding theory sections. |
-| 6. Engagement & tone | 10/10 | The text is encouraging, natural, and frames the review as a "mirror" rather than a test. The dialogue has a very natural flow. |
-| 7. Structural integrity | 10/10 | Word count is deterministic, headers match the outline, and no extra/unplanned sections were added. |
-| 8. Cultural accuracy | 10/10 | The reading and dialogue present standard routines and interactions correctly without calques or weird assumptions. |
-| 9. Dialogue & conversation quality | 10/10 | Excellent multi-turn conversation that weaves in all the requested grammar patterns (modals, sequence, both verb groups) organically. |
+| 1. Plan adherence | 10/10 | Covers all grammar points and sections specified in the `content_outline`. Fits the 1200 word target comfortably (1785 words) and explicitly recaps M15-M20 as requested. |
+| 2. Linguistic accuracy | 10/10 | All Ukrainian text is correct. No Russianisms, Surzhyk, or calques. Correctly highlights the naturalness rule of using "ставити питання" instead of the literal translation "задавати". |
+| 3. Pedagogical quality | 9/10 | Provides clear explanations with examples. Deducting slightly for a minor translation issue where "гуляти" is translated literally as "walk" instead of "go for a walk" in the dialogue context, which sounds like inquiring about physical ability. |
+| 4. Vocabulary coverage | 10/10 | The module effectively uses the review vocabulary across all sections without introducing unneeded new words. |
+| 5. Exercise quality | 10/10 | All 4 exercise markers from the plan are present and placed logically after their corresponding pedagogical sections. |
+| 6. Engagement & tone | 10/10 | The text maintains a supportive and encouraging teacher persona without any corporate or gamified filler. |
+| 7. Structural integrity | 8/10 | Deducting due to an incomplete/dangling sentence right before the "Читання" header: "If these patterns feel familiar, ". Otherwise well structured. |
+| 8. Cultural accuracy | 10/10 | Culturally appropriate contexts and names are utilized seamlessly. |
+| 9. Dialogue & conversation quality | 10/10 | Natural conversational exchange between Viktor and Olena, demonstrating appropriate refusal strategies like "Не можу" instead of just "Ні". |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: "Both verb groups appear naturally here. Group I: гуляю, люблю, читаю, слухаю, працюю, почина́ю, викладаю. Group II: говорю."
-Issue: "Люблю" (любити) is a Group II verb, not Group I. It takes Group II endings (-ю, -иш, -ить, -имо, -ите, -ять/люблять).
-Fix: Move "люблю" to Group II in the text.
+[Structural integrity] [major]
+Location: "Що ми знаємо? (What Do We Know?)" — "If these patterns feel familiar, \n\n## Читання (Reading Practice)"
+Issue: The sentence is incomplete and dangling directly above the next heading.
+Fix: Complete the sentence with "you are ready to see them in action."
 
-[2. Linguistic accuracy] [Major]
-Location: "> — **Максим:** Ціка́во! То́бі подобається робота?"
-Issue: Incorrect stress mark on "тобі". The stress should be on the second syllable "Тобі́".
-Fix: Replace "То́бі" with "Тобі́".
-
-[3. Pedagogical quality] [Major]
-Location: "The quickest way to tell them apart: look at the **вони** form. Group I ends in **-ють** (читають), Group II ends in **-ять** (говорять)."
-Issue: This is factually oversimplified and confusing when the very next tip block introduces "-уть" for Group I (хочуть). Group I ends in "-уть" or "-ють". Group II ends in "-ать" or "-ять".
-Fix: Update the sentence to include "-уть" and "-ать".
+[Pedagogical quality] [minor]
+Location: "Діалог (Connected Dialogue)" — "> **Віктор:** Ти можеш гуляти зараз? *(Can you walk right now?)*" and "When Viktor asks if she can walk, she doesn't just say"
+Issue: Translating "гуляти" as "walk" in the context of meeting a friend sounds slightly awkward, like inquiring about physical ability. "Go for a walk" or "hang out" is much more natural contextually.
+Fix: Change "walk" to "go for a walk" in the translation and explanation.
 
 ## Verdict: REVISE
-The module contains a critical linguistic error (misclassifying "любити" as Group I), an incorrect stress mark, and a pedagogically confusing oversimplification of conjugation rules. These issues require fixing before the module can be published, but do not warrant a full rebuild.
+The module is overall excellent and meets all plan requirements, but requires revision due to an incomplete/dangling sentence affecting structural integrity and a minor translation clarification. Both issues are fixed via deterministic replacement.
 
 <fixes>
-- find: "Both verb groups appear naturally here. Group I: гуляю, люблю, читаю, слухаю, працюю, почина́ю, викладаю. Group II: говорю."
-  replace: "Both verb groups appear naturally here. Group I: гуляю, читаю, слухаю, працюю, почина́ю, викладаю. Group II: говорю, люблю."
-- find: "Ціка́во! То́бі подобається робота?"
-  replace: "Ціка́во! Тобі́ подобається робота?"
-- find: "The quickest way to tell them apart: look at the **вони** form. Group I ends in **-ють** (читають), Group II ends in **-ять** (говорять)."
-  replace: "The quickest way to tell them apart: look at the **вони** form. Group I ends in **-уть** or **-ють** (читають), Group II ends in **-ать** or **-ять** (говорять)."
+- find: "If these patterns feel familiar, \n\n## Читання (Reading Practice)"
+  replace: "If these patterns feel familiar, you are ready to see them in action.\n\n## Читання (Reading Practice)"
+- find: "Ти можеш гуляти зараз? *(Can you walk right now?)*"
+  replace: "Ти можеш гуляти зараз? *(Can you go for a walk right now?)*"
+- find: "When Viktor asks if she can walk, she doesn't just say"
+  replace: "When Viktor asks if she can go for a walk, she doesn't just say"
 </fixes>

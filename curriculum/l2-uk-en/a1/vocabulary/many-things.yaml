@@ -1,84 +1,84 @@
 vocabulary:
 - word: столи́
-  translation: tables (pl of стіл)
+  translation: tables
   expression: false
   pos: ім.
   gender: ''
   verified: true
 - word: стільці́
-  translation: chairs (pl of стілець)
+  translation: chairs
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: ві́кна
-  translation: windows (pl of вікно)
+  translation: windows
   expression: false
   pos: ім.
   gender: с.
   verified: true
+- word: кни́ги
+  translation: books
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: ручки
-  translation: pens (pl of ручка)
+  translation: pens
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: зо́шити
-  translation: notebooks (pl of зошит)
+  translation: notebooks
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: олівці́
-  translation: pencils (pl of олівець)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кни́ги
-  translation: books (pl of книга)
+- word: су́мки́
+  translation: bags
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: ла́мпи
-  translation: lamps (pl of лампа)
+  translation: lamps
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: су́мки́
-  translation: bags (pl of сумка)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: крі́сла
-  translation: armchairs (pl of крісло)
+- word: дзерка́ла
+  translation: mirrors
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: дзерка́ла
-  translation: mirrors (pl of дзеркало)
+- word: крі́сла
+  translation: armchairs
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: лі́жка
+  translation: beds
   expression: false
   pos: ім.
   gender: с.
   verified: true
 - word: ре́чі
-  translation: things (pl of річ)
+  translation: things
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: ці
-  translation: these (pl of цей/ця/це)
+  translation: these
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: ті
-  translation: those (pl of той/та/те)
+  translation: those
   expression: false
   pos: прикм.
   gender: ''
@@ -95,129 +95,105 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: однина́
-  translation: singular (grammatical number)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: множина́
-  translation: plural (grammatical number)
+  translation: plural
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: телефо́ни
-  translation: phones (pl of телефон)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: підру́чники
-  translation: textbooks (pl of підручник)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: ка́рти
-  translation: maps (pl of карта)
+- word: однина́
+  translation: singular
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: до́шки
-  translation: boards (pl of дошка)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лі́жка
-  translation: beds (pl of ліжко)
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: слова́
-  translation: words (pl of слово)
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: вели́кі
-  translation: big (plural adjective)
+  translation: big (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: нові́
-  translation: new (plural adjective)
+  translation: new (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: старі́
-  translation: old (plural adjective)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чи́сті
-  translation: clean (plural adjective)
+  translation: old (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: черво́ні
-  translation: red (plural adjective)
+  translation: red (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: си́ні
-  translation: blue (plural adjective)
+  translation: blue (plural)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: жо́вті
-  translation: yellow (plural adjective)
+- word: бі́лі
+  translation: white (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: чо́рні
-  translation: black (plural adjective)
+  translation: black (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: бі́лі
-  translation: white (plural adjective)
+- word: чи́сті
+  translation: clean (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: зеле́ні
-  translation: green (plural adjective)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: мале́нький
-  translation: small
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: Які столи?
-  translation: What kind of tables?
+- word: Що тут є?
+  translation: What is here?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: один предмет → багато предметів
-  translation: one object → many objects
+- word: У вас є...?
+  translation: Do you have...?
   expression: true
   pos: ''
   gender: ''
+  verified: true
+- word: Скі́льки
+  translation: How many?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Будь ласка
+  translation: please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: оди́н
+  translation: one
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: бага́то
+  translation: many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: предме́т
+  translation: item
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true

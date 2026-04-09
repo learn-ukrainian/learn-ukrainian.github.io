@@ -1,14 +1,30 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 47,
+  "grounded_items": 44,
+  "ungrounded": [
+    {
+      "word": "студент'",
+      "exercise_type": "quiz",
+      "context": "Why is there a dash in 'Я — студент'?",
+      "role": "context"
+    },
+    {
+      "word": "хто",
+      "exercise_type": "match-up",
+      "context": "Хто це?",
+      "role": "answer"
+    },
+    {
+      "word": "є'",
+      "exercise_type": "true-false",
+      "context": "When stating possession, we use 'У мене є' instead of a dire",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 2,
-    "tested_in_exercises": 0,
-    "not_tested": [
-      "прізвище",
-      "ім'я"
-    ]
+    "tested_in_exercises": 2,
+    "not_tested": []
   },
-  "all_grounded": true
+  "all_grounded": false
 }

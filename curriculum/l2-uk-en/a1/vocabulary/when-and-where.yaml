@@ -1,10 +1,4 @@
 vocabulary:
-- word: коли́
-  translation: when (subordinating conjunction)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
 - word: зна́ти
   translation: to know
   expression: false
@@ -29,32 +23,20 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: ба́чити
-  translation: to see
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
 - word: чу́ти
   translation: to hear
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: розумі́ти
-  translation: to understand
+- word: головни́й
+  translation: main
   expression: false
-  pos: дієсл.
+  pos: прикм.
   gender: ''
   verified: true
-- word: головне речення
-  translation: main clause
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: підрядне речення
-  translation: subordinate clause
+- word: складне речення
+  translation: complex sentence
   expression: true
   pos: ''
   gender: ''
@@ -71,29 +53,17 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: підрядний сполучник
-  translation: subordinating conjunction
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пря́мо
-  translation: straight, straight ahead
+- word: ко́ма
+  translation: comma
   expression: false
-  pos: присл.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
-- word: ліво́руч
-  translation: to the left, on the left
+- word: пло́ща
+  translation: square
   expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: поверни ліворуч
-  translation: turn left
-  expression: true
-  pos: ''
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
 - word: фонта́н
   translation: fountain
@@ -101,59 +71,29 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: ві́льний
-  translation: free, available (of a person)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: то́чно
-  translation: exactly, precisely
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: са́ме
-  translation: exactly, just (emphasis)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: де саме
-  translation: where exactly
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: десь
-  translation: somewhere
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: за́йнятий
-  translation: busy (masc.)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: за́йнята
-  translation: busy (fem.)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: зателефонува́ти
-  translation: to call (by phone), to phone
+- word: поверну́ти
+  translation: to turn
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: зустрі́тися
-  translation: to meet up
+- word: ліво́руч
+  translation: left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зупини́тися
+  translation: to stop
   expression: false
   pos: дієсл.
   gender: ''
+  verified: true
+- word: буди́нок
+  translation: building
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: де́рево
   translation: tree
@@ -161,51 +101,51 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: час
-  translation: time
+- word: закі́нчи́ти
+  translation: to finish
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: о шостій
+  translation: at six
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: До зустрічі!
+  translation: See you!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: саме так
+  translation: exactly
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зачи́нений
+  translation: closed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: гото́вий
+  translation: ready
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: приї́хати
+  translation: to arrive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мі́сце
+  translation: place
   expression: false
   pos: ім.
-  gender: ч.
-  verified: true
-- word: бе́резень
-  translation: March
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Я думаю, що...
-  translation: I think that...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я знаю, що...
-  translation: I know that...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я не знаю, де...
-  translation: I don't know where...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я не знаю, коли...
-  translation: I don't know when...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Скажи, коли...
-  translation: Tell me when...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Зателефонуй, коли...
-  translation: Call when...
-  expression: true
-  pos: ''
-  gender: ''
+  gender: с.
   verified: true

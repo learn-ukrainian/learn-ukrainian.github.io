@@ -1,58 +1,46 @@
 ## Linguistic Scan
-No linguistic errors found.
+No linguistic errors found in the Ukrainian text.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: activity-1 -->` (Vocative + imperative fill-in) is present and correctly placed after the grammar table for imperatives.
-- `<!-- INJECT_ACTIVITY: activity-2 -->` (Conjunction quiz) is present and correctly placed after the coordinating/subordinating conjunctions rules.
-- `<!-- INJECT_ACTIVITY: activity-3 -->` (Complex sentences fill-in) is present and correctly placed after the subordinating conjunctions (що, де, коли) rules.
-- `<!-- INJECT_ACTIVITY: activity-4 -->` (Holiday match) is present and correctly placed after the holiday greetings explanation.
-All 4 activity markers are present, evenly distributed, and match the plan's `activity_hints`.
+All four `<!-- INJECT_ACTIVITY: {id} -->` markers are present, logically placed after the relevant grammar instruction, and perfectly match the four `activity_hints` described in the plan (Vocative/Imperative, Conjunctions, Complex Sentences, Holiday Greetings).
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | All outline sections and vocabulary words (плакат, квиток, напій, кутя, колядки) are included. The dialogue scenarios from the plan are utilized effectively. |
-| 2. Linguistic accuracy | 10/10 | Text is free of Russianisms, Surzhyk, and calques. Gender, case, and complex sentence structures are correct. |
-| 3. Pedagogical quality | 8/10 | Provides clear grammar tables and translations, but incorrectly teaches that the vocative of "друг" is formed just by changing a hard consonant to "-е", ignoring the required consonant mutation. |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary is used naturally in the reading and dialogue sections. |
-| 5. Exercise quality | 10/10 | Activity markers are perfectly placed immediately after the relevant grammar instructions. |
-| 6. Engagement & tone | 6/10 | Contains excessive meta-commentary ("Notice how all five A1.7 communication tools appear naturally together..."). Treats the dialogue like a grammar-hunting exercise, which breaks immersion. |
-| 7. Structural integrity | 10/10 | All required H2 headings are present, ordered correctly, and formatted cleanly. |
-| 8. Cultural accuracy | 10/10 | Correctly uses "З Різдвом!" and references authentic holiday items like "кутя" and "колядки". |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are clear and realistic, effectively demonstrating the grammar points in context. |
+| 1. Plan adherence | 10/10 | The text follows the `content_outline` structure exactly, including sections for "Що ми знаємо?", "Читання", "Граматика", "Діалог", and "Підсумок". All specific plan points are systematically covered. |
+| 2. Linguistic accuracy | 10/10 | The Ukrainian examples are natural, correctly inflected, and free of Russianisms or calques. Sentence structures with conjunctions are built properly. |
+| 3. Pedagogical quality | 8/10 | The grammar rule stating "Masculine names ending in a hard consonant add **-е**: **Петро** becomes **Петре**" is factually incorrect because "Петро" ends in the vowel "-о". Also, using "**друг** (friend) becomes **друже**" as an example of simply adding "-е" without explaining the г → ж consonant mutation is misleading for beginners. |
+| 4. Vocabulary coverage | 10/10 | The required nouns (плакат, квиток, напій, стілець) and verbs are effectively contextualized in the reading and dialogue sections. |
+| 5. Exercise quality | 10/10 | The markers match the plan's `activity_hints` exactly and are inserted at the correct pedagogical moments immediately after each concept is explained. |
+| 6. Engagement & tone | 7/10 | DEDUCT for self-congratulatory openers ("Welcome to the A1.7 Checkpoint.") and gamified/corporate filler ("Communication Hub", "Your mission in this module is practical", "major milestone in your Ukrainian journey"). |
+| 7. Structural integrity | 9/10 | DEDUCT for a dangling sentence fragment at the start of the summary: "7 Communication phase." |
+| 8. Cultural accuracy | 10/10 | Correctly explains the cultural/grammatical formula for Ukrainian holiday greetings using "З" + Instrumental. |
+| 9. Dialogue & conversation quality | 10/10 | The dialogue between Taras and Olena feels like a natural, purpose-driven conversation, integrating all grammar points seamlessly. |
 
 ## Findings
+[Pedagogical quality] [critical]
+Location: Граматика (Grammar Summary), paragraph 1: "Masculine names ending in a hard consonant add **-е**: **Петро** becomes **Петре**, **Тарас** becomes **Тарасе**, and **друг** (friend) becomes **друже**."
+Issue: The rule is factually incorrect. "Петро" ends in the vowel "-о", not a hard consonant. Additionally, using "друг" as an example of simply adding "-е" without noting the consonant mutation (г → ж) is misleading.
+Fix: Update the rule to accurately include nouns ending in "-о" and note the consonant change for "друг".
 
-[Pedagogical quality] [Critical]
-Location: `| **друг** | **друже!** | Friend! (hard consonant → -е) |`
-Issue: The rule provided for the vocative of "друг" is factually incorrect. It claims the hard consonant simply changes to "-е", which would incorrectly produce "друге". The actual change involves a consonant mutation (г → ж) before the ending "-е".
-Fix: Update the rule explanation to explicitly state the consonant mutation.
+[Engagement & tone] [minor]
+Location: Що ми знаємо? (What Do We Know?), paragraph 1: "Welcome to the A1.7 Checkpoint. This module serves as your "Communication Hub", where we integrate all the social skills you have acquired in the previous five lessons. [...] Your mission in this module is practical:"
+Issue: Uses self-congratulatory openers and gamified/corporate language ("Communication Hub", "Your mission in this module is practical"), which violates the tone guidelines.
+Fix: Remove the gamified filler and state the module's purpose directly.
 
-[Engagement & tone] [Major]
-Location: `Read the text below. Notice how all five A1.7 communication tools appear naturally together in one single realistic situation.`
-Issue: Excessive meta-commentary that breaks immersion. Calling out "all five A1.7 communication tools" reads like a teacher's syllabus rather than engaging learner content.
-Fix: Simplify the sentence to remove the meta-commentary.
-
-[Engagement & tone] [Major]
-Location: `Read through the dialogue again and circle every vocative case, imperative verb, conjunction, and subordinating clause you see. You should find at least two vocatives, three imperatives, three coordinating conjunctions, and five subordinating clauses. This is how natural Ukrainian looks in action.`
-Issue: Highly robotic and textbook-like instruction. Treating the dialogue as a grammar-hunting exercise with a specific count breaks immersion and tells rather than shows.
-Fix: Replace with a more natural instruction focused on comprehension and observation.
-
-[Engagement & tone] [Minor]
-Location: `These five skills work together. In the reading passage below, you will see Olena use all of them in one short phone call — she addresses Taras by name, asks him to bring something, explains why, links her thoughts into longer sentences, and wishes him a happy holiday. This is how these skills work in real conversations.`
-Issue: Telling instead of showing. The concluding sentence "This is how these skills work in real conversations" is a generic cliché.
-Fix: Streamline the text to be more engaging and less meta.
+[Structural integrity] [minor]
+Location: Підсумок — Summary, paragraph 1: "7 Communication phase. This is a major milestone in your Ukrainian journey. Review your new capabilities:"
+Issue: "7 Communication phase." is a dangling sentence fragment (likely a typo for "A1.7"). The paragraph also uses gamified language ("major milestone in your Ukrainian journey").
+Fix: Combine and rephrase into a complete, non-gamified sentence.
 
 ## Verdict: REVISE
-The module covers all the necessary checkpoints and grammar rules effectively, but it contains a critical pedagogical error regarding the vocative mutation of "друг" and suffers from excessive meta-commentary that breaks learner immersion. Applying the fixes will resolve these issues.
+The module contains a critical pedagogical error regarding the vocative rule for masculine nouns ending in "-о", as well as some minor formatting and tone issues. These need to be addressed via the `<fixes>` block before publishing.
 
 <fixes>
-- find: "| **друг** | **друже!** | Friend! (hard consonant → -е) |"
-  replace: "| **друг** | **друже!** | Friend! (г → ж + е) |"
-- find: "These five skills work together. In the reading passage below, you will see Olena use all of them in one short phone call — she addresses Taras by name, asks him to bring something, explains why, links her thoughts into longer sentences, and wishes him a happy holiday. This is how these skills work in real conversations."
-  replace: "These five skills work together seamlessly. Read how Olena uses them naturally when calling her friend."
-- find: "Read the text below. Notice how all five A1.7 communication tools appear naturally together in one single realistic situation."
-  replace: "Read the text below. Notice how these communication tools appear together naturally."
-- find: "Read through the dialogue again and circle every vocative case, imperative verb, conjunction, and subordinating clause you see. You should find at least two vocatives, three imperatives, three coordinating conjunctions, and five subordinating clauses. This is how natural Ukrainian looks in action."
-  replace: "Read through the dialogue again. Notice how the organizer and volunteers use the vocative to address each other, and the imperative to give clear instructions."
+- find: "Masculine names ending in a hard consonant add **-е**: **Петро** becomes **Петре**, **Тарас** becomes **Тарасе**, and **друг** (friend) becomes **друже**."
+  replace: "Masculine names ending in a hard consonant or **-о** take **-е**: **Тарас** becomes **Тарасе**, **Петро** becomes **Петре**, and **друг** (friend) becomes **друже** (notice the consonant change)."
+- find: "Welcome to the A1.7 Checkpoint. This module serves as your \"Communication Hub\", where we integrate all the social skills you have acquired in the previous five lessons. Language is a tool for connection, and in a real-world scenario, you do not just recite vocabulary; you use it to achieve a specific goal. Your mission in this module is practical: you are helping your friends organize a lively school event."
+  replace: "This Checkpoint integrates the communication skills you have acquired in the previous five lessons. Language is a tool for connection, and in a real-world scenario, you do not just recite vocabulary; you use it to achieve a specific goal. In this module, you are helping your friends organize a lively school event."
+- find: "7 Communication phase. This is a major milestone in your Ukrainian journey. Review your new capabilities:"
+  replace: "You have reached the end of the A1.7 Communication phase. Review your capabilities:"
 </fixes>

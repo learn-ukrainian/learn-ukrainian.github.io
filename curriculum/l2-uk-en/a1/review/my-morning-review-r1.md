@@ -1,60 +1,50 @@
 ## Linguistic Scan
-No critical linguistic errors found. Minor euphony issue detected ("в ванній" instead of "у ванній").
+Errors found:
+1. **Calque:** "дивлюся телефон" is an unnatural direct translation of "смотреть телефон / look at the phone". Natural Ukrainian uses "сиджу в телефоні", "читаю новини", or "гортаю стрічку". 
+2. **Incorrect Categorization:** The word `дивлюся` is explicitly categorized in the text as a "regular [non-reflexive] verb" despite ending in the reflexive suffix `-ся`.
+3. **Grammatical Error:** The text falsely claims that the core 3rd person singular present tense ending for Group I verbs is `-єть` (e.g., `вмиваєть`), when it is actually `-є` (e.g., `вмиває`). The `ть` is only present before the reflexive suffix `-ся`.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-add-sya -->` is present and placed correctly.
-- `<!-- INJECT_ACTIVITY: quiz-reflexive-or-not -->` is present and placed correctly.
-- `<!-- INJECT_ACTIVITY: fill-in-morning-order -->` is present and placed correctly.
-- `<!-- INJECT_ACTIVITY: fill-in-describe-morning -->` (or equivalent for the 4th plan requirement) is MISSING.
+All `<!-- INJECT_ACTIVITY: {id} -->` markers are present, ordered correctly, and placed logically after their corresponding grammar or vocabulary explanations. No issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed the "Self-check: Describe your morning in 4-5 sentences" point from the `Підсумок — Summary` section outline. |
-| 2. Linguistic accuracy | 9/10 | Excellent overall accuracy. Minor euphony clash ("в ванній" instead of "у ванній") which disrupts natural phonetic flow for learners. |
-| 3. Pedagogical quality | 10/10 | Great explanation of reflexive verbs looping back to the subject. Good pacing and examples. Pronunciation shift is explained perfectly. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are included naturally in context. |
-| 5. Exercise quality | 7/10 | Missing the final `fill-in` activity for describing a morning routine, leaving learners without the crucial production step at the end. |
-| 6. Engagement & tone | 10/10 | Warm, encouraging tone without being generic. The dialogues feel like real roommate conversations. |
-| 7. Structural integrity | 10/10 | Clean markdown, appropriate H2 headings, correct word count. |
-| 8. Cultural accuracy | 10/10 | Culturally appropriate contexts and names. Accurate grounding in Ukrainian textbook concepts. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, establish a clear scene, and perfectly illustrate the grammar point in action. |
+| 1. Plan adherence | 10/10 | Covers all requested sections and grammar points, perfectly matching the 4 sections specified in the `content_outline`. |
+| 2. Linguistic accuracy | 6/10 | The text claims `-єть` is a standard non-reflexive verb ending ("Notice that the core endings (-ю, -єш, -єть) remain perfectly regular"). This is false; the non-reflexive ending is `-є`. It also falsely claims `дивлюся` is a regular non-reflexive verb ("regular verbs like лежу (I lie down) and дивлюся (I look)"). Finally, uses the unnatural calque "дивлюся телефон". |
+| 3. Pedagogical quality | 6/10 | Pedagogical flaw in teaching learners that `вмиваєть` is the core form of the verb before adding `-ся`. This could lead learners to incorrectly produce non-reflexive forms like "Він вмиваєть лице" instead of "Він вмиває лице". |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are utilized and naturally integrated into the text. |
+| 5. Exercise quality | 10/10 | The 4 activity markers match the `activity_hints` from the plan exactly in sequence and purpose. |
+| 6. Engagement & tone | 9/10 | The tone is warm, structured, and pedagogical without relying on corporate/gamified language. It establishes clear contexts (roommates contrasting their schedules). |
+| 7. Structural integrity | 10/10 | 1515 words easily meets the 1200-word target. All H2 headings match the `content_outline`. Clean formatting. |
+| 8. Cultural accuracy | 10/10 | Successfully uses authentic names (Ліна, Настя) and integrates references from Ukrainian Grade 4 and 10 textbooks naturally. |
+| 9. Dialogue & conversation quality | 8/10 | Conversations successfully frame the grammar concepts. Slightly textbook-robotic ("Що ти робиш потім? Вмиваюся, одягаюся..."), but this is entirely acceptable and functional for an A1 level. |
 
 ## Findings
+[2. Linguistic accuracy] [Critical]
+Location: `Діалоги — Dialogues` — "> **Ліна:** У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон."
+Issue: "Дивлюся телефон" is an unnatural calque. Later in the text, `дивлюся` is falsely presented as a non-reflexive verb.
+Fix: Change the phrase to "читаю новини" and update the subsequent grammatical explanation.
 
-[1. Plan adherence] [Major]
-Location: `## Підсумок — Summary`
-Issue: The plan explicitly asks for a "Self-check: Describe your morning in 4-5 sentences using sequence words." point in the Summary, but this section was omitted.
-Fix: Add a self-check paragraph at the end of the summary.
-
-[5. Exercise quality] [Major]
-Location: Module end / `## Підсумок — Summary`
-Issue: The 4th activity marker from the plan (`type: fill-in, focus: Describe your morning in 3 sentences`) is missing from the module.
-Fix: Inject `<!-- INJECT_ACTIVITY: fill-in-describe-morning -->` along with the missing self-check text.
-
-[2. Linguistic accuracy] [Minor]
-Location: `## Мій ранок (My Morning)` > Reflexive morning verbs: "Вона вмивається в ванній."
-Issue: Phonetic euphony clash ("в ванній"). In Ukrainian, it should be "у ванній" to avoid consecutive "в" sounds.
-Fix: Change "в ванній" to "у ванній".
+[3. Pedagogical quality] [Critical]
+Location: `Дієслова на -ся — Reflexive Verbs` — "Notice that the core endings (**-ю**, **-єш**, **-єть**) remain perfectly regular. You just add the **-ся** suffix immediately after them."
+Issue: Falsely teaches that `-єть` is the core non-reflexive ending for the `він/вона` form. The actual non-reflexive ending is `-є`. The `ть` only appears as part of the reflexive suffix combination `-ється`.
+Fix: Correct the table split to `вмиває-ться` and amend the explanation to state that the core ending is `-є` and you add `-ться` for the "він/вона" form.
 
 ## Verdict: REVISE
-The module is excellent linguistically and pedagogically, but misses a mandatory content point (the self-check) and its corresponding activity marker from the plan. A minor euphony fix is also required.
+The module meets word count and structural goals perfectly, but contains two critical linguistic/pedagogical hallucinations: teaching `-єть` as a standard verb ending and classifying `дивлюся` as a non-reflexive verb. These must be deterministically fixed. 
 
 <fixes>
-- find: "Вона вмивається в ванній."
-  replace: "Вона вмивається у ванній."
+- find: "> **Ліна:** У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон. *(On Saturday I do not hurry. I wake up late, lie down, look at the phone.)*"
+  replace: "> **Ліна:** У суботу я не поспішаю. Прокидаюся пізно, лежу, читаю новини. *(On Saturday I do not hurry. I wake up late, lie down, read the news.)*"
+- find: "In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular verbs like **лежу** (I lie down) and **дивлюся** (I look)."
+  replace: "In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular, non-reflexive verbs like **лежу** (I lie down) and **читаю** (I read)."
 - find: |
-    :::note
-    How do you know if a verb is reflexive? Ask: can I do this action *to another person*? If yes, the non-reflexive form exists and means something different. **Вмивати когось** (to wash someone) ≠ **вмиватися** (to wash oneself). **Одягати дитину** (to dress a child) ≠ **одягатися** (to get dressed). The **-ся** signals the action loops back to the subject.
-    :::
+    | Він / Вона | **вмиваєть-ся** | He / She washes himself/herself |
+
+    Notice that the core endings (**-ю**, **-єш**, **-єть**) remain perfectly regular. You just add the **-ся** suffix immediately after them.
   replace: |
-    ### Self-check: Your turn
-    
-    Now it's your turn to put it all together. Can you describe your own morning routine in 3-4 sentences? Use the sequence words (**спочатку**, **потім**, **після цього**, **нарешті**) and a mix of reflexive and non-reflexive verbs.
-    
-    <!-- INJECT_ACTIVITY: fill-in-describe-morning -->
-    
-    :::note
-    How do you know if a verb is reflexive? Ask: can I do this action *to another person*? If yes, the non-reflexive form exists and means something different. **Вмивати когось** (to wash someone) ≠ **вмиватися** (to wash oneself). **Одягати дитину** (to dress a child) ≠ **одягатися** (to get dressed). The **-ся** signals the action loops back to the subject.
-    :::
+    | Він / Вона | **вмиває-ться** | He / She washes himself/herself |
+
+    Notice that the core endings (**-ю**, **-єш**, **-є**) remain perfectly regular. You just add the **-ся** (or **-ться** for "він / вона") suffix to the end.
 </fixes>

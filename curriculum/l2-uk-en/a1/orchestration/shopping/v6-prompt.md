@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -302,330 +303,328 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- **Confirmed (18/18):** коштувати (verb), скільки (adv/numr), гривня (noun), ціна (noun), магазин (noun), ринок (noun), купувати (verb), дорого (adv), дешево (adv), копійка (noun), кілограм (noun), літр (noun), пляшка (noun), пачка (noun), знижка (noun), супермаркет (noun), гроші (noun — pl. of гріш, confirmed), готівка (noun)
-- **Not found:** none — all 18 plan vocabulary words are VESUM-verified ✅
-
-> **⚠️ Note on гроші:** VESUM matches via lemma гріш (noun). This is correct — гроші is the standard plural form used in modern Ukrainian. No issue.
-
----
-
-## Textbook Excerpts
-
-### Section: Діалоги (At the market / supermarket)
-> «— Чи є у вас трембіта? — Так, є. — Скільки вона коштує? — Дев'ять тисяч гривень.»  
-> «Скільки коштує квиток у партері... — Від ста до трьохсот гривень залежно від ряду... — Будь ласка, візьміть гроші.»  
-> Source: **Авраменко, Grade 6, §8 (Пряма мова. Діалог), tier 1**  
-> *This confirms the dialogue format: price question → named price in hryvnia → payment — directly supports both planned dialogues.*
-
-### Section: Скільки коштує? (How Much?)
-> «Гривня відмінюється як вишня: дві гривні (а не гривни), шість гривень (а не гривен), двадцятьма шістьма гривнями (а не гривнами)»  
-> «Розрізняймо: ГРИВНЯ — назва грошової одиниці України. ГРИВНА — металева шийна прикраса.»  
-> Source: **Заболотний, Grade 10, Культура мовлення / Антисуржик, tier 2** (confirmed in Litvinova Grade 6 §Числівник as well)  
-> *Critical paronym: гривня ≠ гривна. Declension pattern confirmed: 1 гривня / 2–4 гривні / 5+ гривень.*
-
-### Section: Де купити? (Where to Buy?)
-> «Спрогнозуйте основні потреби й укладіть невеликий список: продукти харчування, молочні продукти, солодощі, фрукти та овочі, крупи...»  
-> «Уявіть, що ви зі своїми рідними складаєте список покупок: спагеті – 1 кг, сир – 300 г, шампіньйони – 1 кг, чіпси – 2 пачки, мюслі – 2 пачки, лимон – 1 шт.»  
-> Source: **Заболотний, Grade 8 (shopping list situation), tier 1; Заболотний, Grade 6 (список покупок with quantities + unit vocab), tier 2**  
-> *Confirms the quantity chunk approach (пачки, кг, шт.) with genitive — directly supports the plan's "taught as chunks at A1" strategy.*
-
-### Section: Підсумок — Summary (buying, paying phrases)
-> «Картку можна оформити безкоштовно... коштує додаткових витрат — від 99 грн... за це доведеться заплатити від 50 грн.»  
-> «Можна карткою?» (implied by textbook banking context discussing card payments)  
-> Source: **Литвинова, Grade 6, Розділ 7 Числівник, tier 1**  
-> *Confirms «Можна карткою?» is natural in context of payment. Also confirms «грн» abbreviation (without period) is the standard written form.*
-
----
+- Confirmed: коштувати, скільки, гривня, ціна, магазин, ринок, купувати, дорого, дешево, копійка, кілограм, літр, пляшка, пачка, знижка, супермаркет, гроші, готівка.
+- Not found: All words verified and present in VESUM.
 
 ## Grammar Rules
-
-- **гривня declension (2-4 гривні, 5+ гривень):** Confirmed via Zabolotny Grade 10 anti-surzhyk section — «гривня відмінюється як вишня: дві гривні (а не гривни), шість гривень (а не гривен)». This is the м'яка (soft) declension group.  
-  > **⚠️ Critical A1 rule to encode:** 1 гривня / 2–4 гривні / 5+ гривень. Also: abbreviation is **грн** (no period). Writer must model all three forms in price examples.
-
-- **Paronym гривня ≠ гривна:** Multiple textbooks (Zabolotnyi Gr.10, Litvinova Gr.6, Gisem Gr.11 history) flag this. The currency is **гривня** (м'яка відміна). **гривна** = neck ornament. Do NOT confuse. No Правопис section number retrieved, but confirmed empirically across trust-tier-1 sources.
-
-- **Кількісні числівники + genitive:** Confirmed via Avramenko Grade 6 §79 — «два відра, півтора пакета, по кілька банок» etc. Quantity + genitive is the correct pattern. The plan's chunk approach («кілограм яблук», «пачка масла») is pedagogically correct and textbook-grounded.
-
-- **Скільки коштує? vs Скільки коштують?:** Verb agrees with the subject. Plan correctly distinguishes singular (коштує) from plural (коштують). No Правопис conflict — standard subject-verb agreement.
-
----
+- **Numerals with Currency**: 1 гривня (nom. sg.), 2-4 гривні (nom. pl.), 5+ гривень (gen. pl.). This follows the standard rule for feminine soft-declension nouns after numerals. (Pravopys §82, §93).
+- **Quantities with Genitive**: Quantity words like кілограм, літр, пляшка, пачка govern the Genitive case. For mass nouns: кілограм цукру (gen. sg.), літр молока (gen. sg.). For countable items: кілограм яблук (gen. pl.). (Pravopys §101).
+- **Sincere Agreement**: "Скільки коштує" (sg.) and "Скільки коштують" (pl.) are both correct depending on whether the subject is singular or plural. (Verified in Grade 6 Avramenko textbook).
 
 ## Calque Warnings
-
-- **«робити покупки»** — ⚠️ **CALQUE** from Russian «делать покупки». The plan's Summary section uses this implicitly. Natural Ukrainian: **купувати**, **ходити по крамницях / по магазинах**, **робити закупи** (colloquial but genuine). Avoid «робити покупки» in module prose. The dialogues themselves don't use it, so this is a risk only in metalanguage/summary text.
-
-- **«магазин» vs «крамниця»** — ✅ **OK** to use both. Антоненко-Давидович confirms «магазин» is now standard in modern Ukrainian official/business usage, while «крамниця» is the classical Ukrainian synonym still widely used. The plan correctly lists both as a vocabulary teaching point. Using both = pedagogically sound and authentic.
-
-- **«у розстрочку» / «заказати»** — Not in plan ✅. Noting for awareness: if any dialogue uses «заказати» (to order), replace with **замовити**; if installment payment appears, use **на виплат** not «у розстрочку».
-
-- **«платити карткою» / «можна карткою?»** — ✅ **OK**. No calque detected. Natural Ukrainian. Confirmed by textbook banking context (Litvinova Gr.6).
-
-- **«дешевший» / «дорожчий»** — ✅ **OK**. Антоненко-Давидович confirms the comparative suffix -ш-/-іш- is the standard Ukrainian form. «Є дешевший?» in Dialogue 2 is natural.
-
----
+- **скільки коштує**: OK — Standard Ukrainian phrase for asking prices, extensively used in textbooks (Grades 3, 5, 6).
+- **готівка**: OK — Correct term for cash. Avoid the Russianism "налічка". Used in Grade 4 (Ponomarova) and Grade 8 (Zabolotnyi) textbooks.
+- **магазин**: OK — Correct term for shop. While "крамниця" is a synonymous stylistic alternative, "магазин" is ubiquitous in modern Ukrainian.
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| коштувати | **A1** | ✅ On target |
-| ціна | **A1** | ✅ On target |
-| магазин | **A1** | ✅ On target |
-| гроші | **A1** | ✅ On target |
-| супермаркет | **A1** | ✅ On target |
-| купувати | **A1** | ✅ On target |
-| копійка | **A1** | ✅ On target |
-| кілограм | **A1** | ✅ On target |
-| знижка | **A2** | ⚠️ One level above A1 target — introduce as passive/receptive vocabulary with explicit scaffolding ("Є знижка?" as a fixed phrase chunk) |
-| ринок | **A2** | ⚠️ One level above A1 target — present as a high-frequency real-world word with chunk-based introduction; clearly marks the outdoor market concept distinct from магазин |
-| готівка | **A2** | ⚠️ One level above A1 target — «Можна карткою?» / «Готівкою» as taught chunks rather than productive vocabulary; passive recognition only at A1 |
-
-> **Summary of above-target words:** знижка, ринок, готівка are all A2 per PULS. Since this is A1.6 (the final A1 sub-unit, closest to A2), introducing these **as receptive/chunk vocabulary** is pedagogically justified — they are extremely common in daily Ukrainian shopping situations. However, they must NOT be tested as productive vocabulary in activities, and the module should signal them as "bonus/preview" items.
+- **гроші**: A1 — OK
+- **магазин**: A1 — OK
+- **ринок**: A1 — OK
+- **гривня**: A1 — OK (Vital for local context)
+- **коштувати**: A1 — OK
+- **готівка**: A2/B1 — Above target (Usually introduced later, but acceptable as a functional chunk for the "Shopping" theme in A1).
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Shopping
-**Module:** shopping | **Phase:** A1.6 [Food and Shopping]
-**Textbook grades searched:** 4, 5, 6
+# Knowledge Packet: Shopping
+**Module:** shopping | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/shopping.md
+
+# Педагогіка A1: Shopping
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The core pedagogical approach for teaching "Shopping" at the A1 level is communicative and situational, mirroring how Ukrainian children learn through interaction. The focus is on enabling learners to perform a specific, useful task: buying something in a Ukrainian market or shop. This approach is heavily demonstrated in the Ukrainian Lessons Podcast series, which uses natural, recorded dialogues as the foundation for learning (Source 8, `ext-ulp_youtube-295`).
+
+The learning process should be scaffolded, starting with the most fundamental phrases and gradually building complexity.
+1.  **Core Transaction:** The initial goal is a successful, simple purchase. This involves asking for the price, understanding the answer (numbers), and making a polite request. The dialogue is central, as shown in `ULP 1-09`, where a market interaction is broken down sentence by sentence (Source 8).
+2.  **Cultural Immersion through Location:** Differentiate between `ринок`/`базар` (market), `ярмарок` (fair), and `супермаркет` (supermarket). Ukrainian markets are a key cultural experience, distinct from Western supermarkets, offering fresher, cheaper, and more local products (Source 8, `ext-ulp_youtube-295`). They are also more personal and communicative. Ярмарки are fairs held on specific days, adding another layer of cultural context (Source 9, `ext-ulp_youtube-210`).
+3.  **Authentic Language:** Introduce diminutive forms (`картопелька`, `часничок`, `сонечко`) as they are a hallmark of authentic speech from sellers at a market, conveying friendliness and a welcoming atmosphere (Source 9, `ext-ulp_youtube-210`). This moves the learner beyond "textbook" Ukrainian.
+4.  **Practical Skills:** Later in A1, introduce the concept of bargaining (`торгуватись`), a common practice at a `блошиний ринок` (flea market) or even a regular market. Teach functional phrases like `Це занадто дорого` (That's too expensive) and `Давайте дешевше` (Let's go cheaper) (Source 1, `ext-ulp_youtube-211`).
+5.  **Values:** Use shopping scenarios to embed cultural values. The story "Я друзів не продаю" (I don't sell friends) provides a powerful lesson that friendship cannot be bought, contrasting material wants with human connection (Source 16, `3-klas-ukrainska-mova-savchenko-2020-2_s0135`).
+
+## Послідовність введення (Introduction Sequence)
+
+1.  **Step 1: The Core Question.** Introduce the verb `коштувати` (to cost) and the foundational question `Скільки коштує...?` for singular items and `Скільки коштують...?` for plural items. This is the most crucial phrase for any shopping interaction (Source 10, `ext-ulp_youtube-65`).
+2.  **Step 2: Essential Nouns & Currency.** Teach basic vocabulary for common goods (e.g., `хліб`, `вода`, `яблуко`) and the currency: `гривня`. Explain that `гривня` is the official term (Source 26, `6-klas-ukrmova-litvinova-2023_s0251`).
+3.  **Step 3: Numbers 1-100.** Learners cannot shop if they don't understand prices. Teach numbers systematically, focusing on the patterns for tens (20 `двадцять`, 30 `тридцять`, but 40 `сорок`) (Source 8, `ext-ulp_youtube-295`). Practice reading prices like `15 грн` (п'ятнадцять гривень) and `37 грн` (тридцять сім гривень).
+4.  **Step 4: Making a Polite Request.** Introduce the formal imperative `Дайте, будь ласка...` (Give me, please...). This is the standard polite form for requesting an item from a seller (Source 10, `ext-ulp_youtube-65`).
+5.  **Step 5: Differentiating Locations.** Clearly define `магазин` (shop), `супермаркет` (supermarket), and the culturally significant `ринок` or `базар` (market), which often features direct-from-garden produce and is a more personal experience (Source 8, `ext-ulp_youtube-295`). Also introduce `ярмарок` (fair) as a special type of market (Source 9, `ext-ulp_youtube-210`).
+6.  **Step 6: Expanding Vocabulary & Grammar.** Introduce adjectives like `дорогий` (expensive) and `дешевий` (cheap), and verbs like `купити` (to buy), `платити` (to pay), and `хотіти` (to want). Start introducing basic case usage with numbers (e.g., `дві гривні` vs. `п'ять гривень`).
+7.  **Step 7 (Late A1/Early A2): Cultural Nuances.** Introduce the concept of bargaining with phrases like `Це мені не по кишені` (It's not in my pocket / too expensive for me) (Source 1, `ext-ulp_youtube-211`). Also, introduce the common use of diminutives by sellers (`мандаринки`, `картопелька`) to add authenticity (Source 9, `ext-ulp_youtube-210`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| *How much is apples?* | `Скільки коштують яблука?` | English uses "is" for mass nouns, but Ukrainian requires plural `коштують` for plural nouns like `яблука`. The singular `коштує` is for singular items: `Скільки коштує хліб?` (Source 10). |
+| `Я хочу купити два яблук.` | `Я хочу купити два яблука.` | After the numbers 2, 3, and 4, nouns take the nominative plural form, not the genitive plural (`-ів`). The genitive plural is used for 5 and up: `п'ять яблук` (Source 36, `6-klas-ukrmova-zabolotnyi-2020_s0189`). |
+| `Цей хліб є дешевий.` | `Цей хліб дешевий.` (або `Це дешево.`) | The verb `є` (is/are) is typically omitted in simple "X is Y" statements in the present tense. Learners often insert it based on English grammar. |
+| `Дякую вас.` | `Дякую вам.` | The verb `дякувати` (to thank) governs the dative case (`кому?` - to whom?), not the accusative case. This is a common error for learners translating directly from "thank you" (Source 31, `10-klas-ukrajinska-mova-avramenko-2018_s0022`). |
+| `Вибачаюся.` | `Вибачте, будь ласка.` або `Перепрошую.` | `Вибачаюся` is a reflexive form that literally means "I forgive myself." It is a common Russianism and considered incorrect in standard Ukrainian. The correct forms are imperatives or set phrases (Source 13, `7-klas-ukrmova-zabolotnyi-2024_s0240`). |
+| `Скільки для хліба?` | `Скільки коштує хліб?` | Direct translation of "How much for the bread?". Ukrainian uses the set phrase `Скільки коштує + [nominative noun]`. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This section is mandatory. Teaching about shopping provides a crucial opportunity to build a decolonized understanding of Ukrainian culture and language from day one.
+
+1.  **Currency: `Гривня`, not `Копійка` as the focus.** The official currency is the `гривня` (Source 26, `6-klas-ukrmova-litvinova-2023_s0251`). While `копійка` exists as the subdivision, it's vital to explain its history. The term `копійка` is an imperial Russian imposition. The historically Ukrainian term for a small coin is `шаг` (shah), which is found throughout classical Ukrainian literature by authors like Shevchenko and Kotlyarevskyi and was the official subdivision in 1918. The National Bank of Ukraine has initiated discussions to restore this historical name to de-occupy the nation's monetary sovereignty (Source 11, `ext-realna_istoria-86`). While learners will see `копійка` in practice, framing `шаг` as the authentic Ukrainian term is a powerful act of decolonization.
+2.  **Souvenirs: Promote Ukrainian, Prohibit Russian.** When teaching vocabulary for souvenirs, actively avoid Russian cultural symbols. The `матрьошка` (matryoshka doll) is a potent symbol of Russian culture and, for many Ukrainians, a painful reminder of the ongoing conflict and war. It is **not** a Ukrainian souvenir. Instead, promote authentic Ukrainian items like the `вишиванка` (embroidered shirt), `трав'яний чай` (herbal tea), `мед` (honey), or traditional crafts (Source 2, `ext-ulp_youtube-173`; Source 1, `ext-ulp_youtube-211`). Similarly, Soviet symbols (red flags, etc.) are symbols of a totalitarian regime that actively destroyed Ukrainian culture and should never be presented as acceptable souvenirs from Ukraine (Source 2, `ext-ulp_youtube-173`).
+3.  **Language: No Russian Calques.** Firmly correct Russian-influenced phrasing. For example, the common L2 error `Вибачаюся` ("I apologize") is a direct calque from Russian and incorrect; the proper Ukrainian is `Вибачте` or `Перепрошую` (Source 13, `7-klas-ukrmova-zabolotnyi-2024_s0240`). Teach Ukrainian on its own terms, without reference to Russian cognates or grammar as a crutch.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+### Іменники (Nouns)
+*   **Locations:** `ринок`/`базар` (market) ★★★, `магазин` (shop) ★★★, `супермаркет` (supermarket) ★★, `ярмарок` (fair) ★
+*   **Money:** `гроші` (money) ★★★, `гривня` (hryvnia) ★★★, `ціна` (price) ★★★, `решта` (change) ★★, `знижка` (discount) ★, `розпродаж` (sale) ★
+*   **People:** `продавець`/`продавчиня` (salesman/saleswoman) ★★, `покупець` (customer) ★
+*   **Items:** `візок` (trolley/cart) ★, `кошик` (basket) ★★, `чек` (receipt) ★★
+*   **Food (examples):** `хліб` (bread), `вода` (water), `молоко` (milk), `яйця` (eggs), `картопля` (potatoes), `морква` (carrots), `цибуля` (onion), `часник` (garlic), `яблуко` (apple), `виноград` (grapes), `кавун` (watermelon) ★★★
+
+### Дієслова (Verbs)
+*   `коштувати` (to cost) ★★★
+*   `хотіти` (to want) ★★★
+*   `купити` (to buy - perfective) ★★★
+*   `платити` (to pay) ★★
+*   `давати`/`дати` (to give) ★★
+*   `брати`/`взяти` (to take) ★★
+*   `продавати`/`продати` (to sell) ★
+*   `торгуватися` (to bargain) ★
+
+### Прикметники (Adjectives) & Прислівники (Adverbs)
+*   `дорогий` (expensive) / `дорого` (expensively) ★★★
+*   `дешевий` (cheap) / `дешево` (cheaply) ★★★
+*   `смачний` (tasty) ★★
+*   `свіжий` (fresh) ★★
+*   `великий` (big) / `маленький` (small) ★★
+
+### Ключові фрази (Key Phrases)
+*   `Скільки коштує / коштують...?` (How much does/do ... cost?) ★★★
+*   `Дайте, будь ласка...` (Please give me...) ★★★
+*   `З вас ... гривень.` (That will be ... hryvnias from you.) ★★
+*   `Ось, візьміть.` (Here, take it.) ★★
+*   `Дякую.` (Thank you.) ★★★
+*   `Будь ласка.` (Please / You're welcome.) ★★★
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Situational Role-Play (Source 36, `6-klas-ukrmova-zabolotnyi-2020_s0189`)**
+    *   **Prompt:** Уявіть, що ви прийшли в магазин, щоб купити шкільне приладдя. Зверніться до продавця і замовте товар відповідно до поданого списку, уживаючи іменники в правильній формі.
+    *   **Список:**
+        *   3 (олівець)
+        *   2 (альбом)
+        *   5 (ручка)
+        *   4 (стержень)
+    *   **Мета:** This exercise forces the learner to practice asking for items and correctly applying number-noun agreement rules in a realistic scenario.
+
+2.  **Dialogue Completion (Source 25, `6-klas-ukrmova-avramenko-2023_s0017`)**
+    *   **Prompt:** Заповніть пропуски в діалозі, використовуючи слова з довідки.
+    *   **Dialogue:**
+        `— Добрий день! _______ ________ квиток у партері?`
+        `— Від ста до трьохсот гривень.`
+        `— Тоді мені, ____ ______, два квитки.`
+        `— З вас п'ятсот гривень.`
+    *   **Довідка:** `будь ласка`, `скільки коштує`.
+    *   **Мета:** Reinforces core question and politeness formulas in a structured way.
+
+3.  **Price and Number Practice (Source 18, `7-klas-ukrmova-avramenko-2024_s0023`)**
+    *   **Prompt:** Перепишіть речення, передавши кількісні показники за допомогою числівників у потрібній відмінковій формі.
+    *   **Example:** Кілограм бананів у супермаркетах Полтави коштує від 54 до 75 гривень.
+    *   **Learner's Task:** Write out: "Кілограм бананів ... коштує від п'ятдесяти чотирьох до сімдесяти п'яти гривень."
+    *   **Мета:** Focuses specifically on the correct declension of numbers when stating prices and ranges, a complex but necessary skill.
+
+4.  **Aфіша (Poster/Ad) Creation (Source 41, `2-klas-ukrmova-bolshakova-2019-2_s0086`)**
+    *   **Prompt:** Створи афішу для ярмарку. Включи таку інформацію:
+        *   `назва` (name)
+        *   `час` (time)
+        *   `місце` (place)
+        *   `ціна` (price, e.g., for entrance or special items)
+    *   **Мета:** A creative task that combines writing, numbers, and key vocabulary (`ціна`) in a practical output. It moves beyond simple dialogue repetition.
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/numbers`
+- `pedagogy/a1/cases-intro`
+- `culture/ukrainian-currency`
+- `culture/markets-and-fairs`
+- `vocabulary/a1/food`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/checkpoint-food-shopping.md
 
-> **Source:** , Grade 4
-> **Section:** Сторінка 115
-> **Score:** 0.50
->
-> •  Випишіть із тексту словосполучення іменників із залежним 1 
-> від них числівниками. Запишіть числівники словами, поставте 
-> до них питання.
-> 263. Прочитайте словосполучення, розкриваючи дужки.
-> 5 (олівець), 8 (зошит), 20 (курча), 3 (стіл), 60 (лист), 
-> 11 (стілець), 20 (яблуко), 24 (ящик), 70 (кілограм), 500 
-> (дерево).
-> •  Спишіть словосполучення за зразком, запишіть числівники 
-> словами.
-> Зразок
-> П’ять олівців, п’ятсот кілограмів.
-> гь'зіж ябт ,
-> 264. Прочитайте текст.
-> Паць вийшов із будинку за п’ять хвилин до восьмої 
-> години й уже о дванадцятій хвилині на дев’яту був у шко­
-> лі. Вінні-Пух прийшов до школи о двадцять п’ятій хвилині 
-> на дев’яту годину, хоч йому потрібно було йти на десять 
-> хвилин менше, ніж Пацю.
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 169
-> **Score:** 0.25
->
-> 169
-> 169
-> § 86.  М’який  знак  у  числівниках
-> 3.	 Прочитайте текст і виконайте завдання.
-> Корисні  ласощі
-> Сухофрукти — дуже смачний і корисний продукт. Калорійність і кіль­
-> кісний показник цукру на 100 г у сухих фруктах різні. Наприклад, у ку­
-> разі місткість цукру — 72,1 г, калорійність — 215,6 ккал. Яблука сушені 
-> мають 61,9 г цукру, а їхня калорійність становить 230,9 ккал, у груші су­
-> шеній цукру — 63,2 г і 250,1 ккал, в інжирі — 77,8 г цукру та 256,8 ккал.
-> Сушених яблук рекомендовано вживати не більше 30–50 г на добу (З ін-
-> тернету).
-> А.	 Замініть цифри словами. Запишіть їх.
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 185
-> **Score:** 0.50
->
-> 185
-> Числiвник
-> Якщо до складу числівника входять слова з поло-
-> виною, із чвертю, то іменник узгоджуємо із цілим
-> числом. НАПРИКЛАД:
-> два з половиною лимони, 
-> шість із половиною лимонів.
-> ПОРІВНЯЙМО:
-> ПРАВИЛЬНО
-> НЕПРАВИЛЬНО
-> дві третіх кілограма
-> двом третім кілограма
-> півтора кілограма
-> два із чвертю кілограми
-> дві третіх кілограми
-> двом третім кілограмам
-> півтора кілограми
-> два із чвертю кілограма
-> Іменники при складених числівниках уживаємо в тому відмінку, яко-
-> го вимагає останнє слово. НАПРИКЛАД: двадцять три
-> р
-> дні
-> и
-> , двад-
-> цять п’ять днів.
-> ЧОМУ ТАК? Поясніть,
-> ?
-> чому в кожному з поданих речень іменник персик
-> ужито в різних формах. 
-> 1. На столі лежало три персики.
-> 2. Мама купила шість персиків. 
-> 3.
-
-## Скільки коштує? (How Much?)
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 167
-> **Score:** 0.50
->
-> 167
-> герб, тризуб. Ці гроші згодом стали називати гривнями. 
-> Тож наші сучасні гривні мають довгу й цікаву історію! 
-> (З інтернету).
->  
-> ІІ   Порівняйте тексти — уміщений у підручнику і записаний 
-> вами. Назвіть їхні спільні ознаки. Чим різняться тексти?
-> Пригадуємо:
-> 1   Що таке текст?
-> 2   Що таке тема тексту?
-> Шукаємо відповіді на запитання:
-> 1   Що таке первинні і вторинні тексти?
-> 2   Чим відрізняються первинні і вторинні тексти?
-> 3   У яких життєвих ситуаціях створюють первинні тексти?
-> Відповідно до запитань сформулюйте особисті цілі.
-> 395   Висловіть припущення: який із двох текстів (уміщений у підруч-
-> нику чи записаний вами) можна назвати первинним, а який — 
-> вторинним? Відповідь обґрунтуйте. Звірте свої міркування 
-> з поданими нижче відомостями.
-
-> **Source:** varzatska, Grade 4
-> **Section:** Сторінка 47
-> **Score:** 0.33
->
-> 47
-> 90. 
-> 1. Прочитай текст і розглянь малюнок. Постав запи-
-> тання до кожного абзацу.
-> ОДНА ГРИВНЯ — ОДИН ВІЛ
-> Гривня з’явилася за часів Київської Русі. Це був зли-
-> ток — срібний, іноді золотий. За одну гривню можна було 
-> купити вола.
-> Гривні знову з’явилися за часів відродження україн-
-> ської державності в 1919–1920 роках. Тепер — це наші 
-> українські гроші.
-> 2. Визнач рід та відмінок виділених іменників. За потреби 
-> користуйся таблицями на сс. 41–42.
-> 91. 
-> 1. Прочитай і спиши речення. Підкресли в них голов-
-> ні члени. Визнач, у яких відмінках ужито виділений 
-> іменник. Обґрунтуй свою відповідь.
-> 1. Українська державність відродилася в 1919–1920 ро-
-> ках. 2. Український народ виборов свою державність 
-> у 1919–1920 роках.
-> 2.
-
-## Де купити? (Where to Buy)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 81
-> **Score:** 0.25
->
-> назви транспортних засобів, 
-> магазинів і виробів
-> літак «Мрія», мотоцикл «Ява», су-
-> пермаркет «Сільпо», печиво «Дніпро» 
-> назви 
-> періодичних 
-> видань, 
-> мистецьких творів
-> журнал «Vo­gue», газета «Порад­ни­
-> ця», повість «Климко», мульт­фільм 
-> «Рататуй»
-> Потрібно розрізняти загальні назви й утворені від них умовні власні 
-> назви: біла церква (храм білого кольору) — Біла Церква (місто); сві-
-> тить сонечко — дитсадок «Сонечко». Назви періодичних видань, мистецьких творів і виробів, а також умов­
-> ні назви пишемо з великої букви та в лапках: часопис «Дніпро», пісня 
-> «Червона рута», цукерки «Ліщина».
-
-> **Source:** avramenko, Grade 5
-> **Section:** Сторінка 184
-> **Score:** 0.33
->
-> 184
-> СИНТАКСИС  І  ПУНКТУАЦІЯ  
-> — Тю! Що це тобі — м’ясозаготівля? Це ж видовище. Головне тут — 
-> красиво вимахувати червоною плахтою і ловко вивертатися… Уперше в іс-
-> торії Васюківки — бій биків (За Вс. Нестайком). 5. Прочитайте діалог і виконайте завдання. Зверніть увагу: за словами 
-> автора ви маєте розпізнати, коли після реплік треба ставити знак пи­
-> тання, знак оклику чи кому. Ви маєте картку нашого магазину запитала касирка. Так, ось вона відповів Іван і дістав із гаманця картку. Вам потрібний пакет додала жінка, не підводячи очей. Так, середнього розміру пролунало у відповідь. Дякуємо за покупку. Приходьте ще на прощання вигукнула касирка. А. Перепишіть діалог,  розставляючи розділові знаки. Б. Випишіть іменники за алфавітом. 6. Виконайте завдання в тестовій формі. 1.
-
-## Підсумок — Summary
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 221
-> **Score:** 0.50
->
-> 218
-> Доброго ранку! Добрий день! Привіт! Радий бачити тебе. 
-> * * *
-> До побачення! На все добре! Гарного дня! Бувайте здорові! До зу-
-> стрічі!
-> Бажаю успіхів! Хай щастить! Рада була зустрітися.
-> * * *
-> Вибачте. Пробачте. Прошу вибачити (пробачити).
-> Даруйте. Перепрошую. Вибачте, що турбую.
-> * * *
-> Дякую. Щиро дякую. Я тобі дуже вдячний. Будь ласка. Нема 
-> за що.
-> 528.	І. ПОПРАЦЮЙТЕ В ПАРАХ. Уявіть, що хтось із вас опинився в 
-> чужому місті і йому необхідно з’ясувати, де розміщено стадіон (цирк чи 
-> театр). А хтось із вас живе в цьому місті. Складіть і розіграйте за осо-
-> бами діалог (5–6 реплік), можливий у цій ситуації. Уживайте слова 
-> ввічливості.
-> ІІ.
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 140
-> **Score:** 0.33
->
-> Дайте відповідь на запитання однокласника / однокласниці та оцініть його / її 
-> відповідь. кульмінація
-> зав’язка           розв’язка
-
-## Grammar Reference
+# Педагогіка A1: Checkpoint Food Shopping
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
+The goal of the A1 checkpoint on food shopping is to move learners from passive knowledge to active, communicative use of the language in a simulated, high-frequency scenario. The approach is grounded in **мовленнєва діяльність** (speech activity), prioritizing practical communication over abstract grammatical knowledge (Source `6-klas-ukrmova-betsa-2023_s0014`).
 
-### Правила вживання знака м'якшення
-> **Source:** МійКлас — [Правила вживання знака м'якшення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/pravila-vzhivannia-znaka-m-iakshennia-39904)
+The core pedagogical tool is the **діалог** (dialogue), as it models the real-world conversational exchange between a shopper and a seller (Source `6-klas-ukrmova-betsa-2023_s0014`). This allows for the natural integration of vocabulary, grammar, and cultural norms. Learning starts with structured dialogues, which are then broken down into key phrases (**репліки**), and finally used as a scaffold for students to create their own conversations (Source `6-klas-ukrmova-betsa-2023_s0018`).
 
-### Теорія:
-  
+This checkpoint should be treated as a **комунікативне завдання** (communicative task) (Source `9-klas-ukrajinska-mova-voron-2017_s0008`). The primary measure of success is whether the learner can successfully "purchase" an item, asking for its price and expressing what they want. Grammar is a tool to achieve this goal, not the goal itself. The module structure should follow the classic model of introduction, main part, and conclusion (`вступ, основна частина, висновок`), where the "conclusion" is the final communicative task (Source `3-klas-ukrainska-mova-vashulenko-2020-1_s0014`).
 
-*www.ua.pistacja.tv*  
- 
-Знаком ь позначаємо м’якість приголосних звуків на письмі.
-Знак м’якшення пишемо:
-- Ь пишеться після м’яких д, т, з, с, дз, ц, л, н у кінці **слова** та **складу**: *дядько, радість, низько, заносьте, гедзь, доброволець, коваль, тінь.
-*  
-- Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
+## Послідовність введення (Introduction Sequence)
 
----
-**Total textbook excerpts found:** 10
-**Grades searched:** 4, 5, 6
+**Step 1: Activate & Introduce Core Vocabulary (Активізація лексики)**
+- Begin by reviewing previously learned food items (яблуко, хліб, вода).
+- Introduce new, essential shopping vocabulary using visual aids (pictures of a market, a store, products). This aligns with the principle that graphical information is often the first thing a child (or a new learner) perceives (Source `5-klas-ukrmova-golub-2022_s0150`).
+- Introduce the key nouns: `магазин`, `ринок`, `продавець` (seller), `покупець` (buyer), `ціна`, and the currency `гривня`. (Source `ext-istoria_movy-10` highlights the importance of context-specific vocabulary in trade).
+
+**Step 2: Introduce Core Communicative Phrases (Ключові фрази)**
+- Teach the most critical questions and statements as fixed chunks. The goal is function, not grammatical analysis at this stage.
+- **Question:** `Скільки коштує...?` (How much does ... cost?)
+- **Request:** `Дайте, будь ласка, ...` (Give me, please...)
+- **Statement:** `Я хочу купити ...` (I want to buy...)
+- **Politeness:** `Дякую` (Thank you), `Будь ласка` (Please/You're welcome).
+- This follows the logic of teaching functional language for specific situations (`мовленнєва подія`) (Source `10-klas-ukrmova-glazova-2018_s0318`).
+
+**Step 3: Model Dialogue (Моделювання діалогу)**
+- Present a simple, complete dialogue between a shopper and a seller. The dialogue should be read aloud to model correct intonation and pronunciation (Source `7-klas-ukrlit-mishhenko-2015_s0109`).
+- Example:
+  - Покупець: Добрий день.
+  - Продавець: Добрий день.
+  - Покупець: Скажіть, будь ласка, скільки коштує хліб?
+  - Продавець: Двадцять гривень.
+  - Покупець: Добре. Дайте, будь ласка, один хліб.
+  - Продавець: Будь ласка.
+  - Покупець: Дякую. До побачення.
+- This provides a complete "script" for learners to analyze and then adapt (Source `6-klas-ukrmova-betsa-2023_s0018`).
+
+**Step 4: Controlled Practice & Role-Play (Контрольована практика)**
+- Begin with simple substitution drills. Provide the model dialogue and a list of other food items and prices for learners to swap in.
+- Structure a role-playing activity where one student is the `продавець` and the other is the `покупець`. This transforms the monologue of learning into a true dialogue (Source `6-klas-ukrmova-betsa-2023_s0014`).
+- Use question-and-answer pairs as a practice format (Source `2-klas-ukrmova-bolshakova-2019-2_s0054`).
+
+**Step 5: Introduction to Genitive Case with Numbers (Введення родового відмінка)**
+- This is a checkpoint, so it's the first exposure to a practical need for a new case. Introduce the concept not as a full paradigm, but as a pattern for quantity.
+- **Pattern 1 (Singular):** Show `один` + Nominative: `один хліб`, `одна пляшка`.
+- **Pattern 2 (2, 3, 4):** Show `два/три/чотири` + Nominative Plural (for A1, this can be simplified or pre-taught): `два банани`.
+- **Pattern 3 (5+):** Introduce the Genitive Plural ending `-ів` or `-` as a rule for "many" of something: `п'ять яблук`, `десять гривень`.
+- This is a functional introduction to a complex grammatical category, focusing on communicative need rather than exhaustive rules (Source `ext-other_blogs-46`). The goal is recognition and basic use, not mastery.
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrectly) | ✅ Правильно (Correctly) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Я *буду мати* хліб.` | `Я хочу хліб.` / `Дайте, будь ласка, хліб.` | This is a direct calque from English "I will have...". In Ukrainian, desire is expressed with `хотіти`, and a direct request is made with `давати` in the imperative. The verb `мати` is for possession. <!-- VERIFY --> |
+| `Скільки є хліб?` | `Скільки коштує хліб?` | English "How much *is* the bread?" is translated literally. The Ukrainian structure for asking a price uses the verb `коштувати` (to cost). (Source `ext-istoria_movy-10` implies that direct translation is a common issue). |
+| `Дайте мені п'ять *яблуко*.` | `Дайте мені п'ять яблук.` | After numbers 5 and greater, nouns must be in the Genitive Plural case. Learners default to the Nominative Singular learned first. This is a fundamental rule of noun-numeral agreement. (Source `ext-other_blogs-46`) |
+| `Я плачу з *кредитна картка*.` | `Я плачу кредитною карткою.` | The Instrumental case (`орудний відмінок`) is required to show the "instrument" or method of payment. English uses a preposition ("with a credit card"), while Ukrainian uses a case ending. (Source `ext-other_blogs-46`) |
+| `Це *двадцять гривна*.` | `Це двадцять гривень.` | Similar to the error with `яблука`, the noun `гривня` must be in the Genitive Plural (`гривень`) after numbers like `двадцять`. Learners often forget to decline the currency itself. <!-- VERIFY --> |
+
+## Деколонізаційні застереження (Decolonization Notes)
+This section is critical for building an authentic and respectful understanding of Ukrainian language and culture from the very beginning.
+
+1.  **Currency is `Гривня`, Not `Рубль`**: Emphasize that the national currency of Ukraine is the `гривня` (plural `гривні`, genitive plural `гривень`). There should be absolutely no mention of `рубль`, as it is the currency of the aggressor state and historically associated with imperial and Soviet occupation. Using it is factually incorrect and politically insensitive. (Source `ext-realna_istoria-42` highlights the long history of Russian political and economic influence that Ukraine is overcoming).
+
+2.  **Ukrainian Phonetics Only**: Pronunciation must be taught based on the Ukrainian phonetic system. Do not use Russian sounds as a reference point (e.g., "it's like the Russian 'ы'"). Ukrainian has its own distinct phonology. For example, the Ukrainian `и` is a separate phoneme, not a variant of `і`. Teaching through Russian parallels reinforces a colonial linguistic hierarchy and creates bad pronunciation habits. (Source `ext-imtgsh-151` clearly distinguishes the linguistic paths of Ukrainian and Russian).
+
+3.  **Food Vocabulary is Ukrainian**: While many Slavic languages share food terms, present the vocabulary as authentically Ukrainian. For example, use words like `сир` (cheese), `сметана` (sour cream), and `овочі` (vegetables) without referencing Russian cognates. Use tools like `r2u.org.ua` (mentioned in Source `ext-istoria_movy-10`) to actively check for and avoid Russianisms (`русизми`) that may have crept into colloquial speech.
+
+4.  **No "Little Russian" Tropes**: Avoid any framing that presents Ukrainian culture or language as a smaller, quaint, or "folkloric" version of Russian culture. Shopping for everyday items like `хліб` and `молоко` is a modern, universal activity. The context should be a contemporary Ukrainian city, not an ethnographic museum. (Source `9-klas-istorija-ukrajini-gisem-2017_s0260` shows how the Russian empire historically viewed and suppressed Ukrainian identity as "Little Russian").
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+**Іменники (Nouns):**
+- **Food:** хліб ★★★, вода ★★★, молоко ★★★, сік ★★, чай ★, кава ★, цукор ★★, сіль (f.) ★, яблуко ★★★, банан ★★, картопля (f.) ★★, помідор ★★★, огірок ★★★, сир ★★★, м'ясо ★★★, риба ★★, яйце (pl. яйця) ★★, олія (f.) ★
+- **Shopping:** магазин ★★★, ринок ★★, продавець (m.) ★★, покупець (m.) ★★, ціна ★★★, гроші (pl. only) ★★★, гривня (f.) ★★★, кошик ★
+- **Quantities:** кілограм ★, літр ★, пляшка (f.) ★★, пакет ★
+
+**Дієслова (Verbs):**
+- купувати / купити ★★★
+- коштувати ★★★
+- хотіти ★★★
+- давати / дати ★★★
+- платити / заплатити ★★
+- продавати ★
+- брати / взяти ★★
+
+**Прикметники (Adjectives):**
+- свіжий ★★★
+- смачний ★★
+- дорогий ★
+- дешевий ★
+- великий ★★
+- малий ★★
+
+**Прислівники, займенники, фрази (Adverbs, Pronouns, Phrases):**
+- скільки ★★★
+- будь ласка ★★★
+- дякую ★★★
+- ось / от ★★★
+- тут ★★
+- щось ★
+- ще ★
+- все (that's all) ★★
+
+## Приклади з підручників (Textbook Examples)
+
+**1. Dialogue Role-Play (Діалог за ролями)**
+- **Format:** Based on the structure in `6-klas-ukrmova-betsa-2023_s0018`, provide two roles (Покупець, Продавець) and a list of items with prices. Students must construct a dialogue to buy 1-2 items.
+- **Prompt:**
+  - `Розіграйте діалог із сусідом / сусідкою за партою.` (Act out the dialogue with your deskmate.) (Source `6-klas-ukrmova-betsa-2023_s0014`)
+  - **Items:**
+    - Яблука: 30 грн/кг
+    - Молоко: 40 грн/літр
+    - Хліб: 25 грн
+  - **Goal:** Student A (Покупець) asks the price of two items and buys one. Student B (Продавець) answers and sells the item.
+
+**2. Question Construction (Складання запитань)**
+- **Format:** Inspired by the simple Q&A in `2-klas-ukrmova-bolshakova-2019-2_s0054`. Give the answer and have the student write the correct question.
+- **Prompt:** `Склади запитання до відповідей.` (Create questions for the answers.)
+  - `Відповідь: Цей сир коштує сто гривень.` -> `Запитання: ...?` (Скільки коштує цей сир?)
+  - `Відповідь: Так, я хочу купити помідори.` -> `Запитання: ...?` (Ви хочете купити помідори?)
+  - `Відповідь: Один кілограм, будь ласка.` -> `Запитання: ...?` (Скільки вам ...?)
+
+**3. List Creation / Sentence Building (Створення списку)**
+- **Format:** Adapted from the categorization task in `2-klas-ukrmova-bolshakova-2019-2_s0054`. Provide a list of food items and ask the learner to create a shopping list using the phrase "Я хочу купити..."
+- **Prompt:** `Склади свій список покупок. Почни речення з "Я хочу купити..."` (Make your shopping list. Start the sentence with "I want to buy...")
+- **Vocabulary:** `[молоко, хліб, сік, банани, сир, вода]`
+- **Example output:** `Я хочу купити молоко, хліб і сир.`
+
+**4. Reading Comprehension (Навчальне читання)**
+- **Format:** Provide a short, simple text (a shopping list or a very short story about going to the store) and ask comprehension questions. This models the "Навчальне читання" activities (Source `5-klas-ukrmova-uhor-2022-1_s0015`).
+- **Prompt:** `Прочитайте текст і дайте відповіді на запитання.` (Read the text and answer the questions.)
+- **Text:** `Це мій список покупок. Мені треба купити хліб, молоко і два кілограми картоплі. Ще я хочу купити сік.`
+- **Questions:**
+  1. `Що треба купити?` (What needs to be bought?)
+  2. `Скільки картоплі треба купити?` (How much potato needs to be bought?)
+  3. `Автор хоче купити сік?` (Does the author want to buy juice?)
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/numbers-0-100`
+- `pedagogy/a1/asking-questions`
+- `grammar/a2/genitive-case-introduction`
+- `grammar/a2/instrumental-case-introduction`
+- `vocabulary/a1/food`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -638,7 +637,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Скільки коштує? (How Much?)` (~300 words)
 - `## Де купити? (Where to Buy)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -694,7 +692,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -795,89 +793,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги — Dialogues (~330 words total)
+- P1 (~60 words): Context setting — contrast the atmosphere of a traditional Ukrainian market (ринок, базар) with a modern supermarket. Introduce the characters: Мама and Дочка shopping for dinner, setting a friendly, communicative tone.
+- D1 (~120 words): Dialogue 1 — At the market. Buying produce from a friendly seller. Key phrases: "Скільки коштує кілограм яблук?", "Дайте, будь ласка, два кілограми помідорів". Focus on price exchange: "Сорок гривень", "Сімдесят п'ять гривень".
+- D2 (~110 words): Dialogue 2 — At the supermarket. Navigation and comparing prices. Phrases: "Вибачте, де тут хліб?", "Молоко в холодильнику". Comparing items: "Скільки коштує цей сир? — Сто двадцять гривень. — Дорого! А є дешевший?".
+- P2 (~40 words): Brief vocabulary summary of common food items used in the dialogues: хліб (bread), молоко (milk), сир (cheese), ковбаса (sausage), and масло (butter).
+- <!-- INJECT_ACTIVITY: match-up-shops --> [match-up, Focus: Where do you buy it? Match item to shop type (ринок, м'ясний відділ, аптека), 8 items]
 
-- P1-setup (~30 words): Scene-setter for Dialogue 1 — Taras is at a Kyiv outdoor market (ринок). He wants яблука and помідори. Introduces the core buying exchange: ask price → hear number + гривень → order with Дайте, будь ласка + quantity.
+## Скільки коштує? — How Much? (~340 words total)
+- P1 (~100 words): Explaining the verb "коштувати" (to cost). Focus on the crucial A1 distinction: "Скільки коштує...?" for singular (хліб, молоко, масло) and "Скільки коштують...?" for plural (яблука, помідори, яйця). Provide 4 clear sentence pairs.
+- P2 (~120 words): The "Гривня" paradigm for prices. Explain the 1/2-4/5+ rule as a pattern: 1 гривня (21, 31), 2-3-4 гривні (22, 33, 44), and 5-20/tens гривень (10, 25, 100). Mention "копійка" and the historical "шаг" as a decolonization note.
+- P3 (~120 words): Expressing price reactions and status. Using adverbs: "дорого" (expensive), "дешево" (cheap), "нормальна ціна" (fair price). Useful transaction phrases: "є знижка?" (is there a discount?), "за все" (total amount), and "скільки з мене?" (how much do I owe?).
+- <!-- INJECT_ACTIVITY: quiz-currency-choice --> [quiz, Focus: Choose correct: 23 (гривня / гривні / гривень), 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-prices --> [fill-in, Focus: Скільки коштує/коштують [item]? — [number] гривень, 8 items]
 
-- Dialogue 1 (~115 words): Full 8-turn market exchange between Taras and a vendor (продавець). Covers: Скільки коштує кілограм яблук? — Сорок гривень. А помідори? — Тридцять п'ять гривень за кілограм. Дайте, будь ласка, два кілограми помідорів і кілограм яблук. — Сімдесят п'ять гривень, будь ласка. — Ось, будь ласка. — Дякую! До побачення! Highlights: quantity phrase два кілограми + genitive plural, price arithmetic aloud.
+## Де купити? — Where to Buy (~330 words total)
+- P1 (~90 words): Vocabulary for shopping locations. Difference between "магазин" (general shop), "супермаркет", and "крамниця" (store). Introduce specific sections within a large store: "м'ясний відділ" (meat section) and "молочний відділ" (dairy section).
+- P2 (~120 words): Quantity words as chunks (pre-genitive introduction). Teach students to use these as fixed units: "кілограм яблук", "літр молока", "пачка масла", "пляшка води", and "буханка хліба". Explicitly state that "of" is included in the ending of the second word.
+- P3 (~120 words): Politeness and Payment at the counter. The request formula "Дайте, будь ласка...". Payment methods: "готівка" (cash) and "картка" (card). The final question: "Можна карткою?" and the seller's response: "Ось решта" (Here is the change) or "Ось ваш чек" (Here is your receipt).
+- <!-- INJECT_ACTIVITY: fill-in-quantities --> [fill-in, Focus: At the market: Дайте ___ (кілограм/літр/пляшку) ___, 6 items]
 
-- Bridge (~25 words): Two key takeaways boxed: (1) за кілограм = per kilogram, (2) Дайте, будь ласка + [quantity] + [item] = the standard buying request.
+## Підсумок — Summary (~300 words total)
+- P1 (~100 words): Recap of the "Shopping Toolkit". A concise summary of the steps to a successful purchase: Ask (Скільки коштує?), Choose (Дайте, будь ласка), React (Дорого/Дешево), and Pay (Можна карткою?).
+- P2 (~100 words): Cultural/Authentic speech note. Explain why market sellers use diminutives like "картопелька" (little potato) or "яблучка" (little apples) — it’s not just about size, but about being welcoming and friendly. Remind students to use "Ви" with sellers.
+- P3 (~100 words): Self-check scenarios. Provide a bulleted list for the student to practice mentally:
+    - How do you ask for the price of 5 kilograms of potatoes at the market?
+    - How do you tell the seller that 200 hryvnias is too expensive?
+    - How do you politely ask for a bottle of water and a pack of tea in a shop?
 
-- P2-setup (~25 words): Scene-setter for Dialogue 2 — Мама and Дочка in a supermarket (супермаркет). They need to find хліб, compare prices on two varieties of сир, and pay by card.
-
-- Dialogue 2 (~115 words): Full 12-turn supermarket exchange between Мама and Дочка. Covers: Вибачте, де тут хліб? — Хліб у третьому ряді. А молоко? — Молоко в холодильнику, там. Скільки коштує цей сир? — Сто двадцять гривень. Дорого! А є дешевший? — Так, ось цей — вісімдесят. Добре, беру. Скільки за все? — Сто сорок сім гривень. Можна карткою? — Так, звичайно. Дякуємо за покупку! Highlights: navigating aisles, comparing prices, є дешевший? reaction chain, paying by card.
-
-- Key-phrase note (~20 words): Callout box — four phrases from Dialogue 2 to memorize now: Дорого! / Добре, беру. / Скільки за все? / Можна карткою?
-
----
-
-## Скільки коштує? (How Much?) (~330 words total)
-
-- P1 (~75 words): Introduce Скільки коштує? (singular, verb 3rd sg.) vs. Скільки коштують? (plural, verb 3rd pl.). The verb agrees with the item, not with Скільки. Four contrasting examples: Скільки коштує хліб? / Скільки коштує молоко? / Скільки коштують яблука? / Скільки коштують помідори? Show the pattern: animate vs. inanimate doesn't matter — only singular vs. plural does.
-
-- P2 (~95 words): The three forms of гривня after numbers — taught as a pattern, not case analysis. Rule: 1 → гривня; 2, 3, 4 → гривні; 5 and above → гривень. Eight examples with real prices: 1 гривня, 2 гривні, 4 гривні, 5 гривень, 20 гривень, 21 гривня, 32 гривні, 100 гривень. Side note: копійка follows the same pattern (1 копійка, 2 копійки, 5 копійок) but prices are usually rounded in everyday speech.
-
-- **Activity (quiz, 8 items):** Choose the correct form — 21 ___ / 32 ___ / 45 ___ / 100 ___ / 1 ___ / 3 ___ / 10 ___ / 54 ___ (options: гривня / гривні / гривень for each).
-
-- P3 (~85 words): Price-reading practice using the five items from Dialogue 2 (plan's dialogue_situations): хліб — 25 гривень, молоко — 42 гривні, сир — 89 гривень, ковбаса — 120 гривень, масло — 65 гривень. Each price read aloud in full Ukrainian: двадцять п'ять гривень, сорок дві гривні, вісімдесят дев'ять гривень, сто двадцять гривень, шістдесят п'ять гривень. Note the gender switch: сорок дві гривні (гривня is feminine → дві, not два).
-
-- P4 (~55 words): Reaction vocabulary — six short expressions with example triggers: Дорого! (said when price is high — 120 гривень for ковбаса), Дешево! (said when price is low), Нормальна ціна. (fair), Є знижка? (Is there a discount?), За все — [total]. (the cashier's total), Добре, беру. (I'll take it).
-
-- **Activity (fill-in, 8 items):** Скільки коштує {хліб|хліба}? — Двадцять гривень. / Скільки коштує {вода|воду}? — Десять гривень. / … (full 8-item set from plan).
-
----
-
-## Де купити? (Where to Buy) (~330 words total)
-
-- P1 (~90 words): Five shopping locations with a sentence for each. магазин (general shop) — Я йду в магазин. супермаркет (supermarket) — У супермаркеті є все. ринок (open-air market) — На ринку часто дешевше, ніж у супермаркеті. крамниця (store — the distinctly Ukrainian word, used in western Ukraine and literary Ukrainian, synonym for магазин) — У нашій крамниці гарний вибір. аптека (pharmacy — only medicines and cosmetics, not food) — Ліки купують в аптеці. Note: the plan lists крамниця as a Ukrainian synonym — flag it as a деполонізований / деколонізований word (Ukrainian own lexicon vs. borrowed магазин from German Magazin via Russian).
-
-- P2 (~65 words): Store sections inside a supermarket — м'ясний відділ (meat section), молочний відділ (dairy section), хлібний відділ (bread section), овочевий відділ (vegetable/produce section). Use pattern: Де тут молочний відділ? — Там, праворуч. / Де тут хлібний відділ? — Перший ряд, ліворуч. Connects back to Dialogue 2: Де тут хліб? — Хліб у третьому ряді.
-
-- P3 (~125 words): Five quantity words — taught as frozen chunks (genitive after quantity is noted but not explained at A1). Each entry: word + 1 example chunk + 1 buying sentence. кілограм: кілограм яблук / два кілограми помідорів — Дайте, будь ласка, кілограм яблук. літр: літр молока / два літри соку — Дайте, будь ласка, літр молока. пачка: пачка масла / пачка чаю — Дайте, будь ласка, дві пачки кави. пляшка: пляшка води / пляшка соку — Дайте, будь ласка, пляшку води. буханка: буханка хліба (only used for bread) — Дайте, будь ласка, буханку хліба. Footnote: You'll see these genitive endings again in A2. For now, learn the chunks — they're the same ones native speakers use automatically.
-
-- P4 (~50 words): The buying formula consolidated — Дайте, будь ласка, + [quantity] + [item]. Three full examples: Дайте, будь ласка, два кілограми помідорів. / Дайте, будь ласка, літр молока. / Дайте, будь ласка, буханку хліба. Pattern: quantity word changes form with number (кілограм → два кілограми); item stays in genitive — for now just copy the chunk.
-
-- **Activity (fill-in, 6 items):** Дайте {кілограм|літр|пляшку} яблук. / Дайте {літр|кілограм|пачку} молока. / Дайте {пляшку|кілограм|літр} води. / Дайте {пачку|літр|пляшку} чаю. / Дайте {буханку|літр|кілограм} хліба. / Дайте {кілограм|літр|пляшку} помідорів.
-
-- **Activity (match-up, 8 items):** помідори → ринок / м'ясо → м'ясний відділ / сир → молочний відділ / хліб → крамниця / молоко → супермаркет / вода → магазин / кава → кафе / борщ → ресторан.
-
----
-
-## Підсумок — Summary (~330 words total)
-
-- P1 (~155 words): Shopping toolkit — structured by function:
-
-  **Ask:**
-  - Скільки коштує [item]? — How much does [item] cost? (singular)
-  - Скільки коштують [items]? — How much do [items] cost? (plural)
-  - Де тут [item / відділ]? — Where is [item / section] here?
-  - Є дешевший? — Is there a cheaper one?
-  - Є знижка? — Is there a discount?
-
-  **Buy:**
-  - Дайте, будь ласка, [quantity] [item]. — Please give me [quantity] [item].
-  - Можна [item]? — Can I have [item]? (informal, used at markets)
-
-  **React:**
-  - Дорого! — Expensive! / Дешево! — Cheap! / Нормальна ціна. — Fair price. / Добре, беру. — OK, I'll take it.
-
-  **Pay:**
-  - Скільки за все? — How much is everything?
-  - Можна карткою? — Can I pay by card?
-  - Можна готівкою? — Can I pay cash?
-
-- P2 (~105 words): Self-check scenario — you are at a Kyiv market and need three things: 2 kg of tomatoes (помідори, 50 грн/кг), 1 bottle of juice (сік, 30 грн), 1 loaf of bread (хліб, 20 грн). Walk through the exchange:
-  — Скільки коштують помідори? — П'ятдесят гривень за кілограм.
-  — Скільки коштує сік? — Тридцять гривень.
-  — Скільки коштує хліб? — Двадцять гривень.
-  — Дайте, будь ласка, два кілограми помідорів, пляшку соку і буханку хліба.
-  — Сто п'ятдесят гривень.
-  — Можна карткою? — Так, звичайно.
-  Can you do this without looking at the toolkit? That's your goal.
-
-- P3 (~70 words): Module wrap-up and look-ahead — you've completed A1.6 (Food and Shopping): cafés (M38), shopping (this module). The three core verbs — коштувати, купувати, платити — plus гроші and ціна will recur throughout A1. Next: M40 People Around Me, where you'll meet the neighbors and family members you'd shop with. The word гривня connects to Ukrainian history — its name comes from Kyivan Rus silver currency.
-
-**Grand total: ~1320 words**
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format

@@ -2,309 +2,306 @@ version: '1.0'
 module: stress-and-melody
 level: a1
 inline:
-- id: quiz-stress-syllable
+- id: quiz-stress-position
   type: quiz
-  instruction: Which syllable is stressed? Choose the correct option.
+  instruction: Where is the stress? Choose the correct stressed syllable.
   items:
-  - question: Where is the stress in 'кава' (coffee)?
+  - question: ранок
     options:
-    - КА-ва (first syllable)
-    - ка-ВА (second syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 0
-  - question: Where is the stress in 'вода' (water)?
+  - question: метро
     options:
-    - ВО-да (first syllable)
-    - во-ДА (second syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 1
-  - question: Where is the stress in 'ранок' (morning)?
+  - question: кава
     options:
-    - РА-нок (first syllable)
-    - ра-НОК (second syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 0
-  - question: Where is the stress in 'метро' (metro)?
+  - question: вода
     options:
-    - МЕТ-ро (first syllable)
-    - мет-РО (second syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 1
-  - question: Where is the stress in 'молоко' (milk)?
+  - question: мама
     options:
-    - МО-ло-ко (first syllable)
-    - мо-ЛО-ко (second syllable)
-    - мо-ло-КО (third syllable)
-    correct: 2
-  - question: Where is the stress in 'наголос' (stress/accent)?
-    options:
-    - НА-го-лос (first syllable)
-    - на-ГО-лос (second syllable)
-    - на-го-ЛОС (third syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 0
-  - question: Where is the stress in 'фотографія' (photograph)?
+  - question: зима
     options:
-    - фо-ТО-гра-фі-я (second syllable)
-    - фо-то-ГРА-фі-я (third syllable)
-    - фо-то-гра-ФІ-я (fourth syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 1
-  - question: Where is the stress in 'зима' (winter)?
+  - question: тато
     options:
-    - ЗИ-ма (first syllable)
-    - зи-МА (second syllable)
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
+    correct: 0
+  - question: кафе
+    options:
+    - 1st syllable
+    - 2nd syllable
+    - 3rd syllable
     correct: 1
+  title: Where is the stress? Choose the correct stressed syllable.
 - id: match-stress-pairs
   type: match-up
-  instruction: Match each word to its correct English meaning. The CAPITALIZED syllable
-    shows where the stress falls — stress changes the meaning entirely.
+  instruction: Match the words with their English meanings based on their stress pattern.
   pairs:
-  - left: ЗАмок
+  - left: за́мок (1st syllable)
     right: castle
-  - left: замОк
+  - left: замо́к (2nd syllable)
     right: lock
-  - left: МУка
-    right: torment / suffering
-  - left: мукА
+  - left: му́ка (1st syllable)
+    right: torment
+  - left: мука́ (2nd syllable)
     right: flour
-  - left: АТлас
-    right: atlas (collection of maps)
-  - left: атлАС
-    right: satin fabric
-  - left: КАва
-    right: coffee (first-syllable stress)
-  - left: воДА
-    right: water (second-syllable stress)
+  - left: доро́га (2nd syllable)
+    right: road
+  - left: дорога́ (3rd syllable)
+    right: expensive
+  title: Match the words with their English meanings based on their stress pattern.
 - id: quiz-sentence-type
   type: quiz
-  instruction: Look at the punctuation mark at the end. What type of sentence is it?
+  instruction: What is the correct intonation for this sentence?
   items:
   - question: Це кава.
     options:
-    - Statement — voice falls ↘
-    - Yes/no question — voice rises ↗
-    - Exclamation — strong fall ↘↘
+    - Falling (↘)
+    - Rising (↗)
+    - Strong falling (↘↘)
     correct: 0
   - question: Це кава?
     options:
-    - Statement — voice falls ↘
-    - Yes/no question — voice rises ↗
-    - Exclamation — strong fall ↘↘
+    - Falling (↘)
+    - Rising (↗)
+    - Strong falling (↘↘)
     correct: 1
+  - question: Що це?
+    options:
+    - Falling (↘)
+    - Rising (↗)
+    - Strong falling (↘↘)
+    correct: 0
   - question: Як гарно!
     options:
-    - Statement — voice falls ↘
-    - Yes/no question — voice rises ↗
-    - Exclamation — strong fall ↘↘
+    - Falling (↘)
+    - Rising (↗)
+    - Strong falling (↘↘)
     correct: 2
   - question: Де метро?
     options:
-    - Statement — voice falls ↘
-    - Question WITH a question word — voice falls ↘
-    - Yes/no question — voice rises ↗
+    - Falling (↘)
+    - Rising (↗)
+    - Strong falling (↘↘)
+    correct: 0
+  - question: Це твоя кава?
+    options:
+    - Falling (↘)
+    - Rising (↗)
+    - Strong falling (↘↘)
     correct: 1
-  - question: Так, це метро!
-    options:
-    - Statement — voice falls ↘
-    - Yes/no question — voice rises ↗
-    - Exclamation — strong fall ↘↘
-    correct: 2
-  - question: Автобус тут?
-    options:
-    - Statement — voice falls ↘
-    - Yes/no question — voice rises ↗ (no question word)
-    - Question with question word — voice falls ↘
-    correct: 1
-  - question: Дякую!
-    options:
-    - Statement — voice falls ↘
-    - Yes/no question — voice rises ↗
-    - Exclamation — strong fall ↘↘
-    correct: 2
+  title: What is the correct intonation for this sentence?
 - id: fill-in-punctuation
   type: fill-in
-  instruction: 'Choose the correct punctuation mark: period (.), question mark (?),
-    or exclamation mark (!). Read the context clue in parentheses.'
+  instruction: Add the correct punctuation mark based on the sentence type.
   items:
-  - sentence: Це кава ___ (someone calmly telling you what is in the cup)
+  - sentence: 'Statement: Це кава _____'
     answer: .
     options:
     - .
     - '?'
     - '!'
-  - sentence: Де метро ___ (asking for directions — the word 'де' is a question word)
+  - sentence: 'Question word: Де метро _____'
     answer: '?'
     options:
     - .
     - '?'
     - '!'
-  - sentence: Як гарно ___ (expressing delight at something beautiful)
+  - sentence: 'Emotion: Як гарно _____'
     answer: '!'
     options:
     - .
     - '?'
     - '!'
-  - sentence: Це метро ___ (asking for confirmation — no question word present)
-    answer: '?'
-    options:
-    - .
-    - '?'
-    - '!'
-  - sentence: Так, це метро ___ (excited confirmation)
-    answer: '!'
-    options:
-    - .
-    - '?'
-    - '!'
-  - sentence: Ось він ___ (calm statement — pointing something out)
+  - sentence: 'Statement: Київ — столиця України _____'
     answer: .
     options:
     - .
     - '?'
     - '!'
-  - sentence: Дякую ___ (heartfelt, emotional thanks)
-    answer: '!'
-    options:
-    - .
-    - '?'
-    - '!'
-  - sentence: Де вихід ___ (asking where the exit is — question word present)
+  - sentence: 'Yes/no question: Це вода _____'
     answer: '?'
     options:
     - .
     - '?'
     - '!'
+  - sentence: 'Greeting: Привіт _____'
+    answer: '!'
+    options:
+    - .
+    - '?'
+    - '!'
+  title: Add the correct punctuation mark based on the sentence type.
 workbook:
-- type: group-sort
-  instruction: Sort these words into two groups based on where the stress falls. Listen
-    for which syllable sounds louder and longer.
-  groups:
-  - label: First-syllable stress (МА-ма pattern)
-    items:
+- id: odd-one-out-stress
+  type: odd-one-out
+  instruction: 'Which word has a different stress pattern? (Hint: find the stressed
+    syllable)'
+  items:
+  - words:
+    - мама
+    - тато
+    - кафе
+    correct: 2
+    explanation: кафе (2nd syllable stress), others are 1st syllable
+  - words:
+    - вода
+    - зима
     - ранок
+    correct: 2
+    explanation: ранок (1st syllable stress), others are 2nd syllable
+  - words:
+    - книга
+    - кава
+    - метро
+    correct: 2
+    explanation: метро (2nd syllable stress), others are 1st syllable
+  - words:
+    - рука
+    - зима
+    - тато
+    correct: 2
+    explanation: тато (1st syllable stress), others are 2nd syllable
+  - words:
+    - ранок
+    - кава
+    - вода
+    correct: 2
+    explanation: вода (2nd syllable stress), others are 1st syllable
+  - words:
+    - метро
+    - кафе
+    - мама
+    correct: 2
+    explanation: мама (1st syllable stress), others are 2nd syllable
+  title: 'Which word has a different stress pattern? (Hint: find the stressed syllable)'
+- id: tf-melody-rules
+  type: true-false
+  instruction: Are these statements about Ukrainian stress and melody true or false?
+  items:
+  - statement: Ukrainian stress always falls on the last syllable.
+    correct: false
+    explanation: Ukrainian stress is free and can fall on any syllable.
+  - statement: Changing the stress can completely change the meaning of a word.
+    correct: true
+    explanation: For example, за́мок (castle) and замо́к (lock).
+  - statement: Yes/no questions use a rising intonation (↗).
+    correct: true
+    explanation: Your voice must rise sharply on the key word.
+  - statement: Questions starting with 'що' or 'де' always use a rising intonation.
+    correct: false
+    explanation: They use a falling intonation (↘) because the question word does
+      the grammatical work.
+  - statement: Exclamatory sentences use a strong falling intonation (↘↘).
+    correct: true
+    explanation: This pattern applies to enthusiastic greetings and expressions of
+      strong feeling.
+  - statement: In Ukrainian, an unstressed 'О' is still pronounced clearly as 'О'.
+    correct: true
+    explanation: Ukrainian vowels keep their core phonetic shape even when unstressed.
+  title: Are these statements about Ukrainian stress and melody true or false?
+- id: reading-comprehension-quiz
+  type: quiz
+  instruction: Answer the questions based on the lesson text.
+  items:
+  - question: What is 'наголос' in Ukrainian?
+    options:
+    - Stress
+    - Intonation
+    - Syllable
+    - Punctuation
+    correct: 0
+  - question: Which word means 'castle'?
+    options:
+    - за́мок
+    - замо́к
+    - му́ка
+    - мука́
+    correct: 0
+  - question: What intonation do you use for 'Що це?'
+    options:
+    - Falling (↘)
+    - Rising (↗)
+    - Flat (→)
+    - Strong rising (↗↗)
+    correct: 0
+  - question: How do you correctly divide 'фотографія' into syllables?
+    options:
+    - фо-то-гра-фі-я
+    - ф-от-ог-ра-фія
+    - фо-тог-раф-ія
+    - фот-ог-раф-ія
+    correct: 0
+  - question: What happens to the stress when 'рука' (hand) becomes 'руки' (hands)?
+    options:
+    - It shifts to the first syllable
+    - It stays on the second syllable
+    - It disappears
+    - It moves to the middle
+    correct: 0
+  - question: Which intonation is used for declarative statements?
+    options:
+    - Falling (↘)
+    - Rising (↗)
+    - Flat (→)
+    - Strong falling (↘↘)
+    correct: 0
+  title: Answer the questions based on the lesson text.
+- id: divide-syllables-practice
+  type: divide-words
+  instruction: Divide these words into syllables. Use a hyphen (-) between syllables.
+  items:
+  - word: кава
+    answer: ка-ва
+  - word: вода
+    answer: во-да
+  - word: зима
+    answer: зи-ма
+  - word: молоко
+    answer: мо-ло-ко
+  - word: ранок
+    answer: ран-ок
+  - word: Київ
+    answer: Ки-їв
+  title: Divide these words into syllables. Use a hyphen (-) between syllables.
+- id: sort-stress-position
+  type: group-sort
+  instruction: Sort the words into groups based on where the stress falls.
+  groups:
+  - label: Stress on the 1st syllable
+    items:
     - кава
     - мама
     - тато
+    - ранок
     - книга
-  - label: Last-syllable stress (во-ДА pattern)
+  - label: Stress on the 2nd syllable
     items:
     - вода
     - зима
     - метро
     - кафе
-    - молоко
-- type: true-false
-  instruction: True or false? Read each statement about Ukrainian stress and intonation.
-  items:
-  - statement: In Ukrainian, stress always falls on the last syllable — just like
-      in French.
-    correct: false
-    explanation: 'Ukrainian stress is FREE — it can fall on ANY syllable. Compare:
-      МА-ма (first syllable) vs во-ДА (last syllable). There is no shortcut rule.'
-  - statement: The word 'замок' can mean two completely different things depending
-      on where the stress falls.
-    correct: true
-    explanation: ЗАмок = castle (stress on the first syllable). замОк = lock (stress
-      on the second syllable). Same five letters, entirely different objects.
-  - statement: For a yes/no question with no question word (like 'Це кава?'), your
-      voice should rise ↗.
-    correct: true
-    explanation: 'Without a question word, rising intonation signals that you are
-      asking. Example: Це ка-ВА? ↗ — your voice goes up on the stressed syllable of
-      кава.'
-  - statement: When a sentence has a question word like 'де' or 'хто', your voice
-      should rise at the end.
-    correct: false
-    explanation: 'Question words carry the interrogative meaning themselves — your
-      voice FALLS ↘. Example: Де метро? ↘ — ''де'' already tells the listener you
-      are asking about location.'
-  - statement: An exclamation mark (!) always means your voice rises sharply.
-    correct: false
-    explanation: 'Exclamations use a strong FALLING voice ↘↘ — dropping with extra
-      force and emotion. Example: Як гарно! ↘↘'
-  - statement: The word 'мука' with stress on the first syllable (МУка) means flour.
-    correct: false
-    explanation: МУка (first syllable) = torment or suffering. мукА (last syllable)
-      = flour. Wrong stress gives the completely wrong word.
-  - statement: In everyday Ukrainian text — newspapers, messages, novels — stress
-      marks are usually written over every word.
-    correct: false
-    explanation: Stress marks appear only in textbooks and learning materials. Native
-      speakers do not write them in everyday text — they already know where stress
-      falls. As a learner, YOU write stress marks in your notes.
-  - statement: The word 'фотографія' has its stress on the third syllable.
-    correct: true
-    explanation: 'фо-то-ГРА-фі-я — stress falls on ГРА, the third syllable. Slow reading
-      helps: фо... то... ГРА... фі... я. Then together: фотоГРАфія.'
-- type: quiz
-  instruction: Odd one out — which word has a DIFFERENT stress pattern from the other
-    three?
-  items:
-  - question: Three of these words have first-syllable stress. Which one is different?
-    options:
-    - мама
-    - кава
-    - ранок
-    - вода
-    correct: 3
-  - question: Three of these words have last-syllable stress. Which one is different?
-    options:
-    - молоко
-    - зима
-    - метро
-    - книга
-    correct: 3
-  - question: Which word has stress on the LAST syllable?
-    options:
-    - ранок
-    - кава
-    - тато
-    - вода
-    correct: 3
-  - question: Which word has stress on the FIRST syllable?
-    options:
-    - молоко
-    - вода
-    - зима
-    - мама
-    correct: 3
-  - question: Which of these is a stress PAIR — same spelling but different meaning
-      depending on stress?
-    options:
-    - кава
-    - замок
-    - метро
-    - ранок
-    correct: 1
-  - question: What does 'АТлас' (stress on the first syllable) mean?
-    options:
-    - satin fabric
-    - atlas — a collection of maps
-    - castle
-    - suffering
-    correct: 1
-- type: match-up
-  instruction: Match each intonation pattern to what it signals in Ukrainian speech.
-  pairs:
-  - left: Voice falls ↘ at the end (period)
-    right: Statement — you are telling someone something
-  - left: Voice rises ↗ at the end (question mark, no question word)
-    right: Yes/no question — asking for confirmation
-  - left: Voice falls ↘ at the end (question mark, WITH a question word)
-    right: Information question — де/хто/що does the work
-  - left: Strong falling voice ↘↘ (exclamation mark)
-    right: Exclamation — high emotion, surprise, or delight
-  - left: Це кава. ↘
-    right: Calm statement — this is coffee
-  - left: Це кава? ↗
-    right: Confirmation question — is this coffee?
-  - left: Як гарно! ↘↘
-    right: Emotional exclamation — how beautiful!
-  - left: Де метро? ↘
-    right: Direction question — 'де' signals asking about location
-- type: observe
-  examples:
-  - ЗАмок (castle) ↔ замОк (lock)
-  - МУка (torment) ↔ мукА (flour)
-  - АТлас (atlas/maps) ↔ атлАС (satin fabric)
-  - МАма — stress stays on the first syllable
-  - воДА — stress stays on the last syllable
-  - фотоГРАфія — stress stays on the third syllable
-  prompt: Look at the first three pairs. What happens to the MEANING of a Ukrainian
-    word when you move the stress to a different syllable? Now look at the last three
-    examples — what does this tell you about learning new Ukrainian words?
+    - рука
+  title: Sort the words into groups based on where the stress falls.

@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Every specific plan point is fully articulated. Example: "Відмінкові
+    питання — це ваш найкращий і найпростіший граматичний діагностичний інструмент...
+    Я малюю (ким? чим?) ручкою." perfectly fulfills t'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: General grammar is excellent, but there are a few pervasive stylistic
+    calques. The writer uses "Найчастіше цю важливу роль грає іменник..." instead
+    of "виконує роль". The text also relies on the Russi
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Brilliant metalanguage bridging. Analogies like "головне слово — це наш
+    абсолютний командир" and "це головний енергетичний центр нашої думки" make abstract
+    concepts highly accessible for A2 learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended terminology (підмет, присудок, додаток, означення,
+    обставина, називний відмінок, etc.) is integrated smoothly with appropriate English
+    glosses in parentheses.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers are injected cleanly and perfectly aligned with the lesson
+    progression.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Extremely encouraging, though the ending is slightly inflated ("Наступний
+    навчальний модуль радісно почне новий великий етап..."). The supportive tone overall
+    fits the complex theoretical topic.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, appropriate H2 headers perfectly matching the plan, and
+    word count is robust (4488 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explicitly teaches the authentic Ukrainian mnemonic device for case names
+    ("Наша Рая Добре Знає Оцю Мову Калинову"), which embeds learners in genuine school
+    culture.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'The tutoring session dialogue is highly functional and realistic. The
+    tutor and student naturally parse a newspaper sentence: "— Передав як? Швидко.
+    Це обставина способу дії."'
+findings: []

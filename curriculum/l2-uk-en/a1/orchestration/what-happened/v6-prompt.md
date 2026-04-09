@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -259,321 +259,366 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**45/45 word forms confirmed — zero failures.**
-
-- ✅ **учора** — adv
-- ✅ **робити** — verb → робив / робила / робило / робили (all confirmed)
-- ✅ **читати** — verb → читав / читала / читало / читали (all confirmed)
-- ✅ **працювати** — verb → працював / працювала / працювало / працювали (all confirmed)
-- ✅ **гуляти** — verb → гуляв / гуляла / гуляло / гуляли (all confirmed)
-- ✅ **готувати** — verb → готував / готувала / готувало / готували (all confirmed)
-- ✅ **дивитися** — verb → дивився / дивилася / дивилося / дивилися (all confirmed)
-- ✅ **говорити** — verb → говорив / говорила / говорило / говорили (all confirmed)
-- ✅ **минулий** — adj (3 VESUM entries — adj declension forms confirmed)
-- ✅ **вихідні** — adj/noun (6 VESUM entries — covers both uses: вихідний день + вихідні pl noun)
-- ✅ **субота** — noun
-- ✅ **неділя** — noun
-- ✅ **разом** — adv
-- ✅ **фільм** — noun (2 entries)
-- ✅ **провести** — verb → провів / провела (both confirmed)
-
-Not found: **none**
-
----
-
-## Textbook Excerpts
-
-### Section: Минулий час (Past Tense) — formation rule
-
-> «Форму минулого часу мають дієслова доконаного й недоконаного виду: робив і зробив, грав і зіграв. Дієслова в минулому часі змінюються за родами й числами. Форми дієслів минулого часу утворюємо від основи інфінітива (треба відкинути суфікс -ти) суфіксальним способом: значити → значи+в, значи+л(а), значи+л(о), значи+л(и).»
-> Source: **Литвинова, Grade 7** (Tier 1 — NUS 2022+)
-
-> «Дієслова минулого часу змінюються за числами: думав — думали, а в однині — за родами: думав, думала, думало. Можуть означати завершену дію (придумав) або незавершену (думав).»
-> Source: **Захарійчук, Grade 4** (Tier 2)
-
-**Key textbook table (Захарійчук Grade 4) — exactly matches plan paradigm:**
-| чоловічий | жіночий | середній | Множина |
-|-----------|---------|----------|---------|
-| читав | читала | читало | читали |
-
-✅ The plan's pedagogical approach (remove -ти, add gender suffixes) matches Grades 4 & 7 Ukrainian textbooks precisely. The distinction "past tense marks GENDER, not person" is explicitly confirmed in official textbooks.
-
-### Section: Dialogues — How did you spend the weekend?
-
-> «Складіть і розіграйте діалог (телефонну розмову) між однокласниками (однокласницями) про те, як минув вихідний день.»
-> Source: **Глазова, Grade 11** (Tier 2)
-
-✅ Textbook validation: talking about how one's weekend/day passed is a canonical dialogue situation in Ukrainian pedagogy from Grade 4 onwards. The dialogue format in the plan (phone call / casual exchange) is fully grounded in textbook practice.
-
-> «Що зробив Олег? — накреслив (дія відбулася до того, як про неї повідомили — минулий). Що робить Олег? — вирізує (теперішній).»
-> Source: **Варзацька, Grade 4** (Tier 2)
-
-✅ The contrast present vs. past tense (what are you doing? vs. what did you do?) is a core Grade 4 concept — appropriate to recycle at A1.8.
-
-### Section: Вихідні — days & narration
-
-> «У суботу розглядала Київський собор. У неділю черепаха вигукнула: "О! Буду малювати капці та пальто!" — Випиши назви днів тижня. Склади речення з двома словами. Зразок. У суботу я ... . У неділю я ... .»
-> Source: **Большакова, Grade 2** (Tier 2)
-
-✅ The exact pattern "У суботу я [verb]... У неділю я [verb]..." from the plan is used verbatim in Bolshakova's Grade 2 textbook as a model sentence-building task. Perfect pedagogical grounding.
-
-### Section: Практика — past tense paradigm drill
-
-> «Утворіть від дієслів усі можливі форми минулого часу (за зразком). Зразок. Марити — марив, марила, марило, марили. Марити, робити, принести, бігти, писати, будувати...»
-> Source: **Авраменко, Grade 7** (Tier 1 — NUS 2022+)
-
-✅ The practice section's verb paradigm tables (робити → робив/робила/робило/робили, etc.) directly mirror the standard Ukrainian school drill format from Авраменко Grade 7. **Author priority match confirmed.**
-
----
+- Confirmed: учора, робити, читати, працювати, гуляти, готувати, дивитися, говорити, минулий, вихідні, субота, неділя, разом, фільм, провести
+- Not found: None
 
 ## Grammar Rules
-
-**Правопис 2019 note:** The 2019 Правопис covers orthography and spelling rules, not verb morphology/conjugation paradigms. Past tense formation is a morphological rule governed by grammar textbooks, not the spelling rulebook — the empty query result is correct and expected.
-
-**Authoritative source for past tense formation (from textbooks):**
-- **Rule**: Минулий час = основа інфінітива (відкинути -ти) + суфікс **-в** (чол. р.), **-ла** (жін. р.), **-ло** (сер. р.), **-ли** (мн.) 
-- **Source**: Литвинова Grade 7, §"Минулий час" (Tier 1); Авраменко Grade 7, §29 (Tier 1)
-- **Exception pattern flagged by textbooks**: If infinitive stem ends in a consonant (нести, могти), чол. р. has **no -в**: ніс, міг (but несла, могла). ✅ None of A1.8's target verbs trigger this exception — all end in vowel stems (-ати, -ити, -увати).
-
-**Reflexive verb note (дивитися → дивився):** The reflexive suffix -ся contracts to **-сь** after -л- in past tense (дивився, not дивилася for чол. р.). VESUM confirms: дивився (чол. р.) / дивилася (жін. р.) / дивилося (сер. р.) / дивилися (мн.). ✅ Plan correctly shows all four forms.
-
----
+- Past Tense Formation (Минулий час): Textbook Grade 5 (Uhor) / Grade 6 (Betsa) — Formed from the infinitive stem + suffixes: -в (masculine singular), -ла (feminine singular), -ло (neuter singular), -ли (plural).
+- Gender vs Person: Unlike the present tense, the past tense reflects the gender of the subject, not the person. (e.g., "я читав" for a male speaker, "я читала" for a female speaker).
 
 ## Calque Warnings
-
-- **провести вихідні**: ✅ OK — Антоненко-Давидович discusses *вихідні* in the context of number agreement (два вихідні дні) and confirms the word is standard Ukrainian. The phrase "провести вихідні" is natural Ukrainian (cf. "провести час" = to spend time — confirmed via VESUM). No calque found.
-- **дивитися фільм**: ✅ OK — No calque warning in style guide. "Дивитися фільм" is natural Ukrainian (direct object, accusative). No Russian interference pattern detected.
-- **гуляти в парку**: ✅ OK — Style guide does not flag "гуляти" as a Russianism or calque. The verb is confirmed Ukrainian (VESUM: гуляти/verb). The locative phrase "в парку" is natural Ukrainian syntax.
-
-**No calques detected in the plan vocabulary.**
-
----
+- проводити час: OK/Acceptable — While "проводити час" is common, "проводити" is the standard verb for spending time/weekends (проводити вихідні).
+- минулого тижня: OK — Standard genitive construction for time expressions.
+- дивитися фільм: OK — Basic A1 verb for "to watch".
 
 ## CEFR Check
-
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| учора | **A1** (прислівник) | ✅ On target |
-| субота | **A1** (іменник) | ✅ On target |
-| неділя | **A1** (іменник) | ✅ On target |
-| фільм | **A1** (іменник) | ✅ On target |
-| вихідні | **A1** (іменник + прикметник) | ✅ On target |
-| разом | **A1** (прислівник) | ✅ On target |
-| провести | **A2** (дієслово, доконаний вид) | ⚠️ One level above target |
-
-**Flag — провести (A2):** PULS classifies провести as A2. It appears in the key dialogue question "Як ти провів вихідні?" The imperfective counterpart проводити is also A2. 
-
-**Recommendation:** At A1.8 (the graduation module), introducing one bridging A2 verb in a high-frequency, memorable phrase ("Як ти провів вихідні?") is pedagogically defensible — this module's purpose is to consolidate A1 and preview A2. However, the writer should:
-1. Gloss it explicitly in the словнік as "провести/провів — to spend (time), A2 preview"
-2. Not drill it as a production target — use it receptively in the dialogue only
-3. Keep the active practice verbs (читати, гуляти, готувати, дивитися, говорити, працювати) — all confirmed A1
+- учора: A1 — OK
+- вихідні: A1 — OK
+- минулий: A1 — OK
+- разом: A1 — OK
+- фільм: A1 — OK
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: What Happened?
-**Module:** what-happened | **Phase:** A1.8 [Past, Future, Graduation]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: What Happened?
+**Module:** what-happened | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/what-happened.md
+
+# Педагогіка A1: What Happened
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The Ukrainian approach to teaching the past tense (`минулий час`) at the A1 level is communicative and context-driven, prioritizing pattern recognition over abstract rule memorization. Unlike English, the Ukrainian past tense is grammatically simple in its formation but requires agreement with the gender and number of the subject.
+
+The core native pedagogy, as seen in primary school textbooks and beginner resources, is to introduce past tense forms through simple, relatable narratives. For instance, the topic "How I spent my vacation" is a classic entry point (Source: `2-klas-ukrmova-bolshakova-2019-1`). Learners first encounter forms like `відпочивав`, `плавала`, `їздили` in a natural dialogue. The focus is on understanding the meaning and the context (`he rested`, `she swam`, `they traveled`).
+
+The past tense of the verb `бути` (to be) — `був`, `була`, `було`, `були` — serves as the foundation. It is introduced early and reinforced constantly, as it's the most frequent past tense verb (Source: `ext-ulp_youtube-277`). Once this pattern is established, other verbs are introduced by demonstrating the consistent suffix system: `-в` for masculine, `-ла` for feminine, `-ло` for neuter, and `-ли` for plural (Source: `6-klas-ukrmova-betsa-2023_s0205`).
+
+The concept is taught as a modification of the verb's infinitive form. Ukrainian pedagogical materials explicitly state that past tense forms are created from the infinitive stem (`основа інфінітива`) using suffixes (Source: `6-klas-ukrmova-betsa-2023_s0205`). This provides a clear and predictable mechanical rule for learners to follow, which builds confidence. Exercises involve transforming present tense sentences to past tense or filling in the correct past tense form based on the subject's gender, making the agreement rule intuitive through repetition.
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction must be gradual, building from the simplest, most frequent forms to more complex ones.
+
+1.  **Step 1: The Verb `бути` (to be) in the Past.** This is the gateway to the past tense. Start by contrasting present and past situations using high-frequency adverbs.
+    - `Сьогодні він вдома.` (Today he is at home.) → `Вчора він **був** вдома.` (Yesterday he was at home.)
+    - `Сьогодні вона на роботі.` (Today she is at work.) → `Вчора вона **була** на роботі.` (Yesterday she was at work.)
+    - `Сьогодні вони в парку.` (Today they are in the park.) → `Вчора вони **були** в парку.` (Yesterday they were in the park.)
+    - The neuter form `було` is introduced with impersonal expressions: `Було холодно` (It was cold). (Source: `ext-ulp_youtube-277`)
+
+2.  **Step 2: Regular Verbs & Gender/Number Agreement.** Introduce high-frequency imperfective verbs that follow the standard pattern. The writer should present them in a table format showing the transformation from the infinitive.
+    - `читати` → `він чита**в**`, `вона чита**ла**`, `воно чита**ло**`, `вони чита**ли**`
+    - `робити` → `він роби**в**`, `вона роби**ла**`, `воно роби**ло**`, `вони роби**ли**`
+    This sequence is supported by numerous pedagogical sources that present conjugation tables as a primary learning tool (Sources: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0106`, `5-klas-ukrmova-uhor-2022-1_s0093`).
+
+3.  **Step 3: Contextualization with Time Markers.** Immediately pair past tense verbs with simple time expressions to ground them in reality. This is a core feature of communicative language teaching.
+    - `вчора` (yesterday)
+    - `минулого тижня` (last week)
+    - `минулого року` (last year)
+    - `у понеділок` (on Monday)
+    The podcast transcript in `ext-ulp_youtube-277` demonstrates this perfectly by combining `їздив` with `минулого місяця`.
+
+4.  **Step 4: Introduction to `про-` and `по-` Perfectives.** At the A1 level, a deep dive into verbal aspect is premature. However, the contrast between a process and a single, completed action can be introduced via the most common prefixes, `по-` and `про-`. This should be framed as learning vocabulary pairs.
+    - `читати` (to read, process) → `**про**читати` (to read, finish)
+    - `снідати` (to have breakfast) → `**по**снідати` (to finish breakfast)
+    Source `ext-other_blogs-23` explicitly lists `по-` as the most common perfectivizing prefix and provides a long list of examples (`думати/подумати`, `слухати/послухати`). The writer should introduce this as "doing" vs. "done." For example: "Вчора я довго `читав` книжку. Нарешті я її `прочитав`." (Yesterday I was reading a book for a long time. Finally, I finished it.) This distinction is beautifully illustrated in the phrase `як я вивчала і вивчила англійську мову` (how I was studying and [finally] learned English) (Source: `ext-ulp_youtube-181`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English speakers will make predictable errors based on interference from their native language, which lacks grammatical gender and has a more complex tense system.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Вчора Марія **читав** книжку.` | `Вчора Марія **читала** книжку.` | English past tense verbs don't change for gender. Learners often default to the masculine `-в` form as the "base" form. The fix is drilling with female subjects and names until the `-ла` ending becomes automatic. |
+| `Вчора я **є був** у кіно.` | `Вчора я **був** у кіно.` | This is a direct translation of the English "I am/was" structure. Learners must be taught that `був/була` is a standalone verb and `є` is never used in the past tense. |
+| `Я **мав** гарний день.` | `**У мене був** гарний день.` | English "to have" is a verb. Ukrainian expresses possession with the preposition `у` + genitive pronoun + the verb `бути`. The learner must memorize this structural difference for possession. |
+| `Він **катавсь** на сноуборді.` | `Він **катався** на сноуборді.` | The reflexive particle `-ся` is an integral part of the verb and doesn't change or get abbreviated in this way in the standard language. It always follows the verb ending. (Source: `ext-ulp_youtube-277`). |
+| `Він **бігтив** додому.` | `Він **біг** додому.` | A small but important group of verbs with consonant stems (like `бігти`, `нести`, `могти`) do not use the `-в` suffix in the masculine singular form. This rule, mentioned in `6-klas-ukrmova-betsa-2023_s0205`, needs to be taught explicitly for these common verbs. |
+| `Я не **люблю** лижі.` | `Я **не любив** лижі.` | Learners might mix up present tense negation (`не люблю`) with past tense. It's crucial to show that negation works the same way: the particle `не` simply precedes the past tense verb. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to build the language system from the ground up, free from the pervasive influence of Russian-centric pedagogy that has dominated the field for decades.
+
+1.  **No Russian as a Bridge:** NEVER teach Ukrainian past tense by comparing it to Russian. Do not say "it's like the Russian past tense." Ukrainian grammar must be explained on its own terms, using its own logic and native pedagogical sources (e.g., `bolshakova`, `vashulenko`). The learner's reference point should be English vs. Ukrainian, not English vs. Russian vs. Ukrainian.
+
+2.  **Phonetic Independence:** The pronunciation of past tense endings must be based on Ukrainian phonetics. For example, the masculine `-в` ending is often a non-syllabic [w] sound at the end of a word (e.g., `читав` [t͡ʃɪˈtɑw]). This is a distinctly Ukrainian feature and should not be equated with the harder, more consonantal Russian final `в`.
+
+3.  **Correcting False Cognates:** Be vigilant about "false friends." A classic example relevant to scheduling and talking about the past involves the days of the week.
+    - In Ukrainian, `неділя` means **Sunday**.
+    - In Russian, `неделя` means **week**.
+    This can lead to significant misunderstanding. This distinction is clearly explained in beginner materials (Source: `ext-ulp_youtube-289`) and historical context (Source: `ext-istoria_movy-0`). The curriculum must proactively teach and test this difference.
+
+4.  **Emphasize Native Vocabulary:** While there is shared Slavic vocabulary, prioritize examples that are distinctly Ukrainian or have a high frequency in modern Ukrainian usage. The vocabulary should be sourced from Ukrainian children's literature, modern media, and school textbooks, not from Russian-to-Ukrainian dictionaries that might suggest calques.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for introducing and practicing the past tense at the A1 level.
+
+**Дієслова (Verbs):**
+- бути (to be) ★★★
+- робити (to do/make) ★★★
+- читати (to read) ★★★
+- писати (to write) ★★★
+- говорити (to speak) ★★★
+- слухати (to listen) ★★★
+- дивитися (to watch) ★★★
+- жити (to live) ★★
+- працювати (to work) ★★
+- гуляти (to walk/stroll) ★★
+- снідати/обідати/вечеряти (to have breakfast/lunch/dinner) ★★
+- їхати (to go by transport) ★★
+- бачити (to see) ★
+- купувати (to buy) ★
+
+**Іменники (Nouns):**
+- книжка (book) ★★★
+- фільм (film) ★★★
+- музика (music) ★★★
+- робота (work) ★★
+- парк (park) ★★
+- місто (city) ★★
+- море (sea) ★
+- село (village) ★
+- друг/подруга (friend m/f) ★★
+
+**Прислівники та вирази часу (Adverbs & Time Expressions):**
+- вчора (yesterday) ★★★
+- сьогодні (today) ★★★
+- вранці (in the morning) ★★
+- вдень (in the afternoon) ★★
+- ввечері (in the evening) ★★
+- минулого тижня (last week) ★★
+- минулого місяця (last month) ★
+- минулого року (last year) ★
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities on these proven formats from Ukrainian pedagogical sources.
+
+1.  **Sentence Transformation (Present → Past):** This exercise format directly reinforces the mechanical change.
+    *   **Source:** `6-klas-ukrmova-betsa-2023_s0205`
+    *   **Prompt:** `Перепишіть речення. Замініть теперішній час на минулий.` (Rewrite the sentences. Change the present tense to the past tense.)
+    *   **Example Task:**
+        1.  `Увечері сусід гуляє із собакою в парку.` → `Увечері сусід **гуляв** із собакою в парку.`
+        2.  `Діти пишуть повідомлення друзям.` → `Діти **писали** повідомлення друзям.`
+
+2.  **Fill-in-the-Blanks with Gender/Number Agreement:** This tests the learner's ability to apply the agreement rule in context.
+    *   **Source:** `6-klas-ukrmova-betsa-2023_s0205`, Exercise 448
+    *   **Prompt:** `Прочитайте речення, вставляючи на місці пропуску дієслово йти в минулому часі.` (Read the sentences, inserting the verb 'to go' in the past tense in the blank space.)
+    *   **Example Task:**
+        1. `Учора я ______ у гості до своєї бабусі.` (If speaker is female → `йшла`)
+        2. `У п’ятницю діти з вчителем ______ на екскурсію.` (Plural → `йшли`)
+        3. `Куди Степан ______ у середу з батьком?` (Masculine → `йшов`)
+
+3.  **Question & Answer based on a Schedule/Story:** This is a communicative activity that uses the past tense to discuss completed events.
+    *   **Source:** `5-klas-ukrmova-uhor-2022-1_s0049`
+    *   **Prompt:** `Розкажіть, де були Оксана й Давид у понеділок, у вівторок тощо. Що вони робили?` (Tell us where Oksana and David were on Monday, on Tuesday, etc. What did they do?)
+    *   **Example Task (based on a visual schedule):**
+        - `Що Давид робив у понеділок?` → `У понеділок Давид **був** у басейні. Він там **плавав**.`
+        - `Що Оксана робила у вівторок?` → `У вівторок Оксана **була** в бібліотеці. Вона **читала** книгу.`
+
+4.  **Table Completion:** This visual tool helps solidify the pattern for different persons and genders.
+    *   **Source:** `5-klas-ukrmova-uhor-2022-1_s0012`
+    *   **Prompt:** `Запишіть відсутні форми дієслів.` (Write the missing verb forms.)
+    *   **Example Task:**
+| | `розповідати` | `чути` |
+| :--- | :--- | :--- |
+| Я, ти, він (ч.р.) | `розповідав` | `чув` |
+| Я, ти, вона (ж.р.)| `розповідала` | ______ |
+| Ми, ви, вони (мн.) | ______ | `чули` |
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/ukrainian-alphabet`
+- `pedagogy/a1/gender-of-nouns`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/verbal-aspect-introduction`
 
 ---
 
-## Dialogues
+### Вікі: pedagogy/a1/what-time.md
 
-> **Source:** kovalenko, Grade 6
-> **Section:** Сторінка 221
-> **Score:** 0.50
->
-> Поміркуй над прочитаним
->  
-> 1. Чи погоджуєшся з думкою: «Нестерпно було в такий теплий 
-> весняний день сидіти на уроках, хотілося гайнути на ста-
-> ренькому велосипеді кудись за місто, а то й просто поганяти 
-> м’яча»? Чому?
->  
-> 2. Дофантазуй, чому новенька прийшла до класу навесні.
->  
-> 3. Яка деталь пейзажу притаманна всьому твору? Яка її роль?
->  
-> 4. Яка деталь у зовнішності Терези вразила Ігоря? Чому він 
-> уважає дівчину дивною?
->  
-> 5. Чому Тереза ніяковіла?
->  
-> 6. Чому Ігоря Чалагу називають тяжким підлітком? Через які 
-> епізоди та авторські характеристики це виявлено у творі?
->  
-> 7. Якою була атмосфера в класі? Наведи цитати на підтвердження 
-> своєї думки.
->  
-> 8. Усно проаналізуй стосунки Терези та Ігоря. Чому хлопець 
-> змінився? Ти віриш цим змінам? Чому?
->  
-> 9.
-
-## Минулий час (Past Tense)
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 45
-> **Score:** 0.50
->
-> В. Прочитайте текст удруге й докладно його перекажіть (усно).
-
-## Практика (Practice)
-
-> **Source:** zabolotnyi, Grade 7
-> **Section:** Сторінка 62
-> **Score:** 0.33
->
-> 58
-> 58
-> Виконайте тестові завдання. 
-> 1. У формі теперішнього часу вжито обидва дієслова в рядку
-> А співаю, спізнишся  
-> В шепочу, усміхаєшся
-> Б міркую, подорожували
-> Г прочитаємо, мріємо
-> 2. Дієслово у формі майбутнього часу вжито в словосполученні 
-> А вивчатимемо напам’ять
-> В розцвітає навесні 
-> Б просили прочитати
-> Г віримо в перемогу
-> 3. Дієслово у  формі минулого часу вжито в кожному реченні, ОКРІМ
-> А З брудної води ще ніхто чистим не вийшов (Нар. творчість).
-> Б  Топчуть ноги радісно і струнко сонні трави на вузькій межі
-> (О. Теліга).
-> В  Гнучка гілка клена тулилася зранку до чистої шибки вікна 
-> (І. Ільків).
-> Г  Вузлуваті натруджені дуби важко розкинули нерухомі шат ра
-> (М. Стельмах).
-> Відновіть речення, уживаючи на місцях пропусків особові дієслова у відпо-
-> відній часовій формі, й запишіть.
-
-> **Source:** golub, Grade 5
-> **Section:** Сторінка 187
-> **Score:** 0.50
->
-> 187
-> 437   І   Прочитайте текст мовчки. Якщо в ньому є нові для вас сло-
-> ва, випишіть їх. Пригадайте, у яких джерелах можна знайти 
-> інформацію про значення цих слів.
-> Читати й писати людство навчилося якихось 5000 років 
-> тому, натомість бігати, полювати, спілкуватися із собі подіб-
-> ними за допомогою звуків і жестів — уже сотні тисячоліть.
-> Робота мозку під час читання розгортається в кілька ета-
-> пів. Що краще розвинена навичка читання, то швидше ми 
-> розкодовуємо і розуміємо текст. Однак прискорення руху 
-> нейронів* у мозку — то ще не головна вигода. Найціннішими 
-> вважають терапевтичні показники читання. Кора головного 
-> мозку блискавично задіює наш чуттєвий досвід, тому коли 
-> людина читає про погоню — її пульс може пришвидшувати-
-> ся, а коли про смаколики — у роті набігає слина (За 
-> Ю.
-
-## Summary
-
-> **Source:** mishhenko, Grade 7
-> **Section:** Сторінка 200
-> **Score:** 0.50
->
-> З ним була… його київ-
-> ська Іринка. Ішли бадьоро, сміючися і перекидаючися новеньким фут-
-> больним м’ячем.
-
-## Grammar Reference
-
-> **Source:** kovalenko, Grade 6
-> **Section:** Сторінка 238
-> **Score:** 0.50
->
-> — Ти що тут робиш?
-> — Пильную, — поважно відповіла вона.
-> — Навіщо?
-> — Бабця хотіла тебе розбудити. Я не дала.
-> Вона таємничо підморгнула мені:
-> — Я бачила, що у тебе тут вночі світло було…
-> — Ну ти й нишпорка! — посміхнувся я.
-> — А що ти робив? Читав?
-> — Так, читав.
-> — А де ж книжка? — продовжувала допитувати вона.
-> Я знітився. Ну що тут скажеш? І відповів так:
-> — А я її сам пишу! Тому і не спав!
-> — Ух ти! — вигукнула дівчинка. — Сам? Справжню книж-
-> ку? Не брешеш?!
-> — Так, — сказав я. — Але це поки що секрет. Добре?
-> — Звісно! Таємниця в слоїку! — підтвердила Нійолє і зро-
-> била жест, ніби зачиняє на ключик вуста. — А про що твоя 
-> книжка?
-> Я замислився. І раптом зіскочив з ліжка, підхопив дівчин-
-> ку і закружляв з нею по веранді.
-> Ура! Вона мала рацію.
+# Педагогіка A1: What Time
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Рід іменників
-> **Source:** МійКлас — [Рід іменників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978)
+The native pedagogical approach to teaching time in Ukrainian is rooted in distinguishing between *identity* and *sequence*. This is immediately visible in the core questions taught to first and second graders (Source: `2-klas-ukrmova-vashulenko-2019-1_s0089`, `4-klas-ukrayinska-mova-ponomarova-2021-1_s0082`).
 
-### Теорія:
+1.  **Question for Time Identity: `Котра година?`**
+    *   This translates to "Which hour is it?" and conceptually treats the hours on a clock as items in an ordered set. The answer requires a **feminine ordinal numeral** (`перша`, `друга`, `третя`). This is the foundational concept (Source: `ext-ulp_youtube-236`, `ext-other_blogs-42`). Ukrainian pedagogy emphasizes that `година` is a feminine noun, so the ordinal number must agree with it (Source: `6-klas-ukrmova-golub-2023_s0167`).
 
-*www.ua.pistacja.tv*  
-**Рід притаманний кожному іменнику в однині**. Іменники мають постійне значення **роду**:
-чоловічого: *день, зошит, комп'ютер*,  жіночого: *книга, земля, машина*, середнього: *сонце, місто, озеро*, спільного: *суддя, сирота, нечема, забіяка.*
-Іменники чоловічого роду співвідносні з займенником він, жіночого роду — вона, середнього роду — воно.
- 
-**Іменники за родами **не змінюються.
+2.  **Question for Events: `О котрій годині?`**
+    *   This means "At what time?" and is used for scheduling. The answer requires the preposition **`о`** (or `об` before a vowel) followed by the **locative case** of the feminine ordinal numeral (`о першій`, `о другій`, `об одинадцятій`) (Source: `ext-ulp_youtube-236`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0084`).
 
-### Займенник як частина мови
-> **Source:** МійКлас — [Займенник як частина мови](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/zaimennik-51336/zaimennik-iak-chastina-movi-pravilne-nagoloshuvannia-zaimennikovikh-form-51337)
+3.  **Question for Quantity (Minutes): `Скільки хвилин?`**
+    *   Minutes are treated as a simple quantity, not a sequence. Therefore, they use **cardinal numerals** (`п'ять`, `десять`, `двадцять`) (Source: `11-klas-ukrajinska-mova-avramenko-2019_s0057`, `6-klas-ukrmova-avramenko-2023_s0180`). This distinction between ordinal hours and cardinal minutes is a critical pedagogical point.
 
-### Теорія:
+Ukrainian textbooks for young native speakers break down the hour into halves and quarters, introducing colloquial phrases early on. The models are presented visually with clocks and tables, showing multiple correct ways to express the same time (Source: `6-klas-ukrmova-litvinova-2023_s0252`, `2-klas-ukrmova-vashulenko-2019-1_s0089`). This multi-option approach (e.g., `шоста сорок`, `за двадцять сьома`, `двадцять до сьомої`) is standard and should be taught to L2 learners to equip them for real-world conversation (Source: `5-klas-ukrmova-litvinova-2022_s0197`).
 
-*www.ua.pistacja.tv*  
-Займенник — це самостійна змінна частина мови, яка лише вказує на предмети, їхні ознаки або кількість, не називаючи їх, і відповідає на питання хто? що? який? чий? скільки? котрий?  
-Морфологічні ознаки займенника
-Усі займенники змінюються за** **відмінками: *хто — кого, кому, ким, \(на\) кому.*
-Деякі займенники змінюються ще й за родами та числами: *чий — чия, чиє, чиї.*
-Синтаксична роль займенників
-У реченні займенник найчастіше виступає:
-- підметом: *Вчора **я** ходив у школу. **Хтось** зазирнув у вікно.* 
-- означенням: *Зараз розповім про **свої** плани. **Ці** дівчатка не з нашого класу.* 
-- додатком: *Щось **тебе** не бачу.* 
-Зрідка —  частиною  присудка: *Щось ти сьогодні **ніякий.***
-*** *** 
-Зверни увагу\!
+## Послідовність введення (Introduction Sequence)
 
-### Розряди займенників за значенням
-> **Source:** МійКлас — [Розряди займенників за значенням](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/zaimennik-51336/rozriadi-zaimennikiv-za-znachenniam-zaimenniki-iak-zasib-zv-iazku-rechen_-467947)
+This sequence progresses from the simplest structures to more complex colloquial forms, mirroring the logic in Ukrainian school materials.
 
-### Теорія:
+1.  **Step 1: The Core Question & Full Hours**
+    *   **Concept:** Asking "What time is it?" and answering for times exactly on the hour.
+    *   **Question:** `Котра година?` (Source: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0083`)
+    *   **Answer Structure:** Ordinal Numeral (Feminine, Nominative) + `година`.
+    *   **Examples:** `Перша година.` (1:00), `Сьома година.` (7:00), `Дванадцята година.` (12:00) (Source: `ext-ulp_youtube-236`).
+    *   **Why:** This establishes the core principle of using ordinal numbers for hours and ensures correct gender agreement from the start.
 
-*www.ua.pistacja.tv*  
- 
-Особові займенники
-Указують на осіб, інших істот, предмети, явища і поняття: *я, ти, він, вона, воно, ми, ви, вони*.
-Особові займенники бувають трьох осіб, змінюються за числами і відмінками; займенник **він** змінюється також за родами.
-Зверни увагу\!
-Для виявлення ввічливого ставлення до співрозмовника в українській мові займенники *ти*, *твій* замінюють займенниками *Ви*, *Ваш *у звертаннях до однієї особи. Ці займенники пишуться з великої літери: 
-*— Привів, Насте Василівно, Вам свого школяра. Може, і з нього буде якийсь толк \(Михайло Стельмах\).*
-Зворотний займенник
-*Зворотний* займенник *себе* вказує на того, хто виконує дію.
+2.  **Step 2: Scheduling Events on the Hour**
+    *   **Concept:** Stating when an event happens.
+    *   **Question:** `О котрій годині?` (Source: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0082`)
+    *   **Answer Structure:** `О` + Ordinal Numeral (Feminine, Locative).
+    *   **Examples:** `Урок починається о дев'ятій годині.` (9:00), `Зустрінемось о третій.` (3:00) (Source: `ext-ulp_youtube-236`).
+    *   **Why:** Introduces the locative case in a high-frequency, practical context. The preposition `о` is fundamental for scheduling.
 
----
-**Total textbook excerpts found:** 7
-**Grades searched:** 5, 6, 7
+3.  **Step 3: The Half-Hour (`пів на ...`)**
+    *   **Concept:** Expressing "__:30". This is the most common and idiomatic way.
+    *   **Structure:** `пів на` + Ordinal Numeral (Feminine, **Accusative** case, which looks like Nominative for this form).
+    *   **Examples:** `пів на сьому` (6:30, literally "half towards the seventh"), `пів на дванадцяту` (11:30) (Source: `6-klas-ukrmova-betsa-2023_s0164`, `6-klas-ukrmova-litvinova-2023_s0252`).
+    *   **Why:** This is a fixed, highly frequent chunk. Teaching it as a single unit is more effective than deconstructing its grammar at A1. It logically follows full hours.
+
+4.  **Step 4: Minutes Past the Hour (First Half)**
+    *   **Concept:** Expressing minutes from 1 to 29.
+    *   **Structure 1 (Official):** Hour (Ordinal) + `година` + Minutes (Cardinal) + `хвилин`.
+        *   Example: `Сьома година п’ятнадцять хвилин.` (7:15) (Source: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0083`).
+    *   **Structure 2 (Colloquial `... по ...`):** Minutes (Cardinal) + `(хвилин) по` + Hour (Ordinal, **Locative**).
+        *   Example: `П'ятнадцять (хвилин) по сьомій.` (7:15) (Source: `11-klas-ukrajinska-mova-glazova-2019_s0047`).
+    *   **Structure 3 (Colloquial `... на ...`):** Minutes (Cardinal) + `(хвилин) на` + Next Hour (Ordinal, **Accusative**).
+        *   Example: `П'ятнадцять (хвилин) на восьму.` (7:15, literally "15 minutes onto the eighth hour") (Source: `6-klas-ukrmova-betsa-2023_s0164`).
+    *   **Why:** Introduce the official form first for clarity, then the common colloquial variants. The concept of "quarter" (`чверть`) can be introduced here as a substitute for `п'ятнадцять хвилин` (e.g., `чверть по сьомій`, `чверть на восьму`) (Source: `2-klas-ukrmova-vashulenko-2019-1_s0089`).
+
+5.  **Step 5: Minutes To the Hour (Second Half)**
+    *   **Concept:** Expressing minutes from 31 to 59.
+    *   **Structure 1 (Official):** Hour (Ordinal) + `година` + Minutes (Cardinal) + `хвилин`.
+        *   Example: `Сьома година сорок п’ять хвилин.` (7:45) (Source: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0083`).
+    *   **Structure 2 (Colloquial `за ...`):** `за` + Minutes Missing (Cardinal) + `(хвилин)` + Next Hour (Ordinal, **Nominative**).
+        *   Example: `За п'ятнадцять восьма.` (7:45, literally "in 15 minutes, it's the eighth") (Source: `6-klas-ukrmova-betsa-2023_s0164`).
+    *   **Structure 3 (Colloquial `... до ...`):** Minutes Missing (Cardinal) + `(хвилин) до` + Next Hour (Ordinal, **Genitive**).
+        *   Example: `П'ятнадцять (хвилин) до восьмої.` (7:45) (Source: `6-klas-ukrmova-litvinova-2023_s0252`).
+    *   **Why:** This is often the most confusing part for learners. Teaching `за ...` first is often easier as the hour remains in the nominative case. `... до ...` requires the genitive, adding complexity. Again, `чверть` can be used here (`за чверть восьма`) (Source: `12-klas-ukrmova-vashulenko-2019-1_s0089`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| `Зараз *сім година.` | `Зараз сьома година.` | Hours require **ordinal** (яка? котра?) not cardinal (скільки?) numbers. The hour is the "seventh" in sequence, not a quantity of "seven". (Source: `6-klas-ukrmova-zabolotnyi-2020_s0185`) |
+| `*Без п'ятнадцяти вісім.` | `За п'ятнадцять восьма.` | The preposition `без` for telling time is a direct calque from Russian and is grammatically incorrect in standard Ukrainian. The correct native prepositions are `за` or `до`. (Source: `11-klas-ukrajinska-mova-avramenko-2019_s0060`, `5-klas-ukrmova-litvinova-2022_s0199`) |
+| `*Пів восьмої.` | `Пів на восьму.` | This literally means "half of eight" and is incorrect for 6:30. The correct idiomatic phrase is `пів на восьму` ("half towards the eighth hour"). (Source: `6-klas-ukrmova-zabolotnyi-2020_s0185`) |
+| `Концерт починається *в дві години.` | `Концерт починається о другій годині.` | To state when an event happens ("at" a time), Ukrainian uses the preposition `о` + the Locative case, never `в` or `у`. (Source: `6-klas-ukrmova-zabolotnyi-2020_s0185`) |
+| `*П'ятнадцять хвилин восьмої.` | `П'ятнадцять хвилин на дев'яту.` or `П'ятнадцять хвилин по восьмій.` | This construction uses the genitive case incorrectly. To express "minutes past," use `по` + Locative (`по восьмій`). To express "minutes towards," use `на` + Accusative (`на дев'яту`). (Source: `11-klas-ukrajinska-mova-avramenko-2019_s0059`) |
+| `Який зараз час?` | `Котра зараз година?` | While `час` means "time" in general, the specific question for clock time uses `година`. The question word `який` asks about quality ("what kind of"), while `котрий` asks about order/sequence ("which"). (Source: `ext-other_blogs-42`) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+This topic is a critical area for decolonization in language teaching, as Russian-influenced forms are common among non-native speakers and even some legacy dialects.
+
+1.  **Forbid the Preposition `Без`:** The construction `*без десяти сім` (for 6:50) is the single most common Russianism in this topic. It must be explicitly marked as incorrect and foreign to the Ukrainian grammatical system. The teacher must insist on the native forms: `за десять сьома` or `десять (хвилин) до сьомої` (Source: `11-klas-ukrajinska-mova-avramenko-2019_s0060`, `5-klas-ukrmova-litvinova-2022_s0199`). Do not present it as a "colloquial" or "acceptable" alternative; it is a grammatical error stemming from another language.
+
+2.  **Reinforce `Котра година?`:** The standard question is `Котра година?`. While a learner might be understood asking `Скільки годин?` or `Який час?`, these are not the idiomatic, native questions taught in Ukrainian schools (Source: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0083`). Correcting this from Day 1 establishes a native grammatical foundation and avoids habits from Russian (`сколько времени?`).
+
+3.  **Teach Forms Holistically:** Ukrainian offers multiple correct ways to state the time (e.g., 8:15 can be `восьма п'ятнадцять`, `п'ятнадцять по восьмій`, or `п'ятнадцять на дев'яту`) (Source: `6-klas-ukrmova-betsa-2023_s0164`). Teach all common native forms. Do not simplify the system by teaching only the "official" format or a single colloquialism, as this impoverishes the learner's fluency and makes them unable to understand native speakers. Avoid presenting one form as "better" than another; they are simply different registers (official vs. conversational).
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+| Part of Speech | Word/Phrase | Frequency | Notes |
+| :--- | :--- | :--- | :--- |
+| **Іменники** | `година` | ★★★ | The core word for "hour" / "o'clock". |
+| | `хвилина` | ★★★ | "minute" |
+| | `чверть` | ★★ | "quarter" (of an hour). Very common. |
+| | `ранок` / `вранці` | ★★★ | "morning" / "in the morning" |
+| | `день` / `вдень` | ★★★ | "day" / "in the afternoon" |
+| | `вечір` / `ввечері` | ★★★ | "evening" / "in the evening" |
+| | `ніч` / `вночі` | ★★ | "night" / "at night" |
+| | `північ` | ★★ | "midnight" |
+| | `південь` | ★★ | "noon" |
+| **Прислівники** | `зараз` | ★★★ | "now" |
+| | `скоро` | ★★ | "soon" |
+| | `пізно` | ★★ | "late" |
+| | `рано` | ★★ | "early" |
+| **Прийменники** | `о` / `об` | ★★★ | "at" (for time) |
+| | `пів на` | ★★★ | For 30 minutes past the hour. |
+| | `за` | ★★ | "until", "in" (e.g., `за 10 хв`) |
+| | `до` | ★★ | "to", "until" |
+| | `по` | ★★ | "past", "after" |
+| | `на` | ★★ | "onto", "towards" (the next hour) |
+| **Дієслова** | `починатися` | ★★★ | "to begin" |
+| | `закінчуватися` | ★★★ | "to end" |
+| | `зустрічатися` | ★★ | "to meet" |
+| | `прокидатися` | ★★ | "to wake up" |
+
+## Приклади з підручників (Textbook Examples)
+
+1.  **Matching Clocks to Written Times (from Ponomarova, Grade 4)**
+    *   **Task:** The textbook shows several clock faces. The student must match them to the correct written description.
+    *   **Example options:**
+        1.  `Сьома година п’ятнадцять хвилин, або чверть на восьму.`
+        2.  `Сьома година сорок п’ять хвилин, або за чверть восьма.`
+        3.  `Десята година.`
+    *   **(Source: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0083`)** This exercise reinforces the equivalence of official and colloquial forms.
+
+2.  **Dialogue Practice (from Ponomarova, Grade 4)**
+    *   **Task:** Students work in pairs to ask and answer questions about their daily routine.
+    *   **Example questions:**
+        *   `О котрій годині ти просинаєшся в будні?` (At what time do you wake up on weekdays?)
+        *   `До котрої години ти спиш у вихідні?` (Until what time do you sleep on weekends?)
+        *   `Котра зараз година?` (What time is it now?)
+    *   **(Source: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0083`)** This grounds the grammar in a practical, communicative context.
+
+3.  **Table Completion: Digital to Words (from Betsa, Grade 6)**
+    *   **Task:** Students fill in a table, converting digital time into written Ukrainian for both `Котра година?` and `О котрій годині?`.
+    *   **Example Row:**
+        | Години | Котра година? | О котрій годині? |
+        | :--- | :--- | :--- |
+        | 07:30 | `пів на восьму` | `о пів на восьму` |
+        | 09:15 | `дев'ята п'ятнадцять` / `чверть по дев'ятій` | `о дев'ятій п'ятнадцять` / `о чверть по дев'ятій` |
+    *   **(Source: `6-klas-ukrmova-betsa-2023_s0164`)** This exercise systematically drills the different forms and cases required.
+
+4.  **Error Correction (from Litvinova, Grade 6)**
+    *   **Task:** The student is given a list of time expressions, some of which are incorrect, and must write the correct versions.
+    *   **Example incorrect forms to fix:**
+        *   `*без шести вісім` -> `за шість восьма`
+        *   `*половина одинадцяти` -> `пів на одинадцяту`
+        *   `*біля сьомої` -> `близько сьомої` or `о сьомій`
+    *   **(Source: `6-klas-ukrmova-litvinova-2023_s0253`)** This directly targets common mistakes and reinforces correct usage.
+
+## Пов'язані статті (Related Articles)
+- [[pedagogy/a1/ordinal-numbers]]
+- [[pedagogy/a1/locative-case]]
+- [[pedagogy/a1/genitive-case]]
+- [[pedagogy/a1/daily-routine]]
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -586,7 +631,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Минулий час (Past Tense)` (~300 words)
 - `## Практика (Practice)` (~300 words)
 - `## Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -642,7 +686,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -741,49 +785,34 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Dialogues (~330 words total)
+## Dialogues (~330 words)
+- P1 (~120 words): [Dialogue 1: Monday morning catch-up between coworkers. Taras asks Olena what she did yesterday. Focus: Gender-specific verb forms in questions and answers. Examples: "Що ти робив учора?" (to Taras), "Я читав книжку", "Я готувала вечерю" (from Olena), "Він гуляв у парку".]
+- P2 (~60 words): [Linguistic analysis of Dialogue 1. Explanation of how the same activity (reading, cooking) changes ending based on whether Taras or Olena is speaking. Highlight names (Тарас, Олена) and their gender agreement with the verbs.]
+- P3 (~100 words): [Dialogue 2: Weekend recap. Focus on narrative flow and plural forms. Examples: "Як ти провів вихідні?", "Я гуляв у місті", "Я ходила в кафе", "Ми їли торт і пили каву". Introduces "ми" and "вони" plural endings.]
+- P4 (~50 words): [Brief note on the natural transition from present to past in conversation. Contrast "Я зараз працюю" (present) with "Вчора я працював" (past) to set the stage for formal grammar rules.]
 
-- P1 (~20 words): Brief scene-setting — Monday morning at the office, two colleagues meet by the coffee machine and catch up on the weekend.
-- Dialogue 1 (~110 words): 8-turn exchange. Oksana asks Dmytro: "Що ти робив учора?" He answers: "Я читав книжку." She asks: "А яку?" He: "Детектив. А ти?" She: "Я готувала вечерю." He: "А що робив Тарас?" She: "Він гуляв у парку." He: "А Олена?" She: "Вона працювала весь день." Margin gloss: робив (♂) / робила (♀) — same verb, different ending.
-- P2 (~20 words): Transition — the next day, Bohdan and Mariia compare their full weekends; note "провів/провела вихідні."
-- Dialogue 2 (~110 words): 8-turn exchange. Bohdan: "Як ти провела вихідні?" Mariia: "Чудово! У суботу я ходила в кафе з подругою." Bohdan: "А в неділю?" Mariia: "У неділю я дивилася фільм вдома. А ти?" Bohdan: "Я провів суботу вдома — готував і читав. А в неділю ми гуляли в парку з братом." Mariia: "Як приємно!" Margin gloss: ходила / провела / дивилася (♀); провів / готував / гуляли (♂/pl).
-- P3 (~20 words): One-sentence bridge — "notice that every verb changed its ending depending on who is speaking — that is exactly what you will learn now."
-- Exercise (fill-in, ~50 words): 3 quick gap-fill sentences from Dialogue 1, isolating the gender ending: "Тарас {гуляв|гуляла|гуляли} у парку." / "Олена {працювала|працював|працювали} весь день." / "Що ти {робив|робила|робили} учора, Маріє?" — sets up the grammar section.
+## Минулий час (Past Tense) (~350 words)
+- P1 (~90 words): [Formal rule for past tense formation. Removing the infinitive suffix -ти to get the stem. Adding suffixes: -в (masculine), -ла (feminine), -ло (neuter), -ли (plural). Model verb: читати (чита- + в/ла/ло/ли).]
+- P2 (~100 words): [The "Gender, Not Person" insight. Crucial pedagogical shift: explaining that unlike the present tense (я читаю, ти читаєш), the past tense doesn't care about person (1st, 2nd, 3rd) but only about gender. Examples: "Я читав" (male), "Ти читав" (male), "Він читав" (male) vs "Я читала" (female), "Ти читала" (female), "Вона читала" (female).]
+- P3 (~80 words): [The verb "бути" (to be) in the past. This is the most common past tense verb. Paradigms: був, була, було, були. Comparison with English: "I was" (m) -> я був, "I was" (f) -> я була. Note that "є" (present) is never used in the past.]
+- P4 (~80 words): [The neuter and plural forms. Use of "воно" for impersonal weather (Було тепло, було холодно) and "вони" for groups. Emphasis that in the plural (-ли), gender distinctions disappear (ми гуляли, ви гуляли, вони гуляли).]
 
----
+## Практика (Practice) (~350 words)
+- P1 (~90 words): [Drilling core A1 verbs in the past. Providing a text-based table for working (працював/ла), walking (гуляв/ла), and cooking (готував/ла). Special focus on reflexive verbs like "дивитися": explain the suffix -ся remains but changes to -сь in feminine/plural in some dialects, but focus on the standard "дивився", "дивилася", "дивилися".]
+- P2 (~80 words): [Time markers for the past. Introducing "учора" (yesterday) and "минулого тижня" (last week). Explain that "минулого" agrees with the masculine noun "тиждень". Example sentences: "Учора я працював", "Минулого тижня вона готувала борщ".]
+- <!-- INJECT_ACTIVITY: matching-pronoun-ending --> [matching, focus: Match pronoun to the correct past tense ending (він, вона, воно, вони), 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-past-tense-forms --> [fill-in, focus: Form past tense (він / вона / вони) for core verbs (читати, готувати, гуляти), 6 items]
+- P3 (~90 words): [Question formation and conversational response. How to ask "What did you do?". Masculine: "Що ти робив?". Feminine: "Що ти робила?". Explain that the question itself reveals who you are talking to. Response pattern: "Я + [verb with gender ending] + [object]".]
+- <!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement --> [fill-in, focus: Choose correct gender based on the subject (Марія, Мій брат, Вони), 3 items]
+- P4 (~90 words): [Common L2 pitfalls for English speakers. Warning against the "є був" error (I was) and the habit of using masculine as a "default" for everything. Remind learners that if "я" is a woman, she MUST say "я працювала".]
 
-## Минулий час (Past Tense) (~330 words total)
-
-- P1 (~70 words): Introduce the core insight — Ukrainian past tense is not built on person (я/ти/він) but on **gender**. Compare present tense briefly: "я читаю / ти читаєш / він читає" (person endings) vs past tense: "я читав / ти читав / він читав" (same form — all masculine). Same для жіночого роду: "я читала / ти читала / вона читала." Show this contrast in a two-column mini-table: Present (person changes) | Past (gender changes).
-- P2 (~80 words): Step-by-step formation rule. Take the infinitive → remove -ти → add the gender ending. Walk through **читати**: читати → чита- → він читав / вона читала / воно читало / вони читали. Then **гуляти**: гуляти → гуля- → він гуляв / вона гуляла / воно гуляло / вони гуляли. Repeat with **працювати**: він працював / вона працювала / воно працювало / вони працювали. Box the four endings: -в (він), -ла (вона), -ло (воно), -ли (вони).
-- P3 (~60 words): Highlight the special pattern for reflexive verbs (-ся). **дивитися**: він дивився / вона дивилася / воно дивилося / вони дивилися — the -ся stays after the gender ending. Two example sentences: "Тарас дивився фільм." / "Ірина дивилася серіал." Contrast with "читати" (no -ся) to make the pattern visible.
-- P4 (~70 words): The gender-for-я insight — the same speaker says different forms depending on their own gender: "Я читав книжку." (male speaker) vs "Я читала книжку." (female speaker). Same meaning, same person, different ending. Reinforce with Що ти робив/робила? — show both question forms side by side. Add: "Вони завжди закінчується на -ли — множина не розрізняє рід." Four example sentences with різними суб'єктами: Він / Вона / Я (м.) / Я (ж.).
-- Exercise (matching, ~50 words): Match pronoun/name to correct past tense form of **говорити**: він → говорив | вона → говорила | воно → говорило | вони → говорили | Тарас → говорив | Олена → говорила. Reinforces the paradigm just taught before moving to practice.
-
----
-
-## Практика (Practice) (~330 words total)
-
-- P1 (~70 words): Present the six core A1.3 verbs in a full past-tense paradigm table: читати, працювати, гуляти, готувати, дивитися, говорити — four columns (він / вона / воно / вони). Briefly note that the stem of each verb is already familiar; only the ending is new. Point out the -ся pattern again in the дивитися row.
-- Exercise 1 (fill-in, ~60 words): 6 gap-fill sentences testing form selection based on a named subject — items from activity_hints: "Учора він {читав|читала|читати} книжку." / "Олена {готувала|готував|готували} вечерю." / "Ми {гуляли|гуляв|гуляла} в парку." / "Вони {працювали|працював|працювало} разом." / "Тарас {дивився|дивилася|дивилися} фільм." / "Що ти {робив|робила|робили} учора, Іване?"
-- P2 (~80 words): Build sentences about the past using time expressions. Introduce **учора** (yesterday) and **минулого тижня** (last week) with four model sentences: "Учора я читав цікаву книжку." / "Минулого тижня вона працювала в офісі." / "У суботу ми гуляли в парку." / "В неділю вони готували вечерю разом." Show how the time word comes first (fronted for emphasis — natural Ukrainian word order) but doesn't change the verb form.
-- Exercise 2 (fill-in gender-based, ~60 words): 3 sentences where the subject's gender determines the ending — from activity_hints: "Марія {дивилася|дивився|дивилися} фільм." / "Мій брат {гуляв|гуляла|гуляли} у парку." / "Вони {провели|провів|провела} вихідні разом." Learner must identify subject gender to choose correctly.
-- P3 (~60 words): Short production prompt — two model mini-conversations using Що ти робив/робила учора?: "— Що ти робив учора, Андрію? — Я читав і гуляв у парку. — А ввечері? — Ввечері я дивився фільм." And the female version: "— Що ти робила учора, Оксано? — Я готувала вечерю і потім говорила з мамою." Learner notices both forms of the question.
-
----
-
-## Summary (~330 words total)
-
-- P1 (~80 words): Recap the formation rule in plain language: infinitive stem + -в (він), -ла (вона), -ло (воно), -ли (вони). Restate the key insight in a highlighted box: "In Ukrainian, the past tense ending agrees with the GENDER of the subject — not the grammatical person. Я читав and він читав are identical because both subjects are masculine. Я читала and вона читала are identical because both are feminine." Contrast explicitly with English ("I read / she read" — no gender marking).
-- P2 (~70 words): Gather all six verbs in past tense side-by-side (він / вона) for quick visual review: читав/читала, працював/працювала, гуляв/гуляла, готував/готувала, дивився/дивилася, говорив/говорила. Add plural row: читали, працювали, гуляли, готували, дивилися, говорили. Label the endings visually: **-в / -ла / -ло / -ли**. Remind: вони always ends in -ли regardless of gender.
-- P3 (~80 words): Useful phrases for talking about the past — four ready-made conversation starters: "Що ти робив/робила учора?" / "Як ти провів/провела вихідні?" / "Учора я {verb}-в/-ла {object}." / "Ми {verb}-ли разом." Show each with a completed example. Note the paired question forms robiv/robyla are both correct — one for masculine, one for feminine interlocutors.
-- Self-check (~100 words): Bulleted Q&A checklist —
-  - Can you form the past tense of **читати** for all four forms? (читав / читала / читало / читали)
-  - What ending does **вони** always take? (-ли)
-  - What past-tense form would a female speaker use for "I worked"? (я працювала)
-  - How do you ask "What did you do?" to a male friend? (Що ти робив?)
-  - How to a female friend? (Що ти робила?)
-  - Production task: Tell your partner three things you did last week using three different verbs — use your correct gender ending for **я**.
+## Підсумок (~290 words)
+- P1 (~120 words): [Recap of the past tense suffixes: -в, -ла, -ло, -ли. Summary table in text form. Focus on the transformation: infinitive -> past stem -> gender ending. Reminder: Past tense shows GENDER.]
+- P2 (~170 words): [Self-check questions and production task.
+  - Як ми утворюємо минулий час? (Infinitive stem + suffix)
+  - Яке закінчення має жіночий рід? (-ла)
+  - Як запитати друга про вчорашній день? (Що ти робив учора?)
+  - Task: Tell your partner 3 things you did yesterday using different verbs (Я снідав, я гуляв, я читав).]
 
 Grand total: ~1320 words
 </skeleton>

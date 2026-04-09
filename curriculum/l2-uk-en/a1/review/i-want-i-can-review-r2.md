@@ -1,60 +1,52 @@
 ## Linguistic Scan
-No major linguistic errors found. The vocabulary, phrasing, and grammatical explanations are generally authentic and accurate. VESUM false negatives were reviewed: words like "Офіціа", "Дени", and "втра" are artifacts of stress marks (acute accents) splitting tokens during automated scanning. 
-
-However, one pedagogical inaccuracy was spotted: the text claims the regular Group I plural ending is `-е́мо` with an acute accent over the `е`. Group I verbs do not universally have stressed `-е́мо` endings (e.g., `хо́чемо`, `мо́жемо` have stem stress). Presenting the ending with a hardcoded stress mark teaches a wrong accent pattern.
+No linguistic errors found. The text contains zero Russianisms, zero Surzhyk, and correctly models the Accusative case for inanimate masculine and -а feminine nouns. The phonetic and morphological explanations are remarkably accurate.
 
 ## Exercise Check
-- Marker `<!-- INJECT_ACTIVITY: fill-in-conjugation -->` (9 items) is correctly placed after the "Хотіти" section.
-- Marker `<!-- INJECT_ACTIVITY: quiz-modal-choice -->` (8 items) is correctly placed after the "Могти і мусити" section.
-- Marker `<!-- INJECT_ACTIVITY: fill-in-modal-sentences -->` (6 items) is correctly placed after the "Могти і мусити" section.
-- Marker `<!-- INJECT_ACTIVITY: quiz-regular-irregular -->` (6 items) is correctly placed after the "Підсумок — Summary".
-All markers match the plan's `activity_hints` perfectly.
+- `fill-in-khotity-conjugation` is correctly placed after the `хотіти` conjugation table.
+- `quiz-verb-patterns` (testing regular vs irregular identification) is placed immediately after `хотіти`. This is pedagogically premature, as the regular Group II verb `мусити` is introduced in the *next* section to serve as the contrast point. It should be moved to after the `Могти і мусити` section.
+- `quiz-modal-choice` and `fill-in-modal-logic` are correctly placed after all three modals are introduced.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | DEDUCT for: The required/recommended vocabulary word "порекомендувати" was omitted and replaced with "порадити" in Dialogue 2. |
-| 2. Linguistic accuracy | 9/10 | DEDUCT for: The text lists the regular Group I plural ending as "**-е́мо**" with an explicit stress mark, which incorrectly implies it is universally end-stressed. |
-| 3. Pedagogical quality | 10/10 | REWARD for: Exceptional PPP flow, citing Grade 3 poetry to explain deep desire, and clear comparative tables. |
-| 4. Vocabulary coverage | 9/10 | DEDUCT for: Missing "порекомендувати" as noted above. All other required words are used naturally. |
-| 5. Exercise quality | 10/10 | REWARD for: Perfect placement of all planned activity markers matching the required scope and count. |
-| 6. Engagement & tone | 10/10 | REWARD for: Using Антоненко-Давидович style guidelines, creating realistic cafe and weekend scenarios, and avoiding generic filler. |
-| 7. Structural integrity | 8/10 | DEDUCT for: Word count outside target range. The deterministic word count is 1587, which is >30% over the planned 1200 word target. |
-| 8. Cultural accuracy | 10/10 | REWARD for: Teaching the critical stylistic distinction between 'мусити' (genuine compulsion) and 'мати' (ordinary duty). |
-| 9. Dialogue & conversation quality | 9/10 | DEDUCT for: Minor formatting artifact in Dialogue 2 where speaker "Денис" is given two consecutive separate dialogue lines instead of combining his speech. |
+| 1. Plan adherence | 10/10 | Flawless execution of the plan. All dialogues are present exactly as requested (e.g., "Я хочу гуляти. А ти?"), and the distinction between +noun and +infinitive is thoroughly explained. |
+| 2. Linguistic accuracy | 10/10 | Exceptional. Consonant shifts (т→ч, г→ж, с→ш) are accurately described. The explanation of unstressed 'о' in `хотіти` ("make the first vowel a clear, open Ukrainian о") is a brilliant phonetic detail. |
+| 3. Pedagogical quality | 10/10 | The progression from concrete dialogue to grammatical breakdown is excellent. The contrasting of the three modals (desire vs. ability vs. obligation) creates a solid mental framework for the learner. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended words (`хотіти`, `могти`, `мусити`, `кава`, `їсти`, `шкода`, `допомогти`, `борщ`, `порекомендувати`, `треба`) are naturally integrated into the prose and examples. |
+| 5. Exercise quality | 9/10 | All markers are present and match the plan, but `quiz-verb-patterns` is placed before the learner sees the contrast between the irregular `могти` and regular `мусити`. |
+| 6. Engagement & tone | 10/10 | The tone is professional, encouraging, and clear. Phrases like "Breaking down the key phrases..." and "Observe how beautifully they work together" guide the learner without feeling patronizing. |
+| 7. Structural integrity | 10/10 | All sections are present and properly formatted. Word count is 1577 (well above the 1200 target). |
+| 8. Cultural accuracy | 10/10 | High cultural accuracy. The explicit phonetic comparison to other Slavic languages (preventing vowel reduction) is excellent decolonized pedagogy. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly natural and contextualized ("Що ви можете порекомендувати?"). |
 
 ## Findings
-
-[Plan adherence] [major]
-Location: Dialogue 2 — At a café
-Issue: The writer used the word "порадити" instead of the plan-recommended vocabulary word "порекомендувати", missing the specific line from the outline: "Що ви можете порекомендувати?".
-Fix: Replace "порадити" with "порекомендувати".
-
-[Dialogue & conversation quality] [minor]
-Location: Dialogue 2 — At a café
-Issue: Speaker "Денис" is listed on two consecutive dialogue lines instead of combining his speech into one line.
-Fix: Combine the two consecutive lines spoken by "Денис".
-
-[Linguistic accuracy] [minor]
-Location: Хотіти (To Want) section
-Issue: The text lists the regular Group I endings as "**-у, -еш, -е, -е́мо, -ете, -уть**", including an acute accent over the "-е́мо" ending. This incorrectly implies Group I verbs are always end-stressed on "емо", which is false for this very verb (хо́чемо).
-Fix: Remove the acute accent from "-е́мо".
-
-[Structural integrity] [major]
-Location: Entire module
-Issue: The deterministic word count is 1587, significantly over the 1200 target word budget.
-Fix: Trim repetitive pedagogical meta-commentary sentences to help reduce the word count bloat.
+[5. Exercise quality] [minor]
+Location: `<!-- INJECT_ACTIVITY: quiz-verb-patterns -->` placed right before `## Могти і мусити (Can and Must)`
+Issue: The quiz asks learners to identify regular vs irregular patterns. Placing it before the regular verb `мусити` and the irregular `могти` are introduced is premature.
+Fix: Move the marker to the end of the `Могти і мусити` section, where all contrasting verbs have been taught.
 
 ## Verdict: REVISE
-The content is beautifully written, culturally rich, and highly accurate. However, the vocabulary omission ("порекомендувати"), the incorrect stress mark on the grammatical ending, and the word count overage trigger a mandatory REVISE verdict to correct these specific structural and adherence issues.
+The module is of incredibly high quality linguistically and pedagogically, with zero factual errors. The REVISE verdict is strictly to optimize the placement of one activity marker to ensure the exercise occurs after the necessary theory has been fully presented.
 
 <fixes>
-- find: "> — **Денис:** Велику. І ще я хочу ї́сти. *(Large. And I also want to eat.)*\n> — **Денис:** Що ви мо́жете пора́дити? *(What can you recommend?)*\n> — **Офіціант:** Можу порадити борщ! *(I can recommend borscht!)*"
-  replace: "> — **Денис:** Велику. І ще я хочу ї́сти. Що ви мо́жете порекомендува́ти? *(Large. And I also want to eat. What can you recommend?)*\n> — **Офіціант:** Можу порекомендува́ти борщ! *(I can recommend borscht!)*"
-- find: "just add the regular Group I endings: **-у, -еш, -е, -е́мо, -ете, -уть**."
-  replace: "just add the regular Group I endings: **-у, -еш, -е, -емо, -ете, -уть**."
-- find: "Денис asks **ти можеш?** (can you?), **ти хочеш?** (do you want to?). Go back to Dialogue 1 and find all three modals before reading further — they appear in nearly every line."
-  replace: "Денис asks **ти можеш?** (can you?), **ти хочеш?** (do you want to?)."
-- find: "- **Ми хочемо пі́цу.** — We want pizza.\n\nRule of thumb: wanting to DO something → infinitive. Wanting a THING → noun."
-  replace: "- **Ми хочемо пі́цу.** — We want pizza."
+- find: |
+    <!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+    <!-- INJECT_ACTIVITY: quiz-verb-patterns -->
+
+    ## Могти і мусити (Can and Must)
+  replace: |
+    <!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+
+    ## Могти і мусити (Can and Must)
+- find: |
+    <!-- INJECT_ACTIVITY: quiz-modal-choice -->
+    <!-- INJECT_ACTIVITY: fill-in-modal-logic -->
+
+    ## Підсумок — Summary
+  replace: |
+    <!-- INJECT_ACTIVITY: quiz-modal-choice -->
+    <!-- INJECT_ACTIVITY: fill-in-modal-logic -->
+    <!-- INJECT_ACTIVITY: quiz-verb-patterns -->
+
+    ## Підсумок — Summary
 </fixes>

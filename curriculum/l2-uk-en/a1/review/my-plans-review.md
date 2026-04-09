@@ -1,62 +1,57 @@
 ## Linguistic Scan
-No linguistic errors found (Russianisms, Surzhyk, calques, or paronyms are absent). However, there is a critical factual error regarding the euphony rule explanation (identifying a vowel as a consonant), which is logged under findings.
+Found one factual linguistic error regarding possession constructions. The text falsely claims that "Я маю плани" is a direct English translation and is incorrect. In Ukrainian, "мати" is a core verb of possession (e.g., маю час, маю можливість), making "я маю плани" perfectly natural and authentic. Condemning it as an English calque is prescriptively wrong.
+No Russianisms, Surzhyk, Paronyms, or Calques were found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-days-of-week -->`: Placed correctly after the scheduling section. ID slightly misaligns with the plan's `fill-in` type designation, but tests the correct concept.
-- `<!-- INJECT_ACTIVITY: fill-in-invitations -->`: Placed correctly after the invitations section. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-schedule-formula -->`: Placed correctly after the "My Week" scheduling formula section. Matches plan.
-All markers test what was just taught and match the required count (3).
+- `<!-- INJECT_ACTIVITY: fill-in-days-time -->` (matches `fill-in` / Combine days and time)
+- `<!-- INJECT_ACTIVITY: matching-invitations -->` (matches `matching` / Match invitations)
+- `<!-- INJECT_ACTIVITY: fill-in-weekly-plan -->` (matches `fill-in` / Complete a scheduled plan)
+All 3 markers from the plan are present, properly spaced after the relevant teaching concepts, and logically aligned with the plan's focus areas.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | All dialogues, vocabulary, grammar patterns, and sections from the plan are fully present. |
-| 2. Linguistic accuracy | 8/10 | The text incorrectly labels the 'и' in "працювати" as a consonant in the euphony example: `* **Він** бу́де працювати **у** понеділок. (consonant + у + consonant)`. |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow and clear grammar explanations, but the euphony example contradicts its own rule. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (e.g., тиждень, прибирати, допізна, задоволення) are used naturally in context. |
-| 5. Exercise quality | 9/10 | Markers are placed well, though `quiz-days-of-week` uses a different activity type name than the plan's specified `fill-in`. |
-| 6. Engagement & tone | 8/10 | Some sentences use corporate-speak ("reliable formula", "planning toolkit") and tell instead of show ("This makes your sentences flow beautifully"). |
-| 7. Structural integrity | 7/10 | The deterministic word count is 1902 words, which exceeds the target of 1200 by nearly 60%, resulting in structural bloat. |
-| 8. Cultural accuracy | 10/10 | Authentic and culturally appropriate ways of interacting and planning are presented. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are multi-turn, natural, and use appropriate colloquialisms like "Ти будеш?". |
+| 1. Plan adherence | 10/10 | All elements (Dialogues, Планування, Мій тиждень, Summary) are present, pacing is excellent, and all grammar/planning patterns are covered exactly as specified. |
+| 2. Linguistic accuracy | 7/10 | Critical error: The text states: "Do not use the direct English translation 'Я маю плани'". This is factually incorrect, as the verb "мати" is a fully correct Ukrainian verb of possession. |
+| 3. Pedagogical quality | 9/10 | Excellent breakdown of temporal accusative endings for days of the week ("у середу") and locative time telling ("о третій"). Minor deduction for the "я маю" hypercorrection. |
+| 4. Vocabulary coverage | 10/10 | All required (план, тиждень, вільний, зустріч, відпочивати, прибирати, вечірка) and recommended words are seamlessly integrated. |
+| 5. Exercise quality | 10/10 | The three exercise markers directly test what was just taught (days/time, invitations, and weekly plans). |
+| 6. Engagement & tone | 7/10 | Deductions for gamified, corporate fluff at the start of sections ("As we approach the end of our A1 journey, our ability to communicate moves beyond...", "You now possess..."). |
+| 7. Structural integrity | 9/10 | Word count is 1593 (well above 1200 target). Clean formatting, but deducted for a prompt artifact leaked into the prose ("asks... in the plan context"). |
+| 8. Cultural accuracy | 10/10 | Accurately contrasts Western usage of "on the weekend" with natural Ukrainian usage ("на вихідних"). |
+| 9. Dialogue & conversation quality | 10/10 | The opening group chat dialogue perfectly mimics a real-world scenario of friends making weekend plans. |
 
 ## Findings
+[Dimension 2] [Critical]
+Location: "Do not use the direct English translation "Я маю плани". Using the correct structure makes your spoken Ukrainian sound authentic and natural."
+Issue: Factual linguistic error. The verb "мати" is a core Ukrainian verb for possession (e.g., маю час, маю рацію). "Я маю плани" is fully authentic and correct in Ukrainian. Condemning it as an English calque is prescriptively wrong and misleads learners.
+Fix: Remove the false claim and soften the instruction. Keep the suggestion to use "У мене є плани".
 
-[Linguistic accuracy] [critical]
-Location: `*   **Він** бу́де працювати **у** понеділок. (consonant + у + consonant)`
-Issue: The text claims this demonstrates "consonant + у + consonant", but the word immediately preceding "у" ("працювати") ends in "и", which is a vowel. The bolding on "**Він**" suggests the preposition phrase was intended to immediately follow the pronoun.
-Fix: Move `у понеділок` to immediately follow `**Він**` to correctly demonstrate the phonetic rule.
+[Dimension 6] [Minor]
+Location: "As we approach the end of our A1 journey, our ability to communicate moves beyond describing the present moment and past events. We are now stepping into the future."
+Issue: Unnecessary gamified/journey filler that adds zero information about the language.
+Fix: Remove the first two sentences to start directly with the communicative goal.
 
-[Engagement & tone] [minor]
-Location: `When you want to schedule an event or talk about a **план** (plan), you need a reliable formula.`
-Issue: Uses corporate-speak ("reliable formula") which disrupts the natural teaching tone.
-Fix: Simplify to "you can use this simple structure."
+[Dimension 6] [Minor]
+Location: "Recap of the Planning Toolkit. You now possess the essential grammatical and social tools to organize your future effectively."
+Issue: Corporate/gamified phrasing ("You now possess...").
+Fix: Remove the filler sentence.
 
-[Engagement & tone] [minor]
-Location: `When you want to organize your schedule and invite friends, you now have a complete planning toolkit.`
-Issue: Uses corporate-speak ("planning toolkit") and tells instead of shows.
-Fix: Simplify to "you can use these phrases."
-
-[Engagement & tone] [minor]
-Location: `The Ukrainian language naturally avoids awkward clusters of consonants or vowels. This makes your sentences flow beautifully.`
-Issue: Generic enthusiasm and telling instead of showing ("flow beautifully").
-Fix: Change to a more objective statement about making pronunciation easier.
-
-[Structural integrity] [major]
-Location: `Deterministic word count: 1902 words` (entire document)
-Issue: The word count is 1902, significantly exceeding the target of 1200. This indicates verbosity across the explanations.
-Fix: Trim the verbose meta-commentary highlighted in the engagement findings to begin reducing the word count. (Significant overage requires manual truncation if strictly enforced, but these trims act as a starting point).
+[Dimension 7] [Major]
+Location: "Notice how **Оля** asks **Може, підемо в кіно?** in the plan context, or in this case, **Іра** suggests **Може, підемо в кафе ввечері?**."
+Issue: There is an artifact from the plan generation process ("in the plan context"). Additionally, Оля never says "Може, підемо в кіно?" in the preceding dialogue. The AI writer confused the written dialogue with the loose ideas provided in the prompt's plan.
+Fix: Remove the reference to the non-existent line and the artifact.
 
 ## Verdict: REVISE
-The module covers the plan exceptionally well and features strong dialogues, but it contains a critical factual error in its explanation of the euphony rule. It also suffers from structural bloat (exceeding the word count by 60%) and minor tone issues. The euphony error alone mandates a REVISE verdict to prevent teaching incorrect phonetic boundaries.
+The module is robust structurally and pedagogically but contains a critical linguistic inaccuracy regarding possession (condemning "мати плани"), prompt leakage ("in the plan context"), and some gamified filler. It requires targeted revisions.
 
 <fixes>
-- find: "*   **Він** бу́де працювати **у** понеділок. (consonant + у + consonant)"
-  replace: "*   **Він** **у** понеділок бу́де працювати. (consonant + у + consonant)"
-- find: "When you want to schedule an event or talk about a **план** (plan), you need a reliable formula."
-  replace: "When you want to schedule an event or talk about a **план** (plan), you can use this simple structure."
-- find: "When you want to organize your schedule and invite friends, you now have a complete planning toolkit."
-  replace: "When you want to organize your schedule and invite friends, you can use these phrases."
-- find: "The Ukrainian language naturally avoids awkward clusters of consonants or vowels. This makes your sentences flow beautifully."
-  replace: "Ukrainian naturally avoids awkward clusters of consonants or vowels to make pronunciation easier."
+- find: "As we approach the end of our A1 journey, our ability to communicate moves beyond describing the present moment and past events. We are now stepping into the future. Whether you are organizing your weekend, outlining your work schedule, or preparing for graduation, planning is the ultimate social tool."
+  replace: "Whether you are organizing your weekend, outlining your work schedule, or preparing for graduation, planning is the ultimate social tool."
+- find: "Notice how **Оля** asks **Може, підемо в кіно?** in the plan context, or in this case, **Іра** suggests **Може, підемо в кафе ввечері?**. This is a natural way to propose an idea."
+  replace: "Notice how **Іра** suggests **Може, підемо в кафе ввечері?**. This is a natural way to propose an idea."
+- find: "When you talk about your schedule, always remember to use the natural Ukrainian construction for possession: **У мене є плани** (I have plans). Do not use the direct English translation \"Я маю плани\". Using the correct structure makes your spoken Ukrainian sound authentic and natural."
+  replace: "When you talk about your schedule, you can use the natural Ukrainian construction for possession: **У мене є плани** (I have plans). Using this structure makes your spoken Ukrainian sound authentic and natural."
+- find: "Recap of the Planning Toolkit. You now possess the essential grammatical and social tools to organize your future effectively. The grammatical foundation of planning in Ukrainian is the compound future tense, which pairs the helper word **буду** (will) with an infinitive action verb."
+  replace: "Recap of the Planning Toolkit. The grammatical foundation of planning in Ukrainian is the compound future tense, which pairs the helper word **буду** (will) with an infinitive action verb."
 </fixes>

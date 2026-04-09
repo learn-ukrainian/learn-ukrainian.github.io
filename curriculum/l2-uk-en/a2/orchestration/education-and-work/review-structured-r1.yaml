@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The plan mandated the first dialogue to discuss "Право (n, law), Адвокатом
+    (m, lawyer), В юридичній фірмі (f, law firm)". The text instead used "філологію",
+    "перекладачем", and "сучасна європейська лі
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Found several calques and Russianisms: "знаходиться" (instead of розташований),
+    "Давайте детальніше подивимося" (imperative error), and "частковий робочий день"
+    (instead of неповний робочий день).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Follows the PPP flow efficiently. It explicitly addresses common errors
+    for learners ("здавати екзамен" is flagged as a Russianism and corrected to "складати
+    іспит"). Demonstrates good scaffolding for
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required words (освіта, спеціальність, досвід, etc.) and recommended words
+    are all incorporated naturally throughout the text with relevant context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise markers are accurately represented and inserted right after
+    the relevant contextual knowledge is introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural and encouraging teaching tone. Relates the topics clearly
+    to real-world communication (job interviews, parties, university counseling).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All required H2 headings are present. With a word count of 2411, it comfortably
+    satisfies the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly models the Ukrainian higher educational tier system (бакалаврат,
+    магістратура, аспірантура) avoiding direct American mappings.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel natural and demonstrate a variety of real conditional and
+    purpose clauses organically.
+findings: []

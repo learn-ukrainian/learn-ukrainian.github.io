@@ -2,342 +2,303 @@ version: '1.0'
 module: euphony
 level: a1
 inline:
-- id: quiz-u-or-v
+- id: quiz-u-v-choice
   type: quiz
-  instruction: 'Оберіть правильний варіант (Choose the correct form: у or в)'
+  instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: Я живу ___ Києві.
+  - question: Вона працює _____ театрі.
     options:
     - у
     - в
-    correct: 1
-  - question: Тарас живе ___ Львові.
-    options:
-    - у
-    - в
+    - і
     correct: 0
-  - question: Таня працює ___ офісі.
+  - question: Я живу _____ Львові.
+    options:
+    - в
+    - у
+    - з
+    correct: 1
+  - question: Тарас _____ банку.
+    options:
+    - й
+    - в
+    - у
+    correct: 2
+  - question: Ми граємо _____ футбол.
     options:
     - у
     - в
-    correct: 1
-  - question: ___ мене є квіти.
+    - і
+    correct: 0
+  - question: Я працюю _____ офісі.
     options:
-    - У
+    - у
+    - в
+    - і
+    correct: 1
+  - question: Він живе _____ Києві.
+    options:
+    - у
+    - в
+    - з
+    correct: 1
+  - question: _____ понеділок ми працюємо.
+    options:
     - В
-    correct: 0
-  - question: Він ___ парку.
-    options:
-    - у
-    - в
-    correct: 0
-  - question: Ми ___ театрі.
-    options:
-    - у
-    - в
-    correct: 1
-  - question: ___ Одесі тепло.
-    options:
     - У
-    - В
+    - І
     correct: 1
-  - question: Вона їде ___ вагоні.
+  - question: Мама _____ парку.
+    options:
+    - в
+    - у
+    - й
+    correct: 1
+  - question: Так, _____ нас є час.
     options:
     - у
     - в
+    - з
     correct: 0
-  - question: Максим ___ банку.
+  - question: Вона працює _____ Франції.
     options:
-    - у
     - в
-    correct: 0
-  - question: ___ саду тихо.
-    options:
-    - У
-    - В
-    correct: 0
-- id: quiz-i-or-y
+    - із
+    - у
+    correct: 2
+- id: quiz-naturalness-comparison
   type: quiz
-  instruction: 'Оберіть правильний варіант (Choose the correct form: і or й)'
+  instruction: Яке речення звучить краще? (Which sentence sounds better?)
   items:
-  - question: Мама ___ тато.
+  - question: 'Оберіть найбільш природне речення:'
     options:
-    - і
-    - й
-    correct: 1
-  - question: Брат ___ сестра.
-    options:
-    - і
-    - й
+    - Я живу в Києві.
+    - Я живу у Києві.
+    - Я живу й Києві.
     correct: 0
-  - question: Тарас ___ Максим.
+  - question: 'Оберіть найбільш природне речення:'
     options:
-    - і
-    - й
-    correct: 0
-  - question: Ти ___ Олена.
+    - Він працює із Львові.
+    - Він працює в Львові.
+    - Він працює у Львові.
+    correct: 2
+  - question: 'Оберіть найбільш природне речення:'
     options:
-    - і
-    - й
+    - Мама зі тато вдома.
+    - Мама і тато вдома.
+    - Мама й тато вдома.
+    correct: 2
+  - question: 'Оберіть найбільш природне речення:'
+    options:
+    - Тарас й Максим там.
+    - Тарас і Максим там.
+    - Тарас в Максим там.
     correct: 1
-  - question: Вона ___ він.
+  - question: 'Оберіть найбільш природне речення:'
     options:
-    - і
-    - й
-    correct: 1
-  - question: Максим ___ Семен.
-    options:
-    - і
-    - й
+    - Він іде з братом.
+    - Він іде із братом.
+    - Він іде зі братом.
     correct: 0
-  - question: Офіс ___ парк.
+  - question: 'Оберіть найбільш природне речення:'
+    options:
+    - Вони йдуть з школи.
+    - Вони йдуть із школи.
+    - Вони йдуть зі школи.
+    correct: 2
+- id: quiz-i-y-choice
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Ти _____ Олена йдете в кіно?
     options:
     - і
     - й
-    correct: 0
-  - question: Дарина ___ Олексій.
-    options:
-    - і
-    - й
+    - в
     correct: 1
+  - question: Брат _____ сестра там.
+    options:
+    - й
+    - у
+    - і
+    correct: 2
+  - question: Вона _____ він читають.
+    options:
+    - й
+    - і
+    - з
+    correct: 0
+  - question: Я _____ Максим ідемо в парк.
+    options:
+    - і
+    - й
+    - в
+    correct: 0
+  - question: Олена _____ Тарас.
+    options:
+    - і
+    - й
+    - у
+    correct: 1
+  - question: _____ він прийшов.
+    options:
+    - Й
+    - І
+    - В
+    correct: 1
+  - question: Київ _____ Львів.
+    options:
+    - й
+    - з
+    - і
+    correct: 2
+  - question: _____ ми працюємо там.
+    options:
+    - І
+    - Й
+    - З
+    correct: 0
 - id: fill-in-z-iz-zi
   type: fill-in
-  instruction: 'Вставте правильну форму: з, із або зі (Fill in: з, із, or зі)'
+  instruction: Вставте правильне слово (Insert the correct word)
   items:
-  - sentence: Я ___ Одеси.
+  - sentence: Я їду ____ Одеси.
     answer: з
     options:
     - з
     - із
     - зі
-  - sentence: Максим ___ Семеном.
+  - sentence: Він іде ____ другом.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Максим ____ Семеном там.
     answer: із
     options:
     - з
     - із
     - зі
-  - sentence: ___ святом!
-    answer: Зі
+  - sentence: Він бере ____ шафи.
+    answer: із
     options:
-    - З
-    - Із
-    - Зі
-  - sentence: Вона прийшла ___ школи.
+    - з
+    - із
+    - зі
+  - sentence: Вітаємо ____ святом.
     answer: зі
     options:
     - з
     - із
     - зі
-  - sentence: Він ___ братом.
-    answer: з
+  - sentence: Вона іде ____ мною.
+    answer: зі
     options:
     - з
     - із
     - зі
-  - sentence: Тарас ___ Києва.
-    answer: із
-    options:
-    - з
-    - із
-    - зі
-- id: quiz-which-sounds-natural
-  type: quiz
-  instruction: Яке речення звучить природно? (Which sentence sounds natural?)
-  items:
-  - question: 'Оберіть правильне речення:'
-    options:
-    - Я живу в Львові.
-    - Я живу у Львові.
-    correct: 1
-  - question: 'Оберіть правильне речення:'
-    options:
-    - Він живе в Києві.
-    - Він живе у Києві.
-    correct: 0
-  - question: 'Оберіть правильне речення:'
-    options:
-    - Вона й він.
-    - Вона і він.
-    correct: 0
-  - question: 'Оберіть правильне речення:'
-    options:
-    - Брат і сестра.
-    - Брат й сестра.
-    correct: 0
-  - question: 'Оберіть правильне речення:'
-    options:
-    - Зі святом!
-    - З святом!
-    correct: 0
-  - question: 'Оберіть правильне речення:'
-    options:
-    - Максим із Семеном.
-    - Максим з Семеном.
-    correct: 0
 workbook:
-- type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the euphony error)
-  items:
-  - sentence: Вона у парку.
-    error: у
-    correction: в
-    error_type: word
-    options:
-    - у
-    - в
-    explanation: '«Вона» закінчується на голосну А → вживається «в»: «Вона в парку».'
-  - sentence: Я живу у Києві.
-    error: у
-    correction: в
-    error_type: word
-    options:
-    - у
-    - в
-    explanation: «Живу» закінчується на голосну У, «Київ» не починається на в/ф →
-      вживається «в».
-  - sentence: Таня в Львові.
-    error: в
-    correction: у
-    error_type: word
-    options:
-    - у
-    - в
-    explanation: '«Львів» починається на льв — важкий збіг, тому завжди «у»: «Таня
-      у Львові».'
-  - sentence: Мама і тато.
-    error: і
-    correction: й
-    error_type: word
-    options:
-    - і
-    - й
-    explanation: «Мама» закінчується на А (голосна), «тато» починається на Т (перед
-      голосною) → «й».
-  - sentence: Брат й сестра.
-    error: й
-    correction: і
-    error_type: word
-    options:
-    - і
-    - й
-    explanation: «Брат» закінчується на приголосну Т, «сестра» починається на приголосну
-      С → «і».
-  - sentence: Максим з Семеном.
-    error: з
-    correction: із
-    error_type: word
-    options:
-    - з
-    - із
-    - зі
-    explanation: «Максим» закінчується на приголосну М, «Семен» починається на приголосну
-      С → «із».
-- type: group-sort
-  instruction: Розподіліть речення за формою прийменника (Sort by the correct preposition
-    form)
+- id: group-sort-sounds
+  type: group-sort
+  instruction: Розподіліть слова за першим звуком (Sort words by their first sound)
   groups:
-  - label: У
+  - label: Починається на голосний (Starts with a vowel)
     items:
-    - Тарас ___ Львові
-    - Максим ___ банку
-    - Він їде ___ вагоні
-    - ___ саду тихо (початок речення)
-    - Брат ___ театрі
-    - Олексій ___ Львові
-  - label: В
+    - офіс
+    - Олена
+    - Одеса
+  - label: Починається на приголосний (Starts with a consonant)
     items:
-    - Я живу ___ Києві
-    - Таня ___ офісі
-    - Ми ___ театрі
-    - ___ Одесі тепло (початок речення)
-    - Вона ___ парку
-    - Дарина ___ саду
-- type: true-false
+    - парк
+    - театр
+    - банк
+    - футбол
+- id: match-up-euphony
+  type: match-up
+  instruction: З'єднайте пари для правильного звучання (Connect pairs for correct
+    sound)
+  pairs:
+  - left: Я живу в
+    right: Києві
+  - left: Він працює у
+    right: Львові
+  - left: Мама й
+    right: Олена
+  - left: Максим і
+    right: Тарас
+  - left: Ідемо зі
+    right: школи
+  - left: Гуляє з
+    right: братом
+- id: true-false-rules
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: «У/в» чергуються, щоб уникнути важкого збігу приголосних.
+  - statement: Ми завжди пишемо «у» на початку речення. (We always write «у» at the
+      beginning of a sentence.)
     correct: true
-    explanation: 'Так — це основа милозвучності: мова обирає форму, яка легше вимовляється.'
-  - statement: «Й» вживається між двома приголосними.
+    explanation: «У» is used at the beginning of sentences to provide a strong, clear
+      start.
+  - statement: Після голосного ми використовуємо «в». (After a vowel we use «в».)
+    correct: true
+    explanation: We use «в» after a vowel (before a consonant) to avoid a vowel clash.
+  - statement: Слово «Франція» вимагає прийменника «в». (The word «Франція» requires
+      the preposition «в».)
     correct: false
-    explanation: Ні — «й» вживається, коли поряд є голосна. «І» вживається між приголосними.
-  - statement: «Зі» вживається перед важкими збігами приголосних, зокрема зі, ш, щ.
+    explanation: Words starting with ф, в, св, льв always require «у» because they
+      are difficult consonant clusters.
+  - statement: Ми кажемо «зі мною». (We say «зі мною».)
     correct: true
-    explanation: Так — «зі мною», «зі святом», «зі школи».
-  - statement: На початку речення перед приголосною завжди вживається «в».
+    explanation: This is a fixed phrase that helps pronounce the difficult consonants
+      together.
+  - statement: Літера «й» може бути першим словом у реченні. (The letter «й» can be
+      the first word in a sentence.)
     correct: false
-    explanation: 'Ні — на початку речення перед приголосною вживається «у»: «У мене
-      є квіти».'
-  - statement: Перед словами, що починаються на «в» або «ф», вживається «у».
+    explanation: «Й» is a weak semivowel and cannot start a sentence. We use «І» instead.
+  - statement: Милозвучність допомагає вимовляти слова легше. (Euphony helps pronounce
+      words more easily.)
     correct: true
-    explanation: 'Так — «у вагоні», «у фоє» — щоб уникнути подвоєння звуків: в+в або
-      в+ф.'
-  - statement: «З» — це основна форма прийменника з/із/зі.
-    correct: true
-    explanation: Так — «з» вживається за замовчуванням; «із» та «зі» лише при важких
-      збігах.
-- type: fill-in
-  instruction: 'Вставте правильну форму: у/в, і/й або з/із/зі (Fill in the correct
-    euphony form)'
+    explanation: Euphony rules exist to prevent difficult consonant and vowel clashes,
+      making speech flow naturally.
+- id: image-to-letter-vocab
+  type: image-to-letter
+  instruction: Яка перша літера у слові на картинці? (What is the first letter in
+    the word on the picture?)
   items:
-  - sentence: Дарина ___ Олексій сидять за столом.
-    answer: й
+  - image: 🏦
+    letter: б
     options:
-    - і
-    - й
-  - sentence: Я ___ Львові.
-    answer: у
+    - б
+    - т
+    - п
+  - image: 🎭
+    letter: т
     options:
-    - у
-    - в
-  - sentence: Вона прийшла ___ мною.
-    answer: зі
+    - т
+    - п
+    - ф
+  - image: 🌳
+    letter: п
     options:
-    - з
-    - із
-    - зі
-  - sentence: Офіс ___ парк поряд.
-    answer: і
+    - п
+    - ш
+    - о
+  - image: 🏢
+    letter: о
     options:
-    - і
-    - й
-  - sentence: Таня ___ другом.
-    answer: з
+    - о
+    - б
+    - ф
+  - image: ⚽
+    letter: ф
     options:
-    - з
-    - із
-    - зі
-  - sentence: Ми ___ театрі.
-    answer: в
+    - ф
+    - т
+    - п
+  - image: 👗
+    letter: ш
     options:
-    - у
-    - в
-  - sentence: Тарас ___ Семен — друзі.
-    answer: і
-    options:
-    - і
-    - й
-  - sentence: ___ Одесі тепло.
-    answer: В
-    options:
-    - У
-    - В
-- type: match-up
-  instruction: З'єднайте правило з прикладом (Match each rule to its example)
-  pairs:
-  - left: в — після голосної перед приголосною
-    right: живу в Києві
-  - left: у — після приголосної перед приголосною
-    right: Тарас у Львові
-  - left: у — перед словом на льв/в/ф
-    right: їду у вагоні
-  - left: й — між голосними
-    right: мама й тато
-  - left: і — між приголосними
-    right: брат і сестра
-  - left: зі — перед важким збігом
-    right: зі святом
-  - left: із — між двома приголосними
-    right: Максим із Семеном
-  - left: з — основна форма перед голосною
-    right: я з Одеси
+    - ш
+    - т
+    - б

@@ -1,51 +1,60 @@
 ## Linguistic Scan
-No linguistic errors found.
+No Russianisms, Surzhyk, or Calques found. The terminology is accurate. However, there are two instances of incorrect syllable division (`ран-ок` and `ві-дпо-чи-нок`) which constitute critical phonetic errors.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-stress-syllable -->` placed appropriately after stress explanation.
-- `<!-- INJECT_ACTIVITY: match-stress-pairs -->` placed appropriately after stress pairs.
-- `<!-- INJECT_ACTIVITY: quiz-sentence-type -->` placed appropriately after intonation rules.
-- `<!-- INJECT_ACTIVITY: fill-in-punctuation -->` placed appropriately after dialogue modeling.
-
-All markers match the `activity_hints` exactly in ID structure and intent, and they are well-spaced throughout the content.
+- `<!-- INJECT_ACTIVITY: quiz-stress-position -->` (matches `quiz` for stress position)
+- `<!-- INJECT_ACTIVITY: match-stress-pairs -->` (matches `match-up` for stress pairs)
+- `<!-- INJECT_ACTIVITY: quiz-sentence-type -->` (matches `quiz` for sentence type)
+- `<!-- INJECT_ACTIVITY: fill-in-punctuation -->` (matches `fill-in` for punctuation)
+All four markers are present, correctly mapped to the plan's hints, and placed logically after their corresponding explanatory sections. No inline DSL exercises.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The text misses the plan point regarding the *Заболотний Grade 5* reference to 38 sounds, as well as the explicit detail that stress "moves between forms of the same word" in the intro section. Additionally, the word "рука" is missing from the last-syllable stress examples. |
-| 2. Linguistic accuracy | 10/10 | Flawless. Phonetic properties are described accurately, syllable divisions (like `ра-нок`) follow Ukrainian phonetic rules instead of blindly splitting roots, and the intonation contours (falling for WH-questions, rising for Yes/No) are 100% correct. |
-| 3. Pedagogical quality | 10/10 | Exceptional. The "break into syllables -> find stress -> read smoothly" method and the practical tip of tapping the table for each syllable mirror actual Grade 1 teaching methods in Ukraine. |
-| 4. Vocabulary coverage | 9/10 | Covered almost all terms perfectly in context, but missed the required word **столиця** (capital) from the plan. |
-| 5. Exercise quality | 10/10 | Appropriate marker placements directly following the relevant concepts. They flow nicely with the lessons rather than being clustered at the end. |
-| 6. Engagement & tone | 10/10 | Very natural, grounded tone. It avoids generic language hype, offering actionable, specific instructions ("write it down with the stress mark immediately"). |
-| 7. Structural integrity | 10/10 | Markdown is perfectly clean, with exact matching headings from the `content_outline`. |
-| 8. Cultural accuracy | 10/10 | Deeply decolonized and authentic. Uses references to real Ukrainian textbooks (Білоус) and natural names (Кирилко, Соломійка). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues demonstrate the concepts (intonation) in a very authentic, non-robotic way. |
+| 1. Plan adherence | 10/10 | The module strictly follows the plan outline, integrating all specific examples (`замок/замок`, `мука/мука`, intonation arrows, and `goroh.pp.ua` mention). |
+| 2. Linguistic accuracy | 8/10 | The syllable division for `ранок` (`ран-ок` instead of `ра-нок`) and `відпочинок` (`ві-дпо-чи-нок` instead of `від-по-чи-нок`) is incorrect. The text misclassifies "А у тебе?" as a yes/no question. |
+| 3. Pedagogical quality | 10/10 | Exceptional use of the "calling the turtle" technique (`черепаааха`) to explain stress. Very clear distinction between English vowel reduction and Ukrainian core vowels. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are introduced naturally in context with accurate stress patterns. |
+| 5. Exercise quality | 10/10 | 4 injected activity markers present, all matching the type and focus specified in the plan hints, evenly distributed after their respective sections. |
+| 6. Engagement & tone | 10/10 | Very natural teacher voice, encouraging but substantial. "Stress and melody are the physical heartbeat..." is a great opening for the summary. |
+| 7. Structural integrity | 10/10 | Clean markdown, perfect H2 header mapping, word count target cleanly exceeded (1571 > 1200 words). |
+| 8. Cultural accuracy | 10/10 | Factually correct, treats Ukrainian phonetics on its own terms, contrasting cleanly with French, Polish, and English. |
+| 9. Dialogue & conversation quality | 7/10 | The dialogue uses "Бариста" and "Клієнт" but employs informal register ("твоя", "у тебе"), which is inappropriate for a service encounter. Changing the characters to friends ("Оксана" and "Максим") fixes both the register mismatch and the context of the interaction. |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: `Наголос (Stress)` first paragraph
-Issue: Missing the *Заболотний Grade 5* citation that Ukrainian has 38 sounds, and the required point that stress moves between forms of the same word.
-Fix: Inject this reference and the movement property into the explanation of free stress.
+[2. Linguistic accuracy] [Critical]
+Location: `## Читаємо вголос (Reading Aloud)` — `**ран-ок** (morning)` and `**ві-дпо-чи-нок** (rest)`
+Issue: Incorrect syllable division. A single consonant between vowels belongs to the next syllable (`ра-нок`), and the prefix "від-" should not be split across syllables this way (`від-по-чи-нок`).
+Fix: Change `**ран-ок**` to `**ра-нок**` and `**ві-дпо-чи-нок**` to `**від-по-чи-нок**`.
 
-[4. Vocabulary coverage] [major]
-Location: `Читаємо вголос (Reading Aloud)` list of words
-Issue: The required vocabulary phrase "Київ — столиця України" and the word "столиця" are missing entirely from the prose.
-Fix: Add "столиця" (capital) to the bullet point for "Київ".
+[2. Linguistic accuracy] [Critical]
+Location: `## Читаємо вголос (Reading Aloud)` — "The question **А у тебе?** is a yes/no question without a question word..."
+Issue: "А у тебе?" is not a yes/no question; it is an elliptical open question. Calling it a yes/no question is factually incorrect.
+Fix: Update the description to state it lacks a direct question word, rather than calling it a yes/no question.
 
-[1. Plan adherence] [minor]
-Location: `Наголос (Stress)` common stress positions
-Issue: The recommended word "рука" is absent from the last-syllable stress list.
-Fix: Add "рука" to the cluster of last-syllable stress examples.
+[9. Dialogue & conversation quality] [Major]
+Location: `## Читаємо вголос (Reading Aloud)` — The dialogue block.
+Issue: The dialogue employs informal pronouns ("твоя", "у тебе") between a Barista and a Client, which is a register mismatch for a service encounter. Furthermore, a client asking if the coffee belongs to the barista is logically strange.
+Fix: Change the speaker labels from "Бариста/Клієнт" to "Оксана/Максим" to match the informal register.
 
 ## Verdict: REVISE
-The module is linguistically, culturally, and pedagogically outstanding. It captures the rhythm of Ukrainian instruction perfectly. It just needs three precise insertions to satisfy the strict requirements of the plan (missing textbook citation, missing word "столиця", and missing word "рука").
+The module is exceptionally well-written pedagogically, but contains two critical linguistic/phonetic errors (syllable division and misclassifying an open question as a yes/no question) and a register mismatch in the dialogue that must be patched.
 
 <fixes>
-- find: "That louder syllable is the **наголошений склад** (stressed syllable). Every Ukrainian word with more than one syllable has one — and only one — stressed syllable. Here is the crucial fact: Ukrainian **наголос** is free. It can land on the first syllable, the middle, or the last."
-  replace: "That louder syllable is the **наголошений склад** (stressed syllable). As noted in the textbook *Заболотний Grade 5* (p. 73), Ukrainian has 38 sounds, and stress determines which syllable is pronounced louder and longer. Every Ukrainian word with more than one syllable has one — and only one — stressed syllable. Here is the crucial fact: Ukrainian **наголос** is free. It can land on the first syllable, the middle, or the last, and it can even move between forms of the same word."
-- find: "Last-syllable stress: **вода** (water), **зима** (winter), **метро** (metro), **кафе** (café)."
-  replace: "Last-syllable stress: **вода** (water), **зима** (winter), **рука** (hand/arm), **метро** (metro), **кафе** (café)."
-- find: "- **Ки-їв** (Kyiv) — stress on **и**: Київ"
-  replace: "- **Ки-їв** (Kyiv) — stress on **и**: Київ (Київ — **столиця** України / capital of Ukraine)"
+- find: "**ві-дпо-чи-нок**"
+  replace: "**від-по-чи-нок**"
+- find: "**ран-ок**"
+  replace: "**ра-нок**"
+- find: "The question **А у тебе?** is a yes/no question without a question word, so it requires a sharp rising intonation (↗)."
+  replace: "The question **А у тебе?** lacks a direct question word, so it relies on a sharp rising intonation (↗) to signal the inquiry."
+- find: "> **Бариста:** Привіт! *(Hi!)*"
+  replace: "> **Оксана:** Привіт! *(Hi!)*"
+- find: "> **Клієнт:** Привіт! Як справи? *(Hi! How are you?)*"
+  replace: "> **Максим:** Привіт! Як справи? *(Hi! How are you?)*"
+- find: "> **Бариста:** Добре! А у тебе? *(Good! And you?)*"
+  replace: "> **Оксана:** Добре! А у тебе? *(Good! And you?)*"
+- find: "> **Клієнт:** Добре! Це твоя кава? *(Good! Is this your coffee?)*"
+  replace: "> **Максим:** Добре! Це твоя кава? *(Good! Is this your coffee?)*"
+- find: "> **Бариста:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*"
+  replace: "> **Оксана:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*"
 </fixes>

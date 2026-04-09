@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All plan points are covered and the dialogue scenarios correctly implement
+    the requested "New Year's resolutions" setting.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent accuracy. The writer correctly detailed the consonant shifts
+    (e.g., 'б' to 'бл' in 1st person singular and 3rd person plural for 'зробити')
+    and corrected the plan's 'здасть іспит' to the nat
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The pedagogical flow is generally good, but the writer relies heavily
+    on repetitive sentence-by-sentence English translations in the early sections,
+    and the English translation of the erroneous hybrid
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary from the plan ('скажу', 'напишу', 'зроблю', 'буду',
+    'прочитаю', 'подзвоню', 'куплю') is naturally integrated into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: 'The exercise markers are completely clustered at the end of the module
+    (`<!-- INJECT_ACTIVITY: fill-in-future-forms -->`, etc.) instead of being distributed
+    after the concepts they test.'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The tone is encouraging ("Let's briefly compare these two forms"), but
+    the formatting of the English translations is inconsistent (sometimes using italics
+    and parentheses, sometimes plain text), makin
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: The markdown structure is clean, all planned H2 headings are present,
+    and the word count comfortably exceeds the target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The cultural context in the examples is natural and appropriate (e.g.,
+    making New Year's resolutions, planning a weekend trip to the park and cinema).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogues are well-constructed, using named speakers ('Марта', 'Олег')
+    and demonstrating the grammar points in realistic, multi-turn conversations.
+findings: []

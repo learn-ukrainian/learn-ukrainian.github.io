@@ -1,80 +1,43 @@
-
-
-Good — all words verified, no calque issues with "говорити українською". Now let me compile the full review.
-
----
-
 ## Linguistic Scan
-
-**Russianisms:** None found. All Ukrainian vocabulary is authentic.
-
-**Surzhyk:** None found.
-
-**Calques:** None found. "Я говорю українською" confirmed natural via Антоненко-Давидович (говорити is appropriate here for habitual speech about language ability).
-
-**Paronyms:** None found.
-
-**Russian characters (ы, э, ё, ъ):** None found.
-
-**Gender/case errors:** None found. All genitive chunks are correct: з України (f, gen), з Києва (m, gen), зі Львова (m, gen), з Одеси (f, gen), з Харкова (m, gen), з Дніпра (m, gen), із Запоріжжя (n, gen).
-
-**Factual error in English prose:**
-- The paragraph after Dialogue 1 refers to **"Tomas"**: *"Tomas does the same: Я з Канади, із Торонто"* — but the character in the dialogue is named **Тарас** (Taras), not Tomas. This is a factual error in the English explanation.
-
-**з/із/зі rule accuracy:** The module states: *"з before most consonants and vowels; із between awkward consonant clusters; зі before combinations starting with з-, с-, ш-."* Cross-checked against Заболотний Grade 5 (p. 124) and Авраменко Grade 5 (p. 119): the textbook rule specifies ІЗ before [з], [с], [ц], [ж], [ч], [ш] and between consonants; ЗІ before clusters starting with [з], [с], [ш], [ц]. The module's simplified version omits [ц] from the зі rule, but at A1 with a "don't calculate — just memorize" approach, this is acceptable simplification. The module correctly notes "зі Львова" as a euphony-driven exception with the лв- cluster, consistent with Заболотний's "а також деякі інші (з урахуванням милозвучності)."
-
-**VESUM not-found words:** All 39 are proper nouns (country names, city names, personal names) — expected behavior, not errors.
-
-**One error found: "Tomas" → "Taras"**
-
----
+No linguistic errors found (with the exception of the mangled Ukrainian phrase `Я в України` in the pedagogical caution block, addressed in Findings).
 
 ## Exercise Check
-
-**4 activity markers found:**
-1. `<!-- INJECT_ACTIVITY: fill-in-zvidky -->` — after Діалоги section ✅ (tests Звідки? + з/із/зі chunks, matches plan activity_hint 1)
-2. `<!-- INJECT_ACTIVITY: group-sort-location-trio -->` — after Звідки? section ✅ (categorize Де/Куди/Звідки, matches plan activity_hint 2)
-3. `<!-- INJECT_ACTIVITY: quiz-prepositions -->` — after Країни і міста section ✅ (choose correct preposition, matches plan activity_hint 3)
-4. `<!-- INJECT_ACTIVITY: fill-in-location-vs-origin -->` — after Країни і міста section ✅ (contrast location vs origin, matches plan activity_hint 4)
-
-**All 4 plan activity_hints have corresponding markers.** Markers are well-distributed across sections (not clustered). Each marker appears after the relevant teaching content.
-
-No issues found with exercise placement or logic.
-
----
+- `<!-- INJECT_ACTIVITY: answer-zvidky -->`: Placed correctly after explaining how to form Genitive chunks with Звідки. Matches the plan's `fill-in` activity for 8 items.
+- `<!-- INJECT_ACTIVITY: location-trio-sort -->`: Placed perfectly at the end of the `Звідки?` section, contrasting the newly learned origin patterns with the previously learned location and destination patterns. Matches the 9-item `group-sort` activity.
+- `<!-- INJECT_ACTIVITY: preposition-quiz -->`: Placed correctly after the cities and countries section. Matches the 8-item `quiz` activity.
+- `<!-- INJECT_ACTIVITY: location-contrast -->`: Placed correctly after teaching the sentence structure linking origin and current location ("Я живу в Києві, але я зі Львова."). Matches the 6-item `fill-in` activity.
+All markers are present, evenly distributed, test the immediately preceding concepts, and map exactly to the plan's requirements.
 
 ## Scores
-
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | All 4 content_outline sections present with correct ordering. Dialogue 1 covers meeting + origins (план: "Звідки ти? — Я з України, з Києва" ✓). Dialogue 2 covers direction FROM (план: "Звідки ти йдеш? — Я йду з роботи" ✓). Звідки section covers the trio Де/Куди/Звідки with all three examples (В Україні / В Україну / З України ✓). Countries section covers all 6 Ukrainian cities from plan ✓. Nationality chain (з України → українець → говорю українською) present ✓. "Я живу в Києві, але я зі Львова" contrast ✓. Self-check at end ✓. All required vocab used in prose ✓. Word count 1380 vs 1200 target ✓. ULP Ep4 referenced in plan but not explicitly cited in prose — minor gap but acceptable as the content covers the same Звідки topic. One deduction for the "Tomas" name error which misrepresents the dialogue character. |
-| 2. Linguistic accuracy | 9/10 | All Ukrainian forms verified via VESUM (83/83 common words confirmed; 39 proper nouns expected not-in-VESUM). Genitive chunks correct: з Києва, зі Львова, з Одеси, з Харкова, з Дніпра, із Запоріжжя. з/із/зі rule explanation cross-checked against Заболотний Grade 5 — simplified but accurate for A1. No Russianisms, no Surzhyk, no calques. "Говорити українською" confirmed natural (Антоненко-Давидович). One deduction for the "Tomas"/"Taras" name error in English prose. |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow: dialogues present the situation naturally, then the Звідки? section extracts the pattern (trio table), then activities practice. The "memorize as chunks" approach is pedagogically sound for A1 — explicitly tells learners to treat "з України" as a sealed unit, deferring genitive grammar to A2. Multiple examples per grammar point (6+ Ukrainian cities with з-forms, 10+ countries, everyday places). Backward reference to M28 euphony and M05 introductions builds on prior knowledge. The "zooming in" metaphor (country→city) is intuitive. No grammar taught beyond scope. |
-| 4. Vocabulary coverage | 10/10 | All required vocab present in prose: звідки ✓, з/із/зі ✓, Україна ✓, Київ ✓, Львів ✓, Канада ✓. All recommended vocab included: Одеса ✓, Харків ✓, США ✓, Англія ✓, Німеччина ✓, Польща ✓, додому ✓. Words introduced contextually in dialogues and prose, not as bare lists. Additional useful vocab (Угорщина, Румунія, Франція, Японія, Італія) enriches the module beyond plan minimums. |
-| 5. Exercise quality | 9/10 | All 4 plan activity_hints have corresponding markers with correct placement. fill-in-zvidky after dialogues tests the just-taught з + country/city pattern. group-sort-location-trio after Звідки? section tests the trio categorization. quiz-prepositions tests preposition selection. fill-in-location-vs-origin tests the live-vs-from contrast. Markers evenly distributed. Cannot verify answer positions or distractor quality since YAML is generated separately, but marker logic and placement are correct. |
-| 6. Engagement & tone | 9/10 | No motivational filler, no "unlock" language, no generic enthusiasm. Tone is teacher-like and direct. Cultural detail: "Київ takes its name from Кий, a legendary Polanian prince. Львів is named for Prince Лев Данилович" — specific, interesting, grounded. The diaspora angle ("This is how diaspora Ukrainians talk about themselves every day") is relevant and motivating without being generic. One minor deduction: "If you can say Я з Києва without hesitating, you're doing it right" edges toward telling-not-showing, but is brief and functional. |
-| 7. Structural integrity | 10/10 | All 4 H2 sections from plan present in correct order: Діалоги → Звідки? → Країни і міста → Підсумок. Clean markdown. No duplicate sections. No meta-commentary. No stray tags. Word count 1380, well within range (target 1200). Two H3 subsections within Діалоги (Діалог 1, Діалог 2) — natural structure. |
-| 8. Cultural accuracy | 10/10 | Fully decolonized. Germany presented as "Німеччина (not 'Германія')" — explicitly rejects the Russian form. Ukrainian city names with historical context (Кий, Лев Данилович). No "like Russian" comparisons anywhere. Ukrainian presented entirely on its own terms. Factually correct historical claims about city name etymologies. |
-| 9. Dialogue quality | 10/10 | Both dialogues have named speakers with distinct voices. Dialogue 1: multi-speaker group mixer (Тарас, Лена, Кенджі) — natural university setting, culturally appropriate. Dialogue 2: street encounter (Оксана, Микола) — natural daily conversation about coming from work/school, includes third-person reference (Олена). No interrogation pattern — conversations flow naturally with follow-up questions ("Давно тут?", "Куди ти зараз?"). "Бувай!" as a natural closing. Both dialogues match plan situations exactly. |
-
----
+| 1. Plan adherence | 10/10 | The module perfectly covers all points in the `content_outline`. The word count is 1597, safely exceeding the 1200 target. |
+| 2. Linguistic accuracy | 8/10 | There is a factual phonetic error when explaining euphony rules: "especially those starting with z, s, or sh, you use зі, which is why we say зі Львова". "Львів" does not start with a sibilant, it starts with "Льв" (a lateral and a labiodental). The text also contradicts itself by using `із США` but later teaching `зі США`. |
+| 3. Pedagogical quality | 8/10 | The caution block warns: "Never say Я в України to mean 'I am from Ukraine'". English speakers would not naturally invent "в" + Genitive to translate "from". It's much more helpful to warn against using "з" without the case ending (e.g., "Я з Україна"). The euphony explanation is also contradictory and confusing. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (звідки, з/із/зі, Україна, Київ, Львів, Канада, Одеса, Харків, США, Англія, Німеччина, Польща, додому) are perfectly integrated into contextual examples. |
+| 5. Exercise quality | 10/10 | Markers perfectly align with the plan, are well-spaced, and test the target grammar logically. |
+| 6. Engagement & tone | 10/10 | Tone is encouraging and natural. The introduction ("An international student mixer at a university in Kyiv...") is an excellent framing device. |
+| 7. Structural integrity | 10/10 | Markdown is clean, headers exactly match the plan, and there is no meta-commentary. |
+| 8. Cultural accuracy | 10/10 | Excellent integration of a decolonized cultural note regarding the etymology of "Україна" and its contrast with Russian imperialist myths. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, use named speakers, and provide great contrast between the "meeting someone new" context and the "daily routine movements" context. |
 
 ## Findings
+[2. Linguistic accuracy] [Critical]
+Location: `Звідки? — Where From?` -> "If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv)."
+Issue: Factual phonetic error. "Львів" does not start with a sibilant (z, s, or sh), making it a confusing example for that specific claim. Furthermore, the text contradicts itself by using `із США` here but later (in the notes and countries section) stating that "the United States is usually abbreviated, giving us зі США".
+Fix: Update the euphony explanation to use "Запоріжжя" as the "із" example, and group "Львів" and "США" correctly under the "зі" rule.
 
-```
-[DIMENSION 1, 2] [SEVERITY: critical]
-Location: Paragraph after Dialogue 1: "Tomas does the same: Я з Канади, із Торонто — from Canada, from Toronto."
-Issue: The character in Dialogue 1 is named Тарас (Taras), not "Tomas." This is a factual error — the wrong name in the English explanation text.
-Fix: Replace "Tomas" with "Taras"
-```
-
----
+[3. Pedagogical quality] [Major]
+Location: `Звідки? — Where From?` -> "English relies heavily on the verb "to be" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean "I am from Ukraine" — always use **з** for your origin."
+Issue: Pedagogically confusing example. A learner translating "I am from Ukraine" is highly unlikely to invent "в" + Genitive (`Я в України`). They are much more likely to forget the case ending entirely (`Я з Україна`).
+Fix: Change the incorrect example to `Я з Україна` and clarify that the correct ending is required.
 
 ## Verdict: REVISE
-
-One critical finding: wrong character name in English prose ("Tomas" instead of "Taras"). All other dimensions are strong (9-10). This is a single-fix REVISE — the module is otherwise excellent.
+The module is exceptionally well-written, engaging, and structurally sound. However, the factual error regarding the phonetic properties of "Львів", the internal contradiction regarding "із/зі США", and the slightly confusing pedagogical warning in the caution block require targeted revisions to prevent confusing learners.
 
 <fixes>
-- find: "Tomas does the same: **Я з Канади, із Торонто**"
-  replace: "Taras does the same: **Я з Канади, із Торонто**"
+- find: "If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv)."
+  replace: "If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із Запоріжжя** (from Zaporizhzhia). For specific difficult consonant clusters, you use **зі**, which is why we say **зі Львова** (from Lviv) and **зі США** (from the USA)."
+- find: "English relies heavily on the verb \"to be\" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean \"I am from Ukraine\" — always use **з** for your origin."
+  replace: "English relies heavily on the verb \"to be\" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я з Україна** to mean \"I am from Ukraine\" — always use **з** with the correct ending for your origin."
 </fixes>

@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers every content point perfectly, including the exact dialogue structures
+    ("У тебе є брати чи сестри? ↗", "У мене тільки один брат") and the pedagogical
+    sequence.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Very high quality Ukrainian overall. One semantic calque: "Познайом свою
+    сім''ю" instead of "Розкажи про свою сім''ю" (знайомити requires a complement
+    of who you are introducing them to).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and grammar explanations. Deducted slightly for explicit
+    curriculum meta-commentary ("That belongs to A2", "At A1, use only..."), which
+    breaks learner immersion.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Integrates 100% of both required and recommended vocabulary in natural
+    contexts without resorting to bare lists.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly align with the plan's activity hints and are positioned
+    logically to test what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Masterful use of real textbook examples (Захарійчук Grade 1 poem, Вашуленко
+    Grade 3 gender rule) to authenticate the learning experience.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Sections follow the outline exactly. Clean formatting.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highlights native conceptualizations (no single word for grandparents,
+    interchangeable use of сім'я/родина, gender matching).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, contextualized, and provide clear communicative
+    templates for the learner to adapt.
+findings: []

@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All outline points (Dialogues, Days, Months, Summary) are covered. Both
+    dialogues (Planning, Birthday) are present. Word count is healthy.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. Etymologies (четвер/четвертий, березень/береза) are factually
+    correct. Cases in time chunks (у понеділок, в серпні) are correctly formed.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Introduces temporal prepositions as chunks ("у/в + day combination as
+    a fixed phrase") as instructed by the plan, avoiding overwhelming A1 learners
+    with locative/accusative grammar rules.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items (days, months, seasons,
+    week, birthday) are smoothly integrated into prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Appropriate marker distribution targeting exactly what was just taught
+    in the preceding section.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Generally warm and engaging with great cultural notes ("nature calendar"),
+    but the summary opens with slightly cliché meta-commentary ("You now have the
+    full Ukrainian calendar at your fingertips.").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, precise adherence to the plan's H2 structure, no stray
+    artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Effectively emphasizes the decolonized/authentic aspect of Ukrainian months
+    originating from nature rather than Roman gods.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are practical, natural, and accurately model everyday contexts
+    for time (scheduling and birthdays).
+findings: []

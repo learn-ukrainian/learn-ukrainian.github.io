@@ -1,0 +1,442 @@
+{
+  "total_items": 211,
+  "grounded_items": 140,
+  "ungrounded": [
+    {
+      "word": "цьому",
+      "exercise_type": "fill-in",
+      "context": "У цьому тексті немає жодної ____.",
+      "role": "context"
+    },
+    {
+      "word": "тексті",
+      "exercise_type": "fill-in",
+      "context": "У цьому тексті немає жодної ____.",
+      "role": "context"
+    },
+    {
+      "word": "жодної",
+      "exercise_type": "fill-in",
+      "context": "У цьому тексті немає жодної ____.",
+      "role": "context"
+    },
+    {
+      "word": "граматику",
+      "exercise_type": "fill-in",
+      "context": "граматику",
+      "role": "answer"
+    },
+    {
+      "word": "вивчаю",
+      "exercise_type": "fill-in",
+      "context": "Я зараз детально вивчаю українську ____.",
+      "role": "context"
+    },
+    {
+      "word": "відмінком",
+      "exercise_type": "fill-in",
+      "context": "відмінком",
+      "role": "answer"
+    },
+    {
+      "word": "активно",
+      "exercise_type": "fill-in",
+      "context": "Студент активно цікавиться новим ____.",
+      "role": "context"
+    },
+    {
+      "word": "цікавиться",
+      "exercise_type": "fill-in",
+      "context": "Студент активно цікавиться новим ____.",
+      "role": "context"
+    },
+    {
+      "word": "новим",
+      "exercise_type": "fill-in",
+      "context": "Студент активно цікавиться новим ____.",
+      "role": "context"
+    },
+    {
+      "word": "складному",
+      "exercise_type": "fill-in",
+      "context": "У цьому складному ____ є одна помилка.",
+      "role": "context"
+    },
+    {
+      "word": "вчителю",
+      "exercise_type": "fill-in",
+      "context": "Вчителю",
+      "role": "answer"
+    },
+    {
+      "word": "перевірте",
+      "exercise_type": "fill-in",
+      "context": "____, перевірте, будь ласка, мій тест!",
+      "role": "context"
+    },
+    {
+      "word": "будь",
+      "exercise_type": "fill-in",
+      "context": "____, перевірте, будь ласка, мій тест!",
+      "role": "context"
+    },
+    {
+      "word": "ласка",
+      "exercise_type": "fill-in",
+      "context": "____, перевірте, будь ласка, мій тест!",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "____, перевірте, будь ласка, мій тест!",
+      "role": "context"
+    },
+    {
+      "word": "тест",
+      "exercise_type": "fill-in",
+      "context": "____, перевірте, будь ласка, мій тест!",
+      "role": "context"
+    },
+    {
+      "word": "ці",
+      "exercise_type": "fill-in",
+      "context": "Ці маленькі слова з'єднують частини ____.",
+      "role": "context"
+    },
+    {
+      "word": "маленькі",
+      "exercise_type": "fill-in",
+      "context": "Ці маленькі слова з'єднують частини ____.",
+      "role": "context"
+    },
+    {
+      "word": "з'єднують",
+      "exercise_type": "fill-in",
+      "context": "Ці маленькі слова з'єднують частини ____.",
+      "role": "context"
+    },
+    {
+      "word": "впевненості",
+      "exercise_type": "fill-in",
+      "context": "Для впевненості мені потрібне ____.",
+      "role": "context"
+    },
+    {
+      "word": "потрібне",
+      "exercise_type": "fill-in",
+      "context": "Для впевненості мені потрібне ____.",
+      "role": "context"
+    },
+    {
+      "word": "свіжі",
+      "exercise_type": "quiz",
+      "context": "Я щодня ____ свіжі новини.",
+      "role": "context"
+    },
+    {
+      "word": "новини",
+      "exercise_type": "quiz",
+      "context": "Я щодня ____ свіжі новини.",
+      "role": "context"
+    },
+    {
+      "word": "учора",
+      "exercise_type": "quiz",
+      "context": "Учора ввечері він нарешті ____ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "quiz",
+      "context": "Учора ввечері він нарешті ____ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "нарешті",
+      "exercise_type": "quiz",
+      "context": "Учора ввечері він нарешті ____ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "quiz",
+      "context": "Завтра я точно ____ це важливе завдання.",
+      "role": "context"
+    },
+    {
+      "word": "важливе",
+      "exercise_type": "quiz",
+      "context": "Завтра я точно ____ це важливе завдання.",
+      "role": "context"
+    },
+    {
+      "word": "завдання",
+      "exercise_type": "quiz",
+      "context": "Завтра я точно ____ це важливе завдання.",
+      "role": "context"
+    },
+    {
+      "word": "довго",
+      "exercise_type": "quiz",
+      "context": "Ми довго ____ про українську граматику.",
+      "role": "context"
+    },
+    {
+      "word": "учитель",
+      "exercise_type": "quiz",
+      "context": "Учитель ____, що це помилка.",
+      "role": "context"
+    },
+    {
+      "word": "слухав",
+      "exercise_type": "quiz",
+      "context": "Коли я ____ українську, я часто слухав пісні.",
+      "role": "context"
+    },
+    {
+      "word": "пісні",
+      "exercise_type": "quiz",
+      "context": "Коли я ____ українську, я часто слухав пісні.",
+      "role": "context"
+    },
+    {
+      "word": "лист",
+      "exercise_type": "quiz",
+      "context": "Ти вже ____ лист своєму другу?",
+      "role": "context"
+    },
+    {
+      "word": "своєму",
+      "exercise_type": "quiz",
+      "context": "Ти вже ____ лист своєму другу?",
+      "role": "context"
+    },
+    {
+      "word": "другу",
+      "exercise_type": "quiz",
+      "context": "Ти вже ____ лист своєму другу?",
+      "role": "context"
+    },
+    {
+      "word": "говорили",
+      "exercise_type": "error-correction",
+      "context": "Ми часто говорили про його.",
+      "role": "context"
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "error-correction",
+      "context": "Вона п'є каву без молоко.",
+      "role": "context"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "error-correction",
+      "context": "Вона п'є каву без молоко.",
+      "role": "context"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "error-correction",
+      "context": "Мій брат вищий мене.",
+      "role": "context"
+    },
+    {
+      "word": "нові",
+      "exercise_type": "error-correction",
+      "context": "Я читаю цей текст, бо знати нові слова.",
+      "role": "context"
+    },
+    {
+      "word": "помилку",
+      "exercise_type": "error-correction",
+      "context": "помилку",
+      "role": "answer"
+    },
+    {
+      "word": "бачиш",
+      "exercise_type": "error-correction",
+      "context": "Ти бачиш цей великий помилка?",
+      "role": "context"
+    },
+    {
+      "word": "нічого",
+      "exercise_type": "error-correction",
+      "context": "нічого",
+      "role": "answer"
+    },
+    {
+      "word": "проблему",
+      "exercise_type": "error-correction",
+      "context": "Він не знає ніщо про цю проблему.",
+      "role": "context"
+    },
+    {
+      "word": "лежать",
+      "exercise_type": "error-correction",
+      "context": "Три зошитів лежать на столі.",
+      "role": "context"
+    },
+    {
+      "word": "столі",
+      "exercise_type": "error-correction",
+      "context": "Три зошитів лежать на столі.",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "error-correction",
+      "context": "Друг, допоможи мені з граматикою!",
+      "role": "context"
+    },
+    {
+      "word": "допоможи",
+      "exercise_type": "error-correction",
+      "context": "Друг, допоможи мені з граматикою!",
+      "role": "context"
+    },
+    {
+      "word": "граматикою",
+      "exercise_type": "error-correction",
+      "context": "Друг, допоможи мені з граматикою!",
+      "role": "context"
+    },
+    {
+      "word": "моїй",
+      "exercise_type": "error-correction",
+      "context": "У моїй рукі новий телефон.",
+      "role": "context"
+    },
+    {
+      "word": "рукі",
+      "exercise_type": "error-correction",
+      "context": "У моїй рукі новий телефон.",
+      "role": "context"
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "error-correction",
+      "context": "У моїй рукі новий телефон.",
+      "role": "context"
+    },
+    {
+      "word": "підмет",
+      "exercise_type": "match-up",
+      "context": "базова форма, підмет",
+      "role": "context"
+    },
+    {
+      "word": "адресат",
+      "exercise_type": "match-up",
+      "context": "адресат дії",
+      "role": "context"
+    },
+    {
+      "word": "спільна",
+      "exercise_type": "match-up",
+      "context": "інструмент або спільна дія",
+      "role": "context"
+    },
+    {
+      "word": "прийменником",
+      "exercise_type": "match-up",
+      "context": "місце дії, завжди з прийменником",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "match-up",
+      "context": "використовується виключно для звертання",
+      "role": "context"
+    },
+    {
+      "word": "повторимо",
+      "exercise_type": "unjumble",
+      "context": "повторимо",
+      "role": "answer"
+    },
+    {
+      "word": "помилок",
+      "exercise_type": "unjumble",
+      "context": "помилок.",
+      "role": "answer"
+    },
+    {
+      "word": "урок",
+      "exercise_type": "unjumble",
+      "context": "урок,",
+      "role": "answer"
+    },
+    {
+      "word": "де",
+      "exercise_type": "unjumble",
+      "context": "де",
+      "role": "answer"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "unjumble",
+      "context": "моя",
+      "role": "answer"
+    },
+    {
+      "word": "крім",
+      "exercise_type": "true-false",
+      "context": "Усі відмінки, крім називного, називаються непрямими.",
+      "role": "context"
+    },
+    {
+      "word": "називаються",
+      "exercise_type": "true-false",
+      "context": "Усі відмінки, крім називного, називаються непрямими.",
+      "role": "context"
+    },
+    {
+      "word": "непрямими",
+      "exercise_type": "true-false",
+      "context": "Усі відмінки, крім називного, називаються непрямими.",
+      "role": "context"
+    },
+    {
+      "word": "знахідного",
+      "exercise_type": "true-false",
+      "context": "Слово «немає» завжди вимагає знахідного відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "доконаного",
+      "exercise_type": "true-false",
+      "context": "Дієслова доконаного виду означають завершену дію або результ",
+      "role": "context"
+    },
+    {
+      "word": "іншій",
+      "exercise_type": "true-false",
+      "context": "Займенник «свій» показує, що предмет належить іншій особі, а",
+      "role": "context"
+    },
+    {
+      "word": "особі",
+      "exercise_type": "true-false",
+      "context": "Займенник «свій» показує, що предмет належить іншій особі, а",
+      "role": "context"
+    },
+    {
+      "word": "обов'язкове",
+      "exercise_type": "true-false",
+      "context": "В українській мові обов'язкове подвійне заперечення.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 11,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "впевненість",
+      "граматика",
+      "дієслово"
+    ]
+  },
+  "all_grounded": false
+}

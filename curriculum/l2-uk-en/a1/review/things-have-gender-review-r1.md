@@ -1,100 +1,67 @@
-Now I have all the verification data I need. Let me compile the full adversarial review.
-
 ## Linguistic Scan
-
-**Russianisms:** None found. All vocabulary is proper Ukrainian.
-
-**Surzhyk:** None found.
-
-**Calques:** None found. `search_style_guide` returned no hits on any phrases from the module.
-
-**Paronyms:** None found.
-
-**Russian characters (ы, э, ё, ъ):** None present.
-
-**Gender assignments verified:**
-- стіл (m) ✅, книжка (f) ✅, вікно (n) ✅, кімната (f) ✅, ліжко (n) ✅, стілець (m) ✅, лампа (f) ✅, телефон (m) ✅, комп'ютер (m) ✅, зошит (m) ✅, ручка (f) ✅, сумка (f) ✅, крісло (n) ✅, дзеркало (n) ✅, фото (n) ✅ (VESUM: `noun:inanim:n`), ключ (m) ✅, стіна (f) ✅
-
-**Case endings verified:** "дерев'яний" (m.nom) ✅, "зручне" (n.nom) ✅, "нове" (n.nom) ✅, "синя" (f.nom.short — lemma синій) ✅, "цікава" (f.nom — lemma цікавий) ✅, "великий" (m.nom) ✅. All confirmed by VESUM.
-
-**Factual claims about Ukrainian grammar:** The він/вона/воно gender test matches Ponomarova Grade 3 p.86 exactly (RAG-confirmed). The endings patterns match Vashulenko Grade 3 p.112 (RAG-confirmed), noting the module uses a deliberate A1 simplification per plan: it omits masculine -о (тато), feminine нульове (тінь), and neuter -а/-я (маля/курча). The module correctly hedges with "This covers about 90% of all nouns."
-
-**VESUM "NOT FOUND" words:** All 28 are stress-mark split artifacts (e.g., "Діало" from "Діало́ги", "Кла" from "Кла́сно", "телефо" from "телефо́н"). Not real errors.
-
-**фото claim:** Module says "it never changes its ending." VESUM shows both indeclinable (`nv`) and alternative declined forms (фота, фоту, фотом). The indeclinable usage is standard and appropriate for A1. Minor oversimplification, not an error.
-
-**No linguistic errors found.**
+No linguistic errors found. The grammar points are accurate and properly contextualized. All Ukrainian forms have been verified against VESUM.
 
 ## Exercise Check
-
-**Activity markers inventory:**
-
-| # | Marker ID | Location | Plan activity_hint match |
-|---|-----------|----------|--------------------------|
-| 1 | `quiz-vin-vona-vono` | After "Він, вона, воно" section | ✅ quiz: він, вона, or воно? (8 items) |
-| 2 | `group-sort-gender` | After "Предмети навколо" gender lists | ✅ group-sort: Sort objects by gender (12 items) |
-| 3 | `fill-in-possessive` | After У мене є extension | ✅ fill-in: мій/моя/моє ___ (8 items) |
-| 4 | `quiz-gender-by-ending` | After Summary self-check | ✅ quiz: What gender? Look at ending (6 items) |
-
-- **4 markers for 4 activity hints** — full match ✅
-- **Placement:** Each marker follows its relevant teaching section ✅
-- **Spread:** Markers distributed across sections 2, 3, 3, 4 — good spread, not clustered ✅
-- **Concept prerequisite:** Each exercise tests content taught immediately before it ✅
-
-No exercise issues found.
+- `<!-- INJECT_ACTIVITY: quiz-pronoun-choice -->`: Focuses on `він/вона/воно`, but is currently placed after the paragraph teaching `мій/моя/моє`. It should be moved up slightly to immediately follow the `він/вона/воно` explanation.
+- `<!-- INJECT_ACTIVITY: quiz-gender-endings -->`: Matches plan focus ("What gender? Look at the ending"). Correctly placed right after the ending rules are presented.
+- `<!-- INJECT_ACTIVITY: group-sort-gender -->`: Matches plan focus ("Sort objects"). Correctly placed after the vocabulary has been introduced by gender.
+- `<!-- INJECT_ACTIVITY: fill-in-possessives -->`: Focuses on matching the possessive `мій/моя/моє` to the noun, but is currently placed at the very end of the module, right after teaching the phrase `У мене є`. This is disjointed because the learner just read about a different grammar pattern. It should be moved up to immediately follow the `мій/моя/моє` paragraph.
 
 ## Scores
-
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | All 4 content_outline sections present and ordered correctly. Both textbook references cited (Ponomarova p.86, Vashulenko p.112 — RAG-confirmed). All recommended vocab present. **Deduction:** Plan `vocabulary_hints.required` lists "книга (book, f)" but module consistently uses "книжка" instead (14 occurrences). книжка is valid Ukrainian (VESUM-confirmed, Ponomarova p.86 uses it), but the plan is source of truth. |
-| 2. Linguistic accuracy | 10/10 | Zero Russianisms, zero surzhyk, zero calques. All 17 adjective/noun forms batch-verified in VESUM. Gender assignments correct for all 17 nouns. Case endings verified: "дерев'яний" (m.nom), "зручне" (n.nom), "цікава" (f.nom), "синя" (f.nom). Stress-mark artifacts in VESUM scan are false positives, not errors. |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow: dialogues (Presentation) → explicit rules with він/вона/воно test (Presentation) → vocabulary organized by gender with sentences (Practice) → self-check (Production). 15+ Ukrainian examples per grammar point. Follows Vashulenko's textbook methodology exactly — test with він/вона/воно first, then check endings. Natural progression from concrete (dialogues) → abstract (rules) → applied (objects with sentences). |
-| 4. Vocabulary coverage | 9/10 | 9/10 required vocabulary items present in prose context. All 8 recommended items present. **Deduction:** "книга" from required list replaced by "книжка" throughout. Words introduced naturally in dialogues and example sentences, not as bare lists. |
-| 5. Exercise quality | 9/10 | 4 markers match all 4 plan activity_hints in type and focus. Well-placed after teaching sections. Types vary (quiz, group-sort, fill-in). Content generated by separate YAML tool so can't verify items/distractors, but marker placement and coverage are correct. |
-| 6. Engagement & tone | 10/10 | Zero motivational openers, zero meta-commentary, zero "You have unlocked..." language. Direct teacher voice: "Did you notice? Стіл gets мій, кімната gets моя." Cultural detail: "Вона українська!" in dialogue 2. Concrete throughout — never generic. |
-| 7. Structural integrity | 10/10 | All 4 H2 sections present matching plan. Clean markdown, correct HTML dialogue formatting. Word count 1289/1200 target ✅. No stray tags, no duplicate summaries, no meta sections. |
-| 8. Cultural accuracy | 10/10 | Ukrainian presented entirely on its own terms. No "like Russian but..." anywhere. No "Slavic language" hedging. Grammatical gender taught through Ukrainian textbook methodology (він/мій test), not through English comparison. Decolonized. |
-| 9. Dialogue quality | 9/10 | Named speakers (Марія, Оленка) with distinct voices. Natural situations: showing your room on video call, comparing what's in your bag. Multi-turn with follow-ups ("А що ще є?", "Яка книжка?"). Not interrogation-style. **Minor:** In Dialogue 1, Оленка pivots from viewing Марія's room to "Моє крісло дуже зручне!" — comparing her own armchair. The transition is slightly abrupt but conversationally natural (comparing possessions). |
+| 1. Plan adherence | 10/10 | The module strictly follows the outline, including all specific dialogues (pet shop, video call, what's in your bag), textbook references (Ponomarova, Vashulenko), and the 3-step summary. |
+| 2. Linguistic accuracy | 10/10 | No linguistic errors. Gender assignments and grammatical explanations are flawless. All proper vocabulary uses correct forms. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical pacing. Introduces the concept abstractly, then uses possessives to make it concrete, then gives reliable spelling rules, followed by practical application. |
+| 4. Vocabulary coverage | 10/10 | Every single required and recommended vocabulary word is integrated naturally into the prose (e.g., seamlessly grouping them by gender in the "Objects Around Us" section). |
+| 5. Exercise quality | 8/10 | Two exercise markers (`quiz-pronoun-choice` and `fill-in-possessives`) are misplaced relative to the concepts they test, which could cause a jarring experience for learners. |
+| 6. Engagement & tone | 10/10 | The tone is highly engaging without being corporate or patronizing. Phrases like "You must set this habit aside" provide strong, clear guidance. |
+| 7. Structural integrity | 10/10 | All H2 headings match the plan perfectly. The word count is 1773 words, which comfortably exceeds the 1200-word target. |
+| 8. Cultural accuracy | 10/10 | Beautifully incorporates real Ukrainian school textbooks (Ponomarova and Vashulenko) as authoritative sources for the gender rules, reflecting authentic education. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, utilize named speakers, and organically demonstrate the target grammar in relatable situations. |
 
 ## Findings
-
-```
-[PLAN ADHERENCE / VOCABULARY COVERAGE] [SEVERITY: minor]
-Location: Throughout — all instances of "книжка"
-Issue: Plan vocabulary_hints.required specifies "книга (book, f)" but module uses "книжка" in all 14 occurrences. Both are VESUM-confirmed valid Ukrainian. Ponomarova p.86 uses "книжка" in its own examples, so the writer may have followed the textbook rather than the plan. However, the plan is source of truth.
-Fix: Replace "книжка" with "книга" in prose/dialogue, and "книжку" with "книгу" in any accusative contexts. Keep "книжка" mention as a colloquial variant if desired.
-```
+[5. Exercise quality] [major]
+Location: `## Він, вона, воно — The Gender Test` and `## Предмети навколо — Objects Around Us`
+Issue: `quiz-pronoun-choice` (testing `він/вона/воно`) is placed after the `мій/моя/моє` paragraph. `fill-in-possessives` (testing `мій/моя/моє`) is placed at the end of the module after teaching `У мене є`. This means exercises appear significantly after the concept is taught, or immediately after an unrelated concept, which creates a jarring learning experience.
+Fix: Move `quiz-pronoun-choice` to immediately follow the paragraph teaching `він, вона, воно`. Move `fill-in-possessives` to replace the old location of `quiz-pronoun-choice` (immediately following the `мій/моя/моє` paragraph). Remove the marker from the end of the section.
 
 ## Verdict: REVISE
-
-All dimensions ≥9, but the plan requires "книга" as required vocabulary and the module uses "книжка" throughout (14 occurrences). This is a clear plan vocabulary deviation. The fix is mechanical — find/replace.
+The content itself is excellent, linguistically sound, and culturally accurate. However, the misplacement of two activity markers disrupts the pedagogical flow and violates the rule against placing exercises after unrelated concepts. Applying the deterministic marker movement fixes will perfect this module.
 
 <fixes>
-- find: "У мене́ є кни́жка, телефо́н і фо́то."
-  replace: "У мене́ є кни́га, телефо́н і фо́то."
-- find: "Книжка — це ціка́во! Яка книжка?"
-  replace: "Кни́га — це ціка́во! Яка́ кни́га?"
-- find: "Це моя книжка. Вона украї́нська!"
-  replace: "Це моя́ кни́га. Вона́ украї́нська!"
-- find: "А мій зошит нови́й."
-  replace: "А мій зо́шит нови́й."
-- find: "**книжка** (book)"
-  replace: "**книга** (book)"
-- find: "**Жіночий рід** (він, мій) — **книжка** (book)"
-  replace: "**Жіночий рід** (вона, моя) — **книга** (book)"
-- find: "Now try **книжка** (book): **вона книжка**? Yes — **жіночий рід** (feminine)."
-  replace: "Now try **книга** (book): **вона книга**? Yes — **жіночий рід** (feminine)."
-- find: "**мій стіл** (m) → **моя книжка** (f) → **моє вікно** (n)"
-  replace: "**мій стіл** (m) → **моя книга** (f) → **моє вікно** (n)"
-- find: "книжка (-а)"
-  replace: "книга (-а)"
-- find: "**Це моя книжка.**"
-  replace: "**Це моя книга.**"
-- find: "Якого роду **книжка**? → Жіно́чого. Закінчення -а. → **Моя книжка.**"
-  replace: "Якого роду **книга**? → Жіно́чого. Закінчення -а. → **Моя книга.**"
-- find: "великий стіл (m), велика книжка (f), велике вікно (n)"
-  replace: "великий стіл (m), велика книга (f), велике вікно (n)"
-- find: "| книжка (book) |"
-  replace: "| книга (book) |"
+- find: |
+    If the word is a **вікно** (window), you refer to it as **воно**.
+
+    This concept becomes much more intuitive when you attach a possessive pronoun to the noun.
+  replace: |
+    If the word is a **вікно** (window), you refer to it as **воно**.
+
+    <!-- INJECT_ACTIVITY: quiz-pronoun-choice -->
+
+    This concept becomes much more intuitive when you attach a possessive pronoun to the noun.
+- find: |
+    By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
+
+    <!-- INJECT_ACTIVITY: quiz-pronoun-choice -->
+
+    While the "My" test helps you confirm a word's gender,
+  replace: |
+    By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
+
+    <!-- INJECT_ACTIVITY: fill-in-possessives -->
+
+    While the "My" test helps you confirm a word's gender,
+- find: |
+    You do not need to change the ending of the object you possess in this specific construction.
+    :::
+
+    <!-- INJECT_ACTIVITY: fill-in-possessives -->
+
+    ## Підсумок — Summary
+  replace: |
+    You do not need to change the ending of the object you possess in this specific construction.
+    :::
+
+    ## Підсумок — Summary
 </fixes>

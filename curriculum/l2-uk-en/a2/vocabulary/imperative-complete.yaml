@@ -1,0 +1,163 @@
+vocabulary:
+- word: спокі́йний
+  translation: calm
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ува́жний
+  translation: attentive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: живи́
+  translation: live (imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: здійсни́тися
+  translation: to come true
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мрі́я
+  translation: dream
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хай
+  translation: let (particle for 3rd person imperative)
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: неха́й
+  translation: let (formal variant)
+  expression: false
+  pos: част.
+  gender: ''
+  verified: true
+- word: наказовий спосіб
+  translation: imperative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: побажа́ння
+  translation: wish / blessing
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: будь
+  translation: be (imperative singular)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́дьте
+  translation: be (imperative plural/polite)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: щасли́вий
+  translation: happy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: здоро́вий
+  translation: healthy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ході́мо
+  translation: let's go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дава́йте
+  translation: let's (suggestion particle)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Хай щастить!
+  translation: Good luck!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Будьмо!
+  translation: Cheers! / Let's be!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Будьте здорові!
+  translation: Bless you! / Be healthy!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до́звіл
+  translation: permission
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: нака́з
+  translation: command / order
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: успі́шний
+  translation: successful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́смажка
+  translation: sauté / aromatic base for soup
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́лька
+  translation: calque (unnatural literal translation)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поговорі́мо
+  translation: let's talk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зробі́мо
+  translation: let's do (it)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працю́ймо
+  translation: let's work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Будь уважним!
+  translation: Be attentive!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

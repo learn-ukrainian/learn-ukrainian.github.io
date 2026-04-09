@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The plan required two distinct dialogue situations. The second dialogue
+    (about dictionary lookup) is present, but the first dialogue ("A student asking
+    the teacher to explain verb aspect terminology")
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The content incorrectly capitalizes the abbreviation for "рід" (`ч. Р.`)
+    which is a factual error for dictionary literacy. It also uses the calque "протікає
+    наша дія" instead of "відбувається наша дія
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow. The step-by-step morphological analysis of
+    the word "читаємо" is a brilliant practical application of the concepts taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary terms are naturally integrated
+    and bolded throughout the text.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All planned activities are present and test the appropriate language skills.
+    `group-sort-verb-tense` is placed after section 2, which is slightly delayed but
+    still works well as a capstone to the morp
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The teacher persona is encouraging and substantial without resorting to
+    empty filler ("Welcome to the language of the classroom").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'The writer mistakenly included the prompt''s word count target directly
+    into the H2 header: `## Словникова грамотність: читаємо словник (~550 words)`.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Successfully addresses the decolonization rule regarding the Russian calque
+    "давайте", providing authentic Ukrainian synthetic alternatives ("ходімо", "працюймо").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The provided dialogue flows naturally, but it alters the plan's instruction
+    from "asking a classmate" to "Вчителька". Furthermore, the missing first dialogue
+    significantly reduces the conversational d
+findings: []

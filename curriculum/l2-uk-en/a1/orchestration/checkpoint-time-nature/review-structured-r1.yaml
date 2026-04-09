@@ -2,56 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 5 content_outline sections present and ordered correctly. Що ми знаємо
-    covers all M22-M26 self-check questions as specified. Читання has a 10-sentence
-    text (plan asked 8-10). Граматика covers all '
+  score: 10
+  evidence: Covers all 5 sections exactly as outlined in the plan. All grammatical
+    patterns and vocabulary categories (time, calendar, weather, routine) are reviewed.
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: 'All Ukrainian verified against VESUM (153/153 common words found; 3 "not
-    found" are proper nouns Дмитро/Дмитре/Оля confirmed via lemma lookup). Grammar
-    explanations are correct: ordinal time chunks, a'
+  evidence: No Russianisms, Surzhyk, or Calques. Gender and case usage is correct.
+    The phonetic rule for `у/в` euphony is factually accurate.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Excellent PPP flow: self-check (activate prior knowledge) → reading (exposure)
-    → grammar summary (systematize) → dialogue (produce) → summary (consolidate).
-    Each grammar pattern has 2-3 concrete examp'
+  score: 10
+  evidence: Excellent pedagogical notes, especially the clarification on "неділя"
+    (Sunday) vs "тиждень" (week), which is a very common false friend for learners.
+    Good use of context to explain the difference betw
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'Plan has no required/recommended vocabulary (checkpoint module — review
-    only). All key vocabulary from M22-M26 appears naturally: time expressions (о
-    третій, о пів на другу), days (у понеділок, у сере'
+  evidence: All required vocabulary themes (time expressions, days, months, seasons,
+    weather adverbs, frequency) are naturally integrated into the text and dialogue.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 'Three activity markers correspond to the three plan activity_hints. Types
-    match: 2× fill-in, 1× match-up. Focus areas match plan: mixed time/weather review,
-    question→answer matching, day-paragraph com'
+  score: 10
+  evidence: Exercise markers are present, correctly placed, and correspond perfectly
+    to the plan's requirements to test the consolidated knowledge.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'No motivational openers or "magic of" language. Tone is direct and encouraging
-    without being patronizing. "If you answered three or more without hesitation,
-    your A1.4 foundation is solid" — practical '
+  score: 8
+  evidence: 'DEDUCT: Contains gamified/self-congratulatory openers ("You have reached
+    a significant milestone in your Ukrainian journey.") and empty filler ("These
+    tools are absolutely essential for a vibrant soci'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All 5 H2 sections present and correctly ordered. Clean markdown. No duplicate
-    summaries. No stray formatting. Word count 1273 meets the 1200 target. Activity
-    markers properly formatted as HTML comment
+  evidence: Clean markdown, no missing headings, correct ordering. Word count is 1468,
+    well above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. No "like Russian but..." comparisons.
-    The у/в alternation is correctly attributed to Ukrainian euphony. М28 preview
-    correctly labels it "евфонія" (Ukrainian term)
+  evidence: Decolonized perspective, accurately explaining Ukrainian time and calendar
+    structures on their own terms.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Named speakers (Оля, Дмитро) with distinct voices. Natural multi-turn
-    conversation about planning a real outing. Integrates all target patterns organically:
-    weather question, invitation (Ходімо!), mee'
+  score: 10
+  evidence: The dialogue is a natural, multi-turn conversation about planning a weekend,
+    utilizing the targeted vocabulary effectively with realistic phrasing ("Ходімо
+    в музей!").
 findings: []

@@ -1,54 +1,77 @@
 ## Linguistic Scan
-Two linguistic/factual errors found:
-1. **Grammar rule contradiction**: The text states that `сказати` and `взяти` do not follow the stem pattern for forming imperatives. This is factually incorrect. Both perfectly follow the present tense stem pattern taught in the previous paragraph (`скажуть` → `скаж-` + `и` = `скажи`; `візьмуть` → `візьм-` + `и` = `візьми`). Calling them irregular exceptions teaches a wrong grammatical rule.
-2. **Stress mark error**: `І́ди` (in "І́ди, я за́раз") has the stress on the first syllable. The imperative of `іти` is `іди́` (stress on the second syllable). 
-
-*(Note: Words flagged as NOT IN VESUM like `Іва`, `Діало`, `Наказо`, `пиші` are simply tokenizer artifacts caused by the correct presence of combining acute accent marks in the text. All underlying words exist in VESUM).*
+No linguistic errors found (beyond the pedagogical/morphological formula errors noted below).
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-imperative-forms -->` is placed after teaching vowel and consonant stem formation. Matches the plan's `fill-in` for form matching.
-- `<!-- INJECT_ACTIVITY: quiz-correct-imperative -->` is placed after the "irregular" verbs section. Matches the plan's `quiz` for choosing correct forms.
-- `<!-- INJECT_ACTIVITY: group-sort-ty-vy -->` is placed in the Summary. Matches the plan's `group-sort` for sorting forms.
-- `<!-- INJECT_ACTIVITY: fill-in-context-ty-vy -->` is placed at the end of the Summary. Matches the plan's `fill-in` for contextual usage.
-- The 4 markers match the 4 `activity_hints` from the plan exactly in logic and flow.
+- `<!-- INJECT_ACTIVITY: group-sort-imperative-register -->`: Present and correctly placed after the register explanation.
+- `<!-- INJECT_ACTIVITY: fill-in-imperative-formation -->`: Present and correctly placed after formation rules.
+- `<!-- INJECT_ACTIVITY: quiz-polite-choice -->`: Present and correctly placed.
+- `<!-- INJECT_ACTIVITY: fill-in-contextual-names -->`: Present and correctly placed at the end for contextual practice.
+All injected activities match the plan's `activity_hints` in both focus and placement.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The text follows the outline perfectly. It includes all dialogues exactly as requested ("Слухай, ходімо в кафе!"), and uses all required and recommended vocabulary in natural contexts. |
-| 2. Linguistic accuracy | 8/10 | The text makes a factually incorrect linguistic claim: "Four irregular verbs appear constantly in daily speech. They do not follow the stem pattern — memorize them: ... сказати ... взяти". Both of these verbs DO follow the present tense stem pattern. Additionally, there is a stress error: "Добре! І́ди, я за́раз." |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow and great contextualization ("In Ukrainian Grade 5, this grammar topic has a name..."). However, contradicting its own "find the stem from the present tense" rule by calling regular consonant-stem mutations "irregular" is a pedagogical misstep. |
-| 4. Vocabulary coverage | 10/10 | All 8 required words (`читати, писати, слухати, дивитися, говорити, дати, сказати, іти`) and all 4 recommended words are integrated naturally into dialogues and examples. |
-| 5. Exercise quality | 10/10 | Exercise markers are placed immediately after the relevant teaching points, ensuring learners practice what was just explained before moving on. |
-| 6. Engagement & tone | 10/10 | The tone is professional and reassuring. It effectively explains that bare imperatives are not rude in Ukrainian culture ("In Ukrainian classrooms, Читайте! and Пишіть! are standard instructions — not harsh at all"), avoiding generic enthusiasm. |
-| 7. Structural integrity | 10/10 | Clean markdown. Word count (1269) is within the acceptable +/- 10% range of the 1200 target. |
-| 8. Cultural accuracy | 10/10 | Superb cultural notes, specifically the callout against Russian calques: "**Ходімо!** is a uniquely Ukrainian form... In standard Ukrainian, do NOT say *давай підемо*". |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues feel authentic to the classroom and cafe situations. The shift from `ти` to `ви` when Олесь addresses the waiter is a great demonstration of register switching. |
+| 1. Plan adherence | 10/10 | All sections from the outline are present, dialogues match the plan situations exactly, word count (1518) exceeds target. |
+| 2. Linguistic accuracy | 8/10 | Contradictory grammar formula: `говори + те = говоріть` and `пиши + те = пишіть`. The mathematical equation `и + те = іть` is morphologically false. |
+| 3. Pedagogical quality | 8/10 | The explanation "replace the final infinitive ending with -и" is confusing because the previous paragraph defines the infinitive ending strictly as "-ти" (which would lead a learner to erroneously form "говорити" -> "говории"). |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary is used in context, but the recommended word `показати` is missing from the module entirely. |
+| 5. Exercise quality | 10/10 | All activity markers are perfectly placed directly after the relevant teaching sections. |
+| 6. Engagement & tone | 9/10 | Uses mildly gamified/corporate phrasing ("Mastering the наказовий спосіб unlocks your ability..."). |
+| 7. Structural integrity | 10/10 | Word count is solid, all headers are correct, no dangling sentences or markdown artifacts. |
+| 8. Cultural accuracy | 10/10 | Accurately explains that direct imperatives are normal in Ukrainian and not inherently rude, capturing the cultural communication style perfectly. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, accurately portraying classroom and friend-to-friend settings with excellent colloquial flow ("Добре, йди, я зараз"). |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: `Four irregular verbs appear constantly in daily speech. They do not follow the stem pattern — memorize them:`
-Issue: The text claims that `сказати` and `взяти` do not follow the present tense stem pattern. This is linguistically false. Both verbs perfectly follow the rule taught just two paragraphs earlier (`вони скажуть` → `скаж-` + `и` = `скажи`; `вони візьмуть` → `візьм-` + `и` = `візьми`). Teaching learners that these are exceptions creates grammatical confusion.
-Fix: Change the phrasing to simply introduce them as highly common verbs whose forms should be memorized.
 
-[2. Linguistic accuracy] [Critical]
-Location: `The verbs **іди** and **сядь** are irregular but essential — learn them as vocabulary.`
-Issue: Similar to the above, `іти` (`ідуть` → `іди`) and `сісти` (`сядуть` → `сядь`) are completely regular under the present tense stem rule. Calling them irregular contradicts the core grammar lesson.
-Fix: Describe them as highly common and essential instead of irregular.
+[Dimension 2] [CRITICAL]
+Location: Як утворити? `*   **говори** + **те** = **говоріть** (speak! — formal/plural)`
+Issue: Morphologically and mathematically false equation. Adding `-те` to an `-и` ending does not produce `-іть`. This contradicts the rule and teaches a confusing paradigm.
+Fix: Change the explanation to explicitly state that the `-и` ending changes to `-іть`, and remove the `+ те` addition notation for these specific verbs.
 
-[2. Linguistic accuracy] [Critical]
-Location: `— **Дарина:** Добре! І́ди, я за́раз. *(OK! Go ahead, I'm coming.)*`
-Issue: Incorrect stress position on the imperative `іти`. The stress falls on the second syllable (`іди́`), not the first (`І́ди`).
-Fix: Move the stress mark to the second syllable (`Іди́`).
+[Dimension 3] [MAJOR]
+Location: Як утворити? "For verbs in Group II, which often end in **-ити**, the process is slightly different. You usually replace the final infinitive ending with **-и**."
+Issue: Ambiguous and confusing. The text previously defined the "ending" as `-ти`. Replacing `-ти` with `-и` would create `говории`.
+Fix: Clarify that the entire `-ити` or `-іти` ending is replaced with `-и`.
+
+[Dimension 4] [MINOR]
+Location: Як утворити? Irregular verbs list.
+Issue: The recommended vocabulary word `показати` is missing from the module.
+Fix: Add `показати` to the list of essential command verbs to ensure full coverage of the recommended vocabulary.
+
+[Dimension 6] [MINOR]
+Location: Підсумок. "Mastering the **наказовий спосіб** unlocks your ability to actively participate in Ukrainian life."
+Issue: Uses gamified/corporate language ("unlocks your ability") which is discouraged by the style guide for the teacher persona.
+Fix: Replace with "allows you to actively participate".
 
 ## Verdict: REVISE
-The module is beautifully written, highly engaging, and perfectly captures the decolonized pedagogy and cultural nuances of Ukrainian. However, it contains a critical factual contradiction by teaching learners that regular verbs (`сказати`, `взяти`, `іти`, `сісти`) do not follow the stem pattern, undermining its own grammar lesson. It also contains one misplaced stress mark. These must be fixed via the deterministic replacements before publishing.
+The module contains a critical morphological error in its presentation of the `ви`-form paradigm, a confusing formulation of the Group II conjugation rule, and uses some discouraged gamified phrasing. Applying the exact find/replace fixes will resolve these issues.
 
 <fixes>
-- find: "The verbs **іди** and **сядь** are irregular but essential — learn them as vocabulary."
-  replace: "The verbs **іди** and **сядь** are highly common and essential — learn them as vocabulary."
-- find: "Four irregular verbs appear constantly in daily speech. They do not follow the stem pattern — memorize them:"
-  replace: "Four highly common verbs appear constantly in daily speech. Memorize their forms:"
-- find: "Добре! І́ди, я за́раз."
-  replace: "Добре! Іди́, я за́раз."
+- find: |
+    There is a universal rule: you simply take the **ти** form and add the suffix **-те**. If the informal form ends in the vowel **-и**, the spelling sometimes shifts slightly to **-іть** to accommodate the stress, but the concept remains exactly the same.
+
+    *   **читай** + **те** = **читайте** (read! — formal/plural)
+    *   **говори** + **те** = **говоріть** (speak! — formal/plural)
+    *   **дай** + **те** = **дайте** (give! — formal/plural)
+    *   **пиши** + **те** = **пишіть** (write! — formal/plural)
+  replace: |
+    There is a universal rule: you simply take the **ти** form and add the suffix **-те**. If the informal form ends in the vowel **-и**, this ending changes to **-іть** to accommodate the stress.
+
+    *   **читай** + **те** = **читайте** (read! — formal/plural)
+    *   **дай** + **те** = **дайте** (give! — formal/plural)
+    *   **говори** → **говоріть** (speak! — formal/plural)
+    *   **пиши** → **пишіть** (write! — formal/plural)
+- find: "For verbs in Group II, which often end in **-ити**, the process is slightly different. You usually replace the final infinitive ending with **-и**."
+  replace: "For verbs in Group II, the process is slightly different. You usually replace the entire **-ити** or **-іти** ending with **-и**."
+- find: |
+    *   **дати** (to give) → **дай** (give!)
+    *   **сказати** (to say/tell) → **скажи** (tell!)
+    *   **їсти** (to eat) → **їж** (eat!)
+  replace: |
+    *   **дати** (to give) → **дай** (give!)
+    *   **сказати** (to say/tell) → **скажи** (tell!)
+    *   **показати** (to show) → **покажи** (show!)
+    *   **їсти** (to eat) → **їж** (eat!)
+- find: "Mastering the **наказовий спосіб** unlocks your ability to actively participate in Ukrainian life."
+  replace: "Mastering the **наказовий спосіб** allows you to actively participate in everyday Ukrainian life."
 </fixes>

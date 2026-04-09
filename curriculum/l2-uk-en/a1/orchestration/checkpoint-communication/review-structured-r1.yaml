@@ -2,56 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: '**Підсумок is severely truncated.** Plan specifies 5 achievement points
-    (vocative, imperative, conjunctions, complex sentences, holidays). The module
-    only includes 2 (complex sentences + holidays). Vo'
+  score: 10
+  evidence: The text follows the `content_outline` structure exactly, including sections
+    for "Що ми знаємо?", "Читання", "Граматика", "Діалог", and "Підсумок". All specific
+    plan points are systematically covered.
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: 'All 127 non-proper-noun words verified in VESUM. No Russianisms, Surzhyk,
-    calques, or paronyms found. Grammar tables are correct: vocative endings (-а→-о,
-    hard→-е, soft/й→-ю), imperative forms (читай/'
+  evidence: The Ukrainian examples are natural, correctly inflected, and free of Russianisms
+    or calques. Sentence structures with conjunctions are built properly.
 - dimension: 3
   name: Pedagogical quality
   score: 8
-  evidence: 'Good PPP flow: Що ми знаємо reviews patterns, Читання shows them in context,
-    Граматика systematizes, Діалог practices. Multiple examples per grammar point
-    (6 vocative pairs, 4 imperative pairs, 4 conj'
+  evidence: 'The grammar rule stating "Masculine names ending in a hard consonant
+    add **-е**: **Петро** becomes **Петре**" is factually incorrect because "Петро"
+    ends in the vowel "-о". Also, using "**друг** (frie'
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'All plan vocabulary present: плакат, квиток, напій, стілець (from dialogue_situations),
-    кутя, колядки, свічки (from content_outline). Holiday vocabulary: Різдво, Великдень,
-    Новий рік, день народження.'
+  score: 10
+  evidence: The required nouns (плакат, квиток, напій, стілець) and verbs are effectively
+    contextualized in the reading and dialogue sections.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: 4 markers matching 4 plan hints, well-placed after teaching. However,
-    inline comprehension question 2 ("Коли Тарас вільний?") is unanswerable from the
-    text — Taras never states when he's free (Olena s
+  score: 10
+  evidence: The markers match the plan's `activity_hints` exactly and are inserted
+    at the correct pedagogical moments immediately after each concept is explained.
 - dimension: 6
   name: Engagement & tone
   score: 7
-  evidence: 'Several engagement anti-patterns: "you now possess the complete A1.7
-    communication toolkit" (gamified), "tick each box" (corporate), "rather than someone
-    just reading words from a phrasebook" (dismiss'
+  evidence: DEDUCT for self-congratulatory openers ("Welcome to the A1.7 Checkpoint.")
+    and gamified/corporate filler ("Communication Hub", "Your mission in this module
+    is practical", "major milestone in your Ukra
 - dimension: 7
   name: Structural integrity
-  score: 6
-  evidence: 'Incomplete sentence in Підсумок: "Let''s review the concrete communication
-    skills" trails off before the bullet list — missing a colon. Section is truncated
-    (only 2 of 5 planned bullets). All H2 headin'
+  score: 9
+  evidence: 'DEDUCT for a dangling sentence fragment at the start of the summary:
+    "7 Communication phase."'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Ukrainian presented on its own terms. Holiday traditions (кутя, колядки
-    for Різдво) are culturally accurate. No "like Russian but..." framing. School
-    fair scenario is culturally grounded. Greeting for
+  evidence: Correctly explains the cultural/grammatical formula for Ukrainian holiday
+    greetings using "З" + Instrumental.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Both dialogues have named speakers, natural multi-turn exchanges, and
-    clear motivation. The Різдво phone call is warm and realistic. The school fair
-    dialogue effectively demonstrates all 5 communicati
+  score: 10
+  evidence: The dialogue between Taras and Olena feels like a natural, purpose-driven
+    conversation, integrating all grammar points seamlessly.
 findings: []

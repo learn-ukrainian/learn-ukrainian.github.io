@@ -1,0 +1,115 @@
+{
+  "total_items": 151,
+  "grounded_items": 136,
+  "ungrounded": [
+    {
+      "word": "магазин",
+      "exercise_type": "fill-in",
+      "context": "Я йду в магазин, щоб ____ хліб.",
+      "role": "context"
+    },
+    {
+      "word": "вийшов",
+      "exercise_type": "fill-in",
+      "context": "вийшов",
+      "role": "answer"
+    },
+    {
+      "word": "приїхали",
+      "exercise_type": "fill-in",
+      "context": "Вони приїхали в Київ, щоб ____ місто.",
+      "role": "context"
+    },
+    {
+      "word": "києві",
+      "exercise_type": "quiz",
+      "context": "Я вчу українську, _____ працювати в Києві.",
+      "role": "context"
+    },
+    {
+      "word": "рано",
+      "exercise_type": "quiz",
+      "context": "Ми приїхали рано, _____ була велика проблема.",
+      "role": "context"
+    },
+    {
+      "word": "проблема",
+      "exercise_type": "quiz",
+      "context": "Ми приїхали рано, _____ була велика проблема.",
+      "role": "context"
+    },
+    {
+      "word": "прийди",
+      "exercise_type": "match-up",
+      "context": "Прийди сьогодні.",
+      "role": "answer"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "error-correction",
+      "context": "читав",
+      "role": "answer"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "error-correction",
+      "context": "Я хочу, щоб ти читаєш книгу.",
+      "role": "context"
+    },
+    {
+      "word": "приходимо",
+      "exercise_type": "error-correction",
+      "context": "Вона хоче, щоб ми приходимо в гості.",
+      "role": "context"
+    },
+    {
+      "word": "знаєш",
+      "exercise_type": "error-correction",
+      "context": "Я зателефонував, щоб ти знаєш про зустріч.",
+      "role": "context"
+    },
+    {
+      "word": "розуміють",
+      "exercise_type": "error-correction",
+      "context": "Вчитель пояснив правило, щоб учні розуміють його.",
+      "role": "context"
+    },
+    {
+      "word": "робите",
+      "exercise_type": "error-correction",
+      "context": "Директор хоче, щоб ви робите цей проєкт.",
+      "role": "context"
+    },
+    {
+      "word": "попросив",
+      "exercise_type": "group-sort",
+      "context": "Він попросив, щоб я передав повідомлення.",
+      "role": "answer"
+    },
+    {
+      "word": "передав",
+      "exercise_type": "group-sort",
+      "context": "Він попросив, щоб я передав повідомлення.",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 3,
+    "not_tested": [
+      "відповісти",
+      "додати",
+      "зрозуміти",
+      "мета",
+      "мова",
+      "навіщо",
+      "непряма",
+      "передати",
+      "попросити",
+      "пояснити",
+      "пряма",
+      "сказати"
+    ]
+  },
+  "all_grounded": false
+}

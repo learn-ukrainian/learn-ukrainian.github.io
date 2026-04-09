@@ -1,27 +1,256 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 92,
+  "grounded_items": 52,
+  "ungrounded": [
+    {
+      "word": "олеже",
+      "exercise_type": "quiz",
+      "context": "Олеже, _____ меню, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "книжку",
+      "exercise_type": "unjumble",
+      "context": "книжку,",
+      "role": "answer"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "quiz",
+      "context": "Діти, _____ текст на сторінці десять.",
+      "role": "context"
+    },
+    {
+      "word": "сторінці",
+      "exercise_type": "unjumble",
+      "context": "сторінці",
+      "role": "answer"
+    },
+    {
+      "word": "десять",
+      "exercise_type": "quiz",
+      "context": "Діти, _____ текст на сторінці десять.",
+      "role": "context"
+    },
+    {
+      "word": "сюди",
+      "exercise_type": "match-up",
+      "context": "Дивіться сюди",
+      "role": "answer"
+    },
+    {
+      "word": "студенти",
+      "exercise_type": "quiz",
+      "context": "Студенти, _____ три речення.",
+      "role": "context"
+    },
+    {
+      "word": "друже",
+      "exercise_type": "quiz",
+      "context": "Друже, _____, що ти хочеш.",
+      "role": "context"
+    },
+    {
+      "word": "вчителю",
+      "exercise_type": "quiz",
+      "context": "Вчителю, _____ сторінку, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "максиме",
+      "exercise_type": "quiz",
+      "context": "Максиме, _____ тут, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "вчителя",
+      "exercise_type": "match-up",
+      "context": "Слухайте вчителя",
+      "role": "answer"
+    },
+    {
+      "word": "друзі",
+      "exercise_type": "fill-in",
+      "context": "Друзі, _____ сюди!",
+      "role": "context"
+    },
+    {
+      "word": "маріє",
+      "exercise_type": "fill-in",
+      "context": "Маріє, _____ мені, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "fill-in",
+      "context": "_____, слухай мене.",
+      "role": "context"
+    },
+    {
+      "word": "ти'",
+      "exercise_type": "true-false",
+      "context": "We use 'ти' for close friends.",
+      "role": "context"
+    },
+    {
+      "word": "те'",
+      "exercise_type": "true-false",
+      "context": "The ending '-те' or '-іть' is for 'ти' (informal).",
+      "role": "context"
+    },
+    {
+      "word": "іть'",
+      "exercise_type": "true-false",
+      "context": "The ending '-те' or '-іть' is for 'ти' (informal).",
+      "role": "context"
+    },
+    {
+      "word": "ласка'",
+      "exercise_type": "true-false",
+      "context": "Adding 'будь ласка' makes a command polite.",
+      "role": "context"
+    },
+    {
+      "word": "ви'",
+      "exercise_type": "true-false",
+      "context": "You use 'Ви' (formal) when talking to a teacher.",
+      "role": "context"
+    },
+    {
+      "word": "писати'",
+      "exercise_type": "true-false",
+      "context": "The imperative of 'писати' for 'ти' is 'пиши'.",
+      "role": "context"
+    },
+    {
+      "word": "пиши'",
+      "exercise_type": "true-false",
+      "context": "The imperative of 'писати' for 'ти' is 'пиши'.",
+      "role": "context"
+    },
+    {
+      "word": "читати'",
+      "exercise_type": "true-false",
+      "context": "The informal imperative of 'читати' is 'читайте'.",
+      "role": "context"
+    },
+    {
+      "word": "читайте'",
+      "exercise_type": "true-false",
+      "context": "The informal imperative of 'читати' is 'читайте'.",
+      "role": "context"
+    },
+    {
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово для 'Ви'?",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово для 'Ви'?",
+      "role": "context"
+    },
+    {
+      "word": "має",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово для 'Ви'?",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово для 'Ви'?",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово для 'Ви'?",
+      "role": "context"
+    },
+    {
+      "word": "робить",
+      "exercise_type": "quiz",
+      "context": "Що робить фраза 'будь ласка'?",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "quiz",
+      "context": "Що робить фраза 'будь ласка'?",
+      "role": "context"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "quiz",
+      "context": "Яку форму використовують друзі (Олег і Максим)?",
+      "role": "context"
+    },
+    {
+      "word": "використовують",
+      "exercise_type": "quiz",
+      "context": "Яку форму використовують друзі (Олег і Максим)?",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "quiz",
+      "context": "Як утворити форму 'ти' для слова 'читати'?",
+      "role": "context"
+    },
+    {
+      "word": "каже",
+      "exercise_type": "quiz",
+      "context": "Що вчитель каже студентам?",
+      "role": "context"
+    },
+    {
+      "word": "студентам",
+      "exercise_type": "quiz",
+      "context": "Що вчитель каже студентам?",
+      "role": "context"
+    },
+    {
+      "word": "правильна",
+      "exercise_type": "quiz",
+      "context": "Яка правильна форма для слова 'сказати' (ти)?",
+      "role": "context"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "quiz",
+      "context": "Яка правильна форма для слова 'сказати' (ти)?",
+      "role": "context"
+    },
+    {
+      "word": "сказати'",
+      "exercise_type": "quiz",
+      "context": "Яка правильна форма для слова 'сказати' (ти)?",
+      "role": "context"
+    },
+    {
+      "word": "два",
+      "exercise_type": "unjumble",
+      "context": "два.",
+      "role": "answer"
+    },
+    {
+      "word": "це",
+      "exercise_type": "unjumble",
+      "context": "це",
+      "role": "answer"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 12,
     "not_tested": [
-      "відкрити",
-      "говорити",
-      "дати",
-      "дивитися",
       "запитати",
-      "писати",
       "показати",
-      "підручник",
-      "речення",
-      "сказати",
-      "слухати",
-      "сторінка",
-      "сісти",
-      "читати",
-      "іти"
+      "сторінка"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

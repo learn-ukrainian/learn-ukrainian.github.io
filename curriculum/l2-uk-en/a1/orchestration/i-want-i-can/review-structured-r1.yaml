@@ -2,56 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 4 content_outline sections covered with correct points. Dialogue
-    1 covers хочу/можу/мушу planning scenario per plan. Dialogue 2 covers café with
-    хотіти+noun. One deviation: plan''s recommended voca'
+  score: 10
+  evidence: All sections from the outline are present. Vocabulary requirements are
+    fully met, including recommended words like `шкода` and `порекомендувати`.
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'All conjugation tables verified correct against VESUM. One inaccuracy:
-    "in all conjugated forms it becomes хоч-" overgeneralizes — imperative uses хот-
-    stem (хоти, хотімо, хотіть per VESUM). Second se'
+  score: 4
+  evidence: 'CRITICAL: The phonetic rule for `могти` is hallucinated from Russian.
+    In Ukrainian, the `г` to `ж` shift occurs in ALL present tense forms, including
+    the 3rd person plural (`вони можуть`). The text fa'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Excellent PPP flow: dialogues first (Presentation), grammar explanation
-    with examples (Practice pattern setup), activities after each section (Production).
-    6+ Ukrainian examples per grammar point. Rea'
+  score: 9
+  evidence: Excellent PPP flow. Concepts are introduced with clear examples before
+    the grammar breakdown. Only deducting due to the incorrect pedagogical presentation
+    of the rule.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'Required vocab: хотіти ✅, могти ✅, мусити ✅, кава ✅, їсти ✅. Recommended:
-    шкода ✅ (Dialogue 1), допомогти ✅ (Могти section), борщ ✅ (Dialogue 2), треба
-    ✅ (mentioned in Могти section + Summary). пореко'
+  score: 10
+  evidence: All required and recommended words are seamlessly integrated into dialogues
+    and examples.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '4 markers matching all 4 plan activity_hints. Well-placed after relevant
-    teaching. Types varied: 2 fill-in + 2 quiz. Cannot fully assess YAML content (generated
-    separately), but marker placement and l'
+  score: 10
+  evidence: Markers perfectly match the plan's hints and are placed optimally after
+    the corresponding theory.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'Zero motivational openers or meta-commentary. No "Let us explore" or
-    "You have unlocked." Concrete cultural content: Vashulenko poem with real emotional
-    resonance. AD citation adds intellectual depth.'
+  evidence: Professional yet encouraging teacher tone. Good cultural and pronunciation
+    notes ("clear, open Ukrainian **о**").
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 'Clean H2 headings matching plan sections. No duplicate summaries. No
-    stray tags. 1593 words > 1200 target. Sections flow logically: Діалоги → Хотіти
-    → Могти і мусити → Підсумок.'
+  evidence: Clean markdown, word count comfortably exceeds the target (1585 > 1200),
+    and all headings match the plan.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Decolonized — Ukrainian presented entirely on its own terms. No "like
-    Russian but..." comparisons. г→ж alternation taught as a Ukrainian pattern (допомогти→допоможу,
-    берегти→бережу). Vashulenko textbo
+  score: 9
+  evidence: The module is well contextualized within Ukrainian realities, though the
+    `могти` error slightly undermines the linguistic independence.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: 'Two natural multi-turn dialogues with named speakers. Dialogue 1: friends
-    negotiating weekend plans — real situation, emotional arc (disappointment → compromise
-    → agreement). "Шкода!" "Звісно хочу! До'
+  evidence: Dialogues are natural, model real-life situations (negotiating plans,
+    ordering at a café), and use named speakers.
 findings: []

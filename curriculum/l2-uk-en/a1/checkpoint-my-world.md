@@ -1,106 +1,80 @@
 ## Що ми зна́ємо? (What Do We Know?)
 
-You have spent six modules building your Ukrainian world — objects, colors, numbers, and more. This module introduces nothing new. No new grammar, no new vocabulary. Instead, it activates everything from M08 through M13 and tests whether it has settled into your memory. Six skills to check: noun gender, adjective agreement, colors (including both blues), numbers and prices, demonstratives, and plurals. The format is simple: self-check questions first, then a reading passage, a grammar reference, and finally a full dialogue that puts it all together.
+By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment. You started by simply recognizing and naming isolated objects, and now you have the vocabulary and grammar to talk about everything from the furniture in your room to the items at a local marketplace. You can confidently identify what things are, what color they are, how many of them there are, and where they are in relation to you. This is the critical difference between knowing a few scattered words and actually building coherent descriptions in a new language. 
 
-How many of these can you answer without looking back?
+Before we test these skills in a real-world situation, let's make sure your vocabulary backpack is neatly organized. Ask yourself these specific questions to verify your progress:
+- Can you name twenty or more common objects around you right now?
+- Can you determine the grammatical gender of a word like **стіл** (table), **кни́га** (book), or **вікно́** (window) just by looking at the ending?
+- Can you differentiate between the two distinct Ukrainian blues, **си́ній** (dark blue) and **блаки́тний** (light blue)?
+- Can you count from one to one hundred and ask for prices in **гри́вні** (hryvnias)?
+- Can you use demonstrative words like "this" and "that" to point at specific items accurately?
 
-- **Gender:** Is **стіл** (table) він, вона́, or воно́?
-- **Agreement:** Which is correct — **вели́кий стіл** or **вели́ка стіл**?
-- **Colors:** What is the difference between **си́ній** (dark blue) and **блаки́тний** (sky blue)?
-- **Numbers:** How do you say "fifty hryvnias" — **п'ятдеся́т гри́вень**?
-- **Demonstratives:** Do you say **цей виши́ва́нка** or **ця вишиванка** (this embroidered shirt)?
-- **Plurals:** What is the plural of **кни́га** (book)?
+If you answered yes to these questions, you are doing great! To truly consolidate this knowledge, we need to sort the words you already know into logical categories. Think about how an adjective like **зеле́ний** (green) functions differently in a sentence from a number like **де́сять** (ten) or a noun like **ла́мпа** (lamp). Grouping these words mentally will help your brain access them much faster when you need to speak in a real conversation.
 
-If all six feel familiar, you are ready for the dialogue at the end. If even one feels shaky, the grammar summary below will set it straight.
-
-<!-- INJECT_ACTIVITY: group-sort-vocab-categories -->
+<!-- INJECT_ACTIVITY: group-sort-categories -->
 
 ## Чита́ння (Reading Practice)
 
-Read the text below aloud — at least twice. Every word comes from M08–M13. There is nothing new here. Focus on reading naturally and noticing how gender, agreement, and demonstratives appear together in real sentences.
+Imagine you are visiting a friend's home in Ukraine for the very first time. When you step inside, you immediately notice the objects in their living space, the vibrant colors on the walls, and the arrangement of the furniture. Describing a physical space requires you to combine nouns, adjectives, and plural forms into a smooth, continuous flow of information. Reading a complete text aloud is the best way to practice this flow and internalize the natural rhythm of Ukrainian sentences. Focus on how the descriptive words match the objects they describe, and pay attention to how the endings change.
 
-:::note
-Reading aloud is essential. Your mouth needs to practice the shapes of Ukrainian words just as much as your eyes need to recognize them.
-:::
+Read this short text titled **Моя́ кімна́та** (My room). Every single word in this description uses vocabulary you have already practiced in previous modules. There are no new surprises here. Read it aloud, slowly and clearly, to train your pronunciation and build muscle memory for these sentence structures:
 
-> Це моя́ кімна́та. Мій стіл великий і кори́чневий. На столі́ ла́мпа. Ця лампа бі́ла. А та лампа жо́вта — вона стої́ть у кутку́. У мене́ є три кни́ги. Ці книги нові́ й ціка́ві. На стіні́ ви́си́ть карти́на. Картина си́ня й зеле́на. Вікно́ вели́ке, а две́рі мале́нькі. Моя кімната га́рна!
+- **Це моя кімната.** (This is my room.)
+- **Вона́ вели́ка і сві́тла.** (It is big and bright.)
+- **Ось мій стіл, він нови́й.** (Here is my table, it is new.)
+- **Тут є три си́ні кни́ги і одна́ жо́вта лампа.** (Here are three dark blue books and one yellow lamp.)
+- **Це вікно вели́ке, а те вікно мале́.** (This window is big, and that window is small.)
+- **Мої́ сті́ни бі́лі.** (My walls are white.)
+- **У мене́ є два стільці́.** (I have two chairs.)
+- **Вони́ старі́, але́ зру́чні.** (They are old but comfortable.)
 
-*(This is my room. My table is big and brown. On the table there is a lamp. This lamp is white. And that lamp is yellow — it stands in the corner. I have three books. These books are new and interesting. On the wall hangs a painting. The painting is blue and green. The window is big, and the door is small. My room is nice!)*
+Notice how the description naturally shifts between singular items and groups of objects. Recognizing when to use a singular form versus a plural form is critical when talking about your environment, as it completely changes the endings of the words around the noun.
 
-Notice the patterns at work. **Стіл** (table) is masculine — so its adjective is **великий** (big), with the masculine ending **-ий**. **Лампа** (lamp) is feminine — so it gets **біла** (white), with **-а**. **Вікно** (window) is neuter — so its adjective is **велике** (big), with **-е**. The demonstratives follow the same logic: **ця лампа** (this lamp, feminine) vs. **ці книги** (these books, plural). And the number **три** sits naturally before **книги** (books) without any special changes.
-
-Now answer these three questions by pointing back to the text:
-
-- **Яки́й стіл?** *(What is the table like?)*
-- **Скі́льки книг у кімна́ті?** *(How many books are in the room?)*
-- **Яка лампа в кутку — біла чи жовта?** *(Which lamp is in the corner — white or yellow?)*
+<!-- INJECT_ACTIVITY: transform-plural-sentences -->
 
 ## Грама́тика (Grammar Summary)
 
-Five key patterns from A1.2, presented as a quick reference. This is not new instruction — it is a map of what you already know. Each pattern has one rule and examples to confirm your understanding.
+The absolute core of describing your world relies on determining the grammatical gender of a noun. In Ukrainian, every object is categorized as masculine, feminine, or neuter. You can always identify the gender by looking at the final letter of the dictionary form of the word. Masculine nouns usually end in a consonant, like **стіл** (table). Feminine nouns typically end in **-а** or **-я**, like **ру́чка** (pen). Neuter nouns end in **-о** or **-е**, like **дзе́ркало** (mirror). The personal pronouns **він** (he/it), **вона** (she/it), and **воно́** (it) are the essential keys that unlock the rest of the grammar patterns in a sentence.
 
-**Pattern 1 — Noun gender** (the він/вона/воно test): consonant ending → він (**стіл**, **гле́чик**, **зо́шит**). Ending **-а/-я** → вона (**книга**, **вишиванка**, **земля́**). Ending **-о/-е** → воно (**вікно**, **нами́сто**).
+Once you know a noun's gender, you must make sure any adjective describing it agrees with that gender. Adjectives change their endings to match the noun perfectly. For a masculine noun, you use a masculine adjective, as in **га́рний день** (beautiful day). A feminine noun requires a feminine adjective, like **га́рна пі́сня** (beautiful song). A neuter noun takes a neuter adjective, such as **га́рне фо́то** (beautiful photo). Remember that adjectives can have a hard stem, taking the ending **-ий** like **черво́ний** (red), or a soft stem, taking the ending **-ій** like **синій** (dark blue). 
 
-**Pattern 2 — Adjective agreement:** the adjective ending mirrors the noun gender. **Великий стіл** (big table, m), **велика книга** (big book, f), **велике вікно** (big window, n). The adjective always matches.
+When you want to point at a specific object, you use demonstrative pronouns. Just like adjectives, these pointing words must agree with the noun's gender. You use **цей**, **ця**, or **це** to say "this" for masculine, feminine, and neuter nouns respectively. To say "that", you use **той**, **та**, or **те**. When you are talking about multiple items, the rules become much simpler. In the plural form, the gender distinction entirely disappears. Both demonstrative pronouns and adjectives take the exact same plural ending. You will always use **ці** (these) and **ті** (those), and plural adjectives will always end in **-і**, such as **га́рні** (beautiful) or **вели́кі** (big).
 
-:::tip
-Ukrainian textbooks teach: «Прикме́тник за́вжди́ стоїть у тому́ числі́, роді та відмі́нку, що й іме́нник.» The adjective always takes the same number, gender, and case as its noun.
-:::
+Finally, counting objects and discussing prices involves using numbers as fixed vocabulary chunks. For now, you do not need to worry about complex case changes for the numbers themselves. You simply combine the number with the currency, such as **п'ятдеся́т гри́вень** (fifty hryvnias) or **сто гривень** (one hundred hryvnias). Recognizing these basic combinations allows you to handle simple transactions confidently in shops or markets.
 
-**Pattern 3 — Hard vs. soft adjective stems:** hard-stem adjectives end in **-ий/-а/-е**: **черво́ний** (red), **черво́на**, **черво́не**. Soft-stem adjectives end in **-ій/-я/-є**: **синій** (dark blue), **синя**, **си́нє**. This is why **блакитний** (sky blue) takes **-ий** (hard stem) while **синій** takes **-ій** (soft stem) — different base consonants.
-
-**Pattern 4 — Demonstratives:** **цей глечик** (this jug, m), **ця вишиванка** (this embroidered shirt, f), **це намисто** (this necklace, n) for things nearby. **Той/та/те** for things farther away. Gender agreement works exactly like adjectives.
-
-**Pattern 5 — Nominative plurals:** masculine: **столи́**, **гле́чики**; feminine: **книги**, **виши́ва́нки**; neuter: **ві́кна**, **нами́ста**. The adjective plural is always **-і**, regardless of gender — **нові столи**, **нові книги**, **нові вікна**.
-
-**Pattern 6 — Numbers as vocabulary:** **оди́н** (1), **два** (2), **три** (3), **де́сять** (10), **два́дцять** (20), **п'ятдесят** (50), **сто** (100), **дві́сті** (200). At this stage, use them as fixed words — no case changes needed.
-
-These patterns all appear together in natural speech. The next section shows them working in a real conversation.
-
-<!-- INJECT_ACTIVITY: quiz-gender-agreement -->
-
-<!-- INJECT_ACTIVITY: quiz-singular-plural -->
+<!-- INJECT_ACTIVITY: quiz-agreement-pairs -->
 
 ## Діало́г (Connected Dialogue)
 
-Іва́нко is a tourist visiting Ukraine for the first time. His friend **Катя́** (Katia) takes him to a **я́рмарок** (street market) — an open-air market selling handmade crafts. The stalls are full of **вишиванки** (embroidered shirts, f), **глечики** (clay jugs, m), **намисто** (necklaces, n), and **писанки́** (decorated eggs, pl). This is the perfect setting to use every A1.2 skill at once: pointing at objects, describing colors and sizes, asking prices, and talking about quantities.
+A traditional Ukrainian street market, known as a **я́рмарок** (market/fair), is the perfect place to practice describing objects, asking for prices, and pointing at things you want to buy. These markets are full of authentic cultural crafts and are a vibrant part of Ukrainian life. You will see items like a **виши́ва́нка** (embroidered shirt), a traditional clay **гле́чик** (jug), a beautiful **нами́сто** (necklace), and colorfully decorated **писанки́** (Easter eggs). Shopping for these items requires you to use every skill you have learned in this phase simultaneously: identifying gender, making adjectives agree, using demonstratives, and understanding numbers.
 
-> **Іванко:** Катю, диви́сь! Що це таке́? *(Katia, look! What is this?)*
-> **Катя:** Це вишиванка. Гарна, пра́вда? *(This is an embroidered shirt. Beautiful, right?)*
-> **Іванко:** Ду́же! Яка вона — біла чи синя? *(Very! What color is it — white or blue?)*
-> **Катя:** Та — біла. А ця — синя й червона. *(That one is white. And this one is blue and red.)*
-> **Іванко:** Скільки ко́шту́є ця синя вишиванка? *(How much does this blue embroidered shirt cost?)*
-> **Катя:** Вона коштує чоти́риста гривень. *(It costs four hundred hryvnias.)*
-> **Іванко:** А той глечик? Він великий чи мале́нький? *(And that jug? Is it big or small?)*
-> **Катя:** Той — великий. Цей — маленький. *(That one is big. This one is small.)*
-> **Іванко:** Один глечик. Маленький. Скільки він коштує? *(One jug. The small one. How much does it cost?)*
-> **Катя:** Сто п'ятдесят гривень. *(One hundred fifty hryvnias.)*
-> **Іванко:** До́бре. А це що — намисто? *(Good. And what is this — a necklace?)*
-> **Катя:** Так! Це червоне намисто. Га́рне, правда? *(Yes! This is a red necklace. Beautiful, right?)*
-> **Іванко:** Дуже гарне. А писанки? Скільки коштує одна́ пи́санка? *(Very beautiful. And the decorated eggs? How much does one decorated egg cost?)*
-> **Катя:** Двадцять п'ять гривень. Хо́чеш три? *(Twenty-five hryvnias. Want three?)*
-> **Іванко:** Так, три писанки, будь ла́ска! *(Yes, three decorated eggs, please!)*
+Read the conversation between Іва́нко, a tourist, and his local friend Катя́ as they browse the craft stalls at a bustling market. Pay attention to how they point at specific items and describe them before asking the vendor for the price.
 
-Every A1.2 pattern appears in this dialogue. The demonstratives show gender agreement: **ця** синя вишиванка (f), **той** глечик (m), **це** намисто (n). Adjectives match their nouns: **синя вишиванка**, **великий глечик**, **червоне намисто**. Numbers combine with nouns naturally: **три писанки**, **один глечик**. And the price pattern **Скільки коштує?** + amount + **гривень** runs through the whole scene.
+> **Іванко:** Подиви́сь! Це вишиванка? *(Look! Is this an embroidered shirt?)*
+> **Катя:** Так, це гарна бі́ла вишиванка. *(Yes, this is a beautiful white embroidered shirt.)*
+> **Іванко:** А та си́ня? *(And that dark blue one?)*
+> **Катя:** Той о́дяг теж гарний. *(That clothing is also beautiful.)*
+> **Катя:** А ось ці писанки — ду́же краси́ві! *(And these decorated eggs — very beautiful!)*
 
-:::caution
-**Ця** vs. **та** — both mean "this/that" but signal distance. Катя uses **ця** (this one, near me) for what she is holding and **та** (that one, over there) for what is farther away. This is not random — it mirrors the physical space of the market.
-:::
+After choosing what they like, they need to find out how much the items cost to complete their purchase. Notice how the numbers and prices are stated directly and clearly.
 
-Ukrainian markets — **я́рмарки** — are where craft culture lives. **Вишиванка** (the embroidered shirt) is the most recognizable symbol of Ukrainian identity — worn at celebrations, protests, and everyday life. **Писанки** (decorated eggs) are an ancient tradition stretching back to the Trypillian era, thousands of years before they became associated with Easter. **Глечик** (a clay jug) is a traditional household object found in every Ukrainian home for centuries. When you use Ukrainian words for these objects, you are connecting to something much older than grammar rules.
+> **Іванко:** Скі́льки ко́шту́є цей глечик? *(How much does this jug cost?)*
+> **Катя:** Він коштує сто гривень. *(It costs one hundred hryvnias.)*
+> **Іванко:** А ці нами́ста? *(And these necklaces?)*
+> **Катя:** Одне́ намисто — дві́сті гривень. *(One necklace — two hundred hryvnias.)*
+> **Катя:** У мене є три́ста гривень. Купу́ємо! *(I have three hundred hryvnias. We are buying!)*
 
-<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
+<!-- INJECT_ACTIVITY: fill-in-market-dialogue -->
 
 ## Підсумок — Summary
 
-By completing A1.2, you can now do five things in Ukrainian. First, you can identify the gender of a noun and test it with **він/вона/воно**. Second, you can describe objects with adjectives in the correct form — **нови́й стіл** (new table), **нова́ книга** (new book), **нове́ вікно** (new window). Third, you can point at things near and far — **цей**, **ця**, **це** vs. **той**, **та**, **те**. Fourth, you can count and talk about prices — **один**, **два**, **сто**, **двісті гривень** (two hundred hryvnias). Fifth, you can talk about groups of things — **столи**, **книги**, **вікна**, all with the adjective plural ending **-і**. This is your world in Ukrainian.
+ At the beginning of this phase, you could only name isolated objects and recognize basic letters. Now, you have the grammatical structure to identify exactly what things are, detail precisely what they look like in terms of size and color, specify how many there are, and pinpoint exactly where they are located relative to you. You are no longer just memorizing a static list of nouns; you are building complete, accurate descriptions. This ability to smoothly link nouns, adjectives, demonstratives, and numbers is the absolute core of practical communication.
 
-Your vocabulary milestone is real. You now know 20+ Ukrainian nouns with their genders, 10+ adjectives that you can inflect for gender, both Ukrainian words for blue — **синій** (saturated, dark blue) and **блакитний** (sky blue, light blue) — and a working set of numbers for prices. These words cover your physical world: furniture, clothing, objects, colors, quantities. A Ukrainian speaker could understand you when you describe a room, a market stall, or a price tag.
+Review this checklist to confirm your progress and ensure you are ready before moving to the next level:
+- I can easily identify the gender of any A1 noun based on its final letter.
+- I can describe an object's color and size using the correct matching adjective ending.
+- I can accurately use "this" and "that" to point at specific things near or far from me.
+- I can correctly make nouns plural and describe groups of objects.
+- I can count items up to one hundred and ask for prices in a shop or market.
 
-:::tip
-Two blues, not one. English has "blue" for everything. Ukrainian distinguishes **синій** (the deep blue of the sea or a dark shirt) from **блакитний** (the pale blue of the sky). Both are basic color terms — neither is optional.
-:::
-
-So far, A1.2 has been about things: objects, their appearance, their price, their number. A1.3 shifts to actions — what people do, what they like, what they want. The next module (M15: What I Like) introduces Ukrainian verbs for the first time. The same careful, step-by-step approach applies. You will discover how Ukrainian verbs work through real situations, not grammar tables.
-
-**Ти вже вмі́єш говори́ти про свій світ украї́нською.** *(You can already talk about your world in Ukrainian.)* This is real. You proved it in the dialogue above.
+In the next module, your language skills will become much more dynamic and active. We will move away from simply describing what things are, and begin exploring what people actually do. Get ready for Phase A1.3, where we will introduce action verbs, common hobbies, and how to talk about what you like to do!

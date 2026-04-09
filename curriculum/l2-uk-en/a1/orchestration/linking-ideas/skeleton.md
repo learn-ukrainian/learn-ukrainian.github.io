@@ -1,52 +1,31 @@
-## Діалоги (~330 words total)
+## Діалоги — Dialogues (~330 words)
+- P1 (~110 words): [Dialogue 1: Making Plans] — A couple debates between coffee and tea in a cafe. The dialogue models coordinating conjunctions in a natural setting. Examples: "Ти хочеш каву чи чай?", "Каву, бо я дуже втомлений", "А я хочу чай, але без цукру", "Ходімо в кафе, і я візьму ще тістечко".
+- P2 (~110 words): [Dialogue 2: Talking About the Day] — Two friends discuss their busy day and missed calls. Focuses on sequence and reasons. Examples: "Я працював, а потім ходив у магазин", "Я хотів зателефонувати, але ти не відповів", "Вибач, бо телефон був без звуку".
+- P3 (~110 words): [Dialogue 3: Vacation Debate] — A couple compares going to the Carpathians (Карпати) vs. the sea (море). This models adjectives with contrasting conjunctions. Examples: "Гори гарні, але далеко", "Море тепле, бо зараз літо", "Я хочу в гори, а ти — на море", "Поїдемо в Карпати, бо там дешевше".
 
-- Dialogue 1 (~120 words): Café planning scene. Two friends, Оля and Марко, choosing drinks and debating dessert. Full 6-turn exchange using all four target conjunctions naturally: **бо** (Каву, бо я дуже втомлений), **а** (А я хочу чай, а не каву), **але** (але без цукру / але я на дієті!), **і** (Ходімо в кафе, і я візьму ще тістечко). End with Марко giving in: Добре, але тільки одне!
-- P1 (~25 words): One-sentence callout after Dialogue 1 — label all four conjunctions by name directly in the text: "Помітили? і, а, але, бо — кожне слово з'єднує думки по-різному."
-- Dialogue 2 (~110 words): Evening check-in — Данило and Соня texting. Данило explains his day using а (Я працював, а потім ходив у магазин), але (Я хотів зателефонувати, але ти не відповів), бо (Вибач, бо телефон був без звуку). Ends positively: Завтра я вільний, і ми можемо зустрітися.
-- P2 (~25 words): One-sentence callout — "Бо пояснює причину. А і але показують контраст. І додає інформацію. Усі чотири — природна українська мова."
-- Exercise — group-sort (10 items): Sort underlined conjunctions from both dialogues into three bins: **Додавання** (і, та), **Контраст** (а, але), **Причина** (бо). Items drawn verbatim from the two dialogues above.
-- P3 (~50 words): Transition bridge into grammar section — "Ці чотири сполучники — серед найпоширеніших в українській мові. Розберімо кожен детальніше."
+## Сполучники — Conjunctions (~340 words)
+- P1 (~80 words): [Definition & Flow] — Explain the term "сполучник" (from "сполучити" — to connect). Contrast choppy, robotic sentences ("Я люблю каву. Я люблю чай.") with fluid, natural ones ("Я люблю каву і чай."). Define them as the "glue" of the Ukrainian language.
+- P2 (~85 words): [Addition: і, й, та] — Present the basic "and" conjunctions. Explain that "та" is a frequent synonym of "і" in writing and speech (хліб та молоко). Introduce the euphony rule for "й" after vowels (вона й він) to maintain the "melodicity" of Ukrainian.
+- P3 (~85 words): [Soft Contrast: а] — Explain "а" as a tool for comparison or switching focus, rather than strong opposition. Provide the classic L2 contrast: "Я — студент, а ти — вчитель." Contrast this with English, where "and" is often used where Ukrainian requires "а" to mark a shift in subject (Він працює, а вона відпочиває).
+- P4 (~90 words): [Strong Contrast: але] — Introduce "але" for contradictions or unexpected results. Use textbook examples of opposing qualities: "Суп гарячий, але смачний", "Я хочу піти, але не можу". Mention that "та" can also mean "but" in specific folk-style contexts (малий, та вдалий), though "але" is the A1 standard.
+- <!-- INJECT_ACTIVITY: fill-in-conjunction-choice --> [fill-in, Choose between і, а, але — 10 items]
+- <!-- INJECT_ACTIVITY: group-sort-categories --> [group-sort, Sort conjunctions into Addition (і/та) vs. Contrast (а/але) — 10 items]
 
----
+## Бо і тому що — Because (~330 words)
+- P1 (~80 words): [Reason Intro] — Present "бо" and "тому що" as equivalents for "because." Explain that "бо" is the "workhorse" of spoken Ukrainian — short, punchy, and natural. "Тому що" is presented as the neutral/formal counterpart (Я не йду, тому що я втомлений).
+- P2 (~80 words): [The Comma Rule] — Teach the non-negotiable punctuation rule: always place a comma before "а", "але", "бо", and "тому що". Contrast this with English "because" which usually lacks a comma. Example: "Ми вдома, бо йде дощ."
+- P3 (~80 words): [The Why-Because Loop] — Connect the question word "Чому?" (Why?) with the answer "Бо...". Show that in Ukrainian, unlike English, it is perfectly natural and grammatically correct to start an answer with "Бо". Example: "— Чому ти вчиш мову? — Бо я люблю Україну."
+- P4 (~90 words): [Syntax Trap: Full Structures] — Address the common L2 error of omitting the subject after a conjunction (e.g., "because interesting"). Explain that Ukrainian requires a full basis in the clause. Correct: "Я читаю, бо це цікаво" (not "бо цікаво").
+- <!-- INJECT_ACTIVITY: fill-in-reason-building --> [fill-in, Connect sentence pairs using бо or тому що — 6 items]
+- <!-- INJECT_ACTIVITY: quiz-conjunction-matching --> [quiz, Which conjunction fits the logic of the sentence? — 8 items]
 
-## Сполучники (~335 words total)
+## Підсумок — Summary (~320 words)
+- P1 (~160 words): [Quick Reference Recap] — Provide a consolidated summary of the four key types of linking: Addition (і, та), Soft Contrast (а), Strong Contrast (але), and Reason (бо, тому що). Reiterate the euphony rule (і vs й) and the "Always Comma" rule for contrast and reason.
+- P2 (~160 words): [Self-Check & Production] — Present a bulleted list of sentence pairs for the learner to mentally connect.
+    * Я хочу каву. Я не хочу чай. (Try with "а" or "але")
+    * Він вдома. Він хворий. (Try with "бо")
+    * Вона читає. Він пише. (Try with "а")
+    * Сьогодні сонце. Сьогодні холодно. (Try with "але")
+    * Заключне слово: Building longer sentences is the first step from "surviving" to "speaking" Ukrainian.
 
-- P1 (~80 words): What is a сполучник? Ukrainian term etymology: сполучник ← сполучити (to connect, to link). Conjunctions connect words, phrases, or whole sentences. Two-panel before/after comparison — choppy vs. connected: *Я люблю каву. Я люблю чай.* → *Я люблю каву і чай.* / *Я хочу піти. Я втомлений.* → *Я хочу піти, бо я втомлений.* Concept: one conjunction does the work of two sentences.
-- P2 (~85 words): **і / та — "and" (addition)**. та is a full synonym of і — same meaning, common in writing and literary style: мама і тато, хліб та масло. Either works in speech. Four varied examples showing і and та in real sentences: *Я читаю і пишу. Він грає на гітарі та співає. Kyів і Львів — красиві міста. Ми купили хліб та молоко.* Pattern note: і/та join equal, compatible things.
-- P3 (~90 words): **а — "and" with a contrast or shift (softer).** а doesn't mean "but" exactly — it shifts focus or contrasts two subjects. Key examples: *Я люблю каву, а ти? Він працює, а вона відпочиває. Я читаю, а він дивиться телевізор.* Distinguish from але: а is a smooth pivot, але is a real contradiction. Analogy: а = "and meanwhile", але = "but actually".
-- P4 (~50 words): **але — "but" (stronger contrast / contradiction)**. When one part contradicts or limits the other: *Я хочу, але не можу. Він молодий, але дуже розумний. Погода гарна, але холодно.* Comma rule introduced here: **always a comma before але** — and before а when connecting two full sentences.
-- Exercise — fill-in (10 items): Choose і, а, or але: *Я хочу ___ не можу. Він працює, ___ вона відпочиває. Я люблю каву, ___ чай — ні. Ми підемо в кіно ___ поїмо піцу.* (items increase in difficulty: same-subject addition → subject contrast → contradiction)
-- P5 (~30 words): Summary mini-recap of the three: "і/та = додавання. а = м'який контраст або зміна суб'єкта. але = сильний контраст або обмеження."
-
----
-
-## Бо і тому що (~335 words total)
-
-- P1 (~75 words): Two Ukrainian ways to say "because": **бо** (short, conversational) and **тому що** (longer, common in writing). Both are fully correct Standard Ukrainian — бо is not slang, not informal, not wrong. It's the natural spoken form. Side-by-side: *Я не йду, бо я хворий.* / *Я не йду, тому що я хворий.* Meaning is identical; register differs slightly.
-- P2 (~70 words): Comma rule for бо and тому що — always comma before both. Three examples each: *Я втомлений, бо багато працював. Ми не гуляємо, бо йде дощ. Він не прийшов, бо забув.* // *Ми не гуляємо, тому що йде дощ. Я вчу українську, тому що люблю Україну. Він не прийшов, тому що забув.* Note: the clause introduced by бо/тому що is always second.
-- P3 (~100 words): **Чому? → Бо / Тому що…** — the core Q&A pattern. This is how Ukrainians explain things in everyday speech. Present as a mini-drill of 5 exchanges: *— Чому ти вчиш українську? — Бо я люблю Україну. / — Чому ти не їси? — Тому що я не голодний. / — Чому ви тут? — Бо ми чекаємо друга. / — Чому ти не спиш? — Бо я читаю цікаву книжку. / — Чому він не прийшов? — Тому що він хворий.* Point out: Чому? always gets бо or тому що as the answer opener.
-- Exercise — fill-in (6 items): Complete the answer using бо or тому що: *Я вчу українську, ___. Він не прийшов, ___. Ми не підемо в кіно, ___. Вона втомлена, ___.* Learner invents a plausible continuation.
-- P4 (~55 words): Vacation mini-dialogue (from dialogue_situations) — couple debating Карпати vs море. Short 4-line exchange using all five target conjunctions: *Гори гарні, але далеко. Море тепле, бо літо. Я хочу в гори, а ти — на море. Поїдемо в Карпати, бо там дешевше.* Label: але, бо, а, бо — same words, different functions, natural flow.
-- Exercise — quiz (8 items): Multiple choice — which conjunction fits? *Я не йду, ___ хворий. (і / а / бо) / Він працює, ___ вона відпочиває. (але / і / бо) / Я хочу піцу ___ салат. (але / і / бо)* etc.
-
----
-
-## Підсумок — Summary (~330 words total)
-
-- P1 (~100 words): Quick-reference summary table — five conjunctions with meaning, use, and one example sentence:
-
-  | Сполучник | Значення | Приклад |
-  |---|---|---|
-  | і / та | and (addition) | Я їм хліб і п'ю воду. |
-  | а | and (contrast/shift) | Я читаю, а він пише. |
-  | але | but (contradiction) | Я хочу, але не можу. |
-  | бо | because (spoken) | Я не йду, бо хворий. |
-  | тому що | because (written) | Я не йду, тому що хворий. |
-
-- P2 (~80 words): Comma rules consolidated — three rules stated clearly: (1) Always comma before **а, але, бо, тому що**. (2) Comma before **і / та** only when connecting two full sentences with different subjects: *Сонце зайшло, і стало темно.* — but NOT for joining two words: *хліб і масло*. (3) No comma before і/та between two verbs with the same subject: *Я читаю і пишу.* Three contrast pairs to illustrate each rule.
-
-- Self-check exercise (~100 words): Five sentence pairs — learner connects with the best conjunction (answer key provided inline after each): *Я люблю каву. Я не люблю чай. → Я люблю каву, але не люблю чай.* / *Він не прийшов. Він хворий. → Він не прийшов, бо / тому що він хворий.* / *Я читаю. Моя сестра дивиться фільм. → Я читаю, а моя сестра дивиться фільм.* / *Ми купили хліб. Ми купили молоко. → Ми купили хліб і молоко.* / *Я хочу піти. Я дуже втомлений. → Я хочу піти, але я дуже втомлений.* Instruction: "Яке слово найкраще підходить? Чому?"
-
-- P3 (~50 words): Closing hook — preview of next module (a1-045 When and Where): "Тепер ви вмієте з'єднувати думки. У наступному модулі ви навчитеся додавати де і коли — щоб ваші речення ставали ще більш точними та природними."
-
-Grand total: ~1330 words
+Grand total: ~1320 words

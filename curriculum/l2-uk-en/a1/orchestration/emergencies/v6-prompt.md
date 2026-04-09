@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,10 +41,10 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
@@ -286,334 +286,368 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-
-**Confirmed (16/16):**
-- ✅ допомога — noun (VESUM confirmed)
-- ✅ допоможіть — verb form of допомогти (VESUM confirmed)
-- ✅ швидка — noun (VESUM confirmed as standalone noun — not just adjective form; 4 matches including as noun)
-- ✅ поліція — noun (VESUM confirmed)
-- ✅ лікарня — noun (VESUM confirmed)
-- ✅ аварія — noun (VESUM confirmed)
-- ✅ загубити — verb (VESUM confirmed)
-- ✅ викликати — verb (VESUM confirmed, 2 matches)
-- ✅ пожежа — noun (VESUM confirmed)
-- ✅ порятунок — noun (VESUM confirmed, 2 matches)
-- ✅ паспорт — noun (VESUM confirmed, 2 matches)
-- ✅ адреса — noun (VESUM confirmed)
-- ✅ номер — noun (VESUM confirmed, 2 matches)
-- ✅ алергія — noun (VESUM confirmed)
-- ✅ форма — noun (VESUM confirmed)
-- ✅ будинок — noun (VESUM confirmed, 2 matches)
-
-**Not found:** none — all 16 plan vocabulary words are safe to use.
-
----
-
-## Textbook Excerpts
-
-### Section: Екстрені ситуації (Emergencies)
-> «Якщо неможливо залишити приміщення, а у вас є мобільний зв'язок, зателефонуйте за номером 101. [...] Під час пожежі виходьте з класу через двері й допоможіть іншим.»
-> Source: Авраменко, Grade 7 (2024, tier 1) — §36 "Порядок дій у надзвичайних ситуаціях"
-
-> Note: Textbook uses **101** (fire service). The plan correctly uses **112** (universal emergency number, valid since 2016). Both are real numbers; 112 is the correct one for the module's scope.
-
-### Section: Dialogues — Calling 112 / Lost documents
-> «Після досягнення 14-річного віку ви отримаєте паспорт громадянина / громадянки України у формі картки, на якій теж буде вказано вашу адресу.»
-> Source: Авраменко, Grade 7 (2024, tier 1) — Розвиток мовлення, "Заповніть бланк за зразком"
-
-> Also: «Статистику ДТП в Україні опублікувала Патрульна поліція. Причиною більшості аварій...»
-> Source: Заболотний, Grade 7 (2024, tier 1) — ДТП context, confirms аварія used in accident/road context.
-
-### Section: Допомога (Getting Help) — Hospital / Medical
-> «— У неї, здається, алергія — бачиш, як вушка почервоніли... Алергія — схильність організму до захворювань шкіри внаслідок уживання в їжу деяких продуктів.»
-> Source: Вашуленко, Grade 2 (2019, tier 2) — confirms алергія at A1 level with natural Ukrainian usage.
-
-> «Спостереження показують, що спілкування з пацієнтом у 70–80 % випадків допомагає поставити правильний діагноз [...] Ніколи не можна говорити, що ви більше нічого не можете зробити»
-> Source: Заболотний, Grade 10 (2018) — лікар/пацієнт communication context.
-
-### Section: Imperative (наказовий спосіб) — for grammar frame in activities
-> «За допомогою форм наказового способу дієслів спонукають до дії: просять, наказують, благають, примушують [...] 2-а ос. однини: -∅, -и: ріж, роби. 2-а ос. множини: -те, -іть або -іте: ріжте, робіть.»
-> Source: Авраменко, Grade 11 (2019, tier 2) — §17 full imperative paradigm table.
-
-> «У дієсловах наказового способу пишемо м'який знак у кінці слова та складу після д, т, з, с, ц, л, н: лізь, лізьте, будь, будьте, глянь, гляньте, занось, заносьте.»
-> Source: Авраменко, Grade 7 (2024, tier 1) — §37
-
-> «Для творення форм наказового способу не використовуємо частки давай, давайте: читаймо (не давай читати).»
-> Source: Заболотний, Grade 7 (2024, tier 1) — confirmed in both Zabolotnyi and Avramenko Grade 7.
-
----
+- Confirmed: допомога, допоможіть (допомогти), швидка, поліція, лікарня, аварія, загубити, викликати, пожежа, порятунок, паспорт, адреса, номер, алергія, форма, будинок
+- Not found: [none]
 
 ## Grammar Rules
-
-- **Imperative 2nd pl. ending**: Both **-іть** and **-іте** are normative (e.g., допоможіть / допоможіте, залишайтеся). Source: Авраменко Grade 11 §17 — "У формі 2-ї особи множини паралельно із закінченням -іть можна вживати й закінчення -іте (воно хоч і рідше вживане, але нормативне)."
-- **Imperative + м'який знак**: Write ь at end of word and syllable after д, т, з, с, ц, л, н in imperative forms. Source: Авраменко Grade 7 §37.
-- **Imperative — NEVER "давай/давайте"**: Using "давай + infinitive" to form imperative is NOT literary norm. Confirmed by Заболотний Grade 7 and Авраменко Grade 7 — both explicitly mark it as **НЕправильно**.
-- **Правопис 2019 query**: The RAG index did not return a direct Правопис section number for наказовий спосіб or м'який знак — these rules are confirmed via textbooks only.
-
----
+- Наказовий спосіб (Imperative): Правопис § 106 — Forms like "допоможіть" are regular second-person plural imperatives (ending -іть for verbs with stressed endings or consonant clusters). Verified via VESUM: допоможіть (verb:perf:impr:p:2).
+- Написання адреси (Writing addresses): Правопис § 131 — Proper names of streets are capitalized (вулиця Хрещатик). Use of Locative case for location: "на вулиці Хрещатик", "у будинку десять".
 
 ## Calque Warnings
-
-- **"залишайтеся на місці"**: Антоненко-Давидович flags overuse of **залишати** vs. **покидати** (they are not synonyms — залишати ≠ покидати semantically). However, "залишайтеся на місці" is standard Ukrainian in official emergency/administrative register (police dispatchers, emergency services). The imperfective form (залишайтеся = keep staying) is correct here vs. perfective залишіться. ✅ **OK** — acceptable in emergency register.
-
-- **"заповніть цю форму"**: No calque flag found. The style guide returned unrelated entries. "Заповнити форму / бланк" is confirmed in Авраменко Grade 7 ("Заповніть бланк за зразком") — textbook-attested, natural Ukrainian. ✅ **OK.**
-
-- **"викликати швидку / поліцію"**: No flag found. Антоненко-Давидович returned unrelated entries (трапитися, повинна). "Викликати" in the sense of "to call/summon" a service is standard Ukrainian. VESUM confirmed. ✅ **OK.**
-
----
+- адреса: OK — Verified: "адреса" is for location/postal address, while "адрес" is for a formal greeting/dedication (confirmed by textbooks and style guides).
+- викликати швидку: OK — Natural Ukrainian for "call an ambulance".
+- слухаю вас: OK — Standard polite telephone response.
+- заповнити форму: OK — "Форма" (form/blank) is acceptable, though "анкета" is often more specific for biographical data (verified via СУМ-11).
 
 ## CEFR Check
-
-- допомога: **A1** ✅ — on target
-- допоможіть: **A1** (listed as вигук in PULS) ✅ — on target
-- лікарня: **A1** ✅ — on target
-- паспорт: **A1** ✅ — on target
-- алергія: **A1** ✅ — on target
-- адреса: **A1** ✅ — on target
-- поліція: **not found directly** — closest match поліцейський = A2. ⚠️ **Likely A2** — acceptable in A1.8 graduation module (context-critical survival word; taught as chunk)
-- пожежа: **A2** ⚠️ — one level above target. Acceptable in A1.8 (graduation module) as a high-frequency emergency chunk "Тут пожежа!"; taught as formula, not analyzed morphologically
-- аварія: **B1** ⚠️⚠️ — **TWO levels above A1 target.** This is the most significant finding. Recommend flagging for writer: аварія should be introduced as a **passive recognition word** (learner hears it, understands it, uses it only in the fixed chunk "Тут аварія!"). Do NOT require active productive use beyond the emergency phrase. The plan already uses it only in a fixed dialogue chunk — this is pedagogically sound.
+- номер телефону: A1 — Verified in Grade 2-6 textbooks.
+- допомога: A1 — Found in Grade 7 but used in very simple imperative contexts (A1-appropriate).
+- лікарня: A1 — Found in Grade 2 textbooks.
+- паспорт: A1 — Found in Grade 5/9, but a core survival word for foreigners (A1).
+- аварія: A1 — Found in Grade 4, survival vocabulary.
+- пожежа: A1 — Core survival vocabulary.
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: Emergencies
-**Module:** emergencies | **Phase:** A1.8 [Past, Future, Graduation]
-**Textbook grades searched:** 5, 6, 7
+# Knowledge Packet: Emergencies
+**Module:** emergencies | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/emergencies.md
+
+# Педагогіка A1: Emergencies
+
+
+
+## Методичний підхід (Methodological Approach)
+
+Teaching emergency language at the A1 level must be functional, direct, and immediately applicable. The goal is not grammatical perfection but successful communication in a high-stress situation. The Ukrainian pedagogical approach, even for young learners, is rooted in clear, action-oriented instructions.
+
+The core method is situational role-playing built around key "chunks" or formulaic phrases. For example, a textbook for 7th graders (`7-klas-ukrmova-avramenko-2024_s0092`) provides direct, unadorned commands for fire safety: "Під час пожежі виходьте з класу", "Захищайте органи дихання", "Зателефонуйте за номером 101". This imperative-first approach is ideal for A1. It bypasses complex grammar and provides an immediate tool.
+
+For medical emergencies, the approach is centered on describing personal state and needs. Dialogues from educational podcasts model this effectively (`ext-ulp_youtube-201`, `ext-ulp_youtube-58`). The core pattern is "У мене [щось] болить" (Something hurts me) or "Я хочу записатися на прийом до лікаря" (I want to make a doctor's appointment). This teaches the learner to state their problem and their goal clearly.
+
+A crucial element is teaching how to provide essential information: location and personal data. Textbooks for younger learners (`2-klas-ukrmova-bolshakova-2019-2_s0034`, `7-klas-ukrmova-zabolotnyi-2024_s0270`) break down the components of an address (`вулиця, будинок, квартира`) and personal identification (`паспорт`, `ідентифікаційний код`) (`ext-ulp_youtube-219`). The pedagogy emphasizes providing this information in a fixed, predictable order. This is a life skill taught through language.
+
+Finally, the introduction of emergency phone numbers (101, 102, 103) should be presented as non-negotiable memorization, similar to how the alphabet is taught. The context is that these are critical access keys to help (`7-klas-ukrmova-avramenko-2024_s0092`).
+
+## Послідовність введення (Introduction Sequence)
+
+The sequence must build from immediate alerts to providing necessary details. Each step provides a complete, usable skill.
+
+1.  **Step 1: The Alarm.** Introduce single-word exclamations and the universal call for help. This is the most basic and critical function.
+    *   `Допоможіть!` (Help!)
+    *   `Пожежа!` (Fire!)
+    *   `Увага!` (Attention!/Warning!) (Джерело: `5-klas-ukrmova-litvinova-2022_s0166`)
+
+2.  **Step 2: Key Emergency Services & Numbers.** Learners must memorize the three primary emergency numbers in Ukraine.
+    *   `101` — `Пожежна допомога` (Fire service)
+    *   `102` — `Поліція` (Police)
+    *   `103` — `Швидка допомога` (Ambulance, lit. "fast help") (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0123`)
+
+3.  **Step 3: Stating the Location (The Address).** Teach the formula for giving a location. The order is critical: Street -> Building -> Apartment.
+    *   `Вулиця...` (Street...)
+    *   `Будинок номер...` (Building number...)
+    *   `Квартира номер...` (Apartment number...)
+    *   Model sentence: `Моя адреса: вулиця Квіткова, будинок 3` (My address is: Kvitkova street, building 3) (Джерело: `1-klas-bukvar-bolshakova-2018-1_s0044`).
+
+4.  **Step 4: Describing a Medical Problem (The Body).** Introduce the core structure for expressing pain. This is one of the most common and necessary functions for a beginner.
+    *   Introduce body parts: `голова`, `горло`, `живіт`.
+    *   Teach the fixed phrase: `У мене болить...` (I have a pain in.../My...hurts).
+    *   Example: `У мене болить голова і горло` (I have a headache and a sore throat) (Джерело: `ext-ulp_youtube-201`).
+    *   Introduce `температура`. Example: `У мене температура 38,2` (I have a temperature of 38.2) (Джерело: `ext-ulp_youtube-201`).
+
+5.  **Step 5: Making a Call & Requesting Action.** Combine the previous steps into a functional phone call.
+    *   Calling phrase: `Я хочу...` (I want...)
+    *   Example: `Я хочу записатися на прийом до лікаря` (I want to make an appointment with a doctor) (Джерело: `ext-ulp_youtube-58`).
+    *   Stating the need for help: `Треба допомогти` (Help is needed) (Джерело: `1-klas-bukvar-bolshakova-2018-2_s0074`).
+    *   Using the imperative: `Зателефонуйте за номером 101` (Call number 101) (Джерело: `7-klas-ukrmova-avramenko-2024_s0092`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often fall into predictable traps due to L1 interference and structural differences.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| Я маю головний біль. | **У мене болить голова.** | Direct translation from "I have a headache". Ukrainian uses a different structure, literally "At me aches the head". This is a core pattern to drill (Джерело: `ext-ulp_youtube-201`, `ext-ulp_youtube-58`). |
+| Подзвоніть 103. | **Зателефонуйте за номером 103.** | English uses a direct object ("call 103"). Ukrainian requires the prepositional phrase `за номером` (by the number). This is a common prepositional error (`7-klas-ukrmova-avramenko-2024_s0092`). |
+| Мій адрес... | **Моя адреса...** | `Адрес` and `адреса` are false friends. `Адреса` (feminine) is a physical location. `Адрес` (masculine) is a formal written greeting/tribute, which an A1 learner will almost never need (Джерело: `6-klas-ukrmova-betsa-2023_s0072`, `8-klas-ukrmova-zabolotnyi-2025_s0041`). |
+| Я є хворий. | **Я захворів / Я захворіла.** | Direct translation of "I am sick". While grammatically understandable, the natural way to express the onset of illness is with the perfective verb `захворіти` (to get sick) (Джерело: `ext-ulp_youtube-201`). |
+| Мені потрібен паспорт і код. | **Мені потрібен ваш паспорт та ідентифікаційний код.** | Learners often simplify "identification code" to just "code". The full term `ідентифікаційний код` is standard in official contexts like banks or clinics and should be learned as a chunk (Джерело: `ext-ulp_youtube-219`, `ext-ulp_youtube-126`). |
+| Прийдіть раніше і візьміть **ваш** паспорт. | **Прийдіть... раніше і візьміть паспорт.** | English relies heavily on possessive pronouns ("your passport"). In Ukrainian imperatives, when the context is clear, the possessive pronoun is often dropped as redundant. The phrase `Візьміть паспорт` is more natural than `Візьміть ваш паспорт` in this context (Джерело: `ext-ulp_youtube-58`). |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian must be done on its own terms, completely decoupled from Russian. This is especially critical for foundational topics where learners might seek false cognates or analogies.
+
+1.  **NO Russian Phonetic Analogies:** Do not explain Ukrainian sounds by comparing them to Russian. For example, never say "Ukrainian `и` is like Russian `ы`" or "Ukrainian `і` is like Russian `и`". Teach the Ukrainian phonetic system from scratch, using native audio and articulatory descriptions. The learner's mind must build a new, separate phonetic inventory for Ukrainian.
+2.  **Emergency Numbers are Ukrainian:** Explicitly state that the emergency numbers (`101`, `102`, `103`) are the standard for Ukraine. Actively prevent any confusion with the old Soviet/current Russian system (`01`, `02`, `03`). This reinforces Ukraine's sovereign infrastructure.
+3.  **Vocabulary Purity:** Use exclusively Ukrainian vocabulary. For instance, use `лікарня` for hospital, not a calque. The term `швидка допомога` (or just `швидка`) is the correct and natural term for an ambulance (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0123`). Avoid any regionalisms that might have Russian influence.
+4.  **Grammatical Structures:** Emphasize uniquely Ukrainian grammatical constructions, such as the `У мене болить...` structure for pain, without mentioning how it might differ from or be similar to Russian. The goal is to normalize Ukrainian structures, not present them as a deviation from another language.
+5.  **Cultural Context:** When discussing medical care, frame it within the modern Ukrainian system (e.g., family doctors (`сімейний лікар`), private clinics (`приватна клініка`), and the state system (`державна лікарня`)) as described in Ukrainian sources (`ext-ulp_youtube-201`). This grounds the language in the contemporary reality of Ukraine.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is essential for A1 learners to navigate basic emergencies.
+
+**Іменники (Nouns):**
+*   `допомога` ★★★ (help)
+*   `лікар` ★★★ (doctor)
+*   `пожежа` ★★★ (fire)
+*   `швидка допомога` / `швидка` ★★★ (ambulance)
+*   `адреса` ★★★ (address)
+*   `вулиця` ★★★ (street)
+*   `будинок` ★★★ (building)
+*   `квартира` ★★★ (apartment)
+*   `номер` ★★★ (number)
+*   `телефон` ★★★ (telephone)
+*   `голова` ★★☆ (head)
+*   `горло` ★★☆ (throat)
+*   `температура` ★★☆ (temperature)
+*   `паспорт` ★★☆ (passport)
+*   `проблема` ★★☆ (problem)
+*   `вогонь` ★☆☆ (fire/flame)
+*   `дим` ★☆☆ (smoke)
+
+**Дієслова (Verbs):**
+*   `допоможіть` (imperative) ★★★ (help!)
+*   `болить` (3rd person sing.) ★★★ (it hurts)
+*   `треба` (modal) ★★★ (it is necessary / need to)
+*   `хочу` ★★★ (I want)
+*   `дзвонити` / `телефонувати` ★★☆ (to call)
+*   `горіти` ★★☆ (to be on fire)
+*   `сталося` (past) ★★☆ (happened)
+*   `відкрити` / `відчинити` ★☆☆ (to open)
+
+**Прислівники та фрази (Adverbs & Phrases):**
+*   `Де?` ★★★ (Where?)
+*   `Що?` ★★★ (What?)
+*   `Терміново!` ★★★ (Urgently!)
+*   `Дуже` ★★☆ (Very)
+*   `Тут` ★★☆ (Here)
+*   `Що сталося?` ★★☆ (What happened?)
+*   `Що вас турбує?` ★★☆ (What's bothering you?) (Джерело: `ext-ulp_youtube-58`)
+*   `Будь ласка` ★★★ (Please)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises provide a template for creating practical, effective activities for A1 learners.
+
+1.  **Activity: Following Fire Safety Rules** (Based on `7-klas-ukrmova-avramenko-2024_s0092`)
+    *   **Task:** Read the instructions. Match each instruction with a picture showing the action.
+    *   **Instructions:**
+        1.  `Під час пожежі виходьте з класу через двері.`
+        2.  `Не ховайтеся в кутки, під парти.`
+        3.  `Захищайте органи дихання змоченою тканиною.`
+        4.  `Зателефонуйте за номером 101.`
+    *   **Pedagogical Value:** Teaches essential survival commands using the imperative form in a clear, unambiguous context.
+
+2.  **Activity: Providing Your Address** (Based on `2-klas-ukrmova-bolshakova-2019-2_s0034`)
+    *   **Task:** Fill in the blanks to complete your address.
+    *   **Template:**
+        *   `Країна:` __________________ (Україна)
+        *   `Місто:` __________________
+        *   `Вулиця:` __________________
+        *   `Будинок:` _____ , `квартира:` _____
+    *   **Pedagogical Value:** A highly practical, personalized task that reinforces the specific structure and vocabulary for giving a location, a critical skill in any emergency call.
+
+3.  **Activity: Role-Play - Calling the Clinic** (Based on `ext-ulp_youtube-58`, `ext-ulp_youtube-201`)
+    *   **Task:** Work with a partner. Student A is the clinic receptionist. Student B is the patient. Use the phrases below to make an appointment.
+    *   **Student A (Receptionist):**
+        *   `Клініка "Здоров'я", слухаю вас.` (Clinic "Zdorovya", I'm listening.)
+        *   `Що вас турбує?` (What's bothering you?)
+        *   `Я можу записати вас на [час].` (I can book you for [time].)
+    *   **Student B (Patient):**
+        *   `Добрий день. Я хочу записатися на прийом до лікаря.` (Hello. I want to make a doctor's appointment.)
+        *   `У мене болить [голова/горло].` (My [head/throat] hurts.)
+        *   `Добре, мені підходить.` (OK, that suits me.)
+    *   **Pedagogical Value:** Practices a full, realistic conversational exchange, moving from stating a need to providing details and confirming arrangements.
+
+4.  **Activity: What's the Problem?** (Based on `4-klas-ukrmova-zaharijchuk_s0034`, `ext-ulp_youtube-201`)
+    *   **Task:** Look at the pictures of people in different situations (e.g., someone holding their head, a bee sting, a small cut). Describe the problem using the given vocabulary.
+    *   **Vocabulary:** `болить голова`, `болить живіт`, `порізав палець`, `бджола вкусила`.
+    *   **Example:** (Picture of a boy holding his head) -> `У нього болить голова.`
+    *   **Pedagogical Value:** Connects vocabulary directly to visual cues, helping learners to quickly associate phrases with real-world situations.
+
+## Пов'язані статті (Related Articles)
+
+*   [pedagogy/a1/alphabet](link-to-alphabet-article)
+*   [pedagogy/a1/basic-questions](link-to-questions-article)
+*   [pedagogy/a1/imperative-mood](link-to-imperative-article)
+*   [grammar/nouns-cases-genitive](link-to-genitive-case-article)
+*   [vocabulary/body-parts](link-to-body-parts-article)
 
 ---
 
-## Dialogues
+### Вікі: pedagogy/a1/this-and-that.md
 
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 120
-> **Score:** 0.25
->
-> 120
-> ЖИВИЛЬНІ  ДЖЕРЕЛА  МУДРИХ  КНИЖОК
-> — Тю, — ледве сказав Ява.
-> — Тьху, — ледве сказав я. 
-> Це вся розмова, на яку ми спро­моглися.
-> І тільки за хвилин двадцять ми нарешті отямились і змогли обміняти-
-> ся думками з приводу того, що сталося.
-> — Так ... — зітхнув Ява. — Можна сказати, зіпсував ти мені кар’єру. 
-> А що?! Хто ж мене тепер у міліцію візьме...
->  
-> 1.	 Хрещатик «утикається» на Європейській площі в
-> А	 метро «Арсенальна»
-> Б	 метро «Хрещатик»
-> В	   колишній костел
-> Г	   філармонію
-> 2.	 	Репліка «Лізь, голубе, під землю, як усі люди» адресована
-> А	 інтелігентному дідусеві 
-> Б	 опасистому дядьку
-> В  	міліціонерові
-> Г  	 інтуристу
-> 3.	 Установіть відповідність.
-> Ге­рой по­віс­ті
-> Опис зов­ніш­нос­ті 
-> 1	 мі­лі­ці­о­нер
-> 2	 дядь­ко  в мет­ро
-> 3	 ін­ту­рист	
-> А	 «...
-
-> **Source:** litvinova, Grade 5
-> **Section:** Сторінка 248
-> **Score:** 0.50
->
-> 248
-> Відомості із синтаксису й пунктуації.  Пряма мова.  Розділові знаки в реченнях
-> В трамваї хтось гаркнув бабусі на  вухо: 
-> Ану, відступися убік, розвалюхо! 
-> Не встигла убік відступити небога — 
-> Забрала стареньку «швидка допомога». 
-> Буфетнику Про шу в  дитячім кафе 
-> Хтось замість подяки та  вигукнув: 
-> Пфе! 
-> Буфетник облишив буфет і  торти — 
-> Його до  сьогодні не  можуть знайти! 
-> А далі, як мовиться в  казці, 
-> Заби ли триво гу будьласці. 
-> Вони невідомих осіб 
-> Ловили шістнадцять діб! 
-> А потім не  місяць, не  два 
-> Учили казати слова: 
-> «пробачте»,   
-> «спасибі»,   
-> «будь ласка»… 
-> На цьому й  скінчилася  б казка, 
-> Та вчора я  стріла особу одну. 
-> Вона продавцеві сказала: 
-> Ану… 
-> Одразу мені пригадалася казка 
-> Про два королівства: Ану і  Будьласка.
-
-## Екстрені ситуації (Emergencies)
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 228
-> **Score:** 0.33
->
-> 228
-> Розвиток мовлення
-> мовленнєвого етикету. Використайте звертання та слова (сполучення) увічли-
-> вості. Ви можете скористатися поданими нижче зразками.
-> СИТУАЦІЯ А. Ви перебуваєте в незнайомому місті й шукаєте потрібну вулицю 
-> (будівлю). З якими словами ви звернетеся до перехожого? Що скажете на про-
-> щання?
-> Скажіть, будь ласка, де...; перепрошую, ви не знаєте...; вибачте, 
-> ви не скажете...; добродію, будьте ласкаві, підкажіть...; шановний, 
-> якщо ваша ласка, скажіть мені...; дякую вам; на все добре; 
-> приємної подорожі; чи не скажете ви...; вибачте, точно не знаю; 
-> ви мені дуже допомогли; до побачення; немає за що.
-> СИТУАЦІЯ Б. Ви зайшли до книгарні й хочете купити тлумачний словник.
-
-## Допомога (Getting Help)
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 89
-> **Score:** 0.50
->
-> 89
-> Iменник
-> І. Запишіть словосполучення, добираючи правильне закінчення.
-> Головн(ий/а) біль, нов(ий/а) шампунь, нелегк(ий/а) путь,
-> вищ(ий/а) ступінь, вітальн(ий/а) туш, яскрав(ий/а) гуаш,
-> сильн(ий/а) нежить, біл(ий/а) тюль, гірк(ий/а) полин, бара-
-> бан н(ий/а) дріб, нов(ий/а) рукопис, друг(ий/а) степінь,
-> яскрав(ий/а) емаль, висок(ий/а) насип.
-> ІІ. Складіть усно речення з одним поданим словосполученням.
-> СИТУАЦІЯ. Уявіть, що вам треба викликати 
-> лікаря для знайомого, який застудився. Ви теле-
-> фонуєте до лікарні.
-> Складіть усно 2–3 речення, щоб звернутися до 
-> працівника лікарні в цій ситуації. Використайте 
-> подані словосполучення.
-> головний біль
-> сильний нежить
-> висока температура
-> І. Спишіть речення, розставляючи пропущені розділові знаки. Надпи-
-> шіть скорочено над іменниками їхній рід.
-
-> **Source:** zabolotnyi, Grade 5
-> **Section:** Сторінка 42
-> **Score:** 0.25
->
-> 39
-> 1. Мама робила в лікарні й пишалася своєю роботою. 
-> 2.  Сніжна заметіль замела все навколо. 3. Помітивши за 
-> вікном друга, хлопець непомітно вислизнув з хати. 4. У по-
-> відомленні повідомлялося про новий кінофільм. 5. Учителі 
-> та школярі провели флешмоб на шкільному подвір’ї.
-> 86.	 Знайдіть для кожного слова місце в реченні й запишіть. Ви може-
-> те використати кожне слово лише один раз. Ви можете скористатися 
-> таблицею «Культура мовлення» на с. 40. 
-> відкрити / відчинити / розплющити / розгорнути
-> 1. Прошу ... ваші зошити. 2. Уранці мені не хотілося на-
-> віть ... очі. 3. Спеціальний ключ допоможе ... банку. 4. Щоб 
-> провітрити кімнату, треба ... вікна. 
-> 87.	 Виберіть із рамки біля речення слово, яке потрібно вставити на 
-> місці пропуску. Запишіть утворені речення. 
-> 1.
-
-## Summary
-
-> **Source:** avramenko, Grade 7
-> **Section:** Сторінка 84
-> **Score:** 0.33
->
-> 81
-> РОЗВИТОК МОВЛЕННЯ
-> 2.	 Прочитайте текст і виконайте завдання.  
-> ЯК ПОВОДИТИСЯ ПІД ЧАС ПОЖЕЖІ В НАВЧАЛЬНОМУ ЗАКЛАДІ, 
-> КОЛИ ПОРУЧ НЕМАЄ ДОРОСЛОЇ ЛЮДИНИ?
-> Пожежа в класі
-> 1. Під час пожежі виходьте з класу через двері й допоможіть іншим.
-> 2. Якщо вихід перекриває вогонь, але поряд є зовнішня пожежна дра-
-> бина, використайте її.
-> 3. Під час пожежі не ховайтеся в кутки, під парти тощо.
-> 4. Захищайте органи дихання змоченою тканиною. 
-> 5. Подавайте сигнали рятувальникам. 
-> Пожежа в коридорі
-> 1. Перш ніж визирнути в коридор, доторкніться тильним боком долоні 
-> до ручки вхідних дверей; якщо вона гаряча, не відчиняйте: там пожежа. 
-> 2. Ручка холодна — визирніть у коридор. Якщо в коридорі вогонь або 
-> багато диму, поверніться до класу та зачиніть двері. 
-> 3.
-
-## Grammar Reference
-
-> **Source:** avramenko, Grade 6
-> **Section:** Сторінка 165
-> **Score:** 0.33
->
-> Гаразд, прокинусь і вкушу його як потрібно, 
-> тоді він стане моїм рабом назавжди й зробить усе, що я звелю. Марно було чекати на допомогу. Тож я почав діяти швидко й рішуче. На­пруживши всі м’язи, я почав звиватися, як вуж, і сантиметр за сан­ти­
-> метром рухатися в бік паркану, що оточував цей фальшивий будівельний 
-> майдан­чик. Нарешті я виповз за межі випаленого кола порепаної землі, 
-> де про­довжував хропіти синьопикий. (...) Я проліз крізь дірку в паркані й 
-> опинився на гамірній вулиці. Мало не потрапивши під колеса автобуса,
-
-> **Source:** zabolotnyi, Grade 6
-> **Section:** Сторінка 85
-> **Score:** 0.50
->
-> Запишіть, дотримуючись правил уживання великої букви та лапок. Йогурт (в)олошкове (п)оле, (с)пасо-(п)реображенський (с)обор 
-> (Чернігів), (д)омініканський (с)обор (Львів), (м)узей історії Ки-
-> єва, (к)омета (г)аллея, вебсайт (ш)коляр, (з)ахідне (п)оділля,
-> (д)ень (п)сихолога, автомобіль (т)есла, станція метро (п)окров-
-> ська, (ф)ранцузька (р)еспубліка, (г)алактика (с)пляча (к)расуня, 
-> вулиця (с)ічових (с)трільців, (к)ерченська (п)ротока. 225 
-> 226 
-> 227 
-> 228
-> 229
-> 230
-> 231
+# Педагогіка A1: This And That
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Голосні й приголосні звуки
-> **Source:** МійКлас — [Голосні й приголосні звуки](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864)
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
 
-### Теорія:
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
 
-*www.ua.pistacja.tv*  
-Що означають терміни «фонетика», «графіка», «орфоепія», «орфографія»
-Фонетика \(від. грец. phonetikos — звуковий\) — це розділ мовознавства, що вивчає звуки  мови.
- 
-Графіка \(від грец. grapho — пишу\) — це розділ мовознавства, що вивчає cукупність умовних знаків \(букв та символів\) для передачі звуків на письмі.
- 
-Орфоепія \(від грец. orthos — правильний,  epos — мова, мовлення\) — це розділ мовознавства, що вивчає правила літературної вимови.
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
 
-Орфографія \(від грец. orthos — правильний, grapho — пишу\) — це розділ мовознавства, що вивчає правила написання слів.
-Голосні та приголосні звуки
-Звук — найменша одиниця мови та мовлення.
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
 
-### Словосполучення
-> **Source:** МійКлас — [Словосполучення](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/slovospoluchennia-39535)
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
 
-### Теорія:
+## Послідовність введення (Introduction Sequence)
 
-*www.ua.pistacja.tv*  
-Словосполучення
-Словосполучення — це поєднання дв**ох і 
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
 
-... (truncated for context window)
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
+</wiki_context>
+
+## Plan References
+
+- 
+
 </knowledge_packet>
 
 ---
@@ -626,7 +660,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Екстрені ситуації (Emergencies)` (~300 words)
 - `## Допомога (Getting Help)` (~300 words)
 - `## Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -684,7 +717,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -783,42 +816,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Dialogues (~300 words total)
-- Dialogue 1 (~120 words): Emergency call to 112 — Адам witnesses a car accident on вулиця Хрещатик. Full exchange: оператор greets (Служба порятунку, слухаю вас) → Адам reports (Допоможіть! Тут аварія! Людина не рухається!) → оператор asks location (Де ви?) → Адам gives address (На вулиці Хрещатик, біля метро Майдан Незалежності) → оператор confirms (Швидка вже їде. Як вас звати?) → Адам gives name and phone number (Мене звати Адам. Мій номер — нуль дев'яносто три...) → оператор closes (Дякую. Залишайтеся на місці). Bold key emergency phrases.
-- Dialogue 2 (~120 words): Lost passport scenario — Адам asks a passerby for directions to the police station (Вибачте, де тут поліція? → Прямо і наліво). Then at the station: greeting, reports (Я загубив паспорт), officer asks where (Де ви його загубили? → Я не знаю. Може, в метро), officer collects personal info — прізвище (Сміт), номер телефону (нуль дев'яносто три...), ends with instruction to fill out a form (Заповніть цю форму, будь ласка). Bold words: загубив, прізвище, форма.
-- P3 (~60 words): Brief note after dialogues — what to observe: (1) emergency imperatives Допоможіть!/Викличте! open both calls; (2) location comes before name when talking to emergency services; (3) паспорт / форма / прізвище are key police vocabulary. Encourages re-reading both dialogues aloud.
+## Dialogues (~330 words total)
+- P1 (~40 words): Introduction to high-stress communication. Explain that in emergencies, Ukrainian shifts to short, direct functional chunks where clarity is more important than perfect grammar.
+- P2 (~120 words): Dialogue 1 — Calling 112. Adam calls from вулиця Хрещатик to report an аварія (car accident). Operator asks "Що сталося?" (What happened?) and "Де ви?" (Where are you?). Adam provides location: "біля метро Майдан Незалежності" and personal info: "Мене звати Адам. Мій номер — нуль дев'яносто три...".
+- P3 (~110 words): Dialogue 2 — Lost documents at the Поліція (Police). Adam asks for directions ("Вибачте, де тут поліція?") and reports his loss ("Я загубив паспорт"). The officer asks for his прізвище (surname) and number, then provides a форма (form) to fill out.
+- P4 (~60 words): Analysis of the communicative strategy used in both dialogues. Highlight the pattern: Alert ("Допоможіть!") -> Problem ("Тут аварія" / "Я загубив паспорт") -> Location ("Я на вулиці...") -> Personal Identity.
+- <!-- INJECT_ACTIVITY: dialogue-order --> [order, Put the dialogue with the 112 operator in the correct order, 6 items]
 
-## Екстрені ситуації (Emergencies) (~300 words total)
-- P1 (~80 words): Introduce 112 (один один два) as Ukraine's universal emergency number — works for ambulance, police, and fire brigade from any phone. Note that 103 reaches ambulance directly and 102 reaches police. Frame these as survival chunks the learner must memorise before their first trip to Ukraine. Emphasis: you don't need grammar — you need the phrase.
-- P2 (~100 words): Core emergency phrase set — present as a labelled chunk list with English glosses: Допоможіть! (Help!), Викличте швидку! (Call an ambulance!), Викличте поліцію! (Call the police!), Тут аварія! (There's an accident here!), Тут пожежа! (There's a fire here!), Людині погано! (Someone is feeling unwell!), Мені потрібна допомога! (I need help!). Note that Допоможіть and Викличте are imperatives reviewed from M43 — no new grammar, just new vocabulary.
-- P3 (~80 words): Giving your location to the operator — present as a mini-pattern drill: Я на вулиці... (I'm on … street), Я біля... (I'm near...), Я в метро... (I'm in the metro...), Адреса: вулиця Хрещатик, будинок десять. Cross-reference A1.5 prepositions (біля, навпроти, поруч). Tip: know your hotel address in Ukrainian — programme it into your phone before you travel.
-- Exercise (~40 words): **Quiz** — 5 items from activity_hints: choose the correct emergency phrase for the described situation (car crash → Тут аварія! Викличте швидку!; fire → Тут пожежа! Допоможіть!; person ill → Людині погано! Викличте швидку!; lost passport → Я загубив паспорт; stolen wallet → Викличте поліцію! Допоможіть!).
+## Екстрені ситуації (Emergencies) (~330 words total)
+- P1 (~70 words): Emergency Numbers in Ukraine. Explain the universal number 112 (один один два) and the specific services: 101 (пожежна), 102 (поліція), and 103 (швидка). Emphasize that these are non-negotiable memorization items.
+- P2 (~80 words): The Power of the Imperative. Teach the core survival calls: "Допоможіть!" (Help!) and "Викличте швидку!" (Call an ambulance!). Note that these use the plural/formal imperative (-іть) because you are usually addressing a stranger or a service operator.
+- P3 (~90 words): Identifying the Situation. Introduce specific labels for the problem: "Тут аварія!" (There is an accident!), "Тут пожежа!" (There is a fire!), and "Людині погано!" (Someone is feeling bad!). Explain "Мені потрібна допомога!" as a general need statement.
+- P4 (~90 words): Stating your Location. Teach the address formula: Вулиця -> Будинок -> Квартира. Use phrases like "Я на вулиці Шевченка," "Я біля метро," and "Адреса: будинок номер десять." Reinforce the use of prepositions "на" and "біля" from previous modules.
+- <!-- INJECT_ACTIVITY: phrase-choice-quiz --> [quiz, Choose the correct emergency phrase for the situation, 5 items]
+- <!-- INJECT_ACTIVITY: fill-in-emergency-call --> [fill-in, Complete the emergency phone call, 6 items]
 
-## Допомога (Getting Help) (~300 words total)
-- P1 (~90 words): At the hospital (лікарня) — three essential phrases: Мені потрібен лікар (I need a doctor — note мені потрібен as a fixed chunk, no grammar analysis), У мене болить... (My … hurts — vocabulary reviewed from M53: голова, спина, рука, нога), У мене алергія на... (I'm allergic to... — followed by the allergen in accusative: ці таблетки, горіхи, пеніцилін). Point out алергія is an international word learners already recognise.
-- P2 (~80 words): Communication help phrases for when Ukrainian is too fast or too complex: Я не розумію (I don't understand), Повторіть, будь ласка (Please repeat — imperative from M43), Говоріть повільніше, будь ласка (Please speak more slowly), Ви говорите англійською? (Do you speak English?). Frame these as your "emergency brake" — use them immediately rather than nodding and hoping.
-- P3 (~90 words): Personal information checklist for emergencies — present as a table-like bulleted list with examples: Мене звати Адам (name), Моє прізвище — Сміт (surname), Мій номер телефону — нуль дев'яносто три... (phone), Я з Канади / Великої Британії (country of origin), Мій паспорт / Я загубив паспорт (document), Мій готель — «Прем'єр Палас» (hotel). Note all items reviewed from M02, M10, M20 — applied here to a critical real-life situation.
-- Exercise 1 (~20 words label): **Fill-in** — 6 items: complete the emergency phone call (Алло! {Допоможіть}! Тут аварія! / {Викличте} швидку допомогу! / Я на {вулиці} Хрещатик / Мене {звати} Адам / Мій номер {телефону} — нуль дев'яносто три / Мені потрібна {допомога}!).
-- Exercise 2 (~20 words label): **Order** — put 6 lines of a 112 dialogue in correct sequence (Служба порятунку → Допоможіть! Тут пожежа! → Де ви? → На вулиці Шевченка, будинок п'ять → Зрозуміло. Як вас звати? → Мене звати Анна. Дякую!).
+## Допомога (Getting Help) (~330 words total)
+- P1 (~100 words): Medical Assistance. Teach "Мені потрібен лікар" (I need a doctor). Re-introduce the structure "У мене болить..." (My ... hurts) from M53 with key body parts: голова (head), живіт (stomach), горло (throat). Explain that "Мені погано" is the general way to say you feel ill.
+- P2 (~80 words): Pharmacy and Precautions. Phrases for the pharmacy: "Дайте, будь ласка, таблетки" and the critical safety phrase "У мене алергія на..." (I have an allergy to...). Contrast this with "Мені потрібні ліки" (I need medicine).
+- P3 (~90 words): Personal Data for Officials. How to provide identification: "Моє прізвище — Сміт," "Я з Америки/Канади," and "Мій паспорт у готелі." Explain the difference between ім'я (first name) and прізвище (surname) in a bureaucratic context.
+- P4 (~60 words): Overcoming the Language Barrier. Essential phrases for when you don't understand: "Я не розумію," "Повторіть, будь ласка" (Please repeat), and "Ви говорите англійською?" (Do you speak English?).
+- <!-- INJECT_ACTIVITY: report-issue-fill-in --> [fill-in, Reporting an issue at the police station or hospital, 5 items]
 
-## Summary (~300 words total)
-- P1 (~60 words): Brief recap paragraph — ties together the three scenarios practised: calling 112 for an accident or fire, going to the поліція for a lost document, visiting the лікарня for a health issue. Reminds learner that the same personal information block (ім'я, прізвище, номер телефону, адреса) is needed in all three situations.
-- P2 (~80 words): Emergency survival kit — formatted as a clearly labelled reference block:
-  - **112** — universal emergency number (один один два)
-  - **Допоможіть! Викличте швидку / поліцію!** — first words to say
-  - **Тут аварія / пожежа!** — describe the emergency
-  - **Я на вулиці... / Я біля...** — give your location
-  - **У мене болить... / Мені потрібен лікар.** — at the hospital
-  - **Я загубив/загубила [document].** — at the police station
-  - **Ім'я, прізвище, номер телефону, країна, адреса** — personal info always needed
-- P3 — Self-check (~80 words): Bulleted Q&A practice prompts (as specified in plan):
-  - What is Ukraine's universal emergency number? → 112 (один один два)
-  - How do you shout "Help!" in Ukrainian? → Допоможіть!
-  - How do you call an ambulance? → Викличте швидку!
-  - How do you give your street address? → Я на вулиці [name], будинок [number].
-  - How do you say "I lost my passport"? → Я загубив/загубила паспорт.
-  - How do you ask a doctor to repeat something? → Повторіть, будь ласка.
-- Exercise (~80 words label): **Fill-in** — 5 items for police station / hospital scenario: Добрий день. Я {загубив} паспорт / Моє {прізвище} — Сміт / Мені {потрібен} лікар / У мене {алергія} на ці таблетки / Я не розумію. {Повторіть}, будь ласка.
+## Підсумок (~330 words total)
+- P1 (~80 words): Emergency Survival Recap. 112 is your main tool. Use "Допоможіть!" and "Викличте швидку!" immediately. Remember that speed and clarity in Ukrainian "chunks" beat perfect case endings in these moments.
+- P2 (~70 words): Location Recap. Always state the Street (вулиця) and Building (будинок). If you are outside, use landmarks: "біля метро," "навпроти готелю."
+- P3 (~60 words): Medical/Personal Recap. Use "У мене болить..." for pain and "Я загубив..." for lost items. Keep your прізвище and номер телефону ready.
+- P4 (~120 words): Self-check:
+    - Can you call 112 and state there is an accident? (Тут аварія!)
+    - Can you give your current address including street and building? (Вулиця..., будинок...)
+    - Can you tell a doctor what hurts? (У мене болить...)
+    - Can you report a lost passport to the police? (Я загубив паспорт. Моє прізвище...)
+    - Do you know the difference between 101, 102, and 103?
 
 Grand total: ~1320 words
 </skeleton>

@@ -41,32 +41,8 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: чита́ти
-  translation: to read
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
 - word: писа́ти
   translation: to write
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: слу́хати
-  translation: to listen
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: диви́тися
-  translation: to look/watch
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: говори́ти
-  translation: to speak
   expression: false
   pos: дієсл.
   gender: ''
@@ -89,80 +65,56 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: вчи́телька
-  translation: teacher (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: у́чень
-  translation: pupil/student (male)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: учени́ця
-  translation: pupil/student (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: словни́к
-  translation: dictionary
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сло́во
-  translation: word
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: наказо́вий спо́сіб
-  translation: imperative mood
-  expression: false
+- word: Добрий ранок!
+  translation: Good morning!
+  expression: true
   pos: ''
   gender: ''
-  verified: false
-- word: пого́да
-  translation: weather
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
-- word: мі́сце
-  translation: place/spot
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: меню́
-  translation: menu
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ка́ва
-  translation: coffee
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ті́стечко
-  translation: pastry/small cake
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: офіціа́нт
-  translation: waiter
+- word: текст
+  translation: text
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: ходи́ти
-  translation: to walk/go (habitual)
+- word: двадцять три
+  translation: twenty-three
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пита́ння
+  translation: question
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кафе́
+  translation: café
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: га́рна
+  translation: beautiful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: м'яч
+  translation: ball
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: две́рі
+  translation: doors
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: сиді́ти
+  translation: to sit
   expression: false
   pos: дієсл.
   gender: ''
@@ -173,219 +125,8 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: ї́сти
-  translation: to eat
-  expression: false
+- word: покла́сти
+  translation: to put/lay
   pos: дієсл.
-  gender: ''
-  verified: true
-- word: взя́ти
-  translation: to take
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: чита́й
-  translation: read! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: чита́йте
-  translation: read! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пиши́
-  translation: write! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пиші́ть
-  translation: write! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: слу́хай
-  translation: listen! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: слу́хайте
-  translation: listen! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: диви́сь
-  translation: look! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: диві́ться
-  translation: look! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: го́вори
-  translation: speak! (ти-form)
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: говорі́ть
-  translation: speak! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: іди́
-  translation: go! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: іді́ть
-  translation: go! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: дай
-  translation: give! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: да́йте
-  translation: give! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: скажи́
-  translation: say/tell! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: скажі́ть
-  translation: say/tell! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: сядь
-  translation: sit down! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ся́дьте
-  translation: sit down! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: відкри́й
-  translation: open! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: відкри́йте
-  translation: open! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: їж
-  translation: eat! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ї́жте
-  translation: eat! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: візьми́
-  translation: take! (ти-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: візьмі́ть
-  translation: take! (ви-form)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ходімо
-  translation: let's go!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: підемо
-  translation: let's go! (alternative)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Скажіть, будь ласка...
-  translation: Excuse me, could you tell me...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дайте, будь ласка...
-  translation: Could you give me...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Покажіть, будь ласка...
-  translation: Could you show me...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Можна запитати?
-  translation: May I ask a question?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Що означає це слово?
-  translation: What does this word mean?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: зупи́нка
-  translation: bus stop
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ти́хо
-  translation: quietly
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: за́раз
-  translation: right now/coming
-  expression: false
-  pos: присл.
   gender: ''
   verified: true

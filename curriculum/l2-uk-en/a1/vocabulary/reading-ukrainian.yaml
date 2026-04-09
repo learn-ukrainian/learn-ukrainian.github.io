@@ -48,7 +48,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: столи́ця
-  translation: capital (city)
+  translation: capital
   expression: false
   pos: ім.
   gender: ж.
@@ -64,6 +64,42 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: Що там?
+  translation: What is there?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Хто там?
+  translation: Who is there?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де аптека?
+  translation: Where is the pharmacy?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякую!
+  translation: Thank you!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це все?
+  translation: Is this all?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Так, це все!
+  translation: Yes, this is all!
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: ма́ма
   translation: mother
@@ -83,20 +119,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: апте́ка
-  translation: pharmacy
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: рука́
-  translation: hand
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ве́чір
-  translation: evening
+- word: кіт
+  translation: cat
   expression: false
   pos: ім.
   gender: ч.
@@ -107,8 +131,14 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: кіт
-  translation: cat
+- word: дим
+  translation: smoke
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: єно́т
+  translation: raccoon
   expression: false
   pos: ім.
   gender: ч.
@@ -119,44 +149,20 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: краї́на
-  translation: country
+- word: Украї́на
+  translation: Ukraine
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: дим
-  translation: smoke
+- word: апте́ка
+  translation: pharmacy
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
 - word: кни́га
   translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вода́
-  translation: water
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ха́та
-  translation: house, cottage
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: коза́
-  translation: goat
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: шко́ла
-  translation: school
   expression: false
   pos: ім.
   gender: ж.
@@ -179,59 +185,23 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: що
-  translation: what
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: ще
-  translation: still, more, yet
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: день
-  translation: day
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кінь
-  translation: horse
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сім'я́
-  translation: family
+- word: вода́
+  translation: water
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: м'я́со
-  translation: meat
+- word: рука́
+  translation: hand
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: п'ять
-  translation: five
+- word: ха́та
+  translation: house
   expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: моя́
-  translation: my (feminine)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: так
-  translation: 'yes'
-  expression: false
-  pos: присл.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
 - word: Ки́їв
   translation: Kyiv
@@ -239,6 +209,12 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
+- word: Львів
+  translation: Lviv
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
 - word: Оде́са
   translation: Odesa
   expression: false
@@ -263,38 +239,86 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
-- word: склади
-  translation: syllables
+- word: що
+  translation: what
   expression: false
-  pos: ім.
+  pos: спол.
   gender: ''
   verified: true
-- word: голосні́
-  translation: vowels
+- word: ще
+  translation: more
   expression: false
-  pos: прикм.
+  pos: присл.
   gender: ''
   verified: true
-- word: складопо́діл
-  translation: syllable division
+- word: день
+  translation: day
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: м'який знак
-  translation: soft sign (the letter Ь)
+- word: сіль
+  translation: salt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кінь
+  translation: horse
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: м'я́со
+  translation: meat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сім'я́
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: п'ять
+  translation: five
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: Тут каша.
+  translation: Porridge is here.
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: звуковий аналіз слова
-  translation: sound analysis of a word
+- word: А там молоко.
+  translation: And milk is there.
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: столиця України
-  translation: capital of Ukraine
+- word: Там кіт.
+  translation: A cat is there.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ні, це не кіт.
+  translation: No, this is not a cat.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Аптека там.
+  translation: The pharmacy is there.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Київ — столиця України
+  translation: Kyiv is the capital of Ukraine
   expression: true
   pos: ''
   gender: ''

@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,8 +27,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-hobby-verbs -->`
-- `<!-- INJECT_ACTIVITY: fill-in-prepositions -->`
+- `<!-- INJECT_ACTIVITY: fill-in-invitations -->`
+- `<!-- INJECT_ACTIVITY: match-up-hobbies -->`
+- `<!-- INJECT_ACTIVITY: preposition-check -->`
 - `<!-- INJECT_ACTIVITY: fill-in-frequency -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -103,160 +104,96 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги — Розкажи про плани
 
-Вітя and Лєна are standing by a bulletin board at the community center, scanning sign-up sheets for weekend activities. Their conversation covers everything this module teaches — invitations, hobbies, and how often they do things.
+When you want to know what someone is doing in their **вільний час** (free time), the most natural approach is to ask about their upcoming weekend. By starting a conversation with **Що ти робиш у вихідні?** (What are you doing this weekend?), you can gauge their availability before suggesting an activity. This is the perfect way to begin a discussion about plans, hobbies, and how people prefer to spend their time outside of work or study.
 
-### Діалог 1 — Weekend Plans
+> **Вітя:** Привіт, Оленко! Що ти робиш у вихідні? *(Hi, Olenka! What are you doing this weekend?)*
+> **Оленка:** Привіт! Зазвичай я гуляю і читаю. *(Hi! Usually I walk and read.)*
+> **Вітя:** Ходімо в кіно в суботу! *(Let's go to the cinema on Saturday!)*
+> **Оленка:** Добре! О котрій годині? *(Okay! At what time?)*
+> **Вітя:** О п'ятій. *(At five.)*
+> **Оленка:** Чудово! До зустрічі! *(Great! See you!)*
 
-> **Лєна:** Привіт, Вітю! Що ти робиш у вихідні? *(Hi, Vitya! What are you doing on the weekend?)*
-> **Вітя:** Привіт! Зазвичай я гуляю і читаю. *(Hi! Usually I walk and read.)*
-> **Лєна:** А в суботу? Ходімо в кіно! *(And on Saturday? Let's go to the cinema!)*
-> **Вітя:** О, добре! О котрій? *(Oh, great! At what time?)*
-> **Лєна:** О п'ятій. *(At five.)*
-> **Вітя:** Чудово! А потім — гуляємо? *(Wonderful! And then — we walk?)*
-> **Лєна:** Так, звичайно! *(Yes, of course!)*
-
-Notice how Лєна uses **Ходімо!** (Let's go!) to invite Вітя. This is the natural Ukrainian invitation — **Ходімо** + activity + day + time. She names the activity (**в кіно**), the day is already clear (**в суботу**), and when Вітя asks **О котрій?** (At what time?), she gives a time from M25: **О п'ятій** (At five).
-
-### Діалог 2 — Hobbies and Frequency
+:::tip Invitation Patterns
+When you want to invite someone to join you, use the imperative phrase **Ходімо!** (Let's go!). You might also hear native speakers use **Давай!** (Let's!), which is a very common informal and conversational alternative. However, **Ходімо!** is the standard, grammatically correct form to prioritize when suggesting a shared activity. 
+:::
 
 > **Вітя:** Ти любиш спорт? *(Do you like sports?)*
-> **Лєна:** Так, я граю у футбол. *(Yes, I play football.)*
-> **Вітя:** Справді? Як часто? *(Really? How often?)*
-> **Лєна:** Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*
-> **Вітя:** А ще? Що ти робиш? *(And what else? What do you do?)*
-> **Лєна:** Іноді слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
-> **Вітя:** Я теж малюю! А в музей ходиш? *(I draw too! Do you go to the museum?)*
-> **Лєна:** Рідко. Раз на місяць. *(Rarely. Once a month.)*
+> **Оленка:** Так, я граю у футбол. *(Yes, I play football.)*
+> **Вітя:** Як часто? *(How often?)*
+> **Оленка:** Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*
+> **Вітя:** А ще що ти робиш? *(And what else do you do?)*
+> **Оленка:** Іноді слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
 
-The key question here is **Як часто?** (How often?) — it opens the door to frequency adverbs like **іноді** (sometimes) and **рідко** (rarely), plus numeric expressions like **двічі на тиждень** (twice a week). Лєна answers naturally, combining hobby verbs with how often she does each one.
+<!-- INJECT_ACTIVITY: fill-in-invitations -->
 
-:::tip
-Two communicative tools from these dialogues: **Ходімо!** (Let's go!) for invitations, and **Як часто?** (How often?) for asking about frequency. Both appear naturally in conversation before any formal explanation — you already understand them from context.
+## Хобі і спорт — Що ти любиш?
+
+The simplest and most direct way to talk about your interests is to use the verb **любити** (to love/like) followed by an infinitive verb. This structure allows you to express your preferences without needing complex grammar rules. For example, if your hobby is reading, you simply combine the two verbs. Here are some common examples of activities you might enjoy:
+* **читати книги** (to read books)
+* **малювати вдома** (to draw at home)
+* **фотографувати** (to take photos)
+* **готувати** (to cook)
+
+When talking about sports and games, Ukrainian uses the verb **грати** (to play) with the preposition **у** (or **в**). This specific combination is required for any competitive sport or structured game. Remember that the preposition you choose depends on the first letter of the next word to maintain a smooth flow of sound. 
+* **грати у футбол** (to play football)
+* **грати у баскетбол** (to play basketball)
+* **грати у теніс** (to play tennis)
+* **грати у комп'ютерні ігри** (to play computer games)
+
+In contrast to sports, playing a musical instrument uses a completely different pattern. You still use the verb **грати**, but you must combine it with the preposition **на** (on) followed by the instrument. This is a fixed chunk of language that you should memorize as a single unit. It literally translates to "playing on" the instrument.
+* **грати на гітарі** (to play guitar)
+* **грати на піаніно** (to play piano)
+* **грати на скрипці** (to play violin)
+
+For places of entertainment, we use the verb **ходити** (to go habitually) to describe visiting them regularly. Just like with sports and instruments, different venues require different prepositions. We use the chunk **ходити в** for most buildings and physical structures, such as **ходити в кіно** (to go to the cinema), **ходити в театр** (to go to the theater), or **ходити в музей** (to go to a museum). However, for events and performances, we use the chunk **ходити на**. You would say **ходити на концерт** (to go to a concert) or **ходити на футбол** (to go to a football match).
+
+<!-- INJECT_ACTIVITY: match-up-hobbies -->
+<!-- INJECT_ACTIVITY: preposition-check -->
+
+## Як часто? — Прислівники частоти
+
+To describe how regularly you participate in your hobbies, you need adverbs of frequency. The most common positive frequency adverbs are **завжди** (always), **зазвичай** (usually), **часто** (often), and **іноді** or **інколи** (sometimes). In a Ukrainian sentence, these adverbs typically sit right before the main verb. This placement highlights the frequency of the action you are describing.
+* **Я часто гуляю в парку.** (I often walk in the park.)
+* **Ми зазвичай читаємо ввечері.** (We usually read in the evening.)
+* **Вона іноді фотографує місто.** (She sometimes photographs the city.)
+
+When expressing negative frequency, we use words like **рідко** (rarely) and **ніколи** (never). There is a critical grammatical rule regarding the word **ніколи**: it requires a double negation. This means it must always be followed by the particle **не** (not) and the main verb. The word **рідко**, on the other hand, stands alone and does not take a negative particle.
+* **Я ніколи не граю у футбол.** (I never play football.)
+* **Він ніколи не читає журнали.** (He never reads magazines.)
+* **Ми рідко ходимо в кіно.** (We rarely go to the cinema.)
+
+:::note Double Negation
+In English, double negatives are considered incorrect grammar. In Ukrainian, they are absolutely mandatory when using negative adverbs like **ніколи**. You must say "I never not do something" for the sentence to make sense.
 :::
 
-## Хобі і спорт (Hobbies and Sports)
+If you want to be more specific about your schedule, you can use numbers with the phrase **на тиждень** (per week) or **на місяць** (per month). These fixed expressions indicate exactly how many times an action occurs within a given timeframe. Another highly useful and common alternative is **кожен день** (every day), which serves as a more literal substitute for **завжди**.
+* **раз на тиждень** (once a week)
+* **двічі на тиждень** (twice a week)
+* **тричі на тиждень** (three times a week)
 
-In M15, you learned the pattern **Я люблю** + infinitive (I like to...). Now we expand that with specific hobby verbs. Each verb naturally pairs with a noun — learn them as chunks, not separate words:
-
-- **малювати** (to draw) — Я люблю малювати.
-- **фотографувати** (to take photos) — Вона любить фотографувати.
-- **слухати музику** (to listen to music) — Він слухає музику.
-- **дивитися фільми** (to watch films) — Ми дивимося фільми.
-- **дивитися серіали** (to watch series) — Вони дивляться серіали.
-
-These verbs and their objects belong together. When you say **слухати**, the next word is almost always **музику**. When you say **дивитися**, you expect **фільми** or **серіали**. Think of them as a single unit.
-
-Ukrainian has two different prepositions for **грати** (to play), depending on what you play. For sports, use **у**. For instruments, use **на**:
-
-- **грати у футбол** (to play football)
-- **грати у баскетбол** (to play basketball)
-- **грати у теніс** (to play tennis)
-- **грати у волейбол** (to play volleyball)
-- **грати на гітарі** (to play guitar)
-- **грати на піаніно** (to play piano)
-- **грати на скрипці** (to play violin)
-
-:::caution
-Don't choose the preposition — learn the whole phrase. Sport → **у**, instrument → **на**. If you memorize **грати у футбол** and **грати на гітарі** as complete chunks, you'll never mix them up.
-:::
-
-<!-- INJECT_ACTIVITY: match-hobby-verbs -->
-
-Going out for entertainment also follows a chunk pattern: **ходити** + **в** or **на** + destination. Memorize these as fixed phrases:
-
-- **ходити в кіно** (to go to the cinema) — Я ходжу в кіно.
-- **ходити в театр** (to go to the theater) — Він ходить в театр.
-- **ходити на концерт** (to go to a concert) — Вона ходить на концерт.
-- **ходити в музей** (to go to a museum) — Ми ходимо в музей.
-
-The case grammar behind **в** and **на** comes later in A1.5 — for now, memorize these as full phrases. You already know the destinations; just attach **ходити** to the front.
-
-Now combine several chunks to describe a range of hobbies. Try reading these aloud:
-
-- Я граю у баскетбол і слухаю музику.
-- Вона грає на гітарі і малює.
-- Вони ходять в театр і дивляться фільми.
-
-Your turn: pick two or three of your own hobbies and describe them using the same structures. Use **Я люблю** + infinitive, or just the verb + object.
-
-<!-- INJECT_ACTIVITY: fill-in-prepositions -->
-
-## Як часто? (How Often?)
-
-Ukrainian has six core frequency adverbs. Think of them on a scale from "always" to "never":
-
-**завжди** (always) → **зазвичай** (usually) → **часто** (often) → **іноді** (sometimes) → **рідко** (rarely) → **ніколи** (never)
-
-Each one in a sentence:
-
-- Я **завжди** снідаю. *(I always eat breakfast.)*
-- Вона **зазвичай** читає ввечері. *(She usually reads in the evening.)*
-- Він **часто** грає у теніс. *(He often plays tennis.)*
-- Ми **іноді** ходимо в кіно. *(We sometimes go to the cinema.)*
-- Вона **рідко** дивиться серіали. *(She rarely watches series.)*
-- Він **ніколи не** грає у футбол. *(He never plays football.)*
-
-A note on **іноді**: you may also hear **інколи**, which means the same thing. Use **іноді** as your main word — it's more common at this level.
-
-Word order is straightforward: the frequency adverb goes **before the verb** in a neutral statement. **Я часто гуляю.** **Він іноді малює.** One special rule: **ніколи** always requires **не** directly before the verb. This is Ukrainian double negation — you saw it in M19. The two words are inseparable:
-
-- Я **ніколи не** працюю у неділю. *(I never work on Sunday.)*
-- Він **ніколи не** ходить у театр. *(He never goes to the theater.)*
-
-:::note
-**Ніколи** + **не** = always together. Dropping **не** sounds incomplete in Ukrainian, even though English uses only "never."
-:::
+You can synthesize all of these elements by combining the days of the week with your frequency adverbs and activity verbs. This allows you to describe a complete, detailed routine in a single sentence.
+* **У понеділок я завжди займаюся спортом.** (On Monday I always practice sports.)
+* **У п'ятницю ми часто ходимо в театр.** (On Friday we often go to the theater.)
 
 <!-- INJECT_ACTIVITY: fill-in-frequency -->
 
-Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These go **after the verb** — the opposite position from single-word adverbs:
-
-- **раз на тиждень** (once a week)
-- **двічі на тиждень** (twice a week)
-- **тричі на тиждень** (three times a week)
-- **кожен день** (every day)
-- **раз на місяць** (once a month)
-
-In full sentences:
-
-- Я граю у футбол **двічі на тиждень**. *(I play football twice a week.)*
-- Вона ходить у кіно **раз на місяць**. *(She goes to the cinema once a month.)*
-- Він малює **кожен день**. *(He draws every day.)*
-- Ми граємо у волейбол **тричі на тиждень**. *(We play volleyball three times a week.)*
-
-You can even combine both types — an adverb before the verb and a numeric expression after it:
-
-- Я **часто** граю у теніс — **двічі або тричі на тиждень**. *(I often play tennis — two or three times a week.)*
-- Вона **рідко** ходить у театр — **раз на місяць**. *(She rarely goes to the theater — once a month.)*
-
-Try it yourself: pick two of your hobbies and add a frequency to each — one single-word adverb and one numeric expression. This combination is exactly what you'll need for the A1.4 checkpoint.
-
 ## Підсумок — Summary
 
-This module gave you three building blocks for talking about free time:
+You now possess the essential tools to discuss your free time, hobbies, and weekend plans in Ukrainian. You have learned how to use **любити** with an infinitive verb to express your general interests, and you have mastered the crucial difference between the phrases **грати у** for competitive sports and **грати на** for musical instruments. You also know how to invite a friend to an event using the standard imperative **Ходімо!**, and how to specify whether you are going into a building with **ходити в** or attending an event with **ходити на**. Finally, you can accurately describe the frequency of your activities using adverbs like **часто** and **ніколи**, remembering the vital rule of double negation for the latter.
 
-1. **Hobby verbs** — **Я люблю** + infinitive, **грати у** + sport, **грати на** + instrument, **ходити в/на** + destination. All learned as chunks — verb and object together.
-2. **Invitation patterns** — **Ходімо!** (Let's go!) + activity + time + day. This is the native Ukrainian way to invite someone, using the 1st person plural imperative. Combine with days from M24 and times from M25 for a complete invitation.
-3. **Frequency scale** — **завжди, зазвичай, часто, іноді, рідко, ніколи** before the verb. Numeric expressions (**двічі на тиждень, раз на місяць**) after the verb. Double negation with **ніколи не**.
+Use the following self-check questions to verify that you can confidently apply these new communication skills. Read the question, formulate your own answer, and then compare it to the provided model response.
+* **Що ви любите робити у вільний час?** (What do you like to do in your free time?)
+  * Model answer: **Я люблю читати і ходити в кіно.** (I like to read and go to the cinema.)
+* **Як часто ви граєте у футбол?** (How often do you play football?)
+  * Model answer: **Я граю у футбол двічі на тиждень.** (I play football twice a week.)
+* **Ви граєте на піаніно?** (Do you play the piano?)
+  * Model answer: **Ні, я ніколи не граю на піаніно, але я слухаю музику.** (No, I never play the piano, but I listen to music.)
+* **Як запросити друга в театр?** (How to invite a friend to the theater?)
+  * Model answer: **Ходімо в театр у суботу!** (Let's go to the theater on Saturday!)
 
-### Self-Check
-
-Test yourself — answer each question aloud in Ukrainian:
-
-- How do you say "let's go to the cinema"? → **Ходімо в кіно!**
-- What is your hobby? → **Я граю у футбол.** / **Я люблю малювати.** / **Я слухаю музику.**
-- How often do you play tennis? → **Двічі на тиждень.** / **Іноді.** / **Рідко.**
-- Do you always watch series? → **Так, я завжди дивлюся.** / **Ні, я ніколи не дивлюся.**
-- What do you do on the weekend? → **Я зазвичай гуляю і читаю.**
-- Does he play piano or football? → **Він грає на піаніно.**
-
-If you answered four or more, you're ready for M27.
-
-All four A1.4 skills now come together: time expressions from M25, days of the week from M24, weather from M23, and now free-time activities with frequency. At the checkpoint (M27), you'll describe a full day from **ранок** (morning) to **вечір** (evening) — including the weather, your plans, and how often you do your activities. The invitation and frequency patterns from this module are essential building blocks for that final A1.4 task.
-
-**Ти вже вмієш говорити про хобі, запрошувати друзів і пояснювати, як часто ти щось робиш. Це — справжня розмова!** *(You can already talk about hobbies, invite friends, and explain how often you do things. That's real conversation!)*
+By combining your knowledge of time, weather, days of the week, and now free time activities, you can easily describe your perfect weekend routine. This comprehensive foundation prepares you to review all of these interconnected concepts in the upcoming Checkpoint module, where your ability to communicate about daily life will be put to the test.
 
 </module_content>
 
@@ -346,30 +283,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -389,29 +366,63 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: grammar-pluralization [§4.2.1.1]
+**Множина іменників** (Noun plurals)
+- **fill-in** — Утвори множину: Утворити множину іменника — закінчення -и vs -і залежно від приголосного / Form noun plural — -и vs -і endings depending on consonant
+  - Instruction: *Напишіть множину*
+- **group-sort** — Закінчення -и чи -і?: Розподілити іменники за типом закінчення множини / Sort nouns by plural ending type
+  - Instruction: *Розподіліть*
+- **match-up** — Однина → множина: Зіставити форму однини з формою множини / Match singular form to plural form
+  - Instruction: *З'єднайте*
+- **error-correction** — Виправ множину: Знайти неправильну форму множини та виправити / Find incorrect plural form and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ quiz-only: Множина — це словотворення. Учні мають продукувати форми, а не тільки вибирати
+- ❌ fill-in-no-options: На A1 завжди давати варіанти — учень ще не знає всіх закінчень
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -443,68 +454,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

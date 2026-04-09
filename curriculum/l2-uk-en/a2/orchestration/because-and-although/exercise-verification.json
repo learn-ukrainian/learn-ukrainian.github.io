@@ -1,0 +1,446 @@
+{
+  "total_items": 209,
+  "grounded_items": 137,
+  "ungrounded": [
+    {
+      "word": "залишаюся",
+      "exercise_type": "quiz",
+      "context": "Я залишаюся вдома, _____ надворі сильний дощ.",
+      "role": "context"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "quiz",
+      "context": "Він багато працює, _____ хоче купити новий комп'ютер.",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютер",
+      "exercise_type": "match-up",
+      "context": "Петро купив новий комп'ютер,",
+      "role": "answer"
+    },
+    {
+      "word": "склала",
+      "exercise_type": "quiz",
+      "context": "Вона успішно склала тест, _____ добре підготувалася.",
+      "role": "context"
+    },
+    {
+      "word": "тест",
+      "exercise_type": "quiz",
+      "context": "Вона успішно склала тест, _____ добре підготувалася.",
+      "role": "context"
+    },
+    {
+      "word": "підготувалася",
+      "exercise_type": "quiz",
+      "context": "Вона успішно склала тест, _____ добре підготувалася.",
+      "role": "context"
+    },
+    {
+      "word": "холодно",
+      "exercise_type": "quiz",
+      "context": "_____ було холодно, діти гралися в парку.",
+      "role": "context"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "quiz",
+      "context": "_____ було холодно, діти гралися в парку.",
+      "role": "context"
+    },
+    {
+      "word": "гралися",
+      "exercise_type": "quiz",
+      "context": "_____ було холодно, діти гралися в парку.",
+      "role": "context"
+    },
+    {
+      "word": "парку",
+      "exercise_type": "quiz",
+      "context": "_____ було холодно, діти гралися в парку.",
+      "role": "context"
+    },
+    {
+      "word": "почалася",
+      "exercise_type": "quiz",
+      "context": "Ми не пішли гуляти, _____ почалася гроза.",
+      "role": "context"
+    },
+    {
+      "word": "гроза",
+      "exercise_type": "quiz",
+      "context": "Ми не пішли гуляти, _____ почалася гроза.",
+      "role": "context"
+    },
+    {
+      "word": "пішов",
+      "exercise_type": "fill-in",
+      "context": "пішов сильний дощ",
+      "role": "answer"
+    },
+    {
+      "word": "залишилися",
+      "exercise_type": "fill-in",
+      "context": "Ми залишилися вдома, тому що _____.",
+      "role": "context"
+    },
+    {
+      "word": "почула",
+      "exercise_type": "fill-in",
+      "context": "не почула будильник",
+      "role": "answer"
+    },
+    {
+      "word": "будильник",
+      "exercise_type": "fill-in",
+      "context": "не почула будильник",
+      "role": "answer"
+    },
+    {
+      "word": "запізнилася",
+      "exercise_type": "fill-in",
+      "context": "Олена запізнилася на пару, бо _____.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "fill-in",
+      "context": "у мене болить горло",
+      "role": "answer"
+    },
+    {
+      "word": "болить",
+      "exercise_type": "fill-in",
+      "context": "у мене болить горло",
+      "role": "answer"
+    },
+    {
+      "word": "горло",
+      "exercise_type": "fill-in",
+      "context": "у мене болить горло",
+      "role": "answer"
+    },
+    {
+      "word": "п'ю",
+      "exercise_type": "match-up",
+      "context": "Я п'ю міцну каву,",
+      "role": "answer"
+    },
+    {
+      "word": "старий",
+      "exercise_type": "fill-in",
+      "context": "старий телефон зламався",
+      "role": "answer"
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "fill-in",
+      "context": "старий телефон зламався",
+      "role": "answer"
+    },
+    {
+      "word": "зламався",
+      "exercise_type": "fill-in",
+      "context": "старий телефон зламався",
+      "role": "answer"
+    },
+    {
+      "word": "починаються",
+      "exercise_type": "fill-in",
+      "context": "завтра починаються канікули",
+      "role": "answer"
+    },
+    {
+      "word": "канікули",
+      "exercise_type": "fill-in",
+      "context": "завтра починаються канікули",
+      "role": "answer"
+    },
+    {
+      "word": "щасливі",
+      "exercise_type": "fill-in",
+      "context": "Діти дуже щасливі, бо _____.",
+      "role": "context"
+    },
+    {
+      "word": "можу",
+      "exercise_type": "fill-in",
+      "context": "Я не можу вам допомогти, тому що _____.",
+      "role": "context"
+    },
+    {
+      "word": "допомогти",
+      "exercise_type": "fill-in",
+      "context": "Я не можу вам допомогти, тому що _____.",
+      "role": "context"
+    },
+    {
+      "word": "поїхати",
+      "exercise_type": "fill-in",
+      "context": "хочемо поїхати в Карпати",
+      "role": "answer"
+    },
+    {
+      "word": "карпати",
+      "exercise_type": "fill-in",
+      "context": "хочемо поїхати в Карпати",
+      "role": "answer"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "fill-in",
+      "context": "Ми купили квитки на поїзд, бо _____.",
+      "role": "context"
+    },
+    {
+      "word": "квитки",
+      "exercise_type": "fill-in",
+      "context": "Ми купили квитки на поїзд, бо _____.",
+      "role": "context"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "fill-in",
+      "context": "Ми купили квитки на поїзд, бо _____.",
+      "role": "context"
+    },
+    {
+      "word": "почався",
+      "exercise_type": "match-up",
+      "context": "тому що почався сильний дощ.",
+      "role": "context"
+    },
+    {
+      "word": "завдання",
+      "exercise_type": "match-up",
+      "context": "Хоча завдання було складним,",
+      "role": "answer"
+    },
+    {
+      "word": "складним",
+      "exercise_type": "match-up",
+      "context": "Хоча завдання було складним,",
+      "role": "answer"
+    },
+    {
+      "word": "виконали",
+      "exercise_type": "match-up",
+      "context": "студенти успішно його виконали.",
+      "role": "context"
+    },
+    {
+      "word": "ношу",
+      "exercise_type": "match-up",
+      "context": "я все ще ношу зимову куртку.",
+      "role": "context"
+    },
+    {
+      "word": "зимову",
+      "exercise_type": "match-up",
+      "context": "я все ще ношу зимову куртку.",
+      "role": "context"
+    },
+    {
+      "word": "куртку",
+      "exercise_type": "match-up",
+      "context": "я все ще ношу зимову куртку.",
+      "role": "context"
+    },
+    {
+      "word": "міцну",
+      "exercise_type": "match-up",
+      "context": "Я п'ю міцну каву,",
+      "role": "answer"
+    },
+    {
+      "word": "каву",
+      "exercise_type": "match-up",
+      "context": "Я п'ю міцну каву,",
+      "role": "answer"
+    },
+    {
+      "word": "чекали",
+      "exercise_type": "match-up",
+      "context": "Хоча ми довго чекали,",
+      "role": "answer"
+    },
+    {
+      "word": "автобус",
+      "exercise_type": "match-up",
+      "context": "автобус так і не приїхав.",
+      "role": "context"
+    },
+    {
+      "word": "приїхав",
+      "exercise_type": "match-up",
+      "context": "автобус так і не приїхав.",
+      "role": "context"
+    },
+    {
+      "word": "їй",
+      "exercise_type": "unjumble",
+      "context": "їй",
+      "role": "answer"
+    },
+    {
+      "word": "працювали",
+      "exercise_type": "unjumble",
+      "context": "працювали,",
+      "role": "answer"
+    },
+    {
+      "word": "встигли",
+      "exercise_type": "unjumble",
+      "context": "встигли.",
+      "role": "answer"
+    },
+    {
+      "word": "сидимо",
+      "exercise_type": "error-correction",
+      "context": "Бо надворі дощ, ми сьогодні сидимо вдома.",
+      "role": "context"
+    },
+    {
+      "word": "втомлена",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже втомлена, тому багато працювала.",
+      "role": "context"
+    },
+    {
+      "word": "працювала",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже втомлена, тому багато працювала.",
+      "role": "context"
+    },
+    {
+      "word": "йшов",
+      "exercise_type": "error-correction",
+      "context": "Ми залишилися вдома, тому що що йшов сильний дощ.",
+      "role": "context"
+    },
+    {
+      "word": "популярний",
+      "exercise_type": "true-false",
+      "context": "Слово «бо» — це дуже популярний сполучник у розмовній україн",
+      "role": "context"
+    },
+    {
+      "word": "розмовній",
+      "exercise_type": "true-false",
+      "context": "Слово «бо» — це дуже популярний сполучник у розмовній україн",
+      "role": "context"
+    },
+    {
+      "word": "слід",
+      "exercise_type": "true-false",
+      "context": "Англійське «because» завжди слід перекладати як «бо що».",
+      "role": "context"
+    },
+    {
+      "word": "перекладати",
+      "exercise_type": "true-false",
+      "context": "Англійське «because» завжди слід перекладати як «бо що».",
+      "role": "context"
+    },
+    {
+      "word": "ставиться",
+      "exercise_type": "true-false",
+      "context": "Перед словами «тому що», «бо» та «хоча» в українській мові з",
+      "role": "context"
+    },
+    {
+      "word": "справжню",
+      "exercise_type": "true-false",
+      "context": "Сполучник «хоча» показує справжню причину вашої дії.",
+      "role": "context"
+    },
+    {
+      "word": "елегантними",
+      "exercise_type": "true-false",
+      "context": "Слова «проте» та «однак» є більш елегантними синонімами до п",
+      "role": "context"
+    },
+    {
+      "word": "синонімами",
+      "exercise_type": "true-false",
+      "context": "Слова «проте» та «однак» є більш елегантними синонімами до п",
+      "role": "context"
+    },
+    {
+      "word": "містом",
+      "exercise_type": "fill-in",
+      "context": "Ми довго гуляли містом, _____ зовсім не втомилися.",
+      "role": "context"
+    },
+    {
+      "word": "важливу",
+      "exercise_type": "fill-in",
+      "context": "Сергій не прийшов на важливу зустріч, _____ він захворів.",
+      "role": "context"
+    },
+    {
+      "word": "зустріч",
+      "exercise_type": "fill-in",
+      "context": "Сергій не прийшов на важливу зустріч, _____ він захворів.",
+      "role": "context"
+    },
+    {
+      "word": "захворів",
+      "exercise_type": "fill-in",
+      "context": "Сергій не прийшов на важливу зустріч, _____ він захворів.",
+      "role": "context"
+    },
+    {
+      "word": "малює",
+      "exercise_type": "fill-in",
+      "context": "Вона чудово малює, _____ ніколи не вчилася в художній школі.",
+      "role": "context"
+    },
+    {
+      "word": "вчилася",
+      "exercise_type": "fill-in",
+      "context": "Вона чудово малює, _____ ніколи не вчилася в художній школі.",
+      "role": "context"
+    },
+    {
+      "word": "художній",
+      "exercise_type": "fill-in",
+      "context": "Вона чудово малює, _____ ніколи не вчилася в художній школі.",
+      "role": "context"
+    },
+    {
+      "word": "школі",
+      "exercise_type": "fill-in",
+      "context": "Вона чудово малює, _____ ніколи не вчилася в художній школі.",
+      "role": "context"
+    },
+    {
+      "word": "зручний",
+      "exercise_type": "fill-in",
+      "context": "Я купив цей новий телефон, _____ він дуже зручний.",
+      "role": "context"
+    },
+    {
+      "word": "радісно",
+      "exercise_type": "fill-in",
+      "context": "Надворі йде сильний сніг, _____ діти радісно граються.",
+      "role": "context"
+    },
+    {
+      "word": "граються",
+      "exercise_type": "fill-in",
+      "context": "Надворі йде сильний сніг, _____ діти радісно граються.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 16,
+    "tested_in_exercises": 15,
+    "not_tested": [
+      "складне"
+    ]
+  },
+  "all_grounded": false
+}

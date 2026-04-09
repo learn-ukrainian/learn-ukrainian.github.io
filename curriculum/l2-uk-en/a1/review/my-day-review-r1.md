@@ -1,57 +1,53 @@
 ## Linguistic Scan
-No linguistic errors found. The Ukrainian text is highly natural and uses appropriate forms.
+Found errors:
+- **Calques**: The phrase "Як пройшов твій день" is a calque from the Russian "Как прошел день". Time *минає* in standard Ukrainian, it does not *проходить*. 
+- **Grammar/Orthography**: The text uses "О одинадцятій". According to Ukrainian euphony rules, the preposition "о" must change to "об" before words starting with a vowel (об одинадцятій) to avoid hiatus (збіг голосних).
+- Russianisms: None found.
+- Surzhyk: None found.
+- Paronyms: None found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-part-of-day -->`: Placed correctly after teaching the 5 parts of the day. Matches plan hint "Choose the correct part of the day".
-- `<!-- INJECT_ACTIVITY: match-time-of-day -->`: Placed correctly after introducing daily activity verbs. Matches plan hint "Match the activity to the logical time of day".
-- `<!-- INJECT_ACTIVITY: fill-in-sequence -->`: Placed correctly at the end of the module. Matches plan hint "Complete the logical sequence of the day".
-All exercises are properly contextualized and match the plan's requirements.
+- **Inventory**: Three markers present (`match-activity-time`, `fill-in-sequence`, `fill-in-parts-of-day`). This matches the 3 activities defined in the plan's `activity_hints`.
+- **Placement**: Perfect. `match-activity-time` is placed exactly after daily routine verbs and parts of the day are introduced. The two `fill-in` markers are placed logically after the sequence words are fully explained. 
+- **Logic**: The pedagogical timing ensures the learner has been exposed to all necessary vocabulary before encountering the marker. 
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Every point in the `content_outline` is covered accurately. Past tense ("працювала") and future ("буду працювати") are correctly introduced as chunks without full grammar overhead. |
-| 2. Linguistic accuracy | 8/10 | Excellent, natural Ukrainian. However, there are minor factual inaccuracies in the metalanguage: "вечеряти" is grouped as an "-ати" verb (it ends in -яти), "після обіду" is erroneously listed as having "no case endings" when grouped with adverbs, and "після обіду" is mistakenly referred to as a "sequence word" in one instance. |
-| 3. Pedagogical quality | 8/10 | The progression from dialogues to specific grammar parts is excellent. However, the summary formula "**[Time expression] + [Sequence word] + [Verb + object]**" contradicts the very example that follows it ("Потім [sequence] — о дев'ятій [time]"). |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary is seamlessly integrated into the natural flow of the text. Most recommended vocabulary is also utilized natively. |
-| 5. Exercise quality | 10/10 | Markers are placed optimally after the relevant instructional blocks, completely aligning with the pedagogical strategy. |
-| 6. Engagement & tone | 10/10 | Very encouraging and practical. The "story" framing of the day makes the grammar highly accessible and grounded in real-world application. |
-| 7. Structural integrity | 10/10 | All H2 headings match the plan perfectly. The word count (1526 words) is a healthy, natural expansion from the 1200 target. |
-| 8. Cultural accuracy | 10/10 | Authentic daily situations, accurate reflections of working/leisure hours in a standard Ukrainian context. |
-| 9. Dialogue & conversation quality | 10/10 | The conversations are concise but highly communicative. The contrast between yesterday (past) and tomorrow (future) is an elegant way to teach chunks. |
+| 1. Plan adherence | 9/10 | Followed the content outline well and hit the word count. Deducted slightly because one recommended vocabulary word from the plan was omitted. |
+| 2. Linguistic accuracy | 8/10 | Found one grammatical euphony error ("О одинадцятій" instead of "Об одинадцятій") and one common calque ("пройшов день" instead of "минув день"). |
+| 3. Pedagogical quality | 10/10 | Excellent PPP flow. Clear explanations of reflexive "-ся" as a "myself" marker, distinct meal verbs, and great warnings about English prepositions ("I have breakfast"). |
+| 4. Vocabulary coverage | 8/10 | All required vocabulary is present naturally. However, the recommended word "вільний" (free) is completely missing from the text. |
+| 5. Exercise quality | 10/10 | Markers perfectly placed immediately after the relevant grammar and vocabulary sections. Matches plan's 3 activities. |
+| 6. Engagement & tone | 10/10 | Warm, natural teacher tone. Good practical advice on storytelling rhythm. No gamified filler or corporate speak. |
+| 7. Structural integrity | 10/10 | Clean markdown, all H2 headers match plan exactly, word count met (1201 > 1200 target). |
+| 8. Cultural accuracy | 10/10 | Accurate presentation of time divisions and Ukrainian specific noun-verb pairs for meals. |
+| 9. Dialogue & conversation quality | 10/10 | Natural conversational flow, distinct speakers, realistic daily topics that highlight the grammar smoothly. |
 
 ## Findings
+[Linguistic accuracy] [critical]
+Location: `*   **О одинадцятій лягаю спати.** (At eleven I go to bed.)`
+Issue: Grammatical euphony error. The preposition "о" must become "об" before words starting with a vowel to avoid hiatus (збіг голосних). "О одинадцятій" is grammatically incorrect.
+Fix: Change "О одинадцятій" to "Об одинадцятій".
 
-[2. Linguistic accuracy] [Critical]
-Location: `## Мій типовий день (My Typical Day)` — "The sequence words **спочатку**, **потім**, **після обіду**, **нарешті** connect the actions into a story instead of a random list."
-Issue: "після обіду" is an adverbial phrase of time, not a sequence word. Treating it as a sequence word here is factually wrong and contradicts the next section, which properly classifies it as a part of the day.
-Fix: Remove "після обіду" from this list of sequence words.
+[Linguistic accuracy] [critical]
+Location: `> **Максим:** Привіт! Як пройшов твій день? *(Hi! How was your day?)*`
+Issue: The phrase "Як пройшов день" is a common calque from the Russian "Как прошел день". In natural Ukrainian, time "минає" rather than "проходить". A more idiomatic phrasing is "Як минув твій день?".
+Fix: Change "пройшов" to "минув".
 
-[2. Linguistic accuracy] [Critical]
-Location: `## Мій типовий день (My Typical Day)` — "These are adverbs — unchanging words. No case endings, no conjugation."
-Issue: This rule follows a list that includes "після обіду" (a preposition + genitive noun). Stating the entire list has "no case endings" is factually incorrect.
-Fix: Clarify that four of them are single adverbs to remain technically accurate.
-
-[2. Linguistic accuracy] [Critical]
-Location: `## Від ранку до вечора (From Morning to Evening)` — "All three are Group I verbs ending in **-ати**, conjugated exactly like **читати**:"
-Issue: "вечеряти" ends in "-яти", not "-ати". Specifying "-ати" for all three is factually false.
-Fix: Remove the mention of "-ати" and just categorize them as Group I verbs.
-
-[3. Pedagogical quality] [Critical]
-Location: `## Підсумок — Summary` — "**[Time expression] + [Sequence word] + [Verb + object]**"
-Issue: The formula explicitly contradicts the third example provided immediately below it ("Потім [sequence] — о дев'ятій [time] — іду на роботу [verb + complement]"). Sequence words typically precede time expressions.
-Fix: Swap the order of the formula blocks to perfectly match the example.
+[Vocabulary coverage] [major]
+Location: `*   **Ввечері готую вечерю, читаю і дивлюся фільм.** (In the evening I prepare dinner, read, and watch a movie.)`
+Issue: The recommended vocabulary word "вільний" (free) from the plan's `vocabulary_hints` is entirely missing from the prose. I searched the text and confirmed 0 occurrences.
+Fix: Integrate "вільний" into the text describing the evening routine to meet the vocabulary coverage requirement.
 
 ## Verdict: REVISE
-The text is exceptionally well-written and natural, but contains a few critical factual inaccuracies in its grammatical meta-explanations (mislabeling verb endings, case presence, and sentence order formula) that need to be patched before shipping. 
+The module is very strong pedagogically and structurally, but contains a grammatical euphony error ("о одинадцятій"), a calque ("пройшов день"), and misses one recommended vocabulary word. These require a deterministic revision pass.
 
 <fixes>
-- find: "The sequence words **спочатку**, **потім**, **після обіду**, **нарешті** connect the actions into a story instead of a random list."
-  replace: "The sequence words **спочатку**, **потім**, and **нарешті** connect the actions into a story instead of a random list."
-- find: "These are adverbs — unchanging words. No case endings, no conjugation."
-  replace: "Four of these are single adverbs — unchanging words. No case endings, no conjugation."
-- find: "All three are Group I verbs ending in **-ати**, conjugated exactly like **читати**:"
-  replace: "All three are Group I verbs, conjugated exactly like **читати**:"
-- find: "**[Time expression] + [Sequence word] + [Verb + object]**"
-  replace: "**[Sequence word] + [Time expression] + [Verb + object]**"
+- find: "*   **О одинадцятій лягаю спати.** (At eleven I go to bed.)"
+  replace: "*   **Об одинадцятій лягаю спати.** (At eleven I go to bed.)"
+- find: "> **Максим:** Привіт! Як пройшов твій день? *(Hi! How was your day?)*"
+  replace: "> **Максим:** Привіт! Як минув твій день? *(Hi! How was your day?)*"
+- find: "*   **Ввечері готую вечерю, читаю і дивлюся фільм.** (In the evening I prepare dinner, read, and watch a movie.)"
+  replace: "*   **У вільний час ввечері готую вечерю, читаю і дивлюся фільм.** (In my free time in the evening I prepare dinner, read, and watch a movie.)"
 </fixes>

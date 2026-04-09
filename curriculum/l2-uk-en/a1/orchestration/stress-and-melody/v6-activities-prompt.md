@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,7 +27,7 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-stress-syllable -->`
+- `<!-- INJECT_ACTIVITY: quiz-stress-position -->`
 - `<!-- INJECT_ACTIVITY: match-stress-pairs -->`
 - `<!-- INJECT_ACTIVITY: quiz-sentence-type -->`
 - `<!-- INJECT_ACTIVITY: fill-in-punctuation -->`
@@ -85,44 +85,49 @@ required:
 <module_content>
 ## Наголос (Stress)
 
-Say the word **наголос** (stress) out loud. One of its three syllables — на, го, лос — comes out louder and longer than the others. That louder syllable is the **наголошений склад** (stressed syllable). Every Ukrainian word with more than one syllable has one — and only one — stressed syllable. Here is the crucial fact: Ukrainian **наголос** is free. It can land on the first syllable, the middle, or the last. **Мама** (mother) — stress on the first syllable. **Молоко** (milk) — stress on the last. **Фотографія** (photograph) — stress on the third syllable, the second а. French locks stress to the final syllable. Czech locks it to the first. Ukrainian gives no such shortcut. You must learn each word's stress individually.
+**Заболотний Grade 5 p.73** teaches that the Ukrainian language has 38 distinct sounds. When you combine these sounds into words, one syllable always stands out. This emphasis is called **наголос** (stress). The **наголошений склад** (stressed syllable) is pronounced louder and held slightly longer than the rest of the word. A helpful technique to find the stress in a new word is to imagine you are "calling" the object from far away. If you call a turtle — **черепаха** (turtle) — you naturally stretch the third syllable: *черепаааха*. That stretched syllable is where the stress falls. Unlike English, where unstressed vowels often collapse into a weak "uh" sound, Ukrainian vowels keep their core phonetic shape. An unstressed **О** still sounds like **О**, just shorter and quieter.
 
-Stress does more than shape how a word sounds — it changes what the word means. Consider three real pairs you will encounter as a learner. **Замок** with stress on the first syllable means "castle." **Замок** with stress on the second syllable means "lock." Same five letters, entirely different objects. **Мука** with stress on the first syllable means "torment" or "suffering." **Мука** with stress on the last syllable means "flour." **Атлас** with stress on the first syllable is a collection of maps — an atlas. **Атлас** with stress on the second syllable is satin fabric. There is a classic Ukrainian riddle from a Grade 2 textbook by Білоус that captures this perfectly: "This word is an ancient building with sharp masonry towers. Change the stress — and you lock the building shut." Wrong stress does not just sound foreign — it says the wrong word entirely. This is why stress marks matter.
+Ukrainian stress is **вільний** (free). It is not locked to a specific position in the word. In French, the stress always falls on the last syllable. In Polish, it consistently falls on the penultimate syllable. In Ukrainian, it can appear anywhere. You must learn the stress pattern of each individual word. Many common words for beginners have stress on the first syllable: **мама** (mother), **тато** (father), **ранок** (morning), **кава** (coffee), and **книга** (book). Others have stress firmly on the second or last syllable: **вода** (water), **зима** (winter), **рука** (hand/arm), **метро** (metro), and **кафе** (cafe). Some have middle stress, like **столиця** (capital) in the phrase **Київ — столиця України** (Kyiv is the capital of Ukraine).
 
-In textbooks, dictionaries, and learning materials, stress is marked with an accent sign (´) over the vowel: **кава** has its mark over the first а. But in everyday Ukrainian text — newspapers, messages, novels for adults — you will not see stress marks at all. Ukrainians simply know where the stress falls. As a learner, make a habit: every time you write a new word in your notes, mark its stress. When you are unsure, check goroh.pp.ua — it shows the stressed syllable for over 500,000 Ukrainian words.
+Furthermore, Ukrainian stress is **рухомий** (mobile). When a word changes its form, the stress can jump to a different syllable. When you talk about one hand, you say **рука** (hand). When you talk about two hands, the stress shifts to the first syllable: **руки** (hands).
 
-Here are common stress positions for A1 words. First-syllable stress: **мама** (mother), **тато** (father), **ранок** (morning), **кава** (coffee), **книга** (book). Last-syllable stress: **вода** (water), **зима** (winter), **метро** (metro), **кафе** (café). These are clusters, not rules — Ukrainian has exceptions in every pattern. Build the habit now: when you learn a new word, write it with its stress mark immediately. A notebook entry looks like this: **вода** — water — stress on the last syllable. Do not trust your memory on stress. Write it down.
+Stress is critical because it dictates meaning. In English, placing stress on the wrong syllable usually just gives you a strange accent. In Ukrainian, getting the stress wrong often means you are saying a completely different word. These pairs of words that look identical but sound different are called **омографи** (homographs). Consider the word for a castle. A castle is a **замок** (castle), with the stress on the first syllable. A lock for a door is a **замок** (lock), with the stress on the second syllable. If you say the wrong one, the sentence changes entirely. Another stark pair is **мука** (torment), stressed on the first syllable, versus **мука** (flour), stressed on the second syllable. This distinction also applies to adjectives. The noun **дорога** (road) has stress on the second syllable. The adjective **дорога** (expensive) has stress on the final syllable.
 
-<!-- INJECT_ACTIVITY: quiz-stress-syllable -->
+:::tip
+In textbooks and dictionaries, stress marks (') appear above the stressed vowel to guide learners. You will see them in your study materials. However, they do not appear in everyday Ukrainian writing. When reading a newspaper or a menu, you must know the word's stress pattern from memory. As a learner, always check *goroh.pp.ua* when you are unsure about pronunciation.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-stress-position -->
 
 <!-- INJECT_ACTIVITY: match-stress-pairs -->
 
 ## Інтонація (Intonation)
 
-Ukrainian speech has melody. The rise and fall of your voice — **інтонація** (intonation) — tells the listener whether you are making a statement, asking a question, or expressing emotion. Same words, different melody, entirely different meaning. Three core patterns:
+The melody of your voice is called **інтонація** (intonation). Ukrainian uses sentence melody to communicate the fundamental purpose of the sentence. The language classifies sentences by their goal. Declarative sentences, which state facts, are **розповідні** (declarative). Interrogative sentences, which ask questions, are **питальні** (interrogative). Imperative sentences, which give commands, are **спонукальні** (imperative). Any of these three types can also be exclamatory — **окличні** (exclamatory) — if spoken with strong emotion. For A1 learners, focus on the three basic punctuation patterns: the period (.) for statements, the question mark (?) for questions, and the exclamation point (!) for exclamations and commands. These marks are the visual map for your spoken melody.
 
-**Це кава.** ↘ — your voice falls on the stressed syllable of **кава**. You are telling someone: this is coffee. A statement.
+The contrast between a statement and a yes/no question relies entirely on the pitch of your voice. A statement uses falling intonation. You start at a normal pitch and drop lower at the end. Look at this sentence:
 
-**Це кава?** ↗ — your voice rises on that same stressed syllable. You are asking for confirmation: is this coffee? A yes/no question.
+> **Оксана:** Це кава. *(This is coffee.)*
 
-**Як гарно!** ↘↘ — your voice drops sharply with extra force. You are expressing emotion: how beautiful! An exclamation.
+Your voice falls (↘) on the word **кава**. It sounds final and decisive. Same words, different melody, different meaning. Use the exact same words, but a different melody, to ask a question:
 
-Try it yourself. Say **Це кава** three times — once as a calm statement with a falling voice, once as a surprised question with a rising voice, once as a delighted exclamation with a strong drop. Same two words, three entirely different communicative acts.
+> **Оксана:** Це кава? *(Is this coffee?)*
 
-Question words change the rule. Words like **хто** (who), **що** (what), **де** (where), **коли** (when) carry the interrogative meaning themselves — they signal "this is a question" without any rise in your voice. **Що це?** ↘ — falling intonation. The word **що** already tells the listener you are asking about identity. **Де метро?** ↘ — falling. The word **де** signals a question about location. **Коли автобус?** ↘ — falling again. But yes/no questions that lack a question word must rise: **Це метро?** ↗ / **Автобус тут?** ↗. The rule: question word present = voice falls; no question word = voice rises.
+For a yes/no question, you must use rising intonation (↗). You raise the pitch of your voice sharply on the stressed syllable of the key word you are asking about. In this case, your voice spikes upward on the first syllable of **кава**. The rise must be distinct and obvious. If your voice stays flat or falls, a Ukrainian speaker will hear a statement, not a question.
 
-Ukrainian grammar classifies sentences by purpose into three types: **розповідні** (declarative — they tell), **питальні** (interrogative — they ask), and **спонукальні** (imperative — they command or request). Any of these three can also be **окличні** (exclamatory) — carrying high emotional charge, shown by an exclamation mark. **Окличне** is a separate dimension, not a fourth type. A command can be calm — **Іди сюди.** — or exclamatory — **Іди сюди!** For A1, focus on the practical link between punctuation and melody: period (.) = voice falls ↘, question mark (?) = check for a question word, exclamation mark (!) = extra force ↘↘.
+There is a major exception: questions that begin with specific question words. Words like **хто** (who), **що** (what), **де** (where), and **коли** (when) do the grammatical work of asking the question. Because the question word already signals the intent, the sentence melody does not need to rise at the end. Instead, questions with question words usually end with a falling intonation (↘).
 
-Here is a short dialogue that models all three patterns. Two friends, **Кирилко** and **Соломійка**, are near a Kyiv metro station:
+> **Степан:** Що це? *(What is this?)*  
+> **Степан:** Де метро? *(Where is the metro?)*  
 
-> **Кирилко:** Привіт, Соломійко! ↘ *(Hi, Solomiyka!)*
-> **Соломійка:** Привіт! Це метро? ↗ *(Hi! Is this the metro?)*
-> **Кирилко:** Так, це метро! ↘↘ *(Yes, this is the metro!)*
-> **Соломійка:** А де вихід? ↘ *(And where is the exit?)*
-> **Кирилко:** Ось він. ↘ *(Here it is.)*
-> **Соломійка:** Дякую! ↘↘ *(Thanks!)*
+Your voice falls at the end of both sentences because the question word does the work. This creates a direct contrast with yes/no questions, which lack question words and therefore always rise: **Це метро?** (↗).
 
-Notice: **Це метро?** rises — yes/no question without a question word. **Де вихід?** falls — the question word **де** does the work. Exclamations like **Так, це метро!** and **Дякую!** drop sharply with force.
+Exclamations and emotional statements use a strong falling intonation (↘↘). You place intense vocal weight on the stressed syllable of the core word, and then drop your pitch significantly. This pattern applies to enthusiastic greetings and expressions of strong feeling.
+
+> **Максим:** Як гарно! *(How beautiful!)*  
+> **Максим:** Привіт! *(Hi!)*  
+
+You can also use **логічний наголос** (logical stress) to shift the focus of a sentence. By emphasizing one specific word, you change the exact meaning of the statement without altering the grammar or the words themselves.
 
 <!-- INJECT_ACTIVITY: quiz-sentence-type -->
 
@@ -130,63 +135,36 @@ Notice: **Це метро?** rises — yes/no question without a question word. 
 
 ## Читаємо вголос (Reading Aloud)
 
-Reading Ukrainian aloud — **вголос** (aloud) — is where stress and intonation come together. Here is a three-step method for reading multisyllable words correctly.
+Reading multisyllable Ukrainian words correctly requires a systematic approach. Follow a simple three-step method to build muscle memory and rhythm. First, break the word into distinct syllables. Take the word for photograph: **фо-то-гра-фі-я** (photograph). Second, locate the stressed syllable. In this word, the stress falls on the third **а**: **фотографія**. Third, read the word slowly, ensuring the stressed syllable is the loudest and longest. Once you have the pattern, read at natural speed. Apply this same method to the word for Ukrainian: **у-кра-їн-ська** (Ukrainian). The stress falls on the **ї**. For the word rest, the breakdown is **ві-дпо-чи-нок** (rest), with the stress on the **и**.
 
-**Step 1:** Break the word into syllables. Say each syllable slowly, separately.
-**Step 2:** Find the stressed syllable — say it louder and slightly longer than the others.
-**Step 3:** Read the whole word at natural speed, letting the stress land naturally.
+Word list practice helps you internalize different stress patterns. Read the following words aloud with correct **наголос**. First, find the stressed syllable, then read the whole word at natural speed. Read these words: **Ки-їв** (Kyiv), **мо-ло-ко** (milk), **ран-ок** (morning), **ка-ва** (coffee), **во-да** (water), **зи-ма** (winter), and **у-кра-їн-ська** (Ukrainian). Break them down mentally and push your voice heavily on the stressed vowel.
 
-Apply this to three longer words:
+Dialogue practice bridges the gap between single words and connected speech. Apply your knowledge of stress and intonation to a real conversation. In this interaction, two people exchange greetings and ask basic questions. Watch how the melody changes based on the punctuation and the sentence type.
 
-- **у-кра-їн-ська** (Ukrainian) — stress on **ї**. Slow: у... кра... їн... ська. Now together: **українська**.
-- **фо-то-гра-фі-я** (photograph) — stress on the second **а**. Slow: фо... то... гра... фі... я. Now together: **фотографія**.
-- **від-по-чи-нок** (rest/vacation) — stress on **чи**. Slow: від... по... чи... нок. Now together: **відпочинок**.
+> **Бариста:** Привіт! *(Hi!)*  
+> **Клієнт:** Привіт! Як справи? *(Hi! How are you?)*  
+> **Бариста:** Добре! А у тебе? *(Good! And you?)*  
+> **Клієнт:** Добре! Це твоя кава? *(Good! Is this your coffee?)*  
+> **Бариста:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*  
 
-Break first, find the stress, then read smoothly. This is how Ukrainian Grade 1 textbooks teach reading, and it works just as well for adult learners.
-
-Now practice with eight words. Read each one aloud — first broken into syllables, then as a whole word:
-
-- **Ки-їв** (Kyiv) — stress on **и**: Київ
-- **мо-ло-ко** (milk) — stress on last **о**: молоко
-- **ра-нок** (morning) — stress on **ра**: ранок
-- **ка-ва** (coffee) — stress on first **ка**: кава
-- **во-да** (water) — stress on **да**: вода
-- **зи-ма** (winter) — stress on **ма**: зима
-- **у-кра-їн-ська** (Ukrainian) — stress on **ї**: українська
-- **бі-блі-о-те-ка** (library) — stress on **те**: бібліотека
-
-:::tip
-Tap the table once for each syllable as you read. The tap on the stressed syllable will land harder naturally — your hand knows the rhythm before your mouth does.
-:::
-
-Now put both skills together in a dialogue. These are greetings from Module 1, but this time read them with full stress and intonation awareness:
-
-> **Оленка:** Привіт! ↘ *(Hi!)*
-> **Тарас:** Привіт! Як справи? ↗ *(Hi! How are you?)*
-> **Оленка:** Добре! А у тебе? ↗ *(Good! And you?)*
-> **Тарас:** Теж добре, дякую! ↘ *(Also good, thanks!)*
-
-Read this dialogue aloud twice. First time: slowly, tapping each syllable, exaggerating the stress. Second time: at natural speed, letting the melody flow. This is your first full integrated performance of Ukrainian sound, stress, and melody together.
-
-Stress — **наголос** — tells you which syllable to emphasize. Intonation — **інтонація** — tells you what the sentence means. Together they are the music of Ukrainian. Reading aloud — **вголос** — is the practice method that trains both at once. Do it every time you see new Ukrainian text.
+The first **Привіт!** has a strong falling exclamation (↘↘). The question **Як справи?** contains a question word (**як**), so it has a falling intonation (↘). The question **А у тебе?** is a yes/no question without a question word, so it requires a sharp rising intonation (↗). The same rising pitch (↗) applies to **Це твоя кава?**. Finally, the response **Так, це моя кава.** is a simple declarative statement, ending with a standard falling intonation (↘), and **Дякую!** finishes the interaction with a strong falling exclamation (↘↘). Apply these intonation patterns to the greetings you have already learned.
 
 ## Підсумок — Summary
 
-Two core skills from this module: **наголос** — stress is free in Ukrainian, it can fall on any syllable, it moves between forms of the same word, and it changes meaning. **Інтонація** — the melody of your voice signals sentence type: falling for statements, rising for yes/no questions, and a strong fall for exclamations. Together, these two elements are what makes Ukrainian sound like Ukrainian.
+Stress and melody are the physical heartbeat of the spoken language. A single word's identity is anchored by its **наголос**. Because Ukrainian stress is free and mobile, it can fall on any syllable and can shift when a word changes form. You must memorize the stress pattern along with the word itself, because shifting the stress can completely change a word's meaning, turning a castle into a lock, or flour into torment. In written Ukrainian, punctuation marks serve as the sheet music for your voice. They tell you exactly how to manipulate your sentence melody.
 
-### Self-check
+Intonation distinguishes a statement of fact from a question of inquiry. A declarative statement always uses a falling pitch (↘). A yes/no question requires a sharp, noticeable rise (↗) on the specific word you are asking about. However, sentences that start with question words like **що** or **де** do the asking for you, and therefore use a falling pitch (↘). Always listen carefully to native speakers, whether in person, in podcasts, or in videos. Their natural sentence rhythm and melody are exactly what you are aiming to reproduce.
 
-- **Що таке наголос?** — The syllable you say louder and longer. In Ukrainian, stress is free — it can fall on any syllable, and there is no fixed rule for its position.
+Self-check your understanding of these core principles. Answer these questions out loud:
 
-- **Чи може наголос змінити значення слова? Наведи приклад.** — Yes. **Замок** with stress on the first syllable means "castle." **Замок** with stress on the second syllable means "lock." Same letters, different word.
-
-- **Яку інтонацію ти використовуєш для питання «так/ні»?** — Rising intonation ↗ — your voice goes up on the last stressed syllable. Example: **Це кава?** ↗
-
-- **Яку інтонацію ти використовуєш для розповідного речення?** — Falling intonation ↘ — your voice drops at the end. Example: **Це кава.** ↘
-
-- **Прочитай вголос:** **Це аптека?** — rising ↗ (yes/no question). **Так, це аптека.** — falling ↘ (statement). **Як гарно!** — strong falling ↘↘ (exclamation). Read all three aloud, exaggerating the melody to feel the difference.
-
-Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Everything from this module applies immediately: **Мене звати Оленка.** ↘ — a statement with falling intonation. **Як тебе звати?** ↗ — a question with rising intonation. **Дуже приємно!** ↘↘ — an exclamation with strong falling force. Every new Ukrainian word you learn from now on: write it with its stress mark. Check goroh.pp.ua when unsure. This small habit — marking stress from the very first word — is the foundation of natural-sounding Ukrainian.
+- What is **наголос**? It is the louder, longer syllable that carries the weight of a word.
+- Can stress change a word's meaning? Yes, moving the stress can create entirely different words, such as **замок** (castle) and **замок** (lock).
+- What intonation do you use for a yes/no question? You use a rising intonation (↗) on the key word.
+- Do questions starting with **Що** or **Де** always rise? No, they usually have a falling intonation (↘).
+- Read this aloud with correct stress and melody:
+  **Це аптека?** *(Is this a pharmacy?)*
+  **Так, це аптека.** *(Yes, this is a pharmacy.)*
+  **Як гарно!** *(How beautiful!)*
 
 </module_content>
 
@@ -276,30 +254,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -321,34 +339,62 @@ The learner is on their FIRST DAYS learning Ukrainian. They:
 - quiz: in ENGLISH about Ukrainian sounds ('What sound does В make?')
 - observe: show patterns in Ukrainian with English prompts
 - group-sort: sort letters into vowels/consonants
+- divide-words: split words into syllables (складоподіл)
+- count-syllables: count syllables by counting vowels
+- pick-syllables: select open/closed syllables
+- odd-one-out: find the word that doesn't belong
+- watch-and-repeat: pronunciation video practice
+- translate: single words/short phrases English→Ukrainian (multiple choice)
+- error-correction: find simple errors (gender agreement, missing ь)
 
-**DO NOT use:** fill-in with Ukrainian sentences, error-correction, translate (learner can't write Ukrainian yet), cloze, unjumble.
+**DO NOT use:** cloze, mark-the-words, select, essay-response, unjumble (learner can't construct Ukrainian sentences yet).
 
 
 ## Topic-Specific Exercise Patterns (from Ukrainian pedagogy)
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: phonetics-stress
-- **quiz** — Де наголос?: Choose the correct stress position — critical for Ukrainian pronunciation
+### Pattern: phonetics-stress [§4.1.5]
+**Наголос** (Word stress)
+- **quiz** — Де наголос?: Обрати правильне місце наголосу — критично для української вимови / Choose the correct stress position — critical for Ukrainian pronunciation
   - Instruction: *Оберіть слово з правильним наголосом*
-- **odd-one-out** — Четверте зайве за наголосом: Pick the word with different stress pattern
+- **odd-one-out** — Четверте зайве за наголосом: Обрати слово з іншою моделлю наголосу / Pick the word with different stress pattern
+**Anti-patterns (DO NOT generate):**
+- ❌ fill-in: Наголос — це вимова, не написання. Тестувати через вибір, не вписування
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -380,68 +426,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

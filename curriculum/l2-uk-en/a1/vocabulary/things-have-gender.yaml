@@ -5,11 +5,41 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: стіле́ць
   translation: chair
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: ла́мпа
+  translation: lamp
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: телефо́н
   translation: phone
@@ -29,24 +59,6 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: ключ
-  translation: key
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кни́жка
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ла́мпа
-  translation: lamp
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: ру́чка
   translation: pen
   expression: false
@@ -58,30 +70,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: кімна́та
-  translation: room
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: стіна́
-  translation: wall
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вікно́
-  translation: window
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: лі́жко
-  translation: bed
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: крі́сло
   translation: armchair
@@ -95,20 +83,32 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
+- word: ключ
+  translation: key
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: фо́то
   translation: photo
   expression: false
   pos: ім.
   gender: с.
   verified: true
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: вона́
-  translation: she / it (feminine gender marker)
+  translation: she
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: воно́
-  translation: it (neuter gender marker)
+  translation: it
   expression: false
   pos: ім.
   gender: с.
@@ -125,8 +125,50 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
+- word: ко́шик
+  translation: basket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ри́бка
+  translation: fish
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: аква́ріум
+  translation: aquarium
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: черепа́ха
+  translation: turtle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кошеня́
+  translation: kitten
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ша́фа
+  translation: wardrobe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мі́сто
+  translation: city
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: рід
-  translation: grammatical gender
+  translation: gender
   expression: false
   pos: ім.
   gender: ч.
@@ -149,99 +191,27 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: три групи
-  translation: three groups
+- word: Що у тебе є?
+  translation: What do you have?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: дерев'я́ний
-  translation: wooden
+- word: Приві́т
+  translation: Hi
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: ціка́вий
-  translation: interesting
+- word: Диви́сь
+  translation: Look
   expression: false
-  pos: прикм.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: зру́чний
-  translation: comfortable
+- word: Кла́сно
+  translation: Cool
   expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: нови́й
-  translation: new
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: си́ній
-  translation: blue
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: вели́кий
-  translation: big
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: мале́нький
-  translation: small
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: Класно!
-  translation: Cool!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дивись!
-  translation: Look!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Що ще є?
-  translation: What else is there?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У тебе є?
-  translation: Do you have?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Де мій / моя / моє...?
-  translation: Where is my...?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Ось він / вона / воно
-  translation: Here it is
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Це мій / моя / моє...
-  translation: This is my...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Якого роду...?
-  translation: What gender is...?
-  expression: true
-  pos: ''
+  pos: присл.
   gender: ''
   verified: true

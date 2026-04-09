@@ -1,37 +1,35 @@
 ## Linguistic Scan
-1 error found:
-- `болячий зуб` — Morphological error. The correct adjective for "aching" or "painful" is `болючий`. While `болячий` exists in VESUM, it is extremely rare (frequency 16 in the GRAC corpus) and non-standard compared to `болючий`.
+1 error found (orthography inherited from plan): "З учора" should be written as one word "Відучора" when acting as an adverb meaning "since yesterday".
 
 ## Exercise Check
-All four activity hints from the plan are covered by correctly placed injected markers.
-- `<!-- INJECT_ACTIVITY: quiz-health-response -->` follows the Dialogues section (tests logical responses to health problems).
-- `<!-- INJECT_ACTIVITY: match-body-parts -->` follows the Body section (tests vocabulary).
-- `<!-- INJECT_ACTIVITY: fill-in-symptoms -->` follows the It Hurts section (tests the `У мене болить` pattern).
-- `<!-- INJECT_ACTIVITY: fill-in-pharmacy -->` follows the Summary section (tests pharmacy/doctor chunks).
+- `<!-- INJECT_ACTIVITY: quiz-medical-responses -->` — Placed after the Dialogues section, testing doctor and pharmacy conversational responses. Correct logic and placement. Matches the plan's `quiz` hint.
+- `<!-- INJECT_ACTIVITY: match-body-vocabulary -->` — Placed after the Body parts section, testing basic translations. Correct logic and placement. Matches the plan's `match-up` hint.
+- `<!-- INJECT_ACTIVITY: fill-in-symptoms-logic -->` — Placed at the end of the "It hurts" section, testing symptom context and appropriate responses. Correct logic and placement. Matches the plan's first `fill-in` hint.
+- `<!-- INJECT_ACTIVITY: fill-in-medical-chunks -->` — Placed right after the symptoms logic exercise, testing pharmacy/doctor phrases. Correct logic and placement. Matches the plan's second `fill-in` hint.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Flawlessly adhered to the `content_outline`. The writer effectively bypassed errors in the plan, such as correcting the claim that `нежить` is feminine (plan had `нежиті (for runny nose, f)`), and instead explicitly taught that it is masculine (`сильний нежить`, `проти нежитю`). |
-| 2. Linguistic accuracy | 9/10 | Almost perfect, but uses the rare/non-standard adjective form `болячий` ("болячий зуб") instead of the standard `болючий`. The writer's correction of the Russianism "від кашлю/нежиті" to "проти кашлю/нежитю" is exceptionally accurate. |
-| 3. Pedagogical quality | 10/10 | Exceptional. The note explaining that `рука` and `нога` encompass the whole limb is a brilliant pedagogical insight for English speakers. Furthermore, the writer correctly ignored the plan's instruction to treat `Я хворий` as a "short adjective" (a concept from Russian syntax), presenting it properly as a standard adjective. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items are naturally embedded into the dialogues and phrases without reading like a dictionary. |
-| 5. Exercise quality | 10/10 | Activity markers match the plan's hints perfectly and are positioned precisely after the concepts are taught. |
-| 6. Engagement & tone | 10/10 | Professional, direct, and authoritative. The writer avoids fluff and focuses purely on high-signal explanations and cultural norms. |
-| 7. Structural integrity | 10/10 | Headers exactly match the plan's `content_outline`. The deterministic word count is safely within bounds. |
-| 8. Cultural accuracy | 10/10 | The writer explicitly catches a Russianism/calque ("від нежиті" -> "проти нежитю") and explains why `проти` is the authentic Ukrainian pattern. This is elite decolonized teaching. |
-| 9. Dialogue & conversation quality | 10/10 | The two dialogues are highly realistic, capturing exact exchanges a learner would have in a Ukrainian pharmacy or clinic without sounding robotic. |
+| 1. Plan adherence | 10/10 | The module covers all content outlines. It even successfully corrected the plan's grammatical error ("від нежиті" -> "від нежитю") and turned it into a teaching moment. Included all required vocabulary. |
+| 2. Linguistic accuracy | 9/10 | Grammar is perfect throughout. Excellent explanation of the masculine gender of "нежить". Minor orthography error inherited from the plan ("З учора" instead of "Відучора"). |
+| 3. Pedagogical quality | 10/10 | Brilliant presentation of "У мене болить" as a fixed chunk rather than a grammar puzzle. Correctly and explicitly warns against translating the English phrase "My head hurts" literally. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended words are integrated naturally into the instructional text and dialogues. |
+| 5. Exercise quality | 10/10 | All four markers are injected at logical points right after the concepts are introduced, matching the plan's activity hints exactly. |
+| 6. Engagement & tone | 10/10 | Tone is encouraging and informative. Provides excellent cultural context regarding the directness of communication at the doctor's office. |
+| 7. Structural integrity | 10/10 | All Markdown formatting, blockquotes, and notes are clean. Word count of 1547 easily clears the 1200 minimum target. |
+| 8. Cultural accuracy | 10/10 | Accurately describes the cultural expectation that Ukrainian patients answer doctors directly with symptoms rather than using English-style small talk ("I am not feeling well today"). |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, transactional, and realistic. Speakers are named properly and the flow makes perfect sense. |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: Section "Gender in practice" — `- болячий зуб — aching tooth (masculine)`
-Issue: Morphological error. "болячий" is an extremely rare and non-standard form (frequency 16 in GRAC corpus). The correct and universally used adjective for "aching/painful" is "болючий".
-Fix: Change `болячий` to `болючий`.
+[2. Linguistic accuracy] [minor]
+Location: Dialogues section: `> **Пацієнт:** З учора. І в мене температура. *(Since yesterday. And I have a fever.)*`
+Issue: The adverb "since yesterday" should be spelled as one word "Відучора" according to standard Ukrainian orthography, not two words "З учора" (This error was inherited verbatim from the plan).
+Fix: Change "З учора." to "Відучора."
 
 ## Verdict: REVISE
-The module is exceptional. The writer caught and fixed multiple errors that originated directly from the plan itself (such as the gender of `нежить`, the Russian calque `від кашлю`, and the erroneous label "short adjectives" for `Я хворий`). However, the minor but critical morphological error (`болячий` instead of `болючий`) must be fixed before publishing to ensure students learn standard vocabulary.
+The module is exceptional. It boasts excellent pedagogical tips, cultural context, and a fantastic teacher's tone. It even brilliantly caught and pedagogically explained a grammatical error in the plan's outline regarding the masculine gender of "нежить". The only issue is a minor orthographic error ("З учора") that was inherited from the plan's dialogue outline, which requires a quick REVISE to correct.
 
 <fixes>
-- find: "- болячий зуб — aching tooth (masculine)"
-  replace: "- болючий зуб — aching tooth (masculine)"
+- find: "З учора. І в мене температура."
+  replace: "Відучора. І в мене температура."
 </fixes>

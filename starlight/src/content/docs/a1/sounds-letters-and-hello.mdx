@@ -7,12 +7,14 @@ pipeline: v6
 build_status: draft
 ---
 
-import Anagram from '@site/src/components/Anagram';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import LetterGrid from '@site/src/components/LetterGrid';
 import MatchUp from '@site/src/components/MatchUp';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
@@ -24,85 +26,63 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Зву́ки і лі́тери (Sounds and Letters)
 
-Look at this page. What you see are letters — shapes printed in ink. Now say a word out loud. Any word. What your mouth just produced is a sound — vibrations shaped by breath, lips, and tongue. In Ukrainian, this distinction is not a footnote. It is the absolute foundation of how the language is taught. Every Ukrainian student learns this golden rule, summarized perfectly by Заболо́тний (Grade 5, p. 83): **Звуки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо** — "We hear and pronounce sounds, but we see and write letters." Take the word **ма́ма** (mother). You *hear* and *say* two sounds repeating — [м] then [а], [м] then [а]. You *see* and *write* four letters: М-А-М-А. A **звук** (sound) is breath shaped by your mouth and throat. A **лі́тера** (letter) is ink on paper. These are not the same thing.
+Look at the text on this page. What you are seeing are letters. Now, say a word out loud. What you just produced is a sound. This distinction is the absolute foundation of the Ukrainian language. There is a golden rule taught to every Ukrainian student in the fifth grade, from the textbook by Zabolotnyi: **Звуки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо** (We hear and pronounce sounds, but we see and write letters). Think of it like music: the sound is the physical note you play on an instrument, while the letter is simply the sheet music written on paper to record it. Ukrainian teachers drill this difference from the very first day of grade school because confusing the visual symbol with the physical sound causes immediate pronunciation errors. 
 
-Ukrainian has **33 літери** (letters) in its alphabet, but **38 зву́ків** (sounds). Why the mismatch? Two reasons. First, four letters — **Я**, **Ю**, **Є**, **Ї** — can each represent *two* sounds in certain positions. You will master how this works in M02. Second, the letter **Ь** (called **м'яки́й знак**, the soft sign) represents *no sound at all*. It is a silent instruction — it tells you that the consonant before it should be pronounced softly, and then it disappears from the sound picture entirely. There is a famous pedagogical question from Litvinova (Grade 5, p. 130): "Чи мо́жна говори́ти «голосна́ літера»?" — "Can you say 'vowel letter'?" The answer is no. Sounds are **голосні́** (vowel) or **при́голосні** (consonant). Letters only *represent* sounds. They are not sounds themselves. This distinction matters throughout all of Ukrainian phonetics.
+You might wonder how a language can have a different number of sounds and letters. The math of Ukrainian is interesting: the alphabet has exactly 33 letters, but the spoken language has 38 distinct sounds. This mismatch occurs because certain "smart" letters can represent two sounds at the exact same time. For example, the letters **Я**, **Ю**, **Є**, and **Ї** can hold a combination of sounds, acting like a hidden "y" sound before a vowel. Conversely, one specific letter—the soft sign, written as **Ь**—makes absolutely no sound of its own. It acts only as a silent modifier, slightly changing how you pronounce the consonant that stands directly before it. Remember that letters are just the visual clothing that sounds wear.
 
-The Ukrainian alphabet is called **абе́тка** (also **алфа́ві́т**). Its 33 letters run in a fixed order from **А** to **Я**. Unlike English, Ukrainian spelling is largely phonetic — what you see on the page is almost always what you say aloud. There are no "silent e" surprises, no "gh" ambiguities, no letters pretending to be other letters. Once you know the 38 sounds and which letters represent them, you can read any Ukrainian word aloud — even before you understand its meaning. From Вашуленко (Grade 2, p. 26): "Усі тут літери живу́ть, їх 33 — від А до Я" — "All the letters live here, all 33 — from А to Я."
+Because sounds and letters are strictly separate concepts, Ukrainian demands linguistic accuracy when you discuss them. In a fifth-grade textbook, the author Litvinova asks students a pedagogical question: **Чи мо́жна говори́ти «голосна́ лі́тера»?** (Is it possible to say "vowel letter"?). The answer is a strict no. The word **голосни́й** (vowel) describes the physical nature of a sound that is made with your voice, not the ink on a page. A letter like **А** is simply a visual symbol representing the vowel sound. It cannot be a vowel itself. This precision helps learners truly understand the phonetic logic of the language.
 
-Here is the full **абетка** — your map for every module ahead. Ten of these letters represent vowel sounds (marked below). Twenty-two represent consonant sounds. One — **Ь** — represents no sound at all.
+The complete collection of these 33 symbols is the Ukrainian alphabet. The native Ukrainian term for this sequence is **абе́тка**, derived directly from the names of the first two letters, А and Бе. You will also frequently hear the term **алфа́ві́т**. Unlike English, where spelling can be completely unpredictable, Ukrainian is highly phonetic. What you see on the page is almost exactly what you hear when you speak. There are no silent letters waiting to trick you, and no surprise pronunciations. To master these 33 letters and 38 sounds, you will watch a series of short pronunciation videos by Anna Ohoiko. She will serve as your primary guide for hearing the authentic sounds of the language.
 
-| | | | | | | | | |
-|---|---|---|---|---|---|---|---|---|
-| **А а** | **Б б** | **В в** | **Г г** | **Ґ ґ** | **Д д** | **Е е** | **Є є** | **Ж ж** |
-| **З з** | **И и** | **І і** | **Ї ї** | **Й й** | **К к** | **Л л** | **М м** | **Н н** |
-| **О о** | **П п** | **Р р** | **С с** | **Т т** | **У у** | **Ф ф** | **Х х** | **Ц ц** |
-| **Ч ч** | **Ш ш** | **Щ щ** | **Ь** | **Ю ю** | **Я я** | | | |
+<Quiz client:only="react" questions={[{"question": "Що ми чуємо і вимовляємо? (What do we hear and pronounce?)", "options": [{"text": "звуки (sounds)", "correct": true}, {"text": "літери (letters)", "correct": false}, {"text": "слова (words)", "correct": false}, {"text": "абетку (alphabet)", "correct": false}]}, {"question": "Що ми бачимо і пишемо? (What do we see and write?)", "options": [{"text": "літери (letters)", "correct": true}, {"text": "звуки (sounds)", "correct": false}, {"text": "голос (voice)", "correct": false}, {"text": "музику (music)", "correct": false}]}, {"question": "Скільки літер в українській абетці? (How many letters are in the Ukrainian alphabet?)", "options": [{"text": "33", "correct": true}, {"text": "38", "correct": false}, {"text": "26", "correct": false}, {"text": "32", "correct": false}]}, {"question": "Скільки звуків в українській мові? (How many sounds are in the Ukrainian language?)", "options": [{"text": "38", "correct": true}, {"text": "33", "correct": false}, {"text": "40", "correct": false}, {"text": "22", "correct": false}]}, {"question": "Чи можна говорити «голосна літера»? (Is it correct to say 'vowel letter'?)", "options": [{"text": "Ні (No, sounds are vowels)", "correct": true}, {"text": "Так (Yes)", "correct": false}, {"text": "Можливо (Maybe)", "correct": false}, {"text": "Завжди (Always)", "correct": false}]}, {"question": "Яка літера не позначає жодного звука? (Which letter represents no sound at all?)", "options": [{"text": "Ь (soft sign)", "correct": true}, {"text": "Я", "correct": false}, {"text": "А", "correct": false}, {"text": "Ґ", "correct": false}]}]} instruction={"Choose the correct answer based on the golden rule of Ukrainian."} />
 
-Vowel letters: А, Е, И, І, О, У + Я, Ю, Є, Ї. Consonant letters: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ. Special: Ь (no sound — softens the consonant before it).
+## Голосні́ звуки (Vowel Sounds)
 
-## Голосні звуки (Vowel Sounds)
+The core of the language begins with **голосні звуки** (vowel sounds). In a Ukrainian first-grade textbook, author Bolshakova teaches children about vowels through a simple poem: **Голосні почу́єш в пісні́, і у те́мному у лі́сі, і коли́ диву́єшся, і коли милу́єшся. Ле́гко вимовля́ються, ве́село співа́ються!** (You will hear vowels in a song, and in a dark forest, and when you are surprised, and when you are admiring. They are easily pronounced, cheerfully sung!). Vowels are made entirely with your voice. The air flows freely from your lungs and through your mouth without hitting any physical obstruction like your lips, teeth, or tongue. Because they are pure voice, vowels are the only sounds in the language that you can truly sing, stretch out, or shout clearly across a large field.
 
-Ukrainian first-graders learn vowels through a poem from Большако́ва (Grade 1, p. 24): "Голосні почу́єш в пі́сні, і у те́мному у лі́сі, і коли́ диву́єшся, і коли милу́єшся. Ле́гко вимовля́ються, ве́село співа́ються!" — "You'll hear vowels in a song, and in a dark forest, when you're surprised, and when you're delighted. Easy to pronounce, fun to sing!" **Голосні** (vowel sounds) are produced when air flows freely through the mouth with nothing blocking the way. Voice alone shapes them — no lips pressing together, no tongue touching the roof of your mouth, no teeth getting in the way. Because nothing obstructs the air, you can sustain a голосни́й indefinitely: **А-А-А-А** across a field, **О-О-О** into an empty room. You can sing every vowel. That singability is the definition.
+There are exactly 6 pure vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, as you look at the alphabet, you will notice there are 10 vowel letters: **А**, **О**, **У**, **Е**, **И**, **І**, **Я**, **Ю**, **Є**, and **Ї**. The extra four letters (**Я**, **Ю**, **Є**, **Ї**) are known as "iotated" vowels. They are those "smart letters" mentioned earlier that can represent two sounds at once. You will learn their exact mechanics later, but for now, know that every single Ukrainian word must have at least one vowel sound. Vowels are the absolute heart of every syllable. You cannot form a Ukrainian syllable without exactly one vowel sound holding it together.
 
-There are six vowel *sounds*: [а], [о], [у], [е], [и], [і]. But ten vowel *letters*: А, О, У, Е, И, І — plus Я, Ю, Є, Ї. From Кравцо́ва (Grade 2, p. 9), the chart makes this mapping explicit: the sound [а] can be written as А or Я; [у] as У or Ю; [е] as Е or Є; [і] as І or Ї. Those extra four letters — Я, Ю, Є, Ї — are called "iotated." They can add a [й] sound before the vowel in certain positions. A full explanation waits in M02. For now, the key lesson: count the *sounds*, not the letters. Ukrainian has six голосні звуки, not ten.
+When Ukrainian children analyze words, they use a special visual notation. According to the first-grade textbook by Zakhariichuk, a vowel sound is marked with a simple dot: [•]. You can practice hearing these vowels in basic words right now. Listen to the word **ма́ма** (mother). You hear two distinct [а] sounds: [мА-мА]. Now listen to **молоко́** (milk). This word flows with three [о] sounds: [мО-лО-кО]. The word **о́ко** (eye) contains two [о] sounds: [О-кО]. These pure sounds must be mastered completely before you move on to complex reading. When you watch the pronunciation videos for the vowel letters, focus heavily on mimicking that clear, unobstructed airflow.
 
-In Ukrainian school sound models (like Захарійчук Grade 1, p. 13), vowel sounds are marked with a dot: **[•]**. Hear vowels in real words. **мАмА** — two [а] sounds. **мОлОкО́** (milk) — three [о] sounds (from Большакова, p. 24). **о́ко** (eye) — two [о] sounds. **дім** (house) — one [і] sound. **ніс** (nose) — one [і] sound. Every syllable in Ukrainian contains exactly one голосний звук. Vowels are the heartbeat of syllables. A word with three vowel sounds has three syllables. When you meet a new Ukrainian word, finding the голосні is always your first step.
+## При́голосні звуки (Consonant Sounds)
 
-## Приголосні звуки (Consonant Sounds)
+The partners to the vowels are the **приголосні звуки** (consonant sounds). The author Bolshakova describes them in contrast to vowels: **Приголосні деренча́ть і тихе́нько шелестя́ть, го́лосно свистя́ть і шипля́ть** (Consonants rattle and quietly rustle, loudly whistle and hiss). Consonants are formed very differently from vowels. Instead of free-flowing air, consonants are made by creating a physical obstruction in your mouth using your tongue, your teeth, or your lips. They consist of voice mixed with noise, or sometimes just noise alone. Because the air is blocked or squeezed, you cannot sing a pure consonant sound like [к] or [т].
 
-Where голосні flow freely, **приголосні** (consonant sounds) are blocked. Большакова (Grade 1, p. 24) captures the contrast in another poem: "Приголосні деренча́ть і тихе́нько шелестя́ть, го́лосно свистя́ть, скрипля́ть, і гарча́ть, і точуть, співа́ти не хо́чуть." — "Consonants rattle and quietly rustle, whistle loudly, screech, growl, and grind — they don't want to sing!" The obstruction comes from different places: lips pressing together ([м], [б], [п]), tongue touching teeth ([с], [з], [т], [д]), or the back of the throat ([г], [х]). That obstruction creates noise — hissing [с-с-с], buzzing [з-з-з], tapping [р-р-р]. Try holding [к] or [п] for three seconds. You cannot. That unsingability is what defines a при́голосний.
+The Ukrainian language features 32 consonant sounds produced by 22 consonant letters. A major feature of these sounds is the hard versus soft distinction. Many consonants come in pairs: a **тверди́й** (hard) version and a **м'яки́й** (soft) version. Soft consonants are palatalized, meaning the middle of your tongue raises toward the roof of your mouth, similar to the "n" in the English word "new". The Zakhariichuk textbook notation marks hard sounds with a single dash [–] and soft sounds with a double dash [=]. This hard and soft distinction does not exist in English, but it is uniquely Slavic and completely changes the meaning of a Ukrainian word.
 
-Ukrainian has 32 consonant *sounds* from just 22 consonant letters. The reason: many consonants come in pairs — **тверді** (hard) and **м'які́** (soft). From Большакова (Grade 2, p. 42): "Приголосні звуки бува́ють тверді та м'які." A hard [д] and a soft [д'] are two different sounds represented by the same letter **Д**. A hard [н] and a soft [н'] — same letter **Н**, two sounds. Захарійчук (Grade 1, p. 15) marks them in sound models: [–] for hard consonants, [=] for soft consonants. This hard/soft pairing does not exist in English. It is one of the distinctly Slavic features of Ukrainian phonetics, and you will return to it in depth in M03.
+You will meet the primary consonant letters through video practice: **М**, **Н**, **Т**, **С**, **Л**, **К**, and **Р**. Pay special attention to the letter **Ґ**, which makes a hard [g] sound. This letter is uniquely Ukrainian and has a history of being suppressed during the Soviet era, making it an important symbol of linguistic identity. You will also encounter the letter **Щ**, which is a "double letter" that always represents two sounds together: [шч]. Finally, you will see the soft sign, **Ь**. As a reminder, this letter is the silent "helper" that changes the consonant standing directly before it from a hard sound into a soft one.
 
-Three special consonant facts to note now. First, **Ґ** — a letter unique to Ukrainian, representing a hard [ґ] sound, as in **ґа́нок** (porch). It looks like Г but sounds different. Second, **Щ** always represents *two* sounds together: [шч]. The word **щу́ка** (pike, the fish) starts with [шч], not a single sound. Third, the **м'який знак** (**Ь**) represents *zero* sounds. It is a softness signal, not a sound. In the word **сіль** (salt), the Ь tells you the final [л] is soft — and then Ь vanishes from the sound picture completely.
+<GroupSort client:only="react" groups={{"Голосні (Vowels)": ["[а]", "[о]", "[у]", "[е]", "[и]", "[і]"], "Приголосні (Consonants)": ["[к]", "[м]", "[т]", "[в]", "[н]", "[р]", "[с]", "[х]"]}} instruction={"Sort the following sounds into Голосні (vowels) and Приголосні (consonants)."} />
 
-<GroupSort client:only="react" groups={{"Голосні звуки (Vowel sounds)": ["[а]", "[о]", "[у]", "[е]", "[и]", "[і]"], "Приголосні звуки (Consonant sounds)": ["[к]", "[м]", "[т]", "[в]", "[н]", "[р]", "[с]", "[х]"]}} instruction={"Sort these sounds into two groups — Голосні (Vowel sounds) and Приголосні (Consonant sounds). Remember: vowel sounds flow freely and can be sung; consonants are blocked."} />
+<MatchUp client:only="react" pairs={[{"left": "А", "right": "[а]"}, {"left": "О", "right": "[о]"}, {"left": "У", "right": "[у]"}, {"left": "М", "right": "[м]"}, {"left": "К", "right": "[к]"}, {"left": "Н", "right": "[н]"}]} instruction={"Match the Ukrainian letter to the sound it represents. Бачу... Чую... (I see... I hear...)"} />
 
 ## Приві́т! (Hello!)
 
-Time for your first real Ukrainian conversation — following Anna Ohoiko's Ukrainian Lessons Podcast (Episode 1). **Привіт!** means "Hi!" — informal, used with friends, classmates, and family. After **Привіт**, the most natural follow-up is **Як спра́ви?** (How are you?). Three answers you will hear every day: **До́бре** (fine, good), **Чудо́во** (great, wonderful), **Норма́льно** (okay, so-so). To return the question: **А в тебе́?** (And you?). These five phrases form the building block of every casual encounter in Ukrainian. They are not formulas to memorize in isolation — they are the actual words Ukrainians say to each other every single day.
+Now that you understand the building blocks of the language, it is time for your very first Ukrainian conversation. Following the pattern from Anna Ohoiko’s Ukrainian Lessons Podcast Episode 1, we start with the most common informal greeting: **Привіт!** (Hi!). This friendly word is used exclusively for close relationships: friends, family members, classmates, and peers. You would not use it with a boss or a stranger. After saying hello, the standard follow-up question is **Як спра́ви?** (How are you?). You have several excellent ways to respond to this question. You can say **До́бре** (Fine), you can say **Чудо́во** (Great), or if things are just average, you can simply say **Норма́льно** (Okay).
+
+Consider a simple meeting between two friends on the street:
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> Привіт, Олю! *(Hi, Olya!)*</div>
+<div class="dialogue-line"><span class="speaker">А́нна:</span> Привіт! Як справи? *(Hi! How are you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оля:</span> Привіт, Тара́се! Як справи? *(Hi, Taras! How are you?)*</div>
+<div class="dialogue-line"><span class="speaker">Іва́н:</span> Чудово! А у тебе́? *(Great! And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Добре, дякую. А в тебе? *(Good, thanks. And you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оля:</span> Чудово! Ра́да тебе ба́чити. *(Great! Glad to see you.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> І я ра́дий тебе бачити! *(And I'm glad to see you!)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Добре. *(Fine.)*</div>
 
 </div>
 
-Notice something: Оля says **рада** while Тарас says **радий**. Both mean "glad," but **рада** is the feminine form and **радий** is the masculine form. Ukrainian adjectives agree with the speaker's gender — confirmed in Заболотний (Grade 5, p. 218). This is your very first glimpse of grammatical gender, a major topic from M08 onward. For now, just notice the difference and use the form that matches you.
+Notice Ivan's question: **А у тебе?** (And you?). This is the most natural way to return a question and keep the conversation flowing smoothly. You might also notice that these sentences are very short. In Ukrainian, we frequently omit the verb "to be" (am, is, are) in these simple present-tense phrases. You do not need to say "I am fine"; you simply state the feeling: **Добре**.
 
-Now, a **звукови́й ана́ліз** (sound analysis) of **Привіт** — following the method from Большакова (Grade 1, p. 29). Letter by letter: **П** [п] — приголосний; **р** [р] — приголосний; **и** [и] — голосний; **в** [в] — приголосний; **і** [і] — голосний; **т** [т] — приголосний. Count: 2 голосні, 4 приголосні. Six letters, six sounds. This single word contains every type of sound you learned today — vowels and consonants together in one real Ukrainian greeting.
+This basic greeting also provides your first encounter with grammatical gender. If someone is happy to see you, their response changes depending on who is speaking. A female speaker will say **Ра́да тебе ба́чити!** (Glad to see you!). A male speaker will say **Ра́дий тебе бачити!** (Glad to see you!). The ending of the word changes based on the speaker's gender. Ukrainian adjectives and certain verb forms alter their shape to match gender. This concept is a major part of the language, serving as a brief preview of the "Gender and Nouns" topic arriving in Module 8.
 
-<FillIn client:only="react" items={[{"sentence": "— ____! Як справи?", "answer": "Привіт", "options": ["Привіт", "справи", "Добре", "тебе", "Чудово", "Нормально"]}, {"sentence": "— Привіт! Як ____?", "answer": "справи", "options": ["Привіт", "справи", "Добре", "тебе", "Чудово", "Нормально"]}, {"sentence": "— ____, дякую. А у тебе?", "answer": "Добре", "options": ["Привіт", "справи", "Добре", "тебе", "Чудово", "Нормально"]}, {"sentence": "— А у ____?", "answer": "тебе", "options": ["Привіт", "справи", "Добре", "тебе", "Чудово", "Нормально"]}, {"sentence": "— ____!", "answer": "Чудово", "options": ["Привіт", "справи", "Добре", "тебе", "Чудово", "Нормально"]}, {"sentence": "— ____.", "answer": "Нормально", "options": ["Привіт", "справи", "Добре", "тебе", "Чудово", "Нормально"]}]} instruction={"Complete the Ukrainian greeting dialogue. Choose the correct word for each blank."} />
+A sound analysis (**звукови́й ана́ліз**) of your first word, **Привіт**, reveals its structure. It breaks down letter by letter: the letter **П** represents the consonant [п], **р** is the consonant [р], **и** is the vowel [и], **в** is the consonant [в], **і** is the vowel [і], and **т** is the consonant [т]. The word contains exactly two vowel sounds and four consonant sounds. Every type of sound category you learned in this module appears in this single greeting.
+
+<FillIn client:only="react" items={[{"sentence": "— ____! Як справи?", "answer": "Привіт", "options": ["Привіт", "справи", "Добре", "Чудово"]}, {"sentence": "— Привіт! Як ____?", "answer": "справи", "options": ["справи", "тебе", "Нормально", "Добре"]}, {"sentence": "— ____. А у тебе?", "answer": "Добре", "options": ["Добре", "Привіт", "Чудово", "Нормально"]}, {"sentence": "— Добре. А у ____?", "answer": "тебе", "options": ["тебе", "справи", "Чудово", "Нормально"]}]} instruction={"Complete this basic greeting dialogue."} />
 
 ## Підсумок (Summary)
 
-Test yourself with these questions — every answer comes from what you learned above.
-
-**How many letters are in the Ukrainian alphabet?** → **33 літери**.
-
-**How many sounds does Ukrainian have?** → **38 звуків**.
-
-**Why are there more sounds than letters?** → Because Я, Ю, Є, Ї can represent two sounds each, and Ь represents no sound — it only softens the consonant before it.
-
-**What are голосні звуки?** → Sounds made with free-flowing voice — [а], [о], [у], [е], [и], [і]. Air passes through the mouth without obstruction. You can sing them.
-
-**What are приголосні звуки?** → Sounds made with obstruction — lips, tongue, or teeth create noise. You cannot sing them.
-
-**Can you say "голосна літера"?** → **Ні!** Голосні are sounds, not letters. Letters *represent* sounds — they are not sounds themselves.
-
-**What does Привіт mean?** → Hi! (informal greeting).
-
-**What do you say after Як справи?** → **Добре**, **Чудово**, or **Нормально** — then **А в тебе?**
-
-**What is the difference between рада and радий?** → **Рада** is the feminine form (a woman speaking); **радий** is the masculine form (a man speaking). Both mean "glad."
+Before moving forward, check your understanding of these foundational concepts with the following questions. How many letters are in the Ukrainian alphabet? There are exactly 33 letters. How many sounds exist in the Ukrainian language? There are 38 distinct sounds. What is the fundamental difference between a sound and a letter? Sounds are what you hear and pronounce with your mouth, while letters are the symbols you see and write on paper. What exactly is a **голосний звук**? It is a vowel sound, created using only your voice without any physical obstruction in your mouth. What is a **при́голосний звук**? It is a consonant sound, produced by creating an obstruction with your tongue, teeth, or lips. Can you ever say **голосна літера**? Strictly speaking, no. Sounds are vowels or consonants, whereas letters merely represent them visually. Finally, how do you respond to **Як справи?** in a positive way? You can confidently answer **Добре** or **Чудово**.
 
 </TabItem>
 <TabItem label="Словник">
@@ -115,60 +95,50 @@ Test yourself with these questions — every answer comes from what you learned 
 | **лі́тера** | letter | ім. | ж. |
 | **голосни́й** | vowel sound | прикм. |  |
 | **при́голосний** | consonant sound | прикм. |  |
+| **приві́т** | hi (informal) | ім. | ч. |
+| **до́бре** | fine, good | присл. |  |
+| **чудо́во** | great, wonderful | присл. |  |
 | **ма́ма** | mother | ім. | ж. |
 | **молоко́** | milk | ім. | с. |
+| **норма́льно** | okay | присл. |  |
+| **та́то** | father | ім. | ч. |
 | **о́ко** | eye | ім. | с. |
 | **дім** | house | ім. | ч. |
 | **ніс** | nose | дієсл. |  |
-| **приві́т** | hi (informal greeting) | ім. | ч. |
-| **до́бре** | fine, good | присл. |  |
-| **чудо́во** | great, wonderful | присл. |  |
-| **норма́льно** | okay, so-so | присл. |  |
-| **та́то** | father | ім. | ч. |
 | **сон** | dream | ім. | ч. |
-| **абе́тка** | Ukrainian alphabet | ім. | ж. |
+| **абе́тка** | alphabet | ім. | ж. |
 | **алфа́ві́т** | alphabet | ім. | ч. |
-| **м'яки́й знак** | soft sign (the letter Ь) |  |  |
-| **тверді** | hard (consonants) | прикм. |  |
-| **м'які́** | soft (consonants) | прикм. |  |
-| **дякую** | thank you | дієсл. |  |
-| **ра́да** | glad (feminine) | ім. | ч. |
-| **ра́дий** | glad (masculine) | прикм. |  |
-| **ґа́нок** | porch | ім. | ч. |
-| **щу́ка** | pike (the fish) | ім. | ж. |
-| **сіль** | salt | ім. | ж. |
-| **підсумок** | summary | ім. | ч. |
+| **тверди́й** | hard (consonant) | прикм. |  |
+| **м'яки́й** | soft (consonant) | прикм. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Як справи?** | How are you? |
+| **як справи** | how are you |
 | **А у тебе?** | And you? |
-| **Рада тебе бачити** | Glad to see you (feminine speaker) |
-| **радий тебе бачити** | Glad to see you (masculine speaker) |
+| **Рада тебе бачити!** | Glad to see you! (female speaker) |
+| **Радий тебе бачити!** | Glad to see you! (male speaker) |
 | **звуковий аналіз** | sound analysis |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "звук", back: "sound", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́тера", back: "letter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голосни́й", back: "vowel sound", subtitle: "прикм." }, { front: "при́голосний", back: "consonant sound", subtitle: "прикм." }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "о́ко", back: "eye", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дім", back: "house", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ніс", back: "nose", subtitle: "дієсл." }, { front: "приві́т", back: "hi (informal greeting)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "до́бре", back: "fine, good", subtitle: "присл." }, { front: "чудо́во", back: "great, wonderful", subtitle: "присл." }, { front: "норма́льно", back: "okay, so-so", subtitle: "присл." }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сон", back: "dream", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "абе́тка", back: "Ukrainian alphabet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "алфа́ві́т", back: "alphabet", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м&#39;яки́й знак", back: "soft sign (the letter Ь)" }, { front: "тверді", back: "hard (consonants)", subtitle: "прикм." }, { front: "м&#39;які́", back: "soft (consonants)", subtitle: "прикм." }, { front: "дякую", back: "thank you", subtitle: "дієсл." }, { front: "ра́да", back: "glad (feminine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́дий", back: "glad (masculine)", subtitle: "прикм." }, { front: "ґа́нок", back: "porch", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "щу́ка", back: "pike (the fish)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сіль", back: "salt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "підсумок", back: "summary", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "звук", back: "sound", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́тера", back: "letter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "голосни́й", back: "vowel sound", subtitle: "прикм." }, { front: "при́голосний", back: "consonant sound", subtitle: "прикм." }, { front: "приві́т", back: "hi (informal)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "до́бре", back: "fine, good", subtitle: "присл." }, { front: "чудо́во", back: "great, wonderful", subtitle: "присл." }, { front: "ма́ма", back: "mother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "норма́льно", back: "okay", subtitle: "присл." }, { front: "та́то", back: "father", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "о́ко", back: "eye", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дім", back: "house", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ніс", back: "nose", subtitle: "дієсл." }, { front: "сон", back: "dream", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "абе́тка", back: "alphabet", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "алфа́ві́т", back: "alphabet", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тверди́й", back: "hard (consonant)", subtitle: "прикм." }, { front: "м&#39;яки́й", back: "soft (consonant)", subtitle: "прикм." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "What do we HEAR and PRONOUNCE in language?", "options": [{"text": "звуки (sounds)", "correct": true}, {"text": "літери (letters)", "correct": false}, {"text": "слова (words)", "correct": false}, {"text": "склади (syllables)", "correct": false}]}, {"question": "What do we SEE and WRITE?", "options": [{"text": "звуки (sounds)", "correct": false}, {"text": "літери (letters)", "correct": true}, {"text": "голосні (vowels)", "correct": false}, {"text": "приголосні (consonants)", "correct": false}]}, {"question": "How many LETTERS (літери) are in the Ukrainian alphabet (абетка)?", "options": [{"text": "26", "correct": false}, {"text": "30", "correct": false}, {"text": "33", "correct": true}, {"text": "38", "correct": false}]}, {"question": "How many SOUNDS (звуки) does Ukrainian have?", "options": [{"text": "30", "correct": false}, {"text": "33", "correct": false}, {"text": "36", "correct": false}, {"text": "38", "correct": true}]}, {"question": "Is it correct to say 'голосна літера' (vowel letter)?", "options": [{"text": "Yes — both letters and sounds can be голосні", "correct": false}, {"text": "No — голосний describes a SOUND, not a letter", "correct": true}, {"text": "Only for the letters А and О", "correct": false}, {"text": "Yes, in informal speech", "correct": false}]}, {"question": "Which letter represents NO sound at all?", "options": [{"text": "Й", "correct": false}, {"text": "Ь", "correct": true}, {"text": "Ї", "correct": false}, {"text": "Є", "correct": false}]}]} instruction={"Test yourself on sounds vs letters. Choose the correct answer."} />
+<CountSyllables client:only="react" items={[{"word": "око", "correct": 2}, {"word": "молоко", "correct": 3}, {"word": "мама", "correct": 2}, {"word": "дім", "correct": 1}, {"word": "тато", "correct": 2}, {"word": "нормально", "correct": 3}]} instruction={"A Ukrainian word has as many syllables as it has vowel sounds (голосні). Count the syllables in these words."} />
 
-<MatchUp client:only="react" pairs={[{"left": "В", "right": "[в] — like 'v' in 'voice' (not like English B)"}, {"left": "Н", "right": "[н] — like 'n' in 'no' (not like English H)"}, {"left": "Р", "right": "[р] — a rolled 'r' (not like English P)"}, {"left": "С", "right": "[с] — like 's' in 'sun' (not like English C)"}, {"left": "У", "right": "[у] — like 'oo' in 'moon' (not like English Y)"}, {"left": "Х", "right": "[х] — like 'ch' in Scottish 'loch' (not like English X)"}, {"left": "Е", "right": "[е] — like 'e' in 'bed'"}, {"left": "І", "right": "[і] — like 'ee' in 'see'"}]} instruction={"Ukrainian letters can look like English letters — but sound completely different! Match each Ukrainian letter to its actual sound."} />
+<TrueFalse client:only="react" items={[{"statement": "You can sing a consonant sound (приголосний звук).", "isTrue": false, "explanation": "Consonants are made by creating a physical obstruction in your mouth. You cannot sing them clearly like vowels."}, {"statement": "The Ukrainian alphabet has 33 letters.", "isTrue": true, "explanation": "There are exactly 33 letters in the Ukrainian абетка."}, {"statement": "A vowel sound (голосний звук) is made entirely with your voice.", "isTrue": true, "explanation": "Air flows freely without hitting any physical obstruction when making a vowel sound."}, {"statement": "The letter Ь (soft sign) represents two sounds.", "isTrue": false, "explanation": "The soft sign (Ь) makes absolutely no sound of its own. It only changes the consonant before it."}, {"statement": "The word 'мама' contains two vowel sounds.", "isTrue": true, "explanation": "The word 'мама' has two [а] sounds, which are vowels."}, {"statement": "It is correct to say 'vowel letter' (голосна літера).", "isTrue": false, "explanation": "A letter is just a visual symbol on a page. The word 'vowel' (голосний) describes the physical sound."}]} instruction={"Are these statements about Ukrainian sounds and letters true or false? (Правда чи ні?)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "звук", "right": "sound"}, {"left": "літера", "right": "letter"}, {"left": "голосний", "right": "vowel sound"}, {"left": "приголосний", "right": "consonant sound"}, {"left": "привіт", "right": "hi / hello (informal)"}, {"left": "добре", "right": "good / fine"}, {"left": "чудово", "right": "great / wonderful"}, {"left": "нормально", "right": "okay / so-so"}, {"left": "мама", "right": "mother"}, {"left": "молоко", "right": "milk"}]} instruction={"Match each Ukrainian word to its English meaning."} />
+<MatchUp client:only="react" pairs={[{"left": "мама", "right": "mother"}, {"left": "тато", "right": "father"}, {"left": "молоко", "right": "milk"}, {"left": "око", "right": "eye"}, {"left": "дім", "right": "house"}, {"left": "сон", "right": "dream"}, {"left": "ніс", "right": "nose"}]} instruction={"Match the Ukrainian words to their English meanings."} />
 
-<TrueFalse client:only="react" items={[{"statement": "Ukrainian has 33 letters in its alphabet.", "isTrue": true, "explanation": "Yes — the абетка has exactly 33 letters, from А to Я."}, {"statement": "Ukrainian has 33 sounds — the same number as letters.", "isTrue": false, "explanation": "Ukrainian has 38 sounds. Letters Я, Ю, Є, Ї can each represent two sounds; Ь represents no sound at all."}, {"statement": "The letter Ь (м'який знак) makes its own special soft sound.", "isTrue": false, "explanation": "Ь represents NO sound. It only softens the consonant before it, then disappears from the sound picture entirely."}, {"statement": "Vowel sounds (голосні) can be sung indefinitely.", "isTrue": true, "explanation": "Yes — air flows freely for голосні, so you can hold and sing А-А-А or О-О-О as long as you have breath."}, {"statement": "The word 'мама' has 4 letters and 4 sounds.", "isTrue": true, "explanation": "М-А-М-А = 4 letters. [м]-[а]-[м]-[а] = 4 sounds. Letters and sounds match exactly for мама."}, {"statement": "Ukrainian has 6 vowel sounds.", "isTrue": true, "explanation": "The six vowel sounds are [а], [о], [у], [е], [и], [і]. There are 10 vowel LETTERS, but only 6 vowel sounds."}, {"statement": "It is correct to say 'голосна літера' (vowel letter).", "isTrue": false, "explanation": "No — голосний describes a SOUND, not a letter. Letters only represent sounds; they are not sounds themselves."}, {"statement": "In the word 'Привіт', there are 2 vowel sounds.", "isTrue": true, "explanation": "П[р][и]В[і]Т — the vowel sounds are [и] and [і], giving 2 голосні звуки and 4 приголосні."}]} instruction={"True or false? Think carefully about what you learned in this module."} />
+<DivideWords client:only="react" items={[{"word": "мама", "answer": "ма-ма"}, {"word": "тато", "answer": "та-то"}, {"word": "молоко", "answer": "мо-ло-ко"}, {"word": "око", "answer": "о-ко"}, {"word": "привіт", "answer": "при-віт"}, {"word": "чудово", "answer": "чу-до-во"}]} instruction={"Divide these words into syllables (склади). Remember: one vowel = one syllable."} />
 
-<Anagram client:only="react" items={[{"scrambled": "м а м а", "answer": "мама", "hint": "mother"}, {"scrambled": "т а т о", "answer": "тато", "hint": "father"}, {"scrambled": "н і с", "answer": "ніс", "hint": "nose"}, {"scrambled": "с о н", "answer": "сон", "hint": "dream"}, {"scrambled": "о к о", "answer": "oko", "hint": "eye"}, {"scrambled": "з в у к", "answer": "звук", "hint": "sound"}, {"scrambled": "д і м", "answer": "дім", "hint": "house"}, {"scrambled": "ч а й", "answer": "чай", "hint": "tea"}]} instruction={"Rearrange the letters to form a Ukrainian vocabulary word. Use the English hint to help you."} />
+<Quiz client:only="react" questions={[{"question": "How do you say 'Hi!' informally in Ukrainian?", "options": [{"text": "Привіт!", "correct": true}, {"text": "Чудово!", "correct": false}, {"text": "Нормально!", "correct": false}, {"text": "Добре!", "correct": false}]}, {"question": "If someone asks 'Як справи?' (How are you?), which of these means 'Great'?", "options": [{"text": "Чудово", "correct": true}, {"text": "Добре", "correct": false}, {"text": "Нормально", "correct": false}, {"text": "Привіт", "correct": false}]}, {"question": "Which phrase means 'How are you?'", "options": [{"text": "Як справи?", "correct": true}, {"text": "А у тебе?", "correct": false}, {"text": "Привіт?", "correct": false}, {"text": "Нормально?", "correct": false}]}, {"question": "If a friend says 'Добре. А у тебе?' they are asking:", "options": [{"text": "And you?", "correct": true}, {"text": "How are you?", "correct": false}, {"text": "Are you okay?", "correct": false}, {"text": "What is your name?", "correct": false}]}, {"question": "Which of these means 'Fine' or 'Good'?", "options": [{"text": "Добре", "correct": true}, {"text": "Нормально", "correct": false}, {"text": "Чудово", "correct": false}, {"text": "Привіт", "correct": false}]}, {"question": "Which of these means 'Okay' or 'Average'?", "options": [{"text": "Нормально", "correct": true}, {"text": "Добре", "correct": false}, {"text": "Чудово", "correct": false}, {"text": "Привіт", "correct": false}]}]} instruction={"Test your understanding of the basic Ukrainian greeting."} />
 
-<Quiz client:only="react" questions={[{"question": "The letter Щ represents how many sounds?", "options": [{"text": "One sound", "correct": false}, {"text": "Two sounds: [шч]", "correct": true}, {"text": "Three sounds", "correct": false}, {"text": "No sound", "correct": false}]}, {"question": "What does 'Як справи?' mean in English?", "options": [{"text": "What is your name?", "correct": false}, {"text": "How are you?", "correct": true}, {"text": "Good morning!", "correct": false}, {"text": "Thank you!", "correct": false}]}, {"question": "How many VOWEL SOUNDS does Ukrainian have?", "options": [{"text": "4", "correct": false}, {"text": "5", "correct": false}, {"text": "6", "correct": true}, {"text": "8", "correct": false}]}, {"question": "How many vowel LETTERS does Ukrainian have?", "options": [{"text": "6", "correct": false}, {"text": "8", "correct": false}, {"text": "10", "correct": true}, {"text": "12", "correct": false}]}, {"question": "Which phrase is an informal greeting in Ukrainian?", "options": [{"text": "добре", "correct": false}, {"text": "привіт", "correct": true}, {"text": "чудово", "correct": false}, {"text": "нормально", "correct": false}]}, {"question": "How many syllables does 'мама' have? (Tip: count the vowel sounds!)", "options": [{"text": "1", "correct": false}, {"text": "2", "correct": true}, {"text": "3", "correct": false}, {"text": "4", "correct": false}]}, {"question": "How many vowel sounds are in the word 'молоко' (milk)?", "options": [{"text": "1", "correct": false}, {"text": "2", "correct": false}, {"text": "3", "correct": true}, {"text": "4", "correct": false}]}]} instruction={"More questions about the Ukrainian alphabet and sounds. Choose the correct answer."} />
-
-<GroupSort client:only="react" groups={{"Голосні літери (Vowel letters)": ["А", "Е", "И", "І", "О", "У", "Є", "Ї", "Ю", "Я"], "Приголосні літери (Consonant letters)": ["Б", "В", "Г", "Ґ", "Д", "Ж", "З", "Й", "К", "Л", "М", "Н", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "П"]}} instruction={"Sort these Ukrainian letters into their correct category — vowel letters or consonant letters. Remember: Ь is neither (it is special — no sound)."} />
+<OddOneOut client:only="react" items={[{"words": ["А", "О", "У", "М"], "correct": 3, "explanation": "М represents a consonant sound (приголосний). The others represent vowel sounds (голосні)."}, {"words": ["К", "Н", "Т", "Е"], "correct": 3, "explanation": "Е represents a vowel sound. The others are consonant letters."}, {"words": ["мама", "тато", "око", "дім"], "correct": 3, "explanation": "Дім has exactly one syllable (one vowel sound). The others have two syllables."}, {"words": ["молоко", "чудово", "нормально", "сон"], "correct": 3, "explanation": "Сон has exactly one syllable. The others have three syllables."}, {"words": ["Привіт", "Як справи", "А у тебе", "Молоко"], "correct": 3, "explanation": "Молоко is a noun (milk), while the others are parts of a basic greeting dialogue."}, {"words": ["звук", "літера", "абетка", "добре"], "correct": 3, "explanation": "Добре means 'fine'. The others are phonetic and linguistic terms."}]} instruction={"Find the word that does not belong in the group (Четверте зайве)."} />
 
 <LetterGrid client:only="react" letters={[{"upper": "А", "lower": "а", "emoji": "🍍", "key_word": "ананас", "sound_type": "vowel"}, {"upper": "О", "lower": "о", "emoji": "👁️", "key_word": "око", "sound_type": "vowel"}, {"upper": "У", "lower": "у", "emoji": "🇺🇦", "key_word": "Україна", "sound_type": "vowel"}, {"upper": "И", "lower": "и", "emoji": "🐟", "key_word": "риба", "sound_type": "vowel"}, {"upper": "І", "lower": "і", "emoji": "🦃", "key_word": "індик", "sound_type": "vowel"}, {"upper": "Е", "lower": "е", "emoji": "📺", "key_word": "екран", "sound_type": "vowel"}, {"upper": "Я", "lower": "я", "emoji": "🍎", "key_word": "яблуко", "sound_type": "vowel"}, {"upper": "Ю", "lower": "ю", "emoji": "🧑", "key_word": "юнак", "sound_type": "vowel"}, {"upper": "Є", "lower": "є", "emoji": "🦝", "key_word": "єнот", "sound_type": "vowel"}, {"upper": "Ї", "lower": "ї", "emoji": "🦔", "key_word": "їжак", "sound_type": "vowel"}]} title={"Голосні — Vowels"} />
 
@@ -188,28 +158,21 @@ Test yourself with these questions — every answer comes from what you learned 
 
 <WatchAndRepeat client:only="react" items={[{"video": "https://www.youtube.com/watch?v=aq0cjB90s3w", "letter": "Й", "word": "йогурт"}, {"video": "https://www.youtube.com/watch?v=UsJkbdsY2RA", "letter": "Ч", "word": "черепаха"}, {"video": "https://www.youtube.com/watch?v=QmBLieIuf6Q", "letter": "Щ", "word": "щітка"}, {"video": "https://www.youtube.com/watch?v=yhSAf41LX8I", "letter": "Я", "word": "яблуко"}, {"video": "https://www.youtube.com/watch?v=9JdIBYCTWGw", "letter": "Ю", "word": "юнак"}, {"video": "https://www.youtube.com/watch?v=O0bwRyyBQSc", "letter": "Є", "word": "єнот"}, {"video": "https://www.youtube.com/watch?v=cJlal8XKBxo", "letter": "Ь", "word": "сіль"}, {"video": "https://www.youtube.com/watch?v=UcjdjQXhAY8", "letter": "Ї", "word": "їжак"}, {"video": "https://www.youtube.com/watch?v=u44eCjR2Oz8", "letter": "Ц", "word": "цибуля"}, {"video": "https://www.youtube.com/watch?v=haHRsFFZRQI", "letter": "Ф", "word": "фламінго"}]} title={"Watch and repeat: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф"} />
 
-
 </TabItem>
 <TabItem label="Ресурси">
 
 **Джерела — References**
 
-- [Большакова Grade 1 буквар, p.24](https://pidruchnyk.com.ua/uploads/book/1-klas-bukvar-bolshakova-2018-1.pdf#page=24)
-  _Голосні/приголосні taught through poems. 'Голосні почуєш в пісні.' 'Приголосні деренчать.'_
-- [Захарійчук Grade 1 буквар (NUS 2025), p.13](https://pidruchnyk.com.ua/uploads/book/1-klas-bukvar-zaharijchuk-2025-1.pdf#page=13)
-  _Sound notation: [•] for vowels, [–] for consonants, [=] for soft consonants._
-- [Заболотний Grade 5, p.83](https://pidruchnyk.com.ua/uploads/book/5-ukrmova-zabolotny-2023.pdf#page=83)
-  _'Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.' 33 букви, 38 звуків._
-- [Litvinova Grade 5, p.130](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=130)
-  _'Чи можна говорити «голосна літера»? Чому?' — pedagogical question about sounds vs letters._
 - [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/)
   _Привіт, Як справи?, response patterns._
 
-**Граматика — Grammar (МійКлас)**
+## Підручники (Textbooks)
 
-- [МійКлас: Голосні й приголосні звуки](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/golosni-i-prigolosni-zvuki-40864) (miyklas.com.ua)
-- [МійКлас: Приголосні м'які й тверді, дзвінкі й глухі](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885) (miyklas.com.ua)
-- [МійКлас: Алфавіт (абетка, азбука)](https://miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/poznachennia-zvukiv-movlennia-na-pismi-alfavit-abetka-azbuka-41217) (miyklas.com.ua)
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=72), стор. 72
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=43), стор. 43
+- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-1.pdf#page=34), стор. 34
+- [Кравцова Н. М. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-kravcova-2019-1.pdf#page=35), стор. 35
+- [Авраменко О. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=73), стор. 73
 
 **Статті — Articles**
 
@@ -221,15 +184,6 @@ Test yourself with these questions — every answer comes from what you learned 
 
 - [How to read the Ukrainian Alphabet. Cyrillic Letters. Part I](https://www.youtube.com/watch?v=Gt7O4FLGxjI) (Speak Ukrainian)
 - [UKRAINIAN: handwritten cyrillic alphabet](https://www.youtube.com/watch?v=2tEPOopp7-I) (Red Purple Ukrainian)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/)
-- [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/)
-
-**Подкасти — Podcasts**
-
-- [ULP Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/)
 
 </TabItem>
 </Tabs>

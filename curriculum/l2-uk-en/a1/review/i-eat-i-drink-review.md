@@ -1,49 +1,41 @@
 ## Linguistic Scan
-No linguistic errors found in the Ukrainian text. The writer correctly used standard Ukrainian forms and successfully identified and fixed a colloquial Surzhyk error in the plan (changing the plan's `ти їш` to the standard literary `ти їси`).
-
-There is, however, a critical inaccuracy in the English metalanguage describing Ukrainian phonetics ("soft vowel" instead of "iotated vowel"), which will be addressed in the findings.
+1 critical error found:
+- "їш" is a Surzhyk/colloquial form (influenced by Russian "ешь" or analogy) of the 2nd person singular present tense. The standard Ukrainian form is "ти їси". This incorrect form appears 3 times in the generated text (though it is correctly listed as "ти їси" in the conjugation table later).
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-conjugation -->` is placed directly after the section teaching the conjugation of їсти and пити.
-- `<!-- INJECT_ACTIVITY: fill-in-accusative -->` is placed correctly after the accusative case rules.
-- `<!-- INJECT_ACTIVITY: quiz-accusative -->` is placed correctly after the accusative case rules.
-- `<!-- INJECT_ACTIVITY: group-sort-accusative -->` is placed correctly at the end of the accusative section.
-
-All markers are present, appropriately paced, and match the types/focus specified in the plan's `activity_hints`.
+- Marker `<!-- INJECT_ACTIVITY: verb-conjugation-drill -->` is placed correctly after the conjugation explanations.
+- Marker `<!-- INJECT_ACTIVITY: accusative-form-builder -->` is placed correctly after the feminine accusative examples.
+- Marker `<!-- INJECT_ACTIVITY: noun-change-sorting -->` is placed immediately after the previous activity.
+- Marker `<!-- INJECT_ACTIVITY: accusative-choice-quiz -->` is placed correctly after the "хотіти" examples.
+All 4 markers correspond to the plan's activity hints, are logically distributed, and test the concepts that were just taught. 
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Follows the `content_outline` strictly, but misses `бутерброд` and `яблуко` which were explicitly requested in the plan's `dialogue_situations` motivation list. |
-| 2. Linguistic accuracy | 9/10 | Ukrainian text is flawless and corrects a plan error (`їш` → `їси`). However, the English explanation of the apostrophe rule incorrectly uses the term "soft vowel", which is a phonetic inaccuracy. |
-| 3. Pedagogical quality | 9/10 | Excellent integration of the Grade 4/Grade 7 textbook methodology (бачу що? кого?). The only flaw is the imprecise phonetic explanation for the apostrophe rule. |
-| 4. Vocabulary coverage | 10/10 | All required (`їсти`, `пити`, `їм`, `п'ю`, `каву`, `воду`, `рибу`) and recommended vocabulary is naturally integrated into the prose and examples. |
-| 5. Exercise quality | 10/10 | All four required exercise markers are present and perfectly placed immediately after the relevant grammar instruction. |
-| 6. Engagement & tone | 10/10 | The tone is direct, encouraging, and practical. The instruction "Build a habit: every time you use їсти or пити, ask що?" is excellent pedagogical framing. |
-| 7. Structural integrity | 10/10 | Word count (1288) is perfectly within the target +10% range. All H2 headings match the plan exactly. Clean markdown. |
-| 8. Cultural accuracy | 10/10 | Strong cultural grounding by explicitly citing the Ukrainian school system's approach to teaching the accusative case. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogue 1 is somewhat stilted (essentially an interrogation: "And Olena? And the kids?"), but this is a direct result of following the plan's highly specific structural mandate. Dialogue 2 is very natural. |
+| 1. Plan adherence | 10/10 | The module explicitly covers all plan points, including the specific dialogues, the "бачу що? кого?" trigger, and all the inanimate accusative rules. The recommended vocabulary (кашу, картоплю, сметану) is integrated naturally into the text. |
+| 2. Linguistic accuracy | 6/10 | CRITICAL ERROR: The module teaches the non-standard form "їш" instead of the standard Ukrainian "їси" in the first dialogue and subsequent explanations. However, it accurately explains the accusative rules, conjugation of "пити", and correctly warns against Russianisms ("кофе" and "творог"). |
+| 3. Pedagogical quality | 10/10 | The PPP flow is perfectly executed. Grammatical concepts (їсти vs пити, accusative case) are explained clearly and immediately followed by multiple concrete examples ("Я їм суп. Ми їмо яблуко."). The "Soup rule" is an excellent cultural/pedagogical framing device. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended words (їсти, пити, каву, воду, рибу, кашу, картоплю, сметану) are effectively embedded in context within the dialogues and grammar examples. |
+| 5. Exercise quality | 10/10 | 4 injected activity markers correspond to the 4 hints in the plan and are placed logically after the target concept is taught. |
+| 6. Engagement & tone | 10/10 | The tone is warm and encouraging, using a natural teacher persona without falling into gamified tropes. |
+| 7. Structural integrity | 10/10 | Word count is 1592 (target 1200). All plan H2 headers are present. Markdown formatting is clean. |
+| 8. Cultural accuracy | 10/10 | High. The "Soup rule" is an authentic cultural detail, and the explicit warnings against "кофе" and "творог" actively teach decolonized vocabulary. |
+| 9. Dialogue & conversation quality | 10/10 | The dialogues are natural and contextualized ("Lunch break at work"), matching the plan's requirements exactly while demonstrating the target grammar organically. |
 
 ## Findings
-
-[Plan adherence] [Minor]
-Location: `## Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)` - bulleted list of examples.
-Issue: The plan explicitly listed `бутерброд` and `яблуко` in the `dialogue_situations` motivation section, but they were omitted from the prose.
-Fix: Add them as examples to the masculine/neuter noun list where no ending change occurs.
-
-[Linguistic accuracy] [Critical]
-Location: `## Їсти і пити (To Eat and To Drink)` - "Notice the apostrophe before ю, є — this is a standard Ukrainian spelling rule when п meets a soft vowel."
-Issue: Linguistically inaccurate phonetic claim. The vowels `ю` and `є` are iotated vowels, not "soft vowels". The entire purpose of the apostrophe is to *prevent* the preceding consonant from softening, keeping it hard before the /j/ sound. Teaching them as "soft vowels" in this context gives learners a fundamentally wrong phonetic model.
-Fix: Change the terminology to clarify that the consonant is hard and the vowel is iotated.
+[2. Linguistic accuracy] [critical]
+Location: `> **Тарас:** Привіт! Що ти їш на сніданок? *(Hi! What are you eating for breakfast?)*` and `The dialogue above uses the high-frequency question **Що ти їш?** (What are you eating?)` and `Notice the contrast between the verbs: **їш** is highly irregular`
+Issue: The text uses the non-standard/Surzhyk form "їш" for the 2nd person singular present tense of "їсти". The correct standard Ukrainian form is "ти їси". Teaching a non-standard form to beginners is a critical linguistic error.
+Fix: Replace all 3 instances of "їш" with "їси".
 
 ## Verdict: REVISE
-The module is extremely high quality, naturally fixing a Surzhyk error present in the plan itself (`їш` -> `їси`) and providing excellent textbook-aligned pedagogy. However, the phonetic claim regarding "soft vowels" must be corrected to prevent learners from internalizing incorrect mechanics, and two missing vocabulary items from the plan need to be inserted.
+The text is structurally, pedagogically, and culturally excellent, but it contains a critical linguistic error (teaching the non-standard form "їш"). The module must be revised to fix this error to prevent teaching learners incorrect morphology.
 
 <fixes>
-- find: "when п meets a soft vowel."
-  replace: "when a hard consonant like п meets an iotated vowel like ю or є."
-- find: "- **бана́н → банан** — Я їм банан. *(I eat a banana.)*"
-  replace: "- **бана́н → банан** — Я їм банан. *(I eat a banana.)*\n- **бутербро́д → бутерброд** — Я їм бутерброд. *(I eat a sandwich.)*"
-- find: "- **молоко → молоко** — Я п'ю молоко. *(I drink milk.)*"
-  replace: "- **молоко → молоко** — Я п'ю молоко. *(I drink milk.)*\n- **я́блуко → яблуко** — Я їм яблуко. *(I eat an apple.)*"
+- find: "> **Тарас:** Привіт! Що ти їш на сніданок?"
+  replace: "> **Тарас:** Привіт! Що ти їси на сніданок?"
+- find: "The dialogue above uses the high-frequency question **Що ти їш?** (What are you eating?)"
+  replace: "The dialogue above uses the high-frequency question **Що ти їси?** (What are you eating?)"
+- find: "Notice the contrast between the verbs: **їш** is highly irregular"
+  replace: "Notice the contrast between the verbs: **їси** is highly irregular"
 </fixes>

@@ -1,47 +1,51 @@
 ## Linguistic Scan
-No linguistic errors found. The module uses correct Ukrainian forms for time-telling (ordinal numbers, locative chunks with "о/об", and "пів на" constructions). No Russianisms, Surzhyk, or calques identified.
+No linguistic errors found.
 
 ## Exercise Check
-The module contains 4 activity markers, precisely matching the plan's `activity_hints`.
-1. `<!-- INJECT_ACTIVITY: match-up-times -->`: Placed after the 1:00–12:00 hour table. Tests matching numerical times to words.
-2. `<!-- INJECT_ACTIVITY: quiz-clock-faces -->`: Placed after the "half past" and "quarter" explanations. Tests visual/logical recognition.
-3. `<!-- INJECT_ACTIVITY: fill-in-o-kotrij -->`: Placed after the "At what time?" (о + hour) section. Tests production of the locative shifted form.
-4. `<!-- INJECT_ACTIVITY: quiz-time-of-day -->`: Placed after the AM/PM equivalent section (ранку, дня, etc.).
+- `<!-- INJECT_ACTIVITY: quiz-clock-matching -->`: Placed after "Котра година?" section. Matches plan.
+- `<!-- INJECT_ACTIVITY: match-up-digits -->`: Placed after "Котра година?" section. Matches plan.
+- `<!-- INJECT_ACTIVITY: fill-in-o-kotrii -->`: Placed after "О котрій?" section. Matches plan.
+- `<!-- INJECT_ACTIVITY: quiz-time-of-day -->`: Placed after "О котрій?" section. Matches plan.
+All exercises are appropriately placed and match the plan's activity hints in type and count.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all objectives: "Котра година?", "О котрій?", half hours, time of day. Cites Zachariychuk Grade 4 p.117. |
-| 2. Linguistic accuracy | 10/10 | Correct feminine ordinals (перша, одинадцята). Correct use of "об" before vowels. Correct "пів на" logic. |
-| 3. Pedagogical quality | 10/10 | PPP structure: Dialogues (Presentation) -> Rules (Explanation) -> Activities (Practice). Explains the logic of "halfway to the next hour" clearly. |
-| 4. Vocabulary coverage | 10/10 | All 12 hours, half-hours, quarters (recognition), and time-of-day words from the plan are present. |
-| 5. Exercise quality | 10/10 | Markers are placed immediately after relevant sections. Focus matches plan (quiz, fill-in, match-up). |
-| 6. Engagement & tone | 10/10 | Professional, teacher-like tone. No "unlock the magic" fluff. Natural dialogues with named speakers. |
-| 7. Structural integrity | 9/10 | Clean markdown. H2 headings match plan. Word count (1471) is ~22% over target (1200), which is slightly high for A1 but justified by the dense tables. |
-| 8. Cultural accuracy | 10/10 | Decolonized approach, grounding time in Ukrainian school standards (Zachariychuk, Ponomarova). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogue 1 and 2 feel natural and serve the pedagogical goal of showing scheduling in context. |
+| 1. Plan adherence | 10/10 | Covers all outline points, introduces ordinals for time, explains 'пів на' and quarters, explains 'о/об' locative chunks, and includes required time-of-day words. |
+| 2. Linguistic accuracy | 10/10 | Excellent accuracy. Correctly uses forms like 'за чверть третя', 'чверть на третю', 'пів на другу', and actively teaches against common Russianisms like 'без' or 'у/в'. |
+| 3. Pedagogical quality | 7/10 | DEDUCT: The writer leaked meta-notes from the plan directly into the student-facing text ("Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook", "You must warn against", "You must explicitly forbid"). |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary is naturally integrated into the explanations and dialogues. |
+| 5. Exercise quality | 10/10 | Exercise markers are correctly placed after their respective teaching sections and correspond perfectly to the plan. |
+| 6. Engagement & tone | 8/10 | DEDUCT: The meta-language addressed to the instructor breaks the otherwise engaging teacher persona. REWARD: Clear, helpful explanations of the conceptual difference between English and Ukrainian time-telling. |
+| 7. Structural integrity | 10/10 | Clean markdown, sections match outline, word count is well above the 1200 target (1450). |
+| 8. Cultural accuracy | 10/10 | Directly addresses and corrects common Russianisms ('без', 'у/в' for time). |
+| 9. Dialogue & conversation quality | 9/10 | The first dialogue is natural and contextualizes the grammar perfectly. The second dialogue uses slightly generic "Студент А / Студент Б" designations but functions well. |
 
 ## Findings
-[STRUCTURAL] [MINOR]
-Location: Word count
-Issue: The module is 1471 words, exceeding the 1200 target by ~22%. While the content is high quality, it may be slightly dense for an early A1 module.
-Fix: No action required as the density is due to necessary vocabulary tables and textbook citations.
 
-## Verdict: PASS
+[Pedagogical quality] [Major]
+Location: "Котра година?" section ("Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook, because the word **година** (hour) is feminine, the numbers must agree with it.")
+Issue: The writer accidentally included the curriculum reference note from the plan directly into the student-facing text, breaking the fourth wall.
+Fix: Remove the meta-reference to the textbook.
 
-The module is linguistically sound, follows the plan perfectly, and maintains a high pedagogical standard. The slight word count overshoot is acceptable given the thoroughness of the hour tables and the inclusion of both "right now" and "at what time" patterns.
+[Pedagogical quality] [Major]
+Location: "Котра година?" section ("You must warn against using the word "без" (without) for time, which is a common Russianism and incorrect in standard Ukrainian.")
+Issue: The writer is addressing the instructor ("You must warn against") instead of the learner.
+Fix: Rephrase to address the learner directly ("You must avoid using...").
+
+[Pedagogical quality] [Major]
+Location: "О котрій?" section ("You must explicitly forbid using the prepositions "в" or "у" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid.")
+Issue: The writer is again addressing the instructor ("explicitly forbid using") based on the plan's notes, rather than addressing the student.
+Fix: Rephrase to address the learner directly ("You must never use...").
+
+## Verdict: REVISE
+The module is linguistically excellent and covers the plan perfectly, but it contains several instances of meta-prompt leakage where notes intended for the author ("Zakhariichuk Grade 4", "You must warn against", "You must explicitly forbid") were written directly into the student-facing text. These break the fourth wall and must be fixed.
 
 <fixes>
-- find: "о пе́ршій (at 1:00)"
-  replace: "о першій (at 1:00)"
-- find: "о дру́гій (at 2:00)"
-  replace: "о другій (at 2:00)"
-- find: "о тре́тій (at 3:00)"
-  replace: "о третій (at 3:00)"
-- find: "о четве́ртій (at 4:00)"
-  replace: "о четвертій (at 4:00)"
-- find: "о п'я́тій (at 5:00)"
-  replace: "о п'ятій (at 5:00)"
-- find: "о шо́стій (at 6:00)"
-  replace: "о шостій (at 6:00)"
+- find: "Following the native pedagogical approach shown in the Zakhariichuk Grade 4 textbook, because the word **година** (hour) is feminine, the numbers must agree with it."
+  replace: "Because the word **година** (hour) is feminine, the numbers must agree with it."
+- find: "You must warn against using the word \"без\" (without) for time, which is a common Russianism and incorrect in standard Ukrainian."
+  replace: "You must avoid using the word \"без\" (without) for time, which is a common Russianism and incorrect in standard Ukrainian."
+- find: "You must explicitly forbid using the prepositions \"в\" or \"у\" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid."
+  replace: "You must never use the prepositions \"в\" or \"у\" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid."
 </fixes>

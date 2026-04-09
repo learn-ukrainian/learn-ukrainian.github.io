@@ -1,6 +1,6 @@
 # Build Summary: foundations-practice (A2)
 
-Generated: 2026-04-07 22:44
+Generated: 2026-04-09 01:11
 
 ## Pipeline Phases
 
@@ -20,6 +20,7 @@ Generated: 2026-04-07 22:44
 | review | complete | 2026-04-07 20:44:03 |
 | stress | complete | 2026-04-07 20:44:03 |
 | publish | complete | 2026-04-07 20:44:05 |
+| activities | complete | 2026-04-08 23:11:10 |
 
 ## Reviews
 
@@ -38,6 +39,7 @@ Generated: 2026-04-07 22:44
 | activities | gemini-tools (gemini-3.1-pro-preview) | 133s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 123s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 159s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 138s | ✅ |
 | vocab | gemini (auto) | 338s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 163s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |
@@ -49,6 +51,7 @@ Generated: 2026-04-07 22:44
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`

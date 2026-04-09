@@ -12,7 +12,7 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Observe from '@site/src/components/Observe';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
@@ -22,149 +22,112 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги (Dialogues)
+## Діало́ги — Dialogues
 
-Оле́на and Іва́н are setting up a classroom for a Ukrainian lesson. Desks are bare, supplies are in boxes, and everything needs to be counted and arranged before students arrive.
+When you step into a new environment, like setting up a classroom for a Ukrainian lesson, you rarely deal with just one isolated item. You need many chairs for the students, many tables to work on, and many books to read. This natural, everyday situation is the perfect place to learn how to express more than one thing. We call this grammatical concept the plural form, or **множина́** (plural). Observe how teachers and students count and arrange items.
+
+The following conversation shows a teacher asking the students to look around the room, based on the classic textbook by Vashulenko for Grade 3. Pay attention to how the students identify groups of objects.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Іван:</span> Що тут є? *(What's here?)*</div>
+<div class="dialogue-line"><span class="speaker">Вчи́тель:</span> До́брий день! **Що тут є?** *(Good afternoon! What is here?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Столи́, стільці́ і ві́кна. *(Tables, chairs, and windows.)*</div>
+<div class="dialogue-line"><span class="speaker">У́чні:</span> Добрий день! Тут є **столи́**, **стільці́** і **ві́кна**. *(Good afternoon! Here are tables, chairs, and windows.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іван:</span> Які́ столи? *(What kind of tables?)*</div>
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> До́бре. А **які́ столи**? *(Good. And what kind of tables?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Столи вели́кі й нові́. А стільці — старі́. *(The tables are big and new. But the chairs are old.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іван:</span> А вікна? *(And the windows?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Вікна чи́сті. *(The windows are clean.)*</div>
+<div class="dialogue-line"><span class="speaker">Учні:</span> **Столи вели́кі** й **нові́**. А **стільці** — **старі́**. *(The tables are big and new. And the chairs are old.)*</div>
 
 </div>
 
-Notice what just happened. Іван didn't ask about one table — he asked about **столи** (tables), plural. Олена answered with plural adjectives: **великі** (big), **нові** (new), **старі** (old), **чисті** (clean). Every adjective in the plural ended in **-і**. That pattern is not a coincidence — it's a rule you'll learn in this module.
+Listen to the final sounds of those objects. You already know the singular words **стіл** (table), **стіле́ць** (chair), and **вікно́** (window) from previous modules. Notice how their endings transform to indicate that there are several of them in the room.
 
-Now they need supplies. Олена checks the school supply cabinet.
+These plural forms are essential everywhere, not just inside a classroom. Whenever you are buying supplies, asking for directions, or looking for various **ре́чі** (things) in a local store, you must know how to ask for multiple items clearly and accurately.
+
+Imagine you are a student shopping for office supplies. The plural forms appear naturally when buying more than one item.
+
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> У вас є ручки? *(Do you have pens?)*</div>
+<div class="dialogue-line"><span class="speaker">Студе́нт:</span> Добрий день! **У вас є ручки?** *(Good afternoon! Do you have pens?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іван:</span> Так! Які ручки — черво́ні чи си́ні? *(Yes! What kind of pens — red or blue?)*</div>
+<div class="dialogue-line"><span class="speaker">Продаве́ць:</span> **Так! Які ручки? Черво́ні чи си́ні?** *(Yes! What kind of pens? Red or blue?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Сині. І ще зо́шити. *(Blue. And also notebooks.)*</div>
+<div class="dialogue-line"><span class="speaker">Студент:</span> **Сині**. І ще **зо́шити**. *(Blue. And also notebooks.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іван:</span> Скі́льки? *(How many?)*</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> **Скі́льки?** *(How many?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Три зошити. *(Three notebooks.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іван:</span> А олівці́ є? *(Are there pencils?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Є. Ось жо́вті олівці й чо́рні олівці. *(Yes. Here are yellow pencils and black pencils.)*</div>
+<div class="dialogue-line"><span class="speaker">Студент:</span> **Три зошити**, будь ла́ска. *(Three notebooks, please.)*</div>
 
 </div>
 
-Plurals appeared naturally throughout both dialogues. One **ручка** (pen) became **ручки** (pens). One **зошит** (notebook) became **зошити** (notebooks). One **олівець** (pencil) became **олівці** (pencils). Two patterns emerged: masculine and feminine nouns took **-и** or **-і** endings, while neuter nouns like **вікно** became **вікна** with **-а**. The next section explains why these patterns work the way they do.
+In this exchange, the student asks for pens and notebooks. The shopkeeper naturally responds with plural adjectives like red and blue to clarify the request. Notice how the endings changed from the basic singular forms you learned in previous modules. The secret to Ukrainian plurals lies entirely in the final letters of the words.
 
-## Оди́н → бага́то (Singular → Plural)
+## Оди́н → бага́то — Singular → Plural
 
-Ukrainian nouns have two numbers: **однина** (singular) and **множина** (plural). A noun naming one object is in однина; a noun naming two or more is in множина. As Большако́ва puts it in her Grade 2 textbook (p. 18): "один предме́т → багато предме́тів" — one object becomes many objects. There are three main plural patterns, organized by gender.
+A famous Ukrainian textbook for the second grade by Bolshakova introduces plurals with a simple phrase: **один предме́т → багато предме́тів** (one item → many items). In English, you typically add an "s" to the end of a word to make it plural. In Ukrainian, you change the "tail" or the ending of the word. There are three main plural patterns for the nominative case, depending on the noun's gender.
 
-**Masculine nouns** typically take **-и** or **-і** in the plural:
+The first pattern is for masculine nouns, which usually end in **-и** or **-і**. Most masculine words end in a hard consonant, and to make them plural, you simply add the letter **и**. For example, **стіл** (table) becomes **столи** (tables), **телефо́н** (phone) becomes **телефо́ни** (phones), and **зо́шит** (notebook) becomes **зошити** (notebooks). If the masculine noun ends in a soft consonant, like the soft sign, you replace it with an **і**. This is why **стілець** (chair) becomes **стільці** (chairs).
 
-| Singular | → | Plural |
-|----------|---|--------|
-| стіл (m) — table | → | столи — tables |
-| телефо́н (m) — phone | → | телефо́ни — phones |
-| зошит (m) — notebook | → | зошити — notebooks |
-| стіле́ць (m) — chair | → | стільці — chairs |
-| олівець (m) — pencil | → | олівці — pencils |
-| підру́чник (m) — textbook | → | підру́чники — textbooks |
+The second pattern belongs to feminine nouns, which also usually take **-и** or **-і**. These words typically end in **-а** or **-я**. To form the plural, you drop the final vowel and replace it with **и** or **і**. For instance, **кни́га** (book) becomes **кни́ги** (books), **ла́мпа** (lamp) becomes **ла́мпи** (lamps), and **су́мка** (bag) becomes **су́мки́** (bags).
 
-Most masculine nouns take **-и**. Nouns with a soft consonant at the end — like **стілець** and **олівець** — take **-і** instead. Notice how the **е** in the suffix disappears: стілець → стільці, олівець → олівці.
+:::tip
+There is a helpful guideline, though not a strict rule as exceptions exist: after the consonants **г**, **к**, and **х**, Ukrainian uses the **-и** ending. This is why **книга** (book) becomes **книги** (books) and **ру́чка** (pen) changes to **ручки** (pens). After most other consonants, nouns generally take **-и** or **-і** (**стіл** → **столи**, **стілець** → **стільці**).
+:::
 
-**Feminine nouns** also take **-и** or **-і** in the plural:
+The third pattern is for neuter nouns. The shift here is quite distinct: the ending changes to **-а** or **-я**. The neuter ending **-о** changes to **-а** (**вікно** → **вікна**). The neuter ending **-е** changes to **-я**, though words with this ending are not covered yet. Similarly, **лі́жко** (bed) becomes **лі́жка** (beds), **крі́сло** (armchair) shifts to **крі́сла** (armchairs), and **дзе́ркало** (mirror) changes to **дзерка́ла** (mirrors). This strong **-а** sound at the end is the signature of the neuter plural form.
 
-| Singular | → | Plural |
-|----------|---|--------|
-| кни́га (f) — book | → | кни́ги — books |
-| ручка (f) — pen | → | ручки — pens |
-| ла́мпа (f) — lamp | → | ла́мпи — lamps |
-| су́мка (f) — bag | → | су́мки — bags |
-| ка́рта (f) — map | → | ка́рти — maps |
-| до́шка (f) — board | → | до́шки — boards |
+<GroupSort client:only="react" groups={{"Однина (Singular)": ["стіл", "книга", "вікно", "ручка", "зошит", "дзеркало"], "Множина (Plural)": ["столи", "книги", "вікна", "ручки", "зошити", "дзеркала"]}} instruction={"Розподіліть слова (Sort the words)"} />
 
-A useful guideline: after **г**, **к**, **х**, the plural vowel is **-и** (книга → книги, ручка → ручки, дошка → дошки). This isn't an absolute rule, but it covers most feminine nouns you'll encounter at this level.
+The table below summarizes these essential noun endings. Masculine and feminine nouns generally share the **-и** and **-і** endings, while neuter nouns stand apart with the **-а** and **-я** endings. Because there are exceptions and minor stem changes, the best strategy is to learn each plural form alongside its singular noun when you study new vocabulary.
 
-**Neuter nouns** take **-а** in the plural:
+| Змі́на (Change) | Однина́ (Singular) | Множина (Plural) |
+| :--- | :--- | :--- |
+| Чолові́чий рід (Masculine) | **стіл**, **стілець** | **столи**, **стільці** |
+| Жіно́чий рід (Feminine) | **книга**, **ручка** | **книги**, **ручки** |
+| Сере́дній рід (Neuter) | **вікно**, **ліжко** | **вікна**, **ліжка** |
 
-| Singular | → | Plural |
-|----------|---|--------|
-| вікно (n) — window | → | вікна — windows |
-| крі́сло (n) — armchair | → | крі́сла — armchairs |
-| лі́жко (n) — bed | → | лі́жка — beds |
-| дзе́ркало (n) — mirror | → | дзерка́ла — mirrors |
-| сло́во (n) — word | → | слова́ — words |
+<FillIn client:only="react" items={[{"sentence": "стіл → _____", "answer": "столи", "options": ["столи", "столі", "стола"]}, {"sentence": "книга → _____", "answer": "книги", "options": ["книги", "книг", "книга"]}, {"sentence": "вікно → _____", "answer": "вікна", "options": ["вікна", "вікні", "вікно"]}, {"sentence": "зошит → _____", "answer": "зошити", "options": ["зошити", "зошита", "зошиті"]}, {"sentence": "стілець → _____", "answer": "стільці", "options": ["стільці", "стільця", "стільцу"]}, {"sentence": "ручка → _____", "answer": "ручки", "options": ["ручки", "ручкі", "ручка"]}, {"sentence": "лампа → _____", "answer": "лампи", "options": ["лампи", "лампі", "лампа"]}, {"sentence": "дзеркало → _____", "answer": "дзеркала", "options": ["дзеркала", "дзеркалі", "дзеркалу"]}, {"sentence": "ліжко → _____", "answer": "ліжка", "options": ["ліжка", "ліжкі", "ліжку"]}, {"sentence": "телефон → _____", "answer": "телефони", "options": ["телефони", "телефона", "телефоні"]}]} instruction={"Напишіть множину (Write the plural form)"} />
 
-The pattern is clean: drop **-о**, add **-а**. Neuter plurals are the most predictable group — learn this one pattern and it covers most neuter nouns from modules 8 through 12.
+<Quiz client:only="react" questions={[{"question": "Один стіл, а два...", "options": [{"text": "стола", "correct": false}, {"text": "столи", "correct": true}, {"text": "столів", "correct": false}, {"text": "стіли", "correct": false}]}, {"question": "Одна сумка, а дві...", "options": [{"text": "сумки", "correct": true}, {"text": "сумкі", "correct": false}, {"text": "сумок", "correct": false}, {"text": "сумка", "correct": false}]}, {"question": "Одне крісло, а два...", "options": [{"text": "крісла", "correct": true}, {"text": "крісли", "correct": false}, {"text": "кріслі", "correct": false}, {"text": "крісло", "correct": false}]}, {"question": "Один зошит, а три...", "options": [{"text": "зошита", "correct": false}, {"text": "зошиті", "correct": false}, {"text": "зошити", "correct": true}, {"text": "зошиту", "correct": false}]}, {"question": "Одне вікно, а три...", "options": [{"text": "вікні", "correct": false}, {"text": "вікну", "correct": false}, {"text": "вікна", "correct": true}, {"text": "вікни", "correct": false}]}, {"question": "Одна річ, а три...", "options": [{"text": "речі", "correct": true}, {"text": "річи", "correct": false}, {"text": "річі", "correct": false}, {"text": "речей", "correct": false}]}, {"question": "Один стілець, а три...", "options": [{"text": "стільця", "correct": false}, {"text": "стільці", "correct": true}, {"text": "стільци", "correct": false}, {"text": "стілеці", "correct": false}]}, {"question": "Одна книга, а дві...", "options": [{"text": "книги", "correct": true}, {"text": "книгі", "correct": false}, {"text": "книг", "correct": false}, {"text": "книгу", "correct": false}]}]} instruction={"Оберіть правильну форму множини (Choose the correct plural form)"} />
 
-One honest caveat: Ukrainian plurals do have exceptions. The word **річ** (thing) becomes **речі** (things) — not a standard pattern. At this stage, learn each plural alongside its singular as one unit. Full declension rules come at B1.
+## Прикме́тники у множині́ — Adjectives in Plural
 
-<FillIn client:only="react" items={[{"sentence": "стіл → ____", "answer": "столи", "options": ["столи", "стола", "столів"]}, {"sentence": "книга → ____", "answer": "книги", "options": ["книги", "книгу", "книг"]}, {"sentence": "вікно → ____", "answer": "вікна", "options": ["вікна", "вікну", "вікон"]}, {"sentence": "стілець → ____", "answer": "стільці", "options": ["стільці", "стільця", "стільців"]}, {"sentence": "ручка → ____", "answer": "ручки", "options": ["ручки", "ручку", "ручок"]}, {"sentence": "зошит → ____", "answer": "зошити", "options": ["зошити", "зошита", "зошитів"]}, {"sentence": "лампа → ____", "answer": "лампи", "options": ["лампи", "лампу", "ламп"]}, {"sentence": "сумка → ____", "answer": "сумки", "options": ["сумки", "сумку", "сумок"]}, {"sentence": "крісло → ____", "answer": "крісла", "options": ["крісла", "крісел", "кріслу"]}, {"sentence": "дзеркало → ____", "answer": "дзеркала", "options": ["дзеркала", "дзеркал", "дзеркалу"]}]} instruction={"Choose the correct plural form of each noun."} />
+The magic of plural adjectives lies in their simplicity. In the singular form, you had to memorize three different endings depending on the gender of the noun: **-ий** for masculine, **-а** for feminine, and **-е** for neuter. In the plural form, all adjectives converge to a single, universal ending: **-і**. Regardless of the noun's original gender, the adjective always takes **-і**. For example, the adjectives **яки́й** / **яка** / **яке́** (what kind) all become **які**, and **весе́лий** / **весе́ла** / **весе́ле** (cheerful) all become **весе́лі**. So, **вели́кий стіл** (big table) becomes **великі столи** (big tables), **нова́ книга** (new book) becomes **нові книги** (new books), and **чи́сте вікно** (clean window) becomes **чи́сті вікна** (clean windows).
 
-## Прикме́тники у множині́ (Adjectives in Plural)
+This universal rule applies perfectly to colors. When describing groups of objects, the color adjectives will all end in **-і**. You can have **червоні ручки** (red pens) on your desk, **сині зошити** (blue notebooks) in your bag, **бі́лі сті́ни** (white walls) in your room, and **чо́рні стільці** (black chairs) in your kitchen.
 
-Here is the single most useful fact about Ukrainian adjective plurals: in singular, adjectives change ending by gender — **великий** (m), **велика** (f), **велике** (n). In plural, all three genders collapse into one form: **великі**. Большакова's Grade 2 textbook (p. 42) shows this with a clear table: "яки́й/яка/яке́ → які, весе́лий/весе́ла/весе́ле → весе́лі." This is simpler than singular — one ending covers everything.
+:::note
+Demonstrative words also adapt to the plural form. When pointing out specific groups of objects, use **ці** (these) for items close by, and **ті** (those) for items located further away. Just like adjectives, they conveniently end in the **-і** sound. You can say **Ці столи великі** (These tables are big) when standing right next to them. If you are looking across the room, you would say **Ті вікна чисті** (Those windows are clean).
+:::
 
-Three adjectives you already know, applied across all genders:
+To talk about your personal belongings, you use the plural possessive word **мої́** (my - plural). If you are carrying a stack of literature, you simply state **Це мої книги** (These are my books).
 
-| Singular (m / f / n) | → | Plural |
-|---|---|---|
-| нови́й стіл / нова́ книга / нове́ вікно | → | нові столи / нові книги / нові вікна |
-| великий стілець / велика лампа / велике крісло | → | великі стільці / великі лампи / великі крісла |
-| стари́й олівець / стара́ сумка / старе́ ліжко | → | старі олівці / старі сумки / старі ліжка |
+<FillIn client:only="react" items={[{"sentence": "Тут є ____ столи.", "answer": "нові", "options": ["новий", "нова", "нові"]}, {"sentence": "Це ____ книги.", "answer": "великі", "options": ["великий", "велика", "великі"]}, {"sentence": "Там є ____ вікна.", "answer": "чисті", "options": ["чисте", "чисті", "чиста"]}, {"sentence": "У мене є ____ ручки.", "answer": "червоні", "options": ["червона", "червоний", "червоні"]}, {"sentence": "Я маю ____ зошити.", "answer": "сині", "options": ["синій", "синя", "сині"]}, {"sentence": "Це ____ стільці.", "answer": "старі", "options": ["старий", "стара", "старі"]}, {"sentence": "Там стоять ____ ліжка.", "answer": "великі", "options": ["велике", "велика", "великі"]}, {"sentence": "Я бачу ____ дзеркала.", "answer": "нові", "options": ["нове", "нова", "нові"]}]} instruction={"Вставте правильну форму прикметника (Insert the correct adjective form)"} />
 
-The ending is always **-і**. No exceptions, no gender checks, no surprises.
-
-<FillIn client:only="react" items={[{"sentence": "____ книги (новий → ?)", "answer": "нові", "options": ["нові", "нова", "новий"]}, {"sentence": "____ столи (великий → ?)", "answer": "великі", "options": ["великі", "велика", "великий"]}, {"sentence": "____ вікна (чистий → ?)", "answer": "чисті", "options": ["чисті", "чисте", "чиста"]}, {"sentence": "____ стільці (старий → ?)", "answer": "старі", "options": ["старі", "старий", "стара"]}, {"sentence": "____ ручки (червоний → ?)", "answer": "червоні", "options": ["червоні", "червона", "червоний"]}, {"sentence": "____ зошити (синій → ?)", "answer": "сині", "options": ["сині", "синій", "синя"]}, {"sentence": "____ олівці (чорний → ?)", "answer": "чорні", "options": ["чорні", "чорний", "чорна"]}, {"sentence": "____ лампи (жовтий → ?)", "answer": "жовті", "options": ["жовті", "жовтий", "жовта"]}]} instruction={"Complete each phrase with the correct plural adjective form."} />
-
-Colors work the same way. Apply the **-і** rule to the color adjectives from Module 10: **червоні ручки** (red pens), **сині зошити** (blue notebooks), **білі стіни** (white walls), **чорні стільці** (black chairs), **жовті олівці** (yellow pencils), **зелені дошки** (green boards). Color adjectives follow the exact same pattern — no special rules. Try it yourself: look around your room. Які стільці? Які стіни? Які речі на столі́?
-
-Demonstratives and possessives also have plural forms, and they follow the same simplification. Singular **цей/ця/це** (this) becomes **ці** (these). Singular **той/та/те** (that) becomes **ті** (those). Singular **мій/моя́/моє** (my) becomes **мої** (my, plural).
-
-- **Ці столи великі.** *(These tables are big.)*
-- **Ці книги нові.** *(These books are new.)*
-- **Ці вікна чисті.** *(These windows are clean.)*
-- **Ті стільці старі.** *(Those chairs are old.)*
-- **Ті крісла червоні.** *(Those armchairs are red.)*
-- **Мої ручки сині.** *(My pens are blue.)*
-- **Мої зошити нові.** *(My notebooks are new.)*
+When you need to ask about the characteristics of plural objects, you use the question word **які** (what kind?). If you see an interesting stack of reading material, you ask your teacher **Які це книги?** (What kind of books are these?).
 
 ## Підсумок — Summary
 
-Three patterns covered today. For nouns: masculine and feminine take **-и** or **-і** in the plural (**столи**, **книги**, **стільці**); neuter takes **-а** (**вікна**, **крісла**, **дзеркала**). For adjectives: the plural ending is always **-і**, regardless of the noun's gender — **великі столи**, **великі книги**, **великі вікна**. For demonstratives: **ці** (these) and **ті** (those). For possessives: **мої** (my, plural). This is worth remembering: plural adjectives have one form. Ukrainian makes this easier than singular.
+The rules of plural noun formation rely on recognizing consistent patterns. Nouns change their endings based on their original gender. Masculine and feminine nouns typically take the **-и** or **-і** endings, while neuter nouns take the **-а** or **-я** endings. Always remember to learn each plural individually alongside its singular form. The core classroom triad provides perfect anchors for these patterns: **столи** (tables), **книги** (books), and **вікна** (windows).
 
-**Self-check — test yourself:**
+The rules of agreement for describing many items are incredibly straightforward. Adjectives, demonstrative words like **ці** (these) and **ті** (those), and possessive words like **мої** (my - plural) all simplify in the plural form to use the universal **-і** ending. You always use **-і** for adjectives, such as **великі**, **нові**, **червоні**, and **сині**. This convergence makes describing multiple items significantly easier than describing just one thing, as you no longer need to match the specific gender of the noun.
 
-- Як утвори́ти множину́ від **стіл**? → **столи**
-- Як утворити множину від **книга**? → **книги**
-- Як утворити множину від **вікно**? → **вікна**
-- Як утворити множину від **стілець**? → **стільці**
-- Яке закі́нчення ма́ють прикметники у множині? → завжди́ **-і**
-- Як сказа́ти "these chairs"? → **ці стільці**
-- Як сказати "my pens"? → **мої ручки**
-- Утвори́ множину: великий стіл → ? → **великі столи**
+:::caution
+Always pay close attention to the stress marks when learning new plural forms. The stress can sometimes shift when a word becomes plural. For instance, the emphasis moves to the end in **книжки́** (books), and to the beginning in **вікна** (windows). Check the vocabulary lists carefully!
+:::
 
-<GroupSort client:only="react" groups={{"однина (singular)": ["стіл", "книга", "вікно", "ручка", "лампа", "крісло"], "множина (plural)": ["столи", "книги", "вікна", "ручки", "лампи", "крісла"]}} instruction={"Sort the words into **однина** (singular) or **множина** (plural)."} />
+Test your understanding with this quick self-check Q&A before moving to the exercises.
 
-Now put it all together. Describe your own space using today's patterns. Start with these questions as scaffolding: Які столи у ва́шому кла́сі? Які стільці? Які вікна? Які речі на вашому столі? Here is a model answer:
+*   **Q:** Як бу́де «стіл» у множині? *(How is "table" in plural?)*
+*   **A:** **Столи**.
+*   **Q:** Яке закі́нчення ма́ють прикметники у множині? *(What ending do adjectives have in plural?)*
+*   **A:** Закінчення **-і** (**великі**, **нові**).
+*   **Q:** Перекладі́ть: "These blue notebooks". *(Translate: "These blue notebooks".)*
+*   **A:** **Ці сині зошити**.
+*   **Q:** Яке сло́во означа́є "those"? *(Which word means "those"?)*
+*   **A:** **Ті**.
 
-- **У моє́му класі є великі столи і старі стільці.** *(In my classroom there are big tables and old chairs.)*
-- **Вікна чисті.** *(The windows are clean.)*
-- **На моєму столі є сині ручки і нові зошити.** *(On my desk there are blue pens and new notebooks.)*
-- **А ще мале́нький підручник.** *(And also a small textbook.)*
-
-Write 3–4 sentences about your own room or classroom using plural nouns and plural adjectives. Use **ці** or **ті** to point at specific groups of objects. Use **мої** to claim ownership.
-
-In Module 14 — the A1.2 Checkpoint — you'll combine everything from this phase: rooms, objects, colors, numbers, this and that, and now plurals. The **-і** adjective plural you learned today will appear in every description from here on. After the checkpoint, A1.3 introduces verbs — and plurals matter there too. When someone reads, it's not just one book: **вони чита́ють книги** (they read books). Plural nouns and adjectives are the backbone of real sentences.
+ Practice these endings consistently, and they will quickly become second nature.
 
 </TabItem>
 <TabItem label="Словник">
@@ -173,92 +136,72 @@ In Module 14 — the A1.2 Checkpoint — you'll combine everything from this pha
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **столи́** | tables (pl of стіл) | ім. |  |
-| **стільці́** | chairs (pl of стілець) | ім. | ч. |
-| **ві́кна** | windows (pl of вікно) | ім. | с. |
-| **ручки** | pens (pl of ручка) | ім. | ж. |
-| **зо́шити** | notebooks (pl of зошит) | ім. |  |
-| **олівці́** | pencils (pl of олівець) | ім. | ч. |
-| **кни́ги** | books (pl of книга) | ім. | ж. |
-| **ла́мпи** | lamps (pl of лампа) | ім. | ж. |
-| **су́мки́** | bags (pl of сумка) | ім. | ж. |
-| **крі́сла** | armchairs (pl of крісло) | ім. | с. |
-| **дзерка́ла** | mirrors (pl of дзеркало) | ім. | с. |
-| **ре́чі** | things (pl of річ) | ім. | ж. |
-| **ці** | these (pl of цей/ця/це) | прикм. |  |
-| **ті** | those (pl of той/та/те) | прикм. |  |
+| **столи́** | tables | ім. |  |
+| **стільці́** | chairs | ім. | ч. |
+| **ві́кна** | windows | ім. | с. |
+| **кни́ги** | books | ім. | ж. |
+| **ручки** | pens | ім. | ж. |
+| **зо́шити** | notebooks | ім. |  |
+| **су́мки́** | bags | ім. | ж. |
+| **ла́мпи** | lamps | ім. | ж. |
+| **дзерка́ла** | mirrors | ім. | с. |
+| **крі́сла** | armchairs | ім. | с. |
+| **лі́жка** | beds | ім. | с. |
+| **ре́чі** | things | ім. | ж. |
+| **ці** | these | прикм. |  |
+| **ті** | those | прикм. |  |
 | **мої́** | my (plural) | прикм. |  |
 | **які́** | what kind? (plural) | прикм. |  |
-| **однина́** | singular (grammatical number) | ім. | ж. |
-| **множина́** | plural (grammatical number) | ім. | ж. |
-| **телефо́ни** | phones (pl of телефон) | ім. |  |
-| **підру́чники** | textbooks (pl of підручник) | ім. |  |
-| **ка́рти** | maps (pl of карта) | ім. | ж. |
-| **до́шки** | boards (pl of дошка) | ім. | ж. |
-| **лі́жка** | beds (pl of ліжко) | ім. | с. |
-| **слова́** | words (pl of слово) | ім. | с. |
-| **вели́кі** | big (plural adjective) | прикм. |  |
-| **нові́** | new (plural adjective) | прикм. |  |
-| **старі́** | old (plural adjective) | прикм. |  |
-| **чи́сті** | clean (plural adjective) | прикм. |  |
-| **черво́ні** | red (plural adjective) | прикм. |  |
-| **си́ні** | blue (plural adjective) | ім. | ч. |
-| **жо́вті** | yellow (plural adjective) | прикм. |  |
-| **чо́рні** | black (plural adjective) | прикм. |  |
-| **бі́лі** | white (plural adjective) | прикм. |  |
-| **зеле́ні** | green (plural adjective) | прикм. |  |
-| **мале́нький** | small | прикм. |  |
+| **множина́** | plural | ім. | ж. |
+| **однина́** | singular | ім. | ж. |
+| **вели́кі** | big (plural) | прикм. |  |
+| **нові́** | new (plural) | прикм. |  |
+| **старі́** | old (plural) | прикм. |  |
+| **черво́ні** | red (plural) | прикм. |  |
+| **си́ні** | blue (plural) | ім. | ч. |
+| **бі́лі** | white (plural) | прикм. |  |
+| **чо́рні** | black (plural) | прикм. |  |
+| **чи́сті** | clean (plural) | прикм. |  |
+| **Скі́льки** | How many? | присл. |  |
+| **оди́н** | one | числ. |  |
+| **бага́то** | many | присл. |  |
+| **предме́т** | item | ім. | ч. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Які столи?** | What kind of tables? |
-| **один предмет → багато предметів** | one object → many objects |
+| **Що тут є?** | What is here? |
+| **У вас є...?** | Do you have...? |
+| **Будь ласка** | please |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "столи́", back: "tables (pl of стіл)", subtitle: "ім." }, { front: "стільці́", back: "chairs (pl of стілець)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ві́кна", back: "windows (pl of вікно)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ручки", back: "pens (pl of ручка)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зо́шити", back: "notebooks (pl of зошит)", subtitle: "ім." }, { front: "олівці́", back: "pencils (pl of олівець)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́ги", back: "books (pl of книга)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ла́мпи", back: "lamps (pl of лампа)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "су́мки́", back: "bags (pl of сумка)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "крі́сла", back: "armchairs (pl of крісло)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дзерка́ла", back: "mirrors (pl of дзеркало)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ре́чі", back: "things (pl of річ)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ці", back: "these (pl of цей/ця/це)", subtitle: "прикм." }, { front: "ті", back: "those (pl of той/та/те)", subtitle: "прикм." }, { front: "мої́", back: "my (plural)", subtitle: "прикм." }, { front: "які́", back: "what kind? (plural)", subtitle: "прикм." }, { front: "однина́", back: "singular (grammatical number)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "множина́", back: "plural (grammatical number)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "телефо́ни", back: "phones (pl of телефон)", subtitle: "ім." }, { front: "підру́чники", back: "textbooks (pl of підручник)", subtitle: "ім." }, { front: "ка́рти", back: "maps (pl of карта)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "до́шки", back: "boards (pl of дошка)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́жка", back: "beds (pl of ліжко)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "слова́", back: "words (pl of слово)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вели́кі", back: "big (plural adjective)", subtitle: "прикм." }, { front: "нові́", back: "new (plural adjective)", subtitle: "прикм." }, { front: "старі́", back: "old (plural adjective)", subtitle: "прикм." }, { front: "чи́сті", back: "clean (plural adjective)", subtitle: "прикм." }, { front: "черво́ні", back: "red (plural adjective)", subtitle: "прикм." }, { front: "си́ні", back: "blue (plural adjective)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "жо́вті", back: "yellow (plural adjective)", subtitle: "прикм." }, { front: "чо́рні", back: "black (plural adjective)", subtitle: "прикм." }, { front: "бі́лі", back: "white (plural adjective)", subtitle: "прикм." }, { front: "зеле́ні", back: "green (plural adjective)", subtitle: "прикм." }, { front: "мале́нький", back: "small", subtitle: "прикм." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "столи́", back: "tables", subtitle: "ім." }, { front: "стільці́", back: "chairs", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ві́кна", back: "windows", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кни́ги", back: "books", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ручки", back: "pens", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зо́шити", back: "notebooks", subtitle: "ім." }, { front: "су́мки́", back: "bags", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ла́мпи", back: "lamps", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дзерка́ла", back: "mirrors", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "крі́сла", back: "armchairs", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "лі́жка", back: "beds", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ре́чі", back: "things", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ці", back: "these", subtitle: "прикм." }, { front: "ті", back: "those", subtitle: "прикм." }, { front: "мої́", back: "my (plural)", subtitle: "прикм." }, { front: "які́", back: "what kind? (plural)", subtitle: "прикм." }, { front: "множина́", back: "plural", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "однина́", back: "singular", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вели́кі", back: "big (plural)", subtitle: "прикм." }, { front: "нові́", back: "new (plural)", subtitle: "прикм." }, { front: "старі́", back: "old (plural)", subtitle: "прикм." }, { front: "черво́ні", back: "red (plural)", subtitle: "прикм." }, { front: "си́ні", back: "blue (plural)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бі́лі", back: "white (plural)", subtitle: "прикм." }, { front: "чо́рні", back: "black (plural)", subtitle: "прикм." }, { front: "чи́сті", back: "clean (plural)", subtitle: "прикм." }, { front: "Скі́льки", back: "How many?", subtitle: "присл." }, { front: "оди́н", back: "one", subtitle: "числ." }, { front: "бага́то", back: "many", subtitle: "присл." }, { front: "предме́т", back: "item", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "Ці столи ____.", "options": [{"text": "великі", "correct": true}, {"text": "великий", "correct": false}, {"text": "велика", "correct": false}]}, {"question": "____ книги нові.", "options": [{"text": "ці", "correct": true}, {"text": "цей", "correct": false}, {"text": "ця", "correct": false}]}, {"question": "Мої ручки ____.", "options": [{"text": "сині", "correct": true}, {"text": "синя", "correct": false}, {"text": "синій", "correct": false}]}, {"question": "____ крісла червоні.", "options": [{"text": "ті", "correct": true}, {"text": "той", "correct": false}, {"text": "та", "correct": false}]}, {"question": "Ці вікна ____.", "options": [{"text": "чисті", "correct": true}, {"text": "чиста", "correct": false}, {"text": "чисте", "correct": false}]}, {"question": "____ зошити нові.", "options": [{"text": "мої", "correct": true}, {"text": "мій", "correct": false}, {"text": "моя", "correct": false}]}, {"question": "Ті стільці ____.", "options": [{"text": "старі", "correct": true}, {"text": "старий", "correct": false}, {"text": "стара", "correct": false}]}, {"question": "Мої сумки ____.", "options": [{"text": "великі", "correct": true}, {"text": "великий", "correct": false}, {"text": "велике", "correct": false}]}]} instruction={"Choose the correct word to complete each sentence."} />
+<MatchUp client:only="react" pairs={[{"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "стіл", "right": "столи"}, {"left": "стілець", "right": "стільці"}, {"left": "дзеркало", "right": "дзеркала"}, {"left": "ручка", "right": "ручки"}]} instruction={"З'єднайте форму однини з формою множини (Match the singular form to the plural form)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "стіл", "right": "столи"}, {"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "стілець", "right": "стільці"}, {"left": "зошит", "right": "зошити"}, {"left": "дзеркало", "right": "дзеркала"}]} instruction={"Match each singular noun to its plural form."} />
+<TrueFalse client:only="react" items={[{"statement": "Множина слова «стіл» — це «столи».", "isTrue": true, "explanation": "Чоловічий рід з твердим приголосним зазвичай має закінчення -и."}, {"statement": "Множина слова «книга» — це «книгі».", "isTrue": false, "explanation": "Правильна форма — «книги». Після «г», «к», «х» пишемо «и»."}, {"statement": "Слово «вікна» — це однина.", "isTrue": false, "explanation": "«Вікна» — це множина. Однина — «вікно»."}, {"statement": "Слово «стільці» має закінчення -і.", "isTrue": true, "explanation": "Чоловічий рід з м'яким приголосним («ь») змінюється на -і."}, {"statement": "Множина слова «ліжко» — це «ліжки».", "isTrue": false, "explanation": "Середній рід на -о змінюється на -а. Правильно — «ліжка»."}, {"statement": "Прикметники у множині завжди мають закінчення -і.", "isTrue": true, "explanation": "Усі прикметники у множині (наприклад: нові, великі) мають закінчення -і."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Observe client:only="react" examples={["великий стіл → великі столи", "велика книга → великі книги", "велике вікно → великі вікна", "старий олівець → старі олівці", "стара сумка → старі сумки", "старе крісло → старі крісла"]} prompt={"In singular, adjectives change ending by gender: -ий (m), -а (f), -е (n). What happens in the plural? How many different endings are there for plural adjectives?"} />
+<OddOneOut client:only="react" items={[{"words": ["столи", "зошити", "книга"], "correct": 2, "explanation": "«Книга» — це однина, а «столи» і «зошити» — множина."}, {"words": ["нові", "велика", "старі"], "correct": 1, "explanation": "«Велика» — це однина (жіночий рід), а «нові» і «старі» — множина."}, {"words": ["вікна", "ліжка", "стільці"], "correct": 2, "explanation": "«Стильці» мають закінчення -і (чоловічий рід), а «вікна» і «ліжка» — закінчення -а (середній рід)."}, {"words": ["ручка", "лампи", "сумки"], "correct": 0, "explanation": "«Ручка» — однина, інші слова — множина."}, {"words": ["ці", "той", "мої"], "correct": 1, "explanation": "«Той» — однина, інші — множина."}, {"words": ["речі", "крісло", "дзеркало"], "correct": 0, "explanation": "«Речі» — множина, інші — однина."}]} instruction={"Знайдіть зайве слово (Find the odd one out)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Столи у класі великі й нові.", "isTrue": true, "explanation": "Олена confirms: 'Столи великі й нові.'"}, {"statement": "Стільці у класі нові.", "isTrue": false, "explanation": "Олена says the chairs are old: 'стільці — старі'."}, {"statement": "Вікна у класі чисті.", "isTrue": true, "explanation": "Олена confirms: 'Вікна чисті.'"}, {"statement": "Plural adjectives in Ukrainian always end in -і.", "isTrue": true, "explanation": "All three genders share one plural ending: великі, нові, старі, чисті."}, {"statement": "The plural of 'вікно' is 'вікні'.", "isTrue": false, "explanation": "Neuter nouns take -а in the plural: вікно → вікна."}, {"statement": "The plural of 'стілець' is 'стільці'.", "isTrue": true, "explanation": "Soft-stem masculine nouns take -і: стілець → стільці."}, {"statement": "'Ці' means 'those' in Ukrainian.", "isTrue": false, "explanation": "'Ці' means 'these'. 'Ті' means 'those'."}, {"statement": "The plural of 'ручка' is 'ручки'.", "isTrue": true, "explanation": "Feminine nouns ending in -ка take -и in the plural: ручка → ручки."}]} instruction={"Read each statement. Is it true (правда) or false (неправда)?"} />
+<Translate client:only="react" questions={[{"source": "These tables are big.", "options": [{"text": "Ці столи великі.", "correct": true}, {"text": "Цей столи великі.", "correct": false}, {"text": "Ці стіл великі.", "correct": false}, {"text": "Ці столи великий.", "correct": false}]}, {"source": "Those books are new.", "options": [{"text": "Ті книги нові.", "correct": true}, {"text": "Ці книги нові.", "correct": false}, {"text": "Та книги нові.", "correct": false}, {"text": "Ті книга нові.", "correct": false}]}, {"source": "My pens are blue.", "options": [{"text": "Мої ручки сині.", "correct": true}, {"text": "Мій ручки сині.", "correct": false}, {"text": "Мої ручка сині.", "correct": false}, {"text": "Мої ручки синя.", "correct": false}]}, {"source": "What kind of windows are these?", "options": [{"text": "Які це вікна?", "correct": true}, {"text": "Яке це вікна?", "correct": false}, {"text": "Які це вікно?", "correct": false}, {"text": "Яка це вікна?", "correct": false}]}, {"source": "I have three notebooks.", "options": [{"text": "Я маю три зошити.", "correct": true}, {"text": "Я маю три зошит.", "correct": false}, {"text": "Я маю три зошита.", "correct": false}, {"text": "Я маю три зошитів.", "correct": false}]}, {"source": "Where are the chairs?", "options": [{"text": "Де стільці?", "correct": true}, {"text": "Де стілець?", "correct": false}, {"text": "Де стільця?", "correct": false}, {"text": "Де стільців?", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Ці столи великий.", "errorWord": "великий", "correctForm": "великі", "options": ["великі", "велика", "великого"], "explanation": "Plural adjectives always end in -і. 'Великий' is masculine singular."}, {"sentence": "Мої ручки синя.", "errorWord": "синя", "correctForm": "сині", "options": ["сині", "синій", "синього"], "explanation": "Plural adjectives always end in -і. 'Синя' is feminine singular."}, {"sentence": "Ті вікна чисте.", "errorWord": "чисте", "correctForm": "чисті", "options": ["чисті", "чистий", "чистого"], "explanation": "Plural adjectives always end in -і. 'Чисте' is neuter singular."}, {"sentence": "Ці стільці старий.", "errorWord": "старий", "correctForm": "старі", "options": ["старі", "стара", "старого"], "explanation": "Plural adjectives always end in -і. 'Старий' is masculine singular."}, {"sentence": "Мої зошити новий.", "errorWord": "новий", "correctForm": "нові", "options": ["нові", "нова", "нового"], "explanation": "Plural adjectives always end in -і. 'Новий' is masculine singular."}, {"sentence": "Ці книги червона.", "errorWord": "червона", "correctForm": "червоні", "options": ["червоні", "червоний", "червоного"], "explanation": "Plural adjectives always end in -і. 'Червона' is feminine singular."}]} instruction={"Find the error in each sentence and correct it."} />
-
-<Translate client:only="react" questions={[{"source": "These tables are big.", "options": [{"text": "Ці столи великі.", "correct": true}, {"text": "Це стіл великий.", "correct": false}, {"text": "Ті столи великий.", "correct": false}]}, {"source": "My pens are blue.", "options": [{"text": "Мої ручки сині.", "correct": true}, {"text": "Моя ручка синя.", "correct": false}, {"text": "Мої ручки синя.", "correct": false}]}, {"source": "Those chairs are old.", "options": [{"text": "Ті стільці старі.", "correct": true}, {"text": "Ці стільці старі.", "correct": false}, {"text": "Ті стільці старий.", "correct": false}]}, {"source": "The windows are clean.", "options": [{"text": "Вікна чисті.", "correct": true}, {"text": "Вікно чисте.", "correct": false}, {"text": "Вікна чистий.", "correct": false}]}, {"source": "These notebooks are new.", "options": [{"text": "Ці зошити нові.", "correct": true}, {"text": "Цей зошит новий.", "correct": false}, {"text": "Ці зошити нова.", "correct": false}]}, {"source": "Those armchairs are red.", "options": [{"text": "Ті крісла червоні.", "correct": true}, {"text": "Те крісло червоне.", "correct": false}, {"text": "Ці крісла червоні.", "correct": false}]}]} instruction={"Choose the correct Ukrainian translation."} />
-
+<ErrorCorrection client:only="react" items={[{"sentence": "Це мої книгі.", "errorWord": "книгі", "correctForm": "книги", "options": ["книга", "книги", "книг"], "explanation": "Після «г» у множині пишемо «и»."}, {"sentence": "Там стоять великі стіл.", "errorWord": "стіл", "correctForm": "столи", "options": ["столи", "стола", "столів"], "explanation": "Прикметник «великі» у множині, тому іменник теж має бути у множині."}, {"sentence": "Ці вікно дуже чисті.", "errorWord": "вікно", "correctForm": "вікна", "options": ["вікна", "вікні", "вікнам"], "explanation": "«Ці» та «чисті» вказують на множину, тому слово «вікно» має бути «вікна»."}, {"sentence": "Які це зошит?", "errorWord": "зошит", "correctForm": "зошити", "options": ["зошити", "зошита", "зошиті"], "explanation": "Питальне слово «які» стоїть у множині, тому потрібно «зошити»."}, {"sentence": "Це червоні ручка.", "errorWord": "ручка", "correctForm": "ручки", "options": ["ручки", "ручкі", "ручку"], "explanation": "Прикметник «червоні» у множині."}, {"sentence": "Мої ліжко нові.", "errorWord": "ліжко", "correctForm": "ліжка", "options": ["ліжка", "ліжкі", "ліжку"], "explanation": "«Мої» і «нові» — це множина, тому середній рід змінюється на -а."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-**Джерела — References**
+## Підручники (Textbooks)
 
-- [Вашуленко Grade 3, p.114-115](https://pidruchnyk.com.ua/uploads/book/3-klas-ukrainska-mova-vashulenko-2020-1.pdf#page=114)
-  _Іменники мають два числа: однину і множину. Exercises with singular→plural._
-- [Большакова Grade 2, p.18](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-1.pdf#page=18)
-  _Один предмет → багато предметів. First introduction of plural concept._
-- [Большакова Grade 2, p.42](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-1.pdf#page=42)
-  _Adjective singular/plural: який/яка/яке → які, веселий → веселі._
-
-**Граматика — Grammar (МійКлас)**
-
-- [МійКлас: Групи прикметників за значенням](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/grupi-prikmetnikiv-za-znachenniam-46717) (miyklas.com.ua)
-- [МійКлас: Число іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/chislo-imennikiv-43147) (miyklas.com.ua)
-- [МійКлас: Прикметник як частина мови](https://miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/prikmetnik-iak-chastina-movi-46716) (miyklas.com.ua)
-
-**Anna Ohoiko — Ukrainian Lessons**
-
-- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
-- [Plural of Ukrainian Nouns — Special Forms](https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/)
-- [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
+- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 83
+- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 169
+- [Беца І. Ф. — Українська мова, 6 клас (2023)](https://shkola.in.ua/6-klas-ukrainska-mova-betsa-2023.html), стор. 145
+- [Літвінова І. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-litvinova-2023.pdf#page=241), стор. 241
+- [Заболотний О. В. — Українська мова, 6 клас (2020)](https://shkola.in.ua/2835-ukrainska-mova-6-klas-zabolotnyi-2023.html), стор. 242
 
 </TabItem>
 </Tabs>

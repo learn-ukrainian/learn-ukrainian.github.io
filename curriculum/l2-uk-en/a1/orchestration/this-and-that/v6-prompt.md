@@ -4,11 +4,11 @@
 
 ## Your Writing Identity
 
-**You are: Patient & Supportive Ukrainian Tutor.** Your persona is *The Helpful Teacher*.
+**You are: Lead Ukrainian Instructor.** Your persona is *The Patient Guide*.
 
 Write with the authority, depth, and tone that this identity demands. A history professor writes differently from a language tutor. A patient tutor encourages and scaffolds; a senior specialist challenges and deepens. Let your identity shape your word choice, pacing, and cultural sensitivity.
 
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Writing Prompt — Module Content Generation
 
 You are writing one module of a Ukrainian language curriculum for English-speaking teens and adults. Write engaging, pedagogically sound content that teaches the learner to THINK in Ukrainian — not translate from English.
@@ -41,15 +41,16 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 10-20% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
+4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
 6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
 8. **Hit the word target** — you MUST write 1200–1800 words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+10. **EVERY module MUST end with `## Підсумок — Summary`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -231,474 +232,321 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- **Confirmed (13/13):** цей (adj), ця (adj ← цей), це (noun/part ← це), той (adj), та (conj/adj ← той), те (noun/adj ← той), чи (conj/part), ось (part), там (adv), тут (adv), він (noun), вона (noun), воно (noun)
-- **Not found:** — (none missing)
-
-**⚠️ POS notes for writer:**
-- `цей/ця/це` and `той/та/те` are tagged **adj** in VESUM — Ukrainian grammar treats demonstratives as adjective-type pronouns (вказівні займенники), inflecting exactly like adjectives. This is consistent with the plan.
-- `та` has TWO VESUM entries: `conj` (та = and) AND `adj` (та = that, fem.). The plan correctly flags this ambiguity. **Writer must address it explicitly.**
-- `це` has THREE VESUM entries: `noun` (pronoun use), `part` (particle use), and implicitly the copula equative use. The plan correctly flags the "Це вікно" (this window) vs "Це вікно" (This is a window) distinction — **this is a genuine pedagogical challenge that must be handled carefully**.
-- `він/вона/воно` are tagged `noun` (personal pronouns in VESUM fall under noun POS) — consistent with prior modules.
-
----
-
-## Textbook Excerpts
-
-### Section: Цей, ця, це / Той, та, те (demonstrative pronoun inflection)
-> «Вказівні займенники цей, той, такий змінюємо за родами, числами, відмінками подібно до прикметників.»
-> Source: **Заболотний, Grade 6, p. 210** (tier 2)
-
-> «Вказівні займенники вирізняють один предмет, особу чи ознаку з-поміж інших: цей, оцей, сей, той, стільки, такий, отакий. Вказівні займенники цей, той, такий змінюються за родами, числами та відмінками, як прикметники.»
-> Source: **Litvinova, Grade 6, p. 272, §54** (tier 1 — NUS 2022+)
-
-**✅ Plan claim confirmed.** Both priority authors align exactly with the plan's statement.
-
-### Section: Gender pattern consistency (цей/ця/це as gender marker)
-> «Чоловічий рід (додаємо він, цей) … Жіночий рід (додаємо вона, ця) … Середній рід (додаємо воно, це)»
-> Source: **Golub, Grade 6, p. 68** (tier 1)
-
-**✅ The pedagogical link between demonstratives and gender testing is textbook-grounded.** The "point at цей/ця/це to identify noun gender" approach is used in Grade 6 NUS textbooks — fully appropriate to reference in M12.
-
-### Section: Діалоги — Shopping (Скільки коштує)
-> «— Чи є у вас трембіта? — Так, є, — відповіла продавчиня. — Скільки вона коштує? — Дев'ять тисяч гривень.»
-> Source: **Avramenko, Grade 6, p. 18** (tier 1)
-
-**✅ Textbook grounding confirmed.** The "Скільки коштує?" shopping dialogue pattern is directly attested. The ticket-purchase extension also attested: "Скільки коштує квиток?" with price responses. The plan dialogue format (demonstrative + item + price response) is pedagogically authentic.
-
-### Section: Наголос in oblique forms (note for teacher, NOT A1 content)
-> «У непрямих відмінках займенників той, цей наголос змінюється: якщо ці займенники вжиті з прийменником, тоді наголос у них падає на основу (в то́му дописі, із цьо́го акаунту); якщо займенники вживаємо без прийменників, наголошуємо закінчення слова (того́ блогера, цьому́ хейтеру).»
-> Source: **Litvinova, Grade 6, p. 273, §54** (tier 1)
-
-**ℹ️ A1 scope note:** The plan correctly teaches **nominative only** at A1. The stress-shift rule for oblique cases is out of scope for M12 — but stress annotator must apply correct nominative stress: **це́й, та**, **то́й**, **та**, **те́**, **ту́т**, **та́м**, **ось**.
-
----
+- Confirmed: цей, ця, це, той, та, те, чи, ось, там, тут, він, вона, воно.
+- Not found: All words from the plan are present and verified in VESUM as valid Ukrainian forms.
 
 ## Grammar Rules
-- **Demonstrative pronouns inflect like adjectives:** Confirmed by two tier-1 textbooks (Litvinova §54, Grade 6; Golub, Grade 6). Правопис 2019 does not contain a dedicated section on demonstrative pronouns (Правопис covers spelling, not morphology) — textbook authority is the correct source here.
-- **та as conjunction follows і/й/та euphony alternation:** Антоненко-Давидович §СПОЛУЧНИКИ — «для того, щоб звуки гармонійно чергувались, є правило чергування, за яким і чергується з й... а та — третій варіант». Writer must not use та in conjunction role and demonstrative role in the same sentence without disambiguation.
-- **Nominative-only scope at A1:** Confirmed correct. Oblique forms appear in Grade 6 (Litvinova p. 273), not A1 curriculum.
-
----
+- **Вказівні займенники (Demonstrative Pronouns)**: The forms *цей, ця, це* and *той, та, те* are confirmed as the standard nominative forms for masculine, feminine, and neuter genders respectively. They function as pointers to objects in space (near vs. far) and agree with nouns in gender, which aligns with the pedagogical progression from possessives (*мій/моя/моє*) and interrogatives (*який/яка/яке*).
+- **Питальна частка "чи"**: Confirmed as the standard way to express choice in questions (e.g., "Цей чи той?"). Grade 9 textbook usage (*"Це функція освіти чи батьків?"*) validates this pattern.
+- **Word Order**: Standard Ukrainian word order for demonstratives is *Demonstrative + Adjective + Noun* (e.g., *цей великий стіл*), identical to English, making it highly accessible for A1 learners.
 
 ## Calque Warnings
-- **«ось» (here is / look):** ✅ Native Ukrainian particle — not a calque. VESUM: part. PULS: A1. Антоненко-Давидович does not flag it. Safe to use.
-- **«скільки коштує» (how much does it cost):** ✅ Textbook-attested phrase (Avramenko Grade 6 p. 18). Natural Ukrainian — not a calque of Russian «сколько стоит».
-- **«Це мій стіл» / «Це — крісло»** equative sentences: ✅ Ukrainian copula-drop is the norm; the dash in «Те — крісло» is the correct written convention when subject is a pronoun (Правопис punctuation rule for nominal predicate). **Writer must use the dash in written equative sentences: «Те — крісло», not «Те крісло».**
-- **«та» dual use:** ✅ Both uses are native Ukrainian. But calque-risk from Russian «это та сумка» bleeds into learner writing — **writer must explicitly model the disambiguation** (мама та тато = and; та книга = that book).
-
----
+- **"Цей чи той"**: This is a perfectly natural Ukrainian construction. No Russianism or calque detected.
+- **"Та" (that) vs "та" (and)**: The warning in the plan is linguistically accurate. While *та* (f. that) and *та* (conjunction 'and') are homonyms, their syntactic roles (adjective-like vs. connector) make them unambiguous in context (e.g., *та сумка* vs. *мама та тато*).
 
 ## CEFR Check
-- **цей:** A1 (займенник) ✅
-- **той:** A1 (займенник) ✅
-- **це:** A1 (займенник/частка) ✅
-- **те:** A1 (займенник) ✅
-- **тут:** A1 (прислівник) ✅
-- **там:** A1 (прислівник) ✅
-- **ось:** A1 (частка) ✅
-- **він/вона/воно** — not explicitly returned by PULS CEFR query, but attested A1 in prior modules (personal pronouns are core A1 universally)
-- **чи** — not returned directly; contextually A1 (question particle used in Grade 6 store dialogue)
-
-**No vocabulary above A1 target level.** All plan vocabulary is level-appropriate.
-
----
-
-## Summary for Writer
-
-**✅ All 13 vocabulary items confirmed in VESUM. All are A1 CEFR. No blockers.**
-
-**3 pedagogical flags to handle explicitly in content:**
-
-1. **「та」 homonymy** — must be addressed in the Той/та/те section with clear examples: «мама та тато» (conjunction) vs «та книга» (demonstrative). Litvinova §54 implicitly acknowledges this.
-
-2. **「це」 three roles** — demonstrative pronoun (це вікно = this window), equative copula (Це вікно = This is a window), particle. Plan already flags this; writer must model it with explicit minimal-pair examples.
-
-3. **Dash in written equative sentences** — «Те — крісло» not «Те крісло» when the predicate is a noun and subject is a pronoun. Правопис punctuation rule for nominal predicate.
-
-**Textbook authority for this module:** Primary = **Litvinova Grade 6 §54** (tier 1) + **Заболотний Grade 6 p. 210** (tier 2). Both are directly relevant and consistent with the plan.
+- **цей, той, чи, ось, там, тут**: All verified as A1 level. These words appear consistently in Grade 1 *Bukvar* (e.g., Bolshakova 2018) and are foundational for basic communication.
+- **він, вона, воно**: Verified as A1 (previously introduced in M08, here used for gender-based reference).
 </pre_verified_facts>
 
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief — Your Authoritative Source
 
-**MANDATORY — this is your primary source.** The knowledge packet contains real Ukrainian textbook excerpts. Your content MUST use the terminology, notation, and pedagogical approach from these excerpts.
+**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**Hard rules for the knowledge packet:**
-1. **Use Ukrainian terminology from the packet, not English linguistics.** If the textbook says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
-2. **Adopt the textbook's teaching sequence.** If the packet shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Include specific examples from the packet.** If the textbook uses «ка-ша», «мо-ло-ко» to teach syllable division, use those same words (and add more). Authentic examples beat invented ones.
-4. **Your pre-training is contaminated by Russian and English linguistics.** When the packet contradicts your instinct, the packet wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
-5. **Before submitting, verify:** For every linguistic term you used, check — does it appear in the knowledge packet or plan? If you used a term that's NOT in the packet (e.g., "CVCCV", "onset", "coda"), replace it with the Ukrainian equivalent from the packet.
+**How to use the wiki article:**
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
 <knowledge_packet>
-# Verified Knowledge Packet: This and That
-**Module:** this-and-that | **Phase:** A1.2 [My World]
-**Textbook grades searched:** 1, 2, 3
+# Knowledge Packet: This and That
+**Module:** this-and-that | **Track:** A1
+
+<wiki_context>
+## Compiled Wiki Knowledge
+
+The following articles from the project wiki provide compiled knowledge relevant to this module. Use them as authoritative context — they were compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).
+
+### Вікі: pedagogy/a1/this-and-that.md
+
+# Педагогіка A1: This And That
+
+
+
+## Методичний підхід (Methodological Approach)
+
+The core pedagogical principle for teaching demonstratives (`цей`, `той`) in Ukrainian is to tightly integrate them with the concept of noun gender. Ukrainian elementary school textbooks do not teach these words in isolation; they are presented as a fundamental tool for identifying and reinforcing a noun's gender from the very beginning (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`).
+
+The primary method is **substitution and association**. Learners are taught to associate a noun with a chain of gender-agreeing words. For a masculine noun like `стіл` (table), the chain is `стіл` → `він` (he) → `мій` (my) → `цей` (this) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`). This creates a powerful mental link between the noun and its grammatical gender, making adjective agreement (e.g., `цей червоний стіл`) intuitive later on.
+
+The unchangeable pronoun `це` ("this/that is") is introduced first as a simple identifier. It is the most frequent and simplest form, used in basic sentence patterns like "**Це** + [іменник]" (e.g., "**Це** стіл," "**Це** книга."). This allows learners to start building sentences before tackling gender agreement (Джерело: `ext-video-4`, `5-klas-ukrmova-uhor-2022-1_s0081`).
+
+Only after `цей/ця/це` are mastered as pointers for "close" objects is the "far" equivalent `той/та/те` introduced, often through direct contrastive exercises (`цю книгу чи ту книгу?` — "this book or that book?") (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`).
+
+Finally, demonstratives are presented as a key tool for creating cohesive text by avoiding noun repetition. Textbooks show how words like `цей`, `ця`, `він`, `вона` connect sentences and make writing flow more naturally (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`). At the A1 level, the focus is purely on the nominative (subject) case. Full declension is a B1 topic (<!-- VERIFY -->).
+
+## Послідовність введення (Introduction Sequence)
+
+The introduction must be methodical and layered, building from the simplest concept to the more complex.
+
+- **Step 1: The Universal Identifier `Це`**
+  - **What:** Introduce the word `це` as the universal, gender-neutral way to say "This is..." or "That is...". It answers the question `Що це?` (What is this?).
+  - **Why:** This is the highest frequency demonstrative and requires zero knowledge of gender. It allows learners to immediately start identifying objects. For example: `Що це? - Це стіл.` `Що це? - Це книга.` (Джерело: `ext-video-4`). It functions like "It is" in English.
+
+- **Step 2: The Gender Pointers `Цей`, `Ця`, `Це`**
+  - **What:** Introduce the three gendered forms of "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly link them to the gender pronouns `він`, `вона`, `воно` and possessives `мій`, `моя`, `моє`.
+  - **Why:** This directly reinforces noun gender. The teaching pattern is: see a noun (`стіл`), recall its gender pronoun (`він`), and then select the corresponding demonstrative (`цей стіл`) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`). This builds the grammatical reflex for agreement.
+
+- **Step 3: The Plural Pointer `Ці`**
+  - **What:** Introduce the plural form `ці` ("these") for all genders.
+  - **Why:** After mastering the three singular forms, the single plural form is a simple next step. It shows how gender distinctions disappear in the plural for demonstratives. Example: `ці столи`, `ці книги`, `ці вікна`. (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`).
+
+- **Step 4: Distinguishing "This" vs. "That" (`Той`, `Та`, `Те`, `Ті`)**
+  - **What:** Introduce the "far" pointers `той` (m), `та` (f), `те` (n), and `ті` (pl) to contrast with the "near" pointers (`цей`, `ця`, `це`, `ці`).
+  - **Why:** This concept of proximity is familiar to English speakers ("this/that"). It should be taught with contrastive examples, physically pointing to near and far objects. For example: `Цей стілець тут, а той стілець там.` (This chair is here, and that chair is there). `Мені, будь ласка, це/те тістечко` (Source 3) is a perfect textbook example of this choice.
+
+- **Step 5: Demonstratives for Text Cohesion**
+  - **What:** Show how `цей`, `він`, `вона` etc., are used to refer back to a previously mentioned noun to avoid clumsy repetition.
+  - **Why:** This moves learners from single sentences to basic text construction. It's a key feature of natural Ukrainian writing style. (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0148`, `4-klas-ukrmova-zaharijchuk_s0014`). For example: "Славко купив букет квітів... **Він** також узяв книжку." (Slavko bought a bouquet... **He** also took a book).
+
+## Типові помилки L2 (Common L2 Errors)
+
+English-speaking learners often make predictable errors when learning Ukrainian demonstratives due to interference from English grammar.
+
+| ❌ Помилково | ✅ Правильно | Чому |
+| :--- | :--- | :--- |
+| `Що цей?` | `Що це?` | Learners mistakenly use the gendered `цей` for the general question "What is this?". The correct form for identification is always the neutral, unchangeable `це`. (Джерело: `ext-video-4`) |
+| `Ця стіл великий.` | `Цей стіл великий.` | This is a direct gender agreement error. The learner has not yet internalized that `стіл` is masculine and requires the masculine demonstrative `цей`. This is the most common error and is why linking demonstratives to gender is so critical. (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0085`) |
+| `Це стіл є новий.` | `Цей стіл новий.` or `Це новий стіл.` | Learners overuse the verb `є` (is/are), translating directly from English. In simple descriptive sentences in Ukrainian, the verb "to be" is usually omitted in the present tense. The first correct option uses the demonstrative as a pointer, while the second uses `це` as an identifier. |
+| `Це столи.` | `Ці столи.` | The learner incorrectly uses the singular identifier `це` when pointing to multiple items. The correct plural demonstrative is `ці` for "these". (Джерело: `ext-ulp_youtube-261`) |
+| `Мені подобається цей дівчина.` | `Мені подобається ця дівчина.` | Another gender agreement error, but with a feminine noun. The learner applies the default/masculine form `цей` to the feminine noun `дівчина`. (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`) |
+| `Я живу в цей будинок.` | `Я живу в цьому будинку.` | This is a case error. While full declension is not an A1 topic, learners will encounter prepositions. They often incorrectly use the nominative form (`цей`) after a preposition instead of the required locative (`цьому`). This should be taught as a fixed chunk (`в цьому будинку`) at A1, with the grammatical explanation delayed. (<!-- VERIFY -->) |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+Teaching Ukrainian requires a conscious effort to de-link it from Russian and establish its own phonetic and grammatical foundation in the learner's mind.
+
+1.  **Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian phoneme. Do not describe it as "like the Russian ц". Use examples from within Ukrainian, like `цукор` (sugar), `палець` (finger), `кінець` (end). The learner's reference point must be Ukrainian itself.
+
+2.  **No Russian Cognates as a Crutch:** Avoid teaching `цей` by comparing it to Russian `этот` or `той` to `тот`. While they are cognates from a common Slavic root, using Russian as the bridge reinforces a colonial linguistic dependency. Teach `цей` and `той` through their function and context within Ukrainian only.
+
+3.  **Emphasize Native Etymology:** Briefly explain that `цей` comes from an older Ukrainian form `отъ + сей` ("lo, this"), which evolved into `отсей` and then was re-analyzed as `о-цей`, eventually yielding the standalone `цей` (Джерело: `ext-istoria_movy-103`). This demonstrates a clear, internal path of development for the word within the Ukrainian language itself, countering any false narrative of it being a Russian import or derivative.
+
+4.  **Ukrainian Sentence Structure:** Stress that the omission of "to be" (`є`) in sentences like `Цей стіл червоний` is a standard feature of Ukrainian grammar. It is not an "informal" version of a structure that "should" have a verb like in Russian (`Этот стол есть красный`). This validates Ukrainian grammar on its own terms.
+
+5.  **Stylistic Norms:** The use of demonstratives and personal pronouns (`цей`, `він`, `вона`) to avoid repeating nouns is a characteristic of good Ukrainian style, as taught in Ukrainian schools (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`, `2-klas-ukrmova-bolshakova-2019-2_s0044`). It should be presented as a native stylistic device, not a calque from another language.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is appropriate for A1 learners when practicing demonstratives. It focuses on concrete, point-able objects found in a classroom or home.
+
+**Іменники (Nouns):**
+- ★★★ `стіл` (table) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `стілець` (chair) (Джерело: `ext-ulp_youtube-261`)
+- ★★★ `книга` (book)
+- ★★★ `ручка` (pen) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+- ★★★ `вікно` (window) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `будинок` (house, building) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `кімната` (room) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `двері` (door - *plural only*) (Джерело: `ext-ulp_youtube-261`)
+- ★★☆ `олівець` (pencil) (Джерело: `3-klas-ukrainska-mova-savchenko-2020-2_s0009`)
+- ★★☆ `шафа` (wardrobe, cabinet) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `ліжко` (bed) (Джерело: `ext-ulp_youtube-261`)
+- ★☆☆ `поле` (field) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0030`)
+
+**Прикметники (Adjectives):**
+- ★★★ `новий` (new) (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065`)
+- ★★★ `старий` (old) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★★ `великий` (big)
+- ★★★ `малий` (small)
+- ★★☆ `червоний` (red) (Джерело: `10-klas-ukrajinska-mova-avramenko-2018_s0186`)
+- ★★☆ `синій` (blue) (Джерело: `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)
+- ★★☆ `жовтий` (yellow) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `зелений` (green) (Джерело: `6-klas-ukrmova-betsa-2023_s0113`)
+- ★★☆ `гарний` (good, beautiful) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+
+**Дієслова (Verbs):**
+- ★★★ `бути` (to be)
+- ★★★ `мати` (to have)
+- ★★★ `бачити` (to see)
+- ★★☆ `жити` (to live) (Джерело: `5-klas-ukrmova-uhor-2022-1_s0081`)
+- ★★☆ `хотіти` (to want)
+
+## Приклади з підручників (Textbook Examples)
+
+These exercises, adapted from Ukrainian school materials, provide a gold standard for practice activities.
+
+1.  **Gender Sorting with Demonstratives (Джерело: `3-klas-ukrainska-mova-kravtsova-2020-1_s0062`)**
+    - **Format:** Sorting task. Provide a list of nouns and three columns.
+    - **Prompt:** "Розподіли іменники за родами. Запиши назви в потрібний рядок." (Distribute the nouns by gender. Write the names in the correct row.)
+    - **Task:**
+        - **Він, мій, цей:** `стіл`, `олівець`, `будинок`
+        - **Вона, моя, ця:** `книга`, `ручка`, `шафа`
+        - **Воно, моє, це:** `вікно`, `ліжко`, `поле`
+
+2.  **Forced Choice: This vs. That (Джерело: `6-klas-ukrmova-litvinova-2023_s0280`)**
+    - **Format:** Multiple choice within a sentence.
+    - **Prompt:** "Прочитайте речення, обираючи правильний займенник." (Read the sentences, choosing the correct pronoun.)
+    - **Task:**
+        - 1. Привал буде за (цією / тією) горою. (The stop will be behind *this* / *that* mountain.)
+        - 2. Мені, будь ласка, (це / те) тістечко. (For me, please, *this* / *that* pastry.)
+        - 3. Візьміть (цю / ту) книгу, не пошкодуєте. (Take *this* / *that* book, you won't regret it.)
+
+3.  **Adjective and Demonstrative Agreement (Джерело: `6-klas-ukrmova-betsa-2023_s0113`, `3-klas-ukrainska-mova-vashulenko-2020-1_s0128`)**
+    - **Format:** Fill-in-the-blanks for endings.
+    - **Prompt:** "Оберіть правильний варіант закінчення." (Choose the correct ending.)
+    - **Task:**
+        - Який? (m): `Нов__ стіл`, `цікав__ фільм`, `цей хорош__ друг` → (`-ий`, `-ий`, `-ій`)
+        - Яка? (f): `Ця нов__ сукня`, `цікав__ казка` → (`-а`, `-а`)
+        - Яке? (n): `Це нов__ крісло`, `цікав__ оповідання` → (`-е`, `-е`)
+
+4.  **Text Cohesion via Pronoun Substitution (Джерело: `4-klas-ukrmova-zaharijchuk_s0014`)**
+    - **Format:** Text rewriting.
+    - **Prompt:** "Спишіть текст, уникаючи повторів виділених слів. Підкресліть слова, які зв’язують речення в тексті." (Rewrite the text, avoiding repetition of the highlighted words. Underline the words that connect the sentences in the text.)
+    - **Original Text:** "Марусі... подарували маленький рожевий ноутбук. **Ноутбук** став для Марусі найкращим другом. **Ноутбук** зберігав маленькі таємниці дівчинки..."
+    - **Expected Output:** "Марусі... подарували маленький рожевий ноутбук. **Він** став для Марусі найкращим другом. **Цей комп'ютер** зберігав маленькі таємниці дівчинки..."
+
+## Пов'язані статті (Related Articles)
+
+- `pedagogy/a1/noun-gender`
+- `pedagogy/a1/adjective-agreement`
+- `pedagogy/a1/personal-pronouns`
+- `pedagogy/a2/introduction-to-cases`
+- `grammar/nouns/pluralization`
 
 ---
 
-## Діалоги (Dialogues)
+### Вікі: pedagogy/a1/please-do-this.md
 
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 142
-> **Score:** 0.25
->
-> 142
-> Досліди, скількома 
-> способами 
-> можна 
-> прочитати числовий 
-> вираз.
-> Я — дослідник
-> Я — дослідниця
-> Навчаюся читати числові вирази
-> 70 + 25
-> 80 – 25
-> Сума чисел сімдесят і двадцять  
-> п’ять.
-> Сімдесят збільшити на двадцять  
-> п’ять.
-> Перший доданок сімдесят, другий — 
-> двадцять п’ять.
-> До сімдесяти додати двадцять п’ять.
-> Різниця чисел вісімдесят і двадцять п’ять.
-> Вісімдесят зменшити на двадцять п’ять.
-> Зменшуване вісімдесят, від’ємник —  
-> двадцять п’ять.
-> Від вісімдесяти відняти двадцять п’ять.
-> Правильно утворюй форми числівників і вимовляй їх: 
-> сімдесяти, вісімдесяти.
-> 	 	
-> 9   Прочитайте кожен числовий вираз різними способами.
-> 	 	
-> 10   Розв’яжи задачу. Склади і запиши числові вирази на додавання.
-> 	 	
-> 11   Прочитай і розв’яжи задачу. Запиши розв’язок.
-
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 34
-> **Score:** 0.50
->
-> ПРОТИЛЕЖНІ ЗА ЗНАЧЕННЯМ 
-> СЛОВА
-> РОЗПІЗНАЮ ПРОТИЛЕЖНІ ЗА ЗНАЧЕННЯМ СЛОВА
-> Я — учителька
-> Пригадай і розкажи 
-> ; у класі.
-> Я — учитель
-> визначаю 
-> складаю
-> Слова можуть мати протилежні значення.
-> Випиши парами протилежні за значенням слова.
-> Жовтий котиться клубок, та клубок цей — без ниток. 
-> Ані його розмотати, ні нового намотати. 
-> Цілий день катається: 
-> спершу піднімається, 
-> згодом опускається. 
-> Як це називається?
-> 2| Пригадайте і назвіть заголовки казок 
-> зі словами з протилежним значенням. 
-> Допишіть назви казок і підкресліть 
-> протилежні за значенням слова. 
-> Скористайтеся довідкою.
-> «Правда і ? »,
-> «Про бідного і ? братів»,
-> «Про ? парубка і Марка багатого», 
-> «Ситий ? не вірить»,
-> «Про сумні і ? співанки».
-> Довідка
-> Багатого, кривда, веселі, бідного, голодному.
-> 34
-
-## Цей, ця, це (This)
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 72
-> **Score:** 0.25
->
-> 70
-> Мої навчальні досягнення. Я вмію, можу
-> * * *
-> Прибрав ліжко САМ. 
-> Зробив зарядку САМ. На 
-> кухні  САМ поставив на 
-> стіл чашку. Після снідан-
-> ку САМ помив посуд.
-> * * *
-> А ... притулився до 
-> мами й подумав: «Не-
-> має нічого кращого, ніж 
-> обійми моєї матусі. Ось 
-> воно, щастя!»  
-> * * *
-> — Якщо ліс знову ста-
-> не чистим, то й Лісовуня 
-> буде гарною! — сказав 
-> … .
-> 	
-> Пригадай історії, які ти прочитав / прочита-
-> ла. Визнач, якому малюнку відповідає кож-
-> ний уривок із тексту.
-> Pidruchnyk.com.ua
-
-> **Source:** bolshakova, Grade 2
-> **Section:** Сторінка 36
-> **Score:** 0.50
->
-> 36
-> Запиши слова з буквою ї. Визнач звуки, які позначає буква ї.
-> Мій — мої, твій — твої, вія — вії, лілія — лілії, лінія — лінії.
->  
-> Утвори і запиши речення за зразком.
-> Зразок. Колюче їжаченя з’їло слимака.
-> Колючий
-> Колюча
-> Колюче
-> Колючі
-> їжак
-> їжачиха
-> їжаченя
-> їжаки
-> їсть
-> з’їла
-> з’їло
-> їдять
-> слимака.
-> жука.
-> равлика.
-> черв’яка.
->  
-> Редагуємо
-> Їжак і жаба допомагають 
-> садівнику поїдати комах. 
->  
-> Запиши речення на вибір, у якому: 1) пояснюється, чому їжак 
-> не робить запаси на зиму; 2) описується поведінка їжачка 
-> восени. 
-> Восени їжачок носить на своїх голках листя, а не їжу. 
-> Їжак не запасає їжу на зиму. Узимку він не їсть, а спить. 
-> Тому і готує звірятко тепле гніздо для зимівлі. 
-> • Склади речення за питаннями.
-> Коли?
-> Хто?
-> Що?
-> Що робить?
-> Де?
-> скЛаД. наГоЛос.
-
-## Той, та, те (That)
-
-> **Source:** vashulenko, Grade 3
-> **Section:** Сторінка 131
-> **Score:** 0.50
->
-> 131
-> 	
->   Перевірте свої міркування за поданим висновком. 
-> крісло
-> зручне
-> Шукаймо 
-> прикметники до назв 
-> предметів інтер’єру!
-> 	 	
-> 3   Склади усну розповідь на тему «Моя кімната», використову-
-> ючи іменники з довідки. Добери до іменників прикметники 
-> і використай їх у тексті. 
-> Кімната, двері, вікно, стеля, стіни, коридор, шафа, стіл, стілець, 
-> тумбочка, ліжко, підлога. 
-> Довідка
-> Навчаюся визначати рід і число прикметників  
-> за іменником
-> Рід і число прикметників визначаються за формами 
-> роду і числа іменників, з якими зв’язані прикметники. 
-> 	 	
-> 4   Прочитайте сполучення слів і порівняйте їх.
-
-## Підсумок — Summary
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 80
-> **Score:** 0.50
->
-> 78
-> 78
-> Мої навчальні досягнення. Я вмію, можу
-> 	
-> Пригадай історії, які ти прочитав / прочита-
-> ла. Визнач, якому малюнку відповідає кож-
-> ний уривок із тексту.
-> * * * 
-> — Усі мене бояться, а я та-
-> кий доб­рий, я ж хотів казочку 
-> розпо­вісти... 
-> * * * 
-> — Не хвилюйся, Олю, ми 
-> знайдемо твій телефон. 
-> * * * 
-> Він зберігав її таємниці, ве-
-> селі листи до подружок, ко-
-> льорові малюнки.
-> * * *
-> — Це ти для мене зро-
-> била?!
-> 	
-> Прочитай склади й добери зображення пред-
-> мета, у назві якого є цей склад. 
-> ке-
-> мо-
-> но-
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 72
-> **Score:** 0.33
->
-> 70
-> Мої навчальні досягнення. Я вмію, можу
-> * * *
-> Прибрав ліжко САМ. 
-> Зробив зарядку САМ. На 
-> кухні  САМ поставив на 
-> стіл чашку. Після снідан-
-> ку САМ помив посуд.
-> * * *
-> А ... притулився до 
-> мами й подумав: «Не-
-> має нічого кращого, ніж 
-> обійми моєї матусі. Ось 
-> воно, щастя!»  
-> * * *
-> — Якщо ліс знову ста-
-> не чистим, то й Лісовуня 
-> буде гарною! — сказав 
-> … .
-> 	
-> Пригадай історії, які ти прочитав / прочита-
-> ла. Визнач, якому малюнку відповідає кож-
-> ний уривок із тексту.
-> Pidruchnyk.com.ua
-
-> **Source:** vashulenko, Grade 2
-> **Section:** Сторінка 125
-> **Score:** 0.25
->
-> Зачин — це початок тексту. Основна частина — 
-> виклад змісту цього тексту. Кінцівка — його 
-> завершення.
-> 6Ш Я Прочитайте. Подумайте, як можна назвати цю казку.
-> — Горіх мій, я його перша побачила!
-> — Ні, він мій! Я його перша підняла.
-> Почула ту сварку лисиця, стала між 
-> білками, розкусила горіх та й каже:
-> — Я помирю вас. Ця половина 
-> належить тому, хто побачив горіх. А ця 
-> — тому, хто його підняв. А зерно — мені, 
-> бо я вас помирила.
-> • Придумайте і запишіть початок — 
-> зачин казки.
-> • Розподіліть ролі і підготуйтеся до 
-> переказу казки в особах.
-> Який висновок 
-> мають зробити 
-> для себе обидві 
-> білочки?
-> Послухайте оповідання Василя Сухомлинського. 
-> Поміркуйте над запитанням дідуся і розкажіть, що 
-> сталося. Назвіть у тексті зачин, основну частину 
-> і кінцівку.
-
-## Grammar Reference
-
-> **Source:** zaharijchuk, Grade 1
-> **Section:** Сторінка 54
-> **Score:** 0.33
->
-> 52
-> Ц ц
-> Бачу  Ц, ц (це). Чую  [ц], [ц′].
-> а
-> о
-> у
-> и
-> і
-> Ц
-> ца
-> цо
-> цу
-> ци
-> ці
-> а
-> о
-> у
-> и
-> і
-> ац
-> оц
-> уц
-> иц
-> іц
-> Ц
-> цу
-> ци
-> це
-> цві
-> т
-> ркун
-> це
-> дра
-> сарка
-> ці
-> лина
-> кавий
-> 	
-> Пограємо в гру «Так / ні».
-> Летить 
-> ? — _____ !
-> Летить 
-> ?  — _____!
-> Летить 
-> ? — ____!
-> Летить 
-> ? — _______!
-> у
-> г о р о б е
-> в і р
-> ц
-> к
-> и м б
-> ц
-> а
-> ц
->  [ –  =•– |–•– ]  
->  [ –•| –•| –•= ] 
-> ь
-> л и
-> н
-> Pidruchnyk.com.ua
+# Педагогіка A1: Please Do This
 
 
-## МійКлас Theory (miyklas.com.ua)
 
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
+## Методичний підхід (Methodological Approach)
 
-### Рід іменників
-> **Source:** МійКлас — [Рід іменників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/rid-imennikiv-42978)
+This guide outlines the core pedagogical principles for creating A1 level content. The primary goal is not just to teach rules, but to foster a positive, effective, and decolonized learning experience from the very first lesson.
 
-### Теорія:
+1.  **Emotion-Driven Learning (Емоційне навчання):** We remember things that evoke strong emotions (Source: `ext-ulp_youtube-90`). A1 content should not be a dry list of vocabulary. It must be embedded in relatable, personal stories. For example, instead of just a list of foods, present them in a story about a family dinner, connecting a word like «смачно» to the warmth of family, just as a diaspora learner might remember a word from their grandfather (Source: `ext-ulp_youtube-90`).
 
-*www.ua.pistacja.tv*  
-**Рід притаманний кожному іменнику в однині**. Іменники мають постійне значення **роду**:
-чоловічого: *день, зошит, комп'ютер*,  жіночого: *книга, земля, машина*, середнього: *сонце, місто, озеро*, спільного: *суддя, сирота, нечема, забіяка.*
-Іменники чоловічого роду співвідносні з займенником він, жіночого роду — вона, середнього роду — воно.
- 
-**Іменники за родами **не змінюються.
+2.  **Active Retrieval Practice (Практика відтворення):** Passive re-reading is inefficient. The most effective learning happens when the brain struggles to recall information (`відтворення`). This is when the "muscles" of memory are built (Source: `ext-ulp_youtube-90`). A1 modules MUST be built around frequent, low-stakes retrieval exercises. This means less passive reading and more "test-like" activities that force the learner to produce language.
 
-### Іменник. Рід іменників. Паралельні родові форми
-> **Source:** МійКлас — [Іменник. Рід іменників. Паралельні родові форми](https://www.miyklas.com.ua/p/ukrainska-mova/10-klas/morfologichna-norma-373940/imennik-rid-imennikiv-paralelni-rodovi-formi-imennika-374830)
+3.  **Testing as a Learning Tool (Тест як метод навчання):** For A1, "tests" are not for grades; they are the primary method of learning. Instead of teaching a concept and then testing it, we should often test *before* teaching. For instance, before a lesson on verb forms, give the learner a sentence with a blank and ask them to guess the verb. This creates a "need to know," making the subsequent explanation more effective (Source: `ext-ulp_youtube-90`). This "test-first" approach helps learners immediately see what they need to focus on.
 
-### Теорія:
-Іменник — це **самостійна** ча
+4.  **Goal-Oriented Content (Цілеспрямований контент):** Every A1 learner has a goal, whether it's understanding relatives, reading the news, or traveling (Source: `ext-ulp_youtube-166`). The content must serve these goals. For A1, this means focusing on practical, high-frequency situations: introductions, ordering food, asking for directions, talking about family and hobbies. The curriculum must deliver immediate, real-world communicative competence.
 
-... (truncated for context window)
+5.  **Structured Comfort Zone Expansion (Вихід із зони комфорту):** While A1 is about building foundations, learners must be gently pushed to interact with simple, authentic materials. This could be a short children's poem (Source: `ext-ulp_youtube-164`), a simple dialogue from a podcast, or a single page from a graded reader (Source: `ext-ulp_youtube-69`). The key is to make this process structured and supported, for example, by providing a transcript and vocabulary for a one-minute authentic audio clip (Source: `ext-ulp_youtube-166`).
+
+## Послідовність введення (Introduction Sequence)
+
+The order of introduction is critical for building a solid foundation.
+
+1.  **Step 1: Foundational Concepts & Core Vocabulary.** Begin with the absolute basics. Introduce the concept that a text is a series of sentences linked by meaning (Source: `3-klas-ukrainska-mova-vashulenko-2020-1_s0002`). Teach high-frequency social formulas ("Привіт," "Дякую," "Будь ласка") and the most common nouns and verbs related to personal identity (`я`, `ти`, `студент`, `читати`).
+
+2.  **Step 2: Basic Sentence Structure & Present Tense.** Introduce the simple sentence structure (Subject-Verb-Object). Teach the present tense of high-frequency verbs from the 1st and 2nd conjugations. Crucially, teach the omission of "to be" in the present tense ("Я студент," not "Я є студент"). Model this with sentence-building exercises (Source: `6-klas-ukrmova-betsa-2023_s0020`).
+
+3.  **Step 3: Introduction to Cases (Nominative & Accusative).** Do not overwhelm with all seven cases. Start with the Nominative (subject) and Accusative (direct object). This unlocks the ability to form basic transitive sentences ("Я читаю книжку").
+
+4.  **Step 4: The Imperative Mood for Polite Requests.** Introduce the imperative mood not as a command, but as the primary way to make polite requests when combined with "будь ласка." This is a fundamental communicative function (Source: `7-klas-ukrmova-litvinova-2024_s0066`, `5-klas-ukrmova-uhor-2022-1_s0187`).
+
+5.  **Step 5: Past Tense & Basic Prepositional Phrases.** Introduce the past tense, which is relatively simple in Ukrainian (forms based on gender and number). Simultaneously, teach basic prepositional phrases to talk about location (`в/у`, `на`). This allows for simple storytelling ("Я був у Києві").
+
+The general sequence of grammatical topics should follow the logic seen in native textbooks: Verb Forms (Infinitive, Person) → Tense/Mood → Cases (Source: `7-klas-ukrmova-litvinova-2024_s0008`).
+
+## Типові помилки L2 (Common L2 Errors)
+
+This section guides the writer on what to anticipate and proactively address.
+
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| :--- | :--- | :--- |
+| *Я є студент. | Я студент. | The verb `бути` (to be) is omitted in the present tense in standard Ukrainian. This is a direct structural transfer from English and must be explicitly corrected from Day 1. |
+| *Дайте мені каву. (Abrupt) | Дайте, будь ласка, каву. | English speakers often look for modal verbs ("Could I have...") for politeness. In Ukrainian, the imperative form + `будь ласка` is the standard, natural way to make a polite request. The bare imperative can sound like a rude command (Sources: `7-klas-ukrmova-litvinova-2024_s0066`, `5-klas-ukrmova-uhor-2022-1_s0187`). |
+| Прівєт! Как діла? | Привіт! Як справи? | This is Surzhyk, a mix of Ukrainian and Russian. It is not "slang" or a "dialect"; it is a remnant of linguistic Russification. The curriculum must teach pure, standard Ukrainian from the start (Source: `ext-ulp_youtube-168`). |
+| Я маю книжку. | У мене є книжка. | While `мати` can mean "to have," the `У + [genitive] + є` construction is far more common and natural for expressing possession of objects in everyday speech. Teaching this structure first prevents an unnatural, English-like sentence pattern. |
+| *Він хоче іти в **парікмахерську**. | Він хоче йти в **перукарню**. | This is a lexical error, borrowing a common Russian word instead of using the correct Ukrainian equivalent. A1 vocabulary must be carefully vetted to exclude such Russianisms (Source: `ext-ulp_youtube-168`). |
+| Я читаю книжку **зараз**. | Я читаю книжку. | English speakers overuse "now" to specify the present continuous. In Ukrainian, the imperfective verb `читаю` already implies an ongoing action in the present. Adding `зараз` is often redundant and unnatural unless for specific emphasis. |
+
+## Деколонізаційні застереження (Decolonization Notes)
+
+**This is a non-negotiable component of the curriculum.** The teaching of Ukrainian must be free from the influence of Russian linguistic colonialism. Russia actively uses its language and its version of "history" as a weapon to erase Ukrainian identity (Source: `ext-realna_istoria-101`).
+
+1.  **No Russian Comparisons:** Never teach Ukrainian letters, sounds, or grammar by comparing them to Russian (e.g., "Ukrainian 'и' is like Russian 'ы'"). This centers Russian as the default and frames Ukrainian as a deviation. Ukrainian phonetics and grammar must be taught on their own terms.
+
+2.  **Zero Tolerance for Surzhyk:** Surzhyk is not a "quirky dialect." It is a direct result of centuries of forced Russification and the suppression of the Ukrainian language (Source: `ext-ulp_youtube-168`). Its use in educational materials, even as an example of "what not to do," can normalize it. The curriculum must present only standard, clean Ukrainian. Examples like `Привет` or `садік` must be identified as foreignisms to be avoided.
+
+3.  **Correctly Frame Shared Vocabulary:** Ukrainian and Russian share some vocabulary due to a common Slavic root. It is critical to frame this correctly. These are not "Russian words in Ukrainian." They are cognates from a common ancestor. When a word exists in both languages, the Ukrainian form is presented as native, not as a borrowing (Source: `ext-ulp_youtube-139`).
+
+4.  **Ukrainian is the Only Medium of Instruction (for the language itself):** While explanations can be in English, all target language examples, dialogues, and texts must be 100% Ukrainian. The goal is to build a "Ukrainian brain" from scratch, not to map Ukrainian onto an English or Russian framework.
+
+## Словниковий мінімум (Vocabulary Boundaries)
+
+This vocabulary is suitable for A1 learners (teens and adults). It is simple but not childish.
+
+**Іменники (Nouns):**
+*   ★★★: `книжка`, `школа`, `студент`, `вчитель`, `мова`, `Україна`, `Київ`, `день`, `друг`, `сім'я`, `мама`, `тато`, `час`, `робота`, `вода`, `кава`
+*   ★★: `музей`, `вулиця`, `місто`, `село`, `сніданок`, `обід`, `вечеря`, `питання`, `слово`
+*   ★: `подорож`, `хобі`, `канікули` (Source: `6-klas-ukrmova-betsa-2023_s0083`)
+
+**Дієслова (Verbs):**
+*   ★★★: `бути`, `мати`, `хотіти`, `могти`, `знати`, `розуміти`, `говорити`, `читати`, `писати`, `жити`, `працювати`, `йти`, `їхати`
+*   ★★: `любити`, `дивитися`, `слухати`, `робити`, `давати`, `питати`, `їсти`, `пити`
+*   ★: `грати (в/на)` (Source: `6-klas-ukrmova-betsa-2023_s0020`), `починати`, `допомагати`
+
+**Прикметники / Прислівники (Adjectives / Adverbs):**
+*   ★★★: `добрий`, `новий`, `старий`, `великий`, `малий`, `український`, `тут`, `там`, `добре`, `погано`
+*   ★★: `цікавий`, `гарний`, `смачний`, `сьогодні`, `завтра`, `вчора`, `швидко`, `повільно`
+*   ★: `важливий`, `легкий`, `важкий`
+
+## Приклади з підручників (Textbook Examples)
+
+The writer should model activities on these proven formats from Ukrainian schoolbooks.
+
+1.  **Structured Sentence Building (Побудова речень):**
+    *   **Task:** Create full sentences from prompts. This drills vocabulary and basic grammar in a controlled way.
+    *   **Example:** (From `6-klas-ukrmova-betsa-2023_s0020`)
+        > Складіть речення за зразком.
+        > **Зразок:** Томаш — кататися на ковзанах — льодовий майданчик. -> *Томаш катається на ковзанах на льодовому майданчику.*
+        > 1. Андрій — кататися на скейтборді — парк
+        > 2. Марті — подобатися — народні танці
+        > 3. Батьки — ходити в похід — гори
+
+2.  **Polite Request Dialogues (Діалоги з проханням):**
+    *   **Task:** Create and role-play short dialogues for common situations, focusing on polite forms.
+    *   **Example:** (Adapted from `5-klas-ukrmova-uhor-2022-1_s0187`)
+        > Складіть діалог, уявіть ситуацію: ви прийшли у магазин. Вам потрібно купити ручку і зошит. Використайте в ньому слова «Спасибі!» і «Будь ласка».
+
+3.  **Imperative Verb Formation (Утворення наказового способу):**
+    *   **Task:** Fill in the blanks by correctly forming the imperative mood of the verb.
+    *   **Example:** (From `7-klas-ukrmova-litvinova-2024_s0066`)
+        > Утворіть від дієслів у дужках форми наказового способу.
+        > 1. Так (сказати), ви хочете стати справжніми богатирями?
+        > 2. (Слухати), добрий чоловіче, коли вже довелося нам іти разом, (зробити) так.
+        > 3. Тепер (іти) додому, бо пізно.
+
+4.  **Intensive Listening & Repetition (Інтенсивне слухання і повторення):**
+    *   **Task:** A powerful exercise to train listening comprehension and pronunciation simultaneously.
+    *   **Example:** (Based on the method described in `ext-ulp_youtube-166`)
+        > 1. Знайдіть українське відео з субтитрами.
+        > 2. Прослухайте одне речення без субтитрів. Зупиніть відео.
+        > 3. Спробуйте самі сказати вголос, що ви почули. Повторіть кілька разів.
+        > 4. Включіть субтитри і перевірте, чи правильно ви почули і сказали. Запишіть нові слова.
+
+## Пов'язані статті (Related Articles)
+- `pedagogy/a1/introduction-to-cases`
+- `pedagogy/a1/present-tense-conjugation`
+- `pedagogy/a1/imperative-mood-politeness`
+- `pedagogy/decolonization/surzhyk-and-russianisms`
+- `curriculum/a1/vocabulary-by-theme`
+</wiki_context>
+
+## Plan References
+
+- 
+- 
+
 </knowledge_packet>
 
 ---
@@ -711,7 +559,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Цей, ця, це (This)` (~300 words)
 - `## Той, та, те (That)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок — Summary` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -766,7 +613,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -863,109 +710,43 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги (Dialogues) (~340 words total)
+- P1 (~30 words): Introduction setting the scene at a modern electronics store in Kyiv, where Ірина is looking for gadgets with a store consultant.
+- P2 (~130 words): Dialogue 1 — Shopping for electronics. Focus on "this" (near). Ірина asks about prices and colors using `цей телефон`, `ця камера`, and `це радіо`. Consultant uses `це` to identify items: "Це новий смартфон". Vocabulary includes colors from M10 and prices from M11.
+- P3 (~30 words): Transition to Dialogue 2, which takes place in a home office setting, contrasting items nearby and across the room.
+- P4 (~110 words): Dialogue 2 — Interior and furniture. Focus on the contrast between `цей` (near) and `той` (far). Comparison of furniture items: `цей стілець` (here) vs `той стіл` (there), `ця шафа` (new) vs `та книжкова полиця` (old).
+- P5 (~40 words): Brief linguistic observation on how Ірина uses the demonstratives to point without repeating the nouns constantly, showing natural speech flow.
 
-- P1 (~30 words): Scene-setter — Ірина browses an electronics store, a shop assistant (Консультант) approaches. One sentence of atmosphere grounding цей/той contrast.
+## Цей, ця, це (This) (~310 words total)
+- P1 (~90 words): Explanation of `Це` as the universal identifier ("This is..."). Contrast its fixed form in questions like `Що це?` with its role as a pointer for neuter nouns like `це вікно` or `це поле`. 
+- P2 (~110 words): Detailed breakdown of gendered forms for "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly linking them to the gender pronouns `він/вона/воно` and possessives `мій/моя/моє` to show the pattern (e.g., `цей мій стіл`).
+- P3 (~110 words): Word order and adjective agreement. Teaching the sequence: `Demonstrative + Adjective + Noun`. Examples: `цей великий синій рюкзак`, `ця маленька жовта ручка`. Note that the demonstrative always takes the lead, just like in English.
+- <!-- INJECT_ACTIVITY: quiz-this-gender --> [quiz, focus: Choosing the correct form of цей/ця/це based on noun gender, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-this-possessive --> [match-up, focus: Matching demonstratives with corresponding possessives and question words (цей/мій/який), 6 items]
 
-- Dialogue 1 (~120 words): Shopping for a bag/backpack (bridging M10 colors + M11 prices). Full exchange:
-  — Скільки коштує ця сумка?
-  — Яка? Ця червона?
-  — Ні, та синя.
-  — Та коштує двісті гривень.
-  — А цей рюкзак?
-  — Цей — сто п'ятдесят.
-  — Добре, беру цей рюкзак.
-  Brief post-dialogue note (~20 words): ця = the one close to speaker; та = the one farther away. Natural pointing context.
-
-- Dialogue 2 (~120 words): In the store's display room — pointing at furniture items (bridging M08-M09 vocabulary: стіл, стілець, крісло).
-  — Що це?
-  — Це мій стіл.
-  — А те?
-  — Те — крісло.
-  — Цей стілець новий, а той — старий.
-  — Так, цей зручний, а той — ні.
-  Brief post-dialogue note (~20 words): «Це» introduces the object; цей/та/те points to a specific one. Pattern emerges from context.
-
-- Exercise: quiz — "Which demonstrative fits?" — 8 items pairing цей/ця/це with nouns from dialogues (рюкзак, сумка, крісло, телефон, камера, радіо, стіл, вікно).
-
----
-
-## Цей, ця, це (This) (~330 words total)
-
-- P1 (~80 words): Introduce цей/ця/це — demonstrative pronouns that agree with the gender of the noun they point to. Show the three forms side by side:
-  Цей стіл (m) — this table.
-  Ця книга (f) — this book.
-  Це вікно (n) — this window.
-  Compare to мій/моя/моє and який/яка/яке — same ending pattern: -ий (m), -а (f), -е (n). Reference Заболотний Grade 6 p.210: вказівні займенники цей, той змінюються за родами.
-
-- P2 (~80 words): Expand with 6 additional noun examples across genders (телефон m → цей телефон; камера f → ця камера; радіо n → це радіо; олівець m → цей олівець; ручка f → ця ручка; місто n → це місто). Stress that цей/ця/це always refers to something near the speaker — the thing you can reach or are holding.
-
-- P3 (~80 words): Combining with adjectives and colors — demonstrative + adjective(s) + noun (same order as English). Full examples:
-  Цей великий червоний стіл.
-  Ця нова синя сумка.
-  Це маленьке біле вікно.
-  Note: word order is flexible in Ukrainian, but demonstrative + adj + noun is the most natural unmarked order at A1.
-
-- Exercise: fill-in — "Complete with цей, ця, or це" — 8 items. Examples: ___ телефон новий. ___ камера дорога. ___ радіо старе. ___ великий стіл. ___ синя ручка. ___ маленьке місто. ___ рюкзак твій? ___ кімната гарна.
-
----
-
-## Той, та, те (That) (~330 words total)
-
-- P1 (~80 words): Introduce той/та/те — same gender pattern as цей/ця/це but pointing at something farther away or previously mentioned. Show forms:
-  Той стіл (m) — that table.
-  Та книга (f) — that book.
-  Те вікно (n) — that window.
-  Contrast pair: Цей стілець новий, а той — старий. Цей рюкзак синій, а той — чорний. Те крісло зручне, а це — ні.
-
-- P2 (~80 words): The та/і ambiguity — «та» means both "that" (demonstrative) and "and" (conjunction, like і/й). Examples showing the difference:
-  Мама та тато — Mom and Dad. (conjunction — links two nouns, no noun follows та)
-  Та книга цікава. — That book is interesting. (demonstrative — та directly precedes a noun)
-  Rule of thumb: if та is followed directly by a noun → "that". If та links two separate nouns/clauses → "and".
-
-- P3 (~80 words): Practical choosing and pointing — questions with чи (or):
-  Який стіл? — Цей чи той? (This one or that one?)
-  Яка сумка? — Ця червона чи та синя?
-  Яке вікно? — Це велике чи те маленьке?
-  Also: ось (here is / look — pointing word) and там (there) pair naturally with цей/той: Ось цей телефон — дорогий. А той, там, — дешевший.
-
-- P4 (~50 words): Secondary note — Це as stand-alone "This is / That is":
-  Це вікно. (= This is a window. — introducing/naming)
-  vs. Це вікно велике. (= This window is big. — цe as demonstrative modifying вікно)
-  Context always makes it clear. At A1 both uses are natural and learners will encounter them in the dialogues above.
-
-- Exercise: quiz — "Той, та, or те?" — 6 items pointing at far objects: ___ телефон (m), ___ камера (f), ___ радіо (n), ___ великий стіл (m), ___ синя ручка (f), ___ маленьке місто (n).
-
-- Exercise: match-up — Match each demonstrative to its parallel possessive and question form. 6 pairs: цей↔мій↔який, ця↔моя↔яка, це↔моє↔яке, той↔(той), та↔(та), те↔(те). Pattern recognition: all three paradigms share -ий / -а / -е.
-
----
+## Той, та, те (That) (~350 words total)
+- P1 (~100 words): Introduction to `той`, `та`, `те` for objects further away ("that"). Establishing the spatial link with `там` (there). Examples: `той будинок` (that building over there), `та машина`.
+- P2 (~90 words): The concept of contrast using `а` (but/and). Providing binary comparison sentences: `Цей олівець мій, а той — твій.` `Ця книга цікава, а та — нудна.` Reinforcing the near/far distinction.
+- P3 (~80 words): Clarification on the word `та`. Distinguishing the demonstrative `та` (that woman — `та жінка`) from the conjunction `та` (mom and dad — `мама та тато`). Contextual rules for disambiguation.
+- P4 (~80 words): Forming choices using `чи` (or). Practical "pointing" questions for learners: `Цей стіл чи той?` `Ця сумка чи та?` `Це вікно чи те?`
+- <!-- INJECT_ACTIVITY: fill-in-near-far --> [fill-in, focus: Completing contrastive sentences using ця/та or цей/той, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-that-pointing --> [quiz, focus: Identifying the correct form of той/та/те for far objects in pictures or descriptions, 6 items]
 
 ## Підсумок — Summary (~330 words total)
+- P1 (~150 words): The Gender Agreement Table. A comprehensive recap aligning all A1.2 grammar markers:
+  | Gender | Pronoun | Possessive | Question | "This" | "That" |
+  | :--- | :--- | :--- | :--- | :--- | :--- |
+  | Masculine | він | мій | який? | цей | той |
+  | Feminine | вона | моя | яка? | ця | та |
+  | Neuter | воно | моє | яке? | це | те |
+  Emphasis on the consistent vowel endings (-я/а for feminine, -е for neuter).
+- P2 (~100 words): Proactive error correction checklist. Reminder: Never ask `Що цей?` for "What is this?"; always use the neutral `Що це?`. Mentioning the omission of "to be" (`є`) in descriptive sentences: `Цей стіл великий.`
+- P3 (~80 words): Practical self-check.
+  - Point at 3 things near you: `Цей...`, `Ця...`, `Це...`.
+  - Point at 3 things far away: `Той...`, `Та...`, `Те...`.
+  - Check: Does the ending match the noun's gender?
 
-- P1 (~80 words): Recap the two contrasts learned today. Цей/ця/це = this (near me, I can touch it). Той/та/те = that (farther away, I'm pointing at it). Both sets follow the same gender endings as мій/моя/моє and який/яка/яке — Ukrainian gender agreement is one consistent system.
-
-- P2 — Gender agreement table (~60 words):
-
-  | | m | f | n |
-  |---|---|---|---|
-  | мій | моя | моє | (M06 possessives) |
-  | який | яка | яке | (M09 questions) |
-  | цей | ця | це | (M12 this) |
-  | той | та | те | (M12 that) |
-
-  Caption: Same endings, same logic — learn the pattern once, apply it everywhere.
-
-- P3 (~50 words): та = "that" vs та = "and" — one-line reminder with two contrasting examples: Та книга цікава (demonstrative, before noun) vs Ірина та Максим (conjunction, between names). A quick test: is та followed by a noun? → demonstrative.
-
-- P4 — Self-check (~80 words): Bulleted self-check activity:
-  • Look around — pick 3 objects near you. Say: Це ___. Цей/Ця/Це ___ (adjective) ___ (noun).
-  • Now pick 3 objects far away. Say: То ___. Той/Та/Те ___ (adjective) ___ (noun).
-  • Choose between цей and той: ___ телефон (у тебе в руці) чи ___ ноутбук (на тій полиці)?
-  • Translate: That old chair. / This new blue bag. / Is this a window or a door?
-
-- Exercise: fill-in — "Complete with цей/ця/це or той/та/те" — 8 items. Examples: ___ книга нова, а ___ — стара. (ця/та). ___ стіл великий, а ___ — маленький. (цей/той). ___ вікно відкрите, а ___ — закрите. (це/те). ___ рюкзак мій, а ___ — твій. (цей/той).
-
-Grand total: ~1320 words
+Grand total: ~1330 words
 </skeleton>
 
 ## Output Format

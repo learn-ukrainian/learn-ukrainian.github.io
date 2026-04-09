@@ -1,0 +1,201 @@
+{
+  "total_items": 149,
+  "grounded_items": 121,
+  "ungrounded": [
+    {
+      "word": "умовні",
+      "exercise_type": "match-up",
+      "context": "наука про умовні знаки для письма",
+      "role": "context"
+    },
+    {
+      "word": "знаки",
+      "exercise_type": "match-up",
+      "context": "наука про умовні знаки для письма",
+      "role": "context"
+    },
+    {
+      "word": "звукова",
+      "exercise_type": "match-up",
+      "context": "ідеальна абстрактна звукова одиниця",
+      "role": "context"
+    },
+    {
+      "word": "загалом",
+      "exercise_type": "match-up",
+      "context": "серйозна велика наука про мову загалом",
+      "role": "context"
+    },
+    {
+      "word": "сильна",
+      "exercise_type": "match-up",
+      "context": "сильна вимова одного зі складів у слові",
+      "role": "context"
+    },
+    {
+      "word": "мр'і",
+      "exercise_type": "fill-in",
+      "context": "мрія -> [мр'і____а]",
+      "role": "context"
+    },
+    {
+      "word": "зна",
+      "exercise_type": "fill-in",
+      "context": "знання -> [зна____а́]",
+      "role": "context"
+    },
+    {
+      "word": "с'і",
+      "exercise_type": "fill-in",
+      "context": "сіль -> [с'і____]",
+      "role": "context"
+    },
+    {
+      "word": "ча́с'т'а",
+      "exercise_type": "fill-in",
+      "context": "щастя -> [____ча́с'т'а]",
+      "role": "context"
+    },
+    {
+      "word": "м'і́л'",
+      "exercise_type": "fill-in",
+      "context": "джміль -> [____м'і́л']",
+      "role": "context"
+    },
+    {
+      "word": "йа́",
+      "exercise_type": "error-correction",
+      "context": "йа́",
+      "role": "answer"
+    },
+    {
+      "word": "ща́с'т'а",
+      "exercise_type": "error-correction",
+      "context": "[ща́с'т'а]",
+      "role": "context"
+    },
+    {
+      "word": "знанн'а́",
+      "exercise_type": "error-correction",
+      "context": "[знанн'а́]",
+      "role": "context"
+    },
+    {
+      "word": "л'іс'",
+      "exercise_type": "error-correction",
+      "context": "[л'іс']",
+      "role": "context"
+    },
+    {
+      "word": "стають",
+      "exercise_type": "true-false",
+      "context": "В українській мові дзвінкі приголосні в кінці слова (наприкл",
+      "role": "context"
+    },
+    {
+      "word": "глухими",
+      "exercise_type": "true-false",
+      "context": "В українській мові дзвінкі приголосні в кінці слова (наприкл",
+      "role": "context"
+    },
+    {
+      "word": "окремого",
+      "exercise_type": "true-false",
+      "context": "Літера «м'який знак» (ь) ніколи не має власного окремого зву",
+      "role": "context"
+    },
+    {
+      "word": "рухомим",
+      "exercise_type": "true-false",
+      "context": "Український наголос є рухомим, тобто він може змінювати своє",
+      "role": "context"
+    },
+    {
+      "word": "при",
+      "exercise_type": "true-false",
+      "context": "Український наголос є рухомим, тобто він може змінювати своє",
+      "role": "context"
+    },
+    {
+      "word": "зміні",
+      "exercise_type": "true-false",
+      "context": "Український наголос є рухомим, тобто він може змінювати своє",
+      "role": "context"
+    },
+    {
+      "word": "форми",
+      "exercise_type": "true-false",
+      "context": "Український наголос є рухомим, тобто він може змінювати своє",
+      "role": "context"
+    },
+    {
+      "word": "велику",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає велику старовинну будівлю (castle)?",
+      "role": "context"
+    },
+    {
+      "word": "старовинну",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає велику старовинну будівлю (castle)?",
+      "role": "context"
+    },
+    {
+      "word": "будівлю",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає велику старовинну будівлю (castle)?",
+      "role": "context"
+    },
+    {
+      "word": "їмо",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає час, коли ми їмо вдень (lunch)?",
+      "role": "context"
+    },
+    {
+      "word": "моральний",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає сильний моральний чи фізичний біль (tormen",
+      "role": "context"
+    },
+    {
+      "word": "білий",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає білий продукт із пшениці для хліба (flour)",
+      "role": "context"
+    },
+    {
+      "word": "хліба",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає білий продукт із пшениці для хліба (flour)",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 29,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "вільний",
+      "глухий",
+      "голосний",
+      "губний",
+      "дзвінкий",
+      "йотований",
+      "наголошений",
+      "ненаголошений",
+      "орфографія",
+      "орфоепічна",
+      "пом'якшений",
+      "помилка",
+      "приголосний",
+      "рухомий",
+      "свистячий",
+      "склад",
+      "сонорний",
+      "твердий",
+      "транскрипція",
+      "шиплячий"
+    ]
+  },
+  "all_grounded": false
+}

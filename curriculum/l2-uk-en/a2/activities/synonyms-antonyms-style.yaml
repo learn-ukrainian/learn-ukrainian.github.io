@@ -1,0 +1,354 @@
+version: '1.0'
+module: synonyms-antonyms-style
+level: a2
+inline:
+- id: match-up-match-synonyms-e-g-and-antonyms-e-g-in-pairs
+  type: match-up
+  instruction: З'єднайте синоніми та антоніми в пари
+  pairs:
+  - left: говорити
+    right: розповідати
+  - left: гарний
+    right: чудовий
+  - left: великий
+    right: величезний
+  - left: красивий
+    right: вродливий
+  - left: день
+    right: ніч
+  - left: гарячий
+    right: холодний
+  - left: початок
+    right: кінець
+  - left: лихо
+    right: добро
+- id: quiz-identify-the-literary-device-epithet-metaphor-personification-in-short-phrases
+  type: quiz
+  instruction: 'Визначте художній засіб: епітет, метафора, персоніфікація чи пряме
+    значення'
+  items:
+  - question: срібний дощ
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 0
+  - question: зоря надії
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 1
+  - question: сонце сміється
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 2
+  - question: палке серце
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 0
+  - question: море квітів
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 1
+  - question: вітер співає
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 2
+  - question: калинова мова
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 0
+  - question: золотий годинник
+    options:
+    - епітет
+    - метафора
+    - персоніфікація
+    - пряме значення
+    correct: 3
+- id: fill-in-form-diminutives-from-base-words-e-g-using-correct-suffixes
+  type: fill-in
+  instruction: Утворіть ласкаві слова (зменшувальні форми), обравши правильний варіант
+  items:
+  - sentence: Великий стіл стає маленьким словом ____.
+    answer: столик
+    options:
+    - стільчик
+    - столик
+    - стіл
+  - sentence: Звичайний кіт стає милим словом ____.
+    answer: котик
+    options:
+    - котик
+    - коти
+    - котом
+  - sentence: Слово син стає ніжним словом ____.
+    answer: синок
+    options:
+    - синок
+    - сини
+    - сином
+  - sentence: Суворе слово батько може стати дуже теплим словом ____.
+    answer: батечко
+    options:
+    - батечко
+    - батьком
+    - батьки
+  - sentence: Слово квітка перетворюється на миле слово ____.
+    answer: квіточка
+    options:
+    - квіточка
+    - квітки
+    - квіткою
+  - sentence: Яскрава зірка на небі стає словом ____.
+    answer: зірочка
+    options:
+    - зірочка
+    - зірки
+    - зоря
+  - sentence: Слово річка може стати ніжною формою ____.
+    answer: річечка
+    options:
+    - річечка
+    - річки
+    - ріка
+  - sentence: Замість слова малий ми говоримо ____.
+    answer: маленький
+    options:
+    - маленький
+    - малі
+    - мало
+- id: group-sort-sort-examples-into-syntactic-stylistic-categories-ellipsis-vs-repetition
+  type: group-sort
+  instruction: 'Розподіліть приклади на дві синтаксичні категорії: еліпсис та повтор'
+  groups:
+  - label: Еліпсис (пропуск слова)
+    items:
+    - Я — каву, а ти?
+    - Він — додому.
+    - Усе найкраще — дітям!
+    - Кожному — своє.
+  - label: Повтор (інтенсивність дії)
+    items:
+    - Ми думали-думали, і знайшли.
+    - Вони живуть далеко-далеко.
+    - Ішов, ішов та й прийшов.
+    - Вони ходили-ходили.
+workbook:
+- id: quiz-vocabulary-context-synonyms-antonyms
+  type: quiz
+  instruction: Оберіть правильне слово за контекстом
+  items:
+  - question: Коли ми описуємо пейзаж, ідеально підходить слово _____.
+    options:
+    - красивий
+    - вродливий
+    - смачний
+    - розумний
+    correct: 0
+  - question: Постійне повторення одного слова — це _____.
+    options:
+    - тавтологія
+    - епітет
+    - метафора
+    - еліпсис
+    correct: 0
+  - question: Слова з абсолютно протилежним значенням називаються _____.
+    options:
+    - антоніми
+    - синоніми
+    - епітети
+    - суфікси
+    correct: 0
+  - question: Слово «вродливий» ми використовуємо, коли говоримо про _____.
+    options:
+    - зовнішність людини
+    - гарну погоду
+    - смачну їжу
+    - новий будинок
+    correct: 0
+  - question: Слова «день» і «ніч» — це _____.
+    options:
+    - антоніми
+    - синоніми
+    - епітети
+    - повтори
+    correct: 0
+  - question: Яке слово є синонімом до слова «говорити» (спілкуватися неформально)?
+    options:
+    - балакати
+    - кричати
+    - співати
+    - слухати
+    correct: 0
+- id: error-correction-adjectives-and-diminutives
+  type: error-correction
+  instruction: Знайдіть і виправте граматичну помилку в реченні
+  items:
+  - sentence: Вона дуже вродливий дівчина.
+    error: вродливий
+    correction: вродлива
+    error_type: word
+    options:
+    - вродлива
+    - вродливе
+    - вродливі
+    explanation: Дівчина (girl) — це іменник жіночого роду, тому прикметник також
+      має бути жіночого роду.
+  - sentence: Цей величезна будинок дуже старий.
+    error: величезна
+    correction: величезний
+    error_type: word
+    options:
+    - величезний
+    - величезне
+    - величезні
+    explanation: Будинок (house) — це іменник чоловічого роду, тому прикметник також
+      має бути чоловічого роду.
+  - sentence: Слово «батько» може стати ласкавим словом батечка.
+    error: батечка
+    correction: батечко
+    error_type: word
+    options:
+    - батечко
+    - батьком
+    - батьку
+    explanation: Зменшувально-пестлива форма (diminutive) від слова батько — це батечко.
+  - sentence: Я бачу багато красивий квітів.
+    error: красивий
+    correction: красивих
+    error_type: word
+    options:
+    - красивих
+    - красива
+    - красиві
+    explanation: Квітів — це родовий відмінок множини (Genitive plural), тому прикметник
+      також має стояти у родовій множині.
+  - sentence: Вона має палкий серце.
+    error: палкий
+    correction: палке
+    error_type: word
+    options:
+    - палке
+    - палка
+    - палкі
+    explanation: Серце (heart) — це іменник середнього роду, тому прикметник також
+      має бути середнього роду.
+  - sentence: Ми розмовляли цілу нічок.
+    error: нічок
+    correction: ніченьку
+    error_type: word
+    options:
+    - ніченьку
+    - нічка
+    - ніч
+    explanation: Зменшувальна форма для слова ніч — це ніченька (жіночий рід), а не
+      нічок.
+- id: true-false-stylistic-devices-definitions
+  type: true-false
+  instruction: Правда чи ні? Визначте правильність тверджень
+  items:
+  - statement: Тавтологія робить текст цікавішим і багатшим.
+    correct: false
+    explanation: Тавтологія (постійне повторення одного слова) робить текст бідним
+      і нецікавим.
+  - statement: Слово «вродливий» найкраще використовувати для опису пейзажу.
+    correct: false
+    explanation: Для пейзажу краще підходить «красивий», а «вродливий» — для зовнішності
+      людини.
+  - statement: Персоніфікація наділяє неживі предмети людськими рисами.
+    correct: true
+    explanation: Так, наприклад, «вітер співає» або «сонце сміється».
+  - statement: Еліпсис — це пропуск слова в реченні, яке легко зрозуміти.
+    correct: true
+    explanation: Це робить мовлення дуже динамічним і коротким.
+  - statement: Зменшувальні суфікси показують тільки малий розмір предмета.
+    correct: false
+    explanation: Головна їхня функція — це емоції (любов, ніжність, близькість).
+  - statement: Антоніми часто використовуються в українських прислів'ях для контрасту.
+    correct: true
+    explanation: 'Так, наприклад: «Не знаючи лиха, не пізнаєш і добра».'
+  - statement: Епітети, метафори та персоніфікація роблять нашу мову образною та виразною.
+    correct: true
+    explanation: Вони допомагають малювати словами і передавати складні емоції.
+- id: translate-figurative-phrases
+  type: translate
+  instruction: Оберіть правильний переклад для образних виразів
+  items:
+  - source: golden autumn
+    options:
+    - text: золота осінь
+      correct: true
+    - text: жовта осінь
+      correct: false
+    - text: золотий годинник
+      correct: false
+    - text: тепла осінь
+      correct: false
+  - source: a sea of flowers
+    options:
+    - text: море квітів
+      correct: true
+    - text: багато квітів
+      correct: false
+    - text: вода і квіти
+      correct: false
+    - text: озеро квітів
+      correct: false
+  - source: skilful hands
+    options:
+    - text: золоті руки
+      correct: true
+    - text: добрі руки
+      correct: false
+    - text: великі руки
+      correct: false
+    - text: красиві руки
+      correct: false
+  - source: the sun laughs
+    options:
+    - text: сонце сміється
+      correct: true
+    - text: сонце світить
+      correct: false
+    - text: сонце плаче
+      correct: false
+    - text: сонце співає
+      correct: false
+  - source: little star
+    options:
+    - text: зірочка
+      correct: true
+    - text: зірка
+      correct: false
+    - text: сонце
+      correct: false
+    - text: ніченька
+      correct: false
+  - source: very far away
+    options:
+    - text: далеко-далеко
+      correct: true
+    - text: близько-близько
+      correct: false
+    - text: туди-сюди
+      correct: false
+    - text: довго-довго
+      correct: false

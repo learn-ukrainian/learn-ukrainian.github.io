@@ -1,117 +1,57 @@
 ## Linguistic Scan
-4 errors found:
-- `опредмечену` (Russian calque, should be `опредметнену`)
-- `опредмечена` (Russian calque, should be `опредметнена`)
-- `з оточуючим світом` (Russianism / active participle, should be `з навколишнім світом`)
-- `повсякденнішим` (Invalid comparative form, should be `буденнішим`)
+2 errors found:
+1. `зверну́тися` stress incorrectly claimed to be on the first syllable.
+2. `лет` used instead of the more standard `літ` for zero-derivation flight.
 
 ## Exercise Check
-All 5 placeholder markers are present and correctly mapped to the activity hints.
-- `<!-- INJECT_ACTIVITY: nominalization-intro -->` is placed after the introduction. Matches the `match-up` activity.
-- `<!-- INJECT_ACTIVITY: suffix-practice -->` is placed after the -ння suffix section. Matches the `fill-in` activity.
-- `<!-- INJECT_ACTIVITY: zero-derivation -->` is placed after the -ття and zero-derivation section. Matches the `group-sort` activity.
-- `<!-- INJECT_ACTIVITY: sentence-transformation -->` is placed after the syntax section. Matches the `sentence-builder` activity.
-- `<!-- INJECT_ACTIVITY: news-analysis -->` is placed after the reading section. Matches the `quiz` activity.
-The distribution is even and logically follows the pedagogical progression.
+- `<!-- INJECT_ACTIVITY: match-up-verb-noun-matching -->` correctly placed after basic word formation.
+- `<!-- INJECT_ACTIVITY: group-sort-suffix-sort -->` correctly placed after suffix/zero-derivation section.
+- `<!-- INJECT_ACTIVITY: quiz-register-quiz -->` correctly placed after register explanation.
+- `<!-- INJECT_ACTIVITY: phrase-transformation -->` correctly placed after sentence role transformation.
+- `<!-- INJECT_ACTIVITY: noun-formation-fill-in -->` correctly placed after practice instructions.
+- `<!-- INJECT_ACTIVITY: text-analysis-comprehension-of-verbal-nouns-in-news-context -->` correctly placed after the news reading.
+- `<!-- INJECT_ACTIVITY: open-response-write-3-4-sentences-using-verbal-nouns -->` correctly placed at the end of the reading section.
+
+All markers match the plan's requested activities and are placed exactly where they should be in the PPP flow.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | DEDUCT for missing textbook references. The plan explicitly requires citing "Вашуленко Grade 3", "Голуб Grade 6", "Литвінова Grade 6", and "Заболотний Grade 7", but none of these authors or textbooks are mentioned anywhere in the prose. All other grammatical points are well covered. |
-| 2. Linguistic accuracy | 7/10 | CRITICAL errors found: "опредмечена дія" and "опредмечену дію" (Russian calques, should be "опредметнена/у"). Also, "з оточуючим світом" (Russian active participle, should be "з навколишнім світом"). Also "повсякденнішим" (invalid synthetic comparative form). |
-| 3. Pedagogical quality | 9/10 | Excellent pedagogical progression from concept to practice. The use of contrastive examples (process vs result, formal vs neutral) is strong and very helpful for B1 learners. |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary from the plan is introduced naturally in the text with clear explanations and bolded keywords. |
-| 5. Exercise quality | 10/10 | The placeholder markers are perfectly positioned after each relevant grammatical section, ensuring progressive, immediate practice. |
-| 6. Engagement & tone | 8/10 | DEDUCT for generic enthusiasm ("магію перетворення", "лінгвістичну магію"), which violates the rule against "The magic of..." meta-commentary. Otherwise, the tone is professional. |
-| 7. Structural integrity | 7/10 | DEDUCT for adding two unauthorized H2 headings (`## Суфікси -іння та -ення...` and `## Стилістика: Канцелярит...`) that are not in the metadata `content_outline`. Also altered two H2 names from the exact plan wording (`Синтаксис:` and `текстах`). This will break the pipeline validation script. |
-| 8. Cultural accuracy | 10/10 | Good use of Ukrainian context in the reading examples (Дія, digital state, green energy, rebuilding). |
-| 9. Dialogue & conversation quality | 6/10 | DEDUCT for stilted/textbook-robotic phrasing in the opening dialogue. While it intentionally crams verbal nouns for the lesson, sentences like "Моє фотографування на заводі пройшло успішно" sound completely unnatural for native speakers. |
+| 1. Plan adherence | 9/10 | The text covers the outline well, mentioning textbook authors Заболотний and Литвінова. However, it omitted the recommended vocabulary words "становлення" and "мислення", and generalized the Вашуленко reference to "шкільні підручники". |
+| 2. Linguistic accuracy | 8/10 | The module contains a critical factual error regarding stress: "Наголос тут залишається на першому складі, точно як і в базовому дієслові «звернутися»" (the stress in зверну́тися is on the third syllable, not the first). It also uses the poetic noun "лет" instead of the standard "літ" for flight. Other linguistic claims are accurate. |
+| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow. The explanation of the difference between Ukrainian and Russian phonetics (подовження vs -ние) is highly useful, as is the warning against gerund preposition calques ("від ходити"). |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary is present. Missed recommended words "становлення" and "мислення" (which also affects plan adherence). |
+| 5. Exercise quality | 10/10 | The injected markers perfectly align with the plan's five requested types, plus two excellent reading comprehension markers. |
+| 6. Engagement & tone | 10/10 | The tone is professional, encouraging, and appropriate for a B1 academic grammar module. It treats the learner as an adult without gamified language. |
+| 7. Structural integrity | 10/10 | The word count is 4803 (exceeding the 4000 target). All sections are present and well-structured. |
+| 8. Cultural accuracy | 10/10 | The corporate IT context and news article about reconstruction reflect modern Ukrainian realities. |
+| 9. Dialogue & conversation quality | 10/10 | The workplace dialogue is natural and effectively models the formal use of verbal nouns. |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: Entire text
-Issue: Textbook references from the plan (Вашуленко, Голуб, Литвінова, Заболотний) were completely ignored.
-Fix: Since this requires rewriting multiple paragraphs, no exact fix is provided, but this is a significant plan adherence failure.
 
-[2. Linguistic accuracy] [critical]
-Location: "...над яким виконується опредмечена дія."
-Issue: "опредмечена" is a Russian calque (опредмеченный). The correct Ukrainian linguistic term is "опредметнена".
-Fix: Replace "опредмечена дія." with "опредметнена дія."
+[Plan adherence] [Minor]
+Location: (Missing from the prose)
+Issue: The text omits the recommended vocabulary words "становлення" and "мислення", which are listed in the plan.
+Fix: Add them to the list of examples for words with the -ення suffix.
 
-[2. Linguistic accuracy] [critical]
-Location: "...що позначають опредмечену дію:"
-Issue: "опредмечену" is a Russian calque.
-Fix: Replace "опредмечену дію:" with "опредметнену дію:"
+[Linguistic accuracy] [Critical]
+Location: "Прекрасним та дуже показовим прикладом є слово **звернення** *(appeal, address)*. Наголос тут залишається на першому складі, точно як і в базовому дієслові «звернутися»."
+Issue: Factual linguistic error. The stress in the verb "зверну́тися" is on the third syllable ('у'), not the first. Claiming it is on the first syllable like in "зве́рнення" is incorrect and teaches wrong pronunciation.
+Fix: `replace: "Прекрасним та дуже показовим прикладом є слово **звернення** *(appeal, address)*. Наголос тут падає на корінь слова, а не на суфікс."`
 
-[2. Linguistic accuracy] [critical]
-Location: "...описувати свої почуття та взаємини з оточуючим світом, людьми та предметами."
-Issue: "оточуючим" is an active participle calqued from Russian "окружающим". In Ukrainian, the environment is "навколишній світ" or "довкілля".
-Fix: Replace "з оточуючим світом," with "з навколишнім світом,"
-
-[2. Linguistic accuracy] [critical]
-Location: "...тоді як безафіксний іменник розмова ... є набагато теплішим і повсякденнішим."
-Issue: "повсякденний" is a relative adjective and cannot naturally form a synthetic comparative degree ("повсякденніший" does not exist in standard dictionaries). "буденніший" is the correct, natural form here.
-Fix: Replace "є набагато теплішим і повсякденнішим." with "є набагато теплішим і буденнішим."
-
-[6. Engagement & tone] [minor]
-Location: "...здійснювати лінгвістичну магію: перетворювати динамічні..."
-Issue: Generic enthusiasm / meta-commentary ("magic of") violates tone guidelines.
-Fix: Replace "здійснювати лінгвістичну магію: перетворювати" with "здійснювати лінгвістичну трансформацію: перетворювати"
-
-[6. Engagement & tone] [minor]
-Location: "Подивіться на цю магію перетворення:"
-Issue: Generic enthusiasm / meta-commentary.
-Fix: Replace "Подивіться на цю магію перетворення:" with "Погляньте на це перетворення:"
-
-[7. Structural integrity] [major]
-Location: "## Синтаксис: Віддієслівні іменники у реченні"
-Issue: H2 heading does not exactly match the plan outline (added "Синтаксис:").
-Fix: Replace "## Синтаксис: Віддієслівні іменники у реченні" with "## Віддієслівні іменники у реченні"
-
-[7. Structural integrity] [major]
-Location: "## Читання: віддієслівні іменники у текстах"
-Issue: H2 heading does not exactly match the plan outline (changed "новинах" to "текстах").
-Fix: Replace "## Читання: віддієслівні іменники у текстах" with "## Читання: віддієслівні іменники у новинах"
-
-[7. Structural integrity] [major]
-Location: "## Суфікси -іння та -ення: робота з другою дієвідміною"
-Issue: Unauthorized H2 heading added that is not in the plan outline. Must be H3.
-Fix: Replace "## Суфікси -іння та -ення: робота з другою дієвідміною" with "### Суфікси -іння та -ення: робота з другою дієвідміною"
-
-[7. Structural integrity] [major]
-Location: "## Стилістика: Канцелярит та як його уникати"
-Issue: Unauthorized H2 heading added that is not in the plan outline. Must be H3.
-Fix: Replace "## Стилістика: Канцелярит та як його уникати" with "### Стилістика: Канцелярит та як його уникати"
-
-[2. Linguistic accuracy] [minor]
-Location: "Дієслово **збільшити** *(to increase)* стає **збільшенням** *(increase/growth)*."
-Issue: Inconsistent case usage (instrumental here, but nominative in the next sentence "утворює зменшення").
-Fix: Replace "стає **збільшенням** *(increase/growth)*." with "стає іменником **збільшення** *(increase/growth)*."
+[Linguistic accuracy] [Minor]
+Location: "Птах у небі може вільно «летіти», і ця дія миттєво перетворюється на іменник **лет** *(flight)*."
+Issue: The noun "лет" is marked as poetic in СУМ-11. For B1-level prose, the standard zero-derivation noun "літ" is more natural and pedagogically appropriate, and perfectly illustrates the vowel alternation rule discussed just prior.
+Fix: `replace: "Птах у небі може вільно «летіти», і ця дія миттєво перетворюється на іменник **літ** *(flight)*."`
 
 ## Verdict: REVISE
-The module has strong pedagogical value and clear grammar explanations, but contains several critical linguistic errors (Russian calques like "опредмечена", "оточуючим") and structural violations (unauthorized/altered H2 headings that will break the pipeline validation script). These must be fixed before publishing.
+The module is beautifully written and academically rigorous, but the critical factual error regarding the stress in "звернутися" requires a revision to prevent teaching incorrect pronunciation.
 
 <fixes>
-- find: "опредмечена дія."
-  replace: "опредметнена дія."
-- find: "опредмечену дію:"
-  replace: "опредметнену дію:"
-- find: "з оточуючим світом,"
-  replace: "з навколишнім світом,"
-- find: "є набагато теплішим і повсякденнішим."
-  replace: "є набагато теплішим і буденнішим."
-- find: "здійснювати лінгвістичну магію: перетворювати"
-  replace: "здійснювати лінгвістичну трансформацію: перетворювати"
-- find: "Подивіться на цю магію перетворення:"
-  replace: "Погляньте на це перетворення:"
-- find: "## Синтаксис: Віддієслівні іменники у реченні"
-  replace: "## Віддієслівні іменники у реченні"
-- find: "## Читання: віддієслівні іменники у текстах"
-  replace: "## Читання: віддієслівні іменники у новинах"
-- find: "## Суфікси -іння та -ення: робота з другою дієвідміною"
-  replace: "### Суфікси -іння та -ення: робота з другою дієвідміною"
-- find: "## Стилістика: Канцелярит та як його уникати"
-  replace: "### Стилістика: Канцелярит та як його уникати"
-- find: "стає **збільшенням** *(increase/growth)*."
-  replace: "стає іменником **збільшення** *(increase/growth)*."
+- find: "Інші подібні поширені приклади — це **рішення** *(decision)* або офіційне слово **забезпечення** *(provision)*."
+  replace: "Інші подібні поширені приклади — це **рішення** *(decision)*, **мислення** *(thinking)*, книжне слово **становлення** *(formation)* або офіційне слово **забезпечення** *(provision)*."
+- find: "Прекрасним та дуже показовим прикладом є слово **звернення** *(appeal, address)*. Наголос тут залишається на першому складі, точно як і в базовому дієслові «звернутися»."
+  replace: "Прекрасним та дуже показовим прикладом є слово **звернення** *(appeal, address)*. Наголос тут падає на корінь слова, а не на суфікс."
+- find: "Птах у небі може вільно «летіти», і ця дія миттєво перетворюється на іменник **лет** *(flight)*."
+  replace: "Птах у небі може вільно «летіти», і ця дія миттєво перетворюється на іменник **літ** *(flight)*."
 </fixes>

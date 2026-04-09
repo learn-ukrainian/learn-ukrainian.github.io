@@ -1,49 +1,36 @@
 ## Linguistic Scan
-No linguistic errors found.
+No linguistic errors found. The grammar explanations, vocabulary usage, and morphological transformations (-а to -у, dropping -о for "тато", soft endings for "лікар" and "вчитель") are entirely correct and natural.
 
 ## Exercise Check
-All plan `activity_hints` have corresponding markers.
-However, two markers are injected before the concepts they test are formally taught:
-- `fill-in-animate-accusative` tests both masculine and feminine forms but is placed before the rule section.
-- `fill-in-family-friends` tests dialogue sentences and masculine forms but is placed immediately before the masculine rule is taught.
-Count is adequate (4).
+- `<!-- INJECT_ACTIVITY: sort-animate-inanimate -->`: Found. Logically placed after teaching the "що?" vs "кого?" distinction. Matches plan focus 2.
+- `<!-- INJECT_ACTIVITY: fill-in-animate-transform -->`: Found. Logically placed after presenting the specific transformation rules for masculine and feminine nouns. Matches plan focus 1.
+- `<!-- INJECT_ACTIVITY: quiz-ending-choice -->`: Found. Placed at the end to check comprehension of the full paradigm. Matches plan focus 3.
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->`: Found. Placed at the very end to synthesize the grammar in conversational context. Matches plan focus 4.
+All planned exercises are accounted for and pedagogically well-placed.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module strictly follows the `content_outline`, hitting the 1200 word target (1242 words) and covering all grammatical points (masculine genitive=accusative, whom vs what). |
-| 2. Linguistic accuracy | 10/10 | Perfect grammatical explanations. Properly distinguishes `кого?` vs `що?`. Accurately cites textbook rules (Заболотний, Караман). Phrases like "Я чекаю лікаря" and "Я чекаю його" are natural and correct. |
-| 3. Pedagogical quality | 8/10 | Very strong PPP flow, but DEDUCT for exercises placed before the concept is taught. Specifically, `fill-in-animate-accusative` and `fill-in-family-friends` are placed too early in the text. |
-| 4. Vocabulary coverage | 9/10 | All required vocabulary (`бачити`, `знати`, `любити`, `чекати`, `шукати`, `друг`, `подруга`) is naturally integrated into the prose. Some recommended words (`колега`, `викладач`, `продавець`) are absent from the prose. |
-| 5. Exercise quality | 8/10 | DEDUCT for exercises placed before the concept is taught. `fill-in-family-friends` tests masculine forms but is injected before the masculine rule is taught. |
-| 6. Engagement & tone | 10/10 | Excellent integration of the Ukrainian school curriculum approach (Grade 4 mnemonic). The conversational examples (wedding photos, colleagues at work) feel natural and authentic. |
-| 7. Structural integrity | 9/10 | Clean markdown, but DEDUCT for the inclusion of meta-commentary at the very end (`**Deterministic word count: 1242 words**...`). |
-| 8. Cultural accuracy | 10/10 | Accurately references Ukrainian grade school linguistics methodology. Zero Russianisms or Surzhyk. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogue "Ходімо, я тебе познайомлю" and the workplace chat are highly natural, with culturally appropriate multi-turn exchanges. |
+| 1. Plan adherence | 10/10 | The module strictly follows the outline, includes all required and recommended vocabulary natively in the text, and easily meets the 1200-word target (1684 words). |
+| 2. Linguistic accuracy | 10/10 | Excellent. The morphological rules for animate accusative (including common pitfalls like soft endings for "лікар" and vowel changes for "тато") are presented flawlessly. No Surzhyk or calques found. |
+| 3. Pedagogical quality | 10/10 | Superb PPP flow. Introducing the Grade 4 "Бачу кого? що?" mnemonic is a brilliant pedagogical anchor. The distinction between masculine objects staying the same vs. masculine animate changing is drilled clearly. |
+| 4. Vocabulary coverage | 10/10 | All required words (бачити, знати, любити, чекати, шукати, друг, подруга) and recommended words (сусід, колега, викладач, вчитель, лікар, продавець, покупець) are integrated naturally into examples and text. |
+| 5. Exercise quality | 10/10 | The 4 activity markers match the plan's specifications perfectly and are strategically distributed after each new conceptual chunk. |
+| 6. Engagement & tone | 10/10 | The teacher persona is warm and clarifying. The callouts (e.g., "Don't Forget the Men!", "The Grammar Question Test") add high pedagogical value without feeling like filler. |
+| 7. Structural integrity | 9/10 | Markdown structure is clean, but there is a minor formatting glitch in Dialogue 2 where a single speaker's turn is split across two consecutive lines with repeated speaker tags. |
+| 8. Cultural accuracy | 10/10 | Mentioning the Ukrainian primary school approach (Grade 4 mnemonic) adds a lovely layer of authentic cultural context to the grammar lesson. |
+| 9. Dialogue & conversation quality | 9/10 | The dialogues are natural and effectively demonstrate the grammar in a realistic context (wedding photos, school colleagues). Minor deduction for the split speaker tag in the second dialogue. |
 
 ## Findings
-[Exercise quality] [Major]
-Location: `<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->` and `<!-- INJECT_ACTIVITY: fill-in-family-friends -->`
-Issue: `fill-in-animate-accusative` tests both masculine and feminine forms but is placed after "Кого? (Whom?)" before the rules are explicitly taught. `fill-in-family-friends` tests masculine dialogue forms but is placed immediately before the masculine rule.
-Fix: Move `fill-in-family-friends` after the Dialogues section. Move `fill-in-animate-accusative` to the end of the "Знахідний відмінок — живе" section.
-
-[Structural integrity] [Minor]
-Location: `**Deterministic word count: 1242 words** (calculated by pipeline, do NOT estimate manually)`
-Issue: The module contains leftover meta-commentary from the LLM prompt.
-Fix: Remove the meta-commentary line.
+[Structural integrity] [minor]
+Location: `> **Колега 1:** Він дуже добрий. *(He is very kind.)* \n> **Колега 1:** Я чекаю його зараз. *(I am waiting for him right now.)*`
+Issue: The same speaker ("Колега 1") is tagged twice on consecutive lines for a single uninterrupted turn, which disrupts the reading flow of the dialogue.
+Fix: Combine the two lines into a single speaker turn.
 
 ## Verdict: REVISE
-The module is linguistically and pedagogically excellent, but has a Major issue with activity marker placement breaking the pedagogical sequence, plus a Minor issue with a stray meta-commentary string.
+The module is outstanding in its linguistic accuracy, pedagogical framing, and tone. It executes the plan perfectly. A single minor fix is required to clean up a formatting glitch in one of the dialogues.
 
 <fixes>
-- find: "accusative case) with animate nouns — **кого?**\n\n## Кого? (Whom?)"
-  replace: "accusative case) with animate nouns — **кого?**\n\n<!-- INJECT_ACTIVITY: fill-in-family-friends -->\n\n## Кого? (Whom?)"
-- find: "Compare: **кава → каву**, **мама → маму** — identical ending. Feminine animate accusative requires no new rule at all.\n\n<!-- INJECT_ACTIVITY: fill-in-family-friends -->\n\nNow the rule that matters most in this module."
-  replace: "Compare: **кава → каву**, **мама → маму** — identical ending. Feminine animate accusative requires no new rule at all.\n\nNow the rule that matters most in this module."
-- find: "The accusative of **брат** is **брата** — exactly like **нема́ брата** (there is no brother). The next section shows this pattern in full.\n\n<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->\n\n## Знахідний відмінок — живе́ (Accusative Animate)"
-  replace: "The accusative of **брат** is **брата** — exactly like **нема́ брата** (there is no brother). The next section shows this pattern in full.\n\n## Знахідний відмінок — живе́ (Accusative Animate)"
-- find: "The test you should apply every time: before writing the form, ask the question. **Кого?** → take the genitive form. **Що?** → leave masculine as is.\n\n<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->"
-  replace: "The test you should apply every time: before writing the form, ask the question. **Кого?** → take the genitive form. **Що?** → leave masculine as is.\n\n<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->\n\n<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->"
-- find: "<!-- INJECT_ACTIVITY: quiz-accusative-animate -->\n\n**Deterministic word count: 1242 words** (calculated by pipeline, do NOT estimate manually)"
-  replace: "<!-- INJECT_ACTIVITY: quiz-accusative-animate -->"
+- find: "> **Колега 1:** Він дуже добрий. *(He is very kind.)*\n> **Колега 1:** Я чекаю його зараз. *(I am waiting for him right now.)*"
+  replace: "> **Колега 1:** Він дуже добрий. Я чекаю його зараз. *(He is very kind. I am waiting for him right now.)*"
 </fixes>

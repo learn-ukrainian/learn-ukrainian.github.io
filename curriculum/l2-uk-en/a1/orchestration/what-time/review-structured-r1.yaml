@@ -3,46 +3,50 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 10
-  evidence: Covers all dialogue situations, perfectly executes the PPP pedagogy, integrates
-    textbook citations naturally, and covers all required/recommended vocabulary.
+  evidence: Covers all outline points, introduces ordinals for time, explains 'пів
+    на' and quarters, explains 'о/об' locative chunks, and includes required time-of-day
+    words.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Contains a severe factual error claiming that "**друга** also means 'female
-    friend'". The rest of the grammar and vocabulary usage is flawless.
+  score: 10
+  evidence: Excellent accuracy. Correctly uses forms like 'за чверть третя', 'чверть
+    на третю', 'пів на другу', and actively teaches against common Russianisms like
+    'без' or 'у/в'.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: The PPP flow and the A1-friendly heuristic explaining the `-а` to `-ій`
-    shift are brilliant. Minor deduction for an awkward self-check question ("Пів
-    на котру буде о 8:30?").
+  score: 7
+  evidence: 'DEDUCT: The writer leaked meta-notes from the plan directly into the
+    student-facing text ("Following the native pedagogical approach shown in the Zakhariichuk
+    Grade 4 textbook", "You must warn against'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words (ранок, день, вечір, ніч, опівдні,
-    пів, чверть, and all ordinals) are included and taught contextually.
+  evidence: All required and recommended vocabulary is naturally integrated into the
+    explanations and dialogues.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Exercise markers are perfectly aligned with plan hints and strategically
-    placed after the exact concepts are taught.
+  evidence: Exercise markers are correctly placed after their respective teaching
+    sections and correspond perfectly to the plan.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and encouraging. Includes helpful, practical tips like
-    the syllable count for `одинадцята`.
+  score: 8
+  evidence: 'DEDUCT: The meta-language addressed to the instructor breaks the otherwise
+    engaging teacher persona. REWARD: Clear, helpful explanations of the conceptual
+    difference between English and Ukrainian time'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, beautifully formatted HTML dialogues, correct tables,
-    and logical H2/H3 progression.
+  evidence: Clean markdown, sections match outline, word count is well above the 1200
+    target (1450).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Incorporates real textbook examples to prove natural usage to the learner.
+  evidence: Directly addresses and corrects common Russianisms ('без', 'у/в' for time).
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are highly realistic, transactional, and effectively model how
-    a learner would actually schedule a meeting.
+  score: 9
+  evidence: The first dialogue is natural and contextualizes the grammar perfectly.
+    The second dialogue uses slightly generic "Студент А / Студент Б" designations
+    but functions well.
 findings: []

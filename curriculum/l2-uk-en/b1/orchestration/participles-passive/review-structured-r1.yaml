@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The writer missed the required vocabulary word `ношений`. It also completely
+    ignored the specific verb examples provided in the plan outline for consonant
+    alternations (водити, носити, возити, etc.) a
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical false morphological claim: "Зустріти (to meet) →
+    зустрічений (met)" (it should be `зустрітий`). It also invents the non-standard
+    form "пораджений".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Generally excellent, but using the Russian calque "Давайте згадаємо/розглянемо"
+    sets a poor stylistic example for B1 learners who should be using the true Ukrainian
+    imperative ("Згадаймо").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is present naturally, EXCEPT for `ношений` which
+    was entirely omitted.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The markers are perfectly placed, logically tied to the immediate preceding
+    theory, and fulfill all the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Fantastic, encouraging tone without any corporate or gamified filler.
+    Clear explanations with nice real-world examples.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all sections present, word count is excellent (4066 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic examples (Маріїнський палац, вишиванка, борщ) that feel natural.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The museum dialogue is phenomenal. It perfectly weaves in the target grammar
+    while remaining a completely believable, natural conversation.
+findings: []

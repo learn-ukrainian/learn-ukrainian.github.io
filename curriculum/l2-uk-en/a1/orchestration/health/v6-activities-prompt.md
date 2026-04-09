@@ -27,10 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-health-response -->`
-- `<!-- INJECT_ACTIVITY: match-body-parts -->`
-- `<!-- INJECT_ACTIVITY: fill-in-symptoms -->`
-- `<!-- INJECT_ACTIVITY: fill-in-pharmacy -->`
+- `<!-- INJECT_ACTIVITY: quiz-medical-responses -->`
+- `<!-- INJECT_ACTIVITY: match-body-vocabulary -->`
+- `<!-- INJECT_ACTIVITY: fill-in-symptoms-logic -->`
+- `<!-- INJECT_ACTIVITY: fill-in-medical-chunks -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -131,165 +131,126 @@ required:
 
 <module_content>
 ## Dialogues
+When you visit a medical professional in Ukraine, the interaction is usually direct and focused on the symptoms. A general practitioner, known as a **терапевт** (general practitioner), will often begin the consultation with a very standard, practical opening phrase: **Що у вас болить?** (What hurts you?). The cultural expectation is that you will answer this question directly by listing your physical symptoms or describing how you feel, rather than making small talk. There is no need to translate English phrases like "I am not feeling well today" before getting to the point. You simply state the problem. After receiving a diagnosis from the doctor, you will likely need to visit a pharmacy, called an **аптека** (pharmacy). There, you will speak with an **аптекар** (pharmacist) to purchase the necessary treatments, using polite requests to get exactly what you need.
 
-Two situations every learner will face in Ukraine: a visit to the **лікар** (doctor) and a stop at the **аптека** (pharmacy). Both dialogues below use the vocabulary you will study in this module. Read them now for the full picture, then we will break down the pieces.
-
-### Діалог 1 — У лікаря (At the doctor's)
-
-> **Лікар:** Добрий день. Що у вас болить? *(Good day. What hurts you?)*
+> **Лікар:** Добрий день! Що у вас болить? *(Good day! What hurts?)*
 > **Пацієнт:** У мене болить голова і горло. *(My head and throat hurt.)*
-> **Лікар:** Давно? *(For long?)*
+> **Лікар:** Давно? *(For a long time?)*
 > **Пацієнт:** З учора. І в мене температура. *(Since yesterday. And I have a fever.)*
-> **Лікар:** Ви кашляєте? *(Do you cough?)*
+> **Лікар:** Ви кашляєте? *(Are you coughing?)*
 > **Пацієнт:** Так, трохи. І в мене нежить. *(Yes, a little. And I have a runny nose.)*
-> **Лікар:** Зрозуміло. Це застуда. *(Understood. It's a cold.)*
-> **Лікар:** Я випишу ліки. Відпочивайте! *(I'll prescribe medicine. Rest!)*
+> **Лікар:** Зрозуміло. Це застуда. Я випишу ліки. Відпочивайте! *(I understand. It is a cold. I will prescribe medicine. Rest!)*
 > **Пацієнт:** Дякую, лікарю! *(Thank you, doctor!)*
 
-The doctor opens with one question: **«Що у вас болить?»** — and the patient answers with a simple stack of symptoms. That is the entire pattern for a clinic visit.
+In this dialogue, the patient clearly lists the problems: **болить голова і горло** (head and throat hurt), **температура** (fever), and **нежить** (runny nose). The doctor provides a clear diagnosis of **застуда** (a cold) and promises to help: **я випишу ліки** (I will prescribe medicine).
 
-:::tip Key phrases from Dialogue 1
-**«Що у вас болить?»** — the doctor's standard opening question ("What hurts you?"). Memorise this — you will hear it in every Ukrainian clinic.
+> **Пацієнт:** Добрий день! У мене болить голова. Дайте, будь ласка, таблетки. *(Good day! My head hurts. Give me pills, please.)*
+> **Аптекар:** Від головного болю? *(For a headache?)*
+> **Пацієнт:** Так. І від кашлю, будь ласка. *(Yes. And for a cough, please.)*
+> **Аптекар:** Ось, будь ласка. Ще щось? *(Here you go. Anything else?)*
+> **Пацієнт:** А є щось від нежитю? *(And is there anything for a runny nose?)*
+> **Аптекар:** Так, ось краплі. *(Yes, here are drops.)*
+> **Пацієнт:** Дякую! Скільки це коштує? *(Thank you! How much does it cost?)*
 
-**«З учора»** — "Since yesterday." A useful time anchor when describing symptoms at A1.
-:::
+At the pharmacy, the patient uses the polite command **Дайте, будь ласка** (Give me, please) to request specific items. They ask for **таблетки від головного болю** (pills for a headache) and **краплі від нежитю** (drops for a runny nose). The interaction concludes with the essential practical question for any transaction: **Скільки це коштує?** (How much does it cost?).
 
-### Діалог 2 — В аптеці (At the pharmacy)
-
-> **Покупець:** Добрий день! У мене болить голова. Дайте, будь ласка, таблетки. *(Good day! I have a headache. Give me pills, please.)*
-> **Фармацевт:** Проти головного болю? *(For a headache?)*
-> **Покупець:** Так. І проти кашлю, будь ласка. *(Yes. And for a cough, please.)*
-> **Фармацевт:** Ось, будь ласка. Ще щось? *(Here you go. Anything else?)*
-> **Покупець:** А є щось проти нежитю? *(Is there something for a runny nose?)*
-> **Фармацевт:** Так, ось краплі. *(Yes, here are drops.)*
-> **Покупець:** Дякую! Скільки це коштує? *(Thanks! How much does this cost?)*
-
-This dialogue introduces the pharmacy formula: **«Дайте, будь ласка, таблетки проти...»** (Give me pills for...). Notice the three symptom chunks: **проти головного болю** (for a headache), **проти кашлю** (for a cough), **проти нежитю** (for a runny nose). Treat these as frozen phrases — no grammar analysis needed.
-
-:::note «Проти» not «від»
-When asking for medicine, Ukrainian uses **проти** (against), not **від** (from): **таблетки проти кашлю**, **краплі проти нежитю**. This is a common mistake even among native speakers influenced by Russian patterns.
-:::
-
-Both dialogues stay simple: one phrase to describe the problem (**«У мене болить...»**), one formula to ask for help (**«Дайте, будь ласка...»**). That is the complete A1 health toolkit.
-
-<!-- INJECT_ACTIVITY: quiz-health-response -->
+<!-- INJECT_ACTIVITY: quiz-medical-responses -->
 
 ## Тіло (The Body)
+To describe what hurts, you must first know the names of the fundamental parts of the body. In Ukrainian textbooks for early grades, these are taught simply as **частини тіла** (body parts). For common medical complaints, you need to recognize the most essential ones. The word for head is **голова** (head), which is a feminine noun. The throat is **горло** (throat), a neuter noun. The back is **спина** (back), another feminine noun. The stomach or abdomen is **живіт** (stomach), which is a masculine noun. Knowing the grammatical gender of each word is important because it dictates how adjectives will agree with them. For example, if you want to describe a sore back, the adjective must match the feminine gender of the noun, creating a phrase like **хвора спина** (sore back).
 
-Here are ten body parts you need for a clinic visit. Learn each one with its gender — you will need it later for adjectives.
+*   **голова** (head, f)
+*   **горло** (throat, n)
+*   **спина** (back, f)
+*   **живіт** (stomach, m)
 
-- **голова** (f) — head
-- **горло** (n) — throat
-- **спина** (f) — back
-- **живіт** (m) — stomach
-- **рука** (f) — hand/arm
-- **нога** (f) — leg/foot
-- **око** (n) — eye
-- **вухо** (n) — ear
-- **зуб** (m) — tooth
-- **ніс** (m) — nose
+Beyond the torso and head, you must be able to name your limbs and sensory organs. The word for an arm or a hand is **рука** (hand/arm), a feminine noun. The word for a leg or a foot is **нога** (leg/foot), also feminine. For the face and head, an eye is **око** (eye, n), an ear is **вухо** (ear, n), a tooth is **зуб** (tooth, m), and a nose is **ніс** (nose, m). These vocabulary words will cover the vast majority of basic health issues you might experience.
 
-Two scope notes: **рука** covers everything from shoulder to fingertip — Ukrainian uses one word where English has "arm" and "hand." The same applies to **нога**, which covers hip to toe — both "leg" and "foot." These ten words are the most useful for an A1 learner at a clinic. This is not a complete anatomy lesson — just the essentials.
-
-### Gender in practice
-
-At A1 you will mainly use these words after **болить**, but gender matters when you add an adjective (review from M09). Three contrast examples show the pattern:
-
-- **велике око** — big eye (neuter: adjective ends in **-е**)
-- **великий ніс** — big nose (masculine: adjective ends in **-ий**)
-- **велика рука** — big hand (feminine: adjective ends in **-а**)
-
-Two more from the health context:
-
-- **хворе горло** — sore throat (neuter)
-- **болячий зуб** — aching tooth (masculine)
-
-The takeaway: learn each body part with its gender tag now, and adjective agreement will be automatic later.
-
-### From list to phrase
-
-Every word on the list above slots straight into the pattern you will learn next: **«У мене болить»** + body part. Three quick previews:
-
-- **У мене болить голова.** *(I have a headache.)*
-- **У мене болить живіт.** *(My stomach hurts.)*
-- **У мене болить спина.** *(My back hurts.)*
-
-The body-part list is the input; the chunk is the output. Memorise the list now, and the next section gives you the grammar-free way to use it immediately.
-
-<!-- INJECT_ACTIVITY: match-body-parts -->
-
-## У мене болить... (It Hurts...)
-
-**«У мене болить»** is the single most useful health phrase in Ukrainian. Literally it means "at me hurts," but learn it as an unanalysed block — the same way a Ukrainian child does. You do not need to know that it uses the dative case (that is A2 grammar). Just attach any body part from the previous section:
-
-- **У мене болить голова.** *(I have a headache.)*
-- **У мене болить живіт.** *(My stomach hurts.)*
-- **У мене болить горло.** *(My throat hurts.)*
-- **У мене болить спина.** *(My back hurts.)*
-- **У мене болить зуб.** *(I have a toothache.)*
-
-Five sentences, five body parts — that covers most clinic visits.
-
-### Beyond болить
-
-Five more symptom chunks follow the **«У мене + noun»** pattern:
-
-- **У мене температура.** *(I have a fever.)*
-- **У мене кашель.** *(I have a cough.)*
-- **У мене нежить.** *(I have a runny nose.)* — **нежить** is masculine: **сильний нежить**.
-
-Two phrases for your general state (learn as fixed chunks):
-
-- **Мені холодно.** *(I feel cold.)*
-- **Мені погано.** *(I feel bad / I'm not well.)*
-
-And the direct statement — gender agreement works exactly like M09 adjectives:
-
-- **Я хворий.** *(I'm sick — male speaker.)*
-- **Я хвора.** *(I'm sick — female speaker.)*
-
-:::caution болить vs. болять
-When one thing hurts: **У мене болить зуб.** When multiple things hurt, the verb changes: **У мене болять зуби.** (**болять** = plural form of **болить**.) Just recognise this form for now — do not memorise it.
+:::note
+In Ukrainian, **рука** refers to the entire limb from the shoulder all the way down to the fingertips, and **нога** refers to the entire limb from the hip down to the toes. Ukrainian does not strictly separate the hand from the arm or the foot from the leg in everyday speech as English does.
 :::
 
-### Combining symptoms
+*   **рука** (hand/arm, f)
+*   **нога** (leg/foot, f)
+*   **око** (eye, n)
+*   **вухо** (ear, n)
+*   **зуб** (tooth, m)
+*   **ніс** (nose, m)
 
-Real conversations stack symptoms. Two models from the doctor's dialogue:
+At the A1 level, your primary goal is to recognize these nouns so you can point to what hurts. However, you should also begin to notice how adjectives change their endings to match the gender of these body parts. You learned about adjective agreement in earlier modules, and it applies here perfectly. A masculine noun takes a masculine adjective, a feminine noun takes a feminine adjective, and a neuter noun takes a neuter adjective. For instance, you will see **великий ніс** (big nose — masculine), **велика рука** (big hand — feminine), and **велике око** (big eye — neuter). While you will mostly use these nouns with the verb for "hurts," recognizing these endings helps build your grammatical reflex.
 
-- **У мене болить голова і горло.** *(My head and throat hurt — both with болить.)*
-- **У мене нежить і кашель.** *(I have a runny nose and a cough — two noun symptoms, no verb needed.)*
+*   **великий ніс** (big nose)
+*   **велика рука** (big hand)
+*   **велике око** (big eye)
 
-Try building your own combination:
+<!-- INJECT_ACTIVITY: match-body-vocabulary -->
 
-- **Я хвора. У мене болить горло.** *(I'm sick. My throat hurts.)*
-- **У мене температура і кашель.** *(I have a fever and a cough.)*
+## У мене болить... (It Hurts...)
+The most important structure for discussing health in Ukrainian is the magic phrase for expressing pain. You do not say "my head hurts" using a possessive pronoun. Instead, you use the fixed chunk **У мене болить** followed by the body part in the nominative case. Literally, this translates to "at me hurts," but it simply means "my [body part] hurts." You must memorize this as a complete pattern rather than analyzing the grammar behind it.
 
-This is full A1 communication — no grammar analysis required, only chunk combination.
+*   **У мене болить голова.** (I have a headache. / My head hurts.)
+*   **У мене болить живіт.** (My stomach hurts.)
+*   **У мене болить горло.** (My throat hurts.)
+*   **У мене болить спина.** (My back hurts.)
+*   **У мене болить зуб.** (I have a toothache. / My tooth hurts.)
 
-<!-- INJECT_ACTIVITY: fill-in-symptoms -->
+:::caution
+Never translate the English phrase "my head hurts" directly word-for-word into Ukrainian. A phrase like «Моя голова болить» sounds unnatural to a native speaker. Always use the impersonal construction **У мене болить голова**.
+:::
+
+If the pain is in a body part that comes in pairs or groups, the verb must change to match the plural subject. The singular verb **болить** (hurts) changes to the plural verb **болять** (hurt). This is a simple switch from an **-ить** ending to an **-ять** ending.
+
+*   **У мене болять очі.** (My eyes hurt.)
+*   **У мене болять вуха.** (My ears hurt.)
+*   **У мене болять зуби.** (My teeth hurt.)
+*   **У мене болять ноги.** (My legs hurt.)
+
+Not all illnesses involve a specific localized pain. For general symptoms and respiratory issues, you use different phrases. If your body temperature is high, you use the noun **температура** (fever/temperature). For a cough, you use the masculine noun **кашель** (cough). For a runny nose, you use the masculine noun **нежить** (runny nose). To describe these states, you often use the same "I have" construction:
+
+*   **У мене температура.** (I have a fever.)
+*   **У мене кашель.** (I have a cough.)
+*   **У мене нежить.** (I have a runny nose.)
+
+:::tip
+Remember that **нежить** (runny nose) is a masculine noun. This means its ending changes differently than feminine nouns, which is why you ask for drops **від нежитю**, not від нежиті.
+:::
+
+When you want to describe your overall physical state, you can use the adjective for sick, which must agree with your gender. A man says **Я хворий** (I am sick), and a woman says **Я хвора** (I am sick). Alternatively, you can use the impersonal phrase **Мені погано** (I feel bad) or **Мені холодно** (I am cold) to express general discomfort. These are excellent chunks to memorize for times when you cannot point to a specific pain but know you need help.
+
+*   **Я хворий.** (I am sick. — masculine)
+*   **Я хвора.** (I am sick. — feminine)
+*   **Мені погано.** (I feel bad.)
+*   **Мені холодно.** (I am cold.)
+
+<!-- INJECT_ACTIVITY: fill-in-symptoms-logic -->
+<!-- INJECT_ACTIVITY: fill-in-medical-chunks -->
 
 ## Summary
+You can identify the ten core body parts: **голова** (head), **горло** (throat), **живіт** (stomach), **спина** (back), **рука** (arm/hand), **нога** (leg/foot), **око** (eye), **вухо** (ear), **зуб** (tooth), and **ніс** (nose). You also know the primary symptoms associated with common illnesses, such as **температура** (fever), **кашель** (cough), and **нежить** (runny nose). These words allow you to point to a problem and give it a name.
 
-### Your health toolkit
+You have also learned the functional structures required to express pain and discomfort. The most critical magic phrase is **У мене болить** for singular body parts and **У мене болять** for plural ones. When you feel generally unwell, you can describe your state using the phrases **Мені погано** (I feel bad), **Мені холодно** (I am cold), or **Я хворий / Я хвора** (I am sick). Finally, when you visit the pharmacy, you know how to make a polite request using the phrase **Дайте таблетки від...** (Give me pills for...). You can ask for items **від головного болю** (for a headache), **від кашлю** (for a cough), or **від нежитю** (for a runny nose).
 
-This module gave you three registers of health communication. First, talking about your body: **голова**, **горло**, **живіт**, **спина**, **рука**, **нога**, **око**, **вухо**, **зуб**, **ніс** — ten essential body parts with gender. Second, describing what hurts: **«У мене болить»** + any body part, plus noun symptoms like **температура**, **кашель**, **нежить**. Third, describing your general state: **«Я хворий»** / **«Я хвора»**, **«Мені погано»**, **«Мені холодно»**.
+Here is a quick self-check to review what you have learned. Read the English prompt and try to form the Ukrainian response before looking at the model answer.
 
-Two situation-specific formulas tie it all together. At the doctor, answer **«Що у вас болить?»** with **«У мене болить...»**. At the pharmacy, ask **«Дайте, будь ласка, таблетки проти головного болю»** or **«краплі проти нежитю»**. Treat the **проти**-phrases as fixed chunks for now.
+How do you tell a doctor that your throat hurts?
+> [!model-answer]
+> **У мене болить горло.**
 
-### Перевір себе (Self-check)
+How do you ask a pharmacist for headache pills?
+> [!model-answer]
+> **Дайте, будь ласка, таблетки від головного болю.**
 
-- Як сказати "My throat hurts and I have a fever"? → **У мене болить горло. У мене температура.**
-- Як сказати "I'm sick" (you are female)? → **Я хвора.**
-- Що означає **«Мені погано»**? → I feel bad / I'm not well.
-- Як попросити таблетки проти кашлю в аптеці? → **Дайте, будь ласка, таблетки проти кашлю.**
-- Як лікар питає про симптоми? → **Що у вас болить?**
-- Яка різниця між **болить** і **болять**? → **болить** = one thing hurts (**зуб**, **голова**); **болять** = several things hurt (**зуби**, **очі**).
+How do you say "My eyes hurt and I have a fever"?
+> [!model-answer]
+> **У мене болять очі і є температура.**
 
-### What's next
+How do you say "I am sick" if you are a woman?
+> [!model-answer]
+> **Я хвора.**
 
-M54 (Emergencies) builds directly on this module. You will use **«Мені погано»** and **«У мене болить»** in urgent situations and add phrases like **«Викличте швидку!»** (Call an ambulance!). Everything in this module travels forward intact: the chunk **«У мене болить...»**, the symptom nouns, **«Я хворий/хвора»**. Health vocabulary you learn now is vocabulary you keep forever.
-
-<!-- INJECT_ACTIVITY: fill-in-pharmacy -->
+How do you tell someone that you feel bad?
+> [!model-answer]
+> **Мені погано.**
 
 </module_content>
 
@@ -514,68 +475,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

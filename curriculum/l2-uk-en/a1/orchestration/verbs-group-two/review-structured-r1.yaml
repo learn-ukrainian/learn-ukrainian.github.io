@@ -2,48 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: The AI deviated from the planned dialogue prompts ("я вчуся" and "Молодець!"),
-    directly causing the grammatical errors in the text. It also completely missed
-    the recommended vocabulary word "любити".
+  score: 8
+  evidence: The plan requested "Use 6 high-frequency Group II verbs in sentences".
+    The text introduces the 6 verbs, explicitly says "Here is a short sentence for
+    each", but then only provides 3 sentences (*Вона в
 - dimension: 2
   name: Linguistic accuracy
-  score: 6
-  evidence: 'Critical error: intransitive use of "вчити" ("А де ти вчиш?"). Major
-    errors: calque "Ти добре робиш!" for "You''re doing well!", and unnatural imperfective
-    "допомагати" after "прошу".'
+  score: 10
+  evidence: Excellent. The explanation of the sibilant rule (*бачать*, not **бачять*)
+    and consonant shifts (*д→дж*, *б→бл*) is completely accurate.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Strong PPP flow. Excellent explicit side-by-side comparison of the two
-    groups and clear rules for consonant shifts in the я-form.
+  score: 4
+  evidence: 'Major deduction for literally copy-pasting the plan''s outline points
+    directly into the prose. For example: "Consonant changes in Group II (**я**-form
+    only): **робити** → **роблю** (**б**→**бл**), **хо'
 - dimension: 4
   name: Vocabulary coverage
   score: 8
-  evidence: Covered all required words naturally, but missed the recommended review
-    word "любити".
+  evidence: Required verbs are present. However, the recommended verb `любити` (which
+    is a great Group II example) is entirely absent from the text.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers perfectly match the plan and are placed immediately after relevant
-    explanations.
+  score: 8
+  evidence: Exercises match the plan, but having two `INJECT_ACTIVITY` markers back-to-back
+    without intervening text creates a slightly clustered pacing.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Natural teacher tone, good situational context for the dialogues (language
-    cafe, evening at home). No generic enthusiasm.
+  score: 6
+  evidence: 'The opening paragraph is bloated with generic empty filler that adds
+    no value: "When you step into a lively Ukrainian environment, you will immediately
+    notice people performing physical actions... Thi'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean markdown, exact plan headings used, 1368 words is well within the
-    1200 target range.
+  score: 9
+  evidence: 'Word count is perfectly on target (1279). Minor typo: "the Second Conjugation
+    or **Друга дієвідміна** (Second Conjugation)" repeats the translation twice.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Realistic settings and conversational flow (aside from the noted calques).
+  evidence: Names and contexts are natural. No issues found.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: The dialogue endings felt slightly disjointed due to the forced inclusion
-    of target vocabulary without proper flow.
+  score: 8
+  evidence: Conversations are a bit transactional ("Do you speak Ukrainian? Yes...
+    I see that you speak well"), but acceptable for A1.3 level.
 findings: []

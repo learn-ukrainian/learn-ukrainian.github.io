@@ -1,50 +1,63 @@
 ## Linguistic Scan
-Linguistic errors found:
-1. Euphony violation: "зараз в школі" (consonant + в + consonant cluster) is a harsh, unnatural cluster in Ukrainian. It must be "зараз у школі".
-2. Factual error in linguistic rule: The text claims "Use в before a vowel, and use у before a consonant". This is factually incorrect for Ukrainian and contradicts the text's own examples (like "в школі", "в місті", "в Києві", which all correctly use 'в' before a consonant when following a vowel).
+No linguistic errors found. The Ukrainian text is natural, correctly uses the Locative case, and avoids Surzhyk, Calques, and Russianisms.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in -->` marker present after Locative Case section. Matches plan (focus: Answer Де?).
-- `<!-- INJECT_ACTIVITY: quiz -->` marker present after "В чи на?" section. Matches plan (focus: В or на?).
-- `<!-- INJECT_ACTIVITY: match-up -->` marker present after "В чи на?" summary. Matches plan (focus: Match nominative to locative).
-- `<!-- INJECT_ACTIVITY: quiz -->` marker present at the end of the module. Matches plan (focus: Where is it?).
-All exercises are appropriately placed after the relevant teaching sections and match the planned hints exactly. No issues found.
+- `<!-- INJECT_ACTIVITY: match-nom-loc -->` corresponds to the "match-up" activity in the plan. Placed correctly after Locative case endings.
+- `<!-- INJECT_ACTIVITY: quiz-loc-form -->` corresponds to the "quiz" (Where is it?) activity in the plan. Placed correctly after Locative case endings.
+- `<!-- INJECT_ACTIVITY: quiz-v-na -->` corresponds to the "quiz" (В or на?) activity in the plan. Placed correctly after the "В чи на?" explanation.
+- `<!-- INJECT_ACTIVITY: fill-in-de -->` corresponds to the "fill-in" activity in the plan. Placed correctly after the "В чи на?" explanation.
+
+All injected activities match the plan's hints and are logically placed after the relevant instructional content.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all outline points perfectly, including the ULP Ep17 pattern and the Grade 4 helper word method ("you can always use the Grade 4 helper-word test: can you ask на кому? or на чому?"). |
-| 2. Linguistic accuracy | 8/10 | Good overall, but contains a harsh euphony violation ("зараз в школі") and teaches a factually incorrect euphony rule ("Use в before a vowel, and use у before a consonant"). |
-| 3. Pedagogical quality | 8/10 | The PPP flow is excellent, but teaching learners to "use у before a consonant" and then immediately giving them examples like "в школі" and "в Києві" creates a massive pedagogical contradiction that will confuse students. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary from the plan is naturally integrated into the dialogues and examples (школа, робота, банк, магазин, кафе, вокзал, etc.). |
-| 5. Exercise quality | 10/10 | All four planned activity markers are present and placed logically after the concepts are taught. |
-| 6. Engagement & tone | 10/10 | Tone is encouraging and grounded. The cultural note on "в Україні" is powerful and clear. No corporate speak or forced enthusiasm. |
-| 7. Structural integrity | 8/10 | All H2 headings match the plan exactly, but the word count is 1581 words, which is significantly over (>31%) the strict 1200-word budget. |
-| 8. Cultural accuracy | 10/10 | The module explicitly and correctly addresses the decolonized "в Україні" vs imperial "на Україні" distinction. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues feel natural, feature named speakers, and provide excellent contextualized examples of the locative case in use. |
+| 1. Plan adherence | 9/10 | The module follows the plan closely, but slightly truncates the Grade 4 helper questions: `You memorize the helper questions: **на кому? у чому?**` instead of the full `на/у кому? на/у чому?` specified in the plan. |
+| 2. Linguistic accuracy | 10/10 | No Surzhyk, Russianisms, or grammatical errors. The case endings are perfectly accurate. |
+| 3. Pedagogical quality | 9/10 | The PPP flow is excellent. However, English translations in the vocabulary lists are inconsistent (some include prepositions, some don't), and the literal translation of "у столі" as "in the table" is confusing for English speakers. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words from the plan are integrated naturally into dialogues and examples. |
+| 5. Exercise quality | 10/10 | The four requested activity hints are correctly mapped to injected markers and are placed logically after their respective instructional sections. |
+| 6. Engagement & tone | 10/10 | The tone is encouraging and clear without being overly informal or using gamified language. |
+| 7. Structural integrity | 10/10 | All required H2 headings are present. The word count (1279 words) successfully meets the target. |
+| 8. Cultural accuracy | 10/10 | The explanation of "в Україні" versus "на Україні" is culturally accurate and handles a sensitive topic with appropriate educational context. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, contextualized, and provide clear, immediate examples of the Locative case in use. |
 
 ## Findings
-[Linguistic accuracy] [Critical]
-Location: `## Місце́вий відмі́нок (The Locative Case)` — "*Brief rule:* Use **в** before a vowel, and use **у** before a consonant or to avoid awkward consonant clusters. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**."
-Issue: The euphony rule is factually incorrect and contradicts the module's own examples. In Ukrainian, `в` is used *after* a vowel (even before a consonant, like `живу в Києві`), not just *before* a vowel. Telling learners to use `у` before all consonants makes examples like `в школі` and `в Києві` seem like errors, causing massive confusion.
-Fix: Update the brief rule to accurately reflect basic Ukrainian euphony (using `у` between consonants, and `в` after/before vowels).
+[Plan adherence] [minor]
+Location: `You memorize the helper questions: **на кому? у чому?** (on whom? in what?).`
+Issue: The helper questions deviate slightly from the standard Grade 4 textbook format specified in the plan ("на/у кому? на/у чому?").
+Fix: Update the text to match the full helper questions from the plan.
 
-[Linguistic accuracy] [Major]
-Location: `## Діало́ги (Dialogues)` — "Привіт! Вона́ за́раз **в шко́лі**."
-Issue: Violates Ukrainian euphony rules. "зараз" ends in a consonant, and "школі" starts with a consonant cluster. Between consonants, "у" must be used to avoid the unpronounceable cluster "з в шк".
-Fix: Change `в шко́лі` to `у шко́лі`.
+[Pedagogical quality] [minor]
+Location: `* стіл → **у чому?** → **у столі** (in the table)`
+Issue: "In the table" is a literal but confusing English translation. A table does not usually have an inside in English unless referring to a desk drawer.
+Fix: Change the translation to "(in the desk)".
 
-[Structural integrity] [Minor]
-Location: Entire module
-Issue: The word count is 1581 words, which significantly exceeds the plan's strict target of 1200 words (>31% overage).
-Fix: No automated fix applied for word count to avoid breaking content flow, but a manual trim of the English meta-explanations in the future is recommended.
+[Pedagogical quality] [minor]
+Location: `* школа → в школі (school)` (and several others in the lists)
+Issue: Inconsistent English translations in the Locative noun lists. Some include the preposition (e.g., "in the city", "on the window") while others only translate the base noun (e.g., "school", "park", "office"), which obscures the meaning of the Locative phrase for beginners.
+Fix: Add appropriate English prepositions to the translations to match the Ukrainian phrases (e.g., "at school", "in the park").
 
 ## Verdict: REVISE
-The module is highly engaging and covers the locative case effectively, but the contradictory and factually incorrect euphony rule, combined with a euphony violation in the dialogue, necessitates a revision.
+The module is of very high quality, with excellent explanations and natural dialogues. However, the English translations in the Locative examples list need to be made consistent to prevent beginner confusion, and the helper question format should strictly adhere to the plan. Because there are identified minor pedagogical issues with clear fixes, the verdict is REVISE.
 
 <fixes>
-- find: "*Brief rule:* Use **в** before a vowel, and use **у** before a consonant or to avoid awkward consonant clusters. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**."
-  replace: "*Brief rule:* Use **в** after a vowel or before a vowel, and use **у** between consonants or to avoid awkward consonant clusters. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**."
-- find: "Привіт! Вона́ за́раз **в шко́лі**."
-  replace: "Привіт! Вона́ за́раз **у шко́лі**."
+- find: "You memorize the helper questions: **на кому? у чому?** (on whom? in what?)."
+  replace: "You memorize the helper questions: **на/у кому? на/у чому?** (on/in whom? on/in what?)."
+- find: "* стіл → **у чому?** → **у столі** (in the table)"
+  replace: "* стіл → **у чому?** → **у столі** (in the desk)"
+- find: "* школа → в школі (school)"
+  replace: "* школа → в школі (at school)"
+- find: "* робота → на роботі (work)"
+  replace: "* робота → на роботі (at work)"
+- find: "* вулиця → на вулиці (street)"
+  replace: "* вулиця → на вулиці (on the street)"
+- find: "* офіс → в офісі (office)"
+  replace: "* офіс → в офісі (in the office)"
+- find: "* парк → у парку (park)"
+  replace: "* парк → у парку (in the park)"
+- find: "* банк → у банку (bank)"
+  replace: "* банк → у банку (at the bank)"
+- find: "* магазин → у/в магазині (shop)"
+  replace: "* магазин → у/в магазині (in the shop)"
 </fixes>

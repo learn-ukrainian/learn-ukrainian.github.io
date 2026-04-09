@@ -1,0 +1,349 @@
+vocabulary:
+- word: народи́тися
+  translation: to be born
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: жи́ти
+  translation: to live
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́тися
+  translation: to study
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переї́хати
+  translation: to move/relocate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подорожува́ти
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: закі́нчи́ти
+  translation: to finish/graduate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розповіда́ти
+  translation: to tell/narrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: now
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: рані́ше
+  translation: before/earlier
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: да́лі
+  translation: further/next
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: університе́т
+  translation: university
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: програмі́ст
+  translation: programmer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у́спіх
+  translation: success
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мрі́я
+  translation: dream
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: батьки́
+  translation: parents
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дити́нство
+  translation: childhood
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: минулий час
+  translation: past tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: теперішній час
+  translation: present tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: майбутній час
+  translation: future tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: народи́вся
+  translation: was born (masculine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: народи́лася
+  translation: was born (feminine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: жив
+  translation: lived (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жила́
+  translation: lived (feminine)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вчи́вся
+  translation: studied (masculine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вчи́лася
+  translation: studied (feminine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́в
+  translation: worked (masculine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ла
+  translation: worked (feminine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переї́хав
+  translation: moved (masculine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переї́хала
+  translation: moved (feminine)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: буду працювати
+  translation: I will work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: буду вивчати
+  translation: I will study/learn
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: буду подорожувати
+  translation: I will travel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: буду жити
+  translation: I will live
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тоді́
+  translation: back then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: сього́дні
+  translation: today
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ско́ро
+  translation: soon
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наступного року
+  translation: next year
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: цього року
+  translation: this year
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у дитинстві
+  translation: in childhood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А потім...
+  translation: And then...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А далі...
+  translation: And next...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бабу́ся
+  translation: grandmother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: діду́сь
+  translation: grandfather
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вчи́телька
+  translation: teacher (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: центр міста
+  translation: city centre
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на дозвіллі
+  translation: in one's free time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: матема́тика
+  translation: maths
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Успіхів тобі!
+  translation: Best of luck!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Розкажи про себе!
+  translation: Tell me about yourself!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вивча́ти
+  translation: to study/learn (a subject)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: працюва́ти
+  translation: to work
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go (regularly)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love/like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: грати у футбол
+  translation: to play football
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поба́чити
+  translation: to see (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
