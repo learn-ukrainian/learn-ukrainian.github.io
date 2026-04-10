@@ -2,6 +2,15 @@
 
 Pipeline state detection, audit status parsing, research scoring, review analysis,
 and sync computation functions used by state endpoints.
+
+Pipeline version note (#1186, 2026-04-11):
+    This module used to import PHASES/PHASE_LABELS from the retired
+    ``pipeline_v5`` module. The current pipeline is v6 at
+    ``scripts/build/v6_build.py``, which now exports the canonical
+    phase list as public symbols. V5 constants are kept for backwards
+    compatibility when reading old state files (``V5_PHASE_ORDER`` /
+    ``parse_v5_phase_status``) but new code should use
+    ``V6_PHASE_ORDER``.
 """
 
 import contextlib
@@ -21,13 +30,37 @@ from pipeline.state import is_complete as _phase_complete
 from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
 
-# Import canonical phase list from pipeline — single source of truth
+# Canonical phase list for the CURRENT pipeline (v6). Imported from
+# the build module so the API and the pipeline can never drift out of
+# sync. If the import fails (e.g. tests running without the build
+# module on PYTHONPATH), we fall back to a frozen snapshot rather
+# than an empty list — an empty phase list silently breaks coverage
+# endpoints.
 try:
-    from pipeline_v5 import PHASE_LABELS as _PIPELINE_PHASE_LABELS
-    from pipeline_v5 import PHASES as _PIPELINE_PHASES
+    from build.v6_build import PHASE_LABELS as _V6_PHASE_LABELS
+    from build.v6_build import PHASES as _V6_PHASES
 except ImportError:
-    _PIPELINE_PHASES = ["research", "discover", "content", "validate", "review", "activities", "mdx"]
-    _PIPELINE_PHASE_LABELS = {}
+    _V6_PHASES = [
+        "check", "research", "skeleton", "pre-verify", "write",
+        "exercises", "activities", "repair", "verify-exercises",
+        "annotate", "vocab", "enrich", "verify", "review", "stress",
+        "publish", "audit",
+    ]
+    _V6_PHASE_LABELS: dict[str, str] = {}
+
+# Legacy v5 phase list — frozen snapshot. DO NOT use for new work;
+# only for reading state files from builds completed before v6
+# landed. We keep the list inline instead of importing from
+# ``pipeline_v5`` so this module has one less dependency on the
+# retired pipeline module.
+_V5_PHASES = ["research", "discover", "content", "validate", "activities", "review", "mdx"]
+_V5_PHASE_LABELS: dict[str, str] = {}
+
+# Back-compat aliases for callers that still read these names. New
+# code should prefer ``_V6_PHASES`` / ``_V6_PHASE_LABELS`` (or the
+# public ``V6_PHASE_ORDER`` below).
+_PIPELINE_PHASES = _V6_PHASES
+_PIPELINE_PHASE_LABELS = _V6_PHASE_LABELS
 
 
 # ==================== CONSTANTS ====================
@@ -35,9 +68,12 @@ except ImportError:
 CURRICULUM_YAML = CURRICULUM_ROOT / "curriculum.yaml"
 PLANS_ROOT = CURRICULUM_ROOT / "plans"
 
+# Track → profile mapping. ``b2-pro`` / ``c1-pro`` were deleted
+# 2026-04-10 (STEM will eventually replace the pro tracks; that work
+# is not in this issue). The entries are intentionally absent — do
+# not re-add them without a curriculum decision.
 PROFILE_MAP = {
     "a1": "core", "a2": "core", "b1": "core", "b2": "core",
-    "b2-pro": "pro", "c1-pro": "pro",
     "c1": "core", "c2": "core",
     "hist": "seminar", "istorio": "seminar", "bio": "seminar",
     "lit": "seminar", "lit-essay": "seminar", "lit-hist-fic": "seminar",
@@ -48,8 +84,11 @@ PROFILE_MAP = {
     "oes": "seminar", "ruth": "seminar",
 }
 
+# Legacy phase orders kept for parsing historical state files only.
+# Prefer ``V6_PHASE_ORDER`` for any new code.
 V4_PHASE_ORDER = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
-V5_PHASE_ORDER = _PIPELINE_PHASES
+V5_PHASE_ORDER = _V5_PHASES
+V6_PHASE_ORDER = _V6_PHASES
 
 
 # ==================== TTL CACHE ====================
