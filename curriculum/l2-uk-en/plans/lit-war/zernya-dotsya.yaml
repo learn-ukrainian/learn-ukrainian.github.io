@@ -1,20 +1,25 @@
 activity_hints:
-- description: На основі цитат визначити, яку позицію в дебаті "свідчення vs. література" вони представляють.
-  focus: 'Конфліктна карта: Дебати про літературу свідчення'
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
   items: 5
+  placement: inline
   type: quiz
-- description: 'Вставити в речення слова: суб''єктність, наратив, деколонізація, автентичність, свідчення.'
-  focus: Ключова термінологія модуля
-  items: 5
-  type: fill-in
-- description: Оберіть один уривок з тексту, де зображено насильство або страждання. Проаналізуйте, якими засобами авторка
-    досягає ефекту та чи вдається їй уникнути експлуатації теми.
-  focus: Аналіз етики зображення
-  type: note
-- description: Порівняйте, як тема війни та травми розкривається в прозі Zernya Daughter Donetsk та в поезії Сергія Жадана.
-    Що спільного та відмінного в їхніх підходах? (400-600 слів).
-  focus: 'Есе: Порівняльний аналіз'
-  type: note
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Етика зображення — чи текст естетизує війну чи свідчить?
+  placement: workbook
+  type: debate
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Zernya Daughter Donetsk: Свідчення та травма)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Zernya Daughter Donetsk: Свідчення та травма)'
+  placement: workbook
+  type: essay-response
 cefr_min: C1
 connects_to:
 - lit-war-zhadan

@@ -1,20 +1,25 @@
 activity_hints:
-- description: 'Розрізнення позицій: що стверджувала радянська критика, а що — сучасні дослідники? Чий це аргумент?'
-  focus: Розуміння конфліктної карти
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
   items: 5
+  placement: inline
   type: quiz
-- description: 'Вставити в речення терміни з модуля: вітаїзм, синкретизм, кінопоетика, неоромантизм.'
-  focus: Терміни з мови та поетики
-  items: 4
-  type: fill-in
-- description: Проаналізуйте образ То-Ма-Кі. Чи є він alter ego автора? Які ідеї Яновського про мистецтво він втілює? Наведіть
-    цитати з тексту.
-  focus: 'Аналіз персонажа: То-Ма-Кі'
-  type: note
-- description: 'На основі роману "Майстер корабля" напишіть есе (400-600 слів) на тему: "Чи може мистецтво бути вільним у
-    тоталітарній державі?".'
-  focus: 'Есе: Мистецтво і влада'
-  type: essay
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Юрій Яновський: "Майстер корабля")'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Юрій Яновський: "Майстер корабля")'
+  placement: workbook
+  type: essay-response
 cefr_min: C1
 connects_to:
 - lit-khvylovy

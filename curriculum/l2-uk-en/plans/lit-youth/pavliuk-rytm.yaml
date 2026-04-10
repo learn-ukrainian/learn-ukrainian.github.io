@@ -1,16 +1,25 @@
 activity_hints:
-- description: Визначити, яка з наведених тез належить до одного, а яка до іншого табору критиків Pavliuk Rytm.
-  focus: Розуміння конфліктної карти
-  items: 4
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
   type: quiz
-- description: Вставити пропущені терміни (суб'єктність, наратив, деколонізація, ідентичність) у речення з тексту модуля.
-  focus: Ключова термінологія аналізу
-  items: 4
-  type: fill-in
-- description: На основі прочитаного уривку, проаналізуйте, де, на вашу думку, проходить межа між вихованням патріотизму та
-    пропагандою у молодіжній літературі. Аргументуйте свою позицію (300-400 слів).
-  focus: 'Аналіз: Педагогічна функція vs. пропаганда'
-  type: note
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Ідентичність та дорослішання — які цінності передає текст?
+  placement: workbook
+  type: debate
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Pavliuk Rytm: Дзеркало для покоління)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Pavliuk Rytm: Дзеркало для покоління)'
+  placement: workbook
+  type: essay-response
 cefr_min: C1
 connects_to:
 - lit-youth-021-zhadan-internat

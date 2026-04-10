@@ -1,20 +1,25 @@
 activity_hints:
-- description: Визначте, яка з тез належить до дебату "поет чи репортер?", а яка — до "локальний чи національний?".
-  focus: Розуміння конфліктної карти
-  items: 4
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
   type: quiz
-- description: 'Вставте в речення з аналізу модуля ключові терміни: верлібр, міський сленг, синтаксис, оказіоналізм.'
-  focus: Мова і поетика Жадана
-  items: 4
-  type: fill-in
-- description: Оберіть один вірш Жадана, що не розбирався в модулі. Застосовуючи методику close reading, проаналізуйте його
-    ключові образи, стилістичні прийоми та ідею.
-  focus: 'Close Reading: Аналіз вірша'
-  type: note
-- description: На основі модуля напишіть есе (400-600 слів) на тему "Чи може поезія бути більш точним свідченням про війну,
-    ніж документальна хроніка?".
-  focus: 'Есе: Поезія як свідчення'
-  type: note
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Пейзаж Харкова: Поезія опору Сергія Жадана)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Пейзаж Харкова: Поезія опору Сергія Жадана)'
+  placement: workbook
+  type: essay-response
 cefr_min: C1
 connects_to:
 - lit-177
