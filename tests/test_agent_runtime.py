@@ -298,6 +298,52 @@ def test_codex_parse_response_rate_limit_url_no_false_positive(tmp_path):
     assert result.ok is True
 
 
+def test_codex_parse_response_failed_call_with_prompt_echo_not_rate_limit(tmp_path):
+    """Regression: a KILLED or FAILED Codex call whose prompt contained
+    rate-limit phrases must not be misclassified as rate-limited. Only
+    genuine error output (outside the echoed prompt block) should count.
+
+    The specific incident: we sent Codex a consultation prompt literally
+    asking about rate-limit handling. I killed the process mid-run. The
+    adapter saw returncode != 0 + empty output file + pattern hit in
+    echoed prompt and reported rate_limited=True, poisoning has_headroom.
+    """
+    adapter = CodexAdapter()
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("")  # empty — call failed
+
+    # Realistic stderr: banner, echoed prompt containing rate-limit
+    # phrases (because the user's prompt was ABOUT rate limits), then
+    # a real error that is NOT a rate limit (e.g. killed by signal).
+    stderr = (
+        "OpenAI Codex v0.118.0 (research preview)\n"
+        "--------\n"
+        "workdir: /Users/foo/project\n"
+        "model: gpt-5.4\n"
+        "--------\n"
+        "user\n"
+        "Please review our rate-limit handling. We had a usage limit reached\n"
+        "incident where transient 429 errors locked the quota for 5 hours.\n"
+        "What would you do about rate limit detection?\n"
+        "--------\n"
+        "error: terminated by signal\n"
+    )
+
+    result = adapter.parse_response(
+        stdout="",
+        stderr=stderr,
+        returncode=-15,  # SIGTERM
+        output_file=output_file,
+    )
+    # Call failed (no output file content), but the rate-limit phrases
+    # were ONLY in the echoed user prompt. Must not classify as rate-limited.
+    assert result.rate_limited is False, (
+        f"Killed Codex call with rate-limit phrases in echoed prompt was "
+        f"misclassified as rate-limited. stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert result.ok is False
+
+
 def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
     """Regression: Codex CLI echoes the user prompt to stderr. The bridge
     prompts include standing rules mentioning 'usage limit reached' and
@@ -408,26 +454,36 @@ def test_should_kill_returns_none_when_healthy():
     assert should_kill(state, stall_timeout=180, hard_timeout=1800) is None
 
 
-def test_should_kill_detects_stall():
+def test_should_kill_ignores_stall_silence():
+    """Stall detection was removed from the kill path on 2026-04-10 after
+    repeated production incidents where successful long-running calls
+    were killed as false-positive stalls. A silent-but-alive process
+    must NOT be killed — only hard_timeout can kill. See
+    watchdog.py::should_kill() docstring for the full incident chain.
+    """
     now = time.monotonic()
-    state = WatchdogState(start_time=now - 60, last_activity=now - 200)
-    # Active 200s ago, threshold 180s → stalled
-    assert should_kill(state, stall_timeout=180, hard_timeout=1800) == "stalled"
+    state = WatchdogState(start_time=now - 60, last_activity=now - 2000)
+    # Silent for 2000s, well past stall_timeout=180. Still must not kill.
+    assert should_kill(state, stall_timeout=180, hard_timeout=3600) is None
 
 
 def test_should_kill_detects_hard_timeout():
     now = time.monotonic()
-    state = WatchdogState(start_time=now - 2000, last_activity=now)
-    # Started 2000s ago, hard_timeout 1800s → hard_timeout
-    assert should_kill(state, stall_timeout=180, hard_timeout=1800) == "hard_timeout"
+    state = WatchdogState(start_time=now - 4000, last_activity=now)
+    # Started 4000s ago, hard_timeout 3600s → hard_timeout
+    assert should_kill(state, stall_timeout=180, hard_timeout=3600) == "hard_timeout"
 
 
-def test_should_kill_hard_timeout_takes_precedence():
-    """If both conditions fire, hard_timeout wins (checked first)."""
+def test_should_kill_hard_timeout_is_the_only_killer():
+    """Regression pin: even when the process has been silent for a long
+    time AND past hard_timeout, hard_timeout is what fires — there is
+    no 'stalled' return value anymore.
+    """
     now = time.monotonic()
-    state = WatchdogState(start_time=now - 2000, last_activity=now - 500)
-    # Both conditions true — but hard_timeout is reported first
-    assert should_kill(state, stall_timeout=180, hard_timeout=1800) == "hard_timeout"
+    state = WatchdogState(start_time=now - 4000, last_activity=now - 2000)
+    # Both past "stall threshold" AND past hard_timeout — only kill reason
+    # is hard_timeout (stall detection is no longer a kill condition).
+    assert should_kill(state, stall_timeout=180, hard_timeout=3600) == "hard_timeout"
 
 
 # ---------------------------------------------------------------------------

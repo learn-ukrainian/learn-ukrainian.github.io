@@ -51,6 +51,31 @@ _RATE_LIMIT_PATTERNS = (
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
+# Codex CLI (with -o <file>) wraps the echoed user prompt between
+# "--------\nuser\n" and the next "--------" marker in stderr. When we
+# classify errors, we must strip this block first — user prompts can
+# contain any human-language phrase, including "rate limit", and matching
+# against them would misclassify every failed call whose prompt mentions
+# rate limits as a real rate limit. The regex is multiline/dotall so the
+# content between markers can span any number of lines.
+_CODEX_PROMPT_ECHO_RE = re.compile(
+    r"-{3,}\s*\nuser\n.*?\n-{3,}",
+    re.DOTALL,
+)
+
+
+def _strip_codex_prompt_echo(stderr: str) -> str:
+    """Remove the echoed user prompt block from Codex CLI stderr.
+
+    Codex writes the full user prompt back to stderr between two
+    "--------" dividers when invoked with ``-o <file>``. We strip that
+    block before running rate-limit pattern matching to prevent user
+    prompt text from poisoning error classification. See #1184.
+    """
+    if not stderr:
+        return stderr
+    return _CODEX_PROMPT_ECHO_RE.sub("[user prompt echo stripped]", stderr)
+
 
 class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
@@ -143,27 +168,29 @@ class CodexAdapter:
             except OSError:
                 file_output = ""
 
-        # Rate-limit detection — with a CRITICAL caveat.
+        # Rate-limit detection — with two CRITICAL caveats.
         #
-        # Codex CLI (with -o <file>) echoes the full user prompt back to
-        # stderr as part of its trace. The bridge prompts from _prompts.py
-        # include the project standing rules, which literally contain the
-        # phrases "usage limit reached" and "rate-limit error" in their
-        # instructions to Codex. Naive pattern matching against
-        # stdout+stderr+file_output was firing on the PROMPT ECHO, not on
-        # any real rate-limit error, and bridge communication broke
-        # entirely after 2026-04-10. See #1184 post-ship incident.
+        # Codex CLI (with -o <file>) writes everything to stderr: the
+        # startup banner, the echoed user prompt, the reasoning trace,
+        # AND real error messages. Pattern-matching stderr naively is
+        # broken because user prompts can contain ANY human-language
+        # phrase, including "rate limit" and "usage limit reached" (our
+        # own bridge standing rules literally do).
         #
-        # Fix: rate_limited is only TRUE when:
-        #   1. A rate-limit pattern matches somewhere in the output, AND
-        #   2. The call actually failed (returncode != 0 OR empty output
-        #      file). A successful Codex exec with a non-empty final
-        #      message in the -o file CANNOT be rate-limited, period.
+        # Fix 1 (prompt echo sanitization): strip the echoed user prompt
+        # section from stderr before pattern matching. The Codex CLI
+        # wraps the prompt between "--------\nuser\n" and the next
+        # "--------" marker. We remove the entire block so its content
+        # cannot poison classification.
         #
-        # This mirrors the same guard we added to GeminiAdapter after the
-        # identical class of bug there. Keep the two in sync.
+        # Fix 2 (success guard): even after sanitization, rate_limited
+        # is only TRUE when the call actually failed (returncode != 0
+        # OR empty output file). A successful Codex exec with a
+        # non-empty final message in the -o file CANNOT be rate-limited,
+        # period. This mirrors the same guard we have on GeminiAdapter.
+        stderr_for_check = _strip_codex_prompt_echo(stderr)
         combined_for_rl_check = "\n".join(
-            part for part in (stdout, stderr, file_output) if part
+            part for part in (stdout, stderr_for_check, file_output) if part
         )
         pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
         call_failed = returncode != 0 or not file_output

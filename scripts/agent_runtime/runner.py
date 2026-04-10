@@ -37,7 +37,6 @@ from typing import Any
 
 from .adapters.base import AgentAdapter
 from .errors import (
-    AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
@@ -232,8 +231,8 @@ def invoke(
     session_id: str | None = None,
     tool_config: dict | None = None,
     entrypoint: str = "runtime",
-    hard_timeout: int = 1800,
-    stall_timeout: int = 180,
+    hard_timeout: int = 3600,
+    stall_timeout: int = 180,  # accepted but ignored; see docstring
 ) -> Result:
     """Single entry point for all agent CLI invocations.
 
@@ -260,9 +259,12 @@ def invoke(
             ``"delegate"``, ``"consult"``, ``"runtime"``.
         hard_timeout: Absolute wall-clock max in seconds. Default 30 min.
             Triggers AgentTimeoutError on overflow.
-        stall_timeout: Max seconds with zero observed activity (no stdout
-            line AND no liveness file mtime bump) before killing as stalled.
-            Default 3 min. Triggers AgentStalledError.
+        stall_timeout: Accepted for backward compatibility but NO LONGER
+            USED as a kill condition. Removed from the kill path on
+            2026-04-10 after repeated production incidents where
+            successful long-running calls were killed as false-positive
+            stalls. See watchdog.py::should_kill() docstring for the
+            full incident chain. hard_timeout is the only safety net now.
 
     Returns:
         Result with ok, response, timing, session_id, and the full usage
@@ -274,7 +276,6 @@ def invoke(
             policy violation.
         RateLimitedError: has_headroom() reports recent rate limit, OR
             adapter.parse_response() classified the failure as rate-limited.
-        AgentStalledError: No activity for longer than stall_timeout.
         AgentTimeoutError: Wall-clock runtime exceeded hard_timeout.
     """
     # ---------- 1. Resolve adapter ----------
@@ -382,14 +383,11 @@ def invoke(
             liveness_paths.append(plan.output_file)
         watchdog_state, watchdog_threads = start_watchdog(proc, liveness_paths)
 
-        # Poll loop — wait for subprocess to exit OR watchdog to fire.
+        # Poll loop — wait for subprocess to exit OR hard_timeout to fire.
+        # Stall detection was removed from the kill path on 2026-04-10
+        # (see watchdog.py::should_kill docstring). Hard timeout is now
+        # the only safety net; legitimately long-running tasks complete.
         kill_reason: str | None = None
-        # Snapshot of the "true" stall age at kill time. We capture this
-        # BEFORE proc.kill() because draining the stdout streamer thread
-        # afterwards reads the pipe to EOF, which bumps
-        # watchdog_state.last_activity and makes the post-kill age look
-        # like ~0s instead of the real 180s+ stall. (Fixed 2026-04-10.)
-        stall_age_at_kill: float | None = None
         while True:
             returncode = proc.poll()
             if returncode is not None:
@@ -400,15 +398,11 @@ def invoke(
                 # have exited between proc.poll() above and should_kill()
                 # returning True. Re-check before killing, because killing
                 # a process that already exited successfully and then
-                # classifying the run as "stalled" would discard a good result.
+                # classifying the run as a kill would discard a good result.
                 returncode = proc.poll()
                 if returncode is not None:
                     kill_reason = None
                     break
-                if kill_reason == "stalled":
-                    stall_age_at_kill = (
-                        time.monotonic() - watchdog_state.last_activity
-                    )
                 proc.kill()
                 with contextlib.suppress(subprocess.TimeoutExpired):
                     proc.wait(timeout=5.0)
@@ -463,39 +457,10 @@ def invoke(
             write_record(record)
             raise AgentTimeoutError(agent_name, hard_timeout)
 
-        if kill_reason == "stalled":
-            stop_watchdog(watchdog_state, watchdog_threads)
-            # Prefer the age captured BEFORE kill (see comment at stall_age_at_kill
-            # declaration). Fall back to a fresh read only if the snapshot is
-            # somehow missing, which shouldn't happen on this code path.
-            last_activity_age = (
-                stall_age_at_kill
-                if stall_age_at_kill is not None
-                else time.monotonic() - watchdog_state.last_activity
-            )
-            record = _build_usage_record(
-                agent=agent_name,
-                entrypoint=entrypoint,
-                model=effective_model,
-                mode=mode,
-                task_id=task_id,
-                cwd=effective_cwd,
-                session_id=session_id,
-                duration_s=duration_s,
-                input_chars=len(prompt),
-                output_chars=len(stdout_text),
-                returncode=proc.returncode,
-                outcome="stalled",
-                rate_limited=False,
-                stalled=True,
-                stderr_excerpt=(
-                    stderr_text[:500]
-                    or tail_liveness_file_for_debug(liveness_paths)[:500]
-                ),
-                tokens=None,
-            )
-            write_record(record)
-            raise AgentStalledError(agent_name, stall_timeout, last_activity_age)
+        # "stalled" kill branch removed 2026-04-10 — should_kill() no
+        # longer returns "stalled". Only hard_timeout is in the kill
+        # path now. AgentStalledError remains importable from errors.py
+        # for backward compatibility with test mocks, but is never raised.
 
         # ---------- Normal path: adapter parses response ----------
         stop_watchdog(watchdog_state, watchdog_threads)

@@ -189,16 +189,39 @@ def should_kill(state: WatchdogState, stall_timeout: int, hard_timeout: int) -> 
 
     Returns:
         None if the process should continue running.
-        "stalled" if no activity for longer than stall_timeout.
         "hard_timeout" if total runtime exceeded hard_timeout.
 
-    Callers (the runner) poll this in a loop while waiting on the subprocess.
+    ``stall_timeout`` is accepted for backward compatibility with callers but
+    is NOT used as a kill condition. Deleting stall detection from the kill
+    path on 2026-04-10 after a string of production incidents proved it
+    unreliable:
+
+    1. Gemini block-buffers stdout when not a TTY; stdout streamer goes
+       silent for 5+ min during reasoning bursts — looks identical to a
+       hang but is actually successful work.
+    2. Codex 0.118 moved its primary log from ``logs_1.sqlite`` to
+       ``state_5.sqlite`` to ``sessions/YYYY/MM/DD/rollout-*.jsonl``.
+       Each CLI version bump breaks a different mtime signal.
+    3. Directory mtime on ``sessions/YYYY/MM/DD/`` bumps only on child
+       creation, not on child content writes — so the signal fires ONCE
+       at startup and goes silent during the actual run even though the
+       child rollout file is actively growing.
+    4. Every CLI (Claude, Codex, Gemini) stores live state in a different
+       place with a different convention, and tracking each one
+       individually is whack-a-mole with no ground truth.
+
+    The mtime poller still runs for observability (via the WatchdogState
+    last_activity field, which the runner reads for usage records), but
+    the kill decision now relies solely on hard_timeout as the safety net.
+    A legitimately long-running task will be allowed to complete; a truly
+    runaway process still gets killed by hard_timeout.
+
+    See #1184 for the full incident chain.
     """
+    _ = stall_timeout  # accepted but unused; kept in signature for compat.
     now = time.monotonic()
     if (now - state.start_time) > hard_timeout:
         return "hard_timeout"
-    if (now - state.last_activity) > stall_timeout:
-        return "stalled"
     return None
 
 
