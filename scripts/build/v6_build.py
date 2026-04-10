@@ -43,6 +43,7 @@ import json
 import logging
 import os
 import re
+import sqlite3
 import sys
 import time
 from datetime import UTC, datetime
@@ -95,6 +96,45 @@ def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase:
     return True
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+PIDRUCHNYK_URLS_PATH = PROJECT_ROOT / "data" / "pidruchnyk_urls.yaml"
+
+_PIDRUCHNYK_AUTHOR_NAMES = {
+    "avramenko": "Авраменко",
+    "betsa": "Беца",
+    "bolshakova": "Большакова",
+    "borzenko": "Борзенко",
+    "burnejko": "Бурнейко",
+    "burneyko": "Бурнейко",
+    "galimov": "Галімов",
+    "gisem": "Гісем",
+    "glazova": "Глазова",
+    "glazov": "Глазова",
+    "golub": "Голуб",
+    "hlibovska": "Хлібовська",
+    "karaman": "Караман",
+    "khlibovska": "Хлібовська",
+    "kovalenko": "Коваленко",
+    "kravcova": "Кравцова",
+    "kravtsova": "Кравцова",
+    "litvinova": "Літвінова",
+    "mishhenko": "Міщенко",
+    "onatiy": "Онатій",
+    "ponomarova": "Пономарьова",
+    "pometun": "Пометун",
+    "savchenko": "Савченко",
+    "savchuk": "Савчук",
+    "schupak": "Щупак",
+    "semenog": "Семеног",
+    "shchupak": "Щупак",
+    "uhor": "Угор",
+    "varzatska": "Варзацька",
+    "vashulenko": "Вашуленко",
+    "voron": "Ворон",
+    "zabolotnij": "Заболотний",
+    "zabolotnyi": "Заболотний",
+    "zaharijchuk": "Захарійчук",
+}
 
 
 # ─── Module-level build lock ────────────────────────────────────────
@@ -4815,6 +4855,214 @@ def _safe_load_plan(plan_path: Path) -> dict:
         return {}
 
 
+def _load_pidruchnyk_urls(path: Path = PIDRUCHNYK_URLS_PATH) -> dict[str, str]:
+    """Load source_file -> pidruchnyk.com.ua URL mapping."""
+    if not path.exists():
+        return {}
+    try:
+        data = yaml.safe_load(path.read_text("utf-8")) or {}
+    except Exception:
+        return {}
+    return {
+        str(source_file): str(url)
+        for source_file, url in data.items()
+        if isinstance(source_file, str) and isinstance(url, str) and url.strip()
+    }
+
+
+def _extract_source_year(source_file: str) -> int | None:
+    """Extract textbook year from a source_file suffix."""
+    match = re.search(r"-(\d{4})(?:-\d)?$", source_file)
+    return int(match.group(1)) if match else None
+
+
+def _resolve_source_author(source_file: str) -> str:
+    """Resolve a Ukrainian surname label from the source_file."""
+    for key, label in _PIDRUCHNYK_AUTHOR_NAMES.items():
+        if key in source_file:
+            return label
+    parts = source_file.split("-")
+    if len(parts) >= 4:
+        return parts[3].capitalize()
+    return source_file
+
+
+def _resolve_source_subject(source_file: str) -> str:
+    """Map a source_file to a display subject."""
+    if "ukrlit" in source_file or "ukrajinska-literatura" in source_file:
+        return "Українська література"
+    if "istorija-ukrajiny" in source_file or "istoriya-ukr" in source_file or "istoria-ukr" in source_file:
+        return "Історія України"
+    if "istori" in source_file:
+        return "Історія"
+    return "Українська мова"
+
+
+def _build_source_display_name(source_file: str) -> str:
+    """Build a textbook display label from the source_file."""
+    grade_match = re.match(r"(\d+)-klas", source_file)
+    grade = grade_match.group(1) if grade_match else "?"
+    year = _extract_source_year(source_file)
+    author = _resolve_source_author(source_file)
+    subject = _resolve_source_subject(source_file)
+    if year is not None:
+        return f"{author}. {subject}, {grade} клас ({year})"
+    return f"{author}. {subject}, {grade} клас"
+
+
+def _normalize_author_label(value: str) -> str:
+    """Normalize author labels for lightweight title matching."""
+    return re.sub(r"\s+", " ", value.strip().lower())
+
+
+def _infer_reference_subject(title: str, notes: str) -> str:
+    """Infer the referenced textbook subject from title/notes text."""
+    text = f"{title} {notes}".lower()
+    if any(token in text for token in ("літератур", "literature", "ukrlit")):
+        return "Українська література"
+    if any(token in text for token in ("істор", "history", "суспіль")):
+        return "Історія"
+    return "Українська мова"
+
+
+def _parse_textbook_reference(ref: str | dict) -> dict | None:
+    """Extract author/grade/year/subject metadata from a plan reference."""
+    if isinstance(ref, str):
+        title = ref.strip()
+        notes = ""
+    elif isinstance(ref, dict):
+        title = str(ref.get("title", "")).strip()
+        notes = str(ref.get("notes") or ref.get("note") or "").strip()
+    else:
+        return None
+
+    if not title:
+        return None
+
+    grade_match = re.search(r"\bGrade\s+(\d+)\b|\b(\d+)\s*клас\b", title, flags=re.IGNORECASE)
+    if not grade_match:
+        return None
+    grade = int(grade_match.group(1) or grade_match.group(2))
+
+    author_match = re.match(r"([A-Za-zА-Яа-яЇїІіЄєҐґ'’`-]+)", title)
+    if not author_match:
+        return None
+    author = author_match.group(1).replace("’", "'")
+    year_match = re.search(r"\b(20\d{2})\b", title)
+
+    return {
+        "title": title,
+        "notes": notes,
+        "author": _normalize_author_label(author),
+        "grade": grade,
+        "year": int(year_match.group(1)) if year_match else None,
+        "subject": _infer_reference_subject(title, notes),
+    }
+
+
+def _load_textbook_source_index(db_path: Path = SOURCES_DB_PATH) -> list[dict]:
+    """Build a distinct source_file index for textbook reference resolution."""
+    if not db_path.exists():
+        return []
+
+    conn = sqlite3.connect(str(db_path))
+    try:
+        rows = conn.execute(
+            "SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file"
+        ).fetchall()
+    finally:
+        conn.close()
+
+    index = []
+    for source_file, grade, author in rows:
+        index.append(
+            {
+                "source_file": str(source_file),
+                "grade": int(grade) if str(grade).isdigit() else None,
+                "year": _extract_source_year(str(source_file)),
+                "author": _normalize_author_label(
+                    _PIDRUCHNYK_AUTHOR_NAMES.get(str(author), _resolve_source_author(str(source_file)))
+                ),
+                "subject": _resolve_source_subject(str(source_file)),
+            }
+        )
+    return index
+
+
+def _resolve_textbook_source_file(
+    ref: str | dict,
+    pidruchnyk_urls: dict[str, str],
+    source_index: list[dict] | None = None,
+) -> str | None:
+    """Resolve a plan textbook reference to a mapped source_file."""
+    parsed = _parse_textbook_reference(ref)
+    if not parsed:
+        return None
+
+    candidates = source_index if source_index is not None else _load_textbook_source_index()
+    if not candidates:
+        return None
+
+    matches = [
+        candidate
+        for candidate in candidates
+        if candidate["grade"] == parsed["grade"]
+        and candidate["author"] == parsed["author"]
+        and candidate["source_file"] in pidruchnyk_urls
+    ]
+    if not matches:
+        return None
+
+    subject_matches = [candidate for candidate in matches if candidate["subject"] == parsed["subject"]]
+    if not subject_matches:
+        return None
+    matches = subject_matches
+
+    if parsed["year"] is not None:
+        year_matches = [candidate for candidate in matches if candidate["year"] == parsed["year"]]
+        if year_matches:
+            matches = year_matches
+
+    matches.sort(key=lambda candidate: (candidate["year"] or 0, candidate["source_file"]), reverse=True)
+    return matches[0]["source_file"]
+
+
+def _build_pidruchnyk_section(
+    plan: dict,
+    pidruchnyk_urls: dict[str, str] | None = None,
+    source_index: list[dict] | None = None,
+) -> str:
+    """Build a pidruchnyk textbook subsection from plan references."""
+    if not isinstance(plan, dict):
+        return ""
+
+    pidruchnyk_urls = _load_pidruchnyk_urls() if pidruchnyk_urls is None else pidruchnyk_urls
+    if not pidruchnyk_urls:
+        return ""
+
+    refs = plan.get("references", [])
+    if not isinstance(refs, list):
+        return ""
+
+    source_index = source_index if source_index is not None else _load_textbook_source_index()
+    seen: set[str] = set()
+    bullets: list[str] = []
+
+    for ref in refs:
+        source_file = _resolve_textbook_source_file(ref, pidruchnyk_urls, source_index)
+        if not source_file or source_file in seen:
+            continue
+        seen.add(source_file)
+        bullets.append(
+            f"- [{_build_source_display_name(source_file)}]({pidruchnyk_urls[source_file]})"
+        )
+
+    if not bullets:
+        return ""
+
+    return "\n".join(["### Підручники", *bullets])
+
+
 def _build_resources_tab(level: str, slug: str) -> str:
     """Build Ресурси tab content from plan references + external_resources.yaml."""
     parts = ["**Джерела — References**", ""]
@@ -4908,11 +5156,11 @@ def _build_slovnyk_tab(level: str, slug: str) -> str:
 
 
 def _build_resources_tab_full(level: str, slug: str) -> str:
-    """Build Ресурси tab from wiki textbook refs + plan URLs + external_resources.
+    """Build Ресурси tab from plan URLs + textbook links + external_resources.
 
     Three sources, in order:
     1. Plan references with explicit URLs (manually curated ULP/web links)
-    2. Wiki-sourced textbook links (pidruchnyk.com.ua PDF deep links)
+    2. Textbook references resolved to pidruchnyk.com.ua lesson-resource links
     3. External resources by exact slug match (curated articles/videos/podcasts)
 
     Dropped (issue #1175): ULP auto-matching, МійКлас auto-matching — tag-based
@@ -4944,12 +5192,12 @@ def _build_resources_tab_full(level: str, slug: str) -> str:
                 lines.append(f"  _{notes}_")
         lines.append("")
 
-    # --- 2. Wiki-sourced textbook links ---
+    # --- 2. Textbook links from plan references ---
     try:
-        from build.textbook_refs import format_textbook_section, get_textbook_links
-        tb_links = get_textbook_links(level, slug)
-        if tb_links:
-            lines.append(format_textbook_section(tb_links))
+        pidruchnyk_section = _build_pidruchnyk_section(plan)
+        if pidruchnyk_section:
+            lines.append(pidruchnyk_section)
+            lines.append("")
     except Exception as e:
         _log(f"  ⚠️  Textbook links skipped: {e}")
 
@@ -5134,7 +5382,7 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     workbook_content = _build_workbook_tab(workbook_activities)
 
     # Tab 4: Ресурси (from plan + external resources)
-    # Textbook references are linkified inline by _build_resources() via _resolve_textbook_url()
+    # Textbook references are rendered via pidruchnyk_urls.yaml when a mapping exists.
     resources_content = _build_resources_tab_full(level, slug)
 
     tab_parts = []
