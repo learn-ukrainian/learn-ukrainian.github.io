@@ -377,62 +377,8 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
     return (response, True)
 
 
-def _stream_with_watchdog(proc, timeout_val):
-    """Stream stdout with optional watchdog timer. Returns (timed_out, output_lines)."""
-    _timed_out = False
-
-    _watchdog_timer = None
-    if timeout_val:
-        _proc_ref = proc
-
-        def _kill_on_timeout(_p=_proc_ref):
-            nonlocal _timed_out
-            _timed_out = True
-            print(f"\n⏰ Gemini CLI timed out after {timeout_val}s — killing process")
-            sys.stdout.flush()
-            with contextlib.suppress(OSError):
-                _p.kill()
-        import threading
-        _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
-        _watchdog_timer.daemon = True
-        _watchdog_timer.start()
-
-    output_lines = []
-    _last_output_time = time.time()
-    _STALL_THRESHOLD = 120  # seconds
-    try:
-        for line in proc.stdout:
-            print(line, end='')
-            sys.stdout.flush()
-            output_lines.append(line)
-            now = time.time()
-            stall_duration = now - _last_output_time
-            if stall_duration > _STALL_THRESHOLD:
-                print(f"\n  [watchdog] Output resumed after {stall_duration:.0f}s stall", file=sys.stderr, flush=True)
-            _last_output_time = now
-    except (OSError, ValueError):
-        pass
-
-    # Log if the stream ended with a long stall before EOF
-    final_stall = time.time() - _last_output_time
-    if final_stall > _STALL_THRESHOLD and not _timed_out:
-        print(f"\n  [watchdog] Stream ended after {final_stall:.0f}s of silence "
-              f"({len(output_lines)} lines received)", file=sys.stderr, flush=True)
-
-    proc.wait()
-    if _watchdog_timer:
-        _watchdog_timer.cancel()
-
-    # Capture stderr on timeout for diagnostics
-    if _timed_out and proc.stderr:
-        try:
-            stderr_content = proc.stderr.read()
-            if stderr_content and stderr_content.strip():
-                print(f"  [watchdog] stderr on timeout: {stderr_content[:500]}", flush=True)
-        except (OSError, ValueError):
-            pass
-
-    return _timed_out, output_lines
+# _stream_with_watchdog was removed in Phase 6 — the runtime's watchdog.py
+# now provides streaming stdout + mtime liveness polling for all agents.
 
 
 def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
