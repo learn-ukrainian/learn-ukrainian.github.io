@@ -228,28 +228,34 @@ class CodexAdapter:
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Return paths the runner should poll for mtime changes.
 
-        Codex writes its output file progressively AND also writes to
-        several state files in ``~/.codex/`` during exec. We return every
-        candidate that exists so the mtime poller has multiple independent
-        liveness signals. Fixed 2026-04-10: the old primary signal
-        ``logs_1.sqlite`` went stale (Codex stopped writing there in a
-        recent version bump), which caused spurious "Codex stalled" errors
-        in the bridge because the stdout streamer was the only remaining
-        signal and stdout is nearly silent when -o <file> is used.
+        Note 2026-04-10: stall detection is no longer a kill condition
+        (see watchdog.py::should_kill). The mtime poller still runs to
+        populate WatchdogState.last_activity for observability — so
+        getting the paths RIGHT still matters for future diagnostic
+        logging and for the async delegate.py work, even though a
+        missed signal no longer kills the process.
 
-        Current live candidates (verified against codex-cli 0.118.0):
-          - plan.output_file: the -o target file (per-call, grows as
-            Codex emits the final message)
-          - ~/.codex/state_5.sqlite: live runtime state (bumps during exec)
-          - ~/.codex/sessions/{YYYY}/{MM}/{DD}/: directory mtime bumps
-            when Codex creates a new rollout-*.jsonl file at the start
-            of exec — catches the startup signal even before state_5
-            updates
+        Codex CLI 0.118.0 storage layout (verified empirically):
+          - ``sessions/YYYY/MM/DD/rollout-*.jsonl`` is the ACTUAL live
+            file. It grows throughout the run as reasoning messages
+            and tool calls are streamed to disk. Confirmed: a 9-minute
+            consultation run had its rollout file at 409KB and still
+            growing.
+          - ``sessions/YYYY/MM/DD/`` (the directory) only bumps on
+            child file *creation*, not on content writes. Useful for
+            catching the startup signal but goes silent during the run.
+          - ``state_5.sqlite`` bumps intermittently (not reliably on
+            every message). Kept as a secondary signal.
+          - ``logs_1.sqlite``, ``history.jsonl`` are stale in 0.118+
+            but kept as fallbacks for older CLI versions.
+          - ``plan.output_file`` is the -o target; empty during the run
+            and only written at the very end on success, but kept as
+            a signal for the "Codex is writing the final response" moment.
 
-        Legacy paths (kept for backward compat with older CLI versions):
-          - ~/.codex/logs_1.sqlite: pre-0.118 primary log
-          - ~/.codex/history.jsonl: older history file, some versions
-            still update it
+        We pick the NEWEST rollout-*.jsonl inside today's sessions dir
+        and return it directly (same pattern as the Gemini adapter's
+        newest session-*.json file), so the mtime poller sees every
+        content write, not just directory-level events.
         """
         from datetime import UTC, datetime
 
@@ -259,14 +265,14 @@ class CodexAdapter:
 
         codex_home = Path.home() / ".codex"
 
-        # Current live signals
+        # Secondary / fallback signals
         for rel in ("state_5.sqlite", "history.jsonl", "logs_1.sqlite"):
             candidate = codex_home / rel
             if candidate.exists():
                 paths.append(candidate)
 
-        # Today's sessions directory — mtime bumps when new rollout
-        # file is created at the start of a codex exec call.
+        # Today's sessions directory (catches startup via dir mtime
+        # bump, but does NOT track subsequent content writes).
         today = datetime.now(UTC)
         sessions_today = (
             codex_home / "sessions" / f"{today.year:04d}"
@@ -274,6 +280,24 @@ class CodexAdapter:
         )
         if sessions_today.exists():
             paths.append(sessions_today)
+
+            # Primary live signal: the newest rollout-*.jsonl inside
+            # today's sessions dir. Codex writes every reasoning line
+            # and tool-call event here during exec. Picking at plan
+            # build time means we may miss a rollout file created
+            # AFTER our call starts (possible if we're slow to start
+            # the poller) — the dir mtime signal above catches that
+            # creation event as a fallback.
+            try:
+                rollouts = sorted(
+                    sessions_today.glob("rollout-*.jsonl"),
+                    key=lambda p: p.stat().st_mtime,
+                    reverse=True,
+                )
+                if rollouts:
+                    paths.append(rollouts[0])
+            except OSError:
+                pass
 
         return tuple(paths)
 

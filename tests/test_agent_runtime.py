@@ -36,7 +36,13 @@ from agent_runtime.errors import (
 from agent_runtime.registry import AGENTS, get_agent_entry
 from agent_runtime.runner import _enforce_resume_policy, _load_adapter, invoke
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
-from agent_runtime.watchdog import WatchdogState, should_kill
+from agent_runtime.watchdog import (
+    WatchdogState,
+    should_kill,
+    start_watchdog,
+    stop_watchdog,
+    tail_liveness_file_for_debug,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -298,6 +304,59 @@ def test_codex_parse_response_rate_limit_url_no_false_positive(tmp_path):
     assert result.ok is True
 
 
+def test_codex_liveness_paths_pick_newest_rollout(tmp_path, monkeypatch):
+    """Regression: Codex 0.118 stores the live rollout in
+    sessions/YYYY/MM/DD/rollout-*.jsonl inside the directory. The
+    directory mtime only bumps on child creation, so directory-only
+    polling misses content writes. The adapter must return the NEWEST
+    rollout file directly (same pattern as Gemini's newest session-*.json).
+
+    Tonight (2026-04-10) we watched our own watchdog about to kill a
+    successfully-running Codex process because the dir-only signal had
+    gone silent while the rollout file was still growing at 409KB.
+    """
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    # Build today's sessions dir structure
+    from datetime import UTC, datetime
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+
+    # Two rollout files, different ages. The newer one must be chosen.
+    old_rollout = sessions_today / "rollout-2026-04-10T18-00-00-aaa.jsonl"
+    old_rollout.write_text('{"old": true}\n')
+    import os as _os
+    _os.utime(old_rollout, (old_rollout.stat().st_mtime - 300,
+                             old_rollout.stat().st_mtime - 300))
+    new_rollout = sessions_today / "rollout-2026-04-10T20-53-00-bbb.jsonl"
+    new_rollout.write_text('{"new": true}\n')
+
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id=None,
+        tool_config=None,
+    )
+    paths = adapter.liveness_signal_paths(plan)
+    names = {p.name for p in paths}
+    assert new_rollout.name in names, (
+        f"newest rollout-*.jsonl missing from liveness paths: {names}"
+    )
+    assert old_rollout.name not in names, (
+        f"older rollout file should not be in liveness paths: {names}"
+    )
+
+
 def test_codex_parse_response_failed_call_with_prompt_echo_not_rate_limit(tmp_path):
     """Regression: a KILLED or FAILED Codex call whose prompt contained
     rate-limit phrases must not be misclassified as rate-limited. Only
@@ -472,6 +531,109 @@ def test_should_kill_detects_hard_timeout():
     state = WatchdogState(start_time=now - 4000, last_activity=now)
     # Started 4000s ago, hard_timeout 3600s → hard_timeout
     assert should_kill(state, stall_timeout=180, hard_timeout=3600) == "hard_timeout"
+
+
+def test_tail_liveness_skips_binary_sqlite(tmp_path):
+    """Regression: state_5.sqlite is in Codex's liveness paths and can
+    be the newest at failure time. We must not decode it as UTF-8 and
+    write replacement-char garbage into stderr_excerpt. (Gemini review
+    finding, #1184.)
+    """
+    # Binary SQLite-ish file (just needs the extension)
+    binary = tmp_path / "state_5.sqlite"
+    binary.write_bytes(b"\x00\x01\x02\xff\xfe" * 800)  # 4KB of binary
+    # Older text file that IS tailable
+    text = tmp_path / "history.log"
+    text.write_text("real error line 1\nreal error line 2\n")
+    # Force the text file to be older than the binary (the binary is
+    # newest, which is what would trigger the bug).
+    import os as _os
+    _os.utime(text, (text.stat().st_mtime - 60, text.stat().st_mtime - 60))
+
+    result = tail_liveness_file_for_debug([binary, text])
+    # The binary must be filtered out; the text file should be chosen.
+    assert "real error" in result
+    assert "\ufffd" not in result, (
+        f"UTF-8 replacement char leaked from binary file tail: {result!r}"
+    )
+
+
+def test_tail_liveness_skips_directories(tmp_path):
+    """Codex passes sessions/YYYY/MM/DD/ as a liveness path. Tailing a
+    directory as if it were a file should fail gracefully and fall
+    through to the next candidate, not raise or return garbage.
+    """
+    sessions_dir = tmp_path / "sessions-today"
+    sessions_dir.mkdir()
+    # Make it the newest path
+    text = tmp_path / "history.log"
+    text.write_text("fallback content\n")
+    import os as _os
+    _os.utime(text, (text.stat().st_mtime - 60, text.stat().st_mtime - 60))
+
+    result = tail_liveness_file_for_debug([sessions_dir, text])
+    assert "fallback content" in result
+
+
+def test_tail_liveness_empty_on_all_binary_or_dirs(tmp_path):
+    """If every candidate is binary or a directory, return empty."""
+    binary = tmp_path / "logs_1.sqlite"
+    binary.write_bytes(b"\x00" * 100)
+    empty_dir = tmp_path / "empty_dir"
+    empty_dir.mkdir()
+    assert tail_liveness_file_for_debug([binary, empty_dir]) == ""
+
+
+def test_stop_watchdog_unblocks_stdout_streamer():
+    """Regression: the stdout streamer thread used to block on
+    proc.stdout.readline() forever because state.stop=True does not
+    interrupt a blocked read. daemon=True prevented process hang but
+    we accumulated orphaned threads during long bridge sessions.
+
+    Fix: stop_watchdog(proc=proc) closes proc.stdout, which makes the
+    blocked readline raise ValueError — the streamer's try/except
+    catches it and the thread exits cleanly. Test: start a subprocess
+    that sleeps with no output, stop the watchdog, assert the streamer
+    thread has joined within a short timeout.
+
+    This is the bug Gemini flagged in his 2026-04-10 review. If we
+    ever regress, this test will catch it.
+    """
+    import subprocess as _sp
+    import sys as _sys
+
+    # A quiet subprocess that will sit silent forever (well, 30s)
+    proc = _sp.Popen(
+        [_sys.executable, "-c", "import time; time.sleep(30)"],
+        stdout=_sp.PIPE,
+        stderr=_sp.PIPE,
+        text=True,
+        bufsize=1,
+    )
+    try:
+        state, threads = start_watchdog(proc, liveness_paths=[])
+        # Find the streamer thread
+        streamer = next((t for t in threads if "stdout" in t.name), None)
+        assert streamer is not None, "streamer thread was not started"
+        assert streamer.is_alive(), "streamer should be running"
+
+        # Kill the subprocess first (required ordering: we only close
+        # stdout after kill to avoid SIGPIPE) and stop the watchdog.
+        proc.kill()
+        proc.wait(timeout=5.0)
+        stop_watchdog(state, threads, timeout=2.0, proc=proc)
+
+        # The streamer MUST have joined by now — without the fix, the
+        # thread would still be blocked on readline() and is_alive()
+        # would return True.
+        assert not streamer.is_alive(), (
+            "streamer thread leaked — still running after stop_watchdog. "
+            "This is the bug the 2026-04-10 fix was supposed to prevent."
+        )
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait(timeout=5.0)
 
 
 def test_should_kill_hard_timeout_is_the_only_killer():

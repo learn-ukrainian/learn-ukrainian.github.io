@@ -28,6 +28,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import contextlib
 import os
 import subprocess
 import threading
@@ -173,13 +174,45 @@ def stop_watchdog(
     state: WatchdogState,
     threads: list[threading.Thread],
     timeout: float = 2.0,
+    proc: subprocess.Popen | None = None,
 ) -> None:
     """Signal the watchdog threads to stop and join them.
 
-    Safe to call multiple times. Threads that don't join within ``timeout``
-    are left running as daemons — they'll be killed on process exit.
+    Two mechanisms drive shutdown:
+
+    1. ``state.stop = True`` unblocks the mtime poller (it checks this
+       flag between sleeps).
+
+    2. Closing ``proc.stdout`` (if ``proc`` is provided) unblocks the
+       stdout streamer. Without this, the streamer sits on
+       ``proc.stdout.readline()`` forever because the OS pipe read is
+       not interruptible from another thread. Setting state.stop has
+       no effect on a blocked read. Closing the pipe from THIS thread
+       causes ``readline`` to raise ValueError (closed file) which the
+       streamer's try/except catches for a clean exit.
+
+       Pass ``proc`` when you want the streamer to drop IMMEDIATELY
+       without waiting for the subprocess to exit on its own. If you
+       omit ``proc``, the streamer will still exit when the subprocess
+       terminates and its stdout pipe naturally closes — acceptable
+       for the normal path where we've already waited for exit.
+
+    Safe to call multiple times. Threads that don't join within
+    ``timeout`` are left running as daemons — they'll be cleaned up
+    on process exit. Added 2026-04-10 after Gemini review noted the
+    streamer was leaking threads on long bridge sessions.
     """
     state.stop = True
+
+    # Close stdout to unblock the streamer's readline. Only safe to do
+    # after the subprocess has been killed or has naturally exited — if
+    # you close while the subprocess is still writing, the subprocess
+    # will get SIGPIPE on its next write. Callers already ensure this
+    # ordering: they call proc.kill() + proc.wait() BEFORE stop_watchdog.
+    if proc is not None and proc.stdout is not None:
+        with contextlib.suppress(OSError, ValueError):
+            proc.stdout.close()
+
     for t in threads:
         t.join(timeout=timeout)
 
@@ -225,20 +258,56 @@ def should_kill(state: WatchdogState, stall_timeout: int, hard_timeout: int) -> 
     return None
 
 
+# Binary file extensions that MUST NOT be tailed into a UTF-8
+# stderr_excerpt on failure. SQLite DBs, shelve DBs, and packed
+# state files produce garbage Unicode-replacement chars when
+# decoded. Adapters pass state_5.sqlite / logs_1.sqlite as
+# liveness paths for mtime-polling purposes, and those can be
+# the newest path at failure time.
+_BINARY_LIVENESS_EXTS = frozenset({
+    ".sqlite", ".sqlite3", ".db", ".dbm", ".pack", ".idx",
+    ".bin", ".pyc", ".pyo",
+})
+
+
+def _is_tailable_text(path: Path) -> bool:
+    """Return True if `path` is a regular file suitable for UTF-8 tailing.
+
+    Excludes:
+    * Directories (they're passed as liveness paths for Codex's
+      sessions/YYYY/MM/DD/ dir, but you can't tail a directory).
+    * Known-binary extensions — SQLite, packed indexes, etc.
+    * Symlinks to nonexistent targets.
+    """
+    try:
+        if not path.is_file():  # excludes directories and nonexistent
+            return False
+    except OSError:
+        return False
+    return path.suffix.lower() not in _BINARY_LIVENESS_EXTS
+
+
 def tail_liveness_file_for_debug(
     paths: Iterable[Path],
     max_bytes: int = 4096,
 ) -> str:
-    """Tail the newest liveness file for error diagnostics.
+    """Tail the newest text-format liveness file for error diagnostics.
 
     Called by the runner on failure to capture the agent's "last known
     thoughts" from its session file, since stderr may be empty or useless.
     Returns the concatenated tails or an empty string if nothing found.
 
+    Filters out directories and known-binary files (SQLite, etc.) before
+    picking the newest candidate — otherwise we'd write replacement-char
+    garbage into stderr_excerpt when Codex's state_5.sqlite happens to be
+    the newest liveness path at failure time.
+
     Safe against all filesystem errors; returns "" on any problem.
     """
     candidates: list[tuple[float, Path]] = []
     for p in paths:
+        if not _is_tailable_text(p):
+            continue
         try:
             mtime = p.stat().st_mtime
             candidates.append((mtime, p))

@@ -432,7 +432,7 @@ def invoke(
 
         # ---------- Handle watchdog kills ----------
         if kill_reason == "hard_timeout":
-            stop_watchdog(watchdog_state, watchdog_threads)
+            stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
             record = _build_usage_record(
                 agent=agent_name,
                 entrypoint=entrypoint,
@@ -463,7 +463,7 @@ def invoke(
         # for backward compatibility with test mocks, but is never raised.
 
         # ---------- Normal path: adapter parses response ----------
-        stop_watchdog(watchdog_state, watchdog_threads)
+        stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
         parse: ParseResult = adapter.parse_response(
             stdout=stdout_text,
             stderr=stderr_text,
@@ -523,8 +523,11 @@ def invoke(
 
     finally:
         # Ensure watchdog threads are signaled to stop even on exception.
+        # Pass proc so the stdout streamer gets unblocked via pipe close
+        # (see stop_watchdog docstring). proc may be None if Popen itself
+        # raised — handled safely by stop_watchdog.
         if watchdog_state is not None:
-            stop_watchdog(watchdog_state, watchdog_threads)
+            stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
         # Clean up the output file if the adapter created one and parse
         # succeeded — callers get the content in Result.response, no need
         # to keep the tempfile. On error, leave it for debugging.
