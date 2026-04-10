@@ -55,6 +55,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+from analytics.cost_report import format_module_cost_summary
 from batch_gemini_config import (
     # FLASH_MODEL removed from imports 2026-04-10 — Flash is unreliable and
     # GEMINI_FAMILY.fast now points directly at PRO_MODEL. When Flash is
@@ -6436,6 +6437,10 @@ def main():
     _minutes = int(_build_elapsed // 60)
     _seconds = int(_build_elapsed % 60)
     _log(f"\n✅ V6 Build COMPLETE: {args.level.upper()} M{args.module:02d} ({slug})")
+    if args.range is None:
+        cost_summary_line = format_module_cost_summary(args.level, slug)
+        if cost_summary_line:
+            _log(f"   {cost_summary_line}")
     _log(f"   Total time: {_minutes}m {_seconds}s")
     if publish_completed:
         if final_score is None:
