@@ -27,6 +27,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.codex import CodexAdapter
+from agent_runtime.adapters.gemini import GeminiAdapter
 from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
@@ -369,3 +370,210 @@ def test_should_kill_hard_timeout_takes_precedence():
     state = WatchdogState(start_time=now - 2000, last_activity=now - 500)
     # Both conditions true — but hard_timeout is reported first
     assert should_kill(state, stall_timeout=180, hard_timeout=1800) == "hard_timeout"
+
+
+# ---------------------------------------------------------------------------
+# GeminiAdapter
+# ---------------------------------------------------------------------------
+
+def test_gemini_adapter_attributes():
+    adapter = GeminiAdapter()
+    assert adapter.name == "gemini"
+    assert "read-only" in adapter.supported_modes
+    assert "workspace-write" in adapter.supported_modes
+    assert "danger" in adapter.supported_modes
+
+
+def test_gemini_adapter_read_only_no_yolo(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--approval-mode=yolo" not in plan.cmd
+    assert "-m" in plan.cmd
+    assert plan.stdin_payload == "hello"
+    assert plan.output_file is None  # Gemini uses stdout, no -o file
+    assert plan.liveness_paths == ()
+
+
+def test_gemini_adapter_workspace_write_yolo(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--approval-mode=yolo" in plan.cmd
+
+
+def test_gemini_adapter_mcp_tool_config(tmp_path):
+    """The #1 consultation finding: tool_config for MCP restrictions must
+    survive through the protocol."""
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"mcp_server_names": ["rag"]},
+    )
+    assert "--allowed-mcp-server-names" in plan.cmd
+    idx = plan.cmd.index("--allowed-mcp-server-names")
+    assert plan.cmd[idx + 1] == "rag"
+
+
+def test_gemini_adapter_mcp_tool_config_multiple(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"mcp_server_names": ["rag", "other", "third"]},
+    )
+    assert "rag,other,third" in plan.cmd
+
+
+def test_gemini_adapter_ignores_unknown_tool_config_keys(tmp_path):
+    """Forward compatibility: adapters silently ignore tool_config keys
+    they don't understand."""
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "mcp_server_names": ["rag"],
+            "some_future_field": "value",
+            "another_future_field": {"nested": True},
+        },
+    )
+    assert "--allowed-mcp-server-names" in plan.cmd
+    # Unknown keys do not appear anywhere in the command
+    cmd_str = " ".join(plan.cmd)
+    assert "some_future_field" not in cmd_str
+    assert "another_future_field" not in cmd_str
+
+
+def test_gemini_adapter_ignores_session_id(tmp_path):
+    """Gemini CLI has no --resume equivalent; session_id must be silently dropped."""
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id="some-uuid",
+        tool_config=None,
+    )
+    assert "--resume" not in plan.cmd
+    assert "some-uuid" not in " ".join(plan.cmd)
+
+
+def test_gemini_parse_response_success():
+    adapter = GeminiAdapter()
+    result = adapter.parse_response(
+        stdout="Hello from Gemini\n",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Hello from Gemini"
+    assert result.rate_limited is False
+    assert result.session_id is None
+    assert result.tokens is None
+
+
+def test_gemini_parse_response_rate_limit_resource_exhausted():
+    adapter = GeminiAdapter()
+    result = adapter.parse_response(
+        stdout="",
+        stderr="Error: RESOURCE_EXHAUSTED",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.rate_limited is True
+
+
+def test_gemini_parse_response_rate_limit_quota_exceeded():
+    adapter = GeminiAdapter()
+    result = adapter.parse_response(
+        stdout="",
+        stderr="quota exceeded for project xyz",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.rate_limited is True
+
+
+def test_gemini_parse_response_rate_limit_in_stdout():
+    """Some Gemini rate-limit messages land in stdout, not stderr."""
+    adapter = GeminiAdapter()
+    result = adapter.parse_response(
+        stdout="Error: quota exceeded",
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.rate_limited is True
+
+
+def test_gemini_parse_response_url_no_false_positive():
+    """\\b429\\b must not match URL path components."""
+    adapter = GeminiAdapter()
+    result = adapter.parse_response(
+        stdout="See https://example.com/issues/4290 for details",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.rate_limited is False
+
+
+def test_gemini_parse_response_error_with_empty_stderr():
+    """Falls back to stdout for excerpt when stderr is empty."""
+    adapter = GeminiAdapter()
+    result = adapter.parse_response(
+        stdout="unexpected error: model timed out",
+        stderr="",
+        returncode=2,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert "timed out" in (result.stderr_excerpt or "")
+
+
+def test_gemini_liveness_paths_empty(tmp_path):
+    """Gemini adapter returns no fallback liveness paths; stdout streamer is enough."""
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert adapter.liveness_signal_paths(plan) == ()
