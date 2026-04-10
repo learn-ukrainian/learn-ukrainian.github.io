@@ -23,10 +23,11 @@ objectives:
     process (imperfective).
 dialogue_situations:
   - setting: Making New Year's resolutions with friends — Я напишу книгу (f)! Я 
-      вивчу іспанську (f)! Він прочитає 50 книг! Вона здасть іспит (m, exam)!
+      вивчу іспанську (f)! Він прочитає 50 книг! Вона складе іспит (m, exam)!
     speakers:
       - Група друзів на Новий рік
-    motivation: 'Perfective future: написати→напишу, вивчити→вивчу, здати→здам'
+    motivation: 'Perfective future: написати→напишу, вивчити→вивчу, скласти→складу.
+      Note: Ukrainian says складати/скласти іспит (not the Russianism "здавати іспит").'
 content_outline:
   - section: Два майбутніх часи (Two Futures in Ukrainian)
     words: 450

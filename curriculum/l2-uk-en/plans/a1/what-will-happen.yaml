@@ -15,13 +15,13 @@ objectives:
 - Use future tense to talk about plans and intentions
 - Ask and answer "What will you do?" (Що ти будеш робити?)
 dialogue_situations:
-- setting: 'Fortune teller at a fun fair — predicting the future: Ти будеш багато
-    подорожувати. Будеш знаходити нових друзів (m). Будеш отримувати подарунки (pl).
-    Будеш щасливий/щаслива!'
+- setting: 'A village ворожка reading a client''s palm in her kitchen — predicting
+    the future with analytical imperfective future: Ти будеш багато подорожувати.
+    Будеш зустрічати цікавих людей (m). Будеш отримувати подарунки (pl). Будеш щасливий/щаслива!'
   speakers:
-  - Ворожка (fortune teller)
+  - Ворожка (village fortune teller, at home)
   - Клієнт
-  motivation: Future with робота(f), друг(m), подарунок(m)
+  motivation: 'Imperfective analytical future (буду + infinitive): подорожувати, зустрічати, отримувати — iterative/process actions across time, not single completed events.'
 content_outline:
 - section: Dialogues
   words: 300
