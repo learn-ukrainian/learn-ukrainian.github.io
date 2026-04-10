@@ -7,6 +7,7 @@ and case government rules based on CEFR level.
 
 import re
 import unicodedata
+from typing import Any
 
 from ..cleaners import extract_ukrainian_sentences
 from ..config import (
@@ -17,6 +18,18 @@ from ..config import (
     NOMINATIVE_PLURAL_EXCLUSIONS,
     PARTICIPLE_EXCLUSIONS,
 )
+
+
+def _resolve_constraints(level_code: str) -> dict[str, Any]:
+    """Return grammar constraints for a level, with B2 as fallback.
+
+    Guaranteed non-None so Pyright can narrow `.get()` calls on the result.
+    """
+    return (
+        GRAMMAR_CONSTRAINTS.get(level_code)
+        or GRAMMAR_CONSTRAINTS.get('B2')
+        or {}
+    )
 
 
 def _strip_stress(s: str) -> str:
@@ -61,7 +74,7 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
     # Strip dialogue location labels — **(За столом / At the table)** is bilingual
     # context, not grammar being taught (#975)
     text = re.sub(r'\*\*\(.*?/.*?\)\*\*', '', text)
-    constraints = GRAMMAR_CONSTRAINTS.get(level_code, GRAMMAR_CONSTRAINTS.get('B2'))
+    constraints = _resolve_constraints(level_code)
 
     # Check forbidden cases at A1
     if level_code == 'A1':
@@ -145,7 +158,7 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
 def check_sentence_complexity(text: str, level_code: str) -> list[dict]:
     """Check sentence complexity against level limits."""
     violations = []
-    constraints = GRAMMAR_CONSTRAINTS.get(level_code, GRAMMAR_CONSTRAINTS.get('B2'))
+    constraints = _resolve_constraints(level_code)
     max_words = constraints.get('max_words_per_sentence', 50)
 
     sentences = extract_ukrainian_sentences(text)
@@ -169,7 +182,13 @@ def check_sentence_complexity(text: str, level_code: str) -> list[dict]:
 
 
 def check_gender_agreement(content: str, level_code: str) -> list[dict]:
-    """Check for noun-adjective gender agreement errors."""
+    """Check for noun-adjective gender agreement errors.
+
+    `level_code` is accepted for signature symmetry with sibling checks and
+    reserved for future level-scoped rules (currently all levels share the
+    same pattern set).
+    """
+    _ = level_code  # reserved for future level-scoped rules
     violations = []
 
     # Strip deliberate errors (strikethrough ~~wrong form~~) before checking

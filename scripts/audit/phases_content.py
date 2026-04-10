@@ -35,7 +35,10 @@ def run_vocab_and_format_checks(ctx: AuditContext, state: AuditState) -> None:
     if ctx.vocab_data:
         vocab_words = set()
         for item in ctx.vocab_data:
-            uk = item.get('lemma', '')
+            # YAML sidecar uses `word:`; legacy path used `lemma:`. Support both
+            # so vocab-aware checks (metalanguage scaffolding, etc.) don't miss
+            # entries that are actually taught. (#1185)
+            uk = item.get('word') or item.get('lemma') or ''
             if uk:
                 vocab_words.add(uk.lower())
     else:

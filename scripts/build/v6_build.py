@@ -5929,10 +5929,11 @@ def main():
         _activity_gate_failed = False
         _salad_gate_failed = False
         _engagement_gate_failed = False
+        _inline_english_gate_failed = False
+        _immersion_gate_failed = False
         _overall_status = "unknown"
         if _status_path.exists():
             try:
-                import json
                 _status = json.loads(_status_path.read_text("utf-8"))
                 _overall_status = _status.get("overall", {}).get("status", "unknown")
                 _gates = _status.get("gates", {})
@@ -5971,6 +5972,19 @@ def main():
                             _eng_need = int(_eng_match.group(2))
                             if _eng_have < _eng_need:
                                 _engagement_gate_failed = True
+                    # Inline English translations in prose — parenthetical
+                    # glosses like "(He used to call often)" that break the
+                    # immersion target. The writer prompt already forbids
+                    # them; regen with the current prompt should clear it.
+                    if "INLINE_ENGLISH_IN_PROSE" in _lesson_msg:
+                        _inline_english_gate_failed = True
+                # Immersion gate — Ukrainian % below the level target.
+                # Root cause is almost always the same as inline-English:
+                # too much English explanation in the prose body. Re-run
+                # the chunked writer with the paragraph-language rule.
+                _immersion_g = _gates.get("immersion", {})
+                if isinstance(_immersion_g, dict) and _immersion_g.get("status") == "fail":
+                    _immersion_gate_failed = True
             except Exception as e:
                 _log(f"  ⚠️  Could not parse status file for heal check: {e}")
 
@@ -6013,14 +6027,23 @@ def main():
         # requirement) and re-audit. Max 1 regen attempt per build
         # invocation to prevent loops.
         _salad_regen_ran = False
-        _prose_regen_needed = _salad_gate_failed or _engagement_gate_failed
+        _prose_regen_needed = (
+            _salad_gate_failed
+            or _engagement_gate_failed
+            or _inline_english_gate_failed
+            or _immersion_gate_failed
+        )
         if _prose_regen_needed and content_path and content_path.exists():
-            if _salad_gate_failed and _engagement_gate_failed:
-                _log("\n🥗 Audit flagged LANGUAGE SALAD + missing engagement callouts — regenerating prose")
-            elif _salad_gate_failed:
-                _log("\n🥗 Audit flagged LANGUAGE SALAD — regenerating prose")
-            else:
-                _log("\n🎨 Audit flagged MISSING ENGAGEMENT callouts — regenerating prose")
+            _reasons = []
+            if _salad_gate_failed:
+                _reasons.append("language salad")
+            if _engagement_gate_failed:
+                _reasons.append("missing engagement callouts")
+            if _inline_english_gate_failed:
+                _reasons.append("inline English in prose")
+            if _immersion_gate_failed:
+                _reasons.append("immersion below target")
+            _log(f"\n🎨 Audit flagged {' + '.join(_reasons)} — regenerating prose")
             _log("   Writer prompt includes paragraph-language rule (#1185) and callout requirement.")
             _log("   Reusing research/skeleton/plan — only prose will be rewritten.")
             _pre_regen_mtime = content_path.stat().st_mtime
@@ -6040,7 +6063,7 @@ def main():
                 else:
                     _log(f"   ⚠️  No skeleton at {_sk_path} — will use single-shot path")
 
-            _heal_packet = packet_path
+            _heal_packet: Path | None = packet_path
             if _heal_packet is None:
                 _pk = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
                 if _pk.exists():
@@ -6067,6 +6090,9 @@ def main():
             if _chunk_cache_count:
                 _log(f"   🗑️  Cleared {_chunk_cache_count} cached chunk(s) to force fresh regen")
 
+            if _heal_packet is None:
+                _log("   ❌ No knowledge packet available on disk — cannot regenerate prose. Run --step research first.")
+                _new_content_path = None
             try:
                 _new_content_path = step_write_with_retry(
                     args.level, args.module, slug,
@@ -6076,7 +6102,7 @@ def main():
                     skeleton=_heal_skeleton,
                     no_chunk=args.no_chunk,
                     verification_text=_heal_verification,
-                )
+                ) if _heal_packet is not None else None
                 if _new_content_path:
                     content_path = _new_content_path
                     _post_process_content(content_path)

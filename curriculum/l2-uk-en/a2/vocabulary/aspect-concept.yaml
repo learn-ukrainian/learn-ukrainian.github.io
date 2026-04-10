@@ -23,6 +23,12 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: вид
+  translation: aspect (grammatical category of verbs)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: вид дієслова
   translation: verb aspect
   expression: true

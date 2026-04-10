@@ -7,10 +7,28 @@
   "items": {
     "oneOf": [
       {
-        "$ref": "#/definitions/quiz-b1"
+        "$ref": "#/definitions/anagram-b1"
       },
       {
-        "$ref": "#/definitions/match-up-b1"
+        "$ref": "#/definitions/authorial-intent-b1"
+      },
+      {
+        "$ref": "#/definitions/classify-b1"
+      },
+      {
+        "$ref": "#/definitions/cloze-b1"
+      },
+      {
+        "$ref": "#/definitions/comparative-study-b1"
+      },
+      {
+        "$ref": "#/definitions/critical-analysis-b1"
+      },
+      {
+        "$ref": "#/definitions/error-correction-b1"
+      },
+      {
+        "$ref": "#/definitions/essay-response-b1"
       },
       {
         "$ref": "#/definitions/fill-in-b1"
@@ -19,19 +37,28 @@
         "$ref": "#/definitions/group-sort-b1"
       },
       {
-        "$ref": "#/definitions/unjumble-b1"
-      },
-      {
-        "$ref": "#/definitions/true-false-b1"
-      },
-      {
-        "$ref": "#/definitions/cloze-b1"
-      },
-      {
-        "$ref": "#/definitions/error-correction-b1"
-      },
-      {
         "$ref": "#/definitions/mark-the-words-b1"
+      },
+      {
+        "$ref": "#/definitions/match-up-b1"
+      },
+      {
+        "$ref": "#/definitions/observe-b1"
+      },
+      {
+        "$ref": "#/definitions/odd-one-out-b1"
+      },
+      {
+        "$ref": "#/definitions/order-b1"
+      },
+      {
+        "$ref": "#/definitions/phrase-table-b1"
+      },
+      {
+        "$ref": "#/definitions/quiz-b1"
+      },
+      {
+        "$ref": "#/definitions/reading-b1"
       },
       {
         "$ref": "#/definitions/select-b1"
@@ -40,223 +67,151 @@
         "$ref": "#/definitions/translate-b1"
       },
       {
-        "$ref": "#/definitions/essay-response-b1"
+        "$ref": "#/definitions/true-false-b1"
       },
       {
-        "$ref": "#/definitions/critical-analysis-b1"
-      },
-      {
-        "$ref": "#/definitions/comparative-study-b1"
-      },
-      {
-        "$ref": "#/definitions/authorial-intent-b1"
-      },
-      {
-        "$ref": "#/definitions/reading-b1"
+        "$ref": "#/definitions/unjumble-b1"
       }
     ]
   },
   "definitions": {
-    "quiz-b1": {
+    "anagram-b1": {
       "type": "object",
       "required": [
         "type",
-        "title",
+        "instruction",
         "items"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
-          "const": "quiz"
+          "const": "anagram"
         },
-        "title": {
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
           "type": "string",
           "minLength": 1
         },
+        "notes": {
+          "type": "string"
+        },
         "items": {
           "type": "array",
-          "minItems": 8,
+          "minItems": 1,
           "items": {
             "type": "object",
             "required": [
-              "question",
-              "options"
+              "letters",
+              "answer"
             ],
-            "additionalProperties": false,
             "properties": {
-              "question": {
-                "type": "string",
-                "minLength": 1
-              },
-              "options": {
+              "letters": {
                 "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
+                "minItems": 2,
                 "items": {
-                  "type": "object",
-                  "required": [
-                    "text",
-                    "correct"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "text": {
-                      "type": "string",
-                      "minLength": 1
-                    },
-                    "correct": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              },
-              "explanation": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        }
-      }
-    },
-    "match-up-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "pairs"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "match-up"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "pairs": {
-          "type": "array",
-          "minItems": 8,
-          "items": {
-            "type": "object",
-            "required": [
-              "left",
-              "right"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "left": {
-                "type": "string",
-                "minLength": 1
-              },
-              "right": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          }
-        }
-      }
-    },
-    "fill-in-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "items"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "fill-in"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "items": {
-          "type": "array",
-          "minItems": 8,
-          "items": {
-            "type": "object",
-            "required": [
-              "sentence",
-              "answer",
-              "options"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "sentence": {
-                "type": "string",
-                "minLength": 1
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "Scrambled letters"
               },
               "answer": {
                 "type": "string",
                 "minLength": 1
               },
-              "options": {
-                "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "explanation": {
+              "hint": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
-        }
-      }
-    },
-    "group-sort-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "groups"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "group-sort"
         },
         "title": {
           "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authorial-intent-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "excerpt",
+        "questions"
+      ],
+      "properties": {
+        "type": {
+          "const": "authorial-intent"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "excerpt": {
+          "type": "string",
           "minLength": 1
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "model_answer": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "classify-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "categories"
+      ],
+      "properties": {
+        "type": {
+          "const": "classify"
+        },
+        "id": {
+          "type": "string"
         },
         "instruction": {
           "type": "string",
-          "description": "Additional instructions for the learner"
+          "minLength": 1
         },
-        "groups": {
+        "notes": {
+          "type": "string"
+        },
+        "categories": {
           "type": "array",
           "minItems": 2,
           "items": {
             "type": "object",
             "required": [
-              "name",
+              "label",
               "items"
             ],
-            "additionalProperties": false,
             "properties": {
-              "name": {
+              "label": {
                 "type": "string",
                 "minLength": 1
+              },
+              "symbol_hint": {
+                "type": "string"
               },
               "items": {
                 "type": "array",
@@ -266,128 +221,53 @@
                   "minLength": 1
                 }
               }
-            }
+            },
+            "additionalProperties": false
           }
-        }
-      }
-    },
-    "unjumble-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "items"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "unjumble"
         },
         "title": {
           "type": "string",
-          "minLength": 1
-        },
-        "items": {
-          "type": "array",
-          "minItems": 6,
-          "items": {
-            "type": "object",
-            "required": [
-              "words",
-              "answer"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "words": {
-                "type": "array",
-                "minItems": 3,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "answer": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          }
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
+          "description": "Optional display title for the activity"
         }
-      }
-    },
-    "true-false-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "items"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "true-false"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "items": {
-          "type": "array",
-          "minItems": 8,
-          "items": {
-            "type": "object",
-            "required": [
-              "statement",
-              "correct"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "statement": {
-                "type": "string",
-                "minLength": 1
-              },
-              "correct": {
-                "type": "boolean"
-              },
-              "explanation": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
+      },
+      "additionalProperties": false
     },
     "cloze-b1": {
       "type": "object",
       "required": [
         "type",
-        "title",
-        "passage"
+        "instruction",
+        "text"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
           "const": "cloze"
         },
-        "title": {
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
           "type": "string",
           "minLength": 1
         },
-        "passage": {
+        "notes": {
+          "type": "string"
+        },
+        "text": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Text with {gap} or {{N}} markers"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Global option pool (for simpler cloze)"
         },
         "blanks": {
           "type": "array",
-          "minItems": 14,
           "items": {
             "type": "object",
             "required": [
@@ -395,7 +275,6 @@
               "answer",
               "options"
             ],
-            "additionalProperties": false,
             "properties": {
               "id": {
                 "type": "integer",
@@ -407,52 +286,160 @@
               },
               "options": {
                 "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
+                "minItems": 2,
+                "maxItems": 6,
                 "items": {
                   "type": "string",
                   "minLength": 1
                 }
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
-        "instruction": {
+        "title": {
           "type": "string",
-          "description": "Additional instructions for the learner"
+          "description": "Optional display title for the activity"
         }
-      }
+      },
+      "additionalProperties": false
+    },
+    "comparative-study-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "items_to_compare",
+        "criteria",
+        "prompt"
+      ],
+      "properties": {
+        "type": {
+          "const": "comparative-study"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items_to_compare": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_answer": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "critical-analysis-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "prompt"
+      ],
+      "properties": {
+        "type": {
+          "const": "critical-analysis"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_text": {
+          "type": "string"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "model_answers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evaluation_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
     },
     "error-correction-b1": {
       "type": "object",
       "required": [
         "type",
-        "title",
+        "instruction",
         "items"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
           "const": "error-correction"
         },
-        "title": {
-          "type": "string",
-          "minLength": 1
+        "id": {
+          "type": "string"
         },
         "instruction": {
           "type": "string",
-          "description": "Additional instructions for the learner"
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
         },
         "items": {
           "type": "array",
-          "minItems": 6,
+          "minItems": 1,
           "items": {
             "type": "object",
             "required": [
               "sentence",
-              "error"
+              "error",
+              "correction"
             ],
-            "additionalProperties": false,
             "properties": {
               "sentence": {
                 "type": "string",
@@ -461,12 +448,12 @@
               "error": {
                 "type": "string",
                 "minLength": 1,
-                "description": "The incorrect word or phrase in the sentence"
+                "description": "The incorrect word or phrase"
               },
-              "answer": {
+              "correction": {
                 "type": "string",
                 "minLength": 1,
-                "description": "The correct word or phrase"
+                "description": "The correct replacement"
               },
               "error_type": {
                 "type": "string",
@@ -475,212 +462,37 @@
                   "phrase",
                   "register",
                   "construction"
-                ],
-                "description": "Type of correction (default: word). Use 'phrase' for multi-word corrections, 'register' for style transformations, 'construction' for grammatical structures."
+                ]
               },
               "options": {
                 "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
+                "minItems": 2,
+                "maxItems": 6,
                 "items": {
                   "type": "string",
                   "minLength": 1
                 }
               },
               "explanation": {
-                "type": "string",
-                "minLength": 1
-              },
-              "correction": {
-                "type": "string",
-                "minLength": 1,
-                "description": "The correct word or phrase (alternative to 'answer')"
-              }
-            }
-          }
-        }
-      }
-    },
-    "mark-the-words-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "instruction",
-        "text"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "mark-the-words"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "instruction": {
-          "type": "string",
-          "minLength": 1
-        },
-        "text": {
-          "type": "string",
-          "minLength": 1
-        },
-        "answers": {
-          "type": "array",
-          "minItems": 0,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        }
-      }
-    },
-    "select-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "items"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "select"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "items": {
-          "type": "array",
-          "minItems": 6,
-          "items": {
-            "type": "object",
-            "required": [
-              "question",
-              "options"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "question": {
-                "type": "string",
-                "minLength": 1
-              },
-              "options": {
-                "type": "array",
-                "minItems": 4,
-                "maxItems": 6,
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "text",
-                    "correct"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "text": {
-                      "type": "string",
-                      "minLength": 1
-                    },
-                    "correct": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              },
-              "min_correct": {
-                "type": "integer",
-                "minimum": 2
-              },
-              "explanation": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        }
-      }
-    },
-    "translate-b1": {
-      "type": "object",
-      "required": [
-        "type",
-        "title",
-        "items"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "translate"
         },
         "title": {
           "type": "string",
-          "minLength": 1
-        },
-        "items": {
-          "type": "array",
-          "minItems": 6,
-          "items": {
-            "type": "object",
-            "required": [
-              "source",
-              "options"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "source": {
-                "type": "string",
-                "minLength": 1
-              },
-              "options": {
-                "type": "array",
-                "minItems": 3,
-                "maxItems": 4,
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "text",
-                    "correct"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "text": {
-                      "type": "string",
-                      "minLength": 1
-                    },
-                    "correct": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              },
-              "explanation": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
+          "description": "Optional display title for the activity"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "essay-response-b1": {
       "type": "object",
-      "description": "Long-form writing task with model answer and rubric",
       "required": [
-        "id",
         "type",
-        "title",
-        "prompt",
-        "model_answer"
+        "prompt"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
           "const": "essay-response"
@@ -688,39 +500,38 @@
         "id": {
           "type": "string"
         },
-        "source_reading": {
+        "instruction": {
           "type": "string"
         },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
+        "notes": {
+          "type": "string"
         },
         "prompt": {
           "type": "string",
-          "minLength": 10
+          "minLength": 1
         },
         "min_words": {
           "type": "integer",
-          "minimum": 100
+          "minimum": 50
         },
         "model_answer": {
-          "type": "string",
-          "minLength": 50
+          "type": "string"
+        },
+        "evaluation_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "rubric": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "object",
             "required": [
               "criteria",
               "description"
             ],
-            "additionalProperties": false,
             "properties": {
               "criteria": {
                 "type": "string",
@@ -733,47 +544,538 @@
               "points": {
                 "type": "integer"
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
-        "peer_review_guidelines": {
-          "type": "string"
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
-      }
+      },
+      "additionalProperties": false
     },
-    "critical-analysis-b1": {
+    "fill-in-b1": {
       "type": "object",
-      "description": "Deep analysis of a text or concept",
       "required": [
-        "id",
         "type",
-        "title",
-        "target_text",
-        "questions",
-        "model_answers"
+        "instruction",
+        "items"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
-          "const": "critical-analysis"
+          "const": "fill-in"
         },
         "id": {
           "type": "string"
         },
-        "source_reading": {
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "sentence",
+              "answer"
+            ],
+            "properties": {
+              "sentence": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Sentence with ____ or {answer} marking the blank"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 6,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "group-sort-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "groups"
+      ],
+      "properties": {
+        "type": {
+          "const": "group-sort"
+        },
+        "id": {
           "type": "string"
         },
         "instruction": {
           "type": "string",
-          "description": "Additional instructions for the learner"
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "items"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          }
         },
         "title": {
           "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "mark-the-words-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "text",
+        "target_words"
+      ],
+      "properties": {
+        "type": {
+          "const": "mark-the-words"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
           "minLength": 1
         },
-        "target_text": {
+        "notes": {
+          "type": "string"
+        },
+        "text": {
           "type": "string",
-          "description": "The text or excerpt to analyze"
+          "minLength": 1
+        },
+        "target_words": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "criteria": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "match-up-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "pairs"
+      ],
+      "properties": {
+        "type": {
+          "const": "match-up"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "pairs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "left",
+              "right"
+            ],
+            "properties": {
+              "left": {
+                "type": "string",
+                "minLength": 1
+              },
+              "right": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "observe-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "examples",
+        "prompt"
+      ],
+      "properties": {
+        "type": {
+          "const": "observe"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Question prompting pattern discovery"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "odd-one-out-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "odd-one-out"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "words",
+              "correct",
+              "explanation"
+            ],
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 6,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "correct": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "order-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "items",
+        "correct_order"
+      ],
+      "properties": {
+        "type": {
+          "const": "order"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Lines/sentences/steps to put in order (displayed shuffled)"
+        },
+        "correct_order": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Zero-based indices of items in correct order"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "phrase-table-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "groups"
+      ],
+      "properties": {
+        "type": {
+          "const": "phrase-table"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "phrases"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "phrases": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "phrase"
+                      ],
+                      "properties": {
+                        "phrase": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "context": {
+                          "type": "string"
+                        },
+                        "emoji": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "quiz-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "quiz"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "vesum_exempt": {
+          "type": "boolean"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "options",
+              "correct"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 6,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "correct": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "0-based index of the correct option"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reading-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "passage",
+        "questions"
+      ],
+      "properties": {
+        "type": {
+          "const": "reading"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "passage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string"
         },
         "questions": {
           "type": "array",
@@ -783,182 +1085,279 @@
             "minLength": 1
           }
         },
-        "model_answers": {
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "select-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "select"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
           "type": "array",
           "minItems": 1,
           "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "focus_points": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Key elements to analyze (e.g. tone, bias)"
-        }
-      }
-    },
-    "comparative-study-b1": {
-      "type": "object",
-      "description": "Comparison of two or more texts/concepts",
-      "required": [
-        "id",
-        "type",
-        "title",
-        "items_to_compare",
-        "criteria",
-        "model_answer"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "comparative-study"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
-        "source_reading": {
-          "type": "string"
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "items_to_compare": {
-          "type": "array",
-          "minItems": 2,
-          "items": {
-            "type": "string"
-          },
-          "description": "Titles or excerpts of items"
-        },
-        "criteria": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "description": "Dimensions of comparison (e.g. style, theme)"
-        },
-        "prompt": {
-          "type": "string"
-        },
-        "model_answer": {
-          "type": "string"
-        }
-      }
-    },
-    "authorial-intent-b1": {
-      "type": "object",
-      "description": "Evaluation of author's purpose and techniques",
-      "required": [
-        "id",
-        "type",
-        "title",
-        "text_excerpt",
-        "prompt",
-        "model_answer"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "authorial-intent"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
-        "source_reading": {
-          "type": "string"
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "text_excerpt": {
-          "type": "string"
-        },
-        "prompt": {
-          "type": "string"
-        },
-        "techniques_to_identify": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "model_answer": {
-          "type": "string"
-        }
-      }
-    },
-    "reading-b1": {
-      "type": "object",
-      "description": "Reading comprehension task with external resource",
-      "required": [
-        "id",
-        "type",
-        "title",
-        "resource",
-        "tasks"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "reading"
-        },
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the activity"
-        },
-        "instruction": {
-          "type": "string",
-          "description": "Additional instructions for the learner"
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "resource": {
-          "type": "object",
-          "required": [
-            "type",
-            "url",
-            "title"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "type": "string"
+            "type": "object",
+            "required": [
+              "question",
+              "options"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "min_correct": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "explanation": {
+                "type": "string"
+              }
             },
-            "url": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            }
+            "additionalProperties": false
           }
         },
-        "tasks": {
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "translate-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "translate"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
           "type": "array",
           "minItems": 1,
           "items": {
-            "type": "string",
-            "minLength": 1
+            "type": "object",
+            "required": [
+              "source"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Text to translate"
+              },
+              "answer": {
+                "type": "string"
+              },
+              "alternatives": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "explanation": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
-      }
+      },
+      "additionalProperties": false
+    },
+    "true-false-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "true-false"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "statement",
+              "correct"
+            ],
+            "properties": {
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correct": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "unjumble-b1": {
+      "type": "object",
+      "required": [
+        "type",
+        "instruction",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "unjumble"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "words",
+              "correct_order"
+            ],
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "Jumbled words"
+              },
+              "correct_order": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "Words in correct order"
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
