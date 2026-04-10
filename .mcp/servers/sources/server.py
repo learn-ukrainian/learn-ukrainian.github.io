@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
 """
-MCP RAG Server — Ukrainian Textbook Search
+MCP Sources Server — Ukrainian curriculum knowledge base
 
-Provides hybrid text search (dense + sparse via BGE-M3),
-image search (SigLIP 2), and context retrieval from Qdrant.
+Serves SQLite FTS5 search over textbook chunks, literary sources
+(chronicles / poetry / legal texts), Ukrainian Wikipedia articles, and
+a stack of dictionaries (VESUM, СУМ, Грінченко, Балла, Антоненко-Давидович,
+Фразеологічний, Правопис 2019). Used by the build pipeline for knowledge
+packet assembly and by agents during writing / review.
+
+Historically this was called the "RAG server" — the current implementation
+is FTS5, not vector-based retrieval. Renamed for clarity (#1024 follow-up).
+The Python backing package is still `scripts/rag/` for backwards compat
+with imports; rename there is a follow-up.
 
 Tools:
-    - search_text: Hybrid text search with optional grade/subject/trust_tier filters
-    - search_images: Text-to-image search via Ukrainian text query
-    - get_chunk_context: Surrounding chunks for a given chunk_id
-    - collection_stats: Index statistics
+    - search_text, search_literary, search_images, get_chunk_context
+    - verify_word, verify_words, verify_lemma (VESUM)
+    - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
+    - search_definitions, search_etymology, search_idioms, search_synonyms
+    - search_style_guide (Антоненко-Давидович)
+    - translate_en_uk (Балла)
 """
 
 import asyncio
@@ -18,7 +28,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# Add scripts/ to path so rag package is importable
+# Add scripts/ to path so the rag package is importable
 sys.path.insert(0, str(Path(__file__).resolve().parents[2].parent / "scripts"))
 
 try:
@@ -29,7 +39,9 @@ except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
     sys.exit(1)
 
-server = Server("rag")
+# Server ID published to MCP clients. Matches the key in .mcp.json
+# ("sources"). Agent tool prefixes become mcp__sources__*.
+server = Server("sources")
 
 
 @server.list_tools()
@@ -534,7 +546,7 @@ def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0
 
     log_dir = Path(__file__).resolve().parents[2].parent / "logs"
     log_dir.mkdir(exist_ok=True)
-    log_path = log_dir / "mcp-rag-requests.jsonl"
+    log_path = log_dir / "mcp-sources-requests.jsonl"
 
     entry = {
         "ts": _dt.now().isoformat(),
@@ -1125,13 +1137,13 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
 
 
 async def main_stdio():
-    """Run the MCP RAG server via stdio (spawned by Claude Code)."""
+    """Run the MCP sources server via stdio (spawned by Claude Code)."""
     async with stdio_server() as (read_stream, write_stream):
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
-    """Run the MCP RAG server as a standalone SSE daemon."""
+    """Run the MCP sources server as a standalone SSE daemon."""
     import uvicorn
     from mcp.server.sse import SseServerTransport
     from starlette.applications import Starlette
@@ -1172,7 +1184,7 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
         ],
     )
 
-    print(f"RAG MCP Server (SSE) running on http://{host}:{port}")
+    print(f"MCP Sources Server (SSE) running on http://{host}:{port}")
     print(f"  SSE endpoint: http://{host}:{port}/sse")
     print(f"  Messages: http://{host}:{port}/messages/")
     sys.stdout.flush()

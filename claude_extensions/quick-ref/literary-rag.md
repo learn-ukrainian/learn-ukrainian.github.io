@@ -3,7 +3,7 @@
 ## Search Tool
 
 ```
-mcp__rag__search_text(query="your query in Ukrainian", subject="literary")
+mcp__sources__search_text(query="your query in Ukrainian", subject="literary")
 ```
 
 Or with filters:

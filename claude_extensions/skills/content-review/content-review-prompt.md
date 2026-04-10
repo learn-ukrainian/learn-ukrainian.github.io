@@ -47,10 +47,10 @@ Compare the built content against the plan YAML:
 
 ### 2. LINGUISTIC ACCURACY (use RAG tools)
 
-- [ ] **Russianisms scan** -- Read through all Ukrainian text in the module. Flag any Russian-specific vocabulary or grammar. Use `mcp__rag__verify_word` for suspicious words and `mcp__rag__query_r2u` for words that might have Ukrainian alternatives.
-- [ ] **Grammar correctness** -- Check case endings, verb conjugations, gender agreement in Ukrainian examples. Use `mcp__rag__query_ulif` for morphological verification when in doubt.
-- [ ] **Ghost word check** -- Verify any Ukrainian word you haven't seen before with `mcp__rag__verify_word`. Focus on words in example sentences, vocabulary tables, and activities.
-- [ ] **Stress marks** -- If the module uses stress marks, verify they're on the correct syllable. Use `mcp__rag__query_grac` (mode: concordance) to check stress patterns.
+- [ ] **Russianisms scan** -- Read through all Ukrainian text in the module. Flag any Russian-specific vocabulary or grammar. Use `mcp__sources__verify_word` for suspicious words and `mcp__sources__query_r2u` for words that might have Ukrainian alternatives.
+- [ ] **Grammar correctness** -- Check case endings, verb conjugations, gender agreement in Ukrainian examples. Use `mcp__sources__query_ulif` for morphological verification when in doubt.
+- [ ] **Ghost word check** -- Verify any Ukrainian word you haven't seen before with `mcp__sources__verify_word`. Focus on words in example sentences, vocabulary tables, and activities.
+- [ ] **Stress marks** -- If the module uses stress marks, verify they're on the correct syllable. Use `mcp__sources__query_grac` (mode: concordance) to check stress patterns.
 - [ ] **False friend claims** -- If the module claims a word is a "false friend" or Russicism, verify the claim. False Russicism claims are **HIGH** severity.
 
 ### 3. PEDAGOGICAL QUALITY
@@ -69,7 +69,7 @@ Read the activities YAML and check:
 
 - [ ] **Schema compliance** -- Each activity matches its type's schema. Check required fields (type, title, items/pairs, correct answers). Read `docs/ACTIVITY-YAML-REFERENCE.md` for schema details if needed.
 - [ ] **Language testing, not content testing** -- Can the learner answer without reading the Ukrainian text? If YES, the activity tests content recall, not language. Flag as **HIGH** (Rule 10a). Exempt: ZNO-format activities.
-- [ ] **Correct answers are correct** -- Verify that marked correct answers are actually correct Ukrainian. Use `mcp__rag__verify_word` for any suspicious answer.
+- [ ] **Correct answers are correct** -- Verify that marked correct answers are actually correct Ukrainian. Use `mcp__sources__verify_word` for any suspicious answer.
 - [ ] **Distractors are plausible** -- Wrong answers should be plausible but clearly wrong. Not absurd, not trick questions.
 - [ ] **Variety** -- Check activity type distribution. Flag if >50% are the same type as **LOW**.
 - [ ] **Decodability** (Cyrillic modules only) -- Activity items use only letters from the cumulative charset.
@@ -94,22 +94,22 @@ Read the activities YAML and check:
 ### CORE MODE (A1-C2)
 
 - [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1.1: 20-40%, A2: 50-75%, B1+: 75%+).
-- [ ] **Grammar accuracy** -- Verify grammar explanations against textbooks using `mcp__rag__search_text`. Flag incorrect rules as **CRITICAL**.
+- [ ] **Grammar accuracy** -- Verify grammar explanations against textbooks using `mcp__sources__search_text`. Flag incorrect rules as **CRITICAL**.
 
 ### HISTORY/BIO/ISTORIO MODE
 
-- [ ] **Factual accuracy** -- Spot-check 3-5 factual claims using `mcp__rag__query_wikipedia`. Flag errors as **HIGH**.
+- [ ] **Factual accuracy** -- Spot-check 3-5 factual claims using `mcp__sources__query_wikipedia`. Flag errors as **HIGH**.
 - [ ] **Decolonization stance** -- Ukrainian agency centered, not passive objects of Russian/Soviet history. Flag imperial framing as **HIGH**.
 - [ ] **Analytical, not encyclopedic** -- Content drives analysis and critical thinking, not just narrates facts. Flag purely descriptive sections as **MEDIUM**.
 
 ### LITERARY MODE (LIT, LIT-*)
 
 - [ ] **Textual evidence** -- Literary analysis cites specific passages, not vague generalizations. Flag unsupported claims as **MEDIUM**.
-- [ ] **Author/work accuracy** -- Verify key claims about literary works using `mcp__rag__search_literary` or `mcp__rag__query_wikipedia`.
+- [ ] **Author/work accuracy** -- Verify key claims about literary works using `mcp__sources__search_literary` or `mcp__sources__query_wikipedia`.
 
 ### OES/RUTH MODE
 
-- [ ] **Primary source accuracy** -- Verify text dating, genre, linguistic features using `mcp__rag__search_literary` with period filter.
+- [ ] **Primary source accuracy** -- Verify text dating, genre, linguistic features using `mcp__sources__search_literary` with period filter.
 - [ ] **Not anachronistic** -- No modern features projected onto historical texts.
 
 ---

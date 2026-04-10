@@ -116,7 +116,7 @@ Pre-write verification phase: dispatch tools BEFORE writing.
 | docs/rules/pedagogy-patterns.yaml | NEW: 15 exercise patterns |
 | docs/resources/miyklas-url-index.yaml | NEW: 70 lesson URLs |
 | docs/resources/ulp-articles-index.yaml | NEW: 70+ article URLs |
-| .mcp/servers/rag/server.py | /health endpoint |
+| .mcp/servers/sources/server.py | /health endpoint |
 | .gemini/settings.json | MCP RAG server config |
 
 ## Services

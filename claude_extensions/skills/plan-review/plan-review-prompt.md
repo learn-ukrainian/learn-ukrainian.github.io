@@ -8,9 +8,9 @@ You have THREE authority sources. Use ALL of them:
 
 1. **State Standard 2024** — Read `docs/l2-uk-en/state-standard-2024-mapping.yaml` with the Read tool. This is the Ukrainian government's official CEFR-mapped curriculum. Cross-reference the plan's grammar topics against the level's prescribed scope.
 
-2. **Ukrainian textbooks (RAG)** — Use `mcp__rag__search_text` to verify grammar rules, pedagogical approaches, and vocabulary. The RAG contains 70+ Ukrainian school textbooks (grades 1-11) covering all grammar concepts in Ukrainian. Search in Ukrainian (e.g., "знахідний відмінок" not "accusative case").
+2. **Ukrainian textbooks (RAG)** — Use `mcp__sources__search_text` to verify grammar rules, pedagogical approaches, and vocabulary. The RAG contains 70+ Ukrainian school textbooks (grades 1-11) covering all grammar concepts in Ukrainian. Search in Ukrainian (e.g., "знахідний відмінок" not "accusative case").
 
-3. **VESUM + GRAC** — Use `mcp__rag__verify_word` for vocabulary existence, `mcp__rag__query_grac` for frequency, `mcp__rag__query_r2u` for Russicism checks.
+3. **VESUM + GRAC** — Use `mcp__sources__verify_word` for vocabulary existence, `mcp__sources__query_grac` for frequency, `mcp__sources__query_r2u` for Russicism checks.
 
 ## Input
 
@@ -61,7 +61,7 @@ Find the section for this plan's level (a1, a2, b1, b2, c1, c2). Then check:
 
 For each grammar concept in the plan's `grammar:` field and `content_outline` points:
 
-- [ ] **Search textbooks** — Use `mcp__rag__search_text` with the grammar concept in Ukrainian (e.g., for "Accusative case" search "знахідний відмінок", for "verb conjugation" search "дієвідмінювання"). Verify:
+- [ ] **Search textbooks** — Use `mcp__sources__search_text` with the grammar concept in Ukrainian (e.g., for "Accusative case" search "знахідний відмінок", for "verb conjugation" search "дієвідмінювання"). Verify:
   - The rule is stated correctly in the plan
   - The examples given are accurate
   - The pedagogical approach aligns with how Ukrainian textbooks teach it
@@ -72,10 +72,10 @@ For each grammar concept in the plan's `grammar:` field and `content_outline` po
 
 For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`:
 
-- [ ] **VESUM check** — Use `mcp__rag__verify_word` for each Ukrainian word. Empty result = ghost word. Flag as **CRITICAL**.
-- [ ] **Russicism check** — For words that might be shared with Russian, use `mcp__rag__query_r2u` to check. Flag as **HIGH**. Skip for clearly Ukrainian words.
-- [ ] **Frequency check** — Use `mcp__rag__query_grac` (mode: frequency) on required vocabulary. Words with IPM < 1.0 may be too rare for the stated level. Flag as **LOW**.
-- [ ] **Gender/case accuracy** — If vocab hints include example phrases with case forms, verify forms are correct. Use `mcp__rag__query_ulif` when in doubt.
+- [ ] **VESUM check** — Use `mcp__sources__verify_word` for each Ukrainian word. Empty result = ghost word. Flag as **CRITICAL**.
+- [ ] **Russicism check** — For words that might be shared with Russian, use `mcp__sources__query_r2u` to check. Flag as **HIGH**. Skip for clearly Ukrainian words.
+- [ ] **Frequency check** — Use `mcp__sources__query_grac` (mode: frequency) on required vocabulary. Words with IPM < 1.0 may be too rare for the stated level. Flag as **LOW**.
+- [ ] **Gender/case accuracy** — If vocab hints include example phrases with case forms, verify forms are correct. Use `mcp__sources__query_ulif` when in doubt.
 
 ### 5. YAML QUALITY
 
@@ -99,9 +99,9 @@ Only for slugs containing "cyrillic-code":
 
 ### 8. CONTENT ACCURACY
 
-- [ ] **Grammar rules cited correctly** — Verify against textbooks using `mcp__rag__search_text` (search in Ukrainian).
-- [ ] **Cultural claims accurate** — Verify via `mcp__rag__query_wikipedia`.
-- [ ] **No false Russicism claims** — If the plan claims a word is Russian/Surzhyk, verify with `mcp__rag__verify_word` and `mcp__rag__query_r2u`. False Russicism claims are **HIGH**.
+- [ ] **Grammar rules cited correctly** — Verify against textbooks using `mcp__sources__search_text` (search in Ukrainian).
+- [ ] **Cultural claims accurate** — Verify via `mcp__sources__query_wikipedia`.
+- [ ] **No false Russicism claims** — If the plan claims a word is Russian/Surzhyk, verify with `mcp__sources__verify_word` and `mcp__sources__query_r2u`. False Russicism claims are **HIGH**.
 
 ---
 

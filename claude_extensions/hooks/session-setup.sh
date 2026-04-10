@@ -86,13 +86,13 @@ if [ -d "$PROJECT_DIR/claude_extensions" ] && [ -d "$PROJECT_DIR/.claude" ]; the
   fi
 fi
 
-# 8. Check MCP RAG server health
-RAG_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:8766/sse" 2>/dev/null)
-if [ "$RAG_STATUS" != "200" ] && [ "$RAG_STATUS" != "000" ]; then
+# 8. Check MCP sources server health (historically called the RAG server)
+MCP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:8766/sse" 2>/dev/null)
+if [ "$MCP_STATUS" != "200" ] && [ "$MCP_STATUS" != "000" ]; then
   # 000 means connection refused (server down), non-200 means server error
-  INFO+=("MCP RAG server returned HTTP $RAG_STATUS — some tools may be unavailable")
-elif [ "$RAG_STATUS" = "000" ]; then
-  ISSUES+=("MCP RAG server unreachable at 127.0.0.1:8766 — RAG tools unavailable. Start with: cd .mcp/servers/rag && .venv/bin/python server.py")
+  INFO+=("MCP sources server returned HTTP $MCP_STATUS — some tools may be unavailable")
+elif [ "$MCP_STATUS" = "000" ]; then
+  ISSUES+=("MCP sources server unreachable at 127.0.0.1:8766 — VESUM + textbook + dictionary tools unavailable. Start with: ./services.sh start sources")
 fi
 
 # 9. Check gemini-cli auth

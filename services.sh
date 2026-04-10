@@ -3,14 +3,21 @@
 #
 # Usage:
 #   ./services.sh start              # Start all services
-#   ./services.sh start rag api      # Start specific services
+#   ./services.sh start sources api  # Start specific services
 #   ./services.sh stop               # Stop all services
-#   ./services.sh stop rag           # Stop specific service
+#   ./services.sh stop sources       # Stop specific service
 #   ./services.sh restart            # Restart all
 #   ./services.sh restart api        # Restart specific service
 #   ./services.sh status             # Show what's running
 #
-# Services: rag, api, starlight
+# Services: sources, api, starlight
+#
+# Note: the `sources` service was historically called `rag`. It serves
+# SQLite FTS5 indices over textbook chunks, dictionaries, VESUM, literary
+# sources, and Wikipedia — an MCP server, not vector-RAG retrieval. We
+# accept the legacy name `rag` as an alias below for backwards compat
+# with old shell history and session notes. Remove the alias after the
+# next quarterly cleanup pass.
 
 set -euo pipefail
 
@@ -24,10 +31,10 @@ mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 # Service definitions: name -> command, port, log file
 declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC
 
-SVC_CMD[rag]="$VENV/python .mcp/servers/rag/server.py --standalone"
-SVC_PORT[rag]=8766
-SVC_LOG[rag]="$LOGS_DIR/rag-server.log"
-SVC_DESC[rag]="RAG MCP Server (SQLite FTS5)"
+SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone"
+SVC_PORT[sources]=8766
+SVC_LOG[sources]="$LOGS_DIR/mcp-sources.log"
+SVC_DESC[sources]="MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia)"
 
 SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765"
 SVC_PORT[api]=8765
@@ -39,7 +46,21 @@ SVC_PORT[starlight]=4321
 SVC_LOG[starlight]="$LOGS_DIR/starlight.log"
 SVC_DESC[starlight]="Starlight Dev Server (Astro)"
 
-ALL_SERVICES="rag api starlight"
+ALL_SERVICES="sources api starlight"
+
+# Legacy alias: rewrite `rag` → `sources` when passed as a CLI arg.
+# Accept shell history + scripts that still say `./services.sh start rag`.
+_rewrite_legacy_alias() {
+    local out=()
+    for svc in "$@"; do
+        if [[ "$svc" == "rag" ]]; then
+            out+=("sources")
+        else
+            out+=("$svc")
+        fi
+    done
+    printf '%s\n' "${out[@]}"
+}
 
 _pid_file() { echo "$PIDS_DIR/$1.pid"; }
 
@@ -147,6 +168,11 @@ _status() {
 action="${1:-help}"
 shift || true
 services="${*:-$ALL_SERVICES}"
+# Rewrite legacy alias `rag` → `sources` so old muscle memory still works.
+if [[ -n "${services// /}" ]]; then
+    # shellcheck disable=SC2086
+    services=$(_rewrite_legacy_alias $services | tr '\n' ' ')
+fi
 
 case "$action" in
     start)
@@ -198,10 +224,12 @@ case "$action" in
         done
         echo ""
         echo "Examples:"
-        echo "  $0 start              # Start all"
-        echo "  $0 start rag api      # Start specific"
-        echo "  $0 stop rag           # Stop one"
-        echo "  $0 restart            # Restart all"
-        echo "  $0 status             # Show status"
+        echo "  $0 start                  # Start all"
+        echo "  $0 start sources api      # Start specific"
+        echo "  $0 stop sources           # Stop one"
+        echo "  $0 restart                # Restart all"
+        echo "  $0 status                 # Show status"
+        echo ""
+        echo "Note: 'rag' is accepted as a legacy alias for 'sources'."
         ;;
 esac

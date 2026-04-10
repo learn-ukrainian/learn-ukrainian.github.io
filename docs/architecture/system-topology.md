@@ -64,8 +64,8 @@ graph TB
         JSON[vibe JSON]
     end
 
-    subgraph RAG["MCP RAG Server"]
-        RAGServer[.mcp/servers/rag/server.py<br/>:8766]
+    subgraph RAG["MCP Sources Server"]
+        RAGServer[.mcp/servers/sources/server.py<br/>:8766]
     end
 
     Pipeline --> DispatchAgent
@@ -187,7 +187,7 @@ user → compile.py --track hist --slug kyivan-rus
 | `scripts/ai_agent_bridge/__main__.py` | The one bridge CLI |
 | `scripts/delegate.py` | Fire-and-forget task runner |
 | `data/sources.db` | SQLite FTS5 — 660K source chunks |
-| `.mcp/servers/rag/server.py` | MCP RAG tool server (port 8766) |
+| `.mcp/servers/sources/server.py` | MCP sources tool server (port 8766) |
 | `.mcp/servers/message-broker/messages.db` | Agent message broker (SQLite) |
 | `batch_state/api_usage/*.jsonl` | Per-call usage records |
 | `batch_state/tasks/*.json` | Delegated task state |

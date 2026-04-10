@@ -10,7 +10,7 @@ Hooks run automatically on specific events. Configured in `claude_extensions/set
 
 | Event | Hook script | Timeout | What it does |
 |-------|------------|---------|--------------|
-| **SessionStart** | `session-setup.sh` | 10s | Validates environment: venv, env vars, MCP RAG server, gemini-cli auth, stale builds, MEMORY.md line count, deploy drift, open GH issues |
+| **SessionStart** | `session-setup.sh` | 10s | Validates environment: venv, env vars, MCP sources server, gemini-cli auth, stale builds, MEMORY.md line count, deploy drift, open GH issues |
 | **PreToolUse** (Bash) | `enforce-venv.sh` | 3s | Rewrites bare `python3`/`python` → `.venv/bin/python` before every Bash call |
 | **UserPromptSubmit** | `check-gemini-inbox.sh` | 5s | Checks message broker DB for unread Gemini messages, injects alert |
 | **PostCompact** | `post-compact.sh` | 10s | After context compaction: restores in-progress modules, open issues, key reminders |
@@ -136,7 +136,7 @@ claude_extensions/  ──npm run claude:deploy──►  .claude/ + .agent/
 | **RAG** | 8766 | VESUM, textbooks, literary sources, dictionaries, Wikipedia |
 | **Message Broker** | SQLite (no port) | Claude ↔ Gemini async messaging via `.mcp/servers/message-broker/messages.db` |
 
-Start RAG: `cd .mcp/servers/rag && .venv/bin/python server.py`
+Start RAG: `cd .mcp/servers/sources && .venv/bin/python server.py`
 Start all services: `./services.sh start`
 
 ---

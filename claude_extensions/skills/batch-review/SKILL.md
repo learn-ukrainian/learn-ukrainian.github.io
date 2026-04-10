@@ -75,9 +75,9 @@ Read the module files:
 - `curriculum/l2-uk-en/plans/{track}/{slug}.yaml` (plan)
 
 Follow the content review prompt (in `claude_extensions/skills/content-review/content-review-prompt.md`). Use RAG tools for linguistic verification:
-- `mcp__rag__verify_word` for suspicious Ukrainian words
-- `mcp__rag__search_text` for grammar verification against textbooks
-- `mcp__rag__query_r2u` for Russicism checking
+- `mcp__sources__verify_word` for suspicious Ukrainian words
+- `mcp__sources__search_text` for grammar verification against textbooks
+- `mcp__sources__query_r2u` for Russicism checking
 
 Produce the full content-review report with grade (A/B/C/F).
 

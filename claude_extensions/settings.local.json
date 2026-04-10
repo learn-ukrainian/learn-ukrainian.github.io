@@ -24,6 +24,7 @@
       "Bash(python3.12 -m venv:*)",
       "Skill(module-architect)",
       "Skill(prompt-engineering)",
+      "mcp__sources__*",
       "mcp__rag__*"
     ],
     "deny": [],

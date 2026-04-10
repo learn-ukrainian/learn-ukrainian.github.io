@@ -124,7 +124,7 @@ Supporting modules:
 ### 2. Audit System (`scripts/audit/`)
 **~23K LOC** | Entry: `scripts/audit_module.py` | 34 check modules
 
-### 3. RAG System (`scripts/rag/` + `.mcp/servers/rag/`)
+### 3. RAG System (`scripts/rag/` + `.mcp/servers/sources/`)
 **~8K LOC** | MCP server at port 8766
 
 | Source | MCP Tool |

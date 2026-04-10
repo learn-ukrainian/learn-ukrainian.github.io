@@ -56,7 +56,7 @@ cd starlight && npm install && cd ..
 
 | Service | Port | Command |
 |---------|------|---------|
-| RAG MCP server | 8766 | `./services.sh start` |
+| MCP sources server | 8766 | `./services.sh start` |
 | Monitor API | 8765 | `./services.sh start` |
 | Starlight dev | 4321 | `./services.sh start` |
 
@@ -105,6 +105,9 @@ Every non-trivial change needs a GH issue. Before starting: find or create an is
 
 # Full suite (~2-3 min)
 .venv/bin/pytest tests/ -q
+
+# Per-file coverage with missing lines
+.venv/bin/pytest --cov=scripts --cov-report=term-missing tests/ -q  # per-file coverage with missing lines
 ```
 
 ### Lint

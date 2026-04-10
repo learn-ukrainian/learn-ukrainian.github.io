@@ -1,4 +1,8 @@
-"""Tests for the MCP RAG server (.mcp/servers/rag/server.py).
+"""Tests for the MCP Sources server (.mcp/servers/sources/server.py).
+
+Historically called the "MCP RAG server" — the current implementation
+is SQLite FTS5, not vector RAG, so the server was renamed to `sources`
+in the April 2026 rename pass. Tool prefix is mcp__sources__*.
 
 Covers:
 - Tool listing returns all expected tools with correct schemas
@@ -17,7 +21,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 # Add the server directory to path so we can import it
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "rag"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources"))
 
 
 @pytest.fixture
@@ -46,11 +50,17 @@ class TestListTools:
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_words", "verify_lemma",
             "query_wikipedia", "query_grac", "query_ulif",
-            "query_r2u", "query_pravopys", "query_cefr_level",
+            "query_r2u", "query_e2u", "query_pravopys", "query_cefr_level",
             "search_style_guide", "search_definitions", "search_etymology",
             "search_idioms", "search_synonyms", "translate_en_uk",
         }
-        assert tool_names == expected
+        missing = expected - tool_names
+        extra = tool_names - expected
+        assert not missing, f"missing tools: {missing}"
+        assert not extra, (
+            f"unexpected tools: {extra}. Update the test expected set — "
+            f"adding a tool to the server always requires a test update."
+        )
 
     def test_all_tools_have_input_schema(self, server_module):
         tools = _run(server_module.list_tools())

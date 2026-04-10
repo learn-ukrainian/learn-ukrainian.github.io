@@ -47,7 +47,7 @@ Runs on every session start, new or resumed.
 | 4 | Build state hygiene | INFO | Reports stale or active build state files |
 | 5 | Memory budget | ISSUE/INFO | `MEMORY.md` line count vs project limits |
 | 6 | Deploy drift | ISSUE | Diffs `claude_extensions/` vs `.claude/` |
-| 7 | MCP RAG health | ISSUE | Pings `127.0.0.1:8766` |
+| 7 | MCP sources health | ISSUE | Pings `127.0.0.1:8766` |
 | 8 | `gemini` CLI | INFO | Verifies command exists and auth works |
 | 9 | Open GitHub issues | INFO | Lists a small set of open issues |
 
@@ -189,7 +189,7 @@ Checks short articles, leaked reasoning, fence wrapping, missing headings, and t
 | `scripts/wiki/fetch_external_sources.py` | External source fetcher |
 | `scripts/wiki/quality_gate.py` | Post-compile quality checker |
 | `scripts/wiki/state.py` | Progress tracking |
-| `.mcp/servers/rag/server.py` | MCP RAG server |
+| `.mcp/servers/sources/server.py` | MCP sources server |
 | `.mcp.json` | MCP configuration |
 | `data/sources.db` | Unified SQLite database |
 
@@ -201,7 +201,7 @@ Checks short articles, leaked reasoning, fence wrapping, missing headings, and t
 |---|---|
 | `.claude/rules/workflow.md` | Core workflow rules for agent sessions |
 | `.claude/rules/pipeline.md` | Build and validation workflow guidance |
-| `.claude/rules/rag-and-dictionaries.md` | MCP RAG and dictionary lookup rules |
+| `.claude/rules/rag-and-dictionaries.md` | MCP sources and dictionary lookup rules |
 | `.claude/rules/ukrainian-linguistics.md` | Ukrainian language quality rules |
 | `.claude/phases/gemini/README.md` | Gemini phase map |
 | `.claude/phases/gemini/v6-write.md` | Current write phase reference |
@@ -213,7 +213,7 @@ Checks short articles, leaked reasoning, fence wrapping, missing headings, and t
 
 ## Tool Inventory (Quick Reference)
 
-### MCP RAG tools
+### MCP sources tools
 
 Full list: [`.claude/rules/rag-and-dictionaries.md`](../.claude/rules/rag-and-dictionaries.md). Core tools used daily:
 

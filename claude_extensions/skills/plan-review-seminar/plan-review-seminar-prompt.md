@@ -8,7 +8,7 @@ You are reviewing a Ukrainian language course plan YAML file for seminar tracks 
 
 You have THREE authority sources. Use ALL of them:
 
-1. **Wikipedia (Ukrainian)** — Use `mcp__rag__query_wikipedia` to verify people, events, dates, places. Wikipedia is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian. Available modes:
+1. **Wikipedia (Ukrainian)** — Use `mcp__sources__query_wikipedia` to verify people, events, dates, places. Wikipedia is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian. Available modes:
    - `mode='summary'` — quick intro paragraph (default)
    - `mode='extract'` — full article text (up to 50K chars) for deep verification
    - `mode='sections'` — list section headings with indices
@@ -17,11 +17,11 @@ You have THREE authority sources. Use ALL of them:
 
    Results are cached locally (30-day TTL). Use `force_refresh=true` for fresh data.
 
-2. **Literary RAG** — Use `mcp__rag__search_literary` to verify primary source references. The RAG contains chronicles, poetry, legal texts, and other primary Ukrainian literary sources. For plans that cite specific works (Povist mynulykh lit, Kobzar, Ruska Pravda, etc.), verify the citations exist in the corpus.
+2. **Literary RAG** — Use `mcp__sources__search_literary` to verify primary source references. The RAG contains chronicles, poetry, legal texts, and other primary Ukrainian literary sources. For plans that cite specific works (Povist mynulykh lit, Kobzar, Ruska Pravda, etc.), verify the citations exist in the corpus.
 
-3. **VESUM + GRAC** — Use `mcp__rag__verify_word` for vocabulary existence, `mcp__rag__query_grac` for frequency, `mcp__rag__query_r2u` for Russicism checks. Same as core reviews.
+3. **VESUM + GRAC** — Use `mcp__sources__verify_word` for vocabulary existence, `mcp__sources__query_grac` for frequency, `mcp__sources__query_r2u` for Russicism checks. Same as core reviews.
 
-**Textbook RAG** (`mcp__rag__search_text`) is also available for grammar concepts if the plan includes grammar teaching. Search in Ukrainian.
+**Textbook RAG** (`mcp__sources__search_text`) is also available for grammar concepts if the plan includes grammar teaching. Search in Ukrainian.
 
 ## Input
 
@@ -60,10 +60,10 @@ Flag as **CRITICAL**.
 
 For each factual claim in `content_outline`, `objectives`, and `vocabulary_hints`:
 
-- [ ] **Verify people** — Use `mcp__rag__query_wikipedia` for every named person. Verify: correct name spelling, correct dates, correct role/title. Ghost people (invented or confused identities) are **CRITICAL**.
-- [ ] **Verify events** — Use `mcp__rag__query_wikipedia` for every named event. Verify: correct date, correct location, correct participants. Wrong dates are **HIGH**.
+- [ ] **Verify people** — Use `mcp__sources__query_wikipedia` for every named person. Verify: correct name spelling, correct dates, correct role/title. Ghost people (invented or confused identities) are **CRITICAL**.
+- [ ] **Verify events** — Use `mcp__sources__query_wikipedia` for every named event. Verify: correct date, correct location, correct participants. Wrong dates are **HIGH**.
 - [ ] **Verify places** — Named locations should be historically accurate for the period discussed. Anachronistic place names are **MEDIUM** (e.g., using modern city names for medieval locations without noting the historical name).
-- [ ] **Verify primary sources** — If the plan references specific documents (chronicles, letters, legal codes), use `mcp__rag__search_literary` to check they exist. Ghost sources (invented documents) are **CRITICAL**.
+- [ ] **Verify primary sources** — If the plan references specific documents (chronicles, letters, legal codes), use `mcp__sources__search_literary` to check they exist. Ghost sources (invented documents) are **CRITICAL**.
 
 ### 3. SOURCE QUALITY
 
@@ -86,10 +86,10 @@ For each factual claim in `content_outline`, `objectives`, and `vocabulary_hints
 
 For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`, and in the `vocabulary:` list if present:
 
-- [ ] **VESUM check** — Use `mcp__rag__verify_word` for each Ukrainian word. Empty result = ghost word. Flag as **CRITICAL**.
-- [ ] **Russicism check** — For words that might be shared with Russian, use `mcp__rag__query_r2u` to check. Flag as **HIGH**. Skip for clearly Ukrainian words.
+- [ ] **VESUM check** — Use `mcp__sources__verify_word` for each Ukrainian word. Empty result = ghost word. Flag as **CRITICAL**.
+- [ ] **Russicism check** — For words that might be shared with Russian, use `mcp__sources__query_r2u` to check. Flag as **HIGH**. Skip for clearly Ukrainian words.
 - [ ] **Domain vocabulary appropriate** — Vocabulary should match the track domain (historical terms for HIST, literary terms for LIT, Old East Slavic terms for OES/RUTH). Flag as **LOW** if vocabulary is too generic.
-- [ ] **Frequency check** — Use `mcp__rag__query_grac` (mode: frequency) on required vocabulary. For seminar tracks, low-frequency domain-specific words are expected and acceptable (unlike core levels where rare words are flagged).
+- [ ] **Frequency check** — Use `mcp__sources__query_grac` (mode: frequency) on required vocabulary. For seminar tracks, low-frequency domain-specific words are expected and acceptable (unlike core levels where rare words are flagged).
 
 ### 6. YAML QUALITY
 

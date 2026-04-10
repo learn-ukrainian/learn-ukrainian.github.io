@@ -10,7 +10,7 @@ List all `.md` files in `scripts/build/phases/`. For each template, extract:
 - All `{PLACEHOLDER}` tokens (regex: `\{[A-Z_]+\}`)
 - All instruction sections (H2 headings)
 - Exercise format instructions (DSL vs INJECT_ACTIVITY markers)
-- Tool prefix references (`mcp__rag__` vs `rag_`)
+- Tool prefix references (`mcp__sources__` vs `rag_`)
 
 ---
 
@@ -41,7 +41,7 @@ Compare instructions ACROSS templates for contradictions:
 
 ### 3b. Tool prefix
 - Does each template use the correct tool prefix for its agent?
-- `mcp__rag__` for Claude, `rag_` for Gemini
+- `mcp__sources__` for Claude, `rag_` for Gemini
 - Is the prefix dynamically set based on the actual dispatched agent, or hardcoded?
 
 ### 3c. Formatting instructions
