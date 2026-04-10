@@ -322,7 +322,13 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
             tool_config=None,
             entrypoint="bridge",
             hard_timeout=max(timeout_val or 1800, 300),
-            stall_timeout=min(180, timeout_val or 180),
+            # 600s matches dispatch.py. Gemini block-buffers stdout when
+            # not a TTY and can stay silent 5+ min during reasoning; the
+            # mtime poller on ~/.gemini/tmp/<project>/{logs.json, chats/}
+            # catches real activity, so this ceiling only fires on
+            # genuinely dead processes. Raised from 180s on 2026-04-10
+            # after a successful 319s skeleton was killed at 181s. (#1184)
+            stall_timeout=min(600, timeout_val or 600),
         )
     except RateLimitedError as exc:
         # Rate-limited: treat as retryable per legacy behavior

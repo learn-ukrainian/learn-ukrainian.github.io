@@ -1,40 +1,26 @@
 """Codex interaction: ask_codex and process_for_codex.
 
-Phase 4 of #1184 migrated the subprocess path onto scripts.agent_runtime.
-The subprocess-building helpers below (_build_codex_exec_cmd,
-_build_codex_resume_cmd) are kept ONLY for backward compatibility with
-test mocks; they are no longer called by production code paths. They
-will be deleted in Phase 6 cleanup.
-
-Note: this module used to attempt Codex session resume for multi-turn
-bridge conversations. Phase 4 drops that — Codex always starts fresh,
-consistent with the runtime's resume_policy="never" for Codex (see
-docs/design/agent-runtime.md § 6.3). Short bridge consultations don't
-benefit from resume, and resume is the cross-worktree contamination
-footgun that Codex flagged in his own consultation.
+Phase 4 of #1184 migrated the bridge subprocess path onto
+scripts.agent_runtime. Codex bridge calls now always start fresh,
+consistent with the runtime's resume_policy="never" for Codex.
 """
 
 import json
 import os
-import re
-import subprocess
-import tempfile
-from pathlib import Path
 
+from agent_runtime import runner as agent_runner
 from agent_runtime.errors import (
     AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.runner import invoke as runtime_invoke
 
-from ._config import CODEX_CLI, REPO_ROOT
-from ._db import get_db, get_session, set_session
+from ._config import REPO_ROOT
+from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_codex_prompt
 
-_SESSION_RE = re.compile(r"session id:\s*([0-9a-f-]{8,})", re.IGNORECASE)
 _CODEX_MODES = {"safe", "workspace-write", "full-auto", "danger"}
 
 
@@ -63,67 +49,6 @@ def _codex_bridge_runtime_mode() -> str:
     if legacy == "workspace-write":
         return "workspace-write"
     return "read-only"  # "safe" → "read-only"
-
-
-def _codex_bridge_flags() -> list[str]:
-    """Translate bridge mode to Codex CLI flags.
-
-    DEPRECATED: kept for test-mock backward compat. Production code uses
-    scripts.agent_runtime.adapters.codex.CodexAdapter which builds its
-    own flags from mode.
-    """
-    mode = _codex_bridge_mode()
-    if mode == "danger":
-        return ["--dangerously-bypass-approvals-and-sandbox"]
-    if mode == "workspace-write":
-        return ["--full-auto"]
-    return ["-s", "read-only"]
-
-
-def _build_codex_exec_cmd(output_path: Path, model: str | None) -> list[str]:
-    """Build a fresh non-resume Codex exec command."""
-    cmd = [
-        CODEX_CLI,
-        "exec",
-        "--skip-git-repo-check",
-        "-C",
-        str(REPO_ROOT),
-        "--color",
-        "never",
-        "-o",
-        str(output_path),
-    ]
-    cmd.extend(_codex_bridge_flags())
-    if model:
-        cmd.extend(["-m", model])
-    cmd.append("-")  # Explicit stdin prompt mode
-    return cmd
-
-
-def _build_codex_resume_cmd(session_id: str, output_path: Path, model: str | None) -> list[str]:
-    """Build a Codex resume command using only resume-supported flags."""
-    cmd = [
-        CODEX_CLI,
-        "exec",
-        "resume",
-        "--skip-git-repo-check",
-        "-o",
-        str(output_path),
-    ]
-    mode = _codex_bridge_mode()
-    if mode == "danger":
-        cmd.append("--dangerously-bypass-approvals-and-sandbox")
-    elif mode == "workspace-write":
-        cmd.append("--full-auto")
-    else:
-        # `codex exec resume` does not expose `-s read-only`, so preserve safety
-        # by starting a fresh non-resume session instead.
-        return _build_codex_exec_cmd(output_path, model)
-
-    if model:
-        cmd.extend(["-m", model])
-    cmd.extend([session_id, "-"])
-    return cmd
 
 
 def ask_codex(content: str, task_id: str | None = None, msg_type: str = "query",
@@ -162,7 +87,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     print("   Session: NEW (Codex runtime always fresh)")
 
     try:
-        result = runtime_invoke(
+        result = agent_runner.invoke(
             "codex",
             prompt,
             mode=_codex_bridge_runtime_mode(),
@@ -173,7 +98,13 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
             tool_config=None,
             entrypoint="bridge",
             hard_timeout=timeout_val,
-            stall_timeout=min(180, timeout_val),
+            # 600s matches dispatch.py — with the mtime-poller liveness
+            # fallback in place (state_5.sqlite, sessions/YYYY/MM/DD/,
+            # history.jsonl, output file), the stall ceiling only applies
+            # to genuinely dead processes. Raised from 180s 2026-04-10
+            # after a real delegated task stalled at 181s on a
+            # successfully-running invocation. (#1184)
+            stall_timeout=min(600, timeout_val),
         )
     except RateLimitedError as exc:
         _handle_codex_error(msg, message_id, f"Rate limited: {exc}")
@@ -243,12 +174,6 @@ def _fetch_codex_message(message_id: int) -> dict | None:
         "data": row[6],
         "timestamp": row[7],
     }
-
-
-def _extract_session_id(stdout: str) -> str | None:
-    """Parse Codex session id from CLI stdout."""
-    match = _SESSION_RE.search(stdout or "")
-    return match.group(1) if match else None
 
 
 def _extract_target_model(msg: dict) -> str | None:

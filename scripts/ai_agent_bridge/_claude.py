@@ -138,7 +138,13 @@ def _run_claude_sync_via_runtime(
             tool_config=tool_config,
             entrypoint="bridge",
             hard_timeout=timeout_val,
-            stall_timeout=min(300, timeout_val),
+            # 600s matches dispatch.py. Claude CLI can go quiet for
+            # several minutes during long reasoning; the project-scoped
+            # session JSONL dir under ~/.claude/projects/<slug>/ gives
+            # the mtime poller a reliable liveness signal. Raised from
+            # 300s on 2026-04-10 for consistency across the codebase
+            # after the dispatch.py bump. (#1184)
+            stall_timeout=min(600, timeout_val),
         )
 
         if not result.ok:
