@@ -20,8 +20,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from .admin_router import router as admin_router
-
-# Team routers
 from .blue_router import router as blue_router
 from .comms_router import router as comms_router
 from .config import (
@@ -38,6 +36,7 @@ from .gold_router import router as gold_router
 from .images_router import router as images_router
 from .rag_router import router as rag_router
 from .state_router import router as state_router
+from .wiki_router import router as wiki_router
 
 app = FastAPI(
     title="Playground API",
@@ -63,16 +62,17 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 # Mount team routers — each team owns their own file
-app.include_router(blue_router, prefix="/api/blue")
-app.include_router(gold_router, prefix="/api/gold")
-app.include_router(dashboard_router, prefix="/api/dashboard")
-app.include_router(state_router, prefix="/api/state")
-app.include_router(comms_router, prefix="/api/comms")
-app.include_router(rag_router, prefix="/api/rag")
-app.include_router(images_router, prefix="/api/images")
 app.include_router(admin_router, prefix="/api/admin")
+app.include_router(blue_router, prefix="/api/blue")
+app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")
+app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
+app.include_router(gold_router, prefix="/api/gold")
+app.include_router(images_router, prefix="/api/images")
+app.include_router(rag_router, prefix="/api/rag")
+app.include_router(state_router, prefix="/api/state")
+app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
 
 
 # Server start time for uptime calculation

@@ -781,6 +781,146 @@ curl -s http://localhost:8765/api/decisions/dec-001 | python3 -m json.tool
 
 ---
 
+## Wiki Compilation — `/api/wiki/`
+
+Read-only observability for compiled wiki articles, quality gate results, build logs, and source inventory.
+
+### `GET /api/wiki/status`
+
+Per-track compiled vs total wiki coverage, with progress percentage and total compiled words.
+
+Response:
+```json
+{
+  "tracks": [
+    {
+      "track": "hist",
+      "total": 42,
+      "compiled": 18,
+      "pct": 42.9,
+      "total_words": 31240
+    }
+  ]
+}
+```
+
+### `GET /api/wiki/status/{track}`
+
+Per-module wiki status for one track: compile flag, words, timestamp, and source count.
+
+Response:
+```json
+[
+  {
+    "slug": "kyivan-rus",
+    "compiled": true,
+    "word_count": 1820,
+    "compiled_at": "2026-04-10T18:45:00+00:00",
+    "source_count": 7
+  }
+]
+```
+
+### `GET /api/wiki/article/{track}/{slug}`
+
+Single article metadata with a 500-character preview.
+
+Response:
+```json
+{
+  "track": "hist",
+  "slug": "kyivan-rus",
+  "compiled": true,
+  "path": "/Users/me/projects/learn-ukrainian/wiki/periods/kyivan-rus.md",
+  "word_count": 1820,
+  "preview": "# Kyivan Rus\\n\\nKyivan Rus was ...",
+  "source_count": 7,
+  "compiled_at": "2026-04-10T18:45:00+00:00"
+}
+```
+
+### `GET /api/wiki/quality-gate`
+
+Runs the wiki quality gate for all tracks and returns issues grouped by track.
+
+Response:
+```json
+{
+  "hist": {
+    "periods/kyivan-rus.md": [
+      "SHORT (900w < 1500)"
+    ]
+  },
+  "folk": {}
+}
+```
+
+### `GET /api/wiki/quality-gate/{track}`
+
+Runs the wiki quality gate for one track only.
+
+Response:
+```json
+{
+  "hist": {
+    "periods/kyivan-rus.md": [
+      "SHORT (900w < 1500)"
+    ]
+  }
+}
+```
+
+### `GET /api/wiki/build-log[?track=x&limit=50]`
+
+Recent structured build events, optionally filtered to one track.
+
+Response:
+```json
+{
+  "events": [
+    {
+      "ts": "2026-04-10T18:45:00+00:00",
+      "track": "hist",
+      "slug": "kyivan-rus",
+      "event": "compile"
+    }
+  ]
+}
+```
+
+### `GET /api/wiki/sources`
+
+Row counts for the wiki `data/sources.db` tables and a total entry count.
+
+Response:
+```json
+{
+  "tables": [
+    {"name": "textbooks", "row_count": 12034},
+    {"name": "sum11", "row_count": 127001}
+  ],
+  "total_entries": 139035
+}
+```
+
+### `GET /api/wiki/sources/{track}/{slug}`
+
+Source availability for one module from its discovery file.
+
+Response:
+```json
+{
+  "keywords": ["Київська Русь", "князі"],
+  "literary_chunks": [],
+  "textbook_chunks": [
+    {"chunk_id": "abc123_c0001"}
+  ],
+  "literary_files": []
+}
+```
+
+---
+
 ## UI Pages
 
 | Page | URL | Data source |
@@ -794,3 +934,46 @@ curl -s http://localhost:8765/api/decisions/dec-001 | python3 -m json.tool
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
 | Consultation | `/consultation.html` | `/api/consultation/queue`, `/api/consultation/history`, `/api/consultation/metrics` |
 | API Docs | `/docs` | FastAPI auto-generated |
+
+---
+
+## Build Event Stream (#1180)
+
+`scripts/build/v6_build.py` now emits monitor-friendly JSON lines to `stdout` alongside the existing human-readable logs. Each event is exactly one line, includes `event` and `ts`, and is flushed immediately with `print(..., flush=True)`.
+
+Example stream:
+
+```json
+{"event":"batch_start","ts":"2026-04-10T18:12:03.114582+00:00","level":"a2","total":68}
+{"event":"module_start","ts":"2026-04-10T18:12:03.337912+00:00","level":"a2","slug":"a2-bridge"}
+{"event":"phase_done","ts":"2026-04-10T18:13:35.481992+00:00","level":"a2","slug":"a2-bridge","phase":"write","duration_s":92.1,"ok":true}
+{"event":"review_score","ts":"2026-04-10T18:20:14.228901+00:00","level":"a2","slug":"a2-bridge","round":1,"score":9.4}
+{"event":"module_done","ts":"2026-04-10T18:22:27.009541+00:00","level":"a2","slug":"a2-bridge","ok":true,"final_score":9.6,"duration_s":624.0}
+{"event":"module_failed","ts":"2026-04-10T18:25:11.442001+00:00","level":"a2","slug":"dative-verbs","phase":"review","error":"Score 6.8/10 < 7.0 — HALTING. Module has critical issues."}
+{"event":"batch_done","ts":"2026-04-10T19:03:42.773140+00:00","level":"a2","total":68,"succeeded":65,"failed":3}
+```
+
+### How to consume
+
+Conceptual Claude Code `Monitor` usage:
+
+```text
+Monitor
+  command: .venv/bin/python scripts/build/v6_build.py a2 1 --resume
+  stream: stdout
+  parse: JSONL lines whose objects contain "event"
+  ignore: human-readable log lines that are not JSON
+```
+
+Practical rule: read `stdout` line-by-line, parse only lines that begin with `{` and contain a top-level `event` field, and leave the existing human logs untouched for interactive debugging.
+
+### Schema Notes
+
+- All events include `event` and `ts` (`datetime.now(UTC).isoformat()` in UTC).
+- `module_start` includes `level` and `slug`.
+- `phase_done` includes `level`, `slug`, `phase`, `duration_s`, and `ok`.
+- `review_score` includes `level`, `slug`, `round`, and `score`.
+- `module_done` includes `level`, `slug`, `ok`, `final_score`, and `duration_s`.
+- `module_failed` includes `level`, `slug`, `phase`, and `error`. Error strings are truncated to 200 characters.
+- `batch_start` includes `level` and `total`.
+- `batch_done` includes `level`, `total`, `succeeded`, and `failed`.
