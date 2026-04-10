@@ -92,10 +92,17 @@ def validate_activities(
     path = Path(path)
     slug = path.stem
     activities = yaml.safe_load(path.read_text("utf-8"))
-    if not activities:
+    if activities is None:
         return []
 
     issues: list[ActivityIssue] = []
+
+    # Root must be a mapping. A list or scalar at the top level means
+    # the generator produced something fundamentally malformed — flag
+    # once and bail so we don't crash on ``.get(...)`` below.
+    if not isinstance(activities, dict):
+        return [ActivityIssue(slug, "root", "root", -1, "error",
+                              "root is not a mapping")]
 
     # Infer level/module_num from path if not provided
     if level is None or module_num is None:
@@ -107,10 +114,31 @@ def validate_activities(
     # Structural per-item checks
     for section in ("inline", "workbook"):
         for act in activities.get(section, []) or []:
+            # Non-dict entries (e.g. a bare None or a string) crash
+            # every downstream ``.get`` call. Report them as a
+            # structural error and move on.
             if not isinstance(act, dict):
+                issues.append(ActivityIssue(
+                    slug, section, "?", -1, "error",
+                    f"activity entry is not a mapping: {type(act).__name__}",
+                ))
                 continue
             atype = act.get("type", "")
-            items = act.get("items", []) or []
+
+            # Validate ``items`` shape before passing it to the
+            # per-type check. A string "oops" or a dict would crash
+            # the per-item for-loop otherwise.
+            raw_items = act.get("items")
+            if raw_items is None:
+                items: list = []
+            elif not isinstance(raw_items, list):
+                issues.append(ActivityIssue(
+                    slug, section, atype or "?", -1, "error",
+                    f"items is not a list: {type(raw_items).__name__}",
+                ))
+                items = []
+            else:
+                items = raw_items
 
             if atype == "fill-in":
                 issues.extend(_check_fill_in(slug, section, items))
@@ -119,7 +147,17 @@ def validate_activities(
             elif atype == "error-correction":
                 issues.extend(_check_error_correction(slug, section, items))
             elif atype == "match-up":
-                pairs = act.get("pairs", []) or []
+                raw_pairs = act.get("pairs")
+                if raw_pairs is None:
+                    pairs: list = []
+                elif not isinstance(raw_pairs, list):
+                    issues.append(ActivityIssue(
+                        slug, section, "match-up", -1, "error",
+                        f"pairs is not a list: {type(raw_pairs).__name__}",
+                    ))
+                    pairs = []
+                else:
+                    pairs = raw_pairs
                 issues.extend(_check_match_up(slug, section, pairs))
             elif atype == "true-false":
                 issues.extend(_check_true_false(slug, section, items))
@@ -300,7 +338,19 @@ def _check_fill_in(
             continue
         sent = str(item.get("sentence", ""))
         answer = str(item.get("answer", ""))
-        opts = item.get("options", []) or []
+        raw_opts = item.get("options")
+        # Malformed options shapes: dict, None, or scalar. Flag and
+        # treat as empty so the rest of the checks don't crash.
+        if raw_opts is None:
+            opts: list = []
+        elif not isinstance(raw_opts, list):
+            issues.append(ActivityIssue(
+                slug, section, "fill-in", i, "error",
+                f"options is not a list: {type(raw_opts).__name__}",
+            ))
+            opts = []
+        else:
+            opts = raw_opts
 
         # Blank must exist (____  for word-level, single _ for letter-level)
         if "_" not in sent:
@@ -334,15 +384,56 @@ def _check_quiz(
     for i, item in enumerate(items):
         if not isinstance(item, dict):
             continue
-        opts = item.get("options", []) or []
+        raw_opts = item.get("options")
         correct = item.get("correct")
 
-        # Correct index must be valid
+        # Options shape. We support two option formats observed in
+        # real plans:
+        #
+        #   1. flat list of strings:   ["Nom", "Acc", "Loc", "Voc"]
+        #   2. list of ``{text, correct}`` dicts, where one entry has
+        #      ``correct: True`` — this is the v6 activity schema's
+        #      preferred shape for inline quizzes
+        #
+        # A ``dict`` or ``None`` root for ``options`` is a structural
+        # error; flag and skip the dedup check so we don't crash on
+        # ``len()`` or ``set()`` below.
+        if raw_opts is None:
+            continue
+        if not isinstance(raw_opts, list):
+            issues.append(ActivityIssue(
+                slug, section, "quiz", i, "error",
+                f"options is not a list: {type(raw_opts).__name__}",
+            ))
+            continue
+
+        # Normalize to a list of strings for dedup + range checks.
+        # Dict-form options get their ``text`` field pulled; anything
+        # else (nested list, None, etc.) is left as-is and will fail
+        # the non_string filter below.
+        opts: list = []
+        for o in raw_opts:
+            if isinstance(o, dict) and "text" in o:
+                opts.append(str(o["text"]))
+            else:
+                opts.append(o)
+
+        # Correct index must be valid (for integer-index quizzes)
         if isinstance(correct, int) and (correct < 0 or correct >= len(opts)):
             issues.append(ActivityIssue(
                 slug, section, "quiz", i, "error",
                 f"correct={correct} out of range (0-{len(opts) - 1})",
             ))
+
+        # Non-string entries in the flattened list — structural error
+        # (e.g. nested list, None, number). Flag and skip dedup.
+        non_string_opts = [o for o in opts if not isinstance(o, str)]
+        if non_string_opts:
+            issues.append(ActivityIssue(
+                slug, section, "quiz", i, "error",
+                f"options contain non-string values: {non_string_opts[:3]}",
+            ))
+            continue
 
         # Duplicate options
         if len(opts) != len(set(opts)):
@@ -392,6 +483,10 @@ def _check_match_up(
 
     for i, pair in enumerate(pairs):
         if not isinstance(pair, dict):
+            issues.append(ActivityIssue(
+                slug, section, "match-up", i, "error",
+                f"pair entry is not a mapping: {type(pair).__name__}",
+            ))
             continue
         left = str(pair.get("left", ""))
         right = str(pair.get("right", ""))
