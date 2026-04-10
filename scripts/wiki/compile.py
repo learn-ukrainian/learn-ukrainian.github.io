@@ -588,6 +588,30 @@ def _needs_structural_rewrite(scores: dict[str, float]) -> bool:
     return scores.get("overall", 0) < 8.0
 
 
+def _extract_review_summary(review_text: str) -> str:
+    """Extract a short human-readable summary from the first scored review."""
+    import re
+
+    score_line = re.compile(
+        r"^\s*(?:\d+\.\s*)?\*{0,2}"
+        r"(?:Factual|Language|Decolonization|Completeness|Actionable)"
+        r"\*{0,2}\s*:\s*\d+(?:\.\d+)?\s*/\s*10\s*[—-]\s*(.+?)\s*$",
+        re.IGNORECASE,
+    )
+
+    for line in review_text.splitlines():
+        match = score_line.match(line.strip())
+        if match:
+            return " ".join(match.group(1).split())[:300]
+
+    for line in review_text.splitlines():
+        stripped = line.strip()
+        if stripped and not stripped.startswith(("<fixes>", "</fixes>", "```")):
+            return " ".join(stripped.split())[:300]
+
+    return "No summary extracted from review."
+
+
 def _send_review(track: str, slug: str, review_prompt: str,
                  round_label: str, project_root: str) -> str | None:
     """Send a review prompt to Gemini via agent bridge. Returns stdout or None."""
@@ -596,7 +620,7 @@ def _send_review(track: str, slug: str, review_prompt: str,
     try:
         result = subprocess.run(
             [
-                sys.executable, "scripts/ai_agent_bridge/__main__.py",
+                ".venv/bin/python", "scripts/ai_agent_bridge/__main__.py",
                 "ask-gemini", "-",  # Read prompt from stdin (avoids arg length limits)
                 "--task-id", f"wiki-review-{track}-{slug}-{round_label}",
                 "--model", "gemini-3.1-pro-preview",
@@ -790,7 +814,7 @@ def _targeted_rewrite(article_path: Path, article_text: str,
     try:
         result = subprocess.run(
             [
-                sys.executable, "scripts/ai_agent_bridge/__main__.py",
+                ".venv/bin/python", "scripts/ai_agent_bridge/__main__.py",
                 "ask-gemini", "-",  # Read prompt from stdin
                 "--task-id", f"wiki-rewrite-{track}-{slug}",
                 "--model", "gemini-3.1-pro-preview",
@@ -837,19 +861,10 @@ def _targeted_rewrite(article_path: Path, article_text: str,
 
 def _review_article(article_path: Path, track: str, slug: str,
                     max_rounds: int = 4) -> None:
-    """Review a wiki article with split-path fix strategy.
-
-    Flow:
-    1. Review → parse dimension scores
-    2. If all dimensions ≥ 8: COPYEDIT path (old:/new: + INSERT AFTER:)
-    3. If any dimension < 8: TARGETED REWRITE path (Gemini rewrites weak sections)
-    4. If no fixes and score < 9: route to rewrite (lazy reviewer = structural problem)
-    5. After last round, final scoring pass with fix application
-
-    Max 4 rounds total (copyedit + rewrite combined).
-    """
+    """Review a wiki article with a single scoring-only pass."""
     from wiki.config import DEFAULT_PROMPT, TRACK_PROMPT, WIKI_DIR
 
+    _ = max_rounds  # Review is intentionally single-pass now.
     print(f"  🔍 Reviewing: {track}/{slug}")
 
     if not article_path.exists() or article_path.stat().st_size < 100:
@@ -876,162 +891,50 @@ def _review_article(article_path: Path, track: str, slug: str,
 
     project_root = str(Path(__file__).resolve().parents[2])
 
-    score = 0.0
-    scores: dict[str, float] = {}
-    review_text = ""
-    last_applied = 0
-    rewrite_used = False  # Only allow ONE structural rewrite per article
-    best_score = 0.0
-    best_article = ""  # Snapshot of article text at peak score
+    article_text = article_path.read_text("utf-8")
+    review_prompt = _build_review_prompt(
+        article_text, article_type, track, slug, "r1",
+    )
+    review_text = _send_review(
+        track, slug, review_prompt, "r1", project_root,
+    )
+    if not review_text:
+        return
 
-    for round_num in range(1, max_rounds + 1):
-        # Step 1: Build prompt with FRESH article text every round
-        article_text = article_path.read_text("utf-8")
-        review_prompt = _build_review_prompt(
-            article_text, article_type, track, slug, str(round_num),
-        )
+    review_path = review_dir / f"{slug}-review-r1.md"
+    review_path.write_text(review_text, "utf-8")
+    (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
 
-        # Step 2: Send to Gemini for review
-        new_review = _send_review(
-            track, slug, review_prompt, f"r{round_num}", project_root,
-        )
-        if not new_review:
-            break  # Preserve review_text from last successful round
-        review_text = new_review
+    scores = _parse_review_scores(review_text)
+    score = scores["overall"]
+    dim_summary = " | ".join(
+        f"{k[:4]}:{v}" for k, v in scores.items() if k != "overall"
+    )
+    print(f"  📋 Round 1: {score}/10 [{dim_summary}]")
+    log_event(track, slug, "review_round", round=1,
+              score=score, **{k: v for k, v in scores.items() if k != "overall"})
 
-        review_path = review_dir / f"{slug}-review-r{round_num}.md"
-        review_path.write_text(review_text, "utf-8")
+    if score >= 9.0:
+        log_event(track, slug, "review_pass", score=score, rounds=1)
+        print(f"  ✅ Review PASSED ({score}/10)")
+        (review_dir / f"{slug}-review-final.md").write_text(review_text, "utf-8")
+        return
 
-        # Step 3: Parse ALL dimension scores
-        scores = _parse_review_scores(review_text)
-        score = scores["overall"]
-        dim_summary = " | ".join(
-            f"{k[:4]}:{v}" for k, v in scores.items() if k != "overall"
-        )
-        print(f"  📋 Round {round_num}: {score}/10 [{dim_summary}]")
-        log_event(track, slug, "review_round", round=round_num,
-                  score=score, **{k: v for k, v in scores.items() if k != "overall"})
-
-        # Step 4: Track peak score — if we regress, revert to best version
-        if score > best_score:
-            best_score = score
-            best_article = article_text
-        elif score < best_score - 0.5 and round_num > 2:
-            # Score dropped significantly — revert to peak and stop
-            print(f"  ⚠️  Score regressed ({best_score} → {score}) — reverting to peak")
-            article_path.write_text(best_article, "utf-8")
-            score = best_score
-            last_applied = 0  # Don't trigger final review — peak is the final state
-            if review_text:
-                final_path = review_dir / f"{slug}-review.md"
-                final_path.write_text(review_text, "utf-8")
-            log_event(track, slug, "review_reverted", score=score,
-                      peak_score=best_score)
-            print(f"  📝 Final score: {score}/10 (peak from round {round_num - 1})")
-            return
-
-        # Step 5: Check if we're done
-        if score >= 9.0:
-            log_event(track, slug, "review_pass", score=score, rounds=round_num)
-            print(f"  ✅ Review PASSED ({score}/10)")
-            # Write both review.md (always) and review-final.md (pass marker)
-            (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
-            (review_dir / f"{slug}-review-final.md").write_text(review_text, "utf-8")
-            return
-
-        # Step 6: Route — copyedit or structural rewrite?
-        # Structural rewrite allowed ONCE. Multiple rewrites cause oscillation
-        # (fix one dimension, break another — observed: 8.4→7.4→7.8→7.0→6.2).
-        needs_rewrite = _needs_structural_rewrite(scores) and not rewrite_used
-
-        if needs_rewrite:
-            # STRUCTURAL REWRITE PATH: any dimension < 8 (first time only)
-            weak = [k for k in ("factual", "language", "decolonization",
-                                "completeness", "actionable")
-                    if scores.get(k, 0) < 8.0]
-            print(f"  🔨 Structural rewrite (weak: {', '.join(weak) or 'overall'})")
-            success = _targeted_rewrite(
-                article_path, article_text, article_type, track, slug,
-                review_text, scores, project_root,
-            )
-            rewrite_used = True
-            if success:
-                last_applied = 1
-                print("  🔄 Re-reviewing after rewrite...")
-                continue
-            else:
-                print("  ⚠️  Rewrite failed — stopping")
-                break
-        else:
-            # COPYEDIT PATH: localized fixes (also used after rewrite is exhausted)
-            if _needs_structural_rewrite(scores) and rewrite_used:
-                print("  ℹ️  Structural issues remain — rewrite exhausted, trying copyedit")
-
-            article_text, total_fixes, last_applied = _extract_and_apply_fixes(
-                review_text, article_text,
-            )
-
-            if last_applied > 0:
-                article_path.write_text(article_text, "utf-8")
-                print(f"  🔧 Applied {last_applied}/{total_fixes} fixes")
-            elif total_fixes > 0:
-                print(f"  ⚠️  0/{total_fixes} fixes matched — stopping")
-                break
-            elif not rewrite_used:
-                # No fixes + score < 9 + no rewrite yet = try rewrite once
-                print(f"  🔨 No fixes but score {score}/10 — routing to rewrite")
-                success = _targeted_rewrite(
-                    article_path, article_text, article_type, track, slug,
-                    review_text, scores, project_root,
-                )
-                rewrite_used = True
-                if success:
-                    last_applied = 1
-                    print("  🔄 Re-reviewing after rewrite...")
-                    continue
-                else:
-                    print("  ⚠️  Rewrite failed — stopping")
-                    break
-            else:
-                print(f"  ⚠️  No fixes, rewrite exhausted — stopping at {score}/10")
-                break
-
-        print("  🔄 Re-reviewing after fixes...")
-
-    # After the loop: if we changed the article in the last round, do a final
-    # scoring review on the CURRENT article to get an accurate final score
-    if last_applied > 0:
-        print("  🔄 Final scoring review on fixed article...")
-        article_text = article_path.read_text("utf-8")
-        review_prompt = _build_review_prompt(
-            article_text, article_type, track, slug, "final",
-        )
-
-        final_review = _send_review(
-            track, slug, review_prompt, "final", project_root,
-        )
-        if final_review:
-            review_text = final_review  # Only update if API succeeded
-            scores = _parse_review_scores(review_text)
-            score = scores["overall"]
-            print(f"  📋 Final: {score}/10")
-
-            # Apply any remaining fixes from the final review too
-            article_text, total_fixes, final_applied = _extract_and_apply_fixes(
-                review_text, article_text,
-            )
-            if final_applied > 0:
-                article_path.write_text(article_text, "utf-8")
-                print(f"  🔧 Applied {final_applied}/{total_fixes} final fixes")
-
-    # Save final review (from last successful round — never empty)
-    if review_text:
-        final_path = review_dir / f"{slug}-review.md"
-        final_path.write_text(review_text, "utf-8")
-    # If we reached here, we exhausted max_rounds without hitting 9.0
-    # (the >= 9.0 case returns early above)
-    log_event(track, slug, "review_fail", score=score, rounds=max_rounds)
-    print(f"  📝 Final score: {score}/10 after review loop")
+    review_summary = _extract_review_summary(review_text)
+    force_cmd = (
+        f".venv/bin/python scripts/wiki/compile.py --track {track} "
+        f"--slug {slug} --force"
+    )
+    log_event(
+        track, slug, "review_fail", score=score, rounds=1,
+        article_path=str(article_path), review_summary=review_summary,
+        rerun_force_cmd=force_cmd,
+    )
+    print("  ❌ Review below threshold — mark for --force recompile")
+    print(f"     path: {article_path}")
+    print(f"     final score: {score}/10")
+    print(f"     first review summary: {review_summary}")
+    print(f"     rerun: {force_cmd}")
 
 
 def _parse_wiki_fixes(fixes_text: str) -> list[tuple[str, str]]:
