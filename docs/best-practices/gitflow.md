@@ -181,3 +181,58 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
 
 This makes AI-assisted commits transparent and attributable.
+
+---
+
+## Branch Protection (main)
+
+`main` is the only long-lived branch. It carries every shipped module and the
+source of truth for plans, prompts, curriculum.yaml, and pipeline code. Treat
+it accordingly.
+
+### Required rules (configure in GitHub → Settings → Branches → main)
+
+1. **Require a pull request before merging** — disabled only for the
+   maintainer's direct commits of content. Code changes go through PRs via
+   the worktree workflow above.
+2. **Require status checks to pass before merging** — must include:
+   - `CI / lint` (ruff on scripts/)
+   - `CI / test` (pytest)
+   - `CI / Secret Scanning (gitleaks)`
+   - `CI / schema-check` (plan / activity YAML schemas)
+3. **Require branches to be up to date before merging** — prevents silent
+   merge-time regressions.
+4. **Require conversation resolution before merging** — no unresolved review
+   comments on merge.
+5. **Require signed commits** — off today because Claude/Gemini/Codex commits
+   aren't signed. Revisit once we gate on GitHub-hosted signing keys.
+6. **Require linear history** — yes. No merge commits on `main`.
+7. **Do not allow bypassing the above settings** — yes, even for admins.
+8. **Restrict who can push to matching branches** — maintainer + release bot
+   only. No collaborators with direct push.
+9. **Rules applied to force pushes** — blocked for everyone.
+10. **Rules applied to deletions** — blocked for everyone.
+
+### Auto-deletion
+
+- Head branches of merged PRs are deleted automatically (Settings → General →
+  Pull Requests → "Automatically delete head branches").
+- Worktree branches that never land on `main` get cleaned by
+  `scripts/wt.sh clean {issue}`.
+
+### When a hook or check blocks you
+
+Fix the underlying issue — never bypass with `--no-verify`,
+`--no-gpg-sign`, or admin override. The sole exception is a documented
+emergency hotfix, which MUST be followed by a commit that adds a test or
+hook preventing the same class of bypass in the future.
+
+### Emergency override log
+
+Any time `main` branch protection is bypassed (admin override, `--no-verify`,
+force push), log it in `docs/decisions/` as an ADR entry with:
+- what was bypassed
+- why it was unavoidable
+- the follow-up commit that restored the invariant
+
+No override without an ADR. No exceptions.

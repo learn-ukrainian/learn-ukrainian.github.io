@@ -10,6 +10,20 @@ Thumbs.db
 .env.local
 .env*.local
 
+# Secrets / credentials (defence in depth — gitleaks is the real gate)
+credentials.json
+credentials.*.json
+*_credentials.json
+*.pem
+*.key
+id_rsa
+id_ed25519
+secrets/
+.secrets/
+*.secret
+api_keys.*
+service-account*.json
+
 # AI assistant configs
 #.gemini/
 .claude/
