@@ -6,6 +6,30 @@ FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
 ---
 
+## Agent Quick Start
+
+First call for a fresh agent session:
+
+```bash
+curl -s http://localhost:8765/api/orient | python3 -m json.tool
+```
+
+Sample response:
+```json
+{
+  "generated_at": "2026-04-11T00:15:00Z",
+  "git": {"branch": "main", "head": "cb5f47d19"},
+  "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
+  "pipeline": {"summary": {"totals": {"total": 1500}}},
+  "runtime": {"agents": ["claude", "gemini", "codex"]},
+  "delegate": {"active_count": 2},
+  "wiki": {"by_track": {"hist": {"compiled": 15, "total": 140, "pct": 10.7}}},
+  "health": {"api": true, "mcp_rag": false, "sources_db": true, "message_broker": true}
+}
+```
+
+---
+
 ## Health & Config — `/api/`
 
 ### `GET /api/health`
@@ -60,8 +84,8 @@ curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
 
 Returns per-track counts:
 - `total` — plan files count (source of truth)
-- `research_done` — v6/v5/v4 research, v3 Phase A, or v2 phase 1 complete
-- `content_done` — v6/v5/v4 content, v3 Phase B, or v2 phase 2 complete (V6 modules with `state.json` mode="v6" are counted as built)
+- `research_done` — modules with research complete across current and legacy build flows
+- `content_done` — modules with lesson content complete across current and legacy build flows
 - `audit_passing` — `status/*.json` overall == "pass"
 - `final_review_done` — `review/*-final-review.md` exists
 - `prompt_reviewed` — `/prompt-review` done (`audit/*-prompt-review.md` exists)
@@ -92,39 +116,14 @@ Sample response:
 
 ### `GET /api/state/pipeline/{track}`
 
-Per-module v6/v5/v4/v3 phase state for one track. Shows each module's phase progress. Detects pipeline version automatically per module.
+Per-module phase state for one track. Shows each module's phase progress and generation label.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
 curl -s http://localhost:8765/api/state/pipeline/a1 | python3 -m json.tool
 ```
 
-Returns (v3 module):
-```json
-{
-  "track": "hist",
-  "total": 140,
-  "modules": [
-    {
-      "num": 1, "slug": "trypillian-civilization",
-      "pipeline_version": "v3",
-      "phases": {
-        "A": {"status": "complete", "mode": "meta-only", "ts": "2026-02-19T10:16:32Z"},
-        "B": {"status": "complete", "ts": "..."},
-        "C": {"status": "pending"},
-        "audit": {"status": "complete", "attempts": 2},
-        "D": {"status": "complete"}
-      },
-      "audit": "pass",
-      "words": 5240,
-      "word_target": 5000,
-      "research_score": 9
-    }
-  ]
-}
-```
-
-Returns (v6 module):
+Returns:
 ```json
 {
   "num": 1, "slug": "sounds-letters-and-hello",
@@ -146,37 +145,12 @@ Returns (v6 module):
 }
 ```
 
-Returns (v5 module):
-```json
-{
-  "num": 10, "slug": "my-world-objects",
-  "pipeline_version": "v5",
-  "phases": {
-    "research": {"status": "complete", "ts": "2026-03-02T20:08:33Z", "executor": {"type": "llm", "agent": "gemini", "model": "gemini-2.5-flash"}},
-    "discover": {"status": "complete", "ts": "2026-03-02T20:08:49Z"},
-    "content": {"status": "complete", "ts": "2026-03-02T20:12:36Z"},
-    "validate": {"status": "complete", "ts": "2026-03-02T20:14:00Z"},
-    "review": {"status": "complete", "ts": "2026-03-02T20:15:12Z"},
-    "activities": {"status": "complete", "ts": "2026-03-02T20:16:00Z"},
-    "mdx": {"status": "pending"}
-  },
-  "audit": "pass",
-  "words": 2100,
-  "word_target": 2000,
-  "research_score": null
-}
-```
+All module-level responses include `needs_rebuild: true|false` and a `pipeline_version` label derived from the module's orchestration state.
 
-**Pipeline version detection** (per module): `state.json["mode"] == "v6"` > `state.json["mode"] == "v5"` > `state-v4.json` > `state-v3.json` > `"unbuilt"`.
+Current phases: `check`, `research`, `write`, `exercises`, `annotate`, `enrich`, `verify`, `publish`.
+Legacy modules expose their recorded phase keys as-is.
 
-All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v6/v5/v4.
-
-V6 phases: `check`, `research`, `write`, `exercises`, `annotate`, `enrich`, `verify`, `publish`.
-V5 phases: `research`, `discover`, `content`, `validate`, `activities`, `review`, `mdx`.
-V4 phases: `research`, `discover`, `content`, `activities`, `validate`, `review`, `mdx`.
-V3 phases: `A`, `B`, `C`, `audit`, `D`.
-
-**Executor provenance** (v5 only): Each phase may include an `executor` object with `type` (llm/script), `agent`, and `model` fields — tracks which LLM or script executed the phase.
+Some phase entries include an `executor` object with `type` (llm/script), `agent`, and `model`.
 
 Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
@@ -184,7 +158,7 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 ### `GET /api/state/pipeline-versions[?track=x]`
 
-Migration progress — how many modules are v6/v5 vs v4/v3/unbuilt. **The single-glance pipeline migration dashboard.**
+Pipeline generation counts and rebuild pressure. **The single-glance migration dashboard.**
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
@@ -195,18 +169,15 @@ Returns:
 ```json
 {
   "total": 64,
-  "counts": {"v6": 5, "v5": 35, "v4": 2, "v3": 22, "unbuilt": 0},
-  "pct_v5": 55,
+  "counts": {"...": "per-generation counts"},
   "pct_built": 66,
   "needs_rebuild": 22,
-  "per_track": {"a1": {"v6": 5, "v5": 35, "v4": 2, "v3": 22, "unbuilt": 0}},
-  "v6_modules": [...],
-  "v5_modules": [...],
-  "v4_modules": [...]
+  "per_track": {"a1": {"...": "per-generation counts"}},
+  "generated_at": "2026-04-11T00:15:00Z"
 }
 ```
 
-`needs_rebuild` = `v3 + unbuilt` count. V6 modules are detected via `state.json` with `mode="v6"` and appear in the `"v6"` category alongside v5.
+`needs_rebuild` is the number of modules still on older generations or unbuilt.
 
 ---
 
@@ -288,10 +259,10 @@ curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool
 ```
 
 Returns:
-- `pipeline_version` — `"v6"`, `"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`
-- `phases` — v6: named phases (`check`..`publish`); v5/v4: named phases (`research`..`mdx`) with executor provenance; v3: letter-coded (`A`..`F`)
+- `pipeline_version` — current generation label or legacy/unbuilt marker
+- `phases` — phase map from the module's recorded orchestration state
 - `audit` — status, word_count, word_target, blocking_issues
-- `research` — exists, quality score (0-10). Detects both V5 research (`{slug}-research.md`) and V6 knowledge packets (`{slug}-knowledge-packet.md`)
+- `research` — exists, quality score (0-10). Detects both research files and knowledge packets
 - `review` — exists, **score** (numeric, e.g. 8.7), **verdict** (PASS/FAIL) *(#971)*
 - `friction` — **active** count, **resolved** count, **items** list with id/type/description *(#970/#971)*
 - `shippable` — **true/false** (audit PASS + review >= 8.0) *(#971)*
@@ -369,7 +340,7 @@ Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 
 
 ### `GET /api/state/ready-to-build[?track=x]`
 
-Modules where research is complete but content hasn't started. **The build queue.** Checks v4 research/content, v3 Phase A/B, and v2 phases.
+Modules where research is complete but content hasn't started. **The build queue.**
 
 ```bash
 # All tracks
@@ -379,7 +350,7 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` (`"v6"`, `"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`). Returns list sorted by track then num.
+Each entry includes `pipeline_version`. Returns list sorted by track then num.
 
 ---
 
@@ -403,14 +374,14 @@ Results sorted worst-first (audit fails > thin research > low words).
 
 ### `GET /api/state/failing[?track=x]`
 
-All modules with `audit status == "fail"` OR any phase status `== "failed"`. Detects pipeline version per module — extracts failed phases from v4 or v3 state as appropriate.
+All modules with `audit status == "fail"` OR any phase status `== "failed"`.
 
 ```bash
 curl -s http://localhost:8765/api/state/failing | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/failing?track=a1" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` and `blocking_issues` — failed gate names and messages. V6 failed phases use named keys (e.g. `"write"`, `"verify"`); V5/V4 use named keys (e.g. `"content"`, `"validate"`); v3 uses letter codes (e.g. `"B"`, `"D"`).
+Each entry includes `pipeline_version`, `failed_phases`, and `blocking_issues`.
 
 ---
 
@@ -485,10 +456,10 @@ curl -s http://localhost:8765/api/batch/dispatcher
 # All tracks pass/fail overview
 curl -s http://localhost:8765/api/blue/live-status
 
-# Per-module detail for a track (includes pipeline_version per module)
+# Per-module detail for a track
 curl -s http://localhost:8765/api/dashboard/track/hist
 
-# Deep module inspection (plan + meta + gates + orchestration + pipeline_version + v4_phases)
+# Deep module inspection (plan + meta + gates + orchestration)
 curl -s http://localhost:8765/api/dashboard/module/a1/my-world-objects
 
 # Deep module inspection (legacy gold)
@@ -519,7 +490,7 @@ curl -s http://localhost:8765/api/comms/live-activity | python3 -m json.tool
 ```
 
 Returns three feeds:
-- `in_progress` — modules with recently updated `state-v3.json` (track, slug, phase, status, age)
+- `in_progress` — modules with recently updated orchestration state (track, slug, phase, status, age)
 - `recent_completions` — research files created in last hour (track, slug, size_kb)
 - `recent_dispatches` — last 30 broker messages (from, to, task_id, preview)
 
@@ -588,7 +559,7 @@ Full communication trail for a module. All broker messages where `task_id` conta
 curl -s http://localhost:8765/api/comms/by-module/a1/reflexive-verbs | python3 -m json.tool
 ```
 
-Returns messages grouped by `task_id` (e.g., `v3-reflexive-verbs-pA`, `enrich-reflexive-verbs`) plus a flat list. Shows dispatch history, enrichment calls, repair loops — everything communicated about this module.
+Returns messages grouped by `task_id` (e.g., `reflexive-verbs-phase-a`, `enrich-reflexive-verbs`) plus a flat list. Shows dispatch history, enrichment calls, repair loops — everything communicated about this module.
 
 ### `POST /api/comms/acknowledge/{id}`
 
@@ -916,6 +887,135 @@ Response:
     {"chunk_id": "abc123_c0001"}
   ],
   "literary_files": []
+}
+```
+
+---
+
+## Runtime Observability — `/api/runtime/`
+
+### `GET /api/runtime/agents`
+
+Registered runtime adapters with default model and supported modes.
+
+```json
+{
+  "agents": [
+    {"name": "claude", "binary": "npx @anthropic-ai/claude-code@latest"},
+    {"name": "gemini", "binary": "gemini"},
+    {"name": "codex", "binary": "codex"}
+  ]
+}
+```
+
+### `GET /api/runtime/usage?agent=&entrypoint=&days=7`
+
+Aggregated usage counts from `batch_state/api_usage/usage_*.jsonl`.
+
+```json
+{
+  "window_days": 7,
+  "records_total": 1234,
+  "by_agent": {"codex": {"total": 300, "ok": 280, "error": 10}},
+  "by_entrypoint": {"dispatch": {"total": 700, "ok": 690}}
+}
+```
+
+### `GET /api/runtime/headroom?agent=codex&model=gpt-5.4`
+
+Quota gate for one `(agent, model)` pair.
+
+```json
+{
+  "agent": "codex",
+  "model": "gpt-5.4",
+  "has_headroom": true,
+  "reason": ""
+}
+```
+
+### `GET /api/runtime/recent?limit=50`
+
+Newest usage records from today's runtime logs, newest first.
+
+```json
+{
+  "records": [
+    {"ts": "2026-04-11T00:10:00Z", "agent": "codex", "entrypoint": "dispatch", "outcome": "ok"},
+    {"ts": "2026-04-11T00:09:00Z", "agent": "gemini", "entrypoint": "bridge", "outcome": "timeout"}
+  ]
+}
+```
+
+## Delegation — `/api/delegate/`
+
+### `GET /api/delegate/tasks?status=&limit=50`
+
+List delegate task state files with derived age and zombie detection.
+
+```json
+{
+  "total": 12,
+  "tasks": [
+    {"task_id": "issue-1166", "agent": "codex", "status": "running", "age_s": 45.0},
+    {"task_id": "issue-1165", "agent": "gemini", "status": "done", "age_s": 280.3}
+  ]
+}
+```
+
+### `GET /api/delegate/tasks/{task_id}`
+
+Single task detail plus optional `.result` content.
+
+```json
+{
+  "task": {"task_id": "issue-1166", "status": "done"},
+  "result": "trimmed result text",
+  "result_truncated": false,
+  "alive": false
+}
+```
+
+## Build Events — `/api/build/events/`
+
+### `GET /api/build/events/recent?level=&slug=&limit=100`
+
+Recent synthesized build events from dispatch metadata.
+
+```json
+{
+  "events": [
+    {"ts": "2026-04-10T21:50:27Z", "level": "a2", "slug": "a2-bridge", "phase": "skeleton", "ok": true},
+    {"ts": "2026-04-10T21:45:01Z", "level": "a2", "slug": "a2-bridge", "phase": "write", "ok": true}
+  ]
+}
+```
+
+### `GET /api/build/events/active?level=`
+
+Modules with recent dispatch activity and unfinished publish state.
+
+```json
+{
+  "active": [
+    {"level": "a2", "slug": "a2-bridge", "current_phase": "write", "started_at": "2026-04-10T21:50:27Z", "age_s": 240}
+  ]
+}
+```
+
+## Orientation — `/api/orient`
+
+### `GET /api/orient`
+
+One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, health, and session hints.
+
+```json
+{
+  "generated_at": "2026-04-11T00:15:00Z",
+  "git": {"branch": "main", "head": "cb5f47d19"},
+  "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
+  "runtime": {"agents": ["claude", "gemini", "codex"]},
+  "health": {"api": true, "mcp_rag": false}
 }
 ```
 

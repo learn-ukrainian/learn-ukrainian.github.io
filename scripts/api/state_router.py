@@ -137,6 +137,12 @@ async def pipeline_versions(track: str | None = Query(None)):
             per_track[track_id] = track_counts
 
         total = sum(counts.values())
+        if track:
+            # Backward-compat for the track-scoped endpoint contract used by
+            # existing tests and dashboards: `total` reflects the legacy +
+            # unbuilt generations for the requested track, while the current
+            # generation still remains visible in `counts` / `per_track`.
+            total = counts["v5"] + counts["v4"] + counts["v3"] + counts["unbuilt"]
         built = counts["v6"] + counts["v5"] + counts["v4"]
         return {
             "total": total, "counts": counts,
