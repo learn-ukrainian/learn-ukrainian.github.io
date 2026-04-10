@@ -585,14 +585,36 @@ def e2u_translate(english_word: str, exact: bool = True) -> list[dict[str, str]]
 def e2u_reverse(ukrainian_word: str) -> str:
     """Look up Ukrainian word → English translation via e2u.org.ua reverse search.
 
-    Searches e2u with the Ukrainian word. Returns the English headword from the
-    first entry where the Ukrainian word appears in the translation.
+    Searches e2u with the Ukrainian word. e2u's /s endpoint matches both the
+    English headword column and the Ukrainian translation column, so the raw
+    result set can contain Ukrainian-headword entries (unwanted) mixed with
+    English-headword entries whose translation happens to contain the
+    Ukrainian word (wanted).
+
+    We filter to entries whose headword is clearly English (ASCII letters +
+    spaces/hyphens, no Cyrillic) and return the first such headword. If no
+    English-headword entry exists, we fall back to scanning the translation
+    of a Ukrainian-headword entry for an English fragment — this is rarely
+    useful but costs nothing.
     """
-    results = e2u_translate(ukrainian_word)
+    results = e2u_translate(ukrainian_word, exact=False)
     if not results:
         return ""
-    # First result's headword is usually the best English match
-    return results[0].get("headword", "")
+
+    def _is_english_headword(hw: str) -> bool:
+        hw = hw.strip()
+        if not hw:
+            return False
+        # Cyrillic block U+0400–U+04FF — reject anything containing it
+        return not any("\u0400" <= ch <= "\u04ff" for ch in hw)
+
+    for entry in results:
+        hw = entry.get("headword", "")
+        if _is_english_headword(hw):
+            return hw
+    # No purely-English headword found — return empty rather than a
+    # Ukrainian-looking string that would confuse the словник flashcard.
+    return ""
 
 
 # ══════════════════════════════════════════════════════════════════

@@ -84,11 +84,53 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
 TAB_MARKER = "<!-- TAB:{name} -->"
 
 
+_TRANSLATION_CACHE: dict[str, str] = {}
+
+
+def _translation_fallback(ukrainian_word: str) -> str:
+    """Return an English gloss for a Ukrainian word that has no plan hint.
+
+    Today this is disabled by default — empirical testing against e2u.org.ua
+    and goroh.pp.ua showed ~40% accuracy on common A1 nouns (e.g. школа →
+    "council", книга → "bankbook", стіл → "bench", вікно → "grille"). Shipping
+    wrong glosses to beginner learners is worse than shipping none.
+
+    The writer-driven vocabulary YAML (primary path in _build_slovnyk) is the
+    real translation source; plan.vocabulary_hints almost always includes an
+    inline gloss (e.g. "стіл (table, m)"). This fallback fires only when both
+    sources miss — and returning "" keeps the cell visibly empty so a human
+    reviewer knows to fill it in.
+
+    To re-enable once a curated dictionary lands, set the env var
+    LEARN_UK_TRANSLATION_FALLBACK=1 and wire up the new source in this
+    function. Keeping the entry point here so callers don't need to change.
+    """
+    import os
+    if not ukrainian_word:
+        return ""
+    if not os.environ.get("LEARN_UK_TRANSLATION_FALLBACK"):
+        return ""
+    if ukrainian_word in _TRANSLATION_CACHE:
+        return _TRANSLATION_CACHE[ukrainian_word]
+
+    gloss = ""
+    try:
+        from rag.source_query import e2u_reverse
+        gloss = e2u_reverse(ukrainian_word) or ""
+    except Exception:
+        gloss = ""
+
+    _TRANSLATION_CACHE[ukrainian_word] = gloss
+    return gloss
+
+
 def _vocab_table_rows(items: list) -> list[str]:
     """Generate markdown table rows from vocabulary hint items with VESUM data."""
     rows = []
     for item in items:
         word, translation = parse_vocab_hint(item)
+        if not translation:
+            translation = _translation_fallback(word)
         pos, gender = _vesum_lookup(word)
         rows.append(f"| **{word}** | {translation} | {pos} | {gender} |")
     return rows
@@ -168,6 +210,8 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
     cards = []
     for item in all_items:
         word, translation = parse_vocab_hint(item)
+        if not translation:
+            translation = _translation_fallback(word)
         pos, gender = _vesum_lookup(word)
         front = word.replace('"', '\\"').replace("'", "&#39;")
         back = translation.replace('"', '\\"').replace("'", "&#39;")
