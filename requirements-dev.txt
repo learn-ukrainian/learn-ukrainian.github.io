@@ -1,0 +1,32 @@
+# Dev-only dependencies for learn-ukrainian
+# Install with: .venv/bin/pip install -r requirements-dev.txt
+#
+# These are additional tools for contributors — testing, linting, type
+# checking, pre-commit hooks. Production code in scripts/ must run against
+# requirements.txt alone.
+#
+# If you add a dev tool here, also bump .pre-commit-config.yaml (if it
+# plugs into pre-commit) and the CI workflow (if it runs in GitHub Actions).
+
+-r requirements.txt
+
+# Pre-commit hook framework — mirrors CI checks locally
+pre-commit>=4.0
+
+# Static type checking (gradual — see [tool.mypy] in pyproject.toml)
+mypy>=1.13
+
+# Test utilities
+pytest-xdist>=3.6         # parallel test execution (-n auto)
+pytest-mock>=3.14          # fixture-based mocker
+
+# Coverage reporting
+coverage[toml]>=7.6
+
+# Debugging
+ipython>=8.29
+ipdb>=0.13
+
+# Secret scanning (gitleaks runs in pre-commit + CI; this is a fallback for
+# ad-hoc local scans of uncommitted state)
+# Install gitleaks separately: brew install gitleaks

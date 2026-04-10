@@ -103,6 +103,42 @@ learn-ukrainian/
 - **Automated audits** -- every module checked for word count, vocabulary, activities, naturalness
 - **Cross-agent review** -- AI-assisted build pipeline with adversarial quality gates
 
+## Quick Start (Developers)
+
+Want to run the build pipeline locally or contribute code? The full guide is
+in [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
+
+```bash
+# 1. Python environment — pyenv + 3.12.8 with sqlite extensions
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.8
+pyenv local 3.12.8
+python -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+# 2. Frontend
+cd starlight && npm install && cd ..
+
+# 3. Services (RAG on 8766, monitor API on 8765, Starlight on 4321)
+./services.sh start
+./services.sh status
+
+# 4. Pre-commit hooks — mirror CI locally
+pip install pre-commit && pre-commit install
+
+# 5. Build a module
+.venv/bin/python scripts/build/v6_build.py a1 2 --writer gemini
+
+# 6. Audit a module
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/sounds-letters-and-hello.md
+
+# 7. Tests
+.venv/bin/pytest tests/ -q
+```
+
+All work happens on `main` — no feature branches. Use `git worktree` for
+isolation when needed. Read `CLAUDE.md` + `docs/best-practices/` before
+touching pipeline code.
+
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -111,10 +147,14 @@ Areas where help is especially welcome:
 - Native speaker review of Ukrainian text
 - Activity design and testing
 - Bug reports and content corrections
+- Pipeline tooling (Python) — see open issues tagged `infrastructure`
 
 ## License
 
-[MIT](LICENSE) -- free to use, modify, and distribute.
+Content (curriculum, wiki, exercises, plans) is
+[CC BY-SA 4.0](LICENSE-CONTENT.md) — free to share and adapt.
+Code (scripts, build tooling, Starlight components) is [MIT](LICENSE) — free
+to use, modify, and distribute.
 
 ---
 

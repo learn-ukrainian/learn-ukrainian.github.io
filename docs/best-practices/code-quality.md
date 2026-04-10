@@ -31,14 +31,17 @@ rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 
 | Script | Use for | Status |
 |--------|---------|--------|
-| `scripts/build/v6_build.py` | All new builds | **Current (V6)** |
-| `scripts/build/dispatch.py` | LLM subprocess dispatch | **Current** |
-| `scripts/build/enrich.py` | Deterministic enrichment | **Current** |
-| `build_module_v5.py` | Legacy v5 pipeline | **RETIRED** — do not use |
-| `pipeline_v5.py` | Legacy v5 phases | **RETIRED** — do not use |
-| `build_module.py` | Legacy v4 pipeline | **RETIRED** — do not use |
+| `scripts/build/v6_build.py` | All new builds (17-phase pipeline) | **Current (V6)** |
+| `scripts/build/dispatch.py` | Agent subprocess dispatch (Claude/Gemini/Codex) | **Current** |
+| `scripts/build/enrich.py` | Deterministic post-write enrichment | **Current** |
+| `scripts/build/activity_repair.py` | Deterministic activity fixer (#1185) | **Current** |
+| `scripts/build/activity_validator.py` | Activity YAML validation | **Current** |
+| `scripts/agent_runtime/` | Unified Claude/Gemini/Codex adapter | **Current** |
+| `scripts/build/build_module_v5.py` (+ stub at scripts/build_module_v5.py) | Legacy v5 entrypoint | **RETIRED** — do not use |
+| `scripts/build/pipeline_v5.py` (+ stub at scripts/pipeline_v5.py) | Legacy v5 phases | **RETIRED** — do not use |
 
-Always use V6 (`scripts/build/v6_build.py`). Legacy scripts remain for reference only.
+Always use V6. The v5 files remain only so old session state files can still
+be loaded for forensic analysis — no new code should import them.
 
 ---
 
@@ -154,7 +157,10 @@ Strings containing colons followed by content must be single-quoted:
 
 ## Logging Conventions
 
-Use the `log()` function from `build_module_v2.py` — it writes to both stdout and the module's log file.
+Use the `_log()` helper from `scripts/build/v6_build.py` — it writes to stdout
+and to the module's orchestration state.json phase log. Pipeline modules should
+import it or define a thin proxy; ad-hoc scripts can use stdlib `print()` but
+must prefix messages with a two-space indent + phase tag to stay grep-able.
 
 ```python
 log("  Phase A: Research saved → slavic-tribes-research.md")
