@@ -767,6 +767,54 @@ async def handle_verify_lemma(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n".join(lines))]
 
 
+def _lookup_wikipedia_in_db(query: str) -> dict | None:
+    """Serve the pre-ingested wikipedia table in sources.db as a persistent
+    cache (#1170). Matches by exact title first, then by FTS5 title match.
+    Returns None if the query isn't in the DB — callers must then fall back
+    to the live API.
+    """
+    import contextlib
+    import sqlite3
+    from pathlib import Path as _Path
+
+    db = _Path(__file__).resolve().parents[3] / "data" / "sources.db"
+    if not db.exists():
+        return None
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = sqlite3.connect(str(db))
+        conn.row_factory = sqlite3.Row
+        # 1. Exact title match (case-insensitive) — the common case after
+        #    fetch_wikipedia.py has ingested a batch from plan topics.
+        row = conn.execute(
+            "SELECT title, url, text FROM wikipedia WHERE LOWER(title) = LOWER(?) LIMIT 1",
+            (query,),
+        ).fetchone()
+        if row:
+            return dict(row)
+        # 2. FTS5 title search — tolerates minor variations (e.g. caller
+        #    passes "Тарас Шевченко" when DB has "Шевченко Тарас Григорович").
+        #    Use MATCH on the title column only to avoid pulling large
+        #    body-text hits for short queries.
+        row = conn.execute(
+            """SELECT w.title, w.url, w.text
+               FROM wikipedia w
+               JOIN wikipedia_fts fts ON fts.rowid = w.id
+               WHERE wikipedia_fts MATCH ?
+               ORDER BY rank LIMIT 1""",
+            (f'title:"{query}"',),
+        ).fetchone()
+        if row:
+            return dict(row)
+    except sqlite3.Error:
+        return None
+    finally:
+        if conn is not None:
+            with contextlib.suppress(Exception):
+                conn.close()
+    return None
+
+
 async def handle_query_wikipedia(args: dict) -> list[TextContent]:
     mode = args.get("mode", "summary")
     query = args["query"]
@@ -813,6 +861,23 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
                 if cache.is_negative(cached):
                     return [TextContent(type="text", text=f"Wikipedia article not found: '{query}' (cached)")]
                 return [TextContent(type="text", text=cached)]
+
+            # Persistent DB cache hit (#1170): pre-ingested wikipedia table in
+            # sources.db serves as a long-lived, curated cache. If the query
+            # maps to an already-fetched article we return it without an API
+            # round trip AND without touching the file cache — the DB is the
+            # source of truth for batch-ingested entries.
+            db_hit = _lookup_wikipedia_in_db(query)
+            if db_hit is not None:
+                lines = [
+                    f"# {db_hit['title']}",
+                    f"**URL**: {db_hit['url']}",
+                    "",
+                    db_hit["text"],
+                ]
+                text = "\n".join(lines)
+                cache.put("extract", query, text)
+                return [TextContent(type="text", text=text)]
 
         result = await asyncio.to_thread(wikipedia_extract, query)
         if not result:
