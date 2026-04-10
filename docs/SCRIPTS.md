@@ -1,18 +1,10 @@
 # Scripts & Workflow Reference
 
-This document describes all scripts and workflows for module creation, validation, and generation.
+Current operational reference for repo-local scripts and agent workflows.
 
-> **Housekeeping (2026-02-21):** 189 unused/one-off scripts archived to `scripts/_archived/`.
-> **Organization (2026-03-08):** 125 scripts moved from `scripts/` root to 14 themed subdirectories
-> (`audit/`, `batch/`, `build/`, `content/`, `crawl/`, `generate_mdx/`, `lint/`, `migrate/`,
-> `oneoff/`, `rag/`, `research/`, `scoring/`, `sync/`, `tools/`, `validate/`, `vocab/`).
-> Re-export stubs at old paths preserve backward compatibility. See [#779](https://github.com/krisztiankoos/learn-ukrainian/issues/779).
-
-> **🚀 Module Creation Workflow:**
->
-> Use `/module {level} {num}` as the main entry point. See [9-Phase Workflow](#9-phase-module-workflow-rfc-001) below.
->
-> This document (SCRIPTS.md) is a **detailed reference** for individual scripts and commands.
+- Main build entry point: `.venv/bin/python scripts/build/v6_build.py {level} {num}`
+- Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
+- This document intentionally omits retired pipelines and legacy script paths
 
 ---
 
@@ -21,19 +13,17 @@ This document describes all scripts and workflows for module creation, validatio
 Project-local wrappers for interactive agent sessions:
 
 ```bash
-# Claude Code wrapper
 ./start-claude.sh
-
-# Codex wrapper
 ./start-codex.sh
 ```
 
 `start-codex.sh` launches Codex with:
-- interactive Codex in dangerous bypass mode
-- `CODEX_SESSION=1` so repo scripts can identify an interactive Codex session
-- repo subprocess defaults unchanged unless you explicitly export override env vars
 
-Override before launch if you need different behavior:
+- interactive Codex in dangerous bypass mode
+- `CODEX_SESSION=1` so repo scripts can detect an interactive Codex session
+- repo subprocess defaults unchanged unless you explicitly override env vars
+
+Override before launch if needed:
 
 ```bash
 CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
@@ -43,32 +33,31 @@ CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
 
 ## Claude Code Hooks
 
-Session hooks live in `claude_extensions/hooks/` (deployed to `.claude/hooks/` via `npm run claude:deploy`).
+Session hooks live in `claude_extensions/hooks/` and deploy to `.claude/hooks/`.
 
-### `session-setup.sh` (SessionStart hook)
+### `session-setup.sh`
 
-Runs on every session start — both new and resumed. Validates environment and reports project state.
+Runs on every session start, new or resumed.
 
 | # | Check | Severity | Details |
-|---|-------|----------|---------|
+|---|---|---|---|
 | 1 | Python venv | ISSUE | `.venv/bin/python` exists and is 3.12.x |
 | 2 | Env vars | ISSUE | `CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS` is set |
-| 3 | Message broker | INFO | SQLite DB for Gemini comms exists |
-| 4 | Stale builds | INFO | `state-v3.json` files with `in_progress` older than 24h |
-| 5 | Active builds | INFO | Count of `in_progress` module builds |
-| 6 | Memory budget | ISSUE/INFO | `MEMORY.md` line count vs 150/200 limits |
-| 7 | Deploy drift | ISSUE | Diffs `claude_extensions/` vs `.claude/` — catches forgotten deploys |
-| 8 | MCP RAG health | ISSUE | Pings `127.0.0.1:8766` — warns if RAG tools unavailable |
-| 9 | gemini-cli | INFO | Verifies `gemini` command exists and auth is working |
-| 10 | Open GH issues | INFO | Lists up to 5 open issues for proactive hygiene |
+| 3 | Message broker | INFO | SQLite DB for agent communication exists |
+| 4 | Build state hygiene | INFO | Reports stale or active build state files |
+| 5 | Memory budget | ISSUE/INFO | `MEMORY.md` line count vs project limits |
+| 6 | Deploy drift | ISSUE | Diffs `claude_extensions/` vs `.claude/` |
+| 7 | MCP RAG health | ISSUE | Pings `127.0.0.1:8766` |
+| 8 | `gemini` CLI | INFO | Verifies command exists and auth works |
+| 9 | Open GitHub issues | INFO | Lists a small set of open issues |
 
-### `enforce-venv.sh` (PreToolUse → Bash)
+### `enforce-venv.sh`
 
-Intercepts bare `python3`/`python` commands and rewrites them to `.venv/bin/python`. Prevents accidental system Python usage.
+Intercepts bare `python` and `python3` shell calls and rewrites them to `.venv/bin/python`.
 
-### `check-gemini-inbox.sh` (UserPromptSubmit)
+### `check-gemini-inbox.sh`
 
-Polls the SQLite message broker for unread Gemini messages. Surfaces inter-agent replies as `additionalContext`. Skips during pipeline runs (`GEMINI_SESSION=1` or `LEARN_UKRAINIAN_PIPELINE=1`).
+Polls the SQLite message broker for unread Gemini messages and surfaces them as additional context. It skips during pipeline runs.
 
 ---
 
@@ -87,2016 +76,614 @@ SINCE_DAYS=7 .venv/bin/python scripts/token_usage.py
 SINCE_DATE=2026-04-03 .venv/bin/python scripts/token_usage.py
 ```
 
-Parses `~/.claude/projects/` JSONL session files. Outputs report to `docs/token-usage/token_report.md` with: per-project totals, daily breakdown, costliest sessions (with model + first prompt), subagent analysis. Adapted from [kieranklaassen's gist](https://gist.github.com/kieranklaassen/7b2ebb39cbbb78cc2831497605d76cc6).
+Parses `~/.claude/projects/` JSONL session files and writes `docs/token-usage/token_report.md` with totals, daily breakdown, costliest sessions, model mix, and subagent analysis.
 
 ---
 
 ## Wiki Knowledge Base
 
-The wiki is the research layer — compiled reference articles that module writers consume as inline context. Everything is pre-baked so module generation needs zero live API calls.
+The wiki is the research layer: compiled reference articles consumed as inline context during module generation. Source retrieval is pre-baked into SQLite, so module generation does not depend on live external search.
 
 ### Architecture
 
-```
-Plan YAML → Discovery → Sources DB (SQLite FTS5) → Gemini compilation → Wiki article (.md)
-                              ↑
-                    Textbooks (24K chunks)
-                    Literary texts (127K chunks)
-                    External articles (1.2K entries)
-                    Wikipedia (batch-fetched)
-                    Dictionaries (530K entries)
+```text
+Plan YAML -> Discovery -> Sources DB (SQLite FTS5) -> Gemini compilation -> Wiki article (.md)
+                         ^
+                         +-- textbooks
+                         +-- literary texts
+                         +-- external articles
+                         +-- Wikipedia
+                         +-- dictionaries
 ```
 
-All sources live in `data/sources.db` (SQLite FTS5). No Qdrant, no vector DB, no embedding models.
+All sources live in `data/sources.db`. No vector DB is involved here.
 
 ### Build Sources Database
 
 ```bash
-# Build/rebuild the unified SQLite database from all JSONL sources
 .venv/bin/python scripts/wiki/build_sources_db.py
 ```
 
-Ingests: textbooks (Google Drive), external articles (`data/external_articles/`), literary texts (Google Drive), 9 dictionaries (Google Drive + local). ~660K entries, ~1.2GB.
+Rebuilds the unified SQLite database from textbook, literary, external, Wikipedia, and dictionary inputs.
 
 ### Fetch Wikipedia Articles
 
 ```bash
-# Fetch for a specific track (reads plan titles → searches Wikipedia)
 .venv/bin/python scripts/wiki/fetch_wikipedia.py --track folk
 .venv/bin/python scripts/wiki/fetch_wikipedia.py --track hist
-
-# Fetch for all seminar tracks
 .venv/bin/python scripts/wiki/fetch_wikipedia.py --all
-
-# Status
 .venv/bin/python scripts/wiki/fetch_wikipedia.py --status
 ```
-
-Rate-limited (1 req/sec). Caches — won't re-fetch existing articles. Stored in `wikipedia` table in `sources.db`.
 
 ### Compile Wiki Articles
 
 ```bash
-# List available modules for a track
+# Status and discovery
+.venv/bin/python scripts/wiki/compile.py --status
 .venv/bin/python scripts/wiki/compile.py --track a2 --list
 
-# Compile one article (dry run — shows prompt without calling Gemini)
+# Single article
 .venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro --dry-run
-
-# Compile one article
 .venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro
+.venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro --review
 
-# Compile all articles for a track (skips already-compiled)
+# Batch
 .venv/bin/python scripts/wiki/compile.py --track a2 --all
+.venv/bin/python scripts/wiki/compile.py --track a2 --all --review
+.venv/bin/python scripts/wiki/compile.py --track a2 --all --limit 5 --review
 
-# Force recompile (even if already done)
+# Maintenance
 .venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro --force
-
-# Update wiki index
+.venv/bin/python scripts/wiki/compile.py --track folk --review-only
 .venv/bin/python scripts/wiki/compile.py --update-index
 ```
 
-Tracks: `a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay, lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama, oes, ruth`
+Supported tracks: `a1`, `a2`, `b1`, `b2`, `c1`, `c2`, `folk`, `hist`, `bio`, `istorio`, `lit`, `lit-essay`, `lit-war`, `lit-hist-fic`, `lit-youth`, `lit-fantastika`, `lit-humor`, `lit-drama`, `oes`, `ruth`.
 
-Prompt templates per track type:
-- A1: `compile_pedagogy_brief.md` (methodology, phonetics, vocab boundaries)
-- A2-B2: `compile_grammar_brief.md` (paradigms, frequency, L2 errors)
-- C1-C2: `compile_academic.md` (scholarly register, stylistics)
-- Seminars: `compile_article.md` (primary sources, historiography)
+Track prompt families:
+
+- `a1`: pedagogy briefs
+- `a2-b2`: grammar briefs
+- `c1-c2`: academic briefs
+- seminar tracks: knowledge articles
 
 ### Quality Gate
 
 ```bash
-# Check all compiled articles for problems
 .venv/bin/python scripts/wiki/quality_gate.py
-
-# Check specific track
 .venv/bin/python scripts/wiki/quality_gate.py --track a2
-
-# Auto-clear bad articles for recompile
 .venv/bin/python scripts/wiki/quality_gate.py --fix
 ```
 
-Checks: short articles (below min word count), AI noise (thinking leaked), fence wrapping, missing headings, truncation. Run after every batch compilation.
+Checks short articles, leaked reasoning, fence wrapping, missing headings, and truncation.
 
 ### Fetch External Sources
 
 ```bash
-# Fetch ULP blog articles
 .venv/bin/python scripts/wiki/fetch_external_sources.py --ulp-blogs
-
-# Fetch all blogs + all YouTube channels + rebuild DB
 .venv/bin/python scripts/wiki/fetch_external_sources.py --all
-
-# Rebuild sources DB only (after adding new JSONL files)
 .venv/bin/python scripts/wiki/fetch_external_sources.py --build-db
-
-# Show cache status
 .venv/bin/python scripts/wiki/fetch_external_sources.py --status
 ```
 
 ### Services
 
 ```bash
-# Start/stop/restart services
-./services.sh start              # Start all (rag, api, starlight)
-./services.sh start rag          # Start RAG MCP server (SQLite FTS5 backend)
-./services.sh stop rag           # Stop RAG server
-./services.sh restart            # Restart all
-./services.sh status             # Show what's running
+./services.sh start
+./services.sh start rag
+./services.sh stop rag
+./services.sh restart
+./services.sh status
 ```
-
-RAG MCP Server (port 8766): serves 27 tools via SSE. Backend: SQLite FTS5 (`data/sources.db`). No Qdrant, no BGE-M3.
 
 ### Key Files
 
 | File | Purpose |
-|------|---------|
-| `scripts/wiki/compile.py` | Wiki article compiler CLI |
-| `scripts/wiki/compiler.py` | Core compilation logic |
+|---|---|
+| `scripts/wiki/compile.py` | Wiki compiler CLI |
+| `scripts/wiki/compiler.py` | Compilation logic |
 | `scripts/wiki/enrichment.py` | Source enrichment pipeline |
-| `scripts/wiki/sources_db.py` | SQLite FTS5 query functions |
+| `scripts/wiki/sources_db.py` | SQLite query layer |
 | `scripts/wiki/build_sources_db.py` | Database builder |
 | `scripts/wiki/fetch_wikipedia.py` | Wikipedia batch fetcher |
 | `scripts/wiki/fetch_external_sources.py` | External source fetcher |
-| `scripts/wiki/quality_gate.py` | Article quality checker |
-| `scripts/wiki/state.py` | Progress tracking (SQLite) |
+| `scripts/wiki/quality_gate.py` | Post-compile quality checker |
+| `scripts/wiki/state.py` | Progress tracking |
 | `.mcp/servers/rag/server.py` | MCP RAG server |
-| `.mcp.json` | MCP server configuration |
-| `data/sources.db` | Unified SQLite database (~660K entries) |
-| `wiki/.state/progress.db` | Compilation progress (SQLite) |
-
----
-
-## Module Creation Pipeline
-
-The complete module creation and validation pipeline:
-
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  1. WRITE       │ ──▶ │  2. AUDIT       │ ──▶ │  3. GENERATE    │ ──▶ │  4. VALIDATE    │
-│  Module content │     │  audit_module   │     │  MDX + JSON     │     │  MDX + HTML     │
-└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
-```
-
-### Full Pipeline Command
-
-```bash
-# Run complete pipeline: lint → generate MDX → validate MDX → validate HTML
-npm run pipeline l2-uk-en a1 5
-
-# Also generate JSON for Vibe app
-npm run generate:json l2-uk-en a1 5
-```
-
-**Note:** HTML validation requires Astro Starlight dev server running:
-
-```bash
-npm run dev:starlight  # In separate terminal
-```
-
-### Step 1: Audit Module
-
-```bash
-# Audit entire level
-npm run audit -- b1
-
-# Audit single module
-npm run audit -- b1 5
-
-# Audit range of modules
-npm run audit -- b1 1-10
-
-# Audit specific modules
-npm run audit -- b1 1,3,5,7
-
-# Mixed ranges and numbers
-npm run audit -- b1 1-5,10,15-20
-
-# With auto-fix for YAML issues
-npm run audit -- b1 --fix
-
-# Verbose output (show details)
-npm run audit -- b1 5 --verbose
-
-# Direct script invocation (single file) - RECOMMENDED: Use wrapper
-scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
-
-# Direct Python call (no log saved)
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-my-world-objects.md
-```
-
-### Step 2: Generate Output
-
-```bash
-# Generate MDX (Starlight)
-npm run generate l2-uk-en a1 5
-
-# Generate JSON (Vibe app)
-npm run generate:json l2-uk-en a1 5
-```
-
-### Step 3: Validate
-
-```bash
-# Validate MDX (content integrity)
-npm run validate:mdx l2-uk-en a1 5
-
-# Validate HTML (browser rendering) - requires dev server
-npm run validate:html l2-uk-en a1 5
-```
-
-### Step 4: Verify
-
-```bash
-# Re-run audit to confirm all passes (saves log)
-scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
-```
-
----
-
-## Plans & Status Management (v2.0)
-
-Learn Ukrainian v2.0 uses a three-layer architecture: **Plans** (Immutable) → **Build** (Mutable) → **Status** (Cached).
-
-### View Module Status (Cached)
-
-Instant status reporting using the audit cache.
-
-```bash
-# View status of a single module
-/module-status b1 5
-
-# View status of entire level
-/level-status b1
-```
-
-### Update Status Cache
-
-The cache is updated automatically whenever `audit_module.py` is run.
-
-```bash
-# Force update cache for a module by running audit
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/05-*.md
-```
-
-### Plan Management
-
-Plans are the immutable source of truth for module requirements.
-
-```bash
-# Extract plans from existing meta files (migration)
-.venv/bin/python scripts/migrate_to_v2.py b1
-```
-
-**Note:** Plan YAML files follow the schema in `schemas/module-plan.schema.json`. Use `validate_meta_yaml.py` for meta file validation.
-
-### Generate Human-Readable Plan Markdown
-
-Convert YAML plans to readable markdown for review and comparison.
-
-```bash
-# Generate readable plan for specific level
-.venv/bin/python scripts/generate_plan_markdown.py hist
-
-# Generate plans for all levels
-.venv/bin/python scripts/generate_plan_markdown.py --all
-```
-
-**Output:** `docs/l2-uk-en/{LEVEL}-PLAN-GENERATED.md`
-
-**What it includes:**
-- Level overview (title, target, prerequisites)
-- Vocabulary focus areas
-- Pedagogy notes (including decolonization guidance)
-- Phase structure with module sequences
-- Per-module details: title, focus, word target, objectives, grammar
-- Content outline preview for each module
-
-**Use cases:**
-- Review curriculum scope before building modules
-- Compare old curriculum plans with new YAML-based plans
-- Generate documentation for stakeholder review
-
-### Status Generation
-
-Generate human-readable status reports from per-module JSON cache:
-- `scripts/generate_level_status.py {level}` - Generates `docs/{LEVEL}-STATUS.md`
-- `npm run status:{level}` - Shortcut for the above (e.g., `npm run status:hist`)
-
-### Manifest Utilities (RFC #410)
-
-The curriculum manifest (`curriculum.yaml`) is the single source of truth for module ordering.
-
-```bash
-# Validate manifest (no duplicate slugs)
-.venv/bin/python scripts/manifest_utils.py validate
-
-# Validate manifest matches filesystem
-.venv/bin/python scripts/manifest_utils.py validate-fs
-.venv/bin/python scripts/manifest_utils.py validate-fs hist  # Specific level
-
-# Show manifest statistics
-.venv/bin/python scripts/manifest_utils.py stats
-
-# Lookup module by slug
-.venv/bin/python scripts/manifest_utils.py lookup trypillian-civilization
-
-# List modules for level
-.venv/bin/python scripts/manifest_utils.py level hist
-```
-
-**Features:**
-- `[slug:xxx]` link resolution for stable cross-module links
-- Module title fallback: meta YAML → plan YAML → slug
-- Supports both numbered (`01-slug.md`) and slug-only filenames
-
-### Plan Validation
-
-Validate that plan files match the config.py constraints.
-
-```bash
-# Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
-.venv/bin/python scripts/validate_plan_config.py b1
-.venv/bin/python scripts/validate_plan_config.py hist
-
-# Fix plan word_targets if mismatched
-.venv/bin/python scripts/fix_plan_word_targets.py b1 --dry-run
-.venv/bin/python scripts/fix_plan_word_targets.py b1 --fix
-
-# Fix invalid activity types in HIST plans
-.venv/bin/python scripts/fix_b2hist_activity_types.py --dry-run
-.venv/bin/python scripts/fix_b2hist_activity_types.py --apply
-```
+| `.mcp.json` | MCP configuration |
+| `data/sources.db` | Unified SQLite database |
 
 ---
 
 ## Related Documentation
 
-| Document                                          | Purpose                                                          |
-| ------------------------------------------------- | ---------------------------------------------------------------- |
-| `docs/ARCHITECTURE-PLANS.md`                      | **Three-layer architecture** - Plans, content, status separation |
-| `docs/STATUS-SYSTEM.md`                           | **Status caching system** - Per-module JSON cache                |
-| `docs/RFC-410-MANIFEST-DRIVEN-ARCHITECTURE.md`    | **Manifest architecture** - curriculum.yaml as single source     |
-| `claude_extensions/phases/module-*.md`            | 9-Phase workflow - Module creation process (RFC-001)             |
-| `claude_extensions/commands/module*.md`           | Module commands (`/module`, `/module-sync`, etc.)                |
-| `docs/ARCHITECTURE.md`                            | System architecture and quality validation overview              |
-| `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`  | Quality standards by level (consolidated)                        |
-| `docs/MARKDOWN-FORMAT.md`                         | Markdown syntax specification                                    |
-| `docs/CONTENT-QUALITY-AUDIT.md`                   | Content quality review system (LLM-based)                        |
-| `claude_extensions/commands/review-content-core-a.md` | Core A review command (A1/A2/B1.0 mixed-language)          |
-| `claude_extensions/commands/review-content-v4.md` | Core B / Seminar review command (modular tier system)            |
-| `claude_extensions/commands/review-tiers/*.md`    | Tier-specific review criteria (beginner, core, seminar, advanced)|
-| `docs/CORE-A-WORKFLOW.md`                         | Core A rebuild workflow (A1/A2/B1.0)                             |
-| `docs/CORE-B-WORKFLOW.md`                         | Core B rebuild workflow (B1.1+/B2/C1/C2/PRO)                    |
-| `docs/RESEARCH-FIRST-WORKFLOW.md`                 | Research-first workflow (seminar tracks)                          |
+| Document | Purpose |
+|---|---|
+| `.claude/rules/workflow.md` | Core workflow rules for agent sessions |
+| `.claude/rules/pipeline.md` | Build and validation workflow guidance |
+| `.claude/rules/rag-and-dictionaries.md` | MCP RAG and dictionary lookup rules |
+| `.claude/rules/ukrainian-linguistics.md` | Ukrainian language quality rules |
+| `.claude/phases/gemini/README.md` | Gemini phase map |
+| `.claude/phases/gemini/v6-write.md` | Current write phase reference |
+| `.claude/phases/gemini/v6-review.md` | Current review phase reference |
+| `.claude/quick-ref/ACTIVITY-SCHEMAS.md` | Activity schema quick reference |
+| `docs/agent-runtime-guide.md` | Agent runtime architecture |
+| `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Module richness requirements |
+| `claude_extensions/consultation-queue/README.md` | Consultation queue format |
+
+## Tool Inventory (Quick Reference)
+
+### MCP RAG tools
+
+Full list: [`.claude/rules/rag-and-dictionaries.md`](../.claude/rules/rag-and-dictionaries.md). Core tools used daily:
+
+- `mcp__rag__verify_word` - VESUM morphological check
+- `mcp__rag__search_text` - textbook content search
+- `mcp__rag__search_definitions` - SUM-11 explanatory dictionary
+- `mcp__rag__search_style_guide` - Antonenko-Davydovych style guidance
+
+### Deterministic audit checks
+
+At `scripts/audit/checks/`:
+
+- `cross_file_integrity.py` - vocabulary used in activities exists in vocabulary YAML
+- `outline_compliance.py` - markdown section structure matches `meta.yaml` outline
+- `activity_quality.py` - deterministic activity quality checks
+
+### Build pipeline entry point
+
+`.venv/bin/python scripts/build/v6_build.py {level} {num}` is the single end-to-end build entry point. It drives the write -> enrich -> review -> audit -> publish chain.
+
+### Agent runtime
+
+`scripts/agent_runtime/` is the universal adapter layer for Claude, Gemini, and Codex CLI invocations. See [`docs/agent-runtime-guide.md`](agent-runtime-guide.md).
+
+### Delegate to background workers
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch --agent {codex|gemini|claude} --task-id <id> --prompt-file <file>
+```
+
+Fire-and-forget execution with status polling and completion artifacts.
 
 ---
 
-## Content Quality Review Commands
+## Build & Validation Workflow
 
-> **When to use:** After `audit_module.py` passes structural gates. Review-content focuses on **pedagogical quality** (coherence, engagement, naturalness).
+Use two entry points depending on the job:
 
-### Two Review Commands by Track Type
+| Need | Entry point |
+|---|---|
+| Full module build | `.venv/bin/python scripts/build/v6_build.py {level} {num}` |
+| Validate existing content | `npm run audit`, `npm run pipeline`, `npm run generate:json` |
 
-| Command | Scope | Dimensions |
-|---------|-------|------------|
-| `/review-content-core-a` | A1, A2, B1 M01-05 (Core A) | 12 (L1/L2 Balance, Beginner Safety) |
-| `/review-content-v4` | B1 M06+, B2, C1, C2, PRO, Seminar tracks (Core B) | 14 (+ Propaganda Filter, Semantic Nuance) |
+### `scripts/build/v6_build.py`
 
-**Core A** drops Propaganda Filter and Semantic Nuance (not relevant at beginner level) and adds L1/L2 Balance (graduated immersion check) and Beginner Safety ("Would I Continue?" test, emotional beats).
-
-**Core B / Seminar** uses the full v4 prompt with all 14 dimensions including State Standard compliance for grammar modules.
-
-### `/review-content-core-a` (Beginner Modules)
-
-Adapted for mixed-language modules with English scaffolding.
+Single end-to-end build entry point.
 
 ```bash
-/review-content-core-a a1 5       # Review A1 module 5
-/review-content-core-a a2 1-10    # Review A2 range
-/review-content-core-a b1 3       # Review B1 metalanguage bridge
+# Single module
+.venv/bin/python scripts/build/v6_build.py a1 5
+
+# Range
+.venv/bin/python scripts/build/v6_build.py a1 7 --range 14
+
+# Resume from prior state
+.venv/bin/python scripts/build/v6_build.py hist 12 --resume
+
+# Run a specific step only
+.venv/bin/python scripts/build/v6_build.py b1 9 --step review
 ```
 
-**Key checks beyond standard review:**
-- **L1/L2 Balance** — verifies English/Ukrainian ratio matches graduated targets per phase
-- **Beginner Safety** — "Would I Continue?" test (5-point rubric from tier-1-beginner.md)
-- **IPA Verification** — every phonetic transcription checked for correct stress
-- **State Standard Compliance** — grammar taught matches §reference
-- **Emotional beats** — welcome, curiosity, quick wins, encouragement, progress marker
+Useful flags:
 
-**File:** `claude_extensions/commands/review-content-core-a.md`
+- `--writer` and `--reviewer` choose agent family
+- `--step` runs a targeted phase
+- `--resume` reuses saved progress
+- `--no-skeleton` and `--no-chunk` alter generation behavior
 
-### `/review-content-v4` (Core B / Seminar)
-
-**v4.0 introduces a modular tier architecture** — short dispatcher (~260 lines) with tier-specific files (~250 lines each). This ensures AI reads and executes the full prompt without skipping sections.
+### Validation flow for existing modules
 
 ```bash
-/review-content-v4 hist 5      # Review single module
-/review-content-v4 b1 1-10        # Review range (uses subagents)
-/review-content-v4 c1 50          # Review C1 module
+# Audit level, module, or range
+npm run audit -- b1
+npm run audit -- b1 5
+npm run audit -- b1 1-10
+
+# Audit single file with saved log
+scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
+
+# Full validation pipeline
+npm run pipeline l2-uk-en a1 5
+
+# Generate app JSON
+npm run generate:json l2-uk-en a1 5
 ```
 
-### Tier System
-
-| Tier | Levels | Experience Focus | File |
-|------|--------|------------------|------|
-| **Tier 1** | A1, A2 | Lesson Quality (encouraging tutor) | `tier-1-beginner.md` |
-| **Tier 2** | B1, B2 Core, B2-PRO | Teaching Quality (effective teaching) | `tier-2-core.md` |
-| **Tier 3** | HIST, ISTORIO, BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
-| **Tier 4** | C1 Core, C1-PRO, C2 | Learning Quality (intellectual depth) | `tier-4-advanced.md` |
-
-**File locations:**
-- Dispatcher: `claude_extensions/commands/review-content-v4.md`
-- Tier files: `claude_extensions/commands/review-tiers/tier-{1-4}-*.md`
-
-### How It Works
-
-1. **Detect Tier** — Command auto-detects tier based on level
-2. **Read Tier File** — Loads tier-specific criteria (arc structure, pacing, weak moments)
-3. **Execute Experience Audit** — TOP PRIORITY: tier-appropriate "Would I...?" test
-4. **Score 12 Dimensions** — Same dimensions, tier-adjusted thresholds
-5. **Apply Fixes** — Safe fixes applied immediately
-6. **Generate Report** — Saves to `curriculum/l2-uk-en/{level}/review/{slug}-review.md`
-
-### Scoring Dimensions
-
-**Core A** (`/review-content-core-a`): 12 dimensions — replaces Propaganda Filter and Semantic Nuance with L1/L2 Balance and Beginner Safety.
-
-**Core B / Seminar** (`/review-content-v4`): 14 dimensions — full set including Propaganda Filter and Semantic Nuance.
-
-#### v4 Dimensions (14 — Core B / Seminar)
-
-| # | Dimension | Weight | Notes |
-|---|-----------|--------|-------|
-| 1 | **Experience Quality** | 1.5 | TOP PRIORITY — tier-specific assessment |
-| 2 | Coherence | 1.0 | Logical flow, transitions |
-| 3 | Relevance | 1.0 | Alignment with module goals |
-| 4 | Educational | 1.2 | Clear explanations, useful examples |
-| 5 | Language | 1.1 | Ukrainian quality, no Russianisms |
-| 6 | Pedagogy | 1.2 | Teaching approach, scaffolding |
-| 7 | Immersion | 0.8 | Ukrainian-to-English ratio |
-| 8 | Activities | 1.3 | Quality, density, variety |
-| 9 | Richness | 0.9 | Examples, engagement, cultural refs |
-| 10 | Humanity | 0.8 | Teacher voice, warmth |
-| 11 | LLM Fingerprint | 1.1 | AI patterns vs. authentic writing |
-| 12 | **Linguistic Accuracy** | 1.5 | Factual correctness (AUTO-FAIL if wrong) |
-
-**Note:** "Experience Quality" adapts per tier:
-- Tier 1: Lesson Quality (tutoring experience)
-- Tier 2: Teaching Quality (learning effectiveness)
-- Tier 3: Lecture Quality (seminar engagement)
-- Tier 4: Learning Quality (intellectual depth)
-
-### Tier-Specific Criteria Examples
-
-**Tier 1 (A1/A2) — Safe Tutoring:**
-- Arc: WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
-- Focus: Quick wins, English support, encouragement
-- Warmth threshold: ≥15 direct address, ≥3 encouragement phrases
-
-**Tier 3 (HIST/ISTORIO/BIO/LIT) — A+ Seminar:**
-- Arc: HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
-- Focus: Narrative engagement, primary sources, emotional peaks
-- Weak moments: DEAD_INTRO, WALL_OF_FACTS, FORCED_CONNECTION, ENERGY_DROP, etc.
-
-### Scoring Philosophy
-
-- **0-6 FAIL** (fix immediately)
-- **7-8 INSUFFICIENT** (improve to 9+)
-- **9-10 PASS** (acceptable)
-
-**ONLY 9-10 IS ACCEPTABLE.**
-
-### Additional Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/review-content-core-a` | Beginner review (A1/A2/B1.0) with L1/L2 balance + beginner safety |
-| `/review-content-enhancements` | AI slop detection & humanity checks (optional addon) |
-
-### Archived (Obsolete)
-
-| Command | Reason |
-|---------|--------|
-| `review-content-scoring.md` | Superseded by v4 modular architecture |
-| `review-content-scoring-0-10.md` | Merged into tier files |
-| `review-content-v3.md` | Renamed and refactored to v4 |
+`pipeline.py` is the technical validation pipeline. It is not the same thing as the end-to-end build orchestrator in `scripts/build/v6_build.py`.
 
 ---
 
-## 9-Phase Module Workflow (RFC-001)
+## Plans, Status, and Manifest
 
-> **NEW:** For track levels (hist, bio, istorio, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
->
-> **See:** GitHub issue #444 for full RFC discussion and implementation status.
-
-### Which Command Should I Use?
-
-| Situation | Command | What it does |
-|-----------|---------|--------------|
-| **New module from scratch** | `/module hist 5` | Full build: phases 1-7 |
-| **Module exists, meta needs update** | `/module-sync hist 5` | Syncs meta to markdown reality |
-| **Rebuild meta+activities, keep content** | `/module hist 5 --refresh` | Regenerates via architect, preserves .md |
-| **Resume after fixing lesson** | `/module hist 5 --from=lesson` | Starts at phase 3 |
-| **Just check status** | `/module hist 5 --check` | Reports current state |
-
-**Key difference:**
-- `--refresh`: Uses **architect skill** to regenerate outline (plan-driven)
-- `/module-sync`: **Extracts from markdown** to update meta (reality-driven)
-
-### /module Command
-
-Unified entry point for building modules. Auto-detects state and runs appropriate phases.
-
-**Usage:**
+### Status generation
 
 ```bash
-/module {level} {num}               # Build single module (phases 1-7)
-/module {level} {start}-{end}       # Batch build
-/module {level} {num} --from=PHASE  # Resume from specific phase
-/module {level} {num} --refresh     # Refresh meta+activities (preserves .md)
-/module {level} {num} --check       # Check status only
+.venv/bin/python scripts/generate_level_status.py a1
+npm run status:a1
+npm run status:all
 ```
 
-**Examples:**
+Generates human-readable status reports from cached per-module audit results.
+
+### Manifest utilities
 
 ```bash
-/module hist 5               # Build module 5 (content + skeleton deploy)
-/module hist 1-5             # Build modules 1-5
-/module hist 5 --from=lesson # Resume from phase 3 (lesson)
-/module hist 5 --refresh     # Refresh meta+activities keeping lesson content
-/module bio 12 --check       # Show which phases are complete
+.venv/bin/python scripts/manifest_utils.py validate
+.venv/bin/python scripts/manifest_utils.py validate-fs
+.venv/bin/python scripts/manifest_utils.py validate-fs hist
+.venv/bin/python scripts/manifest_utils.py stats
+.venv/bin/python scripts/manifest_utils.py lookup trypillian-civilization
+.venv/bin/python scripts/manifest_utils.py level hist
 ```
 
-### Phase Reference
+`curriculum.yaml` is the source of truth for ordering and slug lookup.
 
-| Phase | Command           | Creates                    | Validates                 |
-| ----- | ----------------- | -------------------------- | ------------------------- |
-| 1     | /module-meta      | meta/{slug}.yaml           | -                         |
-| 2     | /module-meta-qa   | -                          | Meta validity             |
-| 3     | /module-lesson    | {slug}.md                  | -                         |
-| 4     | /module-lesson-qa | -                          | Content quality           |
-| 5     | /module-act       | activities/{slug}.yaml     | -                         |
-| 6     | /module-act-qa    | -                          | Activity schema           |
-| 7     | /module-integrate | MDX for Starlight         | Cross-file alignment      |
-| 8     | /module-vocab     | vocabulary/{slug}.yaml     | -                         |
-| 9     | /module-vocab-qa  | -                          | Vocabulary validity       |
-
-### Resume Flags
-
-| --from value | Starts at Phase | Use when...                                |
-| ------------ | --------------- | ------------------------------------------ |
-| `meta`       | 1               | Fresh build from scratch                   |
-| `lesson`     | 3               | Meta is locked, need to regenerate content |
-| `act`        | 5               | Content is locked, need new activities     |
-| `integrate`  | 7               | Activities locked, deploy to website       |
-| `vocab`      | 8               | Module deployed, batch vocab enrichment    |
-
-### /module-sync Command
-
-Sync meta.yaml to match existing markdown content. Use this when markdown exists and is good, but meta needs updating.
+### Plan validation
 
 ```bash
-/module-sync hist 1      # Sync meta to existing trypillian-civilization.md
+.venv/bin/python scripts/validate_plan_config.py b1
+.venv/bin/python scripts/validate_plan_config.py hist
 ```
 
-**What it does:**
-1. Reads existing markdown (source of truth - PRESERVED)
-2. Extracts actual H2 sections with word counts
-3. Updates meta.yaml content_outline to match reality
-4. Validates and fixes activities if needed
-5. Loops until all audit gates pass
-6. Deploys when clean
+Use this before content generation to verify plan files still match `scripts/audit/config.py` constraints.
 
-**Important:** Markdown is NEVER regenerated. Meta is updated to match reality.
-
-### /module-fix Command
-
-Comprehensive check-and-fix loop for a complete module. Orchestrates all QA checks and fixes issues until ALL gates pass.
+### Migrations and readable plan output
 
 ```bash
-/module-fix b1 12           # Fix B1 module 12
-/module-fix hist 5       # Fix HIST module 5
+.venv/bin/python scripts/migrate/migrate_to_v2.py b1
+.venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist
+.venv/bin/python scripts/generate_mdx/generate_plan_markdown.py --all
 ```
-
-**What it does:**
-1. Runs comprehensive audit (`audit_module.py --fix`)
-2. Categorizes violations by component (meta, lesson, activities, vocab, naturalness)
-3. Fixes by category using existing QA phase docs
-4. Loops until ALL audit gates show ✅
-5. Runs pipeline when complete
-
-**Decision matrix:**
-
-| Violations | Action |
-|-----------|--------|
-| ≤3 total | Fix individually |
-| >3 in one component | Rebuild that component |
-| >10 or structural | Consider full rebuild |
-
-**Related QA stages:**
-- `claude_extensions/phases/module-meta-qa.md` - Meta validation
-- `claude_extensions/phases/module-lesson-qa.md` - Lesson validation
-- `claude_extensions/phases/module-act-qa.md` - Activities validation
-- `claude_extensions/phases/module-vocab-qa.md` - Vocabulary validation
-
-### /meta-fix Command
-
-Check and fix invalid activity types in meta.yaml files across the curriculum.
-
-```bash
-/meta-fix                   # Dry-run on all levels
-/meta-fix b1                # Dry-run on B1 only
-/meta-fix hist --apply   # Fix HIST modules
-/meta-fix --apply           # Fix all levels
-```
-
-**What it checks:** Invalid activity types in `activity_hints` section.
-
-**Valid activity types:** match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-
-**Common invalid types and mappings:**
-
-| Invalid | Action | Rationale |
-|---------|--------|-----------|
-| transform | → fill-in | Verb transformation |
-| conjugation | → fill-in | Verb conjugation |
-| dialogue | REMOVE | Content type, not activity |
-| roleplay | REMOVE | Content type, not activity |
-| flashcards | → match-up | Memorization |
-| discussion | REMOVE | Content type, not activity |
-
-**Script:** `scripts/fix_invalid_activity_types.py`
-
-### Batch Mode
-
-When building multiple modules, the command runs each through all phases and reports a summary:
-
-```
-Batch: hist 1-5
-Results:
-  - 1: DEPLOYED
-  - 2: DEPLOYED
-  - 3: FAIL at phase 4 (lesson-qa: word count)
-  - 4: DEPLOYED
-  - 5: DEPLOYED
-
-Summary: 4/5 deployed
-```
-
-### Vocabulary Enrichment (Batch Processing)
-
-For batch vocabulary enrichment across a track after modules are content-complete:
-
-```bash
-/module-vocab-enrich hist    # Enrich vocab M1→MN in order
-```
-
-This command:
-
-- Processes modules **sequentially** (M1 → M2 → ... → MN)
-- Adds IPA, translations, POS tags to skeleton vocabulary
-- Deduplicates (only NEW words per module)
-- Updates vocabulary.db
-
-**When to use:** After Phase 7 (module-vocab) creates skeleton entries, use this for batch enrichment. For single modules, Phase 7-8 handles vocabulary creation and validation.
-
-**Phase files:** `claude_extensions/phases/module-*.md`
-**Command files:** `claude_extensions/commands/module-*.md`
 
 ---
 
 ## Scripts Quick Reference
 
-### Core Pipeline (Python)
-
-| Script                    | Purpose                        | Command                                                      |
-| ------------------------- | ------------------------------ | ------------------------------------------------------------ |
-| `audit_level.py`          | Audit level/module/range       | `npm run audit -- b1` or `npm run audit -- b1 1-10`          |
-| `audit_module.py`         | Module quality checker         | `.venv/bin/python scripts/audit_module.py <file>`            |
-| `pipeline.py`             | Full validation pipeline       | `npm run pipeline l2-uk-en a1 5`                             |
-| `generate_mdx.py`         | Generate MDX for Starlight    | `npm run generate l2-uk-en a1 5`                             |
-| `generate_json.py`        | Generate JSON for Vibe app     | `npm run generate:json l2-uk-en a1 5`                        |
-| `validate_mdx.py`         | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5`                         |
-| `validate_html.py`        | Validate browser rendering     | `npm run validate:html l2-uk-en a1 5`                        |
-| `validate_meta_yaml.py`   | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
-| `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
-| `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
-| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py hist --upgrade` |
-| `enrich_research_quotes.py` | Convert `"..."` → `«»` in research files | `.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istorio` |
-| `enrich_research_gaps.py`   | Close deterministic research gaps (quotes, sections) | `.venv/bin/python scripts/enrich_research_gaps.py --apply` |
-
-### Slug & Path Utilities (Python)
-
-| Script                         | Purpose                                  | Command                                                               |
-| ------------------------------ | ---------------------------------------- | --------------------------------------------------------------------- |
-| `slug_utils.py`                | Single source of truth for slug stripping and path construction | `from slug_utils import to_bare_slug, review_path` |
-| `migrate_audit_review_paths.py`| One-shot migration: standardize review/audit/status file paths | `.venv/bin/python scripts/migrate_audit_review_paths.py --dry-run` |
-
-### Meta & Vocabulary (Python)
-
-| Script                        | Purpose                        | Command                                                                |
-| ----------------------------- | ------------------------------ | ---------------------------------------------------------------------- |
-| `validate_meta_yaml.py`       | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit`           |
-| `fix_invalid_activity_types.py` | Fix invalid activity types in meta | `.venv/bin/python scripts/fix_invalid_activity_types.py [--level b1] [--apply]` |
-| `check_hydration.py`          | Fractal outline status checker | `.venv/bin/python scripts/fractal/check_hydration.py --hydrate <file>` |
-| `vocab_init.py`               | Create fresh vocabulary DB     | `npm run vocab:init`                                                   |
-| `populate_vocab_db.py`        | Populate DB from modules       | `npm run vocab:scan`                                                   |
+| Script | Purpose | Command |
+|---|---|---|
+| `scripts/build/v6_build.py` | End-to-end module build | `.venv/bin/python scripts/build/v6_build.py a1 5` |
+| `scripts/audit_level.py` | Audit a level, module, or range | `npm run audit -- b1 1-10` |
+| `scripts/audit_module.py` | Audit a single module file | `.venv/bin/python scripts/audit_module.py <file>` |
+| `scripts/pipeline.py` | Technical validation pipeline | `npm run pipeline l2-uk-en a1 5` |
+| `scripts/generate_mdx.py` | Generate Starlight MDX | `npm run generate l2-uk-en a1 5` |
+| `scripts/generate_json.py` | Generate app JSON | `npm run generate:json l2-uk-en a1 5` |
+| `scripts/validate_mdx.py` | Validate MDX integrity | `npm run validate:mdx l2-uk-en a1 5` |
+| `scripts/validate_html.py` | Validate rendered HTML | `npm run validate:html l2-uk-en a1 5` |
+| `scripts/generate_level_status.py` | Build status reports | `npm run status:b1` |
+| `scripts/manifest_utils.py` | Manifest validation and lookup | `.venv/bin/python scripts/manifest_utils.py validate` |
+| `scripts/validate_plan_config.py` | Validate plan config alignment | `.venv/bin/python scripts/validate_plan_config.py b1` |
+| `scripts/sync_landing_pages.py` | Update landing pages | `npm run sync:landing` |
+| `scripts/vocab/auto_vocab_extract.py` | Create vocabulary skeletons | `.venv/bin/python scripts/vocab/auto_vocab_extract.py <module.md>` |
+| `scripts/vocab/vocab_enrich_nlp.py` | Enrich vocabulary YAML | `.venv/bin/python scripts/vocab/vocab_enrich_nlp.py <vocab.yaml>` |
+| `scripts/vocab_init.py` | Initialize vocabulary DB | `npm run vocab:init` |
+| `scripts/populate_vocab_db.py` | Scan modules into vocabulary DB | `npm run vocab:scan` |
+| `scripts/assess_research.py` | Assess and upgrade research | `.venv/bin/python scripts/assess_research.py hist --upgrade` |
+| `scripts/consultation_cli.py` | Review consultation proposals | `.venv/bin/python scripts/consultation_cli.py list` |
+| `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
 
 ---
 
 ## Core Scripts
 
-### pipeline.py
+### `audit_level.py`
 
-**Purpose:** Unified validation pipeline that runs all checks in sequence.
-
-**Pipeline Stages:**
-
-1. **Lint** - Markdown format compliance
-2. **Generate** - Creates MDX for Starlight
-3. **Validate MDX** - Ensures no content loss during conversion
-4. **Validate HTML** - Headless browser check for rendering errors
-
-**Usage:**
+Level-oriented wrapper around module auditing.
 
 ```bash
-npm run pipeline l2-uk-en a1        # Validate entire level
-npm run pipeline l2-uk-en a1 5      # Validate single module
+npm run audit -- b1
+npm run audit -- b1 5
+npm run audit -- b1 1-10
+npm run audit -- b1 1,3,5,7
+npm run audit -- b1 --fix
+npm run audit -- b1 5 --verbose
 ```
 
-**Requires:** Astro Starlight dev server running (`npm run dev:starlight`)
+Use this when you want one command for level, module, range, or mixed selections.
 
----
+### `audit_module.sh`
 
-### generate_mdx.py
-
-**Purpose:** Generates MDX files for Starlight web lessons (Python 3.12).
-
-**Usage:**
+Recommended wrapper around `audit_module.py`.
 
 ```bash
-npm run generate l2-uk-en           # Generate all levels
-npm run generate l2-uk-en a1        # Generate specific level
-npm run generate l2-uk-en a1 5      # Generate single module
-```
-
-**Input:** `curriculum/{lang}/{level}/*.md`
-
-**Output:** `starlight/src/content/docs/{level}/module-XX.mdx`
-
-**Note:** Requires Python 3.12 venv (`.venv/bin/python`)
-
----
-
-### generate_json.py
-
-**Purpose:** Generates Vibe-format JSON for app import (Python 3.12).
-
-**Usage:**
-
-```bash
-npm run generate:json l2-uk-en      # Generate all levels
-npm run generate:json l2-uk-en a1   # Generate specific level
-npm run generate:json l2-uk-en a1 5 # Generate single module
-```
-
-**Input:** `curriculum/{lang}/{level}/*.md`
-
-**Output:** `output/json/{lang}/{level}/module-XX.json`
-
-**Note:** Requires Python 3.12 venv (`.venv/bin/python`)
-
----
-
-### validate_mdx.py
-
-**Purpose:** Validates MDX content integrity after generation.
-
-**Checks:**
-
-- Activity types present in MDX match source markdown
-- Vocabulary words from first column preserved
-- Ukrainian text content maintained
-- No content loss during conversion
-
-**Usage:**
-
-```bash
-npm run validate:mdx l2-uk-en a1    # Validate entire level
-npm run validate:mdx l2-uk-en a1 5  # Validate single module
-```
-
-**Review File Integration:**
-Results are automatically written to review files in `gemini/` folders:
-
-```markdown
-## MDX VALIDATION
-
-✅ No issues found
-```
-
-Or with issues:
-
-```markdown
-## MDX VALIDATION
-
-### Errors
-
-- ❌ Activity types missing in MDX: cloze
-
-### Warnings
-
-- ⚠️ Some Ukrainian content may be missing (15/50 words)
-```
-
----
-
-### validate_html.py
-
-**Purpose:** Browser rendering validation using Playwright headless browser.
-
-**Checks:**
-
-- Page loads without HTTP errors
-- React components render (no error boundary)
-- No serious JavaScript errors in console
-- Ukrainian text present (sanity check)
-- Interactive activity elements render with content
-
-**Usage:**
-
-```bash
-npm run validate:html l2-uk-en a1   # Validate entire level
-npm run validate:html l2-uk-en a1 5 # Validate single module
-```
-
-**Graceful Skip:**
-When the dev server is not running, validation skips gracefully with exit code 0:
-
-```
-ℹ️  Starlight dev server not running - skipping HTML validation
-   To enable: npm run dev:starlight
-```
-
-This allows the pipeline to continue without failing.
-
-**Review File Integration:**
-Results are automatically written to review files in `gemini/` folders:
-
-```markdown
-## HTML VALIDATION
-
-✅ Renders correctly (10 interactive elements)
-```
-
-Or with issues:
-
-```markdown
-## HTML VALIDATION
-
-### Errors
-
-- ❌ Activity not rendering: Match Vocabulary (MatchUp)
-- ❌ 2 JS errors
-```
-
-**Requires:**
-
-- Astro Starlight dev server running (`npm run dev:starlight`)
-- Playwright installed (`playwright install`)
-
----
-
-### validate_meta_yaml.py
-
-**Purpose:** Validates meta YAML files against the schema and reports missing fields. Supports auto-detection of full (agent spec) vs minimal (stub) schemas.
-
-**Schemas:**
-
-- `schemas/meta-module.schema.json` - Full agent spec (requires content_outline, sources, vocabulary_hints, activity_hints)
-- `schemas/meta-module-minimal.schema.json` - Minimal stub (requires only title, slug, focus)
-
-**Usage:**
-
-```bash
-# Validate all levels
-.venv/bin/python scripts/validate_meta_yaml.py
-
-# Validate specific level
-.venv/bin/python scripts/validate_meta_yaml.py --level lit
-.venv/bin/python scripts/validate_meta_yaml.py --level hist
-
-# Show only errors (hide warnings)
-.venv/bin/python scripts/validate_meta_yaml.py --level lit --errors-only
-
-# Auto-fix missing optional fields
-.venv/bin/python scripts/validate_meta_yaml.py --level lit --fix
-
-# Verbose mode (show all files)
-.venv/bin/python scripts/validate_meta_yaml.py --level lit --verbose
-```
-
-**Checks:**
-
-- Required fields present per schema
-- JSON Schema validation
-- `content_outline` word sum vs `word_target`
-- `activity_hints` count (recommends 4+)
-- `module` vs `id` normalization
-
-**Auto-fix (`--fix`):**
-
-- Adds missing optional fields with defaults (duration: 120, transliteration: none, etc.)
-- Copies `id` to `module` if `module` is missing
-
-**Common Issues:**
-
-- **Unquoted colons:** Use `'Text: more text'` for strings containing colons
-- **ASCII quotes:** Replace `"..."` with `«...»` for Ukrainian text
-- **Missing fields:** Run with `--fix` to add defaults
-
----
-
-### check_hydration.py
-
-**Purpose:** Fractal hydration checker. Verifies if a Meta YAML has a detailed `content_outline` required for fractal generation. If missing, it provides instructions for the `architect` skill.
-
-**Usage:**
-
-```bash
-.venv/bin/python scripts/fractal/check_hydration.py --hydrate curriculum/l2-uk-en/hist/meta/afhanistan.yaml
-```
-
-**Logic:**
-
-1. **Check Existence:** Ensures `content_outline` field is present and non-empty.
-2. **Template Match:** Locates the corresponding pedagogical template in `docs/l2-uk-en/templates/`.
-3. **Action:** If missing, outputs a set of instructions for the AI Agent to activate the `architect` skill to "hydrate" the skeleton with a plan.
-
----
-
-### audit_module.sh (Wrapper) ⭐ RECOMMENDED
-
-**Purpose:** Wrapper around `audit_module.py` that **automatically saves audit logs** for review and debugging.
-
-**What it does:**
-
-1. Runs `audit_module.py` on the specified module
-2. Auto-saves output to `curriculum/l2-uk-en/{level}/audit/{slug}-audit.log`
-3. Adds metadata (date, path, exit code)
-4. Returns proper exit code (0 = pass, 1 = fail)
-
-**Why use the wrapper:**
-
-- ✅ Audit logs saved automatically (no manual `tee` needed)
-- ✅ Historical record of issues and fixes
-- ✅ Claude can reference logs for context
-- ✅ Debugging failed modules is easier
-
-**Usage:**
-
-```bash
-# Audit single module (recommended)
 scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
-
-# Output saved to:
-# curriculum/l2-uk-en/b1/audit/aspect-future-audit.log
 ```
 
-**Log file includes:**
+It runs the audit and saves the log to `curriculum/l2-uk-en/{level}/audit/{slug}-audit.log`.
 
-- Full audit output
-- Timestamp (UTC)
-- Module path
-- Exit code
+### `audit_module.py`
 
----
-
-### audit_module.py (Direct)
-
-**Purpose:** Comprehensive module quality checker (Python). Validates against MODULE-RICHNESS-GUIDELINES-v2.md requirements.
-
-**Use the wrapper (`audit_module.sh`) instead unless:**
-- You need to pipe output elsewhere
-- Running in automated scripts that handle logging differently
-- Testing audit system changes
-
-**Checks:**
-
-- Frontmatter validity (module, title, pedagogy, objectives)
-- Required sections present
-- Activity count and diversity
-- Vocabulary section format
-- Sentence complexity
-- Grammar constraints by level
-- Linguistic purity (no Surzhyk)
-- **Meta YAML Validation (Seminar Modules):** Enforces strict adherence to `schemas/meta-module.schema.json`.
-- **Activity Hints Enforcement:** Reads `activity_hints` from `meta.yaml` and **FAILS** if any specified activity types are missing from `activities.yaml`. This ensures activities match the meta specification.
-
-**Direct usage (no log saved):**
+Comprehensive module checker.
 
 ```bash
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/06-*.md
 ```
 
-**Issue Categories:**
+It checks:
 
-- **FAIL (Must Fix):** Grammar violations, missing sections, activity syntax, **Missing/Invalid Meta YAML**, **Missing required activity types from meta**
-- **WARN (Should Fix):** Richness, variety, word count
-- **INFO (Consider):** Optional improvements
+- frontmatter and required sections
+- activity count and diversity
+- vocabulary format
+- grammar and level constraints
+- Ukrainian quality
+- activity hints vs actual activities
+- integrated audit checks such as cross-file integrity and outline compliance
 
-**Activity Hints Enforcement Example:**
+### `pipeline.py`
 
-If `meta.yaml` specifies:
-```yaml
-activity_hints:
-  - type: reading
-  - type: quiz
-  - type: essay-response
-```
-
-And `activities.yaml` only has `quiz` and `fill-in`, the audit will FAIL:
-```
-❌ Missing required activity types from meta.yaml: essay-response, reading
-```
-
----
-
----
-
-## Landing Page Sync
-
-### sync_landing_pages.py
-
-**Purpose:** Auto-updates website landing pages with accurate module counts and status.
-
-**Updates:**
-
-- `starlight/src/content/docs/intro.mdx` - Main curriculum overview table
-- `starlight/src/content/docs/{level}/index.mdx` - Level landing pages
-
-**Usage:**
+Technical validation pipeline for already-written content.
 
 ```bash
-npm run sync:landing           # Apply changes
-npm run sync:landing:dry       # Preview only (dry run)
+npm run pipeline l2-uk-en a1
+npm run pipeline l2-uk-en a1 5
 ```
 
-**Status Logic:**
+Stages:
 
-| Completion | Status | Meaning |
-|------------|--------|---------|
-| 100% | 🔍 In QA | All modules exist, needs final review |
-| 10-99% | 🚧 In Progress | Actively being built |
-| <10% | 📋 Planned | Curriculum plan only |
-| Manual | ✅ Complete | Manually verified (in STATUS_OVERRIDES) |
+1. lint
+2. MDX generation
+3. MDX validation
+4. HTML validation
 
-**Data Sources:**
+Requires `npm run dev:starlight` for HTML validation.
 
-- Config file: `docs/l2-uk-en/level-status.yaml` (planned counts, status overrides)
-- Ready counts: MDX files in `starlight/src/content/docs/{level}/module-*.mdx`
+### `generate_mdx.py`
 
-**Config File (`level-status.yaml`):**
-
-```yaml
-b2:
-  planned: 145 # Total modules planned
-  status: auto # 'auto' or 'complete'
-  description: '...' # For intro.mdx table
-```
-
-**Integration:**
-Run after completing a batch of modules to update the website:
+Generates MDX for Starlight:
 
 ```bash
-npm run pipeline l2-uk-en b2    # Build modules
-npm run sync:landing            # Update landing pages
+npm run generate l2-uk-en
+npm run generate l2-uk-en a1
+npm run generate l2-uk-en a1 5
 ```
+
+### `generate_json.py`
+
+Generates JSON for the app:
+
+```bash
+npm run generate:json l2-uk-en
+npm run generate:json l2-uk-en a1
+npm run generate:json l2-uk-en a1 5
+```
+
+### `validate_mdx.py`
+
+Checks MDX conversion integrity:
+
+- activity types preserved
+- vocabulary content preserved
+- Ukrainian text preserved
+- no silent content loss during conversion
+
+```bash
+npm run validate:mdx l2-uk-en a1
+npm run validate:mdx l2-uk-en a1 5
+```
+
+### `validate_html.py`
+
+Checks rendered HTML with a headless browser:
+
+- page loads without HTTP errors
+- interactive components render
+- serious JS console errors are absent
+- Ukrainian text is present
+
+```bash
+npm run validate:html l2-uk-en a1
+npm run validate:html l2-uk-en a1 5
+```
+
+If the Starlight dev server is not running, this step skips gracefully.
+
+### `sync_landing_pages.py`
+
+Updates landing pages with current curriculum counts and status:
+
+```bash
+npm run sync:landing
+npm run sync:landing:dry
+```
+
+Targets:
+
+- `starlight/src/content/docs/intro.mdx`
+- `starlight/src/content/docs/{level}/index.mdx`
+
+### `manifest_utils.py`
+
+Manifest inspection and validation CLI for `curriculum.yaml`.
+
+Use it to validate filesystem alignment, get stats, and resolve modules by slug.
+
+### `validate_plan_config.py`
+
+Checks plan files against current config constraints. Run it before generation, especially when plans or global audit config changed.
 
 ---
 
 ## Vocabulary Pipeline
 
-The vocabulary system uses SQLite (`vocabulary.db`) to track all words across modules.
+Vocabulary uses SQLite in `curriculum/l2-uk-en/vocabulary.db` plus per-module YAML files.
 
-### Workflow Order
+### Workflow order
 
+```text
+1. scripts/vocab/auto_vocab_extract.py
+2. scripts/vocab/vocab_enrich_nlp.py
+3. scripts/audit/checks/cross_file_integrity.py
+4. scripts/audit/checks/outline_compliance.py
+5. scripts/vocab_init.py
+6. scripts/populate_vocab_db.py
 ```
-1. auto_vocab_extract.py          →  Extract new words from module content (Python)
-2. enrich_yaml_vocab.py            →  Enrich YAML with IPA and translations (Python)
-3. cross_file_integrity (audit)    →  Validate words in activities exist in vocab (Python) [NEW]
-4. vocab_init.py                   →  Create empty database (Python)
-5. populate_vocab_db.py            →  Populate from module markdown (Python)
-```
 
-### auto_vocab_extract.py (NEW)
+### `scripts/vocab/auto_vocab_extract.py`
 
-**Purpose:** Automatically extract Ukrainian vocabulary from module content and create skeleton YAML entries.
-
-**Solves:** Manual vocabulary identification bottleneck for HIST expansion (117 skeleton modules).
+Creates skeleton vocabulary entries from module markdown.
 
 ```bash
-# Extract vocabulary from a module
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
-
-# Dry run (preview only)
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md --dry-run
+.venv/bin/python scripts/vocab/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
+.venv/bin/python scripts/vocab/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md --dry-run
 ```
 
-**What it does:**
+### `scripts/vocab/vocab_enrich_nlp.py`
 
-1. Extracts Ukrainian text from markdown (skips frontmatter, code blocks, tables, English)
-2. Tokenizes into individual words
-3. Filters out common words (prepositions, pronouns, basic verbs)
-4. Loads vocabulary from all prior modules in the level
-5. Identifies NEW words not in prior vocabulary
-6. Detects POS (noun/verb/adj/adv) using morphology heuristics
-7. Creates skeleton YAML entries with empty IPA and translation fields
-
-**Output:** Creates/updates `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`
-
-**Example output:**
-
-```yaml
-- lemma: лихварство
-  ipa: '' # Empty - fill with enrichment
-  translation: '' # Empty - fill with enrichment
-  pos: noun
-  gender: n
-
-- lemma: реформи
-  ipa: ''
-  translation: ''
-  pos: noun
-
-- lemma: видатним
-  ipa: ''
-  translation: ''
-  pos: adj
-```
-
-**Next step:** Run enrichment to fill IPA and translations (see `enrich_yaml_vocab.py` below).
-
-**Time savings:** 30 minutes → 5 minutes per module (83% reduction)
-
----
-
-### vocab_enrich_nlp.py
-
-**Purpose:** NLP-based vocabulary enrichment using pymorphy2 (lemmatization, POS tagging) and ukrainian-word-stress (IPA generation).
-
-**Dependencies:**
-- `pymorphy2` with `pymorphy2-dicts-uk` - Ukrainian morphological analyzer
-- `ukrainian-word-stress` (v1.1.1+) - Stress marking and IPA generation
-
-**Usage:**
+Enriches vocabulary YAML with IPA, POS, and morphology-derived data.
 
 ```bash
-# Enrich vocabulary file with IPA, lemma, and POS
-.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml
-
-# Dry run (preview changes)
-.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml --dry-run
+.venv/bin/python scripts/vocab/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml
+.venv/bin/python scripts/vocab/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml --dry-run
 ```
 
-**What it does:**
+### `scripts/audit/checks/cross_file_integrity.py`
 
-1. Reads vocabulary YAML file with skeleton entries
-2. For each entry missing IPA:
-   - Uses `ukrainian-word-stress` to add stress marks (e.g., цивіліза́ція)
-   - Converts stressed form to IPA notation (e.g., /t͡sɪvʲilʲiˈzat͡sʲijɐ/)
-3. For each entry missing POS:
-   - Uses `pymorphy2` to detect part of speech
-   - Maps to standard tags: noun, verb, adj, adv, etc.
-4. Writes enriched YAML back to file
+Runs inside `audit_module.py` and checks that activity vocabulary exists in cumulative vocabulary YAML.
 
-**Example transformation:**
+### `scripts/audit/checks/outline_compliance.py`
 
-```yaml
-# Before (skeleton)
-- lemma: цивілізація
-  ipa: ''
-  translation: civilization
-  pos: ''
+Runs inside `audit_module.py` and checks that markdown structure follows `meta.yaml` outline targets.
 
-# After (enriched)
-- lemma: цивілізація
-  ipa: /t͡sɪvʲilʲiˈzat͡sʲijɐ/
-  translation: civilization
-  pos: noun
-  gender: f
-```
-
-**Batch usage for entire level:**
+### `scripts/vocab_init.py`
 
 ```bash
-# Enrich all vocabulary files in HIST
-for f in curriculum/l2-uk-en/hist/vocabulary/*.yaml; do
-  .venv/bin/python scripts/vocab_enrich_nlp.py "$f"
-done
+npm run vocab:init
+npm run vocab:init:force
+.venv/bin/python scripts/vocab_init.py l2-uk-en --force
 ```
 
-**Related:** See GitHub issue #455 for implementation details.
-
----
-
-### cross_file_integrity.py (Audit Check)
-
-**Purpose:** Validate that Ukrainian words used in activities exist in vocabulary YAML files.
-
-**Integration:** Runs automatically as part of `audit_module.py` (integrated check).
+### `scripts/populate_vocab_db.py`
 
 ```bash
-# Runs automatically during module audit
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/aneksiia-krymu.md
-
-# Output includes vocabulary integrity violations
+npm run vocab:scan
+.venv/bin/python scripts/populate_vocab_db.py
 ```
-
-**What it checks:**
-
-1. Extracts Ukrainian words from activities YAML (`activities/{slug}.yaml`)
-2. Loads cumulative vocabulary (current module + all prior modules)
-3. Compares used words against available vocabulary
-4. Reports violations with actionable fix suggestions
-
-**Example output:**
-
-```
-❌ Vocabulary integrity violations: 482
-   ✓ Smart matching enabled: 356/838 words matched
-     (including 281 inflected forms via stem/fuzzy matching)
-
-   ❌ [VOCABULARY_NOT_DEFINED] Word 'автентику' used in activities...
-      Checked: exact match, stem match, fuzzy match - all failed.
-      Add to: curriculum/l2-uk-en/hist/vocabulary/aneksiia-krymu.yaml
-      Example:
-      - lemma: автентику
-        ipa: ''
-        translation: ''
-        pos: noun
-```
-
-**✨ SMART MATCHING:** Uses corpus-based fuzzy matching (no external dependencies!)
-
-- **Stem extraction:** Strips Ukrainian case endings (агресії → агрес)
-- **Prefix matching:** Handles word families (військовими → військовий)
-- **Fuzzy matching:** Edit distance (80% similarity threshold)
-- **Performance:** Reduces false positives by 36.8% compared to exact matching
-
-**Accuracy:**
-
-- A1-A2: ~90% accuracy (simple inflection)
-- B1-B2: ~60% accuracy (moderate inflection)
-- C1-C2: ~50% accuracy (complex inflection)
-
-Remaining false positives are typically irregular forms, diminutives, or prefixed verbs. Manual review recommended for B2+ content.
-
-**Documentation:** See `docs/CROSS-FILE-INTEGRITY.md` for technical details and performance metrics.
-
----
-
-### outline_compliance.py (Audit Check)
-
-**Purpose:** Validate that markdown content follows content_outline structure from meta YAML.
-
-**Integration:** Runs automatically as part of `audit_module.py` (integrated check).
-
-**What it checks:**
-
-1. All outline sections exist as ## headers in markdown
-2. Word count per section meets minimum (-10% warning, -20% error). Over target is acceptable.
-3. Extra sections in markdown not in outline
-
-**Example output:**
-
-```
-⚠️  Outline compliance: 7 errors, 8 warnings
-   ❌ [MISSING_OUTLINE_SECTION] Section 'Повчання Мономаха' not found...
-   ❌ [SECTION_LENGTH_MISMATCH] Section 'Вступ' is 82% under target.
-   ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Деколонізаційний погляд' not in outline...
-```
-
-**When it activates:**
-
-- Only for modules with `content_outline` in meta YAML
-- Gracefully skips modules without outlines
-- Common for HIST modules using fractal generation
-
-**Fuzzy matching features:**
-
-- Normalizes section names (em-dashes, punctuation, case)
-- 60% similarity threshold via SequenceMatcher
-- Handles variations: "Вступ" matches "Вступ — Останній великий князь"
-
-**Thresholds (only for sections UNDER target):**
-
-- **10% under** = WARNING starts
-- **20% under** = ERROR starts
-- Over target = Acceptable (no violation)
-
-**Documentation:** See `docs/OUTLINE-COMPLIANCE.md` for complete technical details.
-
----
-
-### vocab_init.py
-
-**Purpose:** Initialize a fresh SQLite vocabulary database with proper schema.
-
-```bash
-npm run vocab:init                  # Create database
-npm run vocab:init:force            # Force recreate (deletes existing)
-.venv/bin/python scripts/vocab_init.py l2-uk-en --force  # Direct invocation
-```
-
-**Creates:** `curriculum/{lang}/vocabulary.db`
-
-### populate_vocab_db.py
-
-**Purpose:** Scans all module markdown files and populates the SQLite database.
-
-```bash
-npm run vocab:scan                  # Scan all modules
-python3 scripts/populate_vocab_db.py  # Direct invocation
-```
-
----
-
-## Activity Scripts
-
-### enrich-activities.ts
-
-**Purpose:** Uses vocabulary database to generate activity scaffolds with proper vocabulary data.
-
-```bash
-npx ts-node scripts/enrich-activities.ts l2-uk-en 1-100
-```
-
-**Level Configuration:**
-
-| Level | Activities | Items/Activity | Refresher % | Complexity |
-|-------|------------|----------------|-------------|------------|
-| A1 | 6 | 10 | 10% | simple |
-| A2 | 6 | 12 | 15% | medium |
-| A2+ | 7 | 12 | 20% | medium |
-| B1/B1+ | 8 | 12 | 25% | complex |
-| B2/B2+ | 8 | 12 | 30% | advanced |
-
-### generate-exercises.ts
-
-**Purpose:** Generates additional activity templates based on vocabulary and grammar patterns.
-
-```bash
-npx ts-node scripts/generate-exercises.ts              # All modules
-npx ts-node scripts/generate-exercises.ts 1-80         # Pre-B1 only
-npx ts-node scripts/generate-exercises.ts 5            # Single module
-```
-
-**Activity Types:**
-
-- **Type A (Easy):** match-up, true-false, group-sort
-- **Type B (Medium):** fill-in, quiz
-- **Type C (Hard):** unjumble, transform
 
 ---
 
 ## Activity Quality Validation
 
-**Purpose:** Optional manual validation workflow for B1+ activity quality using deterministic checks + human semantic assessment.
-
-> **When to use:** Recommended for high-stakes content (C1/C2, pre-publication).
-
-### Workflow Overview
-
-1. **Generate Queue:** Pre-populate deterministic quality checks for manual validation
-2. **Manual Validation:** Human reviewer fills in semantic quality scores
-3. **Finalize:** Evaluate CEFR-specific quality gates and generate report
-4. **Integrate:** Optional quality report shown in audit output (INFO gate)
-
-### Quality Dimensions (5-Dimension Model)
-
-| Dimension              | Scale    | Measures                                                    |
-| ---------------------- | -------- | ----------------------------------------------------------- |
-| **Naturalness**        | 1-5      | Robotic → Unnatural → Acceptable → Natural → Highly Natural |
-| **Difficulty**         | 3-option | too_easy \| appropriate \| too_hard                         |
-| **Distractor Quality** | 1-5      | Nonsense → Weak → Acceptable → Good → Excellent             |
-| **Engagement**         | 1-5      | Boring → Low → Neutral → Engaging → Highly Engaging         |
-| **Variety**            | 0-100%   | Mechanical pattern detection score                          |
-
-### CEFR Quality Gates
-
-| Level  | Min Naturalness | Max Difficulty Inappropriate | Min Engagement | Min Distractor Quality | Min Variety |
-| ------ | --------------- | ---------------------------- | -------------- | ---------------------- | ----------- |
-| A1, A2 | None            | None                         | None           | None                   | None        |
-| B1     | 3.5             | ≤20%                         | 3.0            | 4.0                    | 60%         |
-| B2     | 4.0             | ≤15%                         | 3.5            | 4.2                    | 65%         |
-| C1     | 4.5             | ≤10%                         | 4.0            | 4.5                    | 70%         |
-| C2     | 4.8             | ≤5%                          | 4.5            | 5.0                    | 75%         |
-
-### Scripts
-
-#### generate_activity_quality_queue.py
-
-**Purpose:** Run deterministic quality checks and generate queue file for manual validation.
-
-```bash
-# Generate queue for specific module
-npm run quality:queue l2-uk-en b1 52
-
-# Or directly:
-.venv/bin/python scripts/audit/generate_activity_quality_queue.py l2-uk-en b1 52
-```
-
-**Output:** `curriculum/l2-uk-en/b1/queue/52-module-slug-quality.yaml`
-
-**Deterministic Checks Run:**
-
-- `analyze_sentence_variety()` - Pattern repetition detection
-- `estimate_vocabulary_difficulty()` - Word length heuristics per CEFR
-- `analyze_distractor_quality()` - Word class matching, plausibility
-- `check_natural_ukrainian_markers()` - Pronoun overuse, calques
-- `estimate_cognitive_load()` - Task complexity assessment
-
-**Queue File Structure:**
-
-```yaml
-module: 52-module-slug
-level: B1
-activities:
-  - activity_id: quiz-example
-    deterministic_checks:
-      variety_score: 85
-      vocabulary_difficulty: appropriate
-      cognitive_load: medium
-      naturalness_issues: []
-      distractor_quality_avg: 4.2
-    # Manual validation (empty, to be filled):
-    naturalness: null
-    difficulty: null
-    engagement: null
-    distractor_score: null
-    variety_score: null
-```
-
-#### finalize_activity_quality.py
-
-**Purpose:** Read completed queue file, evaluate quality gates, generate report.
-
-```bash
-# After manual validation completed
-npm run quality:finalize l2-uk-en b1 52
-
-# Or directly:
-.venv/bin/python scripts/audit/finalize_activity_quality.py l2-uk-en b1 52
-```
-
-**Output:** `curriculum/l2-uk-en/b1/audit/52-module-slug-quality.md`
-
-**Report Includes:**
-
-- Pass/Fail status against CEFR gates
-- Quality scores summary table
-- Difficulty breakdown (too easy/appropriate/too hard)
-- Failed gates details with recommendations
-- Incomplete validation warnings
-
-### Integration with Audit Pipeline
-
-Quality validation is **optional and informational** (does not block audit pass/fail).
-
-When quality report exists, audit output shows:
-
-```
-Activity_quality ⚠️ Quality gates: 1 failed (see report)
-Activity_quality ✅ Quality gates: All passed
-Activity_quality 📋 Quality validation available (optional)
-```
-
-### Manual Validation Workflow
-
-1. **Generate queue:**
-
-   ```bash
-   npm run quality:queue l2-uk-en b1 52
-   ```
-
-2. **Open queue file:**
-
-   ```bash
-   open curriculum/l2-uk-en/b1/queue/52-module-slug-quality.yaml
-   ```
-
-3. **Fill in manual scores for each activity:**
-   - `naturalness:` 1-5 (How natural does the Ukrainian sound?)
-   - `difficulty:` too_easy | appropriate | too_hard
-   - `engagement:` 1-5 (How engaging is the content?)
-   - `distractor_score:` 1-5 (How plausible are the wrong options?)
-   - `variety_score:` 1-5 (Manual assessment of variety)
-
-4. **Finalize and generate report:**
-
-   ```bash
-   npm run quality:finalize l2-uk-en b1 52
-   ```
-
-5. **Review report:**
-
-   ```bash
-   cat curriculum/l2-uk-en/b1/audit/52-module-slug-quality.md
-   ```
-
-6. **Fix issues if needed and regenerate activities**
-
-### Related Files
-
-- **`scripts/audit/checks/activity_quality.py`** - Deterministic quality check functions
-- **`scripts/audit/generate_activity_quality_queue.py`** - Queue generation
-- **`scripts/audit/finalize_activity_quality.py`** - Report generation
-- **`tests/test_activity_quality.py`** - Unit tests (36 tests, all passing)
-- **Issue #355** - Activity Quality Validation Expansion
-
----
-
-## Level Status Generation
-
-### generate_level_status.py
-
-**Purpose:** Generate status index files showing module completion overview for a level.
-
-**Usage:**
-
-```bash
-# Full level (audits all modules)
-npm run status:a2              # Generate A2 status
-npm run status:hist         # Generate HIST status
-npm run status:all             # Generate all levels
-
-# Filtered modules (faster - only audits specified modules)
-.venv/bin/python scripts/generate_level_status.py a2 5        # Single module
-.venv/bin/python scripts/generate_level_status.py a2 1-4      # Range
-.venv/bin/python scripts/generate_level_status.py a2 1-4,6-10 # Multiple ranges
-```
-
-**Filter Syntax:**
-- `5` - Single module
-- `1-4` - Range (modules 1, 2, 3, 4)
-- `1-4,6-10` - Multiple ranges (modules 1-4 and 6-10)
-- `1,3,5,7-9` - Mixed (modules 1, 3, 5, 7, 8, 9)
-
-**Behavior with filter:**
-- Only audits specified modules (faster)
-- Preserves existing status for non-filtered modules
-- Updates totals based on combined data
-
-**Output:** `docs/{LEVEL}-STATUS.md`
+Optional activity quality validation:
+- `scripts/audit/generate_activity_quality_queue.py` creates the queue.
+- `scripts/audit/finalize_activity_quality.py` creates the report.
+- See `tests/test_activity_quality.py`.
 
 ---
 
 ## Research Quality Assessment
 
-### assess_research.py
+### `assess_research.py`
 
-**Purpose:** Research quality assessment and upgrade pipeline.
-
-**Workflow (run in order):**
+Research assessment and upgrade pipeline.
 
 ```bash
-# 1. Assess — see current quality
+# Assess
 .venv/bin/python scripts/assess_research.py a1
+.venv/bin/python scripts/assess_research.py a1 5
+.venv/bin/python scripts/assess_research.py a1 --gaps
+.venv/bin/python scripts/assess_research.py --all
 
-# 2. Upgrade — regenerate research below 9/10 (retries up to 3x)
+# Upgrade and downstream actions
 .venv/bin/python scripts/assess_research.py a1 --upgrade
-
-# 3. Enrich — enrich plans from 9+ research
+.venv/bin/python scripts/assess_research.py a1 --upgrade --dry-run
 .venv/bin/python scripts/assess_research.py a1 --enrich
-
-# 4. Refresh — rebuild content for modules with upgraded research
 .venv/bin/python scripts/assess_research.py a1 --refresh
+
+# Coverage
+.venv/bin/python scripts/assess_research.py a1 --coverage
+.venv/bin/python scripts/assess_research.py --all --coverage
+.venv/bin/python scripts/assess_research.py c1 --coverage --strict
+.venv/bin/python scripts/assess_research.py c1 --coverage --json
 ```
 
-**Other options:**
-
-```bash
-.venv/bin/python scripts/assess_research.py a1 5          # single module detail
-.venv/bin/python scripts/assess_research.py a1 --gaps     # only modules with gaps
-.venv/bin/python scripts/assess_research.py --all         # all tracks overview
-.venv/bin/python scripts/assess_research.py a1 --json     # JSON output
-.venv/bin/python scripts/assess_research.py a1 --upgrade --dry-run      # preview without building
-.venv/bin/python scripts/assess_research.py a1 --upgrade --min-score 8  # custom threshold
-.venv/bin/python scripts/assess_research.py a1 --coverage               # research coverage gaps
-.venv/bin/python scripts/assess_research.py --all --coverage            # full curriculum coverage
-.venv/bin/python scripts/assess_research.py c1 --coverage --strict      # exit 1 if gaps (CI)
-.venv/bin/python scripts/assess_research.py c1 --coverage --json        # JSON: {total, researched, gaps}
-```
-
-**Self-healing retries:** `--upgrade` retries each module up to 3 attempts. Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
-
-**v3 integration:** after a successful upgrade, `--upgrade` automatically clears Phase A from `state-v3.json` for that module, forcing meta outline regeneration from the improved research on next build.
-
-### enrich_research_quotes.py
-
-**Purpose:** Convert inline `"..."` quotes to `«»` guillemets in research files so the `primary_quotes` scorer counts them. Only converts quotes with 20+ Cyrillic characters inside the "Ключові факти та цитати" section and blockquote lines. No content changes — only quote mark characters.
-
-```bash
-# Preview changes (default)
-.venv/bin/python scripts/enrich_research_quotes.py --dry-run
-
-# Apply to specific tracks
-.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istorio bio
-
-# Apply to default tracks (hist, istorio, bio)
-.venv/bin/python scripts/enrich_research_quotes.py --apply
-```
-
-### enrich_research_gaps.py
-
-**Purpose:** Close deterministic research quality gaps without LLM calls. Adds blockquote-formatted primary source quotes (from existing `«»` text), skeleton `section_notes` and `decolonization` sections where missing. Reports remaining gaps that need Gemini enrichment (sources, chronology).
-
-```bash
-# Preview (default)
-.venv/bin/python scripts/enrich_research_gaps.py --dry-run
-
-# Apply fixes
-.venv/bin/python scripts/enrich_research_gaps.py --apply
-```
-
-### Full Research → Build Workflow
-
-```bash
-# 1. Pre-seed research for all modules
-.venv/bin/python scripts/build_module_v5.py bio --all --research-only
-
-# 2. Assess — see what's below 9/10
-.venv/bin/python scripts/assess_research.py bio --gaps
-
-# 3. Upgrade weak research
-.venv/bin/python scripts/assess_research.py bio --upgrade
-
-# 4. Enrich plans from 9+ research
-.venv/bin/python scripts/assess_research.py bio --enrich
-
-# 5. Full build
-.venv/bin/python scripts/build_module_v5.py bio --all
-```
+Use `--upgrade` to regenerate weak research, `--enrich` to push strong research into plans, and `--refresh` to rebuild content that depends on upgraded research.
 
 ---
 
 ## Consultation Approval Workflow
 
-The consultation loop proposes template changes to improve content generation. Proposals queue for human review.
+The consultation loop proposes prompt or template changes for human review.
 
-### CLI Tool (`scripts/consultation_cli.py`)
+### `scripts/consultation_cli.py`
 
 ```bash
-# List pending proposals
 .venv/bin/python scripts/consultation_cli.py list
-
-# Show full detail for a proposal
 .venv/bin/python scripts/consultation_cli.py show FILENAME.yaml
-
-# Approve (validates FIND strings, applies patches to templates)
 .venv/bin/python scripts/consultation_cli.py approve FILENAME.yaml
-
-# Approve with dry-run (validate only, don't apply)
 .venv/bin/python scripts/consultation_cli.py approve FILENAME.yaml --dry-run
-
-# Reject with reason
-.venv/bin/python scripts/consultation_cli.py reject FILENAME.yaml --reason "Superseded by #2"
-
-# Batch approve all high-confidence proposals
+.venv/bin/python scripts/consultation_cli.py reject FILENAME.yaml --reason "Superseded by newer proposal"
 .venv/bin/python scripts/consultation_cli.py approve-all --confidence high
-
-# Batch approve dry-run (validate only)
 .venv/bin/python scripts/consultation_cli.py approve-all --confidence high --dry-run
 ```
 
-### Web UI
-
-Open `http://localhost:8765/consultation.html` (requires API server running).
-
-### API Endpoints
-
-```bash
-# List pending (API)
-curl -s http://localhost:8765/api/consultation/queue | python3 -m json.tool
-
-# Approve via API
-curl -s -X POST "http://localhost:8765/api/consultation/queue/FILENAME.yaml/approve?confirm=true"
-
-# History and metrics
-curl -s http://localhost:8765/api/consultation/history | python3 -m json.tool
-curl -s http://localhost:8765/api/consultation/metrics | python3 -m json.tool
-```
-
-### Files
+Queue locations:
 
 | Path | Purpose |
-|------|---------|
+|---|---|
 | `claude_extensions/consultation-queue/*.yaml` | Pending proposals |
-| `claude_extensions/consultation-queue/applied/` | Approved and applied |
+| `claude_extensions/consultation-queue/applied/` | Approved proposals |
 | `claude_extensions/consultation-queue/rejected/` | Rejected proposals |
-| `scripts/pipeline/consultation.py` | Parser, patcher, queue logic |
-| `scripts/api/consultation_router.py` | API endpoints |
-| `playgrounds/consultation.html` | Web UI dashboard |
 
 ---
 
 ## Decision Tracking
 
-### check_decisions.py
+### `check_decisions.py`
 
-**Purpose:** Scan `docs/decisions/decisions.yaml` for expired or near-expiry decisions. Runs in the `session-setup` hook to surface stale decisions at session start.
-
-**Usage:**
+Scans `docs/decisions/decisions.yaml` for expired or near-expiry decisions.
 
 ```bash
-# Full report — lists all active decisions with expiry status
 .venv/bin/python scripts/check_decisions.py
-
-# Quiet mode — exit 1 if any expired, no output otherwise (for CI/hooks)
 .venv/bin/python scripts/check_decisions.py --quiet
-
-# Create GH issues for expired decisions (label: decision:stale)
 .venv/bin/python scripts/check_decisions.py --create-issues
 ```
 
-**What it checks:**
-
-- Decisions past their `expires` date → reported as EXPIRED
-- Decisions expiring within 14 days → reported as EXPIRING SOON
-- Budget compliance (max 50 active, max 500 lines)
-
-**Output example:**
-
-```
-Decision Journal Status
-═══════════════════════
-  Active: 12/50  |  Lines: 187/500
-
-  EXPIRED (action required):
-    dec-031  architecture  "Bridge module between A2 and B1"  expired 2026-03-15
-
-  EXPIRING SOON (review within 14 days):
-    dec-042  pipeline      "Use Opus for all content writing"  expires 2026-04-10
-```
-
-**Integration:** Called by `session-setup.sh` hook. See `docs/best-practices/decision-journal.md` for the full decision journal system.
+This is also called by `session-setup.sh`.
 
 ---
 
-## Playgrounds (Interactive Visualizations)
+## Playgrounds
 
-Interactive HTML playgrounds for exploring and prototyping curriculum architecture.
-
-### Scripts
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `generate_playground_data.py` | Aggregate status data from JSON cache | `npm run playgrounds:data` |
-| `build_playgrounds.py` | Build HTML with embedded real data | `npm run playgrounds:build` |
-
-### npm Commands
-
-```bash
-npm run playgrounds:data      # Generate playgrounds/data/status.json from audit cache
-npm run playgrounds:build     # Rebuild HTML files with embedded data
-npm run playgrounds           # Full rebuild + open landing page in browser
-```
-
-### Available Playgrounds
-
-| Playground | File | Purpose |
-|------------|------|---------|
-| **Landing Page** | `playgrounds/index.html` | Links to all playgrounds with summary stats |
-| **Curriculum Architecture** | `playgrounds/playground-curriculum-architecture.html` | Three-layer architecture, 4-stage workflow, track structure |
-| **Module Status Dashboard** | `playgrounds/playground-module-status.html` | Real-time status across all levels (uses real audit data) |
-| **Activity Design Studio** | `playgrounds/playground-activity-design.html` | Prototype activities with live preview + YAML export |
-| **Claude-Gemini Communication** | `playgrounds/playground-claude-gemini.html` | Message broker visualization, conversation threads |
-
-### Data Flow
-
-```
-curriculum/l2-uk-en/{level}/status/*.json   ← Per-module audit cache
-                ↓
-scripts/generate_playground_data.py         ← Aggregates to single file
-                ↓
-playgrounds/data/status.json                ← 692 modules, all levels
-                ↓
-scripts/build_playgrounds.py                ← Embeds data in HTML
-                ↓
-playgrounds/playground-module-status.html   ← Interactive dashboard
-```
-
-### Updating After Audits
-
-After running audits that update status cache:
-
-```bash
-# Regenerate playground data and rebuild
-npm run playgrounds
-```
-
-This ensures the Module Status Dashboard reflects the latest audit results.
+| Entry | Purpose |
+|---|---|
+| `scripts/generate_playground_data.py` | Aggregate audit cache into playground data |
+| `scripts/build_playgrounds.py` | Build HTML playgrounds with embedded data |
+| `npm run playgrounds:data` | Regenerate `playgrounds/data/status.json` |
+| `npm run playgrounds:build` | Rebuild playground HTML |
 
 ---
 
-## NPM Scripts Summary
+## Inter-Agent Communication
+
+SQLite-backed message broker and CLI bridge for Claude, Gemini, and Codex.
+
+### Bridge CLI
+
+All bridge commands route through the runtime at `scripts/agent_runtime/`.
 
 ```bash
-# Audit (Level/Module/Range)
-npm run audit -- b1           # Audit entire B1 level
-npm run audit -- b1 5         # Audit B1 module 5
-npm run audit -- b1 1-10      # Audit B1 modules 1-10
-npm run audit -- b1 1,3,5     # Audit B1 modules 1, 3, 5
-npm run audit -- b1 --fix     # Audit with YAML auto-fix
-
-# Level Status (per-level shortcuts)
-npm run status:a1             # Generate A1 status
-npm run status:a2             # Generate A2 status
-npm run status:b1             # Generate B1 status
-npm run status:b2             # Generate B2 status
-npm run status:c1             # Generate C1 status
-npm run status:c2             # Generate C2 status
-npm run status:hist        # Generate HIST status
-npm run status:bio         # Generate BIO status
-npm run status:istorio        # Generate ISTORIO status
-npm run status:lit            # Generate LIT status
-npm run status:all            # Generate all level status indices
-
-# Full Pipeline (Python)
-npm run pipeline              # Run full validation pipeline
-npm run pipeline l2-uk-en a1  # Pipeline for specific level
-npm run pipeline l2-uk-en a1 5  # Pipeline for single module
-
-# Generation (Python)
-npm run generate              # Generate MDX for Starlight
-npm run generate:json         # Generate JSON for Vibe app
-
-# Validation (Python)
-npm run validate:mdx          # Validate MDX content integrity
-npm run validate:html         # Validate browser rendering (needs dev server)
-
-# Vocabulary Database (TypeScript)
-npm run vocab:init            # Create fresh database
-npm run vocab:init:force      # Force recreate database
-npm run vocab:scan            # Populate from modules
-npm run vocab:enrich          # Enrich module vocab sections
-npm run vocab:enrich:dry      # Preview enrichment changes
-npm run vocab:rebuild         # Full rebuild (init:force + scan)
-
-# Landing Page Sync
-npm run sync:landing          # Update landing pages with current stats
-npm run sync:landing:dry      # Preview changes without applying
-
-# Claude Skills Reference
-
-## Workflow Enhancement Skills
-
-### /explain-decision - Learn Design Rationale
-
-**Purpose**: Understand "why" behind curriculum decisions, not just "what"
-
-**Usage**:
-```
-/explain-decision [topic]                    # General explanation
-/explain-decision module [level] [num]       # Module-specific
-/explain-decision compare [A] vs [B]         # Compare approaches
-```
-
-**Examples**:
-```
-/explain-decision aspect-teaching-sequence   # Why aspect at B1, not A2?
-/explain-decision module b1 9                # Why is M9 structured this way?
-/explain-decision compare aspect-first vs motion-first
-```
-
-**Output**: Provides pedagogical rationale, CEFR alignment, trade-offs, alternatives, Ukrainian-specific factors
-
-**File**: `claude_extensions/commands/explain-decision.md`
-
-### /interview - Specification Through Questioning
-
-**Purpose**: Reduce rework by gathering complete specifications upfront (40-60 questions)
-
-**Usage**:
-```
-/interview [task description]                # Basic interview
-/interview [task] --mode focused             # Focused (20-30 questions)
-/interview [task] --mode rapid               # Rapid (10-15 questions)
-```
-
-**Examples**:
-```
-/interview Create checkpoint activities for B1 grammar modules
-/interview Add ML-based content quality scoring --mode focused
-```
-
-**Interview Phases**:
-1. Understand the Goal (10-15 questions)
-2. Technical Requirements (15-20 questions)
-3. Preferences & Alternatives (10-15 questions)
-4. Success Criteria (5-10 questions)
-
-**Output**: Complete specification document + recommendation (Proceed/Clarify/Revise/Block)
-
-**File**: `claude_extensions/commands/interview.md`
-
-### /review-content-quick - Fast Pre-Check Filter
-
-**Purpose**: Catch obvious quality issues in 3-5 minutes before deep review
-
-**Usage**:
-```
-/review-content-quick [LEVEL] [NUM]          # Single module
-/review-content-quick [LEVEL]                # All modules in level
-/review-content-quick [LEVEL] [START-END]    # Range
-```
-
-**What It Catches**:
-- ✅ Duplicated content (copy-paste sections)
-- ✅ Robotic AI patterns (generic openings, filler phrases)
-- ✅ Russianisms & calques (auto-fail items)
-- ✅ Grammar errors (spot-check 5-10 sentences)
-- ✅ Activity errors (wrong answers)
-- ✅ Coherence issues (flow, consistency)
-
-**When to Use**: During content generation, before committing modules
-
-**Output**: `curriculum/l2-uk-en/{level}/audit/{slug}-quick-review.md`
-
-**File**: `claude_extensions/commands/review-content-quick.md`
-
-### /review-content-v4 - Deep Quality Validation
-
-**Purpose**: Comprehensive quality review (20-25 min) before final publication
-
-**What It Validates**:
-- All 12 quality dimensions
-- Exhaustive Ukrainian verification (every sentence)
-- All activity items tested
-- Linguistic accuracy claims verified
-- Naturalness scoring
-
-**When to Use**: Before final publication, when level complete
-
-**Optimization Guide**: See `review-content-deep-optimized.md` for 35% time savings
-
-**Files**:
-- `claude_extensions/commands/review-content-v4.md`
-- `claude_extensions/commands/review-content-deep-optimized.md`
-
----
-
----
-
-## Inter-Agent Communication (Claude <-> Gemini)
-
-**Purpose**: Enable bidirectional communication between Claude, Gemini, and future agents.
-
-**Architecture**: SQLite Event Bus with MCP + CLI bridges.
-
-**See**: `docs/CLAUDE-GEMINI-COOPERATION.md` for full architecture.
-
-### Message Types
-
-| Type | Purpose |
-|------|---------|
-| `query` | Ask another agent a question |
-| `response` | Answer to a query |
-| `request` | Request work/action |
-| `handoff` | Transfer task with context |
-| `context` | Share state/knowledge |
-| `feedback` | Review or comment |
-
-### Agent Bridge CLI
-
-> **Architecture note:** As of #1184 (April 2026), all bridge commands route through the unified **agent runtime** at `scripts/agent_runtime/`. Adding a new agent = one new adapter file + one registry entry. See [`docs/agent-runtime-guide.md`](agent-runtime-guide.md) for the runtime design.
-
-```bash
-# Check inbox for Gemini by default
+# Inbox and reads
 .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
-
-# Check inbox for Codex explicitly
 .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for codex
-
-# Read specific message
 .venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
-
-# Send message to Claude (with type)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id my-task
-
-# Auto-process with Gemini CLI (read → process → respond)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py process <message_id> --model gemini-3-pro-preview
-
-# Get full conversation history
 .venv/bin/python scripts/ai_agent_bridge/__main__.py conversation <task_id>
 
-# Interactive mode
+# Send and process
+.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id my-task
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process <message_id> --model gemini-3-pro-preview
 .venv/bin/python scripts/ai_agent_bridge/__main__.py interactive
 
-# Dispatch with full execution access (Otaman Phase 7)
+# Dispatch with full execution access
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
   "Activate skill final-review. ..." \
   --task-id fr-{slug} \
@@ -2104,357 +691,65 @@ npm run sync:landing:dry      # Preview changes without applying
   --delimiters FINAL_REVIEW,FRICTION \
   --model gemini-3-pro-preview
 
-# Quick question to Codex (read-only bridge path)
+# Quick Codex question
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
   "Review posted on #1177. Please read and respond." \
   --task-id issue-1177
+
+# Threaded Gemini conversation
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  "Let's plan the A1/1 build" \
+  --task-id a1-1-planning \
+  --model gemini-3.1-pro-preview
 ```
 
-**Codex sandbox control:**
+### Codex sandbox control
 
 ```bash
-# Shared fallback for all Codex CLI launches
 export CODEX_CLI_MODE=danger
-
-# ai_agent_bridge Codex path only: safe | workspace-write | danger
 export CODEX_BRIDGE_MODE=safe
-
-# scripts/build/dispatch.py Codex path only: safe | workspace-write | danger
 export CODEX_DISPATCH_MODE=workspace-write
 ```
 
 Defaults:
-- `ai_agent_bridge` Codex calls default to `safe` (`codex exec -s read-only`)
+
+- `ai_agent_bridge` Codex calls default to `safe`
 - `dispatch.py` defaults to `safe` for `codex` and `workspace-write` for `codex-tools`
-- `danger` maps to `codex exec --dangerously-bypass-approvals-and-sandbox`
+- `danger` maps to bypass mode
 
-**Multi-turn conversation (new):**
-```bash
-# Start or continue a threaded conversation with Gemini
-.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
-  "Let's plan the A1/1 build" \
-  --task-id "a1-1-planning" \
-  --model gemini-3.1-pro-preview
-```
-Each turn includes full conversation history from the broker DB. Truncation drops oldest messages first.
-
-**Key flags for `ask-gemini`:**
-
-| Flag | Purpose |
-|------|---------|
-| `--stdout-only` | READ-ONLY mode — text output only, no bash/writes |
-| `--allow-write` | FULL-EXECUTION mode — bash + file writes, silence protocol enforced |
-| `--delimiters X,Y` | Inject specific delimiter names into system prompt (e.g., `FINAL_REVIEW,FRICTION`) |
-| `--model` | Gemini model (always `gemini-3-pro-preview` for content) |
-| `--task-id` | Session isolation (prefix: `yw-` builder, `gr-` reviewer, `fr-` final review) |
-
-**Key flags for `converse`:**
-
-| Flag | Purpose |
-|------|---------|
-| `--task-id` | Conversation thread ID (required) |
-| `--model` | Gemini model (default: `gemini-3.1-pro-preview`) |
-| `--no-github` | Skip auto-posting to GitHub issues |
-| `--no-github` | Skip auto-posting review to GitHub issue |
-
-### Signal Script (Gemini → Claude notification)
+### Helper tools
 
 ```bash
-# Send message + trigger macOS notification
-.venv/bin/python scripts/signal_claude.py "Your message here"
+.venv/bin/python scripts/tools/signal_claude.py "Your message here"
+.venv/bin/python scripts/tools/message_viewer.py
 ```
 
-### Message Viewer (Web UI)
+`message_viewer.py` serves the archive viewer on `http://localhost:5055`.
 
-```bash
-# Start web viewer
-.venv/bin/python scripts/message_viewer.py
+### Message types
 
-# Open: http://localhost:5055
-```
-
-Features: Stats dashboard, filter by sender/task/type, conversation grouping.
-
-### MCP Message Broker (For Claude)
-
-Available via MCP tools:
-- `send_message(to, from_llm, content, task_id, message_type)`
-- `receive_messages(for_llm, unread_only, task_id)`
-- `check_inbox(for_llm)`
-- `get_conversation(task_id)`
-- `acknowledge_message(message_id)`
-- `list_tasks()`
-
-### Agent Watcher Daemon (NEW)
-
-Monitors message broker and triggers agents automatically:
-
-```bash
-# Check status
-.venv/bin/python scripts/agent_watcher.py --status
-
-# Start daemon (foreground)
-.venv/bin/python scripts/agent_watcher.py
-
-# Start daemon (background)
-.venv/bin/python scripts/agent_watcher.py --daemon
-
-# Stop daemon
-.venv/bin/python scripts/agent_watcher.py --stop
-
-# Process one message and exit
-.venv/bin/python scripts/agent_watcher.py --once
-```
-
-**Features:**
-- Polls database every 5s (30s when idle)
-- Loop prevention: max 10 turns per task
-- User session awareness: backs off when user is active
-- Logs to `.mcp/servers/message-broker/watcher.log`
-
-### Files
-
-| File | Purpose |
-|------|---------|
-| `.mcp/servers/message-broker/server.py` | MCP server for Claude |
-| `scripts/ai_agent_bridge/__main__.py` | CLI bridge for agents |
-| `scripts/agent_watcher.py` | Watcher daemon for auto-triggering |
-| `scripts/signal_claude.py` | Notification trigger |
-| `scripts/message_viewer.py` | Web UI for message archive |
-| `.mcp.json` | MCP configuration |
-| `.mcp/servers/message-broker/messages.db` | SQLite message queue |
-| `.mcp/servers/message-broker/watcher.pid` | Daemon PID file |
-| `.mcp/servers/message-broker/watcher.log` | Daemon log file |
-
-### Memory Contexts
-
-- **Claude**: `CLAUDE.md` (Inter-Agent Communication section)
-- **Gemini**: `.gemini/GEMINI.md` (Inter-Agent Communication section)
-
----
-
-## Deployment
-
-```bash
-# Deploy all skills to .claude/ and .agent/
-npm run claude:deploy
-```
-
-**Edits**: Make changes in `claude_extensions/commands/`, then deploy
-
----
-
-# Playgrounds (Visualization)
-npm run playgrounds:data      # Generate status data from audit cache
-npm run playgrounds:build     # Build HTML with embedded data
-npm run playgrounds           # Full rebuild + open in browser
-
-# Development
-npm run dev:starlight          # Start Astro Starlight dev server (for HTML validation)
-```
+| Type | Purpose |
+|---|---|
+| `query` | Ask another agent a question |
+| `response` | Return an answer |
+| `request` | Request work |
+| `handoff` | Transfer a task with context |
+| `context` | Share state or findings |
+| `feedback` | Review or comment |
 
 ---
 
 ## Common Workflows
 
-### New Module Creation (Full Pipeline)
-
-```bash
-# Option 1: Use /module command (recommended - runs full 7-phase workflow)
-/module hist 5
-
-# Option 2: Manual pipeline after writing content
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
-npm run pipeline l2-uk-en a1 5
-npm run generate:json l2-uk-en a1 5
-```
-
-### Core A Rebuild (A1/A2/B1 M01-05)
-
-For beginner mixed-language modules (119 total), use the Core A workflow:
-
-```bash
-# 1. Lightweight research (15-20 min)
-#    - Check State Standard 2024 for grammar point
-#    - Verify vocabulary frequency
-#    - Find 1-2 cultural hooks
-
-# 2. Write content following plan
-/module a1 5
-
-# 3. Audit
-scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
-
-# 4. Review with Core A prompt
-/review-content-core-a a1 5
-```
-
-**Full workflow:** `docs/CORE-A-WORKFLOW.md`
-
-### Core B Rebuild (B1 M06+/B2/C1/C2/PRO)
-
-For full-immersion modules (477 total), use the Core B workflow:
-
-```bash
-# 1. Research (20-30 min)
-#    - State Standard §section for grammar
-#    - Vocabulary frequency + collocations
-#    - Cross-reference with prior modules
-
-# 2. Write content following plan
-/module b1 15
-
-# 3. Audit
-scripts/audit_module.sh curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md
-
-# 4. Review with standard v4 prompt
-/review-content-v4 b1 15
-```
-
-**Full workflow:** `docs/CORE-B-WORKFLOW.md`
-
-### Core Track Full Rebuild (A1/A2/B1/B2/C1/C2/PRO)
-
-For core tracks, use the 4-phase full-rebuild workflow that chains research, build, review, and verification:
-
-```bash
-/full-rebuild-core {level} {num}
-
-# Examples:
-/full-rebuild-core a1 5               # Core A (beginner)
-/full-rebuild-core b1 15              # Core B (immersion)
-/full-rebuild-core b2 10 --from=review  # Resume from review
-```
-
-**Phases:** Research (Phase 0) -> Build via /module (Phase 1) -> Review (Phase 2) -> Verify (Phase 3)
-
-Auto-detects Core A vs Core B workflow. See `claude_extensions/commands/full-rebuild-core.md` for full details.
-
-### Wiki Knowledge Base Compilation
-
-Compiles curated wiki articles from textbook sources using Gemini. These articles are injected as context when building module content (replaces raw RAG search for A2+ and all seminars).
-
-Each track type uses a different prompt:
-- **A1**: Pedagogical briefs (methodology, phonetic guardrails, vocabulary boundaries)
-- **A2-B2**: Grammar briefs (paradigms, frequency, L2 errors, textbook approaches)
-- **C1-C2**: Academic briefs (scholarly register, stylistic nuances)
-- **Seminars**: Knowledge articles (primary sources, decolonization, historiography)
-
-**Review loop:** `--review` enables adversarial review after compilation. Gemini reviews, outputs `<fixes>` with find/replace pairs, fixes are applied automatically, then re-reviewed. Target: 9/10. Hard stop at 4 rounds. Reviews saved to `wiki/.reviews/{domain}/`.
-
-```bash
-# ── Status & exploration ──
-
-# Check status — what's compiled across all tracks
-.venv/bin/python scripts/wiki/compile.py --status
-
-# List available modules for a track
-.venv/bin/python scripts/wiki/compile.py --track a1 --list
-.venv/bin/python scripts/wiki/compile.py --track folk --list
-
-# ── Compile articles ──
-
-# Compile one article (dry run first to check prompt)
-.venv/bin/python scripts/wiki/compile.py --track a1 --slug sounds-letters-and-hello --dry-run
-.venv/bin/python scripts/wiki/compile.py --track a1 --slug sounds-letters-and-hello
-
-# Compile one article + auto-review (up to 4 rounds, target 9/10)
-.venv/bin/python scripts/wiki/compile.py --track a2 --slug a2-bridge --review
-
-# Compile all articles for a track
-.venv/bin/python scripts/wiki/compile.py --track a1 --all
-
-# Compile all + review (recommended for production)
-.venv/bin/python scripts/wiki/compile.py --track a2 --all --review
-
-# Compile with limit (useful for testing)
-.venv/bin/python scripts/wiki/compile.py --track b1 --all --limit 5 --review
-
-# Force recompile (overwrites existing articles)
-.venv/bin/python scripts/wiki/compile.py --track folk --slug dumy-lytsarski --force
-
-# ── Review existing articles (no recompilation) ──
-
-# Review all FOLK articles (already compiled)
-.venv/bin/python scripts/wiki/compile.py --track folk --review-only
-
-# Review one specific article
-.venv/bin/python scripts/wiki/compile.py --track folk --slug dumy-lytsarski --review-only
-
-# Review first 5 only
-.venv/bin/python scripts/wiki/compile.py --track folk --review-only --limit 5
-
-# ── Maintenance ──
-
-# Regenerate the wiki index
-.venv/bin/python scripts/wiki/compile.py --update-index
-```
-
-**Discovery files** are auto-generated from plans if they don't exist. No separate step needed.
-
-**Build priority:** A1 → A2 → B1 (for current module building), then seminars (FOLK done, HIST/BIO pending).
-
-**Output:** Articles written to `wiki/{domain}/{slug}.md`. Reviews in `wiki/.reviews/{domain}/`. The build pipeline reads articles via `step_research` in `v6_build.py`.
-
-**Tracks:** a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay, lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama, lit-doc, lit-crimea, oes, ruth.
-
----
-
-### Seminar Track Full Rebuild
-
-For seminar tracks (hist, bio, istorio, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
-
-```bash
-/full-rebuild {track} {slug}
-
-# Examples:
-/full-rebuild bio lesya-ukrainka
-/full-rebuild hist bohdan-khmelnytskyi
-/full-rebuild lit marusya
-```
-
-**Phases:** Research (Phase 0) -> Meta alignment (Phase 1) -> Content hydration (Phase 2) -> YAML generation (Phase 3) -> Technical audit (Phase 4) -> Review-Content-v4 (Phase 5) -> Build pipeline (Phase 6)
-
-See `claude_extensions/commands/full-rebuild.md` for full workflow details.
-
-### Review Module Range
-
-```bash
-# 1. Audit multiple modules
-for i in {1..20}; do
-  .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/$i-*.md
-done
-
-# 2. Fix issues in failing modules
-
-# 3. Run pipeline for the level
-npm run pipeline l2-uk-en a1
-
-# 4. Generate JSON
-npm run generate:json l2-uk-en a1
-```
-
-### Fix Vocabulary Duplicates
-
-```bash
-# 1. Rebuild vocabulary database (validates cross-module)
-npm run vocab:rebuild
-
-# 2. Remove duplicates from later modules (per audit output)
-
-# 3. Re-run vocab:rebuild to verify
-npm run vocab:rebuild
-```
-
-### Validate After Changes
-
-```bash
-# Quick validation (no dev server needed)
-npm run validate:mdx l2-uk-en a1 5
-
-# Full validation (requires dev server)
-npm run dev:starlight  # In terminal 1
-npm run pipeline l2-uk-en a1 5  # In terminal 2
-```
-
----
+| Workflow | Command |
+|---|---|
+| Build one module | `/module {level} {num}` |
+| Full seminar rebuild | `/full-rebuild {track} {slug}` |
+| Full core rebuild | `/full-rebuild-core {level} {num}` |
+| Full v6 build via script | `.venv/bin/python scripts/build/v6_build.py {level} {num}` |
+| Audit a module or range | `npm run audit -- {level} {num|range}` |
+| Run technical validation | `npm run pipeline l2-uk-en {level} {num}` |
+| Generate app JSON | `npm run generate:json l2-uk-en {level} {num}` |
+| Sync landing pages | `npm run sync:landing` |
+| Compile one wiki article | `.venv/bin/python scripts/wiki/compile.py --track {track} --slug {slug}` |
+| Compile a wiki track with review | `.venv/bin/python scripts/wiki/compile.py --track {track} --all --review` |
