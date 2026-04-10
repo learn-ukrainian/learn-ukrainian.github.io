@@ -26,6 +26,7 @@ from batch_dispatcher_config import (
 )
 from batch_gemini_config import PROJECT_ROOT, SEMINAR_TRACKS, VENV_PYTHON, get_module_index, get_module_paths
 from batch_utils import atomic_write_json
+from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 log = logging.getLogger("dispatcher")
 
@@ -345,6 +346,8 @@ def dispatch_claude_fix(track_name: str, slug: str, module_num: int,
         "--permission-mode", "bypassPermissions",
         "--max-budget-usd", budget,
     ]
+    if supports_exclude_dynamic_system_prompt_sections((CLAUDE_BIN,)):
+        cmd.append("--exclude-dynamic-system-prompt-sections")
 
     log.info(f"  Claude fix: {track_name}/{slug} (module {module_num})")
 

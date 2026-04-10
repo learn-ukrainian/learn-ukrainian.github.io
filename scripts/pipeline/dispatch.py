@@ -12,6 +12,8 @@ import threading
 import time
 from pathlib import Path
 
+from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+
 # Late imports to avoid circular dependencies
 _pipeline_lib = None
 
@@ -299,6 +301,8 @@ def dispatch_claude_phase(
     prompt = prompt.replace("You are Gemini", "You are Claude")
 
     cmd = [_get_claude_bin(), "--model", model, "-p", "--output-format", "text"]
+    if supports_exclude_dynamic_system_prompt_sections((_get_claude_bin(),)):
+        cmd.append("--exclude-dynamic-system-prompt-sections")
     if allow_tools:
         cmd.extend(["--allowedTools", ",".join(allow_tools)])
 

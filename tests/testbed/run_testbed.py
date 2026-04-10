@@ -206,6 +206,14 @@ def review_module(mod: dict) -> dict:
     for kind, skill in [("content_review", "content-review"), ("prompt_review", "prompt-review")]:
         skill_arg = f"/{skill} {track} {slug}"
         cmd = ["claude", "-p", skill_arg, "--allowedTools", ""]
+        # Version-gated cache-warmth optimization for CC 2.1.98+ (issue #1179).
+        # Local import keeps this test harness self-contained.
+        try:
+            from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+            if supports_exclude_dynamic_system_prompt_sections(("claude",)):
+                cmd.append("--exclude-dynamic-system-prompt-sections")
+        except ImportError:
+            pass  # Testbed may run without scripts/ on sys.path; degrade gracefully.
         print(f"  REVIEW ({skill}): {track} {slug} ...", end="", flush=True)
         try:
             proc = subprocess.run(

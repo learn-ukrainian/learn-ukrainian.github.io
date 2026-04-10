@@ -22,6 +22,13 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+
+# Command prefix for invoking Claude Code in print mode from this dispatcher.
+# Passed to utils.claude_version so the version probe targets the exact
+# binary this dispatcher will execute.
+_CLAUDE_CMD_PREFIX: tuple[str, ...] = ("npx", "@anthropic-ai/claude-code@latest")
+
 # ---------------------------------------------------------------------------
 # Rate limit detection + pacing
 # ---------------------------------------------------------------------------
@@ -275,10 +282,12 @@ def dispatch_agent(
     else:
         mcp_config = str(PROJECT_ROOT / ".mcp.json")
         cmd = [
-            "npx", "@anthropic-ai/claude-code@latest", "-p",
+            *_CLAUDE_CMD_PREFIX, "-p",
             "--model", model,
             "--output-format", "text",
         ]
+        if supports_exclude_dynamic_system_prompt_sections(_CLAUDE_CMD_PREFIX):
+            cmd.append("--exclude-dynamic-system-prompt-sections")
         if mcp_tools and allowed_tools:
             cmd.extend(["--mcp-config", mcp_config, "--allowedTools", allowed_tools])
 

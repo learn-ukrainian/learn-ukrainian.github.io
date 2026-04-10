@@ -8,6 +8,8 @@ import sys
 import uuid
 from pathlib import Path
 
+from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
 from ._db import get_db, get_session, set_session
@@ -108,6 +110,11 @@ def _build_claude_command(prompt, claude_session_id, msg, new_session):
         cmd.extend(["--session-id", new_id])
         set_session(msg['task_id'], "claude", new_id)
         print(f"   New session: {new_id[:8]}...")
+    # Cache-warmth optimization: CC 2.1.98+ strips dynamic system prompt
+    # sections in print mode so Anthropic's server-side cache hits across
+    # scripted calls. Version-gated via utils.claude_version (issue #1179).
+    if supports_exclude_dynamic_system_prompt_sections(CLAUDE_CMD):
+        cmd.append("--exclude-dynamic-system-prompt-sections")
     return cmd
 
 
