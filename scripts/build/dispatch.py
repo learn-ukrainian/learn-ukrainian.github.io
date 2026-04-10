@@ -279,7 +279,7 @@ def dispatch_agent(
     agent_label = f"{agent} ({model})"
     _log(f"  Dispatching to {agent_label}...")
 
-    # ---------- Codex + Gemini routed through agent_runtime (Phase 3) ----------
+    # ---------- All three agents now routed through agent_runtime (Phase 3 + 5) ----------
     if is_codex or is_gemini:
         return _dispatch_via_runtime(
             prompt=prompt,
@@ -292,9 +292,21 @@ def dispatch_agent(
             agent_label=agent_label,
             is_gemini=is_gemini,
         )
+    if is_claude:
+        return _dispatch_claude_via_runtime(
+            prompt=prompt,
+            agent=agent,
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=timeout,
+            mcp_tools=mcp_tools,
+            allowed_tools=allowed_tools,
+            model=model,
+            agent_label=agent_label,
+        )
 
-    # ---------- Claude still uses the legacy path (Phase 5 will migrate) ----------
-    if False:  # pragma: no cover — structural placeholder
+    # ---------- Unreachable ----------
+    if False:  # pragma: no cover
         pass
     else:
         mcp_config = str(PROJECT_ROOT / ".mcp.json")
@@ -379,6 +391,93 @@ def dispatch_agent(
 
     ok, raw = _run_cmd(cmd, agent_label, timeout)
     return ok, raw
+
+
+def _dispatch_claude_via_runtime(
+    *,
+    prompt: str,
+    agent: str,
+    phase: str,
+    orch_dir: Path,
+    timeout: int,
+    mcp_tools: bool,
+    allowed_tools: str | None,
+    model: str,
+    agent_label: str,
+) -> tuple[bool, str]:
+    """Route Claude dispatch through scripts.agent_runtime.runner.invoke().
+
+    Phase 5: Claude joins Codex + Gemini on the runtime. Preserves
+    legacy behavior:
+    - MCP tool config via tool_config={"mcp_config_path": ..., "allowed_tools": ...}
+    - No session resume (dispatch uses fresh sessions)
+    - --exclude-dynamic-system-prompt-sections is applied inside ClaudeAdapter
+      via utils.claude_version gating
+    - Writes dispatch log to orchestration/{slug}/dispatch/
+    """
+    from agent_runtime.errors import (
+        AgentStalledError,
+        AgentTimeoutError,
+        RateLimitedError,
+    )
+    from agent_runtime.runner import invoke as runtime_invoke
+
+    tool_config: dict | None = None
+    if mcp_tools and allowed_tools:
+        mcp_config_path = str(PROJECT_ROOT / ".mcp.json")
+        tool_config = {
+            "mcp_config_path": mcp_config_path,
+            "allowed_tools": allowed_tools,
+        }
+
+    t0 = time.monotonic()
+    try:
+        result = runtime_invoke(
+            "claude",
+            prompt,
+            mode="read-only",  # dispatch treats Claude as read-only; write
+                                # capability for pipeline calls flows through
+                                # tool_config allowed_tools, not mode
+            cwd=PROJECT_ROOT,
+            model=model,
+            task_id=f"{phase}-{orch_dir.name}" if orch_dir else phase,
+            session_id=None,  # dispatch never uses resume (fresh session)
+            tool_config=tool_config,
+            entrypoint="dispatch",
+            hard_timeout=timeout,
+            stall_timeout=min(180, timeout),
+        )
+        elapsed = time.monotonic() - t0
+        _save_dispatch_log(
+            orch_dir, phase, agent_label,
+            prompt_chars=len(prompt),
+            response_chars=len(result.response),
+            stderr=result.stderr_excerpt or "",
+            returncode=result.returncode,
+            duration_s=elapsed,
+            ok=result.ok,
+        )
+        return result.ok, result.response
+    except RateLimitedError as exc:
+        elapsed = time.monotonic() - t0
+        _log(f"  ⏳ {agent_label} rate limited: {exc}")
+        _save_dispatch_log(
+            orch_dir, phase, agent_label,
+            prompt_chars=len(prompt), response_chars=0,
+            stderr=f"RateLimitedError: {exc}", returncode=None,
+            duration_s=elapsed, ok=False,
+        )
+        return False, "__RATE_LIMITED__"
+    except (AgentStalledError, AgentTimeoutError) as exc:
+        elapsed = time.monotonic() - t0
+        _log(f"  ❌ {agent_label} {type(exc).__name__}: {exc}")
+        _save_dispatch_log(
+            orch_dir, phase, agent_label,
+            prompt_chars=len(prompt), response_chars=0,
+            stderr=f"{type(exc).__name__}: {exc}", returncode=None,
+            duration_s=elapsed, ok=False,
+        )
+        return False, ""
 
 
 def _dispatch_via_runtime(

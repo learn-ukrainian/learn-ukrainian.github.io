@@ -98,14 +98,29 @@ def _load_adapter(name: str) -> AgentAdapter:
         )
     module_path, class_name = dotted_path.split(":", 1)
 
-    try:
-        module = importlib.import_module(module_path)
-    except ImportError as exc:
+    # Try the registered dotted path first. If that fails and the path
+    # starts with "scripts." (which requires the repo root on sys.path,
+    # not just `scripts/`), fall back to the path without that prefix.
+    # This lets the runner work whether it's invoked via
+    # `python -m scripts.agent_runtime.runner` (repo root on path) or
+    # `python scripts/build/v6_build.py` (only scripts/ on path).
+    module = None
+    import_errors: list[str] = []
+    candidates = [module_path]
+    if module_path.startswith("scripts."):
+        candidates.append(module_path.removeprefix("scripts."))
+    for candidate in candidates:
+        try:
+            module = importlib.import_module(candidate)
+            break
+        except ImportError as exc:
+            import_errors.append(f"{candidate!r}: {exc}")
+    if module is None:
         raise AgentUnavailableError(
-            f"Failed to import adapter module {module_path!r} for agent "
-            f"{name!r}: {exc}. This usually means the adapter file hasn't "
-            f"been implemented yet."
-        ) from exc
+            f"Failed to import adapter for agent {name!r}. Tried: "
+            + "; ".join(import_errors)
+            + ". This usually means the adapter file hasn't been implemented yet."
+        )
 
     try:
         adapter_cls = getattr(module, class_name)

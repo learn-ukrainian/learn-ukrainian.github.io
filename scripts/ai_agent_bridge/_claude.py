@@ -1,4 +1,16 @@
-"""Claude interaction: ask_claude and process_for_claude (decomposed)."""
+"""Claude interaction: ask_claude and process_for_claude (decomposed).
+
+Phase 5 of #1184: the sync subprocess path in _run_claude_sync was
+migrated onto scripts.agent_runtime.runner.invoke(). The fire-and-forget
+background daemon path (_launch_claude_background) stays as-is — it
+spawns the bridge itself in the background, and that background instance
+then calls process_for_claude which goes through the runtime. The daemon
+wrapper is NOT a Claude subprocess call; it's a process-level pattern.
+
+The legacy _build_claude_command and _stream_claude_with_watchdog
+helpers are preserved for test-mock backward compat and for the
+fire-and-forget path's logging. They will be deleted in Phase 6 cleanup.
+"""
 
 import atexit
 import contextlib
@@ -8,6 +20,13 @@ import sys
 import uuid
 from pathlib import Path
 
+from agent_runtime.errors import (
+    AgentStalledError,
+    AgentTimeoutError,
+    AgentUnavailableError,
+    RateLimitedError,
+)
+from agent_runtime.runner import invoke as runtime_invoke
 from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
@@ -31,7 +50,13 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
 
 def process_for_claude(message_id: int, new_session: bool = False,
                        fire_and_forget: bool = False, no_timeout: bool = False):
-    """Read message addressed to Claude, invoke Claude CLI headlessly, send response."""
+    """Read message addressed to Claude, invoke via agent_runtime, send response.
+
+    Fire-and-forget path still spawns the bridge in background (a
+    process-level pattern that the runtime doesn't cover). The
+    background instance re-enters this function with fire_and_forget=False
+    and routes through the runtime for the actual Claude call.
+    """
     msg = _fetch_claude_message(message_id)
     if not msg:
         return
@@ -41,13 +66,142 @@ def process_for_claude(message_id: int, new_session: bool = False,
 
     _print_claude_message_info(msg, fire_and_forget, no_timeout, claude_session_id)
 
-    prompt = build_claude_prompt(msg)
-    cmd = _build_claude_command(prompt, claude_session_id, msg, new_session)
-
     if fire_and_forget:
         _launch_claude_background(msg, message_id, new_session)
     else:
-        _run_claude_sync(msg, message_id, cmd, no_timeout)
+        _run_claude_sync_via_runtime(msg, message_id, claude_session_id, no_timeout)
+
+
+def _run_claude_sync_via_runtime(
+    msg: dict,
+    message_id: int,
+    claude_session_id: str | None,
+    no_timeout: bool,
+):
+    """Run Claude CLI synchronously via agent_runtime.runner.invoke().
+
+    Phase 5: replaces the Popen + _stream_claude_with_watchdog path.
+    Session handling:
+    - If claude_session_id is set (prior session in SQLite), pass it
+      with is_new_session=False → runtime uses --resume for cache warmth.
+    - Otherwise if task_id is set, mint a new UUID, pass with
+      is_new_session=True → runtime uses --session-id, and persist
+      the new ID in SQLite for future turns.
+    """
+    task_key = msg.get('task_id') or str(message_id)
+    timeout_val = 1800 if no_timeout else 900
+    mode_label = "no-timeout" if no_timeout else "sync, 15 min timeout"
+
+    if _is_task_locked("claude", task_key):
+        print(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
+        return
+
+    print(f"\n🤖 Processing with Claude CLI via runtime [{mode_label}]...")
+    sys.stdout.flush()
+
+    _write_pid_file("claude", task_key, {
+        "message_id": message_id,
+        "task_id": msg.get('task_id'),
+        "mode": mode_label,
+    })
+    atexit.register(_remove_pid_file, "claude", task_key)
+
+    # Decide session handling
+    session_id_to_pass: str | None = None
+    is_new_session_flag = False
+    if claude_session_id:
+        session_id_to_pass = claude_session_id
+        is_new_session_flag = False
+        print(f"   Resuming session: {claude_session_id[:8]}...")
+    elif msg['task_id']:
+        new_id = str(uuid.uuid4())
+        session_id_to_pass = new_id
+        is_new_session_flag = True
+        set_session(msg['task_id'], "claude", new_id)
+        print(f"   New session: {new_id[:8]}...")
+
+    tool_config: dict = {
+        "cmd_prefix": CLAUDE_CMD,
+        "is_new_session": is_new_session_flag,
+    }
+
+    _response_sent = False
+    try:
+        result = runtime_invoke(
+            "claude",
+            build_claude_prompt(msg),
+            mode="read-only",
+            cwd=REPO_ROOT,
+            model=None,  # Bridge uses Claude's default
+            task_id=msg.get('task_id'),
+            session_id=session_id_to_pass,
+            tool_config=tool_config,
+            entrypoint="bridge",
+            hard_timeout=timeout_val,
+            stall_timeout=min(300, timeout_val),
+        )
+
+        if not result.ok:
+            _response_sent = _handle_claude_error(
+                msg, message_id,
+                result.stderr_excerpt or "Claude returned no content",
+            )
+            return
+
+        response = result.response.strip()
+        print(f"\n\n{'─' * 40}")
+        print(f"✅ Claude finished ({len(response)} chars)")
+        sys.stdout.flush()
+
+        reply_id = send_message(
+            content=response, task_id=msg['task_id'], msg_type="response",
+            from_llm="claude", to_llm=msg['from'], from_model=None, to_model=None,
+        )
+        _response_sent = True
+
+        acknowledge(message_id)
+        acknowledge(reply_id)
+
+    except RateLimitedError as exc:
+        print(f"\n⏳ Claude rate limited: {exc}")
+        err_id = send_message(
+            content=f"[Bridge Error] Claude rate limited: {exc}",
+            task_id=msg['task_id'], msg_type="error",
+            from_llm="claude", to_llm=msg['from'],
+            from_model="claude-bridge-rate-limited",
+        )
+        _response_sent = True
+        acknowledge(message_id)
+        acknowledge(err_id)
+    except (AgentStalledError, AgentTimeoutError) as exc:
+        timeout_mins = timeout_val // 60
+        print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit): {exc}")
+        err_id = send_message(
+            content=(
+                f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. "
+                f"({type(exc).__name__}: {exc}). Consider using --async for long tasks."
+            ),
+            task_id=msg['task_id'], msg_type="error",
+            from_llm="claude", to_llm=msg['from'],
+            from_model="claude-bridge-timeout",
+        )
+        _response_sent = True
+        acknowledge(message_id)
+        acknowledge(err_id)
+    except AgentUnavailableError:
+        print("❌ claude CLI not found. Is it installed?")
+        err_id = send_message(
+            content="[Bridge Error] Claude CLI not found on system",
+            task_id=msg['task_id'], msg_type="error",
+            from_llm="claude", to_llm=msg['from'],
+            from_model="claude-bridge-not-found",
+        )
+        _response_sent = True
+        acknowledge(err_id)
+    finally:
+        if not _response_sent:
+            _send_claude_fallback_error(msg, message_id)
+        _remove_pid_file("claude", task_key)
 
 
 def _fetch_claude_message(message_id: int) -> dict | None:

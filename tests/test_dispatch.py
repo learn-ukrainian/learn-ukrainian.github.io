@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -156,10 +156,16 @@ class TestDispatchAgent:
         assert call_kwargs["entrypoint"] == "dispatch"
         assert call_kwargs["tool_config"] is None  # mcp_tools=False by default
 
-    @patch("build.dispatch.subprocess.run")
-    def test_claude_tools_dispatch(self, mock_run, tmp_path):
-        mock_run.return_value = MagicMock(
-            returncode=0, stdout="content here", stderr="tool: verify_words"
+    @patch("agent_runtime.runner.invoke")
+    def test_claude_tools_dispatch(self, mock_invoke, tmp_path):
+        """Post Phase 5: Claude routes through runtime. MCP tool config
+        travels via tool_config dict, not argv assertions."""
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=True, agent="claude", model="claude-opus-4-6", mode="read-only",
+            response="content here", stderr_excerpt=None, duration_s=1.0,
+            session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
         )
         ok, _raw = dispatch_agent(
             "test prompt", agent="claude-tools", phase="review",
@@ -168,10 +174,12 @@ class TestDispatchAgent:
             model="claude-opus-4-6",
         )
         assert ok is True
-        # Check MCP config was passed
-        cmd = mock_run.call_args[0][0]
-        assert "--mcp-config" in cmd
-        assert "--allowedTools" in cmd
+        # MCP tool config must have been passed through tool_config
+        kwargs = mock_invoke.call_args.kwargs
+        assert kwargs["tool_config"] is not None
+        assert "mcp_config_path" in kwargs["tool_config"]
+        assert kwargs["tool_config"]["allowed_tools"] == CLAUDE_REVIEWER_TOOLS
+        assert kwargs["entrypoint"] == "dispatch"
 
     @patch.dict("os.environ", {}, clear=True)
     @patch("agent_runtime.runner.invoke")
@@ -253,10 +261,16 @@ class TestDispatchAgent:
             data = json.loads(mf.read_text())
             assert data["ok"] is False
 
-    @patch("build.dispatch.subprocess.run")
-    def test_failure_logged(self, mock_run, tmp_path):
-        mock_run.return_value = MagicMock(
-            returncode=1, stdout="", stderr="Error: model overloaded"
+    @patch("agent_runtime.runner.invoke")
+    def test_failure_logged(self, mock_invoke, tmp_path):
+        """Post Phase 5: Claude routes through runtime. Runtime returns
+        Result(ok=False) with stderr_excerpt; dispatch writes it to log."""
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=False, agent="claude", model="test", mode="read-only",
+            response="", stderr_excerpt="Error: model overloaded",
+            duration_s=0.5, session_id=None, rate_limited=False,
+            stalled=False, returncode=1, usage_record={},
         )
         ok, _raw = dispatch_agent(
             "test", agent="claude", phase="write",

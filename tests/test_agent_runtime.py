@@ -26,6 +26,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
 from agent_runtime.errors import (
@@ -577,3 +578,184 @@ def test_gemini_liveness_paths_empty(tmp_path):
         tool_config=None,
     )
     assert adapter.liveness_signal_paths(plan) == ()
+
+
+# ---------------------------------------------------------------------------
+# ClaudeAdapter
+# ---------------------------------------------------------------------------
+
+def test_claude_adapter_attributes():
+    adapter = ClaudeAdapter()
+    assert adapter.name == "claude"
+    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
+
+
+def test_claude_adapter_basic_stateless(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "-p" in plan.cmd
+    assert "hello" in plan.cmd
+    assert "--resume" not in plan.cmd
+    assert "--session-id" not in plan.cmd
+    assert "--output-format" in plan.cmd
+    assert plan.stdin_payload == ""  # Claude -p takes prompt as positional
+
+
+def test_claude_adapter_resume_existing_session(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id="abc-123",
+        tool_config=None,  # default is_new_session=False → resume
+    )
+    assert "--resume" in plan.cmd
+    assert "abc-123" in plan.cmd
+    assert "--session-id" not in plan.cmd
+    assert "--bare" not in plan.cmd  # --bare is incompatible with resume
+
+
+def test_claude_adapter_new_named_session(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id="new-uuid-123",
+        tool_config={"is_new_session": True},
+    )
+    assert "--session-id" in plan.cmd
+    assert "new-uuid-123" in plan.cmd
+    assert "--resume" not in plan.cmd
+
+
+def test_claude_adapter_mcp_tool_config(tmp_path):
+    """The #1 consultation finding for Claude too: tool_config for MCP
+    restrictions must flow through the protocol."""
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "mcp_config_path": "/path/.mcp.json",
+            "allowed_tools": "Read,Grep,mcp__rag__verify_word",
+        },
+    )
+    assert "--mcp-config" in plan.cmd
+    assert "/path/.mcp.json" in plan.cmd
+    assert "--allowedTools" in plan.cmd
+    assert "Read,Grep,mcp__rag__verify_word" in plan.cmd
+
+
+def test_claude_adapter_danger_mode(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--dangerously-skip-permissions" in plan.cmd
+
+
+def test_claude_adapter_model_override(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model="claude-sonnet-4-5",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--model" in plan.cmd
+    assert "claude-sonnet-4-5" in plan.cmd
+
+
+def test_claude_adapter_bare_when_api_key_set(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert "--bare" in plan.cmd
+
+
+def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):
+    """--bare is incompatible with resumed or named sessions."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id="abc-123",
+        tool_config=None,
+    )
+    assert "--bare" not in plan.cmd
+    assert "--resume" in plan.cmd
+
+
+def test_claude_parse_response_success():
+    adapter = ClaudeAdapter()
+    result = adapter.parse_response(
+        stdout="Claude's response text.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Claude's response text."
+    assert result.rate_limited is False
+
+
+def test_claude_parse_response_rate_limit():
+    adapter = ClaudeAdapter()
+    result = adapter.parse_response(
+        stdout="",
+        stderr="Error: rate limit reached, try again later",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.rate_limited is True
+
+
+def test_claude_parse_response_url_no_false_positive():
+    adapter = ClaudeAdapter()
+    result = adapter.parse_response(
+        stdout="See docs/issues/4290 for details",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.rate_limited is False
