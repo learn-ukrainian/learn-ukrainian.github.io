@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Events - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); position: sticky; top: 0; z-index: 10; }
+.topbar h1 { font-size: 22px; font-weight: 700; }
+.topbar .sub { font-size: 12px; color: var(--text2); }
+.topbar .spacer { flex: 1; }
+.muted { color: var(--text3); font-size: 12px; }
+.btn, select, input { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-size: 12px; }
+.btn { padding: 7px 12px; cursor: pointer; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+select, input { padding: 8px 10px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--orange); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.card.cyan { border-left-color: var(--cyan); }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.card-header h2 { font-size: 15px; font-weight: 600; }
+.banner { display: none; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(248,81,73,0.14); border: 1px solid rgba(248,81,73,0.35); color: var(--red); font-size: 13px; }
+.empty { color: var(--text3); font-size: 13px; padding: 8px 0; }
+.active-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.active-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.active-card.stale { border-left: 3px solid var(--red); }
+.active-card.live { border-left: 3px solid var(--green); }
+.k { color: var(--text3); font-size: 11px; text-transform: uppercase; }
+.v { font-size: 13px; margin: 4px 0 8px; }
+.filters { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.pill { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.pill.ok { background: rgba(63,185,80,0.15); color: var(--green); }
+.pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
+@media (max-width: 760px) { .topbar { flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>Build Events</h1>
+    <div class="sub">Live build event stream</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn" onclick="refreshAll()">Refresh</button>
+  <div class="muted" id="last-refresh">Auto-refresh every 10s</div>
+  <a href="/">Home</a>
+</div>
+
+<div class="container">
+  <section class="card">
+    <div class="card-header"><h2>&#128293; Active Builds</h2><div class="muted" id="active-muted"></div></div>
+    <div class="banner" id="active-banner"></div>
+    <div id="active-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card cyan">
+    <div class="card-header"><h2>&#128196; Recent Events</h2><div class="muted">Refetches on filter change</div></div>
+    <div class="banner" id="recent-banner"></div>
+    <div class="filters">
+      <select id="level-filter"></select>
+      <input id="slug-filter" placeholder="Filter by slug">
+      <button class="btn" onclick="refreshRecent()">Apply</button>
+    </div>
+    <div id="recent-content" class="empty">Loading...</div>
+  </section>
+</div>
+
+<script>
+const REFRESH_MS = 10000;
+const API_TIMEOUT_MS = 5000;
+const LEVEL_OPTIONS = ['','a1','a2','b1','b2','b2-pro','c1','c1-pro','c2','folk','hist','bio','istorio','lit','oes','ruth'];
+let refreshTimer = null;
+let slugDebounce = null;
+
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function formatTs(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+}
+
+function formatDuration(value) {
+  if (typeof value !== 'number') return '—';
+  if (value >= 60) return `${(value / 60).toFixed(1)}m`;
+  return `${value.toFixed(1)}s`;
+}
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { detail: text };
+    }
+    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Request timed out');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function setBanner(id, message) {
+  const el = document.getElementById(id);
+  el.textContent = message || '';
+  el.style.display = message ? 'block' : 'none';
+}
+
+function initFilters() {
+  const level = document.getElementById('level-filter');
+  level.innerHTML = LEVEL_OPTIONS.map(option => `<option value="${option}">${option || 'All levels'}</option>`).join('');
+  level.addEventListener('change', refreshRecent);
+  document.getElementById('slug-filter').addEventListener('input', () => {
+    clearTimeout(slugDebounce);
+    slugDebounce = setTimeout(refreshRecent, 250);
+  });
+}
+
+function recentQuery() {
+  const params = new URLSearchParams({ limit: '100' });
+  const level = document.getElementById('level-filter').value.trim();
+  const slug = document.getElementById('slug-filter').value.trim();
+  if (level) params.set('level', level);
+  if (slug) params.set('slug', slug);
+  return params.toString();
+}
+
+function renderActive(active) {
+  document.getElementById('active-muted').textContent = `${active.length} active modules`;
+  if (!active.length) {
+    document.getElementById('active-content').innerHTML = '<div class="empty">No active builds right now</div>';
+    return;
+  }
+  document.getElementById('active-content').innerHTML = `<div class="active-grid">${active.map(item => `
+    <div class="active-card ${item.age_s > 300 ? 'stale' : 'live'}">
+      <div class="k">level</div><div class="v">${escapeHtml(item.level || '—')}</div>
+      <div class="k">slug</div><div class="v mono">${escapeHtml(item.slug || '—')}</div>
+      <div class="k">current phase</div><div class="v">${escapeHtml(item.current_phase || '—')}</div>
+      <div class="k">age</div><div class="v">${formatDuration(item.age_s)}</div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderRecent(events) {
+  if (!events.length) {
+    document.getElementById('recent-content').innerHTML = '<div class="empty">No build events match the current filters</div>';
+    return;
+  }
+  document.getElementById('recent-content').innerHTML = `<table>
+    <thead><tr><th>ts</th><th>level</th><th>slug</th><th>phase</th><th>agent</th><th>duration</th><th>ok</th></tr></thead>
+    <tbody>${events.map(event => `<tr>
+      <td>${formatTs(event.ts)}</td>
+      <td>${escapeHtml(event.level || '—')}</td>
+      <td class="mono">${escapeHtml(event.slug || '—')}</td>
+      <td>${escapeHtml(event.phase || '—')}</td>
+      <td>${escapeHtml(event.agent || '—')}</td>
+      <td>${formatDuration(event.duration_s)}</td>
+      <td><span class="pill ${event.ok ? 'ok' : 'err'}">${event.ok ? 'yes' : 'no'}</span></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+async function loadActive() {
+  try {
+    const data = await fetchJson('/api/build/events/active');
+    renderActive(Array.isArray(data.active) ? data.active : []);
+    setBanner('active-banner', '');
+  } catch (error) {
+    setBanner('active-banner', `API unavailable: ${error.message}`);
+    document.getElementById('active-content').innerHTML = '<div class="empty">Unable to load active builds</div>';
+  }
+}
+
+async function refreshRecent() {
+  try {
+    const data = await fetchJson(`/api/build/events/recent?${recentQuery()}`);
+    renderRecent(Array.isArray(data.events) ? data.events : []);
+    setBanner('recent-banner', '');
+  } catch (error) {
+    setBanner('recent-banner', `API unavailable: ${error.message}`);
+    document.getElementById('recent-content').innerHTML = '<div class="empty">Unable to load recent build events</div>';
+  }
+}
+
+function stopRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+}
+
+function startRefresh() {
+  if (!refreshTimer) refreshTimer = setInterval(refreshAll, REFRESH_MS);
+}
+
+function refreshAll() {
+  loadActive();
+  refreshRecent();
+  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · auto-refresh every 10s`;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopRefresh();
+  } else {
+    refreshAll();
+    startRefresh();
+  }
+});
+
+initFilters();
+refreshAll();
+startRefresh();
+</script>
+</body>
+</html>

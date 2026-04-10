@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); position: sticky; top: 0; z-index: 10; }
+.topbar h1 { font-size: 22px; font-weight: 700; }
+.topbar .sub { font-size: 12px; color: var(--text2); }
+.topbar .spacer { flex: 1; }
+.muted { color: var(--text3); font-size: 12px; }
+.btn, select { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-size: 12px; }
+.btn { padding: 7px 12px; cursor: pointer; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+select { padding: 8px 10px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.card.cyan { border-left-color: var(--cyan); }
+.card.orange { border-left-color: var(--orange); }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.card-header h2 { font-size: 15px; font-weight: 600; }
+.banner { display: none; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(248,81,73,0.14); border: 1px solid rgba(248,81,73,0.35); color: var(--red); font-size: 13px; }
+.empty { color: var(--text3); font-size: 13px; padding: 8px 0; }
+.track-list { display: flex; flex-direction: column; gap: 10px; }
+.track-row { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; cursor: pointer; }
+.track-row.active { border-color: var(--blue); }
+.track-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.bar { width: 100%; height: 12px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.detail-shell { display: grid; grid-template-columns: 220px 1fr; gap: 14px; }
+.track-buttons { display: flex; flex-direction: column; gap: 8px; }
+.track-btn { text-align: left; padding: 10px 12px; border-radius: 8px; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-size: 13px; }
+.track-btn.active, .track-btn:hover { border-color: var(--blue); color: var(--text); }
+.module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.module-cell { border-radius: 8px; padding: 12px; border: 1px solid var(--border); background: var(--bg3); min-height: 92px; }
+.module-cell.compiled { border-left: 3px solid var(--green); }
+.module-cell.pending { border-left: 3px solid var(--yellow); }
+.module-cell.failed { border-left: 3px solid var(--red); }
+.module-cell .slug { font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+.module-cell .meta { font-size: 11px; color: var(--text2); }
+.filters { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+@media (max-width: 900px) {
+  .detail-shell { grid-template-columns: 1fr; }
+  .track-buttons { flex-direction: row; flex-wrap: wrap; }
+  .topbar { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>Wiki</h1>
+    <div class="sub">Wiki compilation status and quality gate</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn" onclick="refreshAll()">Refresh</button>
+  <div class="muted" id="last-refresh">Auto-refresh every 60s</div>
+  <a href="/">Home</a>
+</div>
+
+<div class="container">
+  <section class="card">
+    <div class="card-header"><h2>&#128214; Per-Track Progress</h2><div class="muted" id="progress-muted"></div></div>
+    <div class="banner" id="progress-banner"></div>
+    <div id="progress-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card cyan">
+    <div class="card-header"><h2>&#128269; Track Detail</h2><div class="muted" id="detail-muted">Click a track</div></div>
+    <div class="banner" id="detail-banner"></div>
+    <div id="detail-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card orange">
+    <div class="card-header"><h2>&#128221; Recent Build Log</h2><div class="muted">limit 50</div></div>
+    <div class="banner" id="log-banner"></div>
+    <div class="filters">
+      <select id="log-track-filter"></select>
+      <button class="btn" onclick="loadBuildLog()">Apply</button>
+    </div>
+    <div id="log-content" class="empty">Loading...</div>
+  </section>
+</div>
+
+<script>
+const REFRESH_MS = 60000;
+const API_TIMEOUT_MS = 5000;
+let refreshTimer = null;
+let selectedTrack = null;
+let tracksCache = [];
+
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function formatTs(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+}
+
+function summaryText(event) {
+  if (event.summary) return String(event.summary);
+  return Object.entries(event)
+    .filter(([key, value]) => !['ts', 'track', 'slug', 'event'].includes(key) && value != null && value !== '')
+    .slice(0, 3)
+    .map(([key, value]) => `${key}=${value}`)
+    .join(' · ') || '—';
+}
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { detail: text };
+    }
+    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Request timed out');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function setBanner(id, message) {
+  const el = document.getElementById(id);
+  el.textContent = message || '';
+  el.style.display = message ? 'block' : 'none';
+}
+
+function initLogFilter() {
+  const select = document.getElementById('log-track-filter');
+  const options = [''].concat(tracksCache.map(track => track.track));
+  select.innerHTML = options.map(track => `<option value="${track}">${track || 'All tracks'}</option>`).join('');
+}
+
+function renderProgress(tracks) {
+  tracksCache = tracks.slice();
+  initLogFilter();
+  document.getElementById('progress-muted').textContent = `${tracks.length} tracks`;
+  if (!tracks.length) {
+    document.getElementById('progress-content').innerHTML = '<div class="empty">No wiki tracks found</div>';
+    return;
+  }
+  document.getElementById('progress-content').innerHTML = `<div class="track-list">${tracks.map(track => `
+    <div class="track-row ${selectedTrack === track.track ? 'active' : ''}" onclick='selectTrack(${JSON.stringify(String(track.track || ""))})'>
+      <div class="track-top">
+        <strong>${escapeHtml(track.track)}</strong>
+        <span class="muted">${track.compiled}/${track.total} · ${track.pct}%</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:${track.pct}%;background:${track.pct >= 90 ? 'var(--green)' : track.pct >= 50 ? 'var(--yellow)' : 'var(--red)'}"></div></div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function issueMapForTrack(raw, track) {
+  return raw && raw[track] ? raw[track] : {};
+}
+
+function issuesForSlug(issueMap, slug) {
+  return Object.entries(issueMap).find(([path]) => path === `${slug}.md` || path.endsWith(`/${slug}.md`));
+}
+
+function renderDetailButtons() {
+  return `<div class="track-buttons">${tracksCache.map(track => `
+    <button class="track-btn ${selectedTrack === track.track ? 'active' : ''}" onclick='selectTrack(${JSON.stringify(String(track.track || ""))})'>${escapeHtml(track.track)}</button>
+  `).join('')}</div>`;
+}
+
+async function selectTrack(track) {
+  selectedTrack = track;
+  document.getElementById('detail-muted').textContent = track ? `Selected ${track}` : 'Click a track';
+  if (tracksCache.length) renderProgress(tracksCache);
+  await loadTrackDetail();
+}
+
+async function loadProgress() {
+  try {
+    const data = await fetchJson('/api/wiki/status');
+    const tracks = Array.isArray(data.tracks) ? data.tracks.slice().sort((a, b) => b.pct - a.pct || a.track.localeCompare(b.track)) : [];
+    if (!selectedTrack && tracks.length) selectedTrack = tracks[0].track;
+    renderProgress(tracks);
+    setBanner('progress-banner', '');
+  } catch (error) {
+    setBanner('progress-banner', `API unavailable: ${error.message}`);
+    document.getElementById('progress-content').innerHTML = '<div class="empty">Unable to load wiki status</div>';
+  }
+}
+
+async function loadTrackDetail() {
+  if (!selectedTrack) {
+    document.getElementById('detail-content').innerHTML = '<div class="empty">Select a track to inspect its modules</div>';
+    return;
+  }
+  try {
+    const [statusRows, gateRaw] = await Promise.all([
+      fetchJson(`/api/wiki/status/${encodeURIComponent(selectedTrack)}`),
+      fetchJson(`/api/wiki/quality-gate/${encodeURIComponent(selectedTrack)}`),
+    ]);
+    const issueMap = issueMapForTrack(gateRaw, selectedTrack);
+    const rows = Array.isArray(statusRows) ? statusRows : [];
+    const grid = rows.length ? `<div class="module-grid">${rows.map(row => {
+      const hit = issuesForSlug(issueMap, row.slug);
+      const issues = hit ? hit[1] : [];
+      const stateClass = issues.length ? 'failed' : row.compiled ? 'compiled' : 'pending';
+      return `<div class="module-cell ${stateClass}" title="${escapeHtml(issues.join(' | ') || (row.compiled ? 'compiled' : 'pending'))}">
+        <div class="slug">${escapeHtml(row.slug || '—')}</div>
+        <div class="meta">${row.compiled ? `compiled · ${row.word_count || 0}w` : 'pending'}</div>
+        <div class="meta">${row.source_count || 0} sources</div>
+        <div class="meta">${issues.length ? escapeHtml(issues[0]) : (row.compiled_at ? formatTs(row.compiled_at) : 'no issues')}</div>
+      </div>`;
+    }).join('')}</div>` : '<div class="empty">No modules for this track</div>';
+    document.getElementById('detail-content').innerHTML = `<div class="detail-shell">
+      ${renderDetailButtons()}
+      <div>${grid}</div>
+    </div>`;
+    setBanner('detail-banner', '');
+  } catch (error) {
+    setBanner('detail-banner', `API unavailable: ${error.message}`);
+    document.getElementById('detail-content').innerHTML = `<div class="detail-shell">${renderDetailButtons()}<div class="empty">Unable to load track detail</div></div>`;
+  }
+}
+
+async function loadBuildLog() {
+  const filter = document.getElementById('log-track-filter').value;
+  const params = new URLSearchParams({ limit: '50' });
+  if (filter) params.set('track', filter);
+  try {
+    const data = await fetchJson(`/api/wiki/build-log?${params.toString()}`);
+    const events = Array.isArray(data.events) ? data.events : [];
+    if (!events.length) {
+      document.getElementById('log-content').innerHTML = '<div class="empty">No build log events for the selected filter</div>';
+    } else {
+      document.getElementById('log-content').innerHTML = `<table>
+        <thead><tr><th>ts</th><th>track</th><th>slug</th><th>event</th><th>summary</th></tr></thead>
+        <tbody>${events.map(event => `<tr>
+          <td>${formatTs(event.ts)}</td>
+          <td>${escapeHtml(event.track || '—')}</td>
+          <td class="mono">${escapeHtml(event.slug || '—')}</td>
+          <td>${escapeHtml(event.event || '—')}</td>
+          <td>${escapeHtml(summaryText(event))}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+    }
+    setBanner('log-banner', '');
+  } catch (error) {
+    setBanner('log-banner', `API unavailable: ${error.message}`);
+    document.getElementById('log-content').innerHTML = '<div class="empty">Unable to load build log</div>';
+  }
+}
+
+function stopRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+}
+
+function startRefresh() {
+  if (!refreshTimer) refreshTimer = setInterval(refreshAll, REFRESH_MS);
+}
+
+function refreshAll() {
+  loadProgress().then(loadTrackDetail);
+  loadBuildLog();
+  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · auto-refresh every 60s`;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopRefresh();
+  } else {
+    refreshAll();
+    startRefresh();
+  }
+});
+
+refreshAll();
+startRefresh();
+</script>
+</body>
+</html>

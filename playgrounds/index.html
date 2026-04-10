@@ -54,23 +54,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <div class="stats-row" id="stats-row"></div>
 
 <div class="cards">
-  <a class="card audit" href="/audit-dashboard.html">
-    <div class="icon">&#9745;</div>
-    <h2>Audit Dashboard</h2>
-    <p>Track-level overview, module heatmaps, QA gate breakdowns. The mission control.</p>
-    <div class="card-stat" id="audit-stat"></div>
-  </a>
-  <a class="card progress" href="/progress.html">
-    <div class="icon">&#9654;</div>
-    <h2>Progress</h2>
-    <p>Pipeline state across all tracks. Research → Content → Validate → Review → MDX.</p>
-    <div class="card-stat" id="progress-stat"></div>
-  </a>
-  <a class="card curriculum" href="/curriculum-dashboard.html">
-    <div class="icon">&#128218;</div>
-    <h2>Curriculum Dashboard</h2>
-    <p>Bird's-eye view of all tracks. Module plans, word targets, content outlines.</p>
-    <div class="card-stat" id="curriculum-stat"></div>
+  <a class="card" href="/admin.html" style="border-left: 3px solid var(--gray);">
+    <div class="icon">&#128295;</div>
+    <h2>Admin</h2>
+    <p>Qdrant backups, health checks, disk usage, broker vacuum, log cleanup, collection verification.</p>
+    <div class="card-stat" id="admin-stat"></div>
   </a>
   <a class="card comms" href="/comms.html">
     <div class="icon">&#128225;</div>
@@ -78,29 +66,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Live batch progress, agent messages, zombie detection, throughput monitoring.</p>
     <div class="card-stat" id="comms-stat"></div>
   </a>
-  <a class="card quality" href="/quality.html">
-    <div class="icon">&#9881;</div>
-    <h2>Quality</h2>
-    <p>Research coverage, review scores, outstanding issues, weak modules. The fix queue.</p>
-    <div class="card-stat" id="quality-stat"></div>
+  <a class="card audit" href="/audit-dashboard.html">
+    <div class="icon">&#9745;</div>
+    <h2>Audit Dashboard</h2>
+    <p>Track-level overview, module heatmaps, QA gate breakdowns. The mission control.</p>
+    <div class="card-stat" id="audit-stat"></div>
   </a>
-  <a class="card" href="/track-health.html" style="border-left: 3px solid var(--cyan);">
-    <div class="icon">&#128737;</div>
-    <h2>Track Health</h2>
-    <p>Build progress, audit, enrichment, final reviews, ETA — one view per track. Auto-refreshes.</p>
-    <div class="card-stat" id="health-stat"></div>
-  </a>
-  <a class="card" href="/image-explorer.html" style="border-left: 3px solid var(--yellow);">
-    <div class="icon">&#128444;</div>
-    <h2>Images</h2>
-    <p>Page context with bounding boxes, annotation editor, RAG search, quality stats & cleanup.</p>
-    <div class="card-stat" id="images-stat"></div>
-  </a>
-  <a class="card" href="/admin.html" style="border-left: 3px solid var(--gray);">
-    <div class="icon">&#128295;</div>
-    <h2>Admin</h2>
-    <p>Qdrant backups, health checks, disk usage, broker vacuum, log cleanup, collection verification.</p>
-    <div class="card-stat" id="admin-stat"></div>
+  <a class="card" href="/build-events.html" style="border-left: 3px solid var(--orange);">
+    <div class="icon">&#128293;</div>
+    <h2>Build Events</h2>
+    <p>Active module builds and the latest dispatch meta events with level and slug filters.</p>
+    <div class="card-stat" id="card-stat-build-events"></div>
   </a>
   <a class="card" href="/consultation.html" style="border-left: 3px solid var(--purple);">
     <div class="icon">&#128260;</div>
@@ -108,24 +84,122 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Self-improving template proposals. Review, approve/reject queue, history, metrics.</p>
     <div class="card-stat" id="consultation-stat"></div>
   </a>
+  <a class="card curriculum" href="/curriculum-dashboard.html">
+    <div class="icon">&#128218;</div>
+    <h2>Curriculum Dashboard</h2>
+    <p>Bird's-eye view of all tracks. Module plans, word targets, content outlines.</p>
+    <div class="card-stat" id="curriculum-stat"></div>
+  </a>
+  <a class="card" href="/delegate.html" style="border-left: 3px solid var(--yellow);">
+    <div class="icon">&#129309;</div>
+    <h2>Delegate</h2>
+    <p>Delegation task list with zombie detection, manual refresh, and full task detail modal.</p>
+    <div class="card-stat" id="card-stat-delegate"></div>
+  </a>
+  <a class="card" href="/image-explorer.html" style="border-left: 3px solid var(--yellow);">
+    <div class="icon">&#128444;</div>
+    <h2>Images</h2>
+    <p>Page context with bounding boxes, annotation editor, RAG search, quality stats & cleanup.</p>
+    <div class="card-stat" id="images-stat"></div>
+  </a>
+  <a class="card" href="/orient.html" style="border-left: 3px solid var(--cyan);">
+    <div class="icon">&#128506;</div>
+    <h2>Orient</h2>
+    <p>Session orientation snapshot: git, issues, pipeline, runtime, delegate, wiki, and health.</p>
+    <div class="card-stat" id="card-stat-orient"></div>
+  </a>
+  <a class="card progress" href="/progress.html">
+    <div class="icon">&#9654;</div>
+    <h2>Progress</h2>
+    <p>Pipeline state across all tracks. Research → Content → Validate → Review → MDX.</p>
+    <div class="card-stat" id="progress-stat"></div>
+  </a>
+  <a class="card quality" href="/quality.html">
+    <div class="icon">&#9881;</div>
+    <h2>Quality</h2>
+    <p>Research coverage, review scores, outstanding issues, weak modules. The fix queue.</p>
+    <div class="card-stat" id="quality-stat"></div>
+  </a>
+  <a class="card" href="/runtime.html" style="border-left: 3px solid var(--purple);">
+    <div class="icon">&#9201;</div>
+    <h2>Runtime</h2>
+    <p>Agent binaries, 7-day usage, default-model headroom, and recent runtime call history.</p>
+    <div class="card-stat" id="card-stat-runtime"></div>
+  </a>
+  <a class="card" href="/track-health.html" style="border-left: 3px solid var(--cyan);">
+    <div class="icon">&#128737;</div>
+    <h2>Track Health</h2>
+    <p>Build progress, audit, enrichment, final reviews, ETA — one view per track. Auto-refreshes.</p>
+    <div class="card-stat" id="health-stat"></div>
+  </a>
+  <a class="card" href="/wiki.html" style="border-left: 3px solid var(--green);">
+    <div class="icon">&#128214;</div>
+    <h2>Wiki</h2>
+    <p>Per-track wiki compilation progress, quality gate failures, and the latest build log events.</p>
+    <div class="card-stat" id="card-stat-wiki"></div>
+  </a>
 </div>
 
 <div class="footer">Serving from localhost:8765</div>
 
 <script>
+const API_TIMEOUT_MS = 5000;
+
+async function fetchJson(path) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const res = await fetch(path, { signal: controller.signal });
+    const text = await res.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { detail: text };
+    }
+    if (!res.ok) throw new Error(data.detail || data.error || `HTTP ${res.status}`);
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function safeFetch(path) {
+  try {
+    return await fetchJson(path);
+  } catch {
+    return null;
+  }
+}
+
+function setStat(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text || '';
+}
+
 async function loadStats() {
   let v6Count = 0, v5Count = 0, builtPct = 0, pendingConsultations = 0;
+  const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki] = await Promise.all([
+    safeFetch('/api/dashboard/overview'),
+    safeFetch('/api/state/pipeline-versions'),
+    safeFetch('/api/consultation/metrics'),
+    safeFetch('/api/state/summary'),
+    safeFetch('/api/comms/batch-progress'),
+    safeFetch('/api/state/weak-points?limit=1'),
+    safeFetch('/api/orient'),
+    safeFetch('/api/runtime/agents'),
+    safeFetch('/api/delegate/tasks?limit=100'),
+    safeFetch('/api/build/events/active'),
+    safeFetch('/api/wiki/status'),
+  ]);
+
   try {
-    const [data, pv, cMetrics] = await Promise.all([
-      fetch('/api/dashboard/overview').then(r => r.json()),
-      fetch('/api/state/pipeline-versions').then(r => r.json()).catch(() => ({})),
-      fetch('/api/consultation/metrics').then(r => r.json()).catch(() => ({})),
-    ]);
+    if (!data || !pv) throw new Error('overview unavailable');
     const t = data.totals;
     v6Count = pv.counts?.v6 || 0;
     v5Count = pv.counts?.v5 || 0;
     builtPct = pv.pct_built || 0;
-    pendingConsultations = cMetrics.pending_queue || 0;
+    pendingConsultations = cMetrics?.pending_queue || 0;
 
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
@@ -145,28 +219,53 @@ async function loadStats() {
   }
 
   try {
-    const res = await fetch('/api/state/summary');
-    const data = await res.json();
-    const t = data.totals;
+    if (!summary) throw new Error('summary unavailable');
+    const t = summary.totals;
     document.getElementById('progress-stat').textContent =
       `${v6Count} v6 · ${v5Count} v5 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
   } catch(e) {}
 
   try {
-    const res = await fetch('/api/comms/batch-progress');
-    const data = await res.json();
-    const tracks = Object.values(data.tracks || {});
+    if (!comms) throw new Error('comms unavailable');
+    const tracks = Object.values(comms.tracks || {});
     const running = tracks.filter(t => t.health === 'healthy').length;
     const stalled = tracks.filter(t => t.health === 'stalled').length;
     document.getElementById('comms-stat').textContent =
-      `${data.running_processes} processes · ${running} healthy · ${stalled} stalled`;
+      `${comms.running_processes} processes · ${running} healthy · ${stalled} stalled`;
   } catch(e) {}
 
   try {
-    const res = await fetch('/api/state/weak-points?limit=1');
-    const data = await res.json();
-    document.getElementById('quality-stat').textContent = `${data.count} modules need attention`;
+    if (!weakPoints) throw new Error('weak points unavailable');
+    document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
   } catch(e) {}
+
+  if (orient) {
+    setStat('card-stat-orient', orient.git?.branch || 'no branch');
+  }
+
+  if (runtimeAgents) {
+    setStat('card-stat-runtime', `${(runtimeAgents.agents || []).length} agents`);
+  }
+
+  if (delegate) {
+    const tasks = delegate.tasks || [];
+    const active = tasks.filter(task => task.status === 'running' || task.status === 'spawning').length;
+    const zombies = tasks.filter(task => task.status === 'zombie').length;
+    setStat('card-stat-delegate', zombies ? `${active} active · ${zombies} zombie` : `${active} active`);
+  }
+
+  if (buildEvents) {
+    setStat('card-stat-build-events', `${(buildEvents.active || []).length} active`);
+  }
+
+  if (wiki) {
+    const totals = (wiki.tracks || []).reduce((acc, track) => {
+      acc.compiled += track.compiled || 0;
+      acc.total += track.total || 0;
+      return acc;
+    }, { compiled: 0, total: 0 });
+    setStat('card-stat-wiki', `${totals.compiled}/${totals.total} compiled`);
+  }
 }
 
 loadStats();

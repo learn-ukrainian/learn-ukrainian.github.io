@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delegate - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+.topbar h1 { font-size: 22px; font-weight: 700; }
+.topbar .sub { font-size: 12px; color: var(--text2); }
+.topbar .spacer { flex: 1; }
+.btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 12px; font-size: 12px; cursor: pointer; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.card.orange { border-left-color: var(--orange); }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.card-header h2 { font-size: 15px; font-weight: 600; }
+.muted { color: var(--text3); font-size: 12px; }
+.banner { display: none; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(248,81,73,0.14); border: 1px solid rgba(248,81,73,0.35); color: var(--red); font-size: 13px; }
+.empty { color: var(--text3); font-size: 13px; padding: 8px 0; }
+.task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.task-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.task-card.zombie { border-left: 3px solid var(--red); }
+.task-card.running { border-left: 3px solid var(--yellow); }
+.task-card.spawning { border-left: 3px solid var(--blue); }
+.task-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.pill { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.pill.ok { background: rgba(63,185,80,0.15); color: var(--green); }
+.pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
+.pill.warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.pill.gray { background: rgba(72,79,88,0.2); color: var(--text2); }
+.kv { display: grid; grid-template-columns: 78px 1fr; gap: 6px 10px; font-size: 12px; margin-bottom: 12px; }
+.kv .k { color: var(--text3); }
+.task-card button { width: 100%; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 20; }
+.overlay.open { display: block; }
+.modal { max-width: 1100px; width: calc(100% - 48px); max-height: calc(100vh - 48px); overflow: auto; margin: 24px auto; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.modal-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.modal-top h3 { font-size: 18px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; white-space: pre-wrap; word-break: break-word; font-size: 12px; overflow: auto; max-height: 65vh; }
+@media (max-width: 900px) {
+  .modal-grid { grid-template-columns: 1fr; }
+  .topbar { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>Delegate</h1>
+    <div class="sub">Delegation task list and detail inspector</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn" onclick="loadTasks()">Refresh</button>
+  <div class="muted" id="last-refresh">No auto-refresh</div>
+  <a href="/">Home</a>
+</div>
+
+<div class="container">
+  <section class="card">
+    <div class="card-header"><h2>&#129309; Active Tasks</h2><div class="muted" id="active-muted"></div></div>
+    <div class="banner" id="active-banner"></div>
+    <div id="active-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card orange">
+    <div class="card-header"><h2>&#10003; Recent Completed Tasks</h2><div class="muted" id="completed-muted"></div></div>
+    <div class="banner" id="completed-banner"></div>
+    <div id="completed-content" class="empty">Loading...</div>
+  </section>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-top">
+      <h3 id="modal-title">Task Detail</h3>
+      <div class="spacer"></div>
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+    <div class="banner" id="detail-banner"></div>
+    <div class="muted" id="detail-meta" style="margin-bottom:12px"></div>
+    <div class="modal-grid">
+      <div>
+        <div class="muted" style="margin-bottom:8px">Task state JSON</div>
+        <pre id="task-json">Loading...</pre>
+      </div>
+      <div>
+        <div class="muted" style="margin-bottom:8px">Result file</div>
+        <pre id="task-result">Loading...</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_TIMEOUT_MS = 5000;
+
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function formatTs(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+}
+
+function formatElapsed(seconds) {
+  if (typeof seconds !== 'number') return '—';
+  if (seconds >= 3600) return `${(seconds / 3600).toFixed(1)}h`;
+  if (seconds >= 60) return `${(seconds / 60).toFixed(1)}m`;
+  return `${seconds.toFixed(0)}s`;
+}
+
+function finishedAt(task) {
+  if (!task || !task.started_at || typeof task.duration_s !== 'number') return '—';
+  const start = new Date(task.started_at);
+  if (Number.isNaN(start.getTime())) return '—';
+  return new Date(start.getTime() + task.duration_s * 1000).toLocaleString();
+}
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { detail: text };
+    }
+    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Request timed out');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function setBanner(id, message) {
+  const el = document.getElementById(id);
+  el.textContent = message || '';
+  el.style.display = message ? 'block' : 'none';
+}
+
+function statusClass(status) {
+  if (status === 'done') return 'ok';
+  if (status === 'failed' || status === 'zombie') return 'err';
+  if (status === 'running' || status === 'spawning') return 'warn';
+  return 'gray';
+}
+
+function renderActive(tasks) {
+  document.getElementById('active-muted').textContent = `${tasks.length} visible`;
+  if (!tasks.length) {
+    document.getElementById('active-content').innerHTML = '<div class="empty">No active tasks</div>';
+    return;
+  }
+  document.getElementById('active-content').innerHTML = `<div class="task-grid">${tasks.map(task => `
+    <div class="task-card ${escapeHtml(task.status || 'gray')}">
+      <div class="task-top">
+        <div class="mono">${escapeHtml(task.task_id || '—')}</div>
+        <span class="pill ${statusClass(task.status)}">${task.status === 'zombie' ? 'ZOMBIE' : escapeHtml(task.status || 'unknown')}</span>
+      </div>
+      <div class="kv">
+        <div class="k">agent</div><div>${escapeHtml(task.agent || '—')}</div>
+        <div class="k">started</div><div>${formatTs(task.started_at)}</div>
+        <div class="k">elapsed</div><div>${formatElapsed(task.age_s)}</div>
+      </div>
+      <button class="btn" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))})'>View detail</button>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderCompleted(tasks) {
+  document.getElementById('completed-muted').textContent = `${tasks.length} shown`;
+  if (!tasks.length) {
+    document.getElementById('completed-content').innerHTML = '<div class="empty">No completed tasks</div>';
+    return;
+  }
+  document.getElementById('completed-content').innerHTML = `<table>
+    <thead><tr><th>task_id</th><th>agent</th><th>status</th><th>duration</th><th>finished_at</th></tr></thead>
+    <tbody>${tasks.map(task => `<tr>
+      <td class="mono">${escapeHtml(task.task_id || '—')}</td>
+      <td>${escapeHtml(task.agent || '—')}</td>
+      <td><span class="pill ${statusClass(task.status)}">${escapeHtml(task.status || 'unknown')}</span></td>
+      <td>${formatElapsed(task.duration_s)}</td>
+      <td>${finishedAt(task)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+async function openDetail(taskId) {
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('modal-title').textContent = taskId;
+  document.getElementById('detail-meta').textContent = 'Loading...';
+  document.getElementById('task-json').textContent = 'Loading...';
+  document.getElementById('task-result').textContent = 'Loading...';
+  setBanner('detail-banner', '');
+  try {
+    const detail = await fetchJson(`/api/delegate/tasks/${encodeURIComponent(taskId)}`);
+    document.getElementById('detail-meta').textContent = detail.result_truncated ? 'Result truncated to 64 KiB' : 'Result loaded';
+    document.getElementById('task-json').textContent = JSON.stringify(detail.task || {}, null, 2);
+    document.getElementById('task-result').textContent = detail.result ? detail.result : 'no result';
+  } catch (error) {
+    setBanner('detail-banner', `API unavailable: ${error.message}`);
+    document.getElementById('detail-meta').textContent = 'Unable to load task detail';
+    document.getElementById('task-json').textContent = 'Unable to load task detail';
+    document.getElementById('task-result').textContent = 'no result';
+  }
+}
+
+function closeModal(event) {
+  if (event && event.target && event.target.id !== 'overlay') return;
+  document.getElementById('overlay').classList.remove('open');
+}
+
+async function loadTasks() {
+  try {
+    const data = await fetchJson('/api/delegate/tasks?limit=100');
+    const tasks = Array.isArray(data.tasks) ? data.tasks : [];
+    const active = tasks.filter(task => ['running', 'spawning', 'zombie'].includes(task.status));
+    const completed = tasks.filter(task => ['done', 'failed'].includes(task.status));
+    renderActive(active);
+    renderCompleted(completed);
+    setBanner('active-banner', '');
+    setBanner('completed-banner', '');
+  } catch (error) {
+    setBanner('active-banner', `API unavailable: ${error.message}`);
+    setBanner('completed-banner', `API unavailable: ${error.message}`);
+    document.getElementById('active-content').innerHTML = '<div class="empty">Unable to load tasks</div>';
+    document.getElementById('completed-content').innerHTML = '<div class="empty">Unable to load tasks</div>';
+  }
+  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · manual refresh only`;
+}
+
+loadTasks();
+</script>
+</body>
+</html>

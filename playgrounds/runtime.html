@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Runtime - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); position: sticky; top: 0; z-index: 10; }
+.topbar h1 { font-size: 22px; font-weight: 700; }
+.topbar .sub { font-size: 12px; color: var(--text2); }
+.topbar .spacer { flex: 1; }
+.meta { text-align: right; font-size: 12px; color: var(--text3); }
+.btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 12px; font-size: 12px; cursor: pointer; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.card.orange { border-left-color: var(--orange); }
+.card.green { border-left-color: var(--green); }
+.card.purple { border-left-color: var(--purple); }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.card-header h2 { font-size: 15px; font-weight: 600; }
+.muted { color: var(--text3); font-size: 12px; }
+.banner { display: none; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(248,81,73,0.14); border: 1px solid rgba(248,81,73,0.35); color: var(--red); font-size: 13px; }
+.empty { color: var(--text3); font-size: 13px; padding: 8px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.usage-list { display: flex; flex-direction: column; gap: 10px; }
+.usage-row { display: grid; grid-template-columns: 120px 1fr 110px; gap: 12px; align-items: center; }
+.usage-name { font-weight: 600; }
+.usage-bar { height: 28px; display: flex; overflow: hidden; border-radius: 8px; background: var(--bg3); border: 1px solid var(--border); }
+.usage-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; min-width: 0; overflow: hidden; white-space: nowrap; }
+.usage-seg.ok { background: rgba(63,185,80,0.82); color: #07130a; }
+.usage-seg.err { background: rgba(248,81,73,0.9); color: #1d0908; }
+.usage-seg.warn { background: rgba(210,153,34,0.9); color: #1c1404; }
+.usage-seg.gray { background: rgba(72,79,88,0.95); color: var(--text); }
+.usage-tail { text-align: right; color: var(--text2); font-size: 12px; }
+.headroom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.headroom-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.headroom-card .agent { font-size: 12px; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.headroom-card .big { font-size: 42px; font-weight: 700; line-height: 1; margin-bottom: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+.pill.ok { background: rgba(63,185,80,0.15); color: var(--green); }
+.pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
+.pill.warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.pill.gray { background: rgba(72,79,88,0.2); color: var(--text2); }
+@media (max-width: 820px) {
+  .usage-row { grid-template-columns: 1fr; }
+  .topbar { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>Runtime</h1>
+    <div class="sub">Agent runtime usage, headroom, and recent calls</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn" onclick="refreshRuntime()">Refresh</button>
+  <div class="meta">
+    <div>Auto-refresh every 30s</div>
+    <div id="last-refresh">Waiting for data...</div>
+  </div>
+  <a href="/">Home</a>
+</div>
+
+<div class="container">
+  <section class="card">
+    <div class="card-header"><h2>&#128736; Agents</h2><div class="muted">Installed adapters and defaults</div></div>
+    <div class="banner" id="agents-banner"></div>
+    <div id="agents-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card orange">
+    <div class="card-header"><h2>&#128202; Usage (last 7 days)</h2><div class="muted">ok / error / rate_limited / timeout</div></div>
+    <div class="banner" id="usage-banner"></div>
+    <div id="usage-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card purple">
+    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Using each agent's default model</div></div>
+    <div class="banner" id="headroom-banner"></div>
+    <div id="headroom-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="card green">
+    <div class="card-header"><h2>&#128221; Recent Calls</h2><div class="muted">Newest first, limit 50</div></div>
+    <div class="banner" id="recent-banner"></div>
+    <div id="recent-content" class="empty">Loading...</div>
+  </section>
+</div>
+
+<script>
+const REFRESH_MS = 30000;
+const API_TIMEOUT_MS = 5000;
+let refreshTimer = null;
+
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function formatTs(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? escapeHtml(String(value)) : date.toLocaleString();
+}
+
+function formatDuration(value) {
+  if (typeof value !== 'number') return '—';
+  if (value >= 60) return `${(value / 60).toFixed(1)}m`;
+  return `${value.toFixed(1)}s`;
+}
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { detail: text };
+    }
+    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Request timed out');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function setBanner(id, message) {
+  const el = document.getElementById(id);
+  el.textContent = message || '';
+  el.style.display = message ? 'block' : 'none';
+}
+
+function renderAgents(agents) {
+  if (!agents.length) {
+    document.getElementById('agents-content').innerHTML = '<div class="empty">No runtime agents found</div>';
+    return;
+  }
+  document.getElementById('agents-content').innerHTML = `<table>
+    <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Supported Modes</th></tr></thead>
+    <tbody>${agents.map(agent => `<tr>
+      <td>${escapeHtml(agent.name || '—')}</td>
+      <td class="mono">${escapeHtml(agent.binary || '—')}</td>
+      <td class="mono">${escapeHtml(agent.default_model || '—')}</td>
+      <td>${(agent.supported_modes || []).map(mode => `<span class="pill gray">${escapeHtml(mode)}</span>`).join(' ') || '—'}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function segment(count, total, cls, label) {
+  if (!count) return '';
+  const pct = total ? Math.max((count / total) * 100, 8) : 0;
+  return `<div class="usage-seg ${cls}" style="width:${pct}%">${label} ${count}</div>`;
+}
+
+function renderUsage(byAgent) {
+  const entries = Object.entries(byAgent || {});
+  if (!entries.length) {
+    document.getElementById('usage-content').innerHTML = '<div class="empty">No usage records in the last 7 days</div>';
+    return;
+  }
+  entries.sort((a, b) => b[1].total - a[1].total);
+  document.getElementById('usage-content').innerHTML = `<div class="usage-list">${entries.map(([agent, stats]) => `
+    <div class="usage-row">
+      <div class="usage-name">${escapeHtml(agent)}</div>
+      <div class="usage-bar">
+        ${segment(stats.ok || 0, stats.total || 0, 'ok', 'ok')}
+        ${segment(stats.error || 0, stats.total || 0, 'err', 'err')}
+        ${segment(stats.rate_limited || 0, stats.total || 0, 'warn', 'rate')}
+        ${segment(stats.timeout || 0, stats.total || 0, 'gray', 'timeout')}
+      </div>
+      <div class="usage-tail">${stats.total || 0} calls · ${formatDuration(stats.total_duration_s)}</div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderHeadroom(cards) {
+  if (!cards.length) {
+    document.getElementById('headroom-content').innerHTML = '<div class="empty">No headroom data</div>';
+    return;
+  }
+  document.getElementById('headroom-content').innerHTML = `<div class="headroom-grid">${cards.map(card => `
+    <div class="headroom-card">
+      <div class="agent">${escapeHtml(card.agent)}</div>
+      <div class="big" style="color:${card.has_headroom ? 'var(--green)' : 'var(--red)'}">${card.has_headroom ? '&#10003;' : '&#10007;'}</div>
+      <div class="muted mono">${escapeHtml(card.model || '—')}</div>
+      <div style="margin-top:10px;font-size:13px">${escapeHtml(card.reason || 'No reason given')}</div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderRecent(records) {
+  if (!records.length) {
+    document.getElementById('recent-content').innerHTML = '<div class="empty">No recent calls today</div>';
+    return;
+  }
+  document.getElementById('recent-content').innerHTML = `<table>
+    <thead><tr><th>ts</th><th>agent</th><th>entrypoint</th><th>model</th><th>outcome</th><th>duration</th></tr></thead>
+    <tbody>${records.map(record => {
+      const cls = record.outcome === 'ok' ? 'ok' : record.outcome === 'rate_limited' ? 'warn' : record.outcome === 'timeout' ? 'gray' : 'err';
+      return `<tr>
+        <td>${formatTs(record.ts)}</td>
+        <td>${escapeHtml(record.agent || '—')}</td>
+        <td class="mono">${escapeHtml(record.entrypoint || '—')}</td>
+        <td class="mono">${escapeHtml(record.model || '—')}</td>
+        <td><span class="pill ${cls}">${escapeHtml(record.outcome || 'unknown')}</span></td>
+        <td>${formatDuration(record.duration_s)}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+function stopRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+}
+
+function startRefresh() {
+  if (!refreshTimer) refreshTimer = setInterval(loadRuntime, REFRESH_MS);
+}
+
+async function loadRuntime() {
+  let agents = [];
+
+  try {
+    const data = await fetchJson('/api/runtime/agents');
+    agents = Array.isArray(data.agents) ? data.agents : [];
+    renderAgents(agents);
+    setBanner('agents-banner', '');
+  } catch (error) {
+    setBanner('agents-banner', `API unavailable: ${error.message}`);
+    document.getElementById('agents-content').innerHTML = '<div class="empty">Unable to load agents</div>';
+  }
+
+  try {
+    const data = await fetchJson('/api/runtime/usage?days=7');
+    renderUsage(data.by_agent || {});
+    setBanner('usage-banner', '');
+  } catch (error) {
+    setBanner('usage-banner', `API unavailable: ${error.message}`);
+    document.getElementById('usage-content').innerHTML = '<div class="empty">Unable to load usage data</div>';
+  }
+
+  try {
+    if (!agents.length) throw new Error('Need agent list before checking headroom');
+    const cards = await Promise.all(agents.map(agent => fetchJson(`/api/runtime/headroom?agent=${encodeURIComponent(agent.name)}&model=${encodeURIComponent(agent.default_model || '')}`)));
+    renderHeadroom(cards);
+    setBanner('headroom-banner', '');
+  } catch (error) {
+    setBanner('headroom-banner', `API unavailable: ${error.message}`);
+    document.getElementById('headroom-content').innerHTML = '<div class="empty">Unable to load headroom status</div>';
+  }
+
+  try {
+    const data = await fetchJson('/api/runtime/recent?limit=50');
+    renderRecent(Array.isArray(data.records) ? data.records : []);
+    setBanner('recent-banner', '');
+  } catch (error) {
+    setBanner('recent-banner', `API unavailable: ${error.message}`);
+    document.getElementById('recent-content').innerHTML = '<div class="empty">Unable to load recent calls</div>';
+  }
+
+  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+}
+
+function refreshRuntime() {
+  stopRefresh();
+  loadRuntime().finally(startRefresh);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopRefresh();
+  } else {
+    loadRuntime();
+    startRefresh();
+  }
+});
+
+loadRuntime();
+startRefresh();
+</script>
+</body>
+</html>

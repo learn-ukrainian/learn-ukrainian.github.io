@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orient - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); position: sticky; top: 0; z-index: 10; }
+.topbar h1 { font-size: 22px; font-weight: 700; }
+.topbar .sub { font-size: 12px; color: var(--text2); }
+.topbar .spacer { flex: 1; }
+.topbar .meta { text-align: right; font-size: 12px; color: var(--text3); }
+.btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 12px; font-size: 12px; cursor: pointer; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.page-banner, .card-banner { display: none; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; background: rgba(248,81,73,0.14); border: 1px solid rgba(248,81,73,0.35); color: var(--red); font-size: 13px; }
+.section { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.section.orange { border-left-color: var(--orange); }
+.section.green { border-left-color: var(--green); }
+.section.yellow { border-left-color: var(--yellow); }
+.section.purple { border-left-color: var(--purple); }
+.section.cyan { border-left-color: var(--cyan); }
+.section.gray { border-left-color: var(--gray); }
+.section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.section-header h2 { font-size: 15px; font-weight: 600; }
+.section-header .muted { color: var(--text3); font-size: 12px; }
+.kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.kv { background: var(--bg3); border-radius: 8px; padding: 12px; }
+.kv .label { color: var(--text3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.kv .value { font-size: 22px; font-weight: 700; }
+.list { list-style: none; }
+.list li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.list li:last-child { border-bottom: none; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.issue-row { display: grid; grid-template-columns: 72px 1fr 90px; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.issue-row:last-child { border-bottom: none; }
+.issue-num { font-weight: 700; color: var(--blue); }
+.issue-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.issue-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; background: var(--bg3); color: var(--text2); }
+.pill.ok { background: rgba(63,185,80,0.15); color: var(--green); }
+.pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
+.pill.warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.pill.gray { background: rgba(72,79,88,0.2); color: var(--text2); }
+.issue-age { color: var(--text3); font-size: 12px; text-align: right; }
+.track-grid, .agent-grid, .health-grid { display: grid; gap: 12px; }
+.track-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.agent-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.health-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.mini-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.mini-card .title { font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+.mini-card .big { font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+.mini-card .sub { font-size: 12px; color: var(--text3); }
+.bar-track { width: 100%; height: 10px; background: var(--bg); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+.bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; color: var(--text3); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+.dot.ok { background: var(--green); }
+.dot.err { background: var(--red); }
+.details { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; }
+.details summary { cursor: pointer; list-style: none; padding: 12px 14px; font-size: 13px; color: var(--text2); }
+.details summary::-webkit-details-marker { display: none; }
+.details-body { padding: 0 14px 14px; }
+.empty { color: var(--text3); font-size: 13px; padding: 12px 0; }
+@media (max-width: 720px) {
+  .topbar { flex-wrap: wrap; }
+  .issue-row { grid-template-columns: 1fr; }
+  .issue-age { text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>Orient</h1>
+    <div class="sub">One-page session orientation snapshot</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn" onclick="manualRefresh()">Refresh</button>
+  <div class="meta">
+    <div id="refresh-status">Auto-refresh every 30s</div>
+    <div id="generated-at">Waiting for data...</div>
+  </div>
+  <a href="/">Home</a>
+</div>
+
+<div class="container">
+  <div class="page-banner" id="page-banner"></div>
+
+  <section class="section cyan">
+    <div class="section-header"><h2>&#128187; Git</h2><div class="muted" id="git-muted"></div></div>
+    <div id="git-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section orange">
+    <div class="section-header"><h2>&#128172; Issues</h2><div class="muted" id="issues-muted"></div></div>
+    <div id="issues-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section blue">
+    <div class="section-header"><h2>&#128202; Pipeline</h2><div class="muted" id="pipeline-muted"></div></div>
+    <div id="pipeline-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section purple">
+    <div class="section-header"><h2>&#9201; Runtime</h2><div class="muted">Headroom + today's outcomes</div></div>
+    <div id="runtime-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section yellow">
+    <div class="section-header"><h2>&#129309; Delegate</h2><div class="muted" id="delegate-muted"></div></div>
+    <div id="delegate-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section green">
+    <div class="section-header"><h2>&#128214; Wiki</h2><div class="muted" id="wiki-muted"></div></div>
+    <div id="wiki-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section gray">
+    <div class="section-header"><h2>&#128137; Health</h2><div class="muted">API, MCP, sources, broker</div></div>
+    <div id="health-content" class="empty">Loading...</div>
+  </section>
+
+  <section class="section cyan">
+    <div class="section-header"><h2>&#128221; Session Hints</h2><div class="muted">Recent session-state files</div></div>
+    <div id="session-content" class="empty">Loading...</div>
+  </section>
+</div>
+
+<script>
+const REFRESH_MS = 30000;
+const API_TIMEOUT_MS = 5000;
+let refreshTimer = null;
+let refreshHalted = false;
+
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function formatTimestamp(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? escapeHtml(String(value)) : date.toLocaleString();
+}
+
+function formatAgeDays(days) {
+  if (typeof days !== 'number') return '—';
+  return days === 0 ? '0d' : `${days}d`;
+}
+
+function truncate(value, max) {
+  const text = String(value || '');
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { detail: text };
+    }
+    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Request timed out');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function setPageBanner(message) {
+  const banner = document.getElementById('page-banner');
+  banner.textContent = message || '';
+  banner.style.display = message ? 'block' : 'none';
+}
+
+function renderGit(git) {
+  document.getElementById('git-muted').textContent = git && git.head ? `HEAD ${git.head}` : '';
+  if (!git || git.error) {
+    document.getElementById('git-content').innerHTML = `<div class="empty">${escapeHtml(git && git.error ? git.error : 'No git data')}</div>`;
+    return;
+  }
+  const commits = Array.isArray(git.recent_commits) ? git.recent_commits : [];
+  document.getElementById('git-content').innerHTML = `
+    <div class="kv-grid">
+      <div class="kv"><div class="label">Branch</div><div class="value mono">${escapeHtml(git.branch || '—')}</div></div>
+      <div class="kv"><div class="label">HEAD</div><div class="value mono">${escapeHtml(git.head || '—')}</div></div>
+      <div class="kv"><div class="label">Ahead</div><div class="value">${git.ahead_of_origin || 0}</div></div>
+    </div>
+    ${commits.length ? `<ul class="list">${commits.map(commit => `<li class="mono"><strong>${escapeHtml(commit.sha || '—')}</strong> ${escapeHtml(truncate(commit.subject || '', 80))}</li>`).join('')}</ul>` : '<div class="empty">No recent commits</div>'}
+  `;
+}
+
+function renderIssues(issues) {
+  document.getElementById('issues-muted').textContent = `${issues.length} open issues shown`;
+  if (!issues.length) {
+    document.getElementById('issues-content').innerHTML = '<div class="empty">No open issues returned</div>';
+    return;
+  }
+  document.getElementById('issues-content').innerHTML = issues.map(issue => `
+    <div class="issue-row">
+      <div class="issue-num">#${escapeHtml(issue.number || '—')}</div>
+      <div>
+        <div class="issue-title">${escapeHtml(issue.title || '(untitled)')}</div>
+        <div class="issue-meta">${(issue.labels || []).map(label => `<span class="pill gray">${escapeHtml(label)}</span>`).join('') || '<span class="pill gray">no labels</span>'}</div>
+      </div>
+      <div class="issue-age">${formatAgeDays(issue.age_days)}</div>
+    </div>
+  `).join('');
+}
+
+function renderPipeline(pipeline) {
+  const tracks = Object.entries((pipeline && pipeline.summary && pipeline.summary.tracks) || {});
+  const totals = pipeline && pipeline.summary && pipeline.summary.totals ? pipeline.summary.totals : {};
+  document.getElementById('pipeline-muted').textContent = totals.total ? `${totals.total} total modules` : '';
+  if (!tracks.length) {
+    document.getElementById('pipeline-content').innerHTML = '<div class="empty">No pipeline summary available</div>';
+    return;
+  }
+  tracks.sort((a, b) => a[0].localeCompare(b[0]));
+  document.getElementById('pipeline-content').innerHTML = `<div class="track-grid">${
+    tracks.map(([track, stats]) => {
+      const total = stats.total || 0;
+      const auditPct = total ? Math.round(((stats.audit_passing || 0) / total) * 100) : 0;
+      return `<div class="mini-card">
+        <div class="title">${escapeHtml(track)}</div>
+        <div style="font-size:13px;color:var(--text2)">research ${stats.research_done || 0}/${total}</div>
+        <div style="font-size:13px;color:var(--text2)">content ${stats.content_done || 0}/${total}</div>
+        <div style="font-size:13px;color:var(--text2)">audit ${stats.audit_passing || 0}/${total}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${auditPct}%;background:${auditPct >= 80 ? 'var(--green)' : auditPct >= 50 ? 'var(--yellow)' : 'var(--red)'}"></div></div>
+      </div>`;
+    }).join('')
+  }</div>`;
+}
+
+function renderRuntime(runtime) {
+  const agents = ['claude', 'gemini', 'codex'];
+  const outcomes = runtime && runtime.recent_outcomes ? runtime.recent_outcomes : {};
+  document.getElementById('runtime-content').innerHTML = `<div class="agent-grid">${
+    agents.map(agent => {
+      const hasHeadroom = runtime && runtime.headroom ? runtime.headroom[agent] : false;
+      return `<div class="mini-card">
+        <div class="title">${agent}</div>
+        <div class="big" style="color:${hasHeadroom ? 'var(--green)' : 'var(--red)'}">${hasHeadroom ? '&#10003;' : '&#10007;'}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="pill ok">ok ${outcomes.ok || 0}</span>
+          <span class="pill err">error ${outcomes.error || 0}</span>
+          <span class="pill warn">rate ${outcomes.rate_limited || 0}</span>
+        </div>
+        <div class="sub">Today across runtime usage</div>
+      </div>`;
+    }).join('')
+  }</div>`;
+}
+
+function renderDelegate(delegate) {
+  const recent = Array.isArray(delegate && delegate.recent) ? delegate.recent : [];
+  document.getElementById('delegate-muted').textContent = `${delegate && delegate.active_count ? delegate.active_count : 0} active`;
+  document.getElementById('delegate-content').innerHTML = `
+    <div class="kv-grid">
+      <div class="kv"><div class="label">Active Tasks</div><div class="value">${delegate && delegate.active_count ? delegate.active_count : 0}</div></div>
+    </div>
+    ${recent.length ? `<table><thead><tr><th>Task</th><th>Agent</th><th>Status</th><th>Started</th></tr></thead><tbody>${
+      recent.map(task => `<tr>
+        <td class="mono">${escapeHtml(task.task_id || '—')}</td>
+        <td>${escapeHtml(task.agent || '—')}</td>
+        <td><span class="pill ${task.status === 'done' ? 'ok' : task.status === 'failed' || task.status === 'zombie' ? 'err' : 'warn'}">${escapeHtml(task.status || 'unknown')}</span></td>
+        <td>${formatTimestamp(task.started_at)}</td>
+      </tr>`).join('')
+    }</tbody></table>` : '<div class="empty">No recent tasks</div>'}
+  `;
+}
+
+function renderWiki(wiki) {
+  const tracks = Object.entries((wiki && wiki.by_track) || {});
+  document.getElementById('wiki-muted').textContent = `${tracks.length} tracks`;
+  if (!tracks.length) {
+    document.getElementById('wiki-content').innerHTML = '<div class="empty">No wiki status data available</div>';
+    return;
+  }
+  tracks.sort((a, b) => a[0].localeCompare(b[0]));
+  document.getElementById('wiki-content').innerHTML = tracks.map(([track, stats]) => `
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;margin-bottom:6px">
+        <strong>${escapeHtml(track)}</strong>
+        <span style="color:var(--text2)">${stats.compiled || 0}/${stats.total || 0} (${stats.pct || 0}%)</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${stats.pct || 0}%;background:${stats.pct >= 80 ? 'var(--green)' : stats.pct >= 50 ? 'var(--yellow)' : 'var(--red)'}"></div></div>
+    </div>
+  `).join('');
+}
+
+function renderHealth(health) {
+  const items = [
+    ['API', !!(health && health.api)],
+    ['MCP', !!(health && health.mcp_rag)],
+    ['sources.db', !!(health && health.sources_db)],
+    ['broker', !!(health && health.message_broker)],
+  ];
+  document.getElementById('health-content').innerHTML = `<div class="health-grid">${
+    items.map(([label, ok]) => `<div class="mini-card"><div class="title">${label}</div><div style="font-size:15px"><span class="dot ${ok ? 'ok' : 'err'}"></span>${ok ? 'healthy' : 'down'}</div></div>`).join('')
+  }</div>`;
+}
+
+function renderSessionHints(hints) {
+  if (!hints.length) {
+    document.getElementById('session-content').innerHTML = '<div class="empty">No session hints found</div>';
+    return;
+  }
+  document.getElementById('session-content').innerHTML = `
+    <details class="details">
+      <summary>Show ${hints.length} recent session-state files</summary>
+      <div class="details-body">
+        <ul class="list">
+          ${hints.map(item => `<li><div class="mono">${escapeHtml(item.file || '—')}</div><div style="color:var(--text2);font-size:12px;margin-top:4px">${escapeHtml(item.first_line || '(empty file)')}</div></li>`).join('')}
+        </ul>
+      </div>
+    </details>
+  `;
+}
+
+function stopRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+}
+
+function startRefresh() {
+  if (refreshHalted || refreshTimer) return;
+  refreshTimer = setInterval(loadOrient, REFRESH_MS);
+}
+
+async function loadOrient() {
+  try {
+    const data = await fetchJson('/api/orient');
+    setPageBanner('');
+    refreshHalted = false;
+    renderGit(data.git || {});
+    renderIssues(Array.isArray(data.issues) ? data.issues : []);
+    renderPipeline(data.pipeline || {});
+    renderRuntime(data.runtime || {});
+    renderDelegate(data.delegate || {});
+    renderWiki(data.wiki || {});
+    renderHealth(data.health || {});
+    renderSessionHints(Array.isArray(data.session_hints) ? data.session_hints : []);
+    document.getElementById('generated-at').textContent = `Updated ${formatTimestamp(data.generated_at)}`;
+    document.getElementById('refresh-status').textContent = 'Auto-refresh every 30s';
+    console.info(`[orient] refreshed branch=${data.git && data.git.branch ? data.git.branch : 'unknown'} issues=${Array.isArray(data.issues) ? data.issues.length : 0} generated_at=${data.generated_at || 'unknown'}`);
+    startRefresh();
+  } catch (error) {
+    setPageBanner(`API unavailable: ${error.message}`);
+    document.getElementById('refresh-status').textContent = 'Auto-refresh stopped after API failure';
+    document.getElementById('generated-at').textContent = 'Waiting for manual refresh';
+    refreshHalted = true;
+    stopRefresh();
+    console.error('[orient] refresh failed', error);
+  }
+}
+
+function manualRefresh() {
+  refreshHalted = false;
+  stopRefresh();
+  loadOrient();
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopRefresh();
+    return;
+  }
+  startRefresh();
+});
+
+loadOrient();
+</script>
+</body>
+</html>
