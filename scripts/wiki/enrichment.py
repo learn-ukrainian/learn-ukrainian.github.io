@@ -194,7 +194,8 @@ def _get_external_resources() -> dict:
             _EXT_RESOURCES = data.get("resources", {}) if data else {}
         else:
             _EXT_RESOURCES = {}
-    return _EXT_RESOURCES or {}
+    assert _EXT_RESOURCES is not None
+    return _EXT_RESOURCES
 
 
 def _load_external_resources(track: str, slug: str) -> list[dict]:
