@@ -84,6 +84,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Self-improving template proposals. Review, approve/reject queue, history, metrics.</p>
     <div class="card-stat" id="consultation-stat"></div>
   </a>
+  <a class="card" href="/cost.html" style="border-left: 3px solid var(--red);">
+    <div class="icon">&#128176;</div>
+    <h2>Cost</h2>
+    <p>Per-module / per-phase / per-model token and USD spend. Last 7 days, 30 days, all-time.</p>
+    <div class="card-stat" id="card-stat-cost"></div>
+  </a>
   <a class="card curriculum" href="/curriculum-dashboard.html">
     <div class="icon">&#128218;</div>
     <h2>Curriculum Dashboard</h2>
@@ -179,7 +185,7 @@ function setStat(id, text) {
 
 async function loadStats() {
   let v6Count = 0, v5Count = 0, builtPct = 0, pendingConsultations = 0;
-  const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki] = await Promise.all([
+  const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions'),
     safeFetch('/api/consultation/metrics'),
@@ -191,6 +197,7 @@ async function loadStats() {
     safeFetch('/api/delegate/tasks?limit=100'),
     safeFetch('/api/build/events/active'),
     safeFetch('/api/wiki/status'),
+    safeFetch('/api/analytics/cost'),
   ]);
 
   try {
@@ -265,6 +272,11 @@ async function loadStats() {
       return acc;
     }, { compiled: 0, total: 0 });
     setStat('card-stat-wiki', `${totals.compiled}/${totals.total} compiled`);
+  }
+
+  if (cost) {
+    const amount = Number(cost.windows?.last_7_days?.totals?.cost_usd_est || 0);
+    setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
   }
 }
 

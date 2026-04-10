@@ -39,6 +39,7 @@ from .config import (
     PROJECT_ROOT,
 )
 from .consultation_router import router as consultation_router
+from .cost_router import router as cost_router
 from .dashboard_router import router as dashboard_router
 from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
@@ -77,6 +78,7 @@ app.include_router(admin_router, prefix="/api/admin")
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")
+app.include_router(cost_router, prefix="/api/analytics/cost")
 app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"])
 app.include_router(delegate_router, prefix="/api/delegate")
