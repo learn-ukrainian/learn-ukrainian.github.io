@@ -188,13 +188,21 @@ class ClaudeAdapter:
         stderr: str,
         returncode: int,
         output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
     ) -> ParseResult:
         """Parse Claude CLI output into a ParseResult.
 
         Claude Code writes the response to stdout. On success, stdout is
         the clean output; on failure, stderr carries the diagnostic.
         """
+        # plan / call_start_time unused — Claude doesn't need session-file
+        # recovery because the Claude CLI flushes stdout before exit.
+        # Kept in the signature to match the uniform protocol (see
+        # adapters/base.py).
         _ = output_file  # Unused — Claude doesn't use -o file
+        _ = plan
+        _ = call_start_time
 
         # Rate-limit detection across both streams
         combined = f"{stdout}\n{stderr}"

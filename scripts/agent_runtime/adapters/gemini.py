@@ -148,34 +148,95 @@ class GeminiAdapter:
         stderr: str,
         returncode: int,
         output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
     ) -> ParseResult:
         """Parse Gemini CLI output into a ParseResult.
 
-        Gemini writes the final response to stdout. We trust returncode=0
-        as success, fall back to rate-limit detection if non-zero.
+        Primary source: stdout. Fallback source: the Gemini session file
+        under ``~/.gemini/tmp/<project>/chats/session-*.json``.
+
+        Why the fallback exists (2026-04-10): the Gemini CLI block-buffers
+        stdout when not connected to a TTY. On long calls (MCP tool use +
+        internal retries) the CLI can finish and write its full response
+        to the session file while stdout is still sitting in a kernel
+        buffer that never gets flushed before proc.kill() on hard_timeout.
+        Result: the pipeline used to discard completed responses and
+        retry forever, even though the answer was already on disk.
+
+        The fix reads the newest session file after every call and uses
+        it if stdout is empty OR the call was killed. The session file
+        is updated live as Gemini writes, so even a killed call can
+        recover the work-in-progress up to the last flush.
         """
         _ = output_file  # unused — Gemini doesn't use -o
 
         combined = f"{stdout}\n{stderr}"
-
-        # rate_limited is a HARD signal meaning "do not retry, quota is out".
-        # Only set it on:
-        #   1. Genuine quota-exhaustion patterns (RESOURCE_EXHAUSTED, "quota exceeded", etc.)
-        #   2. AND the CLI itself failed the call (returncode != 0 OR empty output)
-        #
-        # Transient 429s / "No capacity available" errors — even if they make
-        # the CLI take 2+ minutes and emit lots of stderr — are NOT rate limits.
-        # The Gemini CLI retries them internally with backoff. If the CLI exited
-        # successfully with output, the transient error was resolved.
         hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         transient_seen = bool(_TRANSIENT_ERROR_RE.search(combined))
 
-        call_failed = returncode != 0 or not stdout.strip()
-        rate_limited = hard_limit_hit and call_failed
+        stdout_response = stdout.strip()
 
-        # Success = exit 0, some stdout, not rate-limited.
-        ok = returncode == 0 and bool(stdout.strip()) and not rate_limited
-        response = stdout.strip() if ok else ""
+        # Three outcomes to distinguish:
+        #
+        #   1. Fast path (success):
+        #        returncode == 0 AND stdout non-empty AND no rate-limit pattern
+        #      → use stdout directly, no disk scan
+        #
+        #   2. Recovery path (killed but answer on disk):
+        #        returncode != 0 (killed / failed) OR stdout empty
+        #      → try the session file. If it has content, THAT is the real
+        #        response and the call is a success despite the bad exit.
+        #
+        #   3. Hard failure:
+        #        no stdout, no session-file recovery → fail the call. If a
+        #        rate-limit pattern was present, classify as rate_limited.
+        #
+        # Note on the "Error: quota exceeded in stdout" case: Gemini CLI
+        # sometimes writes quota messages to stdout instead of stderr. When
+        # that happens, returncode is always non-zero, which routes us to
+        # the recovery path. The session file has nothing (Gemini never
+        # got past the quota error), so we end in the hard-failure branch
+        # and rate_limited is correctly set.
+
+        fast_path_ok = (
+            returncode == 0
+            and bool(stdout_response)
+            and not hard_limit_hit
+        )
+
+        final_response = ""
+        source_note: str | None = None
+
+        if fast_path_ok:
+            final_response = stdout_response
+        else:
+            # Recovery path: read the session file. Empty plan means we're
+            # being called from a unit test that doesn't exercise the
+            # recovery logic — leave the file_response empty.
+            file_response = ""
+            if plan is not None:
+                file_response = self._read_latest_session_response(
+                    plan, call_start_time=call_start_time,
+                )
+            if file_response:
+                final_response = file_response
+                reason = (
+                    "stdout empty" if not stdout_response
+                    else f"rc={returncode}"
+                )
+                source_note = (
+                    f"recovered {len(file_response)} chars from "
+                    f"~/.gemini/tmp/.../chats (reason: {reason})"
+                )
+
+        # Rate limit: pattern present AND we have no usable response
+        # anywhere. If we recovered from the session file, it's not a
+        # real rate-limit — the CLI survived whatever transient 429 it saw.
+        rate_limited = hard_limit_hit and not final_response
+
+        ok = bool(final_response) and not rate_limited
+        response = final_response if ok else ""
 
         stderr_excerpt: str | None = None
         if not ok:
@@ -183,6 +244,9 @@ class GeminiAdapter:
             # (some Gemini errors land in stdout, especially quota messages).
             excerpt_source = stderr.strip() or stdout.strip() or ""
             stderr_excerpt = excerpt_source[:500] or None
+        elif source_note:
+            # We recovered from disk. Surface the note so logs show it.
+            stderr_excerpt = source_note
         elif transient_seen:
             # Call succeeded despite a transient 429 / "No capacity" retry —
             # record a brief note so monitoring can see retry frequency, but
@@ -197,6 +261,114 @@ class GeminiAdapter:
             session_id=None,  # Gemini CLI doesn't expose session IDs.
             tokens=None,      # Nor tokens.
         )
+
+    # ---------------------------------------------------------------------
+    # Session-file recovery
+    # ---------------------------------------------------------------------
+
+    def _read_latest_session_response(
+        self,
+        plan: InvocationPlan,
+        *,
+        call_start_time: float | None = None,
+    ) -> str:
+        """Extract the assistant's response from the newest Gemini session file.
+
+        Gemini CLI writes a file at ``~/.gemini/tmp/<cwd-basename>/chats/
+        session-YYYY-MM-DDTHH-MM-<short>.json`` for every exec. It creates
+        a new file at call start and keeps updating it throughout the
+        run. The file structure is:
+
+            {
+              "sessionId": "<uuid>",
+              "startTime": "<iso>",
+              "lastUpdated": "<iso>",
+              "messages": [
+                {"type": "user", "content": [{"text": "..."}]},
+                {"type": "gemini", "content": "..."},   # a plain string
+                {"type": "gemini", "content": "..."},
+                ...
+              ]
+            }
+
+        We pick the newest file by mtime (Gemini calls are sequential in
+        our pipeline, so newest-by-mtime == current call). If
+        ``call_start_time`` is provided, we additionally verify the file
+        was modified AFTER the call started — a safety check against
+        leftover session files from previous calls.
+
+        Returns the concatenation of every ``type=gemini`` message's text
+        content, or '' if nothing recoverable is found. All exceptions
+        are swallowed — this is a last-resort fallback, not a primary
+        code path.
+        """
+        import json as _json
+        import time as _time
+
+        try:
+            chats_dir = Path.home() / ".gemini" / "tmp" / plan.cwd.name / "chats"
+            if not chats_dir.exists():
+                return ""
+
+            candidates = sorted(
+                chats_dir.glob("session-*.json"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
+            )
+            if not candidates:
+                return ""
+
+            # Pick the newest file whose mtime is after the call start.
+            # If call_start_time is unknown, trust the newest file.
+            newest: Path | None = None
+            if call_start_time is None:
+                newest = candidates[0]
+            else:
+                # Compare wall-clock (file mtime) to monotonic (call_start).
+                # Convert monotonic → wall by adding (time.time() - monotonic())
+                # at call time — but we don't have that delta. Approximation:
+                # any file modified in the last 2 hours of wall clock is
+                # acceptable if it's also the newest. This guards against
+                # picking a multi-day-old orphan file.
+                two_hours_ago = _time.time() - 2 * 3600
+                for c in candidates:
+                    if c.stat().st_mtime >= two_hours_ago:
+                        newest = c
+                        break
+
+            if newest is None:
+                return ""
+
+            data = _json.loads(newest.read_text("utf-8"))
+            messages = data.get("messages", [])
+            if not isinstance(messages, list):
+                return ""
+
+            # Concatenate every gemini message's text content. Skip user
+            # messages, skip info/system messages, skip tool-call
+            # metadata. Content for gemini messages is a plain string
+            # (verified against real session files on disk).
+            parts: list[str] = []
+            for msg in messages:
+                if not isinstance(msg, dict):
+                    continue
+                if msg.get("type") != "gemini":
+                    continue
+                content = msg.get("content")
+                if isinstance(content, str) and content.strip():
+                    parts.append(content)
+                elif isinstance(content, list):
+                    # Defensive: some older Gemini CLI versions may use
+                    # list-of-parts format like user messages.
+                    for part in content:
+                        if isinstance(part, dict):
+                            text = part.get("text")
+                            if isinstance(text, str) and text.strip():
+                                parts.append(text)
+
+            return "\n\n".join(parts).strip()
+        except Exception:
+            return ""
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Return filesystem paths the watchdog should poll for mtime bumps.

@@ -184,6 +184,8 @@ class CodexAdapter:
         stderr: str,
         returncode: int,
         output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
     ) -> ParseResult:
         """Parse the codex exec output into a ParseResult.
 
@@ -191,6 +193,17 @@ class CodexAdapter:
         it regardless of returncode — some failure modes still leave a
         useful partial message in the file, and it's often more informative
         than stderr.
+
+        Fallback recovery (added 2026-04-10): codex-cli 0.118 has a
+        post-completion hang bug where the CLI generates the full answer,
+        writes a ``task_complete`` event to
+        ``~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl``, then hangs at
+        0% CPU without ever flushing ``-o <file>`` or exiting. Previously
+        this meant the runtime waited the full hard_timeout and returned
+        an empty response. Now, if ``-o <file>`` is empty, we scan the
+        newest rollout file for a ``task_complete`` event and extract
+        its ``last_agent_message``. Parallels the Gemini adapter's
+        session-file fallback.
         """
         # Read the output file if it exists. Tolerate all errors.
         file_output = ""
@@ -199,6 +212,30 @@ class CodexAdapter:
                 file_output = output_file.read_text("utf-8", errors="replace").strip()
             except OSError:
                 file_output = ""
+
+        # Fallback: if the -o file is empty, scan the rollout JSONL for
+        # a task_complete event. This handles the 0.118 post-completion
+        # hang where Codex has the answer on disk but never flushes -o.
+        rollout_response = ""
+        rollout_source_note: str | None = None
+        if not file_output and plan is not None:
+            rollout_response = self._read_latest_rollout_task_complete(
+                plan, call_start_time=call_start_time,
+            )
+            if rollout_response:
+                reason = (
+                    "rc=0 but -o empty (post-completion hang)"
+                    if returncode == 0
+                    else f"rc={returncode}, -o empty"
+                )
+                rollout_source_note = (
+                    f"recovered {len(rollout_response)} chars from "
+                    f"~/.codex/sessions/.../rollout-*.jsonl (reason: {reason})"
+                )
+
+        # durable_output is the response we'll return on success:
+        # either the -o file or the rollout-recovered answer.
+        durable_output = file_output or rollout_response
 
         # Rate-limit detection — with THREE critical caveats.
         #
@@ -239,10 +276,11 @@ class CodexAdapter:
         else:
             stderr_for_check = _strip_codex_prompt_echo(stderr)
             combined_for_rl_check = "\n".join(
-                part for part in (stdout, stderr_for_check, file_output) if part
+                part for part in (stdout, stderr_for_check, durable_output) if part
             )
             pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
-            call_failed = returncode != 0 or not file_output
+            # Call failed if neither -o nor rollout gave us content.
+            call_failed = returncode != 0 or not durable_output
             rate_limited = pattern_hit and call_failed
 
         # Session id comes from stdout in Codex.
@@ -251,9 +289,14 @@ class CodexAdapter:
         if session_match:
             session_id = session_match.group(1)
 
-        # Success classification.
-        ok = returncode == 0 and bool(file_output) and not rate_limited
-        response = file_output if ok else ""
+        # Success classification: we have content (from either -o or the
+        # rollout fallback) AND we're not rate-limited. Note that a
+        # post-completion hang will have returncode == -9 (because WE
+        # killed it after the early-reap detector fires) but durable_output
+        # will be populated from rollout. That's a successful recovery,
+        # NOT a failure. So returncode is no longer a veto — content is.
+        ok = bool(durable_output) and not rate_limited
+        response = durable_output if ok else ""
         stderr_excerpt: str | None = None
         if not ok:
             # Build a useful excerpt: stderr first, then file_output as
@@ -264,6 +307,10 @@ class CodexAdapter:
             if not stderr.strip() and file_output:
                 excerpt_parts.append(f"[codex output file]\n{file_output}")
             stderr_excerpt = "\n".join(excerpt_parts)[:500] or None
+        elif rollout_source_note:
+            # We recovered from the rollout file. Surface the note so
+            # logs/usage records show it.
+            stderr_excerpt = rollout_source_note
 
         return ParseResult(
             ok=ok,
@@ -273,6 +320,187 @@ class CodexAdapter:
             session_id=session_id,
             tokens=None,  # codex exec does not expose token counts.
         )
+
+    # ---------------------------------------------------------------------
+    # Early reap — break out of Codex CLI's post-completion hang
+    # ---------------------------------------------------------------------
+
+    def check_early_reap(
+        self,
+        plan: InvocationPlan,
+        *,
+        call_start_time: float | None = None,
+    ) -> bool:
+        """Return True if the Codex rollout JSONL has a task_complete event.
+
+        This is the fix for the Codex 0.118.0 post-completion hang.
+        Verified empirically 2026-04-10: all Codex threads end up in
+        _pthread_cond_wait on an internal Tokio runtime condition
+        variable AFTER writing task_complete to the rollout file. The
+        process never exits on its own. Without this method the runner
+        would wait the full hard_timeout (1h+) on every such hang.
+
+        The runner calls this periodically (every few poll ticks). When
+        it returns True, the runner kills the subprocess and falls
+        through to ``parse_response()``, which recovers the response
+        via ``_read_latest_rollout_task_complete()``.
+
+        Optimizations to keep overhead negligible:
+        1. Warmup window: don't scan before 5 seconds elapsed.
+           Codex can't possibly have emitted task_complete that early.
+        2. Throttle: at most one scan every 2 seconds per adapter
+           instance.
+        3. Mtime gate: skip the scan if the rollout directory mtime
+           hasn't changed since the last scan. The sessions dir bumps
+           on every file creation inside it, and the rollout file's
+           OWN mtime bumps on every write. We snapshot the newest
+           rollout file's mtime and only re-scan when it advances.
+        """
+        import time as _time
+        now = _time.monotonic()
+
+        # Guard 1: warmup window.
+        if call_start_time is not None and (now - call_start_time) < 5.0:
+            return False
+
+        # Guard 2: throttle.
+        last_check = getattr(self, "_last_early_reap_check", 0.0)
+        if now - last_check < 2.0:
+            return False
+        self._last_early_reap_check = now
+
+        # Guard 3: mtime gate — quick stat instead of a full file scan.
+        from datetime import UTC, datetime
+        today = datetime.now(UTC)
+        sessions_today = (
+            Path.home() / ".codex" / "sessions"
+            / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+        )
+        try:
+            if not sessions_today.exists():
+                return False
+            rollouts = list(sessions_today.glob("rollout-*.jsonl"))
+            if not rollouts:
+                return False
+            newest = max(rollouts, key=lambda p: p.stat().st_mtime)
+            current_mtime = newest.stat().st_mtime
+        except OSError:
+            return False
+
+        last_mtime = getattr(self, "_last_early_reap_mtime", 0.0)
+        if current_mtime <= last_mtime:
+            # File hasn't advanced since last scan — task_complete
+            # can't have been added. Skip the scan.
+            return False
+        self._last_early_reap_mtime = current_mtime
+
+        # All guards passed — do the actual scan.
+        msg = self._read_latest_rollout_task_complete(
+            plan, call_start_time=call_start_time,
+        )
+        return bool(msg)
+
+    # ---------------------------------------------------------------------
+    # Rollout-file recovery (post-completion hang fallback)
+    # ---------------------------------------------------------------------
+
+    def _read_latest_rollout_task_complete(
+        self,
+        plan: InvocationPlan,
+        *,
+        call_start_time: float | None = None,
+    ) -> str:
+        """Extract the ``last_agent_message`` from the newest rollout JSONL.
+
+        codex-cli 0.118.0 writes a per-call rollout file at
+        ``~/.codex/sessions/YYYY/MM/DD/rollout-<uuid>.jsonl``. Every
+        reasoning step, tool call, and response is streamed there as a
+        JSONL event. When Codex finishes its turn, it emits a single
+        event like::
+
+            {
+              "timestamp": "2026-04-10T19:40:02.155Z",
+              "type": "event_msg",
+              "payload": {
+                "type": "task_complete",
+                "turn_id": "<uuid>",
+                "last_agent_message": "<the full response text>"
+              }
+            }
+
+        After emitting this event, the CLI frequently hangs at 0% CPU
+        for minutes or forever — it does NOT flush ``-o <file>`` and
+        does NOT exit on its own. So the answer sits on disk while the
+        runtime waits for a proc.exit that never comes.
+
+        This method walks today's sessions directory, picks the newest
+        rollout file, and scans it line-by-line for a task_complete
+        event. Returns the ``last_agent_message`` string, or '' if no
+        such event is present yet (task still in progress) or if
+        anything goes wrong.
+
+        Safety:
+        * call_start_time (monotonic) is used to filter stale files.
+          Any file with mtime older than 2 hours wall-clock is skipped
+          to avoid picking up a previous day's leftover.
+        * All exceptions are swallowed — this is a last-resort fallback,
+          not a primary code path.
+        * If multiple task_complete events exist in one file (e.g. if
+          Codex did multi-turn reasoning), we return the LAST one — the
+          final answer.
+        """
+        _ = call_start_time  # reserved for future tighter verification
+        import json as _json
+        import time as _time
+        from datetime import UTC, datetime
+
+        try:
+            _ = plan  # not strictly needed but kept for future task-specific matching
+            today = datetime.now(UTC)
+            sessions_today = (
+                Path.home() / ".codex" / "sessions"
+                / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+            )
+            if not sessions_today.exists():
+                return ""
+
+            two_hours_ago = _time.time() - 2 * 3600
+            candidates = [
+                p for p in sessions_today.glob("rollout-*.jsonl")
+                if p.stat().st_mtime >= two_hours_ago
+            ]
+            if not candidates:
+                return ""
+
+            newest = max(candidates, key=lambda p: p.stat().st_mtime)
+
+            # Scan for the task_complete event. Take the LAST one if
+            # multiple exist (multi-turn session → final turn wins).
+            last_message = ""
+            with open(newest, encoding="utf-8", errors="replace") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        event = _json.loads(line)
+                    except _json.JSONDecodeError:
+                        continue
+                    if event.get("type") != "event_msg":
+                        continue
+                    payload = event.get("payload") or {}
+                    if payload.get("type") != "task_complete":
+                        continue
+                    msg = payload.get("last_agent_message")
+                    if isinstance(msg, str) and msg:
+                        last_message = msg
+
+            return last_message
+        except Exception:
+            # Last-resort fallback: never let a rollout-parse error
+            # bubble out of parse_response. Swallow everything and
+            # fall back to the primary code path.
+            return ""
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Return paths the runner should poll for mtime changes.

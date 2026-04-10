@@ -136,6 +136,8 @@ class AgentAdapter(Protocol):
         stderr: str,
         returncode: int,
         output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
     ) -> ParseResult:
         """Interpret raw subprocess output into a ParseResult.
 
@@ -150,12 +152,46 @@ class AgentAdapter(Protocol):
             output_file: The path the adapter set in its InvocationPlan,
                 or None. The runner passes it back unchanged; the adapter
                 reads it if it's the canonical output location.
+            plan: The full InvocationPlan the runner used to spawn the
+                subprocess. Adapters that need to recover work from
+                out-of-band locations (e.g. Gemini's session file at
+                ``~/.gemini/tmp/<project>/chats/``) read `plan.cwd` to
+                derive those paths. Added 2026-04-10 so the Gemini
+                adapter can recover responses from the session file
+                when stdout is empty or the CLI was killed mid-flush.
+            call_start_time: Monotonic timestamp of when the subprocess
+                was spawned. Used by adapters that need to distinguish
+                "this call's output" from stale files on disk. None if
+                the runner doesn't track it.
 
         Returns:
             ParseResult with ok, response, stderr_excerpt, rate_limited,
             session_id, and tokens fields.
         """
         ...
+
+    # --- OPTIONAL method (not part of the structural Protocol) ---
+    #
+    # Adapters MAY implement ``check_early_reap(plan, call_start_time)
+    # -> bool``. If present, the runner calls it periodically in its
+    # poll loop. A True return value means "the response is on disk,
+    # kill the subprocess NOW" — used by CodexAdapter to work around
+    # the 0.118 post-completion hang where Codex writes task_complete
+    # to the rollout file then hangs in Tokio runtime shutdown.
+    #
+    # Not declared on the Protocol because structural typing would
+    # then require EVERY adapter to implement it, including the ones
+    # that don't need early reaping (Gemini, Claude). The runner
+    # uses getattr() to probe for the method at call time.
+    #
+    # Signature if implemented::
+    #
+    #     def check_early_reap(
+    #         self,
+    #         plan: InvocationPlan,
+    #         *,
+    #         call_start_time: float | None = None,
+    #     ) -> bool: ...
 
     def liveness_signal_paths(
         self,

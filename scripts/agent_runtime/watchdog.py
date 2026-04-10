@@ -64,11 +64,25 @@ class WatchdogState:
         stdout_lines: Accumulated stdout lines captured by the streamer.
             The runner reads this on normal termination to build the final
             response. (Popen.communicate() would block; we need nonblocking.)
+        stderr_lines: Accumulated stderr lines captured by a separate
+            streamer thread. Before 2026-04-10 we relied on
+            ``proc.stderr.read()`` at completion time, but that ONLY
+            works if stderr fits in the OS pipe buffer (16KB on macOS)
+            — and Codex CLI writes hundreds of KB of banner + echoed
+            prompt + reasoning trace + tool calls to stderr during a
+            single long call. When the pipe filled up, Codex's next
+            stderr write blocked forever, hanging the entire call at
+            0% CPU with STAT=S. Verified empirically via a direct-shell
+            experiment that stderr backpressure (not a Codex bug) was
+            the cause. Fix: mirror stdout_lines with stderr_lines, and
+            add an _stderr_streamer thread that drains stderr in
+            parallel with stdout. See #1184.
     """
     start_time: float
     last_activity: float
     stop: bool = False
     stdout_lines: list[str] = field(default_factory=list)
+    stderr_lines: list[str] = field(default_factory=list)
 
 
 def _stdout_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
@@ -92,6 +106,42 @@ def _stdout_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
         try:
             if proc.stdout is not None:
                 proc.stdout.close()
+        except OSError:
+            pass
+
+
+def _stderr_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
+    """Background thread: drain stderr line-by-line, bump last_activity.
+
+    Exists specifically to prevent stderr pipe backpressure. If the
+    runner pipes both stdout and stderr and only drains stdout, stderr
+    accumulates in the OS pipe buffer (16KB on macOS). Once full, the
+    subprocess's next stderr write blocks indefinitely, hanging the
+    entire call at 0% CPU with STAT=S.
+
+    Codex CLI hit this hard: for tool-heavy reviews it writes hundreds
+    of KB of events to stderr, exceeds the buffer, and sits forever
+    waiting for a reader that never shows up. Verified empirically
+    2026-04-10 via a pair of direct-shell vs runtime experiments:
+    direct-shell with stderr → regular file exited cleanly in 2min;
+    earlier runtime path with stderr → PIPE hung 10+ minutes on the
+    same class of task. See #1184.
+
+    Structure mirrors _stdout_streamer for consistency.
+    """
+    assert proc.stderr is not None  # Popen was configured with stderr=PIPE
+    try:
+        for line in iter(proc.stderr.readline, ""):
+            if state.stop:
+                break
+            state.stderr_lines.append(line)
+            state.last_activity = time.monotonic()
+    except (ValueError, OSError):
+        pass
+    finally:
+        try:
+            if proc.stderr is not None:
+                proc.stderr.close()
         except OSError:
             pass
 
@@ -144,7 +194,7 @@ def start_watchdog(
 
     threads: list[threading.Thread] = []
 
-    # Layer 1: stdout streamer (always started if stdout is a pipe)
+    # Layer 1a: stdout streamer (always started if stdout is a pipe)
     if proc.stdout is not None:
         t_stdout = threading.Thread(
             target=_stdout_streamer,
@@ -154,6 +204,23 @@ def start_watchdog(
         )
         t_stdout.start()
         threads.append(t_stdout)
+
+    # Layer 1b: stderr streamer — CRITICAL for any subprocess that
+    # writes significant stderr volume (e.g. Codex CLI, which writes
+    # banner + echoed prompt + reasoning trace + tool calls all to
+    # stderr). Without this the stderr pipe can fill up the 16KB
+    # macOS buffer and block the subprocess forever on its next
+    # stderr write. Added 2026-04-10 after reproducing a multi-minute
+    # hang on tool-heavy Codex tasks. See _stderr_streamer docstring.
+    if proc.stderr is not None:
+        t_stderr = threading.Thread(
+            target=_stderr_streamer,
+            args=(proc, state),
+            name=f"watchdog-stderr-{proc.pid}",
+            daemon=True,
+        )
+        t_stderr.start()
+        threads.append(t_stderr)
 
     # Layer 2: mtime poller (only if adapter returned any paths)
     capped = list(liveness_paths)[:_MAX_LIVENESS_PATHS]
@@ -204,14 +271,23 @@ def stop_watchdog(
     """
     state.stop = True
 
-    # Close stdout to unblock the streamer's readline. Only safe to do
-    # after the subprocess has been killed or has naturally exited — if
-    # you close while the subprocess is still writing, the subprocess
-    # will get SIGPIPE on its next write. Callers already ensure this
-    # ordering: they call proc.kill() + proc.wait() BEFORE stop_watchdog.
-    if proc is not None and proc.stdout is not None:
-        with contextlib.suppress(OSError, ValueError):
-            proc.stdout.close()
+    # Close stdout AND stderr to unblock the streamer readlines. Only
+    # safe after the subprocess has been killed or has naturally exited
+    # — if you close while the subprocess is still writing, the
+    # subprocess will get SIGPIPE on its next write. Callers already
+    # ensure this ordering: they call proc.kill() + proc.wait() BEFORE
+    # stop_watchdog.
+    #
+    # stderr close is as important as stdout close: the stderr streamer
+    # thread (added 2026-04-10) blocks on its own readline the same way
+    # the stdout streamer does, and a dangling blocked thread leaks.
+    if proc is not None:
+        if proc.stdout is not None:
+            with contextlib.suppress(OSError, ValueError):
+                proc.stdout.close()
+        if proc.stderr is not None:
+            with contextlib.suppress(OSError, ValueError):
+                proc.stderr.close()
 
     for t in threads:
         t.join(timeout=timeout)

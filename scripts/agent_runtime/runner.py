@@ -383,15 +383,52 @@ def invoke(
             liveness_paths.append(plan.output_file)
         watchdog_state, watchdog_threads = start_watchdog(proc, liveness_paths)
 
-        # Poll loop — wait for subprocess to exit OR hard_timeout to fire.
+        # Poll loop — wait for subprocess to exit OR hard_timeout to fire
+        # OR the adapter's early-reap detector to fire.
+        #
         # Stall detection was removed from the kill path on 2026-04-10
-        # (see watchdog.py::should_kill docstring). Hard timeout is now
-        # the only safety net; legitimately long-running tasks complete.
+        # (see watchdog.py::should_kill docstring). Hard timeout is the
+        # wall-clock safety net.
+        #
+        # Early reap (2026-04-10): adapters MAY implement
+        # check_early_reap(plan, call_start_time) -> bool. If present
+        # and True, the runner kills the subprocess immediately and
+        # falls through to parse_response, which is expected to recover
+        # the response from the adapter's persistent state file. This
+        # is the fix for Codex 0.118 post-completion hangs — the CLI
+        # writes its answer to the rollout file then sits in Tokio
+        # cond_wait forever. CodexAdapter returns True the moment a
+        # task_complete event appears in the rollout JSONL, which
+        # unblocks the call in ~10s instead of the full hard_timeout.
+        early_reap_check = getattr(adapter, "check_early_reap", None)
         kill_reason: str | None = None
         while True:
             returncode = proc.poll()
             if returncode is not None:
                 break
+
+            # Early reap — adapter-provided readiness check.
+            if early_reap_check is not None:
+                try:
+                    if early_reap_check(plan, call_start_time=start_time):
+                        # Response ready on disk. Kill and reap.
+                        returncode = proc.poll()
+                        if returncode is not None:
+                            # Race: process exited between poll and
+                            # early_reap_check. Normal exit, no kill.
+                            kill_reason = None
+                            break
+                        kill_reason = "early_reap"
+                        proc.kill()
+                        with contextlib.suppress(subprocess.TimeoutExpired):
+                            proc.wait(timeout=5.0)
+                        break
+                except Exception:
+                    # An adapter bug in check_early_reap must never
+                    # crash the whole invocation. Fall through to
+                    # normal poll/kill logic.
+                    pass
+
             kill_reason = should_kill(watchdog_state, stall_timeout, hard_timeout)
             if kill_reason is not None:
                 # Race-check (Gemini review finding #1): the subprocess may
@@ -415,24 +452,64 @@ def invoke(
         # always returns a state (it was called unconditionally above).
         assert watchdog_state is not None
 
-        # Drain the stdout streamer thread before reading captured lines.
-        # Without this join, the final tail of stdout may still be sitting
-        # in the OS pipe buffer, causing truncated responses on fast-exiting
-        # subprocesses. (Gemini review finding #2.)
+        # Drain both streamer threads before reading captured lines.
+        # Without these joins, the final tail of stdout/stderr may still
+        # be sitting in the OS pipe buffer, causing truncated responses
+        # on fast-exiting subprocesses. (Gemini review finding #2,
+        # extended to stderr on 2026-04-10 after discovering that
+        # proc.stderr.read() at completion time was the ROOT CAUSE of
+        # Codex post-completion hangs for tool-heavy tasks — the stderr
+        # pipe filled up during the run and blocked Codex's writes.)
         for t in watchdog_threads:
-            if "stdout" in t.name:
+            if "stdout" in t.name or "stderr" in t.name:
                 t.join(timeout=5.0)
 
-        # Read captured stdout from watchdog state + any residual stderr.
+        # Read captured stdout AND stderr from watchdog state. We no
+        # longer call proc.stderr.read() because the _stderr_streamer
+        # thread now drains stderr in parallel with stdout during the
+        # run, preventing pipe-buffer backpressure from blocking the
+        # subprocess. See watchdog.py::_stderr_streamer for the full
+        # incident chain.
         stdout_text = "".join(watchdog_state.stdout_lines)
-        stderr_text = ""
-        if proc.stderr is not None:
-            with contextlib.suppress(ValueError, OSError):
-                stderr_text = proc.stderr.read() or ""
+        stderr_text = "".join(watchdog_state.stderr_lines)
 
-        # ---------- Handle watchdog kills ----------
-        if kill_reason == "hard_timeout":
-            stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
+        # ---------- Parse response FIRST, then decide kill outcome ----------
+        #
+        # CRITICAL (2026-04-10): we MUST call adapter.parse_response() even
+        # when the subprocess was hard-killed. Otherwise we throw away the
+        # adapter's ability to recover work that was already completed and
+        # written to disk before the kill.
+        #
+        # Specifically: the Gemini CLI can block-buffer stdout for minutes
+        # while actively streaming its response into
+        # ~/.gemini/tmp/<project>/chats/session-*.json. On a hard_timeout
+        # kill, stdout is empty but the session file has the full (or
+        # partial-but-usable) response. GeminiAdapter.parse_response reads
+        # that file and returns ok=True with the recovered response.
+        #
+        # The old flow raised AgentTimeoutError immediately on kill and
+        # never gave the adapter a chance to recover. That forced the
+        # dispatcher's cascade to retry the same call on a different
+        # model — wasting another 15 minutes on work that was ALREADY
+        # DONE and sitting on disk.
+        #
+        # New flow: always parse, then raise only if parse_response couldn't
+        # recover anything meaningful (ok == False).
+        stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
+        parse: ParseResult = adapter.parse_response(
+            stdout=stdout_text,
+            stderr=stderr_text,
+            returncode=proc.returncode if proc.returncode is not None else -1,
+            output_file=plan.output_file,
+            plan=plan,
+            call_start_time=start_time,
+        )
+
+        # ---------- Handle hard_timeout AFTER parse_response ----------
+        if kill_reason == "hard_timeout" and not parse.ok:
+            # Parse could not recover a usable response from disk. This
+            # is a true hard timeout — raise so the caller can cascade
+            # to a different model.
             record = _build_usage_record(
                 agent=agent_name,
                 entrypoint=entrypoint,
@@ -449,7 +526,8 @@ def invoke(
                 rate_limited=False,
                 stalled=False,
                 stderr_excerpt=(
-                    stderr_text[:500]
+                    parse.stderr_excerpt
+                    or stderr_text[:500]
                     or tail_liveness_file_for_debug(liveness_paths)[:500]
                 ),
                 tokens=None,
@@ -457,19 +535,16 @@ def invoke(
             write_record(record)
             raise AgentTimeoutError(agent_name, hard_timeout)
 
+        # If parse.ok after a hard_timeout kill, we successfully recovered
+        # from disk. Fall through to the normal success path — the usage
+        # record will show outcome=ok but the stderr_excerpt carries the
+        # adapter's "recovered N chars from ..." note so the recovery is
+        # visible in logs.
+
         # "stalled" kill branch removed 2026-04-10 — should_kill() no
         # longer returns "stalled". Only hard_timeout is in the kill
         # path now. AgentStalledError remains importable from errors.py
         # for backward compatibility with test mocks, but is never raised.
-
-        # ---------- Normal path: adapter parses response ----------
-        stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
-        parse: ParseResult = adapter.parse_response(
-            stdout=stdout_text,
-            stderr=stderr_text,
-            returncode=proc.returncode if proc.returncode is not None else -1,
-            output_file=plan.output_file,
-        )
 
         # ---------- Classify outcome ----------
         if parse.rate_limited:

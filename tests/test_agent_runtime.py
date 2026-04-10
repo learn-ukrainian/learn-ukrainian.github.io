@@ -406,6 +406,264 @@ def test_codex_parse_response_signaled_exit_is_never_rate_limit(tmp_path):
     assert result.ok is False
 
 
+def test_codex_check_early_reap_fires_when_task_complete_present(
+    tmp_path, monkeypatch
+):
+    """Regression pin (2026-04-10): check_early_reap must return True
+    as soon as a task_complete event appears in the newest rollout file.
+    Without this, the runner waits the full hard_timeout on every
+    Codex post-completion hang.
+
+    Scenario: call_start_time is old enough (>5s), rollout file exists
+    with a task_complete event. Expected: returns True, releasing the
+    runner to kill and reap.
+    """
+    import json as _json
+    import time as _time
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+    rollout = sessions_today / "rollout-test.jsonl"
+    rollout.write_text(_json.dumps({
+        "type": "event_msg",
+        "payload": {
+            "type": "task_complete",
+            "last_agent_message": "Here is the full audit...",
+        },
+    }) + "\n")
+
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="reap-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    # call_start_time 10s in the past so the "has been running long
+    # enough" guard doesn't short-circuit.
+    call_start = _time.monotonic() - 10.0
+    assert adapter.check_early_reap(plan, call_start_time=call_start) is True
+
+
+def test_codex_check_early_reap_skips_within_warmup_window(tmp_path, monkeypatch):
+    """Early reap must NOT fire within the first 5 seconds of a call,
+    even if a stale rollout from a previous run has a task_complete.
+    Otherwise we'd instantly reap legitimate new calls based on old
+    file state.
+    """
+    import json as _json
+    import time as _time
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+    (sessions_today / "rollout-old.jsonl").write_text(_json.dumps({
+        "type": "event_msg",
+        "payload": {"type": "task_complete", "last_agent_message": "old"},
+    }) + "\n")
+
+    plan = adapter.build_invocation(
+        prompt="x", mode="read-only", cwd=tmp_path,
+        model=None, task_id="warmup", session_id=None, tool_config=None,
+    )
+
+    # call_start_time = now (0s elapsed) — within warmup window
+    assert adapter.check_early_reap(
+        plan, call_start_time=_time.monotonic()
+    ) is False
+
+
+def test_codex_check_early_reap_returns_false_when_no_task_complete(
+    tmp_path, monkeypatch
+):
+    """If there's NO task_complete event yet in the rollout, return False
+    so the runner keeps polling normally.
+    """
+    import json as _json
+    import time as _time
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+    # A rollout file with only reasoning deltas, no task_complete
+    (sessions_today / "rollout-inprogress.jsonl").write_text(
+        _json.dumps({"type": "response_item",
+                     "payload": {"type": "reasoning_delta"}}) + "\n"
+    )
+
+    plan = adapter.build_invocation(
+        prompt="x", mode="read-only", cwd=tmp_path,
+        model=None, task_id=None, session_id=None, tool_config=None,
+    )
+
+    call_start = _time.monotonic() - 10.0
+    assert adapter.check_early_reap(plan, call_start_time=call_start) is False
+
+
+def test_codex_parse_response_recovers_from_rollout_task_complete(
+    tmp_path, monkeypatch
+):
+    """Regression (2026-04-10 production incident): codex-cli 0.118
+    has a post-completion hang bug where the CLI writes task_complete
+    to rollout-*.jsonl, then hangs at 0% CPU without flushing -o <file>
+    or exiting. The adapter must recover by reading the rollout file.
+
+    Simulation: empty -o file (as if Codex never flushed), populated
+    rollout file with a task_complete event. Adapter should return
+    ok=True with the rollout message as the response.
+    """
+    import json as _json
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    # Build today's sessions dir and plant a rollout with task_complete
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+
+    rollout = sessions_today / "rollout-2026-04-10T21-35-20-test.jsonl"
+    events = [
+        {"timestamp": "2026-04-10T21:35:21Z", "type": "event_msg",
+         "payload": {"type": "session_start"}},
+        {"timestamp": "2026-04-10T21:36:00Z", "type": "response_item",
+         "payload": {"type": "reasoning_delta"}},
+        {"timestamp": "2026-04-10T21:40:02Z", "type": "event_msg",
+         "payload": {
+             "type": "task_complete",
+             "turn_id": "abc-123",
+             "last_agent_message": "Here is the binary search tree implementation...",
+         }},
+    ]
+    rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
+
+    # Empty -o file (the hang: Codex never flushed it)
+    output_file = tmp_path / "codex-out.txt"
+    output_file.write_text("")
+
+    plan = adapter.build_invocation(
+        prompt="Write a BST",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="bst-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    # returncode=-9 simulates "we killed the hung process after early-reap"
+    result = adapter.parse_response(
+        stdout="",
+        stderr="",
+        returncode=-9,
+        output_file=output_file,
+        plan=plan,
+    )
+
+    assert result.ok is True, (
+        f"expected rollout recovery to succeed, got stderr_excerpt="
+        f"{result.stderr_excerpt!r}"
+    )
+    assert "binary search tree implementation" in result.response
+    assert "recovered" in (result.stderr_excerpt or "")
+    assert "rollout" in (result.stderr_excerpt or "")
+    assert result.rate_limited is False
+
+
+def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(
+    tmp_path, monkeypatch
+):
+    """When -o <file> has content, skip the rollout scan entirely.
+    Happy path must stay fast (no JSON parsing on every success)."""
+    import json as _json
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+
+    # Plant a rollout with DIFFERENT content so we'd notice if the
+    # adapter accidentally read from it on the happy path.
+    rollout = sessions_today / "rollout-test.jsonl"
+    rollout.write_text(_json.dumps({
+        "type": "event_msg",
+        "payload": {"type": "task_complete",
+                    "last_agent_message": "STALE rollout content"},
+    }) + "\n")
+
+    output_file = tmp_path / "codex-out.txt"
+    output_file.write_text("Fresh -o file response")
+
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    result = adapter.parse_response(
+        stdout="session id: abc123",
+        stderr="",
+        returncode=0,
+        output_file=output_file,
+        plan=plan,
+    )
+
+    assert result.ok is True
+    assert result.response == "Fresh -o file response"
+    assert "STALE" not in result.response
+
+
 def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
     """Regression (Gemini 2026-04-10 review): a user prompt containing
     a legitimate dashes-only line (code block, horizontal rule) used to
@@ -603,6 +861,208 @@ def test_invoke_rate_limit_short_circuit(tmp_path):
     mock_popen.assert_not_called()
 
 
+def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
+    """Regression pin (2026-04-10): when an adapter's check_early_reap
+    returns True, the runner must kill the subprocess and call
+    parse_response, which is expected to recover the response from
+    whatever on-disk state the adapter uses.
+
+    This test pins the whole Codex post-completion-hang recovery path:
+    runner polls early_reap → returns True → runner kills proc →
+    parse_response reads rollout file → returns successful Result.
+    """
+    import json as _json
+    from datetime import UTC, datetime
+    from unittest.mock import MagicMock
+
+    # Plant a rollout file with task_complete so check_early_reap fires
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+    rollout = sessions_today / "rollout-reap-test.jsonl"
+    rollout.write_text(_json.dumps({
+        "type": "event_msg",
+        "payload": {
+            "type": "task_complete",
+            "last_agent_message": "The complete audit response is here.",
+        },
+    }) + "\n")
+
+    # Mock Popen: poll returns None (running) before kill, then -9
+    # after. The runner's finally block may call kill() a second time
+    # as a safety cleanup — to keep the test's kill-call count stable,
+    # we flip poll() to return -9 the moment kill() fires.
+    mock_proc = MagicMock()
+    state = {"killed": False}
+    mock_proc.poll = MagicMock(
+        side_effect=lambda: -9 if state["killed"] else None,
+    )
+    mock_proc.returncode = -9
+    def fake_kill():
+        state["killed"] = True
+    mock_proc.kill = MagicMock(side_effect=fake_kill)
+    mock_proc.wait = MagicMock()
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 99999
+
+    # Make the warmup guard pass by pretending the call is 10s old.
+    # We do that by patching time.monotonic inside the runner to return
+    # a value >5s after start_time. Easier: just patch the adapter's
+    # own warmup guard by patching monotonic globally.
+    import time as _time
+
+    base_time = _time.monotonic()
+    monotonic_values = iter([
+        base_time,       # start_time capture in runner
+        base_time + 10,  # poll loop first check_early_reap
+        base_time + 11, base_time + 12, base_time + 13, base_time + 14,
+    ])
+    def fake_monotonic():
+        try:
+            return next(monotonic_values)
+        except StopIteration:
+            return base_time + 20
+
+    with patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", return_value=mock_proc,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ), patch(
+        "agent_runtime.runner.time.monotonic", side_effect=fake_monotonic,
+    ):
+        result = invoke(
+            "codex", "do the audit",
+            mode="read-only",
+            cwd=tmp_path,
+            task_id="reap-integration",
+            entrypoint="runtime",
+            hard_timeout=300,
+        )
+
+    # Runner must have killed the proc (early reap signaled)
+    mock_proc.kill.assert_called_once()
+    # And returned a successful Result with the recovered response
+    assert result.ok is True, (
+        f"early-reap recovery should produce ok=True, "
+        f"got stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert "complete audit response" in result.response
+    assert "rollout" in (result.stderr_excerpt or "")
+
+
+def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
+    """REGRESSION PIN (2026-04-10): when the runner hard-timeout-kills a
+    Gemini call, it MUST still call adapter.parse_response() so the
+    adapter can recover work from the session file on disk.
+
+    The bug the test guards against: the old runner raised
+    AgentTimeoutError immediately on hard_timeout, which skipped
+    parse_response entirely. That meant Gemini CLI responses already
+    written to ~/.gemini/tmp/.../chats/session-*.json were thrown away
+    and the dispatcher cascaded to a different model for no reason.
+
+    The fix calls parse_response first, then only raises
+    AgentTimeoutError if parse couldn't recover anything.
+    """
+    import json as _json
+    from unittest.mock import MagicMock
+
+    # Set up a fake $HOME with a Gemini session file for the test project.
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    project_cwd = tmp_path / "learn-ukrainian"
+    project_cwd.mkdir()
+
+    chats_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
+    chats_dir.mkdir(parents=True)
+    (chats_dir / "session-latest.json").write_text(_json.dumps({
+        "sessionId": "x",
+        "messages": [
+            {"type": "user", "content": [{"text": "write a module"}]},
+            {"type": "gemini",
+             "content": "### Skeleton\n\n## Section 1\n...full response..."},
+        ],
+    }), "utf-8")
+
+    # Mock Popen so it never really spawns a subprocess. We simulate
+    # a hang by NOT setting returncode on the first poll and then
+    # having should_kill fire hard_timeout.
+    mock_proc = MagicMock()
+    # First poll: None (running). Subsequent polls: -9 (killed).
+    mock_proc.poll = MagicMock(side_effect=[None, None, -9, -9, -9])
+    mock_proc.returncode = -9
+    mock_proc.kill = MagicMock()
+    mock_proc.wait = MagicMock()
+    # stdin/stderr/stdout: provide minimal stubs so the runner's
+    # streamer + drain code doesn't blow up.
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    # Return "" on readline so the _stderr_streamer thread's
+    # iter(readline, "") exits immediately with zero captured lines.
+    # (Before 2026-04-10 the runner read proc.stderr.read() directly;
+    # now it drains via a streamer thread, so mocks need readline too.)
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.read = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")  # empty = streamer exits
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 99999
+
+    # has_headroom mock: always OK.
+    # should_kill mock: fire hard_timeout on every call.
+    with patch(
+        "agent_runtime.runner.has_headroom",
+        return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen",
+        return_value=mock_proc,
+    ), patch(
+        "agent_runtime.runner.should_kill",
+        side_effect=lambda *a, **kw: "hard_timeout",
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        result = invoke(
+            "gemini",
+            "write a module",
+            mode="workspace-write",
+            cwd=project_cwd,
+            hard_timeout=5,
+        )
+
+    # The key assertion: despite hard_timeout killing the subprocess,
+    # invoke() RETURNED a Result (did NOT raise AgentTimeoutError)
+    # because the adapter recovered the response from the session file.
+    assert result.ok is True, (
+        f"expected recovery from session file after hard_timeout, "
+        f"got stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert "Skeleton" in result.response
+    assert "Section 1" in result.response
+    assert "recovered" in (result.stderr_excerpt or "")
+
+
 # ---------------------------------------------------------------------------
 # Watchdog
 # ---------------------------------------------------------------------------
@@ -683,6 +1143,61 @@ def test_tail_liveness_empty_on_all_binary_or_dirs(tmp_path):
     empty_dir = tmp_path / "empty_dir"
     empty_dir.mkdir()
     assert tail_liveness_file_for_debug([binary, empty_dir]) == ""
+
+
+def test_stderr_streamer_drains_large_volume_without_hanging():
+    """Regression pin (2026-04-10): the Codex post-completion hang was
+    caused by stderr pipe backpressure. The runner piped stderr but
+    never drained it during the run, so large stderr volumes
+    (>16KB = the macOS pipe buffer) would block the subprocess on its
+    next stderr write. Codex CLI writes hundreds of KB to stderr for
+    tool-heavy tasks and hit this hard.
+
+    This test spawns a Python subprocess that writes 200KB of stderr
+    (many times the pipe buffer) and then exits, and verifies the
+    runtime's stderr streamer drained it without blocking the child.
+    If the fix regresses, this test will time out or the child will
+    hang instead of exiting in milliseconds.
+    """
+    import subprocess as _sp
+    import sys as _sys
+
+    # Child writes 2000 lines of 100 chars each to stderr, then exits.
+    child_code = (
+        "import sys\n"
+        "for i in range(2000):\n"
+        "    sys.stderr.write('line %05d: ' + 'x' * 80 + '\\n')\n"
+        "sys.stderr.flush()\n"
+    )
+    proc = _sp.Popen(
+        [_sys.executable, "-c", child_code],
+        stdout=_sp.PIPE,
+        stderr=_sp.PIPE,
+        text=True,
+        bufsize=1,
+    )
+    try:
+        state, threads = start_watchdog(proc, liveness_paths=[])
+        # The child should exit in well under 2 seconds if the streamer
+        # is draining. Before the fix, it would block forever on a full
+        # stderr pipe.
+        returncode = proc.wait(timeout=10.0)
+        assert returncode == 0
+
+        # Drain the threads
+        stop_watchdog(state, threads, timeout=2.0, proc=proc)
+
+        # Verify we actually captured all the stderr lines. 2000 lines
+        # expected. If we drop a few at shutdown that's fine; anything
+        # less than 1500 would indicate draining didn't work.
+        assert len(state.stderr_lines) >= 1500, (
+            f"stderr streamer should have captured most of 2000 lines; "
+            f"got {len(state.stderr_lines)}"
+        )
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait(timeout=5.0)
 
 
 def test_stop_watchdog_unblocks_stdout_streamer():
@@ -939,6 +1454,123 @@ def test_gemini_parse_response_error_with_empty_stderr():
     )
     assert result.ok is False
     assert "timed out" in (result.stderr_excerpt or "")
+
+
+def test_gemini_parse_response_recovers_from_session_file(tmp_path, monkeypatch):
+    """When stdout is empty and the call was killed, parse_response must
+    recover the assistant's response from ~/.gemini/tmp/<proj>/chats/
+    session-*.json.
+
+    This is the fix for the hard_timeout-kills-completed-work pattern:
+    the Gemini CLI can block-buffer stdout and get killed while its
+    response is already on disk. The adapter now reads the session
+    file as a fallback when stdout is empty OR returncode != 0.
+    """
+    import json as _json
+
+    adapter = GeminiAdapter()
+
+    fake_home = tmp_path / "fake_home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    project_cwd = tmp_path / "learn-ukrainian"
+    project_cwd.mkdir()
+
+    # Create a realistic session file with a user message + two gemini
+    # messages (the second one being the final answer).
+    chats_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
+    chats_dir.mkdir(parents=True)
+    session_data = {
+        "sessionId": "abc-def",
+        "startTime": "2026-04-10T20:00:00Z",
+        "lastUpdated": "2026-04-10T20:05:00Z",
+        "messages": [
+            {"type": "user", "content": [{"text": "write a sonnet"}]},
+            {"type": "gemini", "content": "Tool call thoughts…"},
+            {"type": "gemini", "content": "Shall I compare thee to a summer's day"},
+        ],
+    }
+    (chats_dir / "session-2026-04-10T20-00-abcdef.json").write_text(
+        _json.dumps(session_data), "utf-8",
+    )
+
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=project_cwd,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    # Simulate a hard-timeout kill: stdout empty, returncode -9 (SIGKILL).
+    result = adapter.parse_response(
+        stdout="",
+        stderr="(killed)",
+        returncode=-9,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is True, (
+        f"expected recovery to succeed, got {result.stderr_excerpt!r}"
+    )
+    assert "Shall I compare thee" in result.response
+    assert "Tool call thoughts" in result.response  # both gemini msgs joined
+    assert "recovered" in (result.stderr_excerpt or "")
+    assert result.rate_limited is False
+
+
+def test_gemini_parse_response_skips_recovery_on_fast_path(tmp_path, monkeypatch):
+    """If stdout is non-empty and returncode == 0, never touch the session
+    file. Fast path stays fast."""
+    import json as _json
+
+    adapter = GeminiAdapter()
+
+    fake_home = tmp_path / "fake_home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    project_cwd = tmp_path / "learn-ukrainian"
+    project_cwd.mkdir()
+
+    # A session file with different content — if the adapter touched it,
+    # the assertion below would pick that up instead of stdout.
+    chats_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
+    chats_dir.mkdir(parents=True)
+    (chats_dir / "session-old.json").write_text(
+        _json.dumps({
+            "messages": [
+                {"type": "gemini", "content": "STALE content from old session"},
+            ],
+        }),
+        "utf-8",
+    )
+
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=project_cwd,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    result = adapter.parse_response(
+        stdout="fresh stdout response",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is True
+    assert result.response == "fresh stdout response"
+    assert "STALE" not in result.response
 
 
 def test_gemini_liveness_paths_from_project_tmp(tmp_path, monkeypatch):
