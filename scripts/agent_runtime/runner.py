@@ -357,6 +357,14 @@ def invoke(
             text=True,
             cwd=str(effective_cwd),
             env=env,
+            # bufsize=1 = line-buffered. Critical for stall watchdog: the
+            # default (-1 = io.DEFAULT_BUFFER_SIZE, typically 8KB) makes
+            # the stdout streamer thread wait for a full buffer before
+            # seeing *any* lines. Quiet CLIs like Codex `-o <file>` emit
+            # only a few short lines over many minutes; with default
+            # buffering the streamer sees nothing for the whole run and
+            # the watchdog falsely stalls. (Fixed 2026-04-10.)
+            bufsize=1,
         )
 
         # Write stdin non-blockingly (we'll drain via watchdog threads,
@@ -376,6 +384,12 @@ def invoke(
 
         # Poll loop — wait for subprocess to exit OR watchdog to fire.
         kill_reason: str | None = None
+        # Snapshot of the "true" stall age at kill time. We capture this
+        # BEFORE proc.kill() because draining the stdout streamer thread
+        # afterwards reads the pipe to EOF, which bumps
+        # watchdog_state.last_activity and makes the post-kill age look
+        # like ~0s instead of the real 180s+ stall. (Fixed 2026-04-10.)
+        stall_age_at_kill: float | None = None
         while True:
             returncode = proc.poll()
             if returncode is not None:
@@ -391,6 +405,10 @@ def invoke(
                 if returncode is not None:
                     kill_reason = None
                     break
+                if kill_reason == "stalled":
+                    stall_age_at_kill = (
+                        time.monotonic() - watchdog_state.last_activity
+                    )
                 proc.kill()
                 with contextlib.suppress(subprocess.TimeoutExpired):
                     proc.wait(timeout=5.0)
@@ -447,7 +465,14 @@ def invoke(
 
         if kill_reason == "stalled":
             stop_watchdog(watchdog_state, watchdog_threads)
-            last_activity_age = time.monotonic() - watchdog_state.last_activity
+            # Prefer the age captured BEFORE kill (see comment at stall_age_at_kill
+            # declaration). Fall back to a fresh read only if the snapshot is
+            # somehow missing, which shouldn't happen on this code path.
+            last_activity_age = (
+                stall_age_at_kill
+                if stall_age_at_kill is not None
+                else time.monotonic() - watchdog_state.last_activity
+            )
             record = _build_usage_record(
                 agent=agent_name,
                 entrypoint=entrypoint,

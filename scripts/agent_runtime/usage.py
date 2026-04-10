@@ -40,9 +40,20 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-# Rate-limit window in seconds. Matches the 5h rolling window used by
-# both Anthropic and OpenAI for quota accounting.
-_RATE_LIMIT_WINDOW_S = 5 * 60 * 60
+# Rate-limit window in seconds. We reduced this from 5h to 15min in
+# 2026-04-10 (#1185 follow-up) after a single transient "No capacity
+# available" 429 at 12:08 falsely locked the entire quota for 5 hours,
+# blocking heal-pipeline runs that would otherwise have succeeded.
+#
+# Philosophy:
+#   - True quota exhaustion IS rare for us (Google AI Pro subscription,
+#     not API key rate limits). When it does happen, a 15-minute cool-off
+#     is plenty — the next call just confirms the state.
+#   - Transient server-capacity issues are common and clear in seconds.
+#     The CLI retries them internally. We must not block on them.
+#   - A 15-minute window means a stale false-positive self-heals in
+#     under a quarter hour without any manual intervention.
+_RATE_LIMIT_WINDOW_S = 15 * 60
 
 # In-process cache of rate-limit state, keyed by (agent, model). When a
 # call returns outcome="rate_limited", we stamp the timestamp here so

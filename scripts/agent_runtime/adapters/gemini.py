@@ -38,21 +38,33 @@ from pathlib import Path
 from ..result import ParseResult
 from .base import InvocationPlan
 
-# Rate-limit patterns — combined with \b boundaries for numeric codes
-# to prevent URL false positives (Gemini review finding #5 on #1179 applies here too).
+# TRUE rate-limit patterns — only things that mean "quota is EXHAUSTED for
+# hours", not transient server-side issues that clear in seconds.
+# (See issue #1185 follow-up: "No capacity available" and raw 429 status
+# codes are transient and were causing 5h false-lockouts after a single
+# ~2-minute retry on Gemini's end.)
 _RATE_LIMIT_PATTERNS = (
     r"RESOURCE_EXHAUSTED",
     r"usage limit reached",
-    r"rate limit",
-    r"rate_limit",
     r"quota exceeded",
-    r"too many requests",
-    r"No capacity available",
-    r"\bHTTP 429\b",
-    r"\bstatus 429\b",
-    r"\b429\b",
+    r"daily.{0,10}limit.{0,10}exceeded",
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
+
+# Transient capacity / retry patterns — NOT rate limits. The Gemini CLI
+# retries these internally with backoff and usually succeeds on a later
+# attempt. We log them as warnings but never block the quota.
+_TRANSIENT_ERROR_PATTERNS = (
+    r"No capacity available",
+    r"Retrying with backoff",
+    r"\bstatus 429\b",
+    r"\bHTTP 429\b",
+    r"\b429\b",
+    r"too many requests",
+    r"rate limit",
+    r"rate_limit",
+)
+_TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNORECASE)
 
 
 class GeminiAdapter:
@@ -111,10 +123,12 @@ class GeminiAdapter:
                     joined = str(mcp_server_names)
                 cmd.extend(["--allowed-mcp-server-names", joined])
 
-        # Silently ignore session_id (CLI has no equivalent) and task_id
-        # (we don't need it here — runner already logs it via usage record).
+        # Silently ignore session_id (CLI has no equivalent), task_id
+        # (runner already logs it via usage record), and cwd (runner sets
+        # it on Popen — we don't bake it into the command).
         _ = session_id
         _ = task_id
+        _ = cwd
 
         return InvocationPlan(
             cmd=cmd,
@@ -139,9 +153,22 @@ class GeminiAdapter:
         """
         _ = output_file  # unused — Gemini doesn't use -o
 
-        # Check rate limit across stdout + stderr (patterns can appear in either)
-        combined_for_rl = f"{stdout}\n{stderr}"
-        rate_limited = bool(_RATE_LIMIT_RE.search(combined_for_rl))
+        combined = f"{stdout}\n{stderr}"
+
+        # rate_limited is a HARD signal meaning "do not retry, quota is out".
+        # Only set it on:
+        #   1. Genuine quota-exhaustion patterns (RESOURCE_EXHAUSTED, "quota exceeded", etc.)
+        #   2. AND the CLI itself failed the call (returncode != 0 OR empty output)
+        #
+        # Transient 429s / "No capacity available" errors — even if they make
+        # the CLI take 2+ minutes and emit lots of stderr — are NOT rate limits.
+        # The Gemini CLI retries them internally with backoff. If the CLI exited
+        # successfully with output, the transient error was resolved.
+        hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
+        transient_seen = bool(_TRANSIENT_ERROR_RE.search(combined))
+
+        call_failed = returncode != 0 or not stdout.strip()
+        rate_limited = hard_limit_hit and call_failed
 
         # Success = exit 0, some stdout, not rate-limited.
         ok = returncode == 0 and bool(stdout.strip()) and not rate_limited
@@ -153,6 +180,11 @@ class GeminiAdapter:
             # (some Gemini errors land in stdout, especially quota messages).
             excerpt_source = stderr.strip() or stdout.strip() or ""
             stderr_excerpt = excerpt_source[:500] or None
+        elif transient_seen:
+            # Call succeeded despite a transient 429 / "No capacity" retry —
+            # record a brief note so monitoring can see retry frequency, but
+            # do NOT mark rate_limited.
+            stderr_excerpt = "transient retry resolved by CLI backoff"
 
         return ParseResult(
             ok=ok,
@@ -164,17 +196,84 @@ class GeminiAdapter:
         )
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
-        """Return empty — stdout streaming is the only liveness signal we need.
+        """Return filesystem paths the watchdog should poll for mtime bumps.
 
-        Gemini CLI writes to stdout continuously (it's how ``_stream_with_watchdog``
-        worked in the prior art). The runner's stdout streamer catches every
-        line; no fallback mtime polling needed.
+        Original design (issue #1184) assumed stdout streaming was sufficient
+        for Gemini because ``_stream_with_watchdog`` in the prior art worked
+        that way. That assumption was WRONG in two ways:
 
-        Gemini DOES write to ``~/.gemini/tmp/<project>/chats/<session>.json``
-        but (a) we don't know the project name at adapter level without
-        parsing gemini-cli config, and (b) stdout streaming already covers
-        the liveness need for this CLI. Leaving the session file path out
-        keeps the adapter simple.
+        1. The gemini CLI uses block-buffered stdout when its stdout isn't a
+           TTY (subprocess pipe). It can emit nothing for 3+ minutes during
+           reasoning bursts, even when actively working — the final message
+           gets flushed all at once near the end.
+        2. bufsize=1 on the Popen side only controls OUR read buffering.
+           We can't force Gemini to flush its own writes.
+
+        Result before this fix: watchdog fired spurious stalls on long
+        Gemini calls that were actually succeeding (session files on disk
+        proved it). See 2026-04-10 incident — a 319s skeleton generation
+        was killed at 181s even though Gemini wrote to ``logs.json`` at
+        319s mark.
+
+        Fix: walk the gemini tmp directory for this project and return
+        any file/dir whose mtime bumps during exec. The CLI updates:
+          - ``~/.gemini/tmp/<project>/logs.json`` — bumps on every tool
+            call or status update (verified: modified during exec).
+          - ``~/.gemini/tmp/<project>/chats/`` — directory mtime bumps
+            when a new session JSON file is created at the start of exec.
+          - ``~/.gemini/tmp/<project>/chats/session-*.json`` — newest
+            session file grows as messages stream in.
+
+        ``<project>`` is the cwd basename per gemini-cli convention. We
+        resolve it from ``plan.cmd`` by walking back to the runner's cwd
+        (not the adapter's cwd — they're the same when invoked through
+        runner.invoke, which is the only supported path).
         """
+        from pathlib import Path as _P
+
+        paths: list[Path] = []
+
+        # The gemini CLI stores project-scoped state under
+        # ~/.gemini/tmp/<project-name>/ where project-name is the basename
+        # of the cwd the CLI was invoked from. We don't have cwd directly
+        # on the InvocationPlan (by design — it's a runner-level concern),
+        # so we try every subdirectory of ~/.gemini/tmp/ and pick the one
+        # whose basename matches our current process cwd. This keeps the
+        # adapter honest without coupling it to runner internals.
+        #
+        # If multiple projects exist we just use the current cwd basename —
+        # that's cheap and correct in practice.
+        import os
         _ = plan
-        return ()
+        cwd_basename = _P(os.getcwd()).name
+        gemini_project_dir = _P.home() / ".gemini" / "tmp" / cwd_basename
+
+        if gemini_project_dir.exists():
+            # 1. The logs.json file — most reliable per-call signal.
+            logs_json = gemini_project_dir / "logs.json"
+            if logs_json.exists():
+                paths.append(logs_json)
+
+            # 2. The chats/ directory — mtime bumps on new session file
+            #    creation, which happens at the start of every gemini exec.
+            chats_dir = gemini_project_dir / "chats"
+            if chats_dir.exists():
+                paths.append(chats_dir)
+
+                # 3. The newest session-*.json file — grows as messages stream.
+                #    We pick by mtime at adapter build time; the watchdog then
+                #    watches THAT file. If Gemini creates a newer session file
+                #    after we start, the chats/ dir mtime bump (signal #2)
+                #    catches it.
+                try:
+                    session_files = sorted(
+                        chats_dir.glob("session-*.json"),
+                        key=lambda p: p.stat().st_mtime,
+                        reverse=True,
+                    )
+                    if session_files:
+                        paths.append(session_files[0])
+                except OSError:
+                    pass
+
+        return tuple(paths)

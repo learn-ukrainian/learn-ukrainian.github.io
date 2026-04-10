@@ -78,6 +78,12 @@ class CodexAdapter:
         tool restrictions the way Claude/Gemini do; any keys passed are
         silently dropped.
         """
+        # Defensively drop session_id and tool_config — Codex adapter ignores
+        # both by design (see class docstring). Local `_ =` rebinds silence
+        # the "unused parameter" linter without changing semantics.
+        _ = session_id
+        _ = tool_config
+
         # Resolve binary. shutil.which handles PATH lookup; fall back to
         # bare "codex" if not on PATH so subprocess.Popen can report the
         # error clearly.
@@ -176,20 +182,51 @@ class CodexAdapter:
         """Return paths the runner should poll for mtime changes.
 
         Codex writes its output file progressively AND also writes to
-        ``~/.codex/logs_1.sqlite`` continuously during exec. Both are
-        good liveness signals; we return both if they exist.
+        several state files in ``~/.codex/`` during exec. We return every
+        candidate that exists so the mtime poller has multiple independent
+        liveness signals. Fixed 2026-04-10: the old primary signal
+        ``logs_1.sqlite`` went stale (Codex stopped writing there in a
+        recent version bump), which caused spurious "Codex stalled" errors
+        in the bridge because the stdout streamer was the only remaining
+        signal and stdout is nearly silent when -o <file> is used.
+
+        Current live candidates (verified against codex-cli 0.118.0):
+          - plan.output_file: the -o target file (per-call, grows as
+            Codex emits the final message)
+          - ~/.codex/state_5.sqlite: live runtime state (bumps during exec)
+          - ~/.codex/sessions/{YYYY}/{MM}/{DD}/: directory mtime bumps
+            when Codex creates a new rollout-*.jsonl file at the start
+            of exec — catches the startup signal even before state_5
+            updates
+
+        Legacy paths (kept for backward compat with older CLI versions):
+          - ~/.codex/logs_1.sqlite: pre-0.118 primary log
+          - ~/.codex/history.jsonl: older history file, some versions
+            still update it
         """
+        from datetime import UTC, datetime
+
         paths: list[Path] = []
         if plan.output_file is not None:
             paths.append(plan.output_file)
 
-        # Codex's sqlite log lives at ~/.codex/logs_1.sqlite. It's
-        # updated continuously during exec; its mtime is a reliable
-        # secondary liveness signal for cases where stdout is quiet
-        # but the file-level poller is still running.
-        codex_sqlite = Path.home() / ".codex" / "logs_1.sqlite"
-        if codex_sqlite.exists():
-            paths.append(codex_sqlite)
+        codex_home = Path.home() / ".codex"
+
+        # Current live signals
+        for rel in ("state_5.sqlite", "history.jsonl", "logs_1.sqlite"):
+            candidate = codex_home / rel
+            if candidate.exists():
+                paths.append(candidate)
+
+        # Today's sessions directory — mtime bumps when new rollout
+        # file is created at the start of a codex exec call.
+        today = datetime.now(UTC)
+        sessions_today = (
+            codex_home / "sessions" / f"{today.year:04d}"
+            / f"{today.month:02d}" / f"{today.day:02d}"
+        )
+        if sessions_today.exists():
+            paths.append(sessions_today)
 
         return tuple(paths)
 

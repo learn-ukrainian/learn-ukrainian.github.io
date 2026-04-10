@@ -571,13 +571,64 @@ def test_gemini_parse_response_error_with_empty_stderr():
     assert "timed out" in (result.stderr_excerpt or "")
 
 
-def test_gemini_liveness_paths_empty(tmp_path):
-    """Gemini adapter returns no fallback liveness paths; stdout streamer is enough."""
+def test_gemini_liveness_paths_from_project_tmp(tmp_path, monkeypatch):
+    """Gemini adapter returns ~/.gemini/tmp/<cwd-basename>/ paths when they exist.
+
+    Updated 2026-04-10: the adapter USED to return () and rely entirely
+    on the stdout streamer. That turned out to be a false assumption —
+    the gemini CLI block-buffers stdout when not a TTY and can stay
+    silent for 5+ minutes during reasoning bursts, causing spurious
+    stalls. It DOES write to ~/.gemini/tmp/<project>/logs.json and
+    chats/ during exec, so we now watch those files via mtime polling.
+    """
     adapter = GeminiAdapter()
+
+    # Fake $HOME so Path.home() resolves inside the test sandbox.
+    fake_home = tmp_path / "fake_home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    # cwd basename drives the lookup; create a matching gemini state dir.
+    project_cwd = tmp_path / "learn-ukrainian"
+    project_cwd.mkdir()
+    monkeypatch.chdir(project_cwd)
+
+    gemini_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian"
+    (gemini_dir / "chats").mkdir(parents=True)
+    (gemini_dir / "logs.json").write_text("{}")
+    (gemini_dir / "chats" / "session-2026-04-10T17-35-abc.json").write_text("{}")
+
     plan = adapter.build_invocation(
         prompt="x",
         mode="read-only",
-        cwd=tmp_path,
+        cwd=project_cwd,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    paths = adapter.liveness_signal_paths(plan)
+    names = {p.name for p in paths}
+    assert "logs.json" in names
+    assert "chats" in names
+    assert any(n.startswith("session-") for n in names)
+
+
+def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
+    """If ~/.gemini/tmp/<basename>/ doesn't exist, return () gracefully."""
+    adapter = GeminiAdapter()
+    fake_home = tmp_path / "fake_home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    # cwd basename with no corresponding gemini project dir
+    empty_cwd = tmp_path / "no-such-project-xyz"
+    empty_cwd.mkdir()
+    monkeypatch.chdir(empty_cwd)
+
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=empty_cwd,
         model=None,
         task_id=None,
         session_id=None,

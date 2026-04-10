@@ -445,7 +445,15 @@ def _dispatch_claude_via_runtime(
             tool_config=tool_config,
             entrypoint="dispatch",
             hard_timeout=timeout,
-            stall_timeout=min(180, timeout),
+            # Stall budget is generous: Gemini/Claude CAN reasonably go
+            # silent for 5+ minutes during long reasoning bursts (especially
+            # skeleton + review phases). 600s = 10 min. The liveness-file
+            # mtime poller (logs.json, chats/, state_5.sqlite) catches real
+            # activity even when stdout is buffered, so this ceiling only
+            # applies to *genuinely* dead processes. Bumped from 180s on
+            # 2026-04-10 after a successful 319s Gemini skeleton run was
+            # killed at 181s.
+            stall_timeout=min(600, timeout),
         )
         elapsed = time.monotonic() - t0
         _save_dispatch_log(
