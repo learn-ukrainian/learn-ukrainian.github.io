@@ -18,6 +18,7 @@ SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 
+from slug_utils import to_bare_slug
 from yaml_activities import ActivityParser
 
 from .checks.outline_compliance import (
@@ -404,6 +405,44 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
         state.has_critical_failure = True
 
 
+def _evaluate_vocab_progression(ctx: AuditContext, state: AuditState) -> None:
+    """Add a non-blocking cross-module vocabulary progression gate."""
+    track_dir = Path(ctx.file_path).parent.name.lower()
+    if track_dir not in {"a1", "a2", "b1", "b2", "c1", "c2"}:
+        return
+
+    try:
+        from analytics.vocab_progression import module_progression_delta
+
+        module_slug = to_bare_slug(Path(ctx.file_path).stem)
+        progression = module_progression_delta(track_dir, module_slug)
+        delta = progression["delta"]
+        premature = progression["premature"]
+        gaps = progression["gaps"]
+        well_paced = progression["well_paced"]
+
+        status = "PASS" if premature == 0 and gaps == 0 and delta >= 0 else "WARN"
+        icon = "✅" if status == "PASS" else "⚠️"
+        msg = f"Δ {delta:+d} | premature={premature} | gaps={gaps} | well-paced={well_paced}"
+        state.results["vocab_progression"] = {
+            "status": status,
+            "icon": icon,
+            "msg": msg,
+            "delta": delta,
+            "premature": premature,
+            "gaps": gaps,
+            "well_paced": well_paced,
+        }
+        print(f"  📈 Vocab progression: {msg}")
+    except Exception as exc:
+        state.results["vocab_progression"] = {
+            "status": "INFO",
+            "icon": "ℹ️",
+            "msg": f"Unavailable: {exc}",
+        }
+        print(f"  ℹ️  Vocab progression unavailable: {exc}")
+
+
 def audit_module(file_path: str, skip_activities: bool = False,
                  skip_review: bool = False) -> bool:
     """
@@ -428,6 +467,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     process_activity_sections(ctx, state)
 
     unique_types = evaluate_core_gates(ctx, state, structure_gate)
+    _evaluate_vocab_progression(ctx, state)
 
     _run_pedagogical_and_content_checks(
         ctx, state,

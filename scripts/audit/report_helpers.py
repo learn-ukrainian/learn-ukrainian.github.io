@@ -170,11 +170,16 @@ def serialize_gate(res) -> dict:
 
     violations = 1 if status == 'fail' else 0
 
-    return {
+    payload = {
         "status": status,
         "violations": violations,
         "message": msg
     }
+    if isinstance(res, dict):
+        for key in ("delta", "premature", "gaps", "well_paced"):
+            if key in res:
+                payload[key] = res[key]
+    return payload
 
 
 def gather_source_mtimes(md_path: Path, module_slug: str) -> dict:
@@ -238,6 +243,8 @@ def build_gates_dict(results: dict) -> dict:
             gates['activities']['message'] += f" | {k}: {res.msg}"
 
     gates['vocabulary'] = serialize_gate(results.get('vocab'))
+    if results.get('vocab_progression') is not None:
+        gates['vocab_progression'] = serialize_gate(results.get('vocab_progression'))
     gates['naturalness'] = serialize_gate(results.get('naturalness'))
     gates['research'] = serialize_gate(results.get('research'))
 

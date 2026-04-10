@@ -464,7 +464,8 @@ def print_gates(results: dict, level_code: str) -> None:
     """Print gate results to console."""
     print(f"\n--- STRICT GATES (Level {level_code}) ---")
     keys_order = ['persona', 'words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality', 'research']
+                  'engagement', 'audio', 'vocab', 'vocab_progression', 'structure', 'lint',
+                  'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality', 'research']
     for k in keys_order:
         r = results.get(k)
         if r:
