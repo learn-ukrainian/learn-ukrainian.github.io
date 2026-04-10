@@ -135,11 +135,16 @@ jobs:
 
       - name: Run tests with coverage
         run: |
+          # Gradual path: 30 (2025) → 35 (now, 2026-04) → 50 (mid-2026) → 80 on
+          # critical paths (dispatch, activity_repair, audit/core). Measured
+          # current: 39% on 2026-04-10. Bumping the floor above measured
+          # coverage would break CI, so we nudge the minimum and track the
+          # trend. Re-measure after each new batch of tests and raise the floor.
           python -m pytest tests/ \
             --cov=scripts \
             --cov-report=term-missing \
             --cov-report=xml:coverage.xml \
-            --cov-fail-under=30 \
+            --cov-fail-under=35 \
             -v --tb=short \
             -k "not slow and not website" \
             --ignore=tests/test_rag.py
