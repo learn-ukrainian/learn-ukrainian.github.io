@@ -143,12 +143,31 @@ class CodexAdapter:
             except OSError:
                 file_output = ""
 
-        # Combine stdout + stderr + file output for rate-limit pattern
-        # matching. The pattern could appear anywhere.
+        # Rate-limit detection — with a CRITICAL caveat.
+        #
+        # Codex CLI (with -o <file>) echoes the full user prompt back to
+        # stderr as part of its trace. The bridge prompts from _prompts.py
+        # include the project standing rules, which literally contain the
+        # phrases "usage limit reached" and "rate-limit error" in their
+        # instructions to Codex. Naive pattern matching against
+        # stdout+stderr+file_output was firing on the PROMPT ECHO, not on
+        # any real rate-limit error, and bridge communication broke
+        # entirely after 2026-04-10. See #1184 post-ship incident.
+        #
+        # Fix: rate_limited is only TRUE when:
+        #   1. A rate-limit pattern matches somewhere in the output, AND
+        #   2. The call actually failed (returncode != 0 OR empty output
+        #      file). A successful Codex exec with a non-empty final
+        #      message in the -o file CANNOT be rate-limited, period.
+        #
+        # This mirrors the same guard we added to GeminiAdapter after the
+        # identical class of bug there. Keep the two in sync.
         combined_for_rl_check = "\n".join(
             part for part in (stdout, stderr, file_output) if part
         )
-        rate_limited = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
+        pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
+        call_failed = returncode != 0 or not file_output
+        rate_limited = pattern_hit and call_failed
 
         # Session id comes from stdout in Codex.
         session_id: str | None = None

@@ -298,6 +298,57 @@ def test_codex_parse_response_rate_limit_url_no_false_positive(tmp_path):
     assert result.ok is True
 
 
+def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
+    """Regression: Codex CLI echoes the user prompt to stderr. The bridge
+    prompts include standing rules mentioning 'usage limit reached' and
+    'rate-limit error' as instructions to Codex. A successful call must
+    NOT be classified as rate-limited just because its own prompt contains
+    those phrases. This bug broke bridge comms entirely on 2026-04-10.
+    """
+    adapter = CodexAdapter()
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("PONG")
+
+    # Simulate the real Codex CLI stderr: banner + echoed prompt that
+    # happens to contain rate-limit phrases from the standing rules.
+    stderr = (
+        "OpenAI Codex v0.118.0 (research preview)\n"
+        "--------\n"
+        "workdir: /Users/foo/project\n"
+        "model: gpt-5.4\n"
+        "provider: openai\n"
+        "approval: never\n"
+        "sandbox: read-only\n"
+        "reasoning effort: high\n"
+        "session id: abc12345\n"
+        "--------\n"
+        "user\n"
+        "Reply with exactly: PONG\n"
+        "## Reporting\n"
+        "- If you hit a 'usage limit reached' or rate-limit error, STOP.\n"
+        "\n"
+        "codex\n"
+        "PONG\n"
+        "tokens used\n"
+        "4089\n"
+    )
+
+    result = adapter.parse_response(
+        stdout="session id: abc12345",
+        stderr=stderr,
+        returncode=0,
+        output_file=output_file,
+    )
+    # Call succeeded (rc=0, output file has content), therefore CANNOT
+    # be rate-limited regardless of what pattern text appears in stderr.
+    assert result.rate_limited is False, (
+        f"False rate-limit classification on successful call. "
+        f"stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert result.ok is True
+    assert result.response == "PONG"
+
+
 # ---------------------------------------------------------------------------
 # invoke() — high-level runner
 # ---------------------------------------------------------------------------
