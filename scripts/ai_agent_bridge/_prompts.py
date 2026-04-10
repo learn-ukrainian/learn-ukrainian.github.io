@@ -228,6 +228,11 @@ Violating this rule destroys the caller's work in progress. There is no exceptio
 - If you hit a `usage limit reached` or rate-limit error, STOP and reply with the exact error
   so the caller can reschedule. Do not retry silently.
 - Be concise. Report what you did, what you verified, and what remains.
+
+## Runtime / architecture tasks
+- If the task involves `scripts/agent_runtime/`, READ `docs/agent-runtime-guide.md` FIRST.
+  The guide is the single source of truth for the runtime design; violating its rules
+  (session resume policy, mode vocabulary, adapter protocol shape) causes silent bugs.
 """
 
 

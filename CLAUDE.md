@@ -31,6 +31,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Gitflow | [`gitflow.md`](docs/best-practices/gitflow.md) |
 | Audit standards | [`audit-standards.md`](docs/best-practices/audit-standards.md) |
 | Vocabulary & activities | [`vocabulary-activity-standards.md`](docs/best-practices/vocabulary-activity-standards.md) |
+| Activity pedagogy (level→type matrix) | [`activity-pedagogy.md`](docs/best-practices/activity-pedagogy.md) |
 | Track architecture | [`track-architecture.md`](docs/best-practices/track-architecture.md) |
 | Dialogue situations | [`dialogue-situations.md`](docs/best-practices/dialogue-situations.md) |
 
@@ -39,6 +40,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 ## Reference Docs
 
 - **Commands & scripts**: [`docs/SCRIPTS.md`](docs/SCRIPTS.md)
+- **Agent runtime**: [`docs/agent-runtime-guide.md`](docs/agent-runtime-guide.md) — universal adapter layer for all agent CLI invocations. READ BEFORE touching `scripts/agent_runtime/`.
 - **Project structure & tracks**: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)

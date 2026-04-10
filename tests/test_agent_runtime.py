@@ -323,9 +323,14 @@ def test_invoke_codex_rejects_session_id(tmp_path):
 def test_invoke_rate_limit_short_circuit(tmp_path):
     """If has_headroom returns False, invoke raises RateLimitedError
     without spawning a subprocess."""
+    # Patch write_record to prevent the short-circuit path from writing
+    # rate_limited records to the REAL batch_state/api_usage/ directory
+    # during test runs (would poison has_headroom for subsequent real calls).
     with patch(
         "agent_runtime.runner.has_headroom",
         return_value=(False, "cached rate limit"),
+    ), patch(
+        "agent_runtime.runner.write_record",
     ), patch(
         "agent_runtime.runner.subprocess.Popen",
     ) as mock_popen, pytest.raises(RateLimitedError, match="cached rate limit"):
