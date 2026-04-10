@@ -1,0 +1,3 @@
+# Human evaluation YAMLs land here.
+# Schema: see docs/eval/human-eval-rubric.md § "YAML output template"
+# Filename: {reviewer}-{YYYY-MM-DD}-{level}-{slug}.yaml
