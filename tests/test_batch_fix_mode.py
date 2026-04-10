@@ -752,10 +752,14 @@ class TestSchemaFilterVerification:
             'historical-writing', 'register-identify', 'loanword-trace',
             'comparative-style', 'watch-and-repeat', 'classify',
             'image-to-letter',
+            # A1 activity types added to LEVEL_CONFIG after the test
+            # was first written. Kept in sync with priority_types in
+            # scripts/audit/config.py (2026-04).
+            'observe', 'odd-one-out', 'order',
         }
 
         missing = set()
-        for config_key, config in LEVEL_CONFIG.items():
+        for _config_key, config in LEVEL_CONFIG.items():
             for ptype in config.get('priority_types', set()):
                 if ptype not in ALL_TYPES:
                     missing.add(ptype)

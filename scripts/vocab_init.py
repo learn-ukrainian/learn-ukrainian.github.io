@@ -6,7 +6,8 @@ from pathlib import Path as _P
 
 _f = _P(__file__).parent / "vocab" / "vocab_init.py"
 if __name__ == "__main__":
-    import runpy; runpy.run_path(str(_f), run_name="__main__")
+    import runpy
+    runpy.run_path(str(_f), run_name="__main__")
 else:
     _s = _ilu.spec_from_file_location("vocab_init", _f)
     _m = _ilu.module_from_spec(_s)

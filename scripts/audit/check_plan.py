@@ -275,12 +275,32 @@ def check_apostrophes(plan: dict) -> list[PlanIssue]:
         "сімя": "сім'я",
     }
 
+    # Plans teach pronunciation errors and calques by citing the wrong form
+    # alongside the right one. When a line is explicitly framed as a
+    # teaching example (starts with `*`, mentions "Russicism", "calque",
+    # "NOT", "wrong", "Russian" etc.), the apostrophe-missing word is
+    # intentional and must be skipped.
+    _TEACHING_MARKERS = re.compile(
+        r"\*\S|Russicism|Russian\b|calque|кальк|NOT\b|wrong\b|incorrect\b|помилк",
+        re.IGNORECASE,
+    )
+
     for wrong, correct in needs_apostrophe.items():
         # Skip if preceded by * (intentional "incorrect form" marker in teaching examples)
         pattern = rf"(?<![а-яґєіїА-ЯҐЄІЇ'*]){re.escape(wrong)}(?![а-яґєіїА-ЯҐЄІЇ])"
-        if re.search(pattern, text, re.IGNORECASE):
+        for m in re.finditer(pattern, text, re.IGNORECASE):
+            # Scan the surrounding line for teaching markers — if the
+            # author is explicitly showing a wrong form, don't flag it.
+            line_start = text.rfind("\n", 0, m.start()) + 1
+            line_end = text.find("\n", m.end())
+            if line_end == -1:
+                line_end = len(text)
+            line = text[line_start:line_end]
+            if _TEACHING_MARKERS.search(line):
+                continue
             issues.append(PlanIssue("APOSTROPHE", "ERROR",
                                     f"Missing apostrophe: '{wrong}' should be '{correct}'"))
+            break  # one issue per word is enough
     return issues
 
 

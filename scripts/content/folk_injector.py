@@ -131,7 +131,7 @@ def _entry_matches_themes(entry: dict, themes: set[str]) -> bool:
         entry_themes = [entry_themes]
     # Also check "theme" (singular, used by прислів'я/приказки)
     if "theme" in entry:
-        entry_themes = entry_themes + [entry["theme"]]
+        entry_themes = [*entry_themes, entry["theme"]]
     return bool(themes & set(entry_themes))
 
 

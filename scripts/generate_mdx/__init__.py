@@ -93,7 +93,7 @@ from .resources import (
 # Utilities
 from .utils import dump_json_for_jsx, escape_jsx, fix_html_for_jsx
 
-__all__ = [
+__all__ = [  # noqa: RUF022 — intentionally grouped by category (Dataclasses, Utilities, Parsers, ...), not alphabetical
     # Dataclasses
     "AnagramItem",
     "ClozeData",

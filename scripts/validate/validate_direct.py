@@ -344,9 +344,10 @@ def _dispatch_activity_check(
     elif act_type == "tongue_twister":
         if not act.get("text"):
             result.error(f"{ctx}: tongue_twister missing 'text'")
-    elif act_type == "proverb_drill":
-        if not act.get("proverb") and not act.get("items"):
-            result.error(f"{ctx}: proverb_drill missing 'proverb' or 'items'")
+    elif act_type == "proverb_drill" and not (
+        act.get("proverb") or act.get("items")
+    ):
+        result.error(f"{ctx}: proverb_drill missing 'proverb' or 'items'")
 
 
 # ── File-level validator ──────────────────────────────────────────────────────

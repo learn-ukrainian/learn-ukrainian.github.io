@@ -62,7 +62,7 @@ from calculate_richness_types import (
 )
 
 # Re-export for backward compatibility
-__all__ = [
+__all__ = [  # noqa: RUF022 — intentionally grouped by category (Config, Types, Counters, Scoring), not alphabetical
     # Config
     'DEFAULT_WEIGHTS',
     'MODULE_TYPE_TARGETS',

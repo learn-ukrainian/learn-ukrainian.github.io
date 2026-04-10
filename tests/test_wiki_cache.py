@@ -117,33 +117,33 @@ class TestStripWikitext:
 
     def setup_method(self):
         from rag.source_query import _strip_wikitext
-        self.strip = _strip_wikitext
+        self.strip_wt = _strip_wikitext
 
     def test_links(self):
-        assert self.strip("[[Київ]]") == "Київ"
-        assert self.strip("[[Київ|столиця]]") == "столиця"
+        assert self.strip_wt("[[Київ]]") == "Київ"
+        assert self.strip_wt("[[Київ|столиця]]") == "столиця"
 
     def test_bold_italic(self):
-        assert self.strip("'''Тарас''' ''Шевченко''") == "Тарас Шевченко"
+        assert self.strip_wt("'''Тарас''' ''Шевченко''") == "Тарас Шевченко"
 
     def test_references(self):
         text = "Факт<ref name='a'>джерело</ref> тут."
-        assert "<ref" not in self.strip(text)
-        assert "Факт" in self.strip(text)
+        assert "<ref" not in self.strip_wt(text)
+        assert "Факт" in self.strip_wt(text)
 
     def test_templates(self):
         text = "Текст {{lang|uk|слово}} далі."
-        result = self.strip(text)
+        result = self.strip_wt(text)
         assert "{{" not in result
 
     def test_section_headers(self):
         text = "== Біографія ==\nТекст біографії."
-        result = self.strip(text)
+        result = self.strip_wt(text)
         assert "Біографія" in result
         assert "==" not in result
 
     def test_html_comments(self):
-        assert "коментар" not in self.strip("текст <!-- коментар --> далі")
+        assert "коментар" not in self.strip_wt("текст <!-- коментар --> далі")
 
 
 class TestWikipediaExtract:

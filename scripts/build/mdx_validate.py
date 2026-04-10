@@ -62,20 +62,18 @@ def validate_mdx(mdx_path: Path) -> list[str]:
         # Find matching closing brace
         depth = 1
         pos = start
-        
+
         # Naive parser that ignores braces inside template literals or strings
         in_backtick = False
         in_string = False
         while pos < len(content) and depth > 0:
             char = content[pos]
-            if char == "`":
-                # Toggle backtick state if not escaped
-                if content[pos-1] != "\\":
-                    in_backtick = not in_backtick
-            elif char == '"':
-                if content[pos-1] != "\\":
-                    in_string = not in_string
-                    
+            # Toggle quote states when unescaped (backtick or double quote).
+            if char == "`" and content[pos-1] != "\\":
+                in_backtick = not in_backtick
+            elif char == '"' and content[pos-1] != "\\":
+                in_string = not in_string
+
             if not in_backtick and not in_string:
                 if char == "{":
                     depth += 1

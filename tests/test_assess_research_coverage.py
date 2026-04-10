@@ -103,7 +103,7 @@ class TestCoverageCliIntegration:
         assert isinstance(data, dict)
         # Should have at least some tracks
         assert len(data) > 0
-        for track_id, cov in data.items():
+        for _track_id, cov in data.items():
             assert "total" in cov
             assert "researched" in cov
             assert "gaps" in cov

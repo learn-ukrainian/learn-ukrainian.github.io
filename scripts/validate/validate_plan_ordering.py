@@ -124,7 +124,7 @@ def _resolve_ref_by_description(
     best_score = 0.0
     best_slug = None
 
-    for slug, seq in slug_to_seq.items():
+    for slug, _seq in slug_to_seq.items():
         score = _slug_similarity(slug, desc)
         if score > best_score:
             best_score = score
@@ -294,7 +294,7 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
                 if is_bad and fix and paren_match:
                     resolved = _resolve_ref_by_description(entry_str, level, slug_to_seq)
                     if resolved:
-                        correct_seq, matched_slug = resolved
+                        correct_seq, _matched_slug = resolved
                         # For prerequisites, verify it doesn't point forward
                         if field_name == "prerequisites" and correct_seq >= expected_seq:
                             # Can't fix — the description itself points forward.
@@ -315,13 +315,17 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
                                 fix_count += 1
                                 print(f"  FIXED: {plan_file.name} {field_name}: "
                                       f"'{entry_str}' -> '{new_entry}'")
-                    elif is_bad and fix:
+                    elif (
+                        is_bad
+                        and fix
+                        and field_name == "prerequisites"
+                        and ref_seq >= expected_seq
+                        and _remove_entry_from_file(plan_file, entry_str)
+                    ):
                         # No description match — remove if forward prereq
-                        if field_name == "prerequisites" and ref_seq >= expected_seq:
-                            if _remove_entry_from_file(plan_file, entry_str):
-                                fix_count += 1
-                                print(f"  REMOVED: {plan_file.name} {field_name}: "
-                                      f"'{entry_str}' (forward ref, no description match)")
+                        fix_count += 1
+                        print(f"  REMOVED: {plan_file.name} {field_name}: "
+                              f"'{entry_str}' (forward ref, no description match)")
 
     # Check for missing plan files
     for slug, seq in slug_to_seq.items():
@@ -377,10 +381,7 @@ def main():
 
     curriculum = load_curriculum()
 
-    if args:
-        tracks = args
-    else:
-        tracks = list(curriculum.keys())
+    tracks = args or list(curriculum.keys())
 
     total_errors = 0
     total_warnings = 0
