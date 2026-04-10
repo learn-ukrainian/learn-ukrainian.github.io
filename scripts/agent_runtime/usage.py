@@ -21,12 +21,14 @@ guarantees ``write(2)`` with ``O_APPEND`` is atomic across concurrent writers
 for payloads smaller than ``PIPE_BUF`` (typically 4KB). Our JSONL records
 are always < 2KB so we're well inside the guarantee. No filelock dependency.
 
-Headroom check: ``has_headroom(agent, model)`` scans the last 5 hours of
-records scoped by ``(agent, model)`` and returns False if any record has
-``outcome == "rate_limited"`` within that window. The runner calls this
-pre-invocation and raises ``RateLimitedError`` if headroom is False —
-saves the quota slot that would otherwise be burned on a known-rate-limited
-call.
+Headroom check: ``has_headroom(agent, model)`` scans the last 15 minutes
+of records scoped by ``(agent, model)`` and returns False if any record
+has ``outcome == "rate_limited"`` within that window. The runner calls
+this pre-invocation and raises ``RateLimitedError`` if headroom is False
+— saves the quota slot that would otherwise be burned on a known-rate-
+limited call. The window was reduced from 5h to 15min on 2026-04-10
+after a transient 429 false-locked the quota for 5 hours on real
+builds; see ``_RATE_LIMIT_WINDOW_S`` for the full story.
 
 Issue: #1184. Supersedes standalone #1183.
 """
@@ -137,19 +139,20 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
     """Check whether (agent, model) has quota headroom for a new call.
 
     Returns:
-        (True, "")  — no recent rate-limit in the last 5h window, proceed.
-        (False, reason) — a rate-limit occurred within 5h; caller should
-            raise RateLimitedError immediately without burning a quota slot.
+        (True, "")  — no recent rate-limit in the 15-minute window, proceed.
+        (False, reason) — a rate-limit occurred within 15 minutes; caller
+            should raise RateLimitedError immediately without burning a
+            quota slot.
 
     Implementation:
         1. Check in-process cache first (fast path, zero I/O).
-        2. Fall through to reading today's and yesterday's JSONL files
-           scoped by (agent, model), looking for any rate_limited record
-           within the last 5h.
+        2. Fall through to reading today's JSONL files scoped by
+           (agent, model), looking for any rate_limited record within
+           the last 15 minutes.
 
-    Why yesterday too: a rate-limit at 23:30 UTC with a 5h decay window
-    still blocks calls until 04:30 UTC next day. We cap the scan at 2 days
-    of files for efficiency; older records are irrelevant.
+    Window history: originally 5 hours, reduced to 15 minutes on
+    2026-04-10 after a transient 429 false-locked the entire quota for
+    a full five hours. See ``_RATE_LIMIT_WINDOW_S``.
     """
     now = time.time()
 

@@ -141,16 +141,30 @@ class CodexAdapter:
         _ = session_id
         _ = tool_config
 
+        # Reset per-invocation state so _read_latest_rollout_task_complete
+        # uses a fresh rollout snapshot (prevents cross-contamination
+        # between consecutive calls on the same adapter instance).
+        # Codex 2026-04-10 audit.
+        self._reset_per_invocation_state()
+
         # Resolve binary. shutil.which handles PATH lookup; fall back to
         # bare "codex" if not on PATH so subprocess.Popen can report the
         # error clearly.
         codex_bin = shutil.which("codex") or "codex"
 
         # Pick a unique output file inside /tmp.
-        # Include task_id for human debuggability.
-        suffix = f"-{task_id}" if task_id else ""
+        # Include task_id for human debuggability, but sanitize it:
+        # arbitrary task_id strings (issue slugs, URLs, user input)
+        # could contain slashes, nulls, or path separators that would
+        # make NamedTemporaryFile create files in unintended locations
+        # or fail entirely. Strip everything that isn't alphanumeric
+        # or a safe punctuation char. Codex 2026-04-10 audit finding.
+        safe_suffix = ""
+        if task_id:
+            safe = "".join(c if c.isalnum() or c in "-_." else "_" for c in task_id)
+            safe_suffix = f"-{safe[:60]}"  # cap length too
         with tempfile.NamedTemporaryFile(
-            prefix=f"codex-runtime{suffix}-",
+            prefix=f"codex-runtime{safe_suffix}-",
             suffix=".txt",
             delete=False,
         ) as output_fd:
@@ -404,80 +418,132 @@ class CodexAdapter:
     # Rollout-file recovery (post-completion hang fallback)
     # ---------------------------------------------------------------------
 
+    def _candidate_rollout_dirs(self) -> list[Path]:
+        """Return today's and yesterday's sessions dirs.
+
+        Yesterday is included so a call that starts at 23:59 UTC and
+        finishes at 00:01 UTC doesn't miss its own rollout when the
+        day directory rolls over. Codex 2026-04-10 audit finding.
+        """
+        from datetime import UTC, datetime, timedelta
+        base = Path.home() / ".codex" / "sessions"
+        dirs: list[Path] = []
+        for delta in (0, 1):
+            d = datetime.now(UTC) - timedelta(days=delta)
+            candidate = base / f"{d.year:04d}" / f"{d.month:02d}" / f"{d.day:02d}"
+            if candidate.exists():
+                dirs.append(candidate)
+        return dirs
+
+    def _snapshot_preexisting_rollouts(self) -> set[Path]:
+        """Snapshot rollout files that exist BEFORE our call starts.
+
+        Stored on the adapter instance the first time check_early_reap
+        runs for a given invocation. Any rollout file NOT in the
+        snapshot, when a new check happens, is a candidate for "this
+        call's rollout" — avoiding the critical cross-contamination bug
+        where two concurrent Codex runs would see each other's results.
+        Codex 2026-04-10 audit finding.
+
+        Note: adapters are logically stateless across calls, but
+        check_early_reap + parse_response are guaranteed to both see
+        the same invocation (the runner doesn't reuse an adapter
+        instance mid-call). The snapshot is reset on each new
+        invocation via _reset_per_invocation_state().
+        """
+        preexisting: set[Path] = set()
+        for d in self._candidate_rollout_dirs():
+            try:
+                preexisting.update(d.glob("rollout-*.jsonl"))
+            except OSError:
+                continue
+        return preexisting
+
+    def _reset_per_invocation_state(self) -> None:
+        """Clear per-invocation caches AND take a fresh snapshot of
+        pre-existing rollout files. Called from build_invocation.
+
+        Taking the snapshot eagerly (in build_invocation) instead of
+        lazily (on the first check_early_reap call) is correct: we
+        want to capture the state of the sessions dir at the MOMENT
+        the call begins, not at some arbitrary later time when the
+        new rollout may already have been created. Any file present
+        when build_invocation runs is "pre-existing" and therefore
+        cannot be the current call's rollout.
+        """
+        self._last_early_reap_check = 0.0
+        self._last_early_reap_mtime = 0.0
+        self._rollout_snapshot = self._snapshot_preexisting_rollouts()
+        self._bound_rollout = None
+
     def _read_latest_rollout_task_complete(
         self,
         plan: InvocationPlan,
         *,
         call_start_time: float | None = None,
     ) -> str:
-        """Extract the ``last_agent_message`` from the newest rollout JSONL.
+        """Extract the ``last_agent_message`` from THIS invocation's
+        rollout JSONL.
 
-        codex-cli 0.118.0 writes a per-call rollout file at
-        ``~/.codex/sessions/YYYY/MM/DD/rollout-<uuid>.jsonl``. Every
-        reasoning step, tool call, and response is streamed there as a
-        JSONL event. When Codex finishes its turn, it emits a single
-        event like::
+        Per-invocation identification (fixed 2026-04-10 after Codex
+        audit): we do NOT pick the newest rollout file globally,
+        because concurrent Codex runs in the same repo would
+        cross-contaminate. Instead we:
 
-            {
-              "timestamp": "2026-04-10T19:40:02.155Z",
-              "type": "event_msg",
-              "payload": {
-                "type": "task_complete",
-                "turn_id": "<uuid>",
-                "last_agent_message": "<the full response text>"
-              }
-            }
+        1. Snapshot the set of rollout files that existed at the
+           moment check_early_reap first runs (stored on the adapter
+           as ``_rollout_snapshot``).
+        2. On every scan, ignore any file in the snapshot.
+        3. From the non-snapshot candidates, pick the one with the
+           newest mtime. This is guaranteed to be a file Codex created
+           AFTER our call started.
+        4. Once we find a candidate, we cache it as ``_bound_rollout``
+           — any future calls return the SAME file, so the runner's
+           parse_response always sees the rollout scoped to THIS
+           invocation.
 
-        After emitting this event, the CLI frequently hangs at 0% CPU
-        for minutes or forever — it does NOT flush ``-o <file>`` and
-        does NOT exit on its own. So the answer sits on disk while the
-        runtime waits for a proc.exit that never comes.
+        Also checks yesterday's sessions dir for UTC-midnight rollover.
 
-        This method walks today's sessions directory, picks the newest
-        rollout file, and scans it line-by-line for a task_complete
-        event. Returns the ``last_agent_message`` string, or '' if no
-        such event is present yet (task still in progress) or if
-        anything goes wrong.
-
-        Safety:
-        * call_start_time (monotonic) is used to filter stale files.
-          Any file with mtime older than 2 hours wall-clock is skipped
-          to avoid picking up a previous day's leftover.
-        * All exceptions are swallowed — this is a last-resort fallback,
-          not a primary code path.
-        * If multiple task_complete events exist in one file (e.g. if
-          Codex did multi-turn reasoning), we return the LAST one — the
-          final answer.
+        Returns ``last_agent_message`` or ''.
         """
-        _ = call_start_time  # reserved for future tighter verification
+        _ = call_start_time  # reserved; currently using snapshot-based binding
+        _ = plan  # plan.task_id could be used for tighter matching in future
         import json as _json
-        import time as _time
-        from datetime import UTC, datetime
 
         try:
-            _ = plan  # not strictly needed but kept for future task-specific matching
-            today = datetime.now(UTC)
-            sessions_today = (
-                Path.home() / ".codex" / "sessions"
-                / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-            )
-            if not sessions_today.exists():
-                return ""
+            # 1. The snapshot was taken at build_invocation time (see
+            #    _reset_per_invocation_state). If somehow it's missing
+            #    — e.g. an adapter instance used directly without
+            #    build_invocation, or a race during test setup — fall
+            #    back to an empty snapshot so that ALL current files
+            #    are treated as candidates (degraded to newest-wins).
+            snapshot: set[Path] = getattr(self, "_rollout_snapshot", None) or set()
 
-            two_hours_ago = _time.time() - 2 * 3600
-            candidates = [
-                p for p in sessions_today.glob("rollout-*.jsonl")
-                if p.stat().st_mtime >= two_hours_ago
-            ]
-            if not candidates:
-                return ""
+            # 2. If we already bound a specific rollout for this
+            #    invocation, reuse it.
+            bound: Path | None = getattr(self, "_bound_rollout", None)
+            if bound is not None and bound.exists():
+                rollout_to_scan = bound
+            else:
+                # 3. Find new rollout files (not in snapshot)
+                all_candidates: list[Path] = []
+                for d in self._candidate_rollout_dirs():
+                    try:
+                        all_candidates.extend(d.glob("rollout-*.jsonl"))
+                    except OSError:
+                        continue
+                new_candidates = [p for p in all_candidates if p not in snapshot]
+                if not new_candidates:
+                    return ""
+                # Newest of the NEW ones is ours
+                rollout_to_scan = max(
+                    new_candidates, key=lambda p: p.stat().st_mtime,
+                )
+                self._bound_rollout = rollout_to_scan
 
-            newest = max(candidates, key=lambda p: p.stat().st_mtime)
-
-            # Scan for the task_complete event. Take the LAST one if
-            # multiple exist (multi-turn session → final turn wins).
+            # 4. Scan our bound rollout for task_complete
             last_message = ""
-            with open(newest, encoding="utf-8", errors="replace") as f:
+            with open(rollout_to_scan, encoding="utf-8", errors="replace") as f:
                 for line in f:
                     line = line.strip()
                     if not line:

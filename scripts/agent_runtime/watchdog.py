@@ -1,28 +1,26 @@
-"""Stall detection watchdog for the agent runtime.
+"""Subprocess I/O streaming + hard-timeout kill watchdog for the agent runtime.
 
-This module implements the two-layer stall detection described in
-docs/design/agent-runtime.md § 4.6. Both layers feed a single
-``last_activity`` clock; the runner kills the subprocess when either:
+Originally implemented as two-layer stall detection, but stall
+detection was REMOVED from the kill path on 2026-04-10 after a
+string of production incidents. The module now does three things:
 
-- ``now - last_activity > stall_timeout`` → AgentStalledError (agent went silent)
-- ``now - start_time > hard_timeout`` → AgentTimeoutError (wall clock exceeded)
+1. **stdout/stderr drainers** — background threads drain both pipes
+   in parallel. CRITICAL for any subprocess that writes significant
+   stderr volume (e.g. Codex CLI writes hundreds of KB of
+   reasoning trace + tool calls to stderr), because otherwise the
+   16KB pipe buffer fills and blocks the subprocess forever on its
+   next write. See ``_stderr_streamer`` for the incident chain.
 
-Layer 1 — Streaming stdout watchdog (primary):
-    A background thread reads stdout line-by-line from ``Popen.stdout``
-    and bumps ``last_activity`` on every line. Lifted from the prior art
-    in ``scripts/ai_agent_bridge/_gemini.py::_stream_with_watchdog``
-    (``_STALL_THRESHOLD = 120``).
+2. **Liveness-file mtime poller** — updates
+   ``WatchdogState.last_activity`` for observability (emitted into
+   usage records) but never drives kill decisions. Stall detection
+   as a kill condition was unreliable because every CLI version
+   bump broke a different mtime signal; see ``should_kill`` for
+   the full story.
 
-Layer 2 — Liveness file mtime polling (fallback):
-    For adapters where stdout is redirected to ``-o <file>`` or buffered
-    (Codex writes final output to a file; Gemini's ``--output-path`` mode
-    hides output from stdout), a second thread polls mtimes on the paths
-    returned by ``adapter.liveness_signal_paths(plan)`` every 5 seconds.
-    Any mtime bump is treated as "agent is alive" and resets the clock.
-
-Why both: stdout streaming is the primary signal (works for any agent that
-talks to stdout), but ``codex exec -o <file>`` can go silent on stdout for
-minutes while still writing the output file. Mtime polling catches those.
+3. **Hard-timeout kill** — the ONLY condition the watchdog kills on.
+   Triggers ``AgentTimeoutError`` when ``now - start_time >
+   hard_timeout``. Default hard_timeout is 1h.
 
 Issue: #1184
 """

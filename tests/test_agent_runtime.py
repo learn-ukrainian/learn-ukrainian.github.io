@@ -410,13 +410,14 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
     tmp_path, monkeypatch
 ):
     """Regression pin (2026-04-10): check_early_reap must return True
-    as soon as a task_complete event appears in the newest rollout file.
-    Without this, the runner waits the full hard_timeout on every
-    Codex post-completion hang.
+    as soon as a task_complete event appears in a NEW rollout file
+    (one created after build_invocation). Without this, the runner
+    waits the full hard_timeout on every Codex post-completion hang.
 
-    Scenario: call_start_time is old enough (>5s), rollout file exists
-    with a task_complete event. Expected: returns True, releasing the
-    runner to kill and reap.
+    Production flow: build_invocation → Codex spawns → Codex creates a
+    new rollout file → check_early_reap finds it. The test simulates
+    this by building an empty snapshot (no pre-existing rollouts),
+    then planting the new rollout AFTER build_invocation.
     """
     import json as _json
     import time as _time
@@ -434,15 +435,9 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
         / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     )
     sessions_today.mkdir(parents=True)
-    rollout = sessions_today / "rollout-test.jsonl"
-    rollout.write_text(_json.dumps({
-        "type": "event_msg",
-        "payload": {
-            "type": "task_complete",
-            "last_agent_message": "Here is the full audit...",
-        },
-    }) + "\n")
 
+    # build_invocation takes the snapshot of pre-existing rollouts.
+    # At this point the dir is empty.
     plan = adapter.build_invocation(
         prompt="x",
         mode="read-only",
@@ -453,10 +448,75 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
         tool_config=None,
     )
 
+    # NOW plant the new rollout — this simulates Codex creating its
+    # rollout file AFTER the subprocess started. It must appear in
+    # check_early_reap as a non-snapshotted candidate.
+    rollout = sessions_today / "rollout-new-after-build.jsonl"
+    rollout.write_text(_json.dumps({
+        "type": "event_msg",
+        "payload": {
+            "type": "task_complete",
+            "last_agent_message": "Here is the full audit...",
+        },
+    }) + "\n")
+
     # call_start_time 10s in the past so the "has been running long
     # enough" guard doesn't short-circuit.
     call_start = _time.monotonic() - 10.0
     assert adapter.check_early_reap(plan, call_start_time=call_start) is True
+
+
+def test_codex_check_early_reap_ignores_preexisting_rollouts(
+    tmp_path, monkeypatch
+):
+    """Regression pin for the cross-contamination fix (Codex 2026-04-10
+    audit): a rollout file that existed BEFORE our build_invocation must
+    NOT trigger early-reap, because it belongs to a previous or
+    concurrent call.
+    """
+    import json as _json
+    import time as _time
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+
+    # Plant a stale rollout BEFORE build_invocation — it belongs to
+    # a previous call. The snapshot should capture it as pre-existing.
+    stale = sessions_today / "rollout-stale-from-other-run.jsonl"
+    stale.write_text(_json.dumps({
+        "type": "event_msg",
+        "payload": {
+            "type": "task_complete",
+            "last_agent_message": "OTHER TASK'S ANSWER",
+        },
+    }) + "\n")
+
+    # build_invocation snapshots all pre-existing rollouts.
+    plan = adapter.build_invocation(
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="contamination-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    # No new rollout has been created. check_early_reap should NOT
+    # return True — the stale file is in the snapshot.
+    call_start = _time.monotonic() - 10.0
+    assert adapter.check_early_reap(plan, call_start_time=call_start) is False
 
 
 def test_codex_check_early_reap_skips_within_warmup_window(tmp_path, monkeypatch):
@@ -541,8 +601,10 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
     or exiting. The adapter must recover by reading the rollout file.
 
     Simulation: empty -o file (as if Codex never flushed), populated
-    rollout file with a task_complete event. Adapter should return
-    ok=True with the rollout message as the response.
+    rollout file with a task_complete event, planted AFTER
+    build_invocation (so it's not in the snapshot of pre-existing
+    rollouts — the cross-contamination fix excludes those).
+    Adapter should return ok=True with the rollout message.
     """
     import json as _json
     from datetime import UTC, datetime
@@ -553,7 +615,7 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
     fake_home.mkdir()
     monkeypatch.setenv("HOME", str(fake_home))
 
-    # Build today's sessions dir and plant a rollout with task_complete
+    # Build today's sessions dir EMPTY — no pre-existing rollouts
     today = datetime.now(UTC)
     sessions_today = (
         fake_home / ".codex" / "sessions"
@@ -561,6 +623,23 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
     )
     sessions_today.mkdir(parents=True)
 
+    # Empty -o file (the hang: Codex never flushed it)
+    output_file = tmp_path / "codex-out.txt"
+    output_file.write_text("")
+
+    # build_invocation snapshots pre-existing rollouts (currently empty).
+    plan = adapter.build_invocation(
+        prompt="Write a BST",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="bst-test",
+        session_id=None,
+        tool_config=None,
+    )
+
+    # Plant the rollout AFTER build_invocation — simulates Codex
+    # creating its own rollout during the call.
     rollout = sessions_today / "rollout-2026-04-10T21-35-20-test.jsonl"
     events = [
         {"timestamp": "2026-04-10T21:35:21Z", "type": "event_msg",
@@ -575,20 +654,6 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
          }},
     ]
     rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
-
-    # Empty -o file (the hang: Codex never flushed it)
-    output_file = tmp_path / "codex-out.txt"
-    output_file.write_text("")
-
-    plan = adapter.build_invocation(
-        prompt="Write a BST",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="bst-test",
-        session_id=None,
-        tool_config=None,
-    )
 
     # returncode=-9 simulates "we killed the hung process after early-reap"
     result = adapter.parse_response(
@@ -861,6 +926,37 @@ def test_invoke_rate_limit_short_circuit(tmp_path):
     mock_popen.assert_not_called()
 
 
+def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
+    """Regression (Codex 2026-04-10 audit): when Popen fails because
+    the CLI binary isn't on PATH, the runner must raise
+    AgentUnavailableError (matching its public contract), NOT leak a
+    raw FileNotFoundError. It must also write a usage record for
+    observability.
+    """
+    from agent_runtime.errors import AgentUnavailableError
+
+    # Patch Popen to raise FileNotFoundError as if the codex binary
+    # is missing. Also patch has_headroom so we reach Popen.
+    with patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ) as mock_write, patch(
+        "agent_runtime.runner.subprocess.Popen",
+        side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"),
+    ), pytest.raises(AgentUnavailableError, match="Popen failed"):
+        invoke("codex", "hello", mode="read-only", cwd=tmp_path)
+
+    # A usage record must have been written.
+    assert mock_write.called, (
+        "runner must write a usage record even on Popen failure"
+    )
+    written = mock_write.call_args.args[0]
+    assert written.get("outcome") == "error"
+    assert "Popen failed" in (written.get("stderr_excerpt") or "")
+    assert "FileNotFoundError" in (written.get("stderr_excerpt") or "")
+
+
 def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     """Regression pin (2026-04-10): when an adapter's check_early_reap
     returns True, the runner must kill the subprocess and call
@@ -870,12 +966,17 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     This test pins the whole Codex post-completion-hang recovery path:
     runner polls early_reap → returns True → runner kills proc →
     parse_response reads rollout file → returns successful Result.
+
+    We plant the rollout file from inside the mock's proc.poll()
+    side_effect — this simulates Codex creating its rollout AFTER
+    build_invocation took its empty snapshot. The snapshot-based
+    cross-contamination fix would otherwise exclude any file that
+    existed before build_invocation ran.
     """
     import json as _json
     from datetime import UTC, datetime
     from unittest.mock import MagicMock
 
-    # Plant a rollout file with task_complete so check_early_reap fires
     fake_home = tmp_path / "home"
     fake_home.mkdir()
     monkeypatch.setenv("HOME", str(fake_home))
@@ -885,24 +986,28 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
         / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     )
     sessions_today.mkdir(parents=True)
+
     rollout = sessions_today / "rollout-reap-test.jsonl"
-    rollout.write_text(_json.dumps({
+    rollout_payload = _json.dumps({
         "type": "event_msg",
         "payload": {
             "type": "task_complete",
             "last_agent_message": "The complete audit response is here.",
         },
-    }) + "\n")
+    }) + "\n"
 
-    # Mock Popen: poll returns None (running) before kill, then -9
-    # after. The runner's finally block may call kill() a second time
-    # as a safety cleanup — to keep the test's kill-call count stable,
-    # we flip poll() to return -9 the moment kill() fires.
+    # Mock Popen: poll() returns None (running) before kill, -9 after.
+    # On the FIRST poll, plant the rollout file. This simulates Codex
+    # creating its rollout file between startup and the first runner
+    # poll iteration, which is what happens in production.
     mock_proc = MagicMock()
-    state = {"killed": False}
-    mock_proc.poll = MagicMock(
-        side_effect=lambda: -9 if state["killed"] else None,
-    )
+    state = {"killed": False, "planted": False}
+    def fake_poll():
+        if not state["planted"]:
+            rollout.write_text(rollout_payload)
+            state["planted"] = True
+        return -9 if state["killed"] else None
+    mock_proc.poll = MagicMock(side_effect=fake_poll)
     mock_proc.returncode = -9
     def fake_kill():
         state["killed"] = True

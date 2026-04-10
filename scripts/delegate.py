@@ -367,8 +367,19 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     # Fork a detached subprocess that runs this same script with
     # --worker. We use Popen rather than os.fork for portability.
+    #
+    # Python interpreter: the project rule (non-negotiable-rules.md)
+    # is to always use .venv/bin/python, never a bare `python` or
+    # whatever sys.executable happens to be. sys.executable only
+    # points at the venv interpreter IF the parent was launched from
+    # the venv, which isn't guaranteed when delegate.py is called
+    # from other contexts. Resolve the venv python explicitly;
+    # fall back to sys.executable only as a last resort. Codex
+    # 2026-04-10 audit finding.
+    venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
+    python_bin = str(venv_python) if venv_python.exists() else sys.executable
     cmd = [
-        sys.executable,
+        python_bin,
         str(Path(__file__).resolve()),
         "_worker",
         "--task-id", task_id,
@@ -394,24 +405,45 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     stdout_fd = open(stdout_log, "ab", buffering=0)  # noqa: SIM115
     stderr_fd = open(stderr_log, "ab", buffering=0)  # noqa: SIM115
 
+    # Explicit env=os.environ.copy() — makes the inherited env
+    # explicit rather than implicit. Callers that want to scrub
+    # secrets from the worker's env can override this here.
+    worker_env = os.environ.copy()
     try:
-        # Explicit env=os.environ.copy() — makes the inherited env
-        # explicit rather than implicit. Callers that want to scrub
-        # secrets from the worker's env can override this here. The
-        # worker itself is trusted code (same repo, same git history)
-        # so we pass the full env rather than a filtered subset, but
-        # being explicit documents the inheritance. Codex 2026-04-10
-        # review finding (hardening, not a strict bug).
-        worker_env = os.environ.copy()
-        proc = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE,
-            stdout=stdout_fd,
-            stderr=stderr_fd,
-            env=worker_env,
-            start_new_session=True,  # detach from our process group
-            close_fds=True,
-        )
+        try:
+            proc = subprocess.Popen(
+                cmd,
+                stdin=subprocess.PIPE,
+                stdout=stdout_fd,
+                stderr=stderr_fd,
+                env=worker_env,
+                start_new_session=True,  # detach from our process group
+                close_fds=True,
+            )
+        except (OSError, FileNotFoundError, ValueError) as exc:
+            # Popen itself failed — typically because the Python
+            # interpreter isn't where we expected, or the file
+            # descriptors are somehow invalid. Without this handler
+            # the state file would stay at "spawning" forever with
+            # pid=None and no zombie detection could rescue it
+            # (because zombie detection is gated on `pid and not alive`).
+            # Codex 2026-04-10 audit finding.
+            failed_state = _read_state(state_path) or initial_state
+            failed_state.update({
+                "status": "failed",
+                "finished_at": datetime.now(UTC).isoformat(),
+                "stderr_excerpt": (
+                    f"Popen failed: {type(exc).__name__}: {exc}"
+                )[:500],
+                "returncode": None,
+            })
+            _write_state_atomic(state_path, failed_state)
+            print(
+                f"❌ failed to spawn worker for {task_id!r}: "
+                f"{type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            return 1
 
         # CRITICAL: write the Popen child's PID into the state file
         # RIGHT NOW, from the parent, before the worker has a chance
@@ -551,11 +583,35 @@ def cmd_wait(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 def cmd_cancel(args: argparse.Namespace) -> int:
-    """Send SIGTERM to the worker's PID. Lets the runtime unwind cleanly."""
+    """Send SIGTERM to the worker's PID. Lets the runtime unwind cleanly.
+
+    Refuses to signal a task whose status is already terminal (done,
+    failed, crashed, cancelled, rate_limited). Otherwise we'd be
+    signalling a PID that the OS may have recycled to some unrelated
+    process. Codex 2026-04-10 audit finding.
+    """
     state_path = _state_path(args.task_id)
     state = _read_state(state_path)
     if state is None:
         print(f"❌ no state file for task {args.task_id!r}", file=sys.stderr)
+        return 1
+
+    status = state.get("status")
+    if status in _TERMINAL_STATUSES:
+        print(
+            f"⚠️  task {args.task_id!r} is already in terminal state "
+            f"{status!r}; refusing to signal the stored PID "
+            f"(could be recycled by the OS).",
+            file=sys.stderr,
+        )
+        return 1
+
+    if status not in ("running", "spawning"):
+        print(
+            f"❌ task {args.task_id!r} has unexpected status {status!r}; "
+            f"refusing to cancel.",
+            file=sys.stderr,
+        )
         return 1
 
     pid = state.get("pid")

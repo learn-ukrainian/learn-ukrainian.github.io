@@ -350,23 +350,54 @@ def invoke(
     watchdog_threads: list = []  # threading.Thread, loose-typed to avoid import
 
     try:
-        proc = subprocess.Popen(
-            plan.cmd,
-            stdin=subprocess.PIPE if plan.stdin_payload else None,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=str(effective_cwd),
-            env=env,
-            # bufsize=1 = line-buffered. Critical for stall watchdog: the
-            # default (-1 = io.DEFAULT_BUFFER_SIZE, typically 8KB) makes
-            # the stdout streamer thread wait for a full buffer before
-            # seeing *any* lines. Quiet CLIs like Codex `-o <file>` emit
-            # only a few short lines over many minutes; with default
-            # buffering the streamer sees nothing for the whole run and
-            # the watchdog falsely stalls. (Fixed 2026-04-10.)
-            bufsize=1,
-        )
+        try:
+            proc = subprocess.Popen(
+                plan.cmd,
+                stdin=subprocess.PIPE if plan.stdin_payload else None,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=str(effective_cwd),
+                env=env,
+                # bufsize=1 = line-buffered. Critical for stall watchdog: the
+                # default (-1 = io.DEFAULT_BUFFER_SIZE, typically 8KB) makes
+                # the stdout streamer thread wait for a full buffer before
+                # seeing *any* lines. Quiet CLIs like Codex `-o <file>` emit
+                # only a few short lines over many minutes; with default
+                # buffering the streamer sees nothing for the whole run and
+                # the watchdog falsely stalls. (Fixed 2026-04-10.)
+                bufsize=1,
+            )
+        except (FileNotFoundError, PermissionError, OSError) as exc:
+            # Popen failed at spawn time — most commonly because the
+            # CLI binary isn't on PATH. The public contract documents
+            # AgentUnavailableError for this case; without this
+            # translation we'd raise a raw FileNotFoundError and skip
+            # writing a usage record. Codex 2026-04-10 audit finding.
+            record = _build_usage_record(
+                agent=agent_name,
+                entrypoint=entrypoint,
+                model=effective_model,
+                mode=mode,
+                task_id=task_id,
+                cwd=effective_cwd,
+                session_id=session_id,
+                duration_s=time.monotonic() - start_time,
+                input_chars=len(prompt),
+                output_chars=0,
+                returncode=None,
+                outcome="error",
+                rate_limited=False,
+                stalled=False,
+                stderr_excerpt=(
+                    f"Popen failed: {type(exc).__name__}: {exc}"
+                )[:500],
+                tokens=None,
+            )
+            write_record(record)
+            raise AgentUnavailableError(
+                f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}"
+            ) from exc
 
         # Write stdin non-blockingly (we'll drain via watchdog threads,
         # so we can close stdin right after writing the payload).

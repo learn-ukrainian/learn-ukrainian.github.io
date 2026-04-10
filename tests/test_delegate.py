@@ -280,6 +280,90 @@ def test_dispatch_refuses_to_clobber_running_task(tmp_tasks_dir, capsys):
     assert "already running" in captured.err
 
 
+def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
+    """Regression (Codex 2026-04-10 audit): if Popen itself fails (e.g.
+    Python binary not found, invalid fd, etc.), cmd_dispatch must mark
+    the task as 'failed' in the state file. Previously it would leave
+    the task stuck at 'spawning' forever with pid=None, and zombie
+    detection couldn't rescue it because zombie detection is gated on
+    `pid and not _pid_alive(pid)`.
+    """
+    path = delegate._state_path("popen-failure")
+
+    import argparse
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="popen-failure",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        hard_timeout=3600,
+    )
+
+    # Make Popen raise FileNotFoundError — simulates a missing
+    # Python interpreter or malformed command.
+    with patch(
+        "delegate.subprocess.Popen",
+        side_effect=FileNotFoundError("no such file"),
+    ):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+
+    # State must be terminal (failed), not stuck in spawning.
+    state = delegate._read_state(path)
+    assert state is not None
+    assert state["status"] == "failed"
+    assert "Popen failed" in (state.get("stderr_excerpt") or "")
+    assert "FileNotFoundError" in (state.get("stderr_excerpt") or "")
+    captured = capsys.readouterr()
+    assert "failed to spawn" in captured.err
+
+
+def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
+    """Regression (Codex 2026-04-10 audit): cmd_cancel must refuse to
+    signal a PID whose task is already in a terminal state. The OS may
+    have recycled the stored PID to an unrelated process, and sending
+    SIGTERM to that could damage something we have no business touching.
+    """
+    path = delegate._state_path("already-done")
+    # Done task with a stored PID that happens to be our own (alive)
+    # — cancel must still refuse because the TASK is done regardless
+    # of whether the PID is alive.
+    delegate._write_state_atomic(path, {
+        "task_id": "already-done",
+        "status": "done",
+        "pid": os.getpid(),
+    })
+
+    import argparse
+    args = argparse.Namespace(task_id="already-done")
+    rc = delegate.cmd_cancel(args)
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "terminal state" in captured.err
+    assert "done" in captured.err
+
+
+def test_cancel_refuses_crashed_task(tmp_tasks_dir, capsys):
+    """Crashed is also terminal — cancel must refuse."""
+    path = delegate._state_path("crashed-task")
+    delegate._write_state_atomic(path, {
+        "task_id": "crashed-task",
+        "status": "crashed",
+        "pid": 999_999_999,
+    })
+    import argparse
+    args = argparse.Namespace(task_id="crashed-task")
+    rc = delegate.cmd_cancel(args)
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "terminal state" in captured.err
+
+
 def test_worker_sigterm_handler_raises_keyboard_interrupt():
     """Regression (Gemini 2026-04-10 review, BUG #3): the worker's
     SIGTERM handler must raise an exception so the runtime's finally
