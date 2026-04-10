@@ -1,4 +1,12 @@
-"""Gemini interaction: ask_gemini and process_and_respond (decomposed)."""
+"""Gemini interaction: ask_gemini and process_and_respond (decomposed).
+
+Phase 4 of #1184: the subprocess path in _run_gemini_attempt was migrated
+onto scripts.agent_runtime.runner.invoke(). The legacy _stream_with_watchdog
+helper is preserved (and still used by the fire-and-forget Popen path for
+output-path callers) but the core subprocess block now routes through the
+runtime. The runtime owns stall detection, rate-limit classification, and
+usage logging uniformly across agents.
+"""
 
 import atexit
 import contextlib
@@ -7,6 +15,13 @@ import sys
 import time
 from pathlib import Path
 
+from agent_runtime.errors import (
+    AgentStalledError,
+    AgentTimeoutError,
+    AgentUnavailableError,
+    RateLimitedError,
+)
+from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import FLASH_MODEL
 
 from ._broker import (
@@ -273,80 +288,93 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
 
 def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only,
                         output_path, skip_github, attempt, max_retries, base_delay):
-    """Run a single Gemini CLI attempt. Returns None to retry, False to stop, or (response, sent)."""
+    """Run a single Gemini CLI attempt via agent_runtime.
+
+    Returns None to retry, False to stop, or (response, sent).
+
+    Phase 4: routes through runtime_invoke() instead of direct Popen.
+    The runtime handles stall detection, hard timeout, and rate-limit
+    classification. The retry loop stays here because it's higher-level
+    policy (multiple attempts with backoff).
+    """
+    prompt_preview = prompt[:200].replace('\n', ' ')
+    print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
+          f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
+
+    pre_snapshot = None
+    if output_path:
+        pre_snapshot = _git_status_snapshot()
+
+    # Gemini bridge is always write-enabled (--approval-mode=yolo) — preserving
+    # legacy behavior. Tool config is None because the bridge doesn't restrict
+    # MCP tools the way dispatch.py does.
     try:
-        prompt_preview = prompt[:200].replace('\n', ' ')
-        print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
-              f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
-        gemini_cmd = [GEMINI_CLI, "-m", model, "--approval-mode=yolo"]
-
-        pre_snapshot = None
-        if output_path:
-            pre_snapshot = _git_status_snapshot()
-
-        proc = subprocess.Popen(
-            gemini_cmd,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=str(REPO_ROOT),
-            env=_PARENT_ENV
+        result = runtime_invoke(
+            "gemini",
+            prompt,
+            mode="workspace-write",
+            cwd=REPO_ROOT,
+            model=model,
+            task_id=msg.get("task_id"),
+            session_id=None,  # Gemini CLI has no --resume; bridge multi-turn
+                              # is handled via conversation context injection
+                              # in the prompt builder, not CLI-level resume.
+            tool_config=None,
+            entrypoint="bridge",
+            hard_timeout=max(timeout_val or 1800, 300),
+            stall_timeout=min(180, timeout_val or 180),
         )
-
-        if proc.stdin:
-            proc.stdin.write(prompt)
-            proc.stdin.close()
-
-        # Watchdog timer
-        _timed_out, output_lines = _stream_with_watchdog(proc, timeout_val)
-
-        proc.wait()
-        stderr = proc.stderr.read() if proc.stderr else ""
-
-        if _timed_out:
-            stderr += f"\n[bridge] Process killed after {timeout_val}s timeout"
-            proc.returncode = -9
-
-        if proc.returncode != 0:
-            retry_result = _handle_gemini_error(stderr, model, attempt, max_retries, base_delay)
-            if retry_result == "retry":
-                return None
-            if retry_result == "stop":
-                return False
-            # "continue" — non-zero exit but might have output
-            if not output_lines or len(''.join(output_lines).strip()) < 50:
-                return False
-
-        response = ''.join(output_lines).strip()
-
-        # Post-validation for file writes
-        if output_path and pre_snapshot is not None:
-            violations = _validate_file_writes(pre_snapshot, output_path)
-            if violations:
-                print("\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
-                for v in violations:
-                    print(f"   - {v}")
-                sys.stdout.flush()
-
-        # Print completion status
-        if not stdout_only:
-            _print_completion_status(output_path, response)
-
-        # Route response
-        _route_gemini_response(msg, message_id, model, response, stdout_only, output_path,
-                               skip_github)
-
-        acknowledge(message_id, quiet=stdout_only)
-        return (response, True)
-
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        print(f"\n❌ Gemini CLI timed out ({timeout_val}s sync limit)")
+    except RateLimitedError as exc:
+        # Rate-limited: treat as retryable per legacy behavior
+        print(f"\n⏳ Gemini rate limited: {exc}")
+        retry_result = _handle_gemini_error(str(exc), model, attempt, max_retries, base_delay)
+        if retry_result == "retry":
+            return None
         return False
-    except FileNotFoundError:
-        print("❌ gemini CLI not found. Is it installed?")
+    except AgentStalledError as exc:
+        print(f"\n❌ Gemini stalled: {exc}")
         return False
+    except AgentTimeoutError as exc:
+        print(f"\n❌ Gemini CLI timed out ({timeout_val}s sync limit): {exc}")
+        return False
+    except AgentUnavailableError as exc:
+        print(f"❌ gemini CLI not available: {exc}")
+        return False
+
+    if not result.ok:
+        # Runtime returned a structured failure. Decide retry vs stop based
+        # on stderr signal (legacy _handle_gemini_error).
+        stderr_text = result.stderr_excerpt or ""
+        retry_result = _handle_gemini_error(stderr_text, model, attempt, max_retries, base_delay)
+        if retry_result == "retry":
+            return None
+        if retry_result == "stop":
+            return False
+        # "continue" — some non-zero-but-useful output case
+        if not result.response or len(result.response.strip()) < 50:
+            return False
+
+    response = result.response.strip()
+
+    # Post-validation for file writes (preserved from legacy path)
+    if output_path and pre_snapshot is not None:
+        violations = _validate_file_writes(pre_snapshot, output_path)
+        if violations:
+            print("\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
+            for v in violations:
+                print(f"   - {v}")
+            sys.stdout.flush()
+
+    # Print completion status
+    if not stdout_only:
+        _print_completion_status(output_path, response)
+
+    # Route response
+    _route_gemini_response(msg, message_id, model, response, stdout_only, output_path,
+                           skip_github)
+
+    acknowledge(message_id, quiet=stdout_only)
+    return (response, True)
 
 
 def _stream_with_watchdog(proc, timeout_val):

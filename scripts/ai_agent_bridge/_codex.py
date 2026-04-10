@@ -1,4 +1,18 @@
-"""Codex interaction: ask_codex and process_for_codex."""
+"""Codex interaction: ask_codex and process_for_codex.
+
+Phase 4 of #1184 migrated the subprocess path onto scripts.agent_runtime.
+The subprocess-building helpers below (_build_codex_exec_cmd,
+_build_codex_resume_cmd) are kept ONLY for backward compatibility with
+test mocks; they are no longer called by production code paths. They
+will be deleted in Phase 6 cleanup.
+
+Note: this module used to attempt Codex session resume for multi-turn
+bridge conversations. Phase 4 drops that — Codex always starts fresh,
+consistent with the runtime's resume_policy="never" for Codex (see
+docs/design/agent-runtime.md § 6.3). Short bridge consultations don't
+benefit from resume, and resume is the cross-worktree contamination
+footgun that Codex flagged in his own consultation.
+"""
 
 import json
 import os
@@ -6,6 +20,14 @@ import re
 import subprocess
 import tempfile
 from pathlib import Path
+
+from agent_runtime.errors import (
+    AgentStalledError,
+    AgentTimeoutError,
+    AgentUnavailableError,
+    RateLimitedError,
+)
+from agent_runtime.runner import invoke as runtime_invoke
 
 from ._config import CODEX_CLI, REPO_ROOT
 from ._db import get_db, get_session, set_session
@@ -29,8 +51,27 @@ def _codex_bridge_mode() -> str:
     return "safe"
 
 
+def _codex_bridge_runtime_mode() -> str:
+    """Translate CODEX_BRIDGE_MODE env var to runtime vocabulary.
+
+    Runtime uses {read-only, workspace-write, danger}.
+    Bridge legacy uses {safe, workspace-write, full-auto, danger}.
+    """
+    legacy = _codex_bridge_mode()
+    if legacy == "danger":
+        return "danger"
+    if legacy == "workspace-write":
+        return "workspace-write"
+    return "read-only"  # "safe" → "read-only"
+
+
 def _codex_bridge_flags() -> list[str]:
-    """Translate bridge mode to Codex CLI flags."""
+    """Translate bridge mode to Codex CLI flags.
+
+    DEPRECATED: kept for test-mock backward compat. Production code uses
+    scripts.agent_runtime.adapters.codex.CodexAdapter which builds its
+    own flags from mode.
+    """
     mode = _codex_bridge_mode()
     if mode == "danger":
         return ["--dangerously-bypass-approvals-and-sandbox"]
@@ -98,73 +139,82 @@ def ask_codex(content: str, task_id: str | None = None, msg_type: str = "query",
 
 
 def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bool = False):
-    """Read message addressed to Codex, invoke Codex CLI headlessly, send response."""
+    """Read message addressed to Codex, invoke via agent_runtime, send response.
+
+    Phase 4: routes through scripts.agent_runtime.runner.invoke(). Resume
+    is dropped (Codex resume_policy="never" in the registry); new_session
+    parameter is accepted for backward compatibility but now always True
+    in effect.
+    """
     msg = _fetch_codex_message(message_id)
     if not msg:
         return
 
-    session = get_session(msg["task_id"]) if msg["task_id"] else {"claude": None, "gemini": None, "codex": None}
-    codex_session_id = session["codex"] if not new_session else None
+    _ = new_session  # No-op: Codex always starts fresh (resume_policy="never")
     prompt = build_codex_prompt(msg)
-    timeout_val = None if no_timeout else 900
+    timeout_val = 1800 if no_timeout else 900  # runner has its own hard_timeout
     model = _extract_target_model(msg)
 
     print(f"📨 Message #{msg['id']}")
     print(f"   From: {msg['from']} → To: {msg['to']}")
     print(f"   Type: {msg['type']}")
     print(f"   Task: {msg['task_id'] or 'N/A'}")
-    print(f"   Session: {codex_session_id[:8] + '...' if codex_session_id else 'NEW'}")
-
-    with tempfile.NamedTemporaryFile(prefix="codex-bridge-", suffix=".txt", delete=False) as tmp:
-        output_path = Path(tmp.name)
-
-    if codex_session_id:
-        cmd = _build_codex_resume_cmd(codex_session_id, output_path, model)
-    else:
-        cmd = _build_codex_exec_cmd(output_path, model)
+    print("   Session: NEW (Codex runtime always fresh)")
 
     try:
-        result = subprocess.run(
-            cmd,
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=timeout_val,
-            cwd=str(REPO_ROOT),
-        )
-        if result.returncode != 0:
-            file_output = output_path.read_text("utf-8").strip() if output_path.exists() else ""
-            error_text = result.stderr or result.stdout or "Unknown Codex error"
-            if file_output:
-                error_text = f"{error_text}\n[codex output file]\n{file_output}".strip()
-            _handle_codex_error(msg, message_id, error_text)
-            return
-
-        session_id = _extract_session_id(result.stdout)
-        if session_id and msg["task_id"] and not codex_session_id:
-            set_session(msg["task_id"], "codex", session_id)
-
-        response = output_path.read_text("utf-8").strip() if output_path.exists() else ""
-        if not response:
-            _handle_codex_error(msg, message_id, "Codex returned no final message")
-            return
-
-        print(f"\n✅ Codex finished ({len(response)} chars)")
-        reply_id = send_message(
-            content=response,
+        result = runtime_invoke(
+            "codex",
+            prompt,
+            mode=_codex_bridge_runtime_mode(),
+            cwd=REPO_ROOT,
+            model=model,
             task_id=msg["task_id"],
-            msg_type="response",
-            from_llm="codex",
-            to_llm=msg["from"],
+            session_id=None,  # Codex resume_policy="never"
+            tool_config=None,
+            entrypoint="bridge",
+            hard_timeout=timeout_val,
+            stall_timeout=min(180, timeout_val),
         )
-        acknowledge(message_id)
-        acknowledge(reply_id)
-    except subprocess.TimeoutExpired:
-        _handle_codex_error(msg, message_id, "Codex CLI timed out after 15 minutes")
-    except FileNotFoundError:
-        _handle_codex_error(msg, message_id, "Codex CLI not found on system")
-    finally:
-        output_path.unlink(missing_ok=True)
+    except RateLimitedError as exc:
+        _handle_codex_error(msg, message_id, f"Rate limited: {exc}")
+        return
+    except AgentStalledError as exc:
+        _handle_codex_error(msg, message_id, f"Codex stalled: {exc}")
+        return
+    except AgentTimeoutError as exc:
+        _handle_codex_error(msg, message_id, f"Codex hard timeout: {exc}")
+        return
+    except AgentUnavailableError as exc:
+        _handle_codex_error(msg, message_id, f"Codex unavailable: {exc}")
+        return
+
+    if not result.ok:
+        _handle_codex_error(
+            msg,
+            message_id,
+            result.stderr_excerpt or "Codex returned no final message",
+        )
+        return
+
+    # Persist session ID for observability (though we never reuse it).
+    if result.session_id and msg["task_id"]:
+        set_session(msg["task_id"], "codex", result.session_id)
+
+    response = result.response
+    if not response:
+        _handle_codex_error(msg, message_id, "Codex returned no final message")
+        return
+
+    print(f"\n✅ Codex finished ({len(response)} chars)")
+    reply_id = send_message(
+        content=response,
+        task_id=msg["task_id"],
+        msg_type="response",
+        from_llm="codex",
+        to_llm=msg["from"],
+    )
+    acknowledge(message_id)
+    acknowledge(reply_id)
 
 
 def _fetch_codex_message(message_id: int) -> dict | None:
