@@ -1,0 +1,178 @@
+"""AgentAdapter protocol + InvocationPlan dataclass.
+
+The protocol defines the three methods every agent adapter must implement.
+The InvocationPlan dataclass is the return type of ``build_invocation()`` —
+everything the runner needs to spawn one subprocess.
+
+Design rationale (from consultation, see docs/design/agent-runtime.md v1 Changelog):
+
+- ``build_invocation`` takes ``session_id`` and ``tool_config`` as inputs —
+  Gemini review #1 and #3 caught that omitting these would silently break
+  dispatch.py MCP tool restrictions and bridge resume semantics.
+- ``parse_response`` returns a rich ``ParseResult`` instead of 3 separate
+  protocol methods — Codex review #1 showed the v0 design
+  (``detect_rate_limit()`` + ``extract_session_id()`` as separate methods)
+  didn't fit all three agents (Claude creates session ID pre-launch, Codex
+  parses post-exec, Gemini does neither).
+- ``liveness_signal_paths`` is NEW in v1 — enables file-mtime stall detection
+  as a fallback when stdout is redirected to ``-o <file>`` or otherwise
+  buffered, complementing the runner's primary stdout streaming watchdog.
+
+Issue: #1184
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Protocol, runtime_checkable
+
+from ..result import ParseResult
+
+
+@dataclass(frozen=True)
+class InvocationPlan:
+    """Everything needed to spawn one agent subprocess.
+
+    Returned by ``adapter.build_invocation()``. The runner consumes it and
+    passes the fields to ``subprocess.Popen``.
+
+    Fields:
+        cmd: The argv list, ready for Popen. Includes all flags, model
+            overrides, output redirection, etc. First element is the binary
+            name (e.g. ``"codex"``, ``"npx"``, ``"gemini"``).
+        stdin_payload: Text to pipe to the subprocess's stdin. Empty string
+            if the prompt is embedded in ``cmd`` instead.
+        output_file: Path where the subprocess will write its final output,
+            if any. Adapters that use ``codex exec -o <file>`` or
+            ``gemini --output-path <file>`` populate this; the runner reads
+            it on completion. None if output goes to stdout.
+        env_overrides: Env vars to add to the subprocess environment.
+            Merged onto ``os.environ`` fresh per invocation — NEVER
+            ``os.environ.update()``. Adapters should only set values that
+            are specific to this call (e.g. Gemini auth tokens). Values set
+            here leak nowhere else.
+        liveness_paths: Files whose mtime indicates the agent is alive.
+            Used by the runner's stall detector as a fallback when stdout
+            is buffered/redirected. Can be empty; if so, only stdout
+            streaming is used for liveness.
+    """
+    cmd: list[str]
+    stdin_payload: str = ""
+    output_file: Path | None = None
+    env_overrides: dict[str, str] = field(default_factory=dict)
+    liveness_paths: tuple[Path, ...] = ()
+
+
+@runtime_checkable
+class AgentAdapter(Protocol):
+    """Protocol every agent adapter must implement.
+
+    Adapters are stateless — instance methods, no self-mutation between calls.
+    The runner instantiates an adapter once per process and reuses it across
+    ``invoke()`` calls.
+
+    Class attributes (MUST be defined at class level, not on instances):
+        name: Registry key. Matches the key in ``registry.AGENTS``. Examples:
+            ``"codex"``, ``"claude"``, ``"gemini"``, ``"grok"``.
+        default_model: Model string passed to the CLI when the caller
+            doesn't specify one. Example: ``"gpt-5.4"`` for Codex.
+        supported_modes: Subset of ``{"read-only", "workspace-write", "danger"}``.
+            The runner rejects invocations requesting a mode not in this set.
+    """
+    name: str
+    default_model: str
+    supported_modes: frozenset[str]
+
+    def build_invocation(
+        self,
+        *,
+        prompt: str,
+        mode: str,
+        cwd: Path,
+        model: str | None,
+        task_id: str | None,
+        session_id: str | None,
+        tool_config: dict | None,
+    ) -> InvocationPlan:
+        """Build the full InvocationPlan for spawning this agent.
+
+        Args:
+            prompt: The prompt text to send.
+            mode: One of the adapter's supported_modes.
+            cwd: Working directory for the subprocess. Mandatory for write
+                modes; runner validates this before calling.
+            model: Model override, or None to use self.default_model.
+            task_id: Optional task identifier for session tracking / logging.
+            session_id: Session to resume, if the adapter's resume_policy
+                allows it. Adapters with resume_policy="never" (Codex)
+                MUST defensively ignore this even if passed.
+            tool_config: Adapter-specific tool configuration. For Claude and
+                Gemini this carries MCP server names and allowed tools.
+                Structure is adapter-defined; keys the adapter doesn't
+                understand are silently ignored.
+
+        Returns:
+            InvocationPlan ready for subprocess.Popen.
+
+        Raises:
+            ValueError: If ``mode`` is not in self.supported_modes, or
+                required inputs for this mode are missing (e.g. cwd
+                for workspace-write).
+        """
+        ...
+
+    def parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+    ) -> ParseResult:
+        """Interpret raw subprocess output into a ParseResult.
+
+        Adapters own all CLI-specific output parsing: which file has the
+        final message, how to detect rate-limiting from stderr patterns,
+        whether the CLI emits a parseable session ID, etc.
+
+        Args:
+            stdout: Captured stdout from the subprocess.
+            stderr: Captured stderr from the subprocess.
+            returncode: Subprocess exit code (may be None if killed).
+            output_file: The path the adapter set in its InvocationPlan,
+                or None. The runner passes it back unchanged; the adapter
+                reads it if it's the canonical output location.
+
+        Returns:
+            ParseResult with ok, response, stderr_excerpt, rate_limited,
+            session_id, and tokens fields.
+        """
+        ...
+
+    def liveness_signal_paths(
+        self,
+        plan: InvocationPlan,
+    ) -> tuple[Path, ...]:
+        """Return paths the runner should poll for activity (mtime bumps).
+
+        Called once after ``build_invocation`` returns. The returned paths
+        are polled by the runner's stall watchdog every ~5s; any mtime
+        bump is treated as "agent is alive" and resets the stall clock.
+
+        Typical implementations:
+
+        - Codex: return the ``-o <file>`` path + ``~/.codex/logs_1.sqlite``.
+        - Gemini: return the active ``~/.gemini/tmp/<proj>/chats/<session>.json``.
+        - Claude: return the active ``~/.claude/projects/.../<session>.jsonl``.
+        - Grok (stub): return ().
+
+        Args:
+            plan: The InvocationPlan returned by build_invocation(). Adapters
+                may read its output_file or other fields.
+
+        Returns:
+            A tuple of Path objects. Returning an empty tuple means
+            "stall detection uses only stdout streaming for this adapter."
+            Cap at ~5 paths for polling overhead reasons.
+        """
+        ...
