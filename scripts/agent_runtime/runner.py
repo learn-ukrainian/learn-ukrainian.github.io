@@ -194,15 +194,21 @@ def _build_usage_record(
     tokens: int | None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
+    # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
+    # to maintain atomic append guarantees in usage.py.
+    safe_cwd = str(cwd)[-250:] if cwd else ""
+    safe_task_id = task_id[:100] if task_id else None
+    safe_session_id = session_id[:100] if session_id else None
+
     return {
         "ts": datetime.now(UTC).isoformat(),
         "agent": agent,
         "entrypoint": entrypoint,
-        "task_id": task_id,
-        "cwd": str(cwd),
+        "task_id": safe_task_id,
+        "cwd": safe_cwd,
         "model": model,
         "mode": mode,
-        "session_id": session_id,
+        "session_id": safe_session_id,
         "duration_s": round(duration_s, 2),
         "input_chars": input_chars,
         "output_chars": output_chars,
@@ -376,6 +382,15 @@ def invoke(
                 break
             kill_reason = should_kill(watchdog_state, stall_timeout, hard_timeout)
             if kill_reason is not None:
+                # Race-check (Gemini review finding #1): the subprocess may
+                # have exited between proc.poll() above and should_kill()
+                # returning True. Re-check before killing, because killing
+                # a process that already exited successfully and then
+                # classifying the run as "stalled" would discard a good result.
+                returncode = proc.poll()
+                if returncode is not None:
+                    kill_reason = None
+                    break
                 proc.kill()
                 with contextlib.suppress(subprocess.TimeoutExpired):
                     proc.wait(timeout=5.0)
@@ -387,6 +402,14 @@ def invoke(
         # Watchdog state is guaranteed non-None here because start_watchdog
         # always returns a state (it was called unconditionally above).
         assert watchdog_state is not None
+
+        # Drain the stdout streamer thread before reading captured lines.
+        # Without this join, the final tail of stdout may still be sitting
+        # in the OS pipe buffer, causing truncated responses on fast-exiting
+        # subprocesses. (Gemini review finding #2.)
+        for t in watchdog_threads:
+            if "stdout" in t.name:
+                t.join(timeout=5.0)
 
         # Read captured stdout from watchdog state + any residual stderr.
         stdout_text = "".join(watchdog_state.stdout_lines)

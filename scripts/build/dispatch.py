@@ -523,7 +523,7 @@ def _dispatch_via_runtime(
         runtime_mode = _codex_runtime_mode(agent)
         tool_config = None  # Codex has no MCP tool restrictions
 
-    def _call_runtime(call_model: str, label: str) -> tuple[bool, str, str, float, int | None]:
+    def _call_runtime(call_model: str, label: str, call_timeout: int) -> tuple[bool, str, str, float, int | None]:
         """One invocation. Returns (ok, response, stderr_excerpt, duration, returncode)."""
         t0 = time.monotonic()
         try:
@@ -537,8 +537,8 @@ def _dispatch_via_runtime(
                 session_id=None,  # dispatch never uses resume
                 tool_config=tool_config,
                 entrypoint="dispatch",
-                hard_timeout=timeout,
-                stall_timeout=min(180, timeout),
+                hard_timeout=call_timeout,
+                stall_timeout=min(180, call_timeout),
             )
             elapsed = time.monotonic() - t0
             _save_dispatch_log(
@@ -593,7 +593,7 @@ def _dispatch_via_runtime(
             return False, "", str(exc), elapsed, None
 
     # First attempt
-    ok, raw, _, _, _ = _call_runtime(model, agent_label)
+    ok, raw, _, elapsed1, _ = _call_runtime(model, agent_label, timeout)
     if ok:
         return True, raw
 
@@ -606,12 +606,16 @@ def _dispatch_via_runtime(
     if is_gemini:
         from batch_gemini_config import FALLBACK_MODEL
         if model != FALLBACK_MODEL:
-            _pace_gemini_calls()
-            fallback_label = f"{agent} ({FALLBACK_MODEL})"
-            _log(f"  🔄 Retrying with fallback model: {fallback_label}")
-            ok2, raw2, _, _, _ = _call_runtime(FALLBACK_MODEL, fallback_label)
-            if raw2 == "__RATE_LIMITED__":
-                return False, "__RATE_LIMITED__"
-            return ok2, raw2
+            remaining_timeout = int(timeout - elapsed1)
+            if remaining_timeout > 0:
+                _pace_gemini_calls()
+                fallback_label = f"{agent} ({FALLBACK_MODEL})"
+                _log(f"  🔄 Retrying with fallback model: {fallback_label}")
+                ok2, raw2, _, _, _ = _call_runtime(FALLBACK_MODEL, fallback_label, remaining_timeout)
+                if raw2 == "__RATE_LIMITED__":
+                    return False, "__RATE_LIMITED__"
+                return ok2, raw2
+            else:
+                _log(f"  ⏳ No timeout remaining for fallback model (elapsed: {elapsed1:.0f}s)")
 
     return ok, raw

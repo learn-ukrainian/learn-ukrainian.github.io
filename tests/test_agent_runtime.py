@@ -40,6 +40,12 @@ from agent_runtime.watchdog import WatchdogState, should_kill
 
 
 @pytest.fixture(autouse=True)
+def _isolate_usage_log(tmp_path):
+    """Ensure no test writes to the real batch_state/api_usage/ log."""
+    with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
+        yield
+
+@pytest.fixture(autouse=True)
 def _clear_state():
     """Reset runtime in-process caches before every test."""
     _reset_rate_limit_cache_for_tests()

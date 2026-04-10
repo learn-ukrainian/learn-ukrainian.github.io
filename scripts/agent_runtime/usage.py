@@ -32,10 +32,11 @@ Issue: #1184. Supersedes standalone #1183.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -93,9 +94,23 @@ def write_record(record: dict[str, Any]) -> None:
             os.close(fd)
 
         # Update in-process rate-limit cache if this was a rate-limit event.
+        # (Gemini review finding #3: use the record's own ts, not wall-clock
+        # at write time. Writing a delayed record would otherwise poison the
+        # cache by starting the 5h block window from "now" instead of the
+        # actual event time. Also honor the newest event when multiple writers
+        # race on the same (agent, model) key.)
         if record.get("outcome") == "rate_limited":
             key = (record["agent"], record["model"])
-            _RATE_LIMIT_CACHE[key] = time.time()
+            ts_str = record.get("ts")
+            event_ts: float = time.time()  # safe fallback
+            if ts_str:
+                with contextlib.suppress(ValueError, AttributeError):
+                    event_ts = datetime.fromisoformat(
+                        str(ts_str).replace("Z", "+00:00")
+                    ).timestamp()
+            existing = _RATE_LIMIT_CACHE.get(key)
+            if existing is None or event_ts > existing:
+                _RATE_LIMIT_CACHE[key] = event_ts
     except Exception as exc:  # pragma: no cover — degraded mode only
         # Best-effort: print to stderr but don't fail the caller. The agent
         # call itself already succeeded or failed at this point; we're only
@@ -137,46 +152,47 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
         # Cache entry expired; clear it
         _RATE_LIMIT_CACHE.pop(cache_key, None)
 
-    # Slow path: scan today's and yesterday's JSONL files for this (agent, *)
-    # and filter by model inside. We don't know the entrypoint, so we scan
-    # all files matching usage_{agent}-*_{date}.jsonl.
+    # Slow path: scan JSONL files for this (agent, *) and filter by model inside.
+    # To survive system clock jumps where old rate limit records might be in files
+    # with dates that don't match the currently shifted clock, we glob all files
+    # for the agent and rely on the file mtime + the absolute `ts` inside the record.
     cutoff = now - _RATE_LIMIT_WINDOW_S
     usage_dir = _usage_dir()
-    today = datetime.now(UTC)
-    dates = [today, today - timedelta(days=1)]
-
     most_recent_rate_limit_ts: float | None = None
-    for day in dates:
-        pattern = f"usage_{agent}-*_{day.strftime('%Y-%m-%d')}.jsonl"
-        for file_path in usage_dir.glob(pattern):
-            try:
-                with open(file_path, encoding="utf-8") as f:
-                    for raw in f:
-                        raw = raw.strip()
-                        if not raw:
-                            continue
-                        try:
-                            rec = json.loads(raw)
-                        except json.JSONDecodeError:
-                            continue  # truncated or corrupted line; skip
-                        if rec.get("model") != model:
-                            continue
-                        if rec.get("outcome") != "rate_limited":
-                            continue
-                        ts_str = rec.get("ts")
-                        if not ts_str:
-                            continue
-                        try:
-                            ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00")).timestamp()
-                        except (ValueError, AttributeError):
-                            continue
-                        if ts >= cutoff and (
-                            most_recent_rate_limit_ts is None
-                            or ts > most_recent_rate_limit_ts
-                        ):
-                            most_recent_rate_limit_ts = ts
-            except OSError:
-                continue  # file disappeared mid-scan; skip
+
+    for file_path in usage_dir.glob(f"usage_{agent}-*.jsonl"):
+        try:
+            # Skip files whose modification time is entirely before the cutoff
+            if file_path.stat().st_mtime < cutoff:
+                continue
+
+            with open(file_path, encoding="utf-8") as f:
+                for raw in f:
+                    raw = raw.strip()
+                    if not raw:
+                        continue
+                    try:
+                        rec = json.loads(raw)
+                    except json.JSONDecodeError:
+                        continue  # truncated or corrupted line; skip
+                    if rec.get("model") != model:
+                        continue
+                    if rec.get("outcome") != "rate_limited":
+                        continue
+                    ts_str = rec.get("ts")
+                    if not ts_str:
+                        continue
+                    try:
+                        ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00")).timestamp()
+                    except (ValueError, AttributeError):
+                        continue
+                    if ts >= cutoff and (
+                        most_recent_rate_limit_ts is None
+                        or ts > most_recent_rate_limit_ts
+                    ):
+                        most_recent_rate_limit_ts = ts
+        except OSError:
+            continue  # file disappeared mid-scan or permission denied; skip
 
     if most_recent_rate_limit_ts is not None:
         age_s = int(now - most_recent_rate_limit_ts)

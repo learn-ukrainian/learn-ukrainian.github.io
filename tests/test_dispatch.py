@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from build.dispatch import (
@@ -15,6 +17,13 @@ from build.dispatch import (
     _save_dispatch_log,
     dispatch_agent,
 )
+
+
+@pytest.fixture(autouse=True)
+def _isolate_usage_log(tmp_path):
+    """Ensure no test writes to the real batch_state/api_usage/ log."""
+    with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
+        yield
 
 # ---------------------------------------------------------------------------
 # Tool constants
