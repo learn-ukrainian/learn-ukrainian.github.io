@@ -190,8 +190,18 @@ def _save_dispatch_log(
     returncode: int | None = None,
     duration_s: float = 0.0,
     ok: bool = False,
+    prompt: str | None = None,
+    response: str | None = None,
+    call_start_time: datetime | None = None,
 ) -> None:
-    """Save dispatch metadata + stderr for debugging agent communications."""
+    """Save dispatch metadata + stderr for debugging agent communications.
+
+    If ``prompt`` and ``response`` are both provided (and the call was
+    successful), we also write a ``session-analysis-{phase}.yaml`` next
+    to the dispatch log with a prompt-size breakdown and directive
+    compliance report. This is best-effort — any failure is swallowed
+    so telemetry never breaks a build.
+    """
     log_dir = orch_dir / "dispatch"
     log_dir.mkdir(parents=True, exist_ok=True)
 
@@ -220,6 +230,38 @@ def _save_dispatch_log(
 
     stderr_info = f", stderr: {len(stderr)} chars" if stderr and stderr.strip() else ""
     _log(f"  📋 Dispatch log → dispatch/{base}-meta.json ({duration_s:.0f}s{stderr_info})")
+
+    # Best-effort post-dispatch session analysis (#1174). Only runs when
+    # the caller passed the actual prompt + response text, the call was
+    # successful, and the agent is Gemini (Codex/Claude session parsers
+    # may land later). Any failure is swallowed.
+    if ok and prompt and response and ("gemini" in agent.lower()):
+        try:
+            from build.session_analysis import build_report, write_report_yaml
+            report = build_report(
+                prompt, response, phase=phase,
+                session_path="",  # set below if we can resolve it
+            )
+            # Best-effort correlation to the on-disk Gemini session file.
+            if call_start_time is not None:
+                from build.gemini_session import find_session_near_time
+                matched = find_session_near_time(call_start_time)
+                if matched is not None:
+                    report.session_path = str(matched)
+            analysis_path = log_dir / f"{base}-session-analysis.yaml"
+            write_report_yaml(report, analysis_path)
+            if report.large_sections:
+                _log(
+                    f"  📊 Session analysis: large prompt sections {report.large_sections} "
+                    f"({report.directives_covered}/{report.directives_total} directives covered)"
+                )
+            else:
+                _log(
+                    f"  📊 Session analysis: "
+                    f"{report.directives_covered}/{report.directives_total} directives covered"
+                )
+        except Exception as exc:  # pragma: no cover — observability only
+            _log(f"  ⚠️  Session analysis skipped: {type(exc).__name__}: {exc}")
 
 
 # ---------------------------------------------------------------------------
@@ -326,6 +368,7 @@ def dispatch_agent(
 
     def _run_cmd(run_cmd, run_label, run_timeout):
         t0 = time.monotonic()
+        call_start = datetime.now().astimezone()
         output_path: str | None = None
         if is_codex:
             with tempfile.NamedTemporaryFile(
@@ -368,6 +411,9 @@ def dispatch_agent(
                 returncode=result.returncode,
                 duration_s=elapsed,
                 ok=ok,
+                prompt=prompt,
+                response=raw,
+                call_start_time=call_start,
             )
             return ok, raw
 
@@ -431,6 +477,7 @@ def _dispatch_claude_via_runtime(
         }
 
     t0 = time.monotonic()
+    call_start = datetime.now().astimezone()
     try:
         result = runtime_invoke(
             "claude",
@@ -464,6 +511,9 @@ def _dispatch_claude_via_runtime(
             returncode=result.returncode,
             duration_s=elapsed,
             ok=result.ok,
+            prompt=prompt,
+            response=result.response,
+            call_start_time=call_start,
         )
         return result.ok, result.response
     except RateLimitedError as exc:
@@ -534,6 +584,7 @@ def _dispatch_via_runtime(
     def _call_runtime(call_model: str, label: str, call_timeout: int) -> tuple[bool, str, str, float, int | None]:
         """One invocation. Returns (ok, response, stderr_excerpt, duration, returncode)."""
         t0 = time.monotonic()
+        call_start = datetime.now().astimezone()
         try:
             result = runtime_invoke(
                 "gemini" if is_gemini else "codex",
@@ -546,7 +597,11 @@ def _dispatch_via_runtime(
                 tool_config=tool_config,
                 entrypoint="dispatch",
                 hard_timeout=call_timeout,
-                stall_timeout=min(180, call_timeout),
+                # See 180→600 rationale in _dispatch_claude_via_runtime
+                # above. Same reasoning applies to Gemini (reasoning bursts
+                # silence stdout for 3-5 min) and Codex (-o file redirects
+                # all stdout, adapter liveness paths cover the gap).
+                stall_timeout=min(600, call_timeout),
             )
             elapsed = time.monotonic() - t0
             _save_dispatch_log(
@@ -557,6 +612,9 @@ def _dispatch_via_runtime(
                 returncode=result.returncode,
                 duration_s=elapsed,
                 ok=result.ok,
+                prompt=prompt,
+                response=result.response,
+                call_start_time=call_start,
             )
             return result.ok, result.response, result.stderr_excerpt or "", elapsed, result.returncode
         except RateLimitedError as exc:
@@ -600,30 +658,64 @@ def _dispatch_via_runtime(
             )
             return False, "", str(exc), elapsed, None
 
+    # Cap the first attempt so a single stalled call can't eat the entire
+    # budget and leave zero room for the cascade. For Gemini we use the
+    # shared cascade budget; Codex + Claude get the full timeout since
+    # they don't have a fallback chain to preserve budget for.
+    if is_gemini:
+        from batch_gemini_config import CASCADE_PER_CALL_MAX_S
+        first_call_timeout = min(CASCADE_PER_CALL_MAX_S, timeout)
+    else:
+        first_call_timeout = timeout
+
     # First attempt
-    ok, raw, _, elapsed1, _ = _call_runtime(model, agent_label, timeout)
+    ok, raw, _, elapsed1, _ = _call_runtime(model, agent_label, first_call_timeout)
     if ok:
         return True, raw
 
     # Short-circuit rate-limited: don't fall back, same quota
     if raw == "__RATE_LIMITED__":
-        _log("  ⏳ Rate limited — skipping fallback model (same quota)")
+        _log("  ⏳ Rate limited — skipping fallback cascade (same quota)")
         return False, "__RATE_LIMITED__"
 
-    # Gemini-only fallback to secondary model (Pro → Flash)
+    # Gemini-only: walk the fallback cascade
+    # (e.g. flash → pro → auto, or flash-lite → flash → pro → auto)
+    # Each step is capped at CASCADE_PER_CALL_MAX_S so no single call can
+    # starve the remaining budget for downstream attempts. We also require
+    # at least 30s of headroom before trying — a sub-30s attempt is useless.
     if is_gemini:
-        from batch_gemini_config import FALLBACK_MODEL
-        if model != FALLBACK_MODEL:
-            remaining_timeout = int(timeout - elapsed1)
-            if remaining_timeout > 0:
-                _pace_gemini_calls()
-                fallback_label = f"{agent} ({FALLBACK_MODEL})"
-                _log(f"  🔄 Retrying with fallback model: {fallback_label}")
-                ok2, raw2, _, _, _ = _call_runtime(FALLBACK_MODEL, fallback_label, remaining_timeout)
-                if raw2 == "__RATE_LIMITED__":
-                    return False, "__RATE_LIMITED__"
-                return ok2, raw2
-            else:
-                _log(f"  ⏳ No timeout remaining for fallback model (elapsed: {elapsed1:.0f}s)")
+        from batch_gemini_config import (
+            CASCADE_PER_CALL_MAX_S,
+            get_fallback_chain,
+        )
+        _MIN_ATTEMPT_S = 30
+        elapsed_total = elapsed1
+        for fallback_model in get_fallback_chain(model):
+            remaining_total = int(timeout - elapsed_total)
+            if remaining_total < _MIN_ATTEMPT_S:
+                _log(
+                    f"  ⏳ No budget left for {fallback_model} fallback "
+                    f"(elapsed: {elapsed_total:.0f}s of {timeout}s)"
+                )
+                break
+            step_timeout = min(CASCADE_PER_CALL_MAX_S, remaining_total)
+            _pace_gemini_calls()
+            fallback_label = f"{agent} ({fallback_model})"
+            _log(
+                f"  🔄 Cascade → {fallback_label} "
+                f"(step budget: {step_timeout}s, remaining: {remaining_total}s)"
+            )
+            ok2, raw2, _, elapsed_step, _ = _call_runtime(
+                fallback_model, fallback_label, step_timeout
+            )
+            elapsed_total += elapsed_step
+            if ok2:
+                return True, raw2
+            if raw2 == "__RATE_LIMITED__":
+                _log(
+                    f"  ⏳ {fallback_label} rate-limited — aborting cascade"
+                )
+                return False, "__RATE_LIMITED__"
+            # else: loop to next fallback
 
     return ok, raw

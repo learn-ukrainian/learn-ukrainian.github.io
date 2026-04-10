@@ -131,6 +131,81 @@ class TestSaveDispatchLog:
         assert len(stderr_files) == 1
         assert stderr_files[0].read_text() == ""
 
+    def test_session_analysis_emitted_for_successful_gemini_call(
+        self, tmp_path
+    ):
+        """When prompt+response are provided for a successful Gemini dispatch,
+        the post-dispatch hook should emit a session-analysis YAML next to
+        the meta.json. Covers the #1174 wiring end-to-end without touching
+        the Gemini CLI itself.
+        """
+        orch_dir = tmp_path / "orch" / "test-slug"
+        prompt = (
+            "# Section-by-Section Generation — Section 1/4\n"
+            "## Section Skeleton\n"
+            "- P1 (~100 words): [Nominative case review with examples]\n"
+            "<!-- INJECT_ACTIVITY: quiz, Case Drill, 8 items -->\n"
+            "## Full Plan\n"
+            + "plan content\n" * 20
+            + "## Knowledge Packet\n"
+            + "wiki\n" * 200
+            + "## Output\nWrite the section."
+        )
+        response = (
+            "## Cases\nThe Nominative case marks the subject of a sentence. "
+            "Here are examples with the Nominative.\n"
+            "<!-- INJECT_ACTIVITY: quiz, Case Drill, 8 items -->"
+        )
+        _save_dispatch_log(
+            orch_dir, "write", "gemini-tools (gemini-3.1-pro-preview)",
+            prompt_chars=len(prompt),
+            response_chars=len(response),
+            ok=True,
+            prompt=prompt,
+            response=response,
+        )
+        analysis_files = list(
+            (orch_dir / "dispatch").glob("*-session-analysis.yaml")
+        )
+        assert len(analysis_files) == 1
+        import yaml
+        data = yaml.safe_load(analysis_files[0].read_text())
+        assert data["phase"] == "write"
+        assert data["prompt_chars"] == len(prompt)
+        assert data["response_chars"] == len(response)
+        # Wiki should dominate this synthetic prompt
+        assert "wiki" in data["large_sections"]
+        # At least one directive was extracted (skeleton para + activity)
+        assert data["directives_total"] >= 2
+
+    def test_session_analysis_skipped_for_failed_call(self, tmp_path):
+        """A failed call must NOT emit a session-analysis file — the
+        response is unreliable and analysis would produce noise."""
+        orch_dir = tmp_path / "orch" / "test-slug"
+        _save_dispatch_log(
+            orch_dir, "write", "gemini-tools",
+            prompt_chars=100, response_chars=0, ok=False,
+            prompt="prompt text", response="",
+        )
+        analysis_files = list(
+            (orch_dir / "dispatch").glob("*-session-analysis.yaml")
+        )
+        assert analysis_files == []
+
+    def test_session_analysis_skipped_for_non_gemini_agent(self, tmp_path):
+        """Session analysis currently targets Gemini only — Codex/Claude
+        session formats are handled by separate adapters."""
+        orch_dir = tmp_path / "orch" / "test-slug"
+        _save_dispatch_log(
+            orch_dir, "write", "codex (gpt-5.4)",
+            prompt_chars=100, response_chars=100, ok=True,
+            prompt="## Plan\nsome plan content", response="some response",
+        )
+        analysis_files = list(
+            (orch_dir / "dispatch").glob("*-session-analysis.yaml")
+        )
+        assert analysis_files == []
+
 
 # ---------------------------------------------------------------------------
 # dispatch_agent integration (mocked subprocess)
