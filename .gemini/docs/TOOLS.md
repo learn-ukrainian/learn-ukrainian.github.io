@@ -8,13 +8,14 @@ These tools are available via MCP (in my native tool definitions). ALWAYS use th
 | `mcp_rag_verify_word` / `verify_words` | Check VESUM morphological dictionary (409K lemmas, 6.7M forms) for word existence, POS, and gender. | `verify_words(["книга", "великий"])` |
 | `mcp_rag_verify_lemma` | Get all inflected forms of a word. | `verify_lemma("книга")` |
 | `mcp_rag_query_pravopys` | Official Ukrainian orthography rules (Правопис 2019). | `query_pravopys("апостроф")` |
-| `mcp_rag_search_text` | Search Ukrainian school textbooks (1.2K+ chunks, Grades 1-11). | `search_text("знахідний відмінок", grade=3)` |
-| `mcp_rag_search_images` | Textbook image search (10K+ images). | `search_images("дієслово таблиця")` |
-| `mcp_rag_search_literary` | Primary literary sources (chronicles, poetry, legal texts). | `search_literary("Шевченко Заповіт")` |
-| `mcp_rag_query_grac` | Check word/phrase frequency (corpus data). | `query_grac("залюбки")` |
+| `mcp_rag_search_text` | Search Ukrainian school textbooks (23K+ chunks, Grades 1-11). | `search_text("знахідний відмінок", grade=3)` |
+| `mcp_rag_search_images` | Textbook image search (14K+ images). | `search_images("дієслово таблиця")` |
+| `mcp_rag_search_literary` | Primary literary sources (125K chunks — chronicles, poetry, legal texts). | `search_literary("Шевченко Заповіт")` |
 | `mcp_rag_query_wikipedia` | Ukrainian Wikipedia (modes: summary, full, search, sections, links). | `query_wikipedia("Данило Галицький", mode="summary")` |
 | `mcp_rag_query_r2u` | Russian-Ukrainian dictionary (for finding Ukrainian equivalents). | `query_r2u("красивый")` |
 | `mcp_rag_query_ulif` | ULIF linguistic dictionary. | `query_ulif("наголос")` |
+
+**Forbidden during write/review (April 2026):** `mcp_rag_query_grac`. Previously used for corpus frequency but causes tool-call loops that stall the pipeline. For frequency-like signals, use `mcp_rag_search_text` over the textbook corpus (hit counts are a rough proxy) or external resources like goroh.pp.ua.
 
 ## Specialized Dictionaries (for quality and vocabulary)
 - `mcp_rag_search_style_guide` — Антоненко-Давидович (279 entries) — **calques and Russianisms**. HIGH PRIORITY.
@@ -31,7 +32,7 @@ These tools are available via MCP (in my native tool definitions). ALWAYS use th
 | **Monitor API** | `http://localhost:8765` — FastAPI server with 30+ endpoints. **Use this first, not grep.** Full docs: `docs/MONITOR-API.md` |
 | **Module dashboard** | `scripts/module_dashboard.py` — aggregated module health (also available via API) |
 | **Audit system** | `scripts/audit_module.py` — deterministic quality gates |
-| **Build pipeline v6** | `scripts/build/v6_build.py` — research → discover → content → validate → activities → review → mdx |
+| **Build pipeline v6** | `scripts/build/v6_build.py` — phases: check → research → skeleton → pre-verify → write → exercises → activities → repair → verify-exercises → annotate → vocab → enrich → verify → review → stress → publish → audit |
 
 ### Monitor API — Key Endpoints
 **Session start:**

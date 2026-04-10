@@ -19,8 +19,11 @@
 
 ## Pipeline (v6)
 ```
-research → discover → content → validate → activities → review → annotate → mdx
+check → research → skeleton → pre-verify → write → exercises → activities → repair →
+verify-exercises → annotate → vocab → enrich → verify → review → stress → publish → audit
 ```
+
+Single entry point: `.venv/bin/python scripts/build/v6_build.py {level} {num}`. Resume any phase with `--step {phase} --resume`. Cross-agent review is mandatory: Gemini writes, Claude reviews. Same LLM cannot write and review the same module (audit gate `SELF_REVIEW_DETECTED` blocks it).
 
 ## Decision Framework: Diagnose before fixing
 ```
