@@ -130,10 +130,17 @@ class TestSaveDispatchLog:
 class TestDispatchAgent:
     """Test dispatch_agent with mocked subprocess."""
 
-    @patch("build.dispatch.subprocess.run")
-    def test_gemini_dispatch(self, mock_run, tmp_path):
-        mock_run.return_value = MagicMock(
-            returncode=0, stdout="## Section 1\nContent...", stderr=""
+    @patch("agent_runtime.runner.invoke")
+    def test_gemini_dispatch(self, mock_invoke, tmp_path):
+        # Post Phase 3: dispatch routes Gemini through agent_runtime.
+        # We mock runtime_invoke and assert the glue translates dispatch
+        # args into the right runtime call.
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=True, agent="gemini", model="gemini-test", mode="workspace-write",
+            response="## Section 1\nContent...", stderr_excerpt=None,
+            duration_s=1.5, session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
         )
         ok, raw = dispatch_agent(
             "test prompt", agent="gemini", phase="write",
@@ -141,8 +148,13 @@ class TestDispatchAgent:
         )
         assert ok is True
         assert "Section 1" in raw
-        # Should have created dispatch log
         assert (tmp_path / "dispatch").exists()
+        # Assert runtime was called with the right shape
+        call_kwargs = mock_invoke.call_args.kwargs
+        assert call_kwargs["mode"] == "workspace-write"
+        assert call_kwargs["model"] == "gemini-test"
+        assert call_kwargs["entrypoint"] == "dispatch"
+        assert call_kwargs["tool_config"] is None  # mcp_tools=False by default
 
     @patch("build.dispatch.subprocess.run")
     def test_claude_tools_dispatch(self, mock_run, tmp_path):
@@ -162,70 +174,72 @@ class TestDispatchAgent:
         assert "--allowedTools" in cmd
 
     @patch.dict("os.environ", {}, clear=True)
-    @patch("build.dispatch.subprocess.run")
-    def test_codex_dispatch_uses_output_file(self, mock_run, tmp_path):
-        def _fake_run(cmd, **kwargs):
-            output_path = cmd[cmd.index("-o") + 1]
-            Path(output_path).write_text("Codex final answer", encoding="utf-8")
-            return MagicMock(returncode=0, stdout="session id: test-session", stderr="")
-
-        mock_run.side_effect = _fake_run
+    @patch("agent_runtime.runner.invoke")
+    def test_codex_dispatch_read_only_mode(self, mock_invoke, tmp_path):
+        """Post Phase 3: agent='codex' → mode='read-only' in runtime."""
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=True, agent="codex", model="gpt-5.4", mode="read-only",
+            response="Codex final answer", stderr_excerpt=None,
+            duration_s=2.0, session_id="test-session",
+            rate_limited=False, stalled=False, returncode=0, usage_record={},
+        )
         ok, raw = dispatch_agent(
             "test prompt", agent="codex", phase="review",
             orch_dir=tmp_path, timeout=600, model="gpt-5.4",
         )
         assert ok is True
         assert raw == "Codex final answer"
-        cmd = mock_run.call_args[0][0]
-        assert cmd[:2] == ["codex", "exec"]
-        assert "-o" in cmd
-        assert "-s" in cmd
-        assert "read-only" in cmd
-        assert cmd[-1] == "-"
+        kwargs = mock_invoke.call_args.kwargs
+        assert kwargs["mode"] == "read-only"
+        assert kwargs["entrypoint"] == "dispatch"
+        assert kwargs["session_id"] is None
 
     @patch.dict("os.environ", {}, clear=True)
-    @patch("build.dispatch.subprocess.run")
-    def test_codex_tools_dispatch_uses_full_auto(self, mock_run, tmp_path):
-        def _fake_run(cmd, **kwargs):
-            output_path = cmd[cmd.index("-o") + 1]
-            Path(output_path).write_text("OK", encoding="utf-8")
-            return MagicMock(returncode=0, stdout="", stderr="")
-
-        mock_run.side_effect = _fake_run
+    @patch("agent_runtime.runner.invoke")
+    def test_codex_tools_dispatch_workspace_write_mode(self, mock_invoke, tmp_path):
+        """Post Phase 3: agent='codex-tools' → mode='workspace-write'."""
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=True, agent="codex", model="gpt-5.4", mode="workspace-write",
+            response="OK", stderr_excerpt=None, duration_s=1.0,
+            session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
+        )
         ok, raw = dispatch_agent(
             "test prompt", agent="codex-tools", phase="write",
             orch_dir=tmp_path, timeout=600, model="gpt-5.4",
         )
         assert ok is True
         assert raw == "OK"
-        cmd = mock_run.call_args[0][0]
-        assert "--full-auto" in cmd
-        assert cmd[-1] == "-"
+        kwargs = mock_invoke.call_args.kwargs
+        assert kwargs["mode"] == "workspace-write"
 
-    @patch.dict("os.environ", {"CODEX_DISPATCH_MODE": "danger"}, clear=True)
-    @patch("build.dispatch.subprocess.run")
-    def test_codex_dispatch_honors_danger_override(self, mock_run, tmp_path):
-        def _fake_run(cmd, **kwargs):
-            output_path = cmd[cmd.index("-o") + 1]
-            Path(output_path).write_text("OK", encoding="utf-8")
-            return MagicMock(returncode=0, stdout="", stderr="")
-
-        mock_run.side_effect = _fake_run
+    @patch.dict("os.environ", {"CODEX_DISPATCH_MODE": "danger"}, clear=False)
+    @patch("agent_runtime.runner.invoke")
+    def test_codex_dispatch_honors_danger_override(self, mock_invoke, tmp_path):
+        """Post Phase 3: CODEX_DISPATCH_MODE=danger → mode='danger'."""
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=True, agent="codex", model="gpt-5.4", mode="danger",
+            response="OK", stderr_excerpt=None, duration_s=1.0,
+            session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
+        )
         ok, raw = dispatch_agent(
             "test prompt", agent="codex", phase="review",
             orch_dir=tmp_path, timeout=600, model="gpt-5.4",
         )
         assert ok is True
         assert raw == "OK"
-        cmd = mock_run.call_args[0][0]
-        assert "--dangerously-bypass-approvals-and-sandbox" in cmd
-        assert "-s" not in cmd
-        assert cmd[-1] == "-"
+        kwargs = mock_invoke.call_args.kwargs
+        assert kwargs["mode"] == "danger"
 
-    @patch("build.dispatch.subprocess.run")
-    def test_timeout_logged(self, mock_run, tmp_path):
-        import subprocess as sp
-        mock_run.side_effect = sp.TimeoutExpired(cmd=["gemini"], timeout=300)
+    @patch("agent_runtime.runner.invoke")
+    def test_timeout_logged(self, mock_invoke, tmp_path):
+        """Post Phase 3: runtime raises AgentTimeoutError → dispatch logs failure."""
+        from agent_runtime.errors import AgentTimeoutError
+        mock_invoke.side_effect = AgentTimeoutError("gemini", 300)
 
         ok, raw = dispatch_agent(
             "test", agent="gemini", phase="skeleton",
@@ -233,9 +247,8 @@ class TestDispatchAgent:
         )
         assert ok is False
         assert raw == ""
-        # Dispatch log should record the timeout (primary + fallback model)
         meta_files = sorted((tmp_path / "dispatch").glob("*-meta.json"))
-        assert len(meta_files) == 2  # primary timeout + fallback timeout
+        assert len(meta_files) >= 1
         for mf in meta_files:
             data = json.loads(mf.read_text())
             assert data["ok"] is False

@@ -93,6 +93,21 @@ def _codex_dispatch_flags(agent: str) -> list[str]:
         return ["--full-auto"]
     return ["-s", "read-only"]
 
+
+def _codex_runtime_mode(agent: str) -> str:
+    """Translate dispatch's Codex mode vocabulary to runtime vocabulary.
+
+    Dispatch uses: safe, workspace-write, full-auto, danger.
+    Runtime uses:  read-only, workspace-write, danger.
+    This bridges the two during the Phase 3 migration.
+    """
+    dispatch_mode = _codex_dispatch_mode(agent)
+    if dispatch_mode == "danger":
+        return "danger"
+    if dispatch_mode == "workspace-write":
+        return "workspace-write"
+    return "read-only"  # "safe" → "read-only"
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
@@ -237,6 +252,10 @@ def dispatch_agent(
 
     Returns:
         (success, stdout_text)
+
+    Migration note: Codex and Gemini branches are routed through
+    ``scripts.agent_runtime.runner.invoke()`` (Phase 3 of #1184).
+    Claude branch remains on the legacy subprocess path until Phase 5.
     """
     is_gemini = agent.startswith("gemini")
     is_claude = agent.startswith("claude")
@@ -260,25 +279,23 @@ def dispatch_agent(
     agent_label = f"{agent} ({model})"
     _log(f"  Dispatching to {agent_label}...")
 
-    # Build command
-    if is_gemini:
-        cmd = ["gemini", "-m", model, "-y"]
-        if mcp_tools:
-            cmd.extend(["--allowed-mcp-server-names", "rag"])
-    elif is_codex:
-        cmd = [
-            "codex",
-            "exec",
-            "--skip-git-repo-check",
-            "-C",
-            str(PROJECT_ROOT),
-            "--color",
-            "never",
-            "-m",
-            model,
-        ]
-        cmd.extend(_codex_dispatch_flags(agent))
-        cmd.append("-")  # Explicit stdin prompt mode
+    # ---------- Codex + Gemini routed through agent_runtime (Phase 3) ----------
+    if is_codex or is_gemini:
+        return _dispatch_via_runtime(
+            prompt=prompt,
+            agent=agent,
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=timeout,
+            mcp_tools=mcp_tools,
+            model=model,
+            agent_label=agent_label,
+            is_gemini=is_gemini,
+        )
+
+    # ---------- Claude still uses the legacy path (Phase 5 will migrate) ----------
+    if False:  # pragma: no cover — structural placeholder
+        pass
     else:
         mcp_config = str(PROJECT_ROOT / ".mcp.json")
         cmd = [
@@ -360,34 +377,142 @@ def dispatch_agent(
             if output_path:
                 Path(output_path).unlink(missing_ok=True)
 
-    # Pace Gemini calls to avoid burst-induced rate limits
-    if is_gemini:
-        _pace_gemini_calls()
-
     ok, raw = _run_cmd(cmd, agent_label, timeout)
+    return ok, raw
 
-    # Gemini fallback: if Pro failed, retry with -m auto
-    # BUT skip fallback if rate-limited — same quota, different model won't help
-    if not ok and is_gemini:
-        # Check if this was a rate limit error
-        log_dir = orch_dir / "dispatch"
-        latest_stderr = ""
-        if log_dir.exists():
-            stderr_files = sorted(log_dir.glob(f"*-{phase}-*.stderr.log"), reverse=True)
-            if stderr_files:
-                latest_stderr = stderr_files[0].read_text()
 
-        if _is_rate_limited(latest_stderr):
-            _log("  ⏳ Rate limited — skipping fallback model (same quota)")
-            # Signal rate limit to caller via empty string with special marker
-            return False, "__RATE_LIMITED__"
+def _dispatch_via_runtime(
+    *,
+    prompt: str,
+    agent: str,
+    phase: str,
+    orch_dir: Path,
+    timeout: int,
+    mcp_tools: bool,
+    model: str,
+    agent_label: str,
+    is_gemini: bool,
+) -> tuple[bool, str]:
+    """Route Codex + Gemini dispatch through scripts.agent_runtime.runner.invoke().
 
+    Preserves the legacy behavior the pipeline depends on:
+    - Pacing between Gemini calls to prevent burst-induced rate limits
+    - Model fallback (Pro → Flash) on non-rate-limited failure
+    - __RATE_LIMITED__ sentinel in the return value for rate-limited calls
+    - Writes to orchestration/{slug}/dispatch/ via _save_dispatch_log
+      (this is PIPELINE observability, separate from the runtime's
+      batch_state/api_usage/ records — both logs are written)
+    """
+    from agent_runtime.errors import (
+        AgentStalledError,
+        AgentTimeoutError,
+        RateLimitedError,
+    )
+    from agent_runtime.runner import invoke as runtime_invoke
+
+    # Determine mode + tool_config based on legacy agent name
+    if is_gemini:
+        # Gemini in the pipeline is always -y (write-enabled) — existing behavior.
+        runtime_mode = "workspace-write"
+        tool_config: dict | None = None
+        if mcp_tools:
+            tool_config = {"mcp_server_names": ["rag"]}
+        # Pace Gemini calls (preserved from legacy path)
+        _pace_gemini_calls()
+    else:
+        # Codex
+        runtime_mode = _codex_runtime_mode(agent)
+        tool_config = None  # Codex has no MCP tool restrictions
+
+    def _call_runtime(call_model: str, label: str) -> tuple[bool, str, str, float, int | None]:
+        """One invocation. Returns (ok, response, stderr_excerpt, duration, returncode)."""
+        t0 = time.monotonic()
+        try:
+            result = runtime_invoke(
+                "gemini" if is_gemini else "codex",
+                prompt,
+                mode=runtime_mode,
+                cwd=PROJECT_ROOT,
+                model=call_model,
+                task_id=f"{phase}-{orch_dir.name}" if orch_dir else phase,
+                session_id=None,  # dispatch never uses resume
+                tool_config=tool_config,
+                entrypoint="dispatch",
+                hard_timeout=timeout,
+                stall_timeout=min(180, timeout),
+            )
+            elapsed = time.monotonic() - t0
+            _save_dispatch_log(
+                orch_dir, phase, label,
+                prompt_chars=len(prompt),
+                response_chars=len(result.response),
+                stderr=result.stderr_excerpt or "",
+                returncode=result.returncode,
+                duration_s=elapsed,
+                ok=result.ok,
+            )
+            return result.ok, result.response, result.stderr_excerpt or "", elapsed, result.returncode
+        except RateLimitedError as exc:
+            elapsed = time.monotonic() - t0
+            _log(f"  ⏳ {label} rate limited: {exc}")
+            _save_dispatch_log(
+                orch_dir, phase, label,
+                prompt_chars=len(prompt),
+                response_chars=0,
+                stderr=f"RateLimitedError: {exc}",
+                returncode=None,
+                duration_s=elapsed,
+                ok=False,
+            )
+            # Use a special return tuple to signal rate limiting upstream.
+            return False, "__RATE_LIMITED__", str(exc), elapsed, None
+        except AgentStalledError as exc:
+            elapsed = time.monotonic() - t0
+            _log(f"  ❌ {label} stalled: {exc}")
+            _save_dispatch_log(
+                orch_dir, phase, label,
+                prompt_chars=len(prompt),
+                response_chars=0,
+                stderr=f"AgentStalledError: {exc}",
+                returncode=None,
+                duration_s=elapsed,
+                ok=False,
+            )
+            return False, "", str(exc), elapsed, None
+        except AgentTimeoutError as exc:
+            elapsed = time.monotonic() - t0
+            _log(f"  ❌ {label} hard timeout: {exc}")
+            _save_dispatch_log(
+                orch_dir, phase, label,
+                prompt_chars=len(prompt),
+                response_chars=0,
+                stderr=f"AgentTimeoutError: {exc}",
+                returncode=None,
+                duration_s=elapsed,
+                ok=False,
+            )
+            return False, "", str(exc), elapsed, None
+
+    # First attempt
+    ok, raw, _, _, _ = _call_runtime(model, agent_label)
+    if ok:
+        return True, raw
+
+    # Short-circuit rate-limited: don't fall back, same quota
+    if raw == "__RATE_LIMITED__":
+        _log("  ⏳ Rate limited — skipping fallback model (same quota)")
+        return False, "__RATE_LIMITED__"
+
+    # Gemini-only fallback to secondary model (Pro → Flash)
+    if is_gemini:
         from batch_gemini_config import FALLBACK_MODEL
         if model != FALLBACK_MODEL:
             _pace_gemini_calls()
-            fallback_cmd = [c if c != model else FALLBACK_MODEL for c in cmd]
             fallback_label = f"{agent} ({FALLBACK_MODEL})"
             _log(f"  🔄 Retrying with fallback model: {fallback_label}")
-            ok, raw = _run_cmd(fallback_cmd, fallback_label, timeout)
+            ok2, raw2, _, _, _ = _call_runtime(FALLBACK_MODEL, fallback_label)
+            if raw2 == "__RATE_LIMITED__":
+                return False, "__RATE_LIMITED__"
+            return ok2, raw2
 
     return ok, raw
