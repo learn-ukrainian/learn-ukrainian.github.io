@@ -81,7 +81,7 @@ To make our sentences more natural and descriptive, we very often add adjectives
 
 <!-- INJECT_ACTIVITY: true-false-workday -->
 
-## Практика: Розкажи про себе (Practice: Tell About Yourself)
+## Підсумок — Практика: Розкажи про себе (Summary — Practice: Tell About Yourself)
 
 Зараз ми об'єднаємо всі наші знання про орудний відмінок. *(Now we will combine all our knowledge about the Instrumental case.)* Спробуйте написати коротку розповідь про себе, свою професію та інтереси. *(Try to write a short story about yourself, your profession, and interests.)* Your profile should be about eight to ten sentences long. Почніть з опису вашої роботи: **«Я працюю...»** (I work as...). *(Start with a description of your work: "I work as...".)* Далі розкажіть про ваше хобі: **«У вільний час я цікавлюся...»** (In my free time I am interested in...). *(Next, tell about your hobby: "In my free time I am interested in...".)* Не забудьте описати вашу улюблену страву: **«Я люблю салат з...»** (I love salad with...). *(Don't forget to describe your favorite dish: "I love salad with...".)* Наприкінці опишіть ваш типовий маршрут: **«Вранці я їду на роботу...»** (In the morning I go to work by...). *(At the end, describe your typical route: "In the morning I go to work by...".)* When writing, always check the gender of the noun. Remember that masculine and neuter nouns take the ending **-ом** or **-ем**, while feminine nouns take **-ою** or **-ею**. Уважно перевіряйте закінчення прикметників: **«з моїм новим колегою»** (with my new colleague) або **«з моєю новою колегою»** (with my new [female] colleague). *(Carefully check the endings of adjectives: "with my new colleague" or "with my new [female] colleague".)*
 

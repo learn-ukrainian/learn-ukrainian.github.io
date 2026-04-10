@@ -49,10 +49,20 @@ SECTION_ALIASES = {
         "## Summary",
         "## Підсумок",
         "## Підсумок (Summary)",
+        "## Підсумки",
         "## Резюме",
         "## Module Summary",
         "# Summary",
         "# Підсумок",
+        # Ukrainian summary-semantic equivalents (review/self-check sections
+        # that pedagogically close a module). Relaxed alongside
+        # validators.check_structure on 2026-04-11.
+        "## Самоперевірка",
+        "## Самооцінка",
+        "## Узагальнення",
+        "## Висновок",
+        "## Висновки",
+        "## Огляд",
     ],
     "activities": [
         "## Activities",

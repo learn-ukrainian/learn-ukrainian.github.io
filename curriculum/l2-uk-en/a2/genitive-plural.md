@@ -167,7 +167,7 @@ Finally, pay attention to the word **чоловік** *(man/person)*. It has par
 <!-- INJECT_ACTIVITY: fill-in-genitive-plural -->
 <!-- INJECT_ACTIVITY: quiz-ending-choice -->
 
-## Середній рід та узагальнення *(Neuter Gender and Summary)*
+## Середній рід та узагальнення (Neuter and Summary)
 
 Середній рід часто поводиться як жіночий. *(The neuter gender often behaves like the feminine.)* When we look at standard neuter nouns ending in **-о**, they follow the exact same logic as hard-stem feminine nouns. They simply drop the final vowel to form a clean zero ending. Sometimes the root vowel **о** inside the word changes to **і** in closed syllables, just as we saw earlier with some feminine words. 
 

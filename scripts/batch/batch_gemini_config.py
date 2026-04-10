@@ -41,6 +41,18 @@ TIMEOUT_PRE_VERIFY = 600
 TIMEOUT_ANNOTATE = 600
 TIMEOUT_PUBLISH = 600
 
+# Per-call cap inside the cascade fallback loop. The dispatcher chains
+# model fallbacks (pro → auto) and retries; each individual subprocess
+# call is capped here so no single hung gemini-cli can eat the whole
+# step timeout. If a call hits this cap, the session-file recovery in
+# the Gemini adapter (runner.py → gemini.py) still tries to salvage
+# partial output from ~/.gemini/tmp/<project>/chats/session-*.json
+# before the dispatcher falls back to the next model.
+#
+# 600s matches the slowest observed successful Pro call (~9 min) plus
+# headroom, without blowing through the overall step budget.
+CASCADE_PER_CALL_MAX_S = 600
+
 # Model Tiering — Claude (used by build_module_v5.py --use-claude phases)
 # Change these to switch models across the entire pipeline without touching CLI flags.
 # Research:      seminar tracks → Opus, core tracks → Sonnet

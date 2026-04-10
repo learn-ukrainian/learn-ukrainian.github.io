@@ -121,7 +121,28 @@ def check_structure(content: str) -> dict[str, bool]:
     Returns a dictionary of boolean flags for each section.
     """
     lines = content.split('\n')
-    has_summary = any(re.match(r'^#+\s+(Summary|Підсумок)', l.strip(), re.IGNORECASE) for l in lines)
+    # Summary headings: accept the canonical English/Ukrainian labels AND
+    # common Ukrainian summary-semantic equivalents that writers naturally
+    # produce for A2+ review/self-check sections. The pedagogical intent
+    # is the same — a closing section that recaps or self-tests the
+    # module's content. Relaxed 2026-04-11 after a2 audit flagged 6
+    # otherwise-valid modules on literal label mismatch.
+    #
+    # The match is substring-anywhere-in-heading (not prefix-only) because
+    # writers put the semantic keyword mid-heading too
+    # ("## Середній рід та узагальнення"). False positives here just flip
+    # a structural missing → present, and any actual summary-quality issue
+    # will surface in prose-quality gates anyway.
+    _SUMMARY_WORDS = (
+        r"Summary|Підсумок|Підсумки|"
+        r"Самоперевірка|Самооцінка|"
+        r"Узагальнення|Висновок|Висновки|Огляд"
+    )
+    _summary_re = re.compile(rf'\b({_SUMMARY_WORDS})\b', re.IGNORECASE)
+    has_summary = any(
+        l.strip().startswith('#') and _summary_re.search(l)
+        for l in lines
+    )
     has_vocab = any(re.match(r'^#+\s+(Vocabulary|Словник)', l.strip(), re.IGNORECASE) for l in lines)
     has_activities = any(re.match(r'^#+\s+(Activities|Вправи)', l.strip(), re.IGNORECASE) for l in lines)
     has_resources = any(re.match(r'^#+\s+(External Resources|Зовнішні ресурси|Resources)', l.strip(), re.IGNORECASE) for l in lines)

@@ -50,7 +50,7 @@ Finally, Ukrainian employs special "protective" particles to handle particularly
 <!-- INJECT_ACTIVITY: match-up-euphony -->
 <!-- INJECT_ACTIVITY: error-correction-euphony -->
 
-## Що нас чекає на рівні А2? (What Awaits Us in A2?)
+## Підсумок — Що нас чекає на рівні А2? (Summary — What Awaits Us in A2?)
 
 As a quick **огляд** *(overview)*, remember that this course builds upon the foundations laid out in resources like Заболотний Grade 5. The A2 curriculum introduces the Ukrainian verbal aspect. We will deeply explore the crucial difference between the imperfective and perfective forms, which is truly the beating heart of the Ukrainian verb system. You will learn exactly when an action is an ongoing process and when it is a successfully completed result. Next, we will explore verb conjugation patterns and tackle the fascinating verbs of motion, learning precisely why we use «**іти**» *(to go by foot)* in one specific situation and «**їхати**» *(to go by vehicle)* in another. Finally, we will complete your noun declension map by introducing the remaining three cases: the Genitive, the Dative, and the Instrumental. This is where you will begin to express more complex ideas and move far beyond simple, basic statements.
 

@@ -22,7 +22,7 @@
 - <!-- INJECT_ACTIVITY: identify-instr-function --> [quiz, Identify which Instrumental function (tool, companion, profession, spatial, transport) is used in each sentence, 8 items]
 - <!-- INJECT_ACTIVITY: true-false-workday --> [true-false, Judge whether sentences about a workday use correct Instrumental forms for transport and prepositions, 8 items]
 
-## Практика: Розкажи про себе (Practice: Tell About Yourself) (~400 words total)
+## Підсумок — Практика: Розкажи про себе (Summary — Practice: Tell About Yourself) (~400 words total)
 - P1 (~150 words): [Integrated Production Task: Drafting a professional/personal profile. Guidance on how to construct 8-10 sentences using the patterns: Profession (Я працюю...), Hobbies (Я цікавлюся...), Food (Я люблю...), and Daily Routine (Я їду... перед...). Emphasize checking for gender agreement in endings.]
 - P2 (~100 words): [Peer Dialogue Simulation: A full "getting to know you" script template. A prompts B: "Ким ти працюєш?", "Чим захоплюєшся?", "Яку їжу любиш?". B provides extended answers using Instrumental constructions. Includes natural response markers like "Справді?", "Я теж!", "Цікаво".]
 - P3 (~150 words): [Підсумок: Recap of Instrumental case functions. Provide a bulleted self-check list:

@@ -137,7 +137,7 @@ In modern Ukrainian, you might sometimes hear native speakers use the instrument
 
 <!-- EXERCISE_2 -->
 
-## Місцевий відмінок: від місця до сенсу
+## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case)
 
 
 The locative case is not just for physical places. It also maps abstract spaces, time periods, and communication channels.

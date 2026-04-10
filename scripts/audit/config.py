@@ -1526,7 +1526,11 @@ AI_CONTAMINATION_PATTERNS = [
     r"\bDraft:\b",
     r"\bCheck this\b",
     r"\bI made a mistake\b",
-    r"\bSelf-correction\b",
+    # Only flag "Self-correction:" / "Self-correction -" — the AI-thinking
+    # label form. The bare phrase "strategy for self-correction" is a
+    # legitimate pedagogical concept and used to false-positive against
+    # A2 review modules that teach self-correction as a study skill.
+    r"\bSelf-correction\s*[:\-]",
     r"\bApologies\b",
     r"\bSorry,\b",
     r"\bAs an AI\b",

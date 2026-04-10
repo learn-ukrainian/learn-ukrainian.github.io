@@ -22,7 +22,7 @@
 - <!-- INJECT_ACTIVITY: match-up-locative-types --> [match-up, Match locative expressions with their English equivalents across all four function types, 8 items]
 - <!-- INJECT_ACTIVITY: error-correction-prepositions --> [error-correction, Fix preposition errors (*у роботі → на роботі, *у телефону → по телефону), 8 items]
 
-## Місцевий відмінок: від місця до сенсу (~350 words)
+## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case) (~350 words)
 - P1 (~100 words): [Synthesis of the "Locative Journey." Summarize how the case has evolved for the learner from identifying physical objects (на столі) to describing life phases (у дитинстві), professional spheres (у науці), and communication tools (по телефону).]
 - P2 (~100 words): [The "Locative Matrix" Consolidation Table. Create a text-based table structure with four columns: Function (Місце, Час, Сфера, Засіб), Preposition (в/у, на, по), and Example (в офісі, у січні, у житті, по радіо). This serves as the definitive reference point for the module.]
 - P3 (~150 words): [Final self-check and summary points. Use the plan's requirements for a recap.

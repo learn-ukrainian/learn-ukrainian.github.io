@@ -81,12 +81,21 @@ def _lint_activity_structure(lines_raw: list[str]) -> list[str]:
 def _lint_line_patterns(lines_raw: list[str], module_num: int) -> list[str]:
     """Check per-line format patterns: callouts, checkboxes, audio, headers, transliteration."""
     lint_errors = []
+    in_activities = False  # Only flag old **Answer:** format inside Activities sections —
+                            # Summary / self-check sections legitimately use `*   **Answer:**`
+                            # as prose-level Q&A lists.
 
     for i, line in enumerate(lines_raw):
         line_num = i + 1
         stripped = line.strip()
 
-        if "**Answer:**" in stripped or "**Option:**" in stripped:
+        if re.match(r'^#{1,2}\s+(Activities|Вправи)', stripped, re.IGNORECASE):
+            in_activities = True
+        # Any other H1/H2 heading leaves the Activities section.
+        elif re.match(r'^#{1,2}\s+\S', stripped):
+            in_activities = False
+
+        if in_activities and ("**Answer:**" in stripped or "**Option:**" in stripped):
             lint_errors.append(f"Line {line_num}: Old format detected. Use '> [!answer]'.")
 
         if '> [!explanation]' in stripped and '[!answer]' in stripped:
