@@ -5978,13 +5978,17 @@ def main():
                     # them; regen with the current prompt should clear it.
                     if "INLINE_ENGLISH_IN_PROSE" in _lesson_msg:
                         _inline_english_gate_failed = True
-                # Immersion gate — Ukrainian % below the level target.
-                # Root cause is almost always the same as inline-English:
-                # too much English explanation in the prose body. Re-run
-                # the chunked writer with the paragraph-language rule.
-                _immersion_g = _gates.get("immersion", {})
-                if isinstance(_immersion_g, dict) and _immersion_g.get("status") == "fail":
-                    _immersion_gate_failed = True
+                    # Immersion — Ukrainian % below the level target. It
+                    # reports as a sub-signal of the LESSON gate message
+                    # ("immersion: 13.4% LOW (target 20-40% (M35))"), not
+                    # as a standalone gate, so we parse it from the lesson
+                    # message when the lesson gate is failing.
+                    if (
+                        _lesson_status == "fail"
+                        and "immersion" in _lesson_msg.lower()
+                        and "LOW" in _lesson_msg
+                    ):
+                        _immersion_gate_failed = True
             except Exception as e:
                 _log(f"  ⚠️  Could not parse status file for heal check: {e}")
 
