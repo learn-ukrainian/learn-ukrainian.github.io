@@ -63,12 +63,17 @@ exclude = [
     "starlight/",
     "node_modules/",
 ]
-# Gradual adoption: start with core files only
+# Gradual adoption: target active v6 entry points and shared runtime modules.
 files = [
-    "scripts/pipeline_v5.py",
-    "scripts/pipeline_lib.py",
-    "scripts/build_module_v5.py",
+    "scripts/build/v6_build.py",
+    "scripts/build/dispatch.py",
+    "scripts/build/enrich.py",
+    "scripts/build/activity_repair.py",
+    "scripts/build/activity_validator.py",
     "scripts/audit/core.py",
+    "scripts/api/main.py",
+    "scripts/api/state_helpers.py",
+    "scripts/agent_runtime",
 ]
 
 [tool.coverage.run]
@@ -77,5 +82,6 @@ omit = []
 
 [tool.coverage.report]
 show_missing = true
+skip_covered = false
 skip_empty = true
 fail_under = 0  # Start with baseline, increase over time
