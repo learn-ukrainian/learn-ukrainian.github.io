@@ -2,6 +2,9 @@
 
 > **Scope:** How Claude, Gemini, and Codex work together without degrading each other's output quality.
 > Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
+>
+> **Runtime layer:** All agent CLI invocations route through `scripts/agent_runtime/`.
+> If you're touching an agent subprocess, read [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) first.
 
 ---
 
@@ -46,6 +49,20 @@ All substantive discussion happens on GitHub where it is persistent and searchab
 | **Broker messages** | Short notifications pointing to GitHub | <200 chars |
 
 **Never put full reviews or code in broker messages.** Post on GitHub, then ping with "review posted on #559."
+
+### Runtime layer — single source of truth for agent CLI calls
+
+As of #1184 (April 2026), all three agents (Claude, Gemini, Codex) are
+invoked through `scripts/agent_runtime/runner.invoke()`. This applies to:
+
+- `scripts/ai_agent_bridge/` — bridge messaging (`ask-gemini`, `ask-codex`, `process-claude`, etc.)
+- `scripts/build/dispatch.py` — pipeline phase dispatch (`skeleton`, `write`, `review`, etc.)
+- `scripts/delegate.py` (future) — ad-hoc coding task delegation
+- `scripts/consult.py` (future) — multi-agent consultation
+
+**If you find yourself writing `subprocess.Popen([... "claude", ...])` or similar — stop.** Use `runner.invoke()`. The runtime owns stall detection, usage logging, rate-limit headroom checks, mode validation, and resume-policy enforcement uniformly across all agents.
+
+Full guide: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 
 ### Direct dispatch (ask-gemini / ask-codex)
 For requests needing immediate response:

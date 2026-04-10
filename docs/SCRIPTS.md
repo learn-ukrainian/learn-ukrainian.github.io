@@ -2072,6 +2072,8 @@ npm run sync:landing:dry      # Preview changes without applying
 
 ### Agent Bridge CLI
 
+> **Architecture note:** As of #1184 (April 2026), all bridge commands route through the unified **agent runtime** at `scripts/agent_runtime/`. Adding a new agent = one new adapter file + one registry entry. See [`docs/agent-runtime-guide.md`](agent-runtime-guide.md) for the runtime design.
+
 ```bash
 # Check inbox for Gemini by default
 .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
