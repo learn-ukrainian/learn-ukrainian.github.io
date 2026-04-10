@@ -522,10 +522,24 @@ def invoke(
         )
 
     finally:
-        # Ensure watchdog threads are signaled to stop even on exception.
-        # Pass proc so the stdout streamer gets unblocked via pipe close
-        # (see stop_watchdog docstring). proc may be None if Popen itself
-        # raised — handled safely by stop_watchdog.
+        # Cleanup ordering matters (Gemini 2026-04-10 review finding):
+        #
+        # 1. If proc is still alive (e.g. a KeyboardInterrupt or unexpected
+        #    exception fired mid-poll), we MUST kill it before closing
+        #    stdout. Closing stdout on an alive proc gives the child
+        #    SIGPIPE on its next write, and more importantly leaks an
+        #    orphan if we never explicitly kill.
+        #
+        # 2. Only after proc has exited do we call stop_watchdog(proc=proc),
+        #    which closes proc.stdout to unblock the streamer thread.
+        #
+        # proc may be None if Popen itself raised — skip the kill.
+        if proc is not None and proc.poll() is None:
+            with contextlib.suppress(Exception):
+                proc.kill()
+            with contextlib.suppress(subprocess.TimeoutExpired):
+                proc.wait(timeout=5.0)
+
         if watchdog_state is not None:
             stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
         # Clean up the output file if the adapter created one and parse

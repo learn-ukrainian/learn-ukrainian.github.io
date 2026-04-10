@@ -304,22 +304,26 @@ def test_codex_parse_response_rate_limit_url_no_false_positive(tmp_path):
     assert result.ok is True
 
 
-def test_codex_liveness_paths_pick_newest_rollout(tmp_path, monkeypatch):
-    """Regression: Codex 0.118 stores the live rollout in
-    sessions/YYYY/MM/DD/rollout-*.jsonl inside the directory. The
-    directory mtime only bumps on child creation, so directory-only
-    polling misses content writes. The adapter must return the NEWEST
-    rollout file directly (same pattern as Gemini's newest session-*.json).
+def test_codex_liveness_paths_exclude_rollout_files(tmp_path, monkeypatch):
+    """Regression: the adapter must NOT return any rollout-*.jsonl
+    file in liveness paths.
 
-    Tonight (2026-04-10) we watched our own watchdog about to kill a
-    successfully-running Codex process because the dir-only signal had
-    gone silent while the rollout file was still growing at 409KB.
+    Earlier version returned the newest rollout-*.jsonl, but picking
+    at plan-build time is wrong: the match is always the PREVIOUS
+    run's file, not the one Codex is about to create. Tracking that
+    wrong file provides no liveness signal during the new run AND
+    leaks the wrong trace into tail_liveness_file_for_debug on
+    failure. Gemini flagged this in the 2026-04-10 review.
+
+    What we DO return: the sessions/YYYY/MM/DD/ directory itself,
+    whose mtime bumps when Codex creates its new rollout file at
+    startup. That's the only correct signal we can compute before
+    the subprocess spawns.
     """
     fake_home = tmp_path / "home"
     fake_home.mkdir()
     monkeypatch.setenv("HOME", str(fake_home))
 
-    # Build today's sessions dir structure
     from datetime import UTC, datetime
     today = datetime.now(UTC)
     sessions_today = (
@@ -328,14 +332,9 @@ def test_codex_liveness_paths_pick_newest_rollout(tmp_path, monkeypatch):
     )
     sessions_today.mkdir(parents=True)
 
-    # Two rollout files, different ages. The newer one must be chosen.
+    # Prior run's rollout file — must NOT appear in liveness paths
     old_rollout = sessions_today / "rollout-2026-04-10T18-00-00-aaa.jsonl"
     old_rollout.write_text('{"old": true}\n')
-    import os as _os
-    _os.utime(old_rollout, (old_rollout.stat().st_mtime - 300,
-                             old_rollout.stat().st_mtime - 300))
-    new_rollout = sessions_today / "rollout-2026-04-10T20-53-00-bbb.jsonl"
-    new_rollout.write_text('{"new": true}\n')
 
     adapter = CodexAdapter()
     plan = adapter.build_invocation(
@@ -349,12 +348,114 @@ def test_codex_liveness_paths_pick_newest_rollout(tmp_path, monkeypatch):
     )
     paths = adapter.liveness_signal_paths(plan)
     names = {p.name for p in paths}
-    assert new_rollout.name in names, (
-        f"newest rollout-*.jsonl missing from liveness paths: {names}"
-    )
     assert old_rollout.name not in names, (
-        f"older rollout file should not be in liveness paths: {names}"
+        f"rollout-*.jsonl should not be in liveness paths (that's the "
+        f"PREVIOUS run's file, see Gemini 2026-04-10 review): {names}"
     )
+    # But the sessions directory itself MUST be there — its mtime
+    # bumps when the new run creates its rollout file at startup.
+    assert sessions_today in paths, (
+        f"sessions/today dir missing from liveness paths: {paths}"
+    )
+
+
+def test_codex_parse_response_signaled_exit_is_never_rate_limit(tmp_path):
+    """Regression (Codex 2026-04-10 review, BUG #9): if a Codex process
+    is killed by signal (negative returncode), the adapter must NOT
+    pattern-match rate-limit phrases in stderr. A signal-kill means
+    WE killed the process (hard_timeout, cancel, exception mid-poll).
+    The stderr at that point may contain only a partial prompt echo
+    (no closing divider, no Codex response section) and the
+    'last divider' heuristic would fall through to echoed prompt text,
+    reintroducing the same false-positive bug we've been fighting.
+
+    Guard: returncode < 0 → rate_limited = False, always. Whatever the
+    pattern-matcher would say is ignored.
+    """
+    adapter = CodexAdapter()
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("")  # call failed
+
+    # Killed mid-echo — only the banner and opening of the prompt
+    # made it to stderr. There is NO closing divider. The "last
+    # divider" is the one right before 'user', and the body after it
+    # is the prompt fragment with "rate limit" phrases.
+    stderr = (
+        "OpenAI Codex v0.118.0 (research preview)\n"
+        "--------\n"
+        "workdir: /foo\n"
+        "model: gpt-5.4\n"
+        "--------\n"
+        "user\n"
+        "Review our rate-limit handling code. We had a usage limit\n"
+        "reached incident. What do you think about rate limit?\n"
+    )
+
+    result = adapter.parse_response(
+        stdout="",
+        stderr=stderr,
+        returncode=-15,  # SIGTERM
+        output_file=output_file,
+    )
+    # Signal-killed → can NEVER be classified as rate_limited,
+    # regardless of what stderr contains.
+    assert result.rate_limited is False, (
+        "signal-killed call must never be classified as rate_limited, "
+        f"stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert result.ok is False
+
+
+def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
+    """Regression (Gemini 2026-04-10 review): a user prompt containing
+    a legitimate dashes-only line (code block, horizontal rule) used to
+    defeat the naive lazy-regex that tried to strip the prompt block.
+
+    The fix switched from "match between two dividers" to "take the
+    stderr tail after the LAST divider". Whatever's after the last
+    divider is guaranteed to be Codex's own output, never echoed
+    prompt. A prompt with 17 inline dashes lines can't poison
+    classification anymore.
+    """
+    adapter = CodexAdapter()
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("")  # call failed
+
+    stderr = (
+        "OpenAI Codex v0.118.0 (research preview)\n"
+        "--------\n"
+        "workdir: /foo\n"
+        "model: gpt-5.4\n"
+        "--------\n"
+        "user\n"
+        "Review our rate-limit handling code. Example:\n"
+        "\n"
+        "```\n"
+        "--------\n"  # inline divider inside the prompt
+        "if usage limit reached:\n"
+        "    log('rate limit triggered')\n"
+        "--------\n"  # another inline divider
+        "```\n"
+        "\n"
+        "What do you think?\n"
+        "--------\n"  # real closing divider
+        "codex\n"
+        "error: terminated by signal 15\n"
+    )
+
+    result = adapter.parse_response(
+        stdout="",
+        stderr=stderr,
+        returncode=-15,
+        output_file=output_file,
+    )
+    # The real error ("terminated by signal") is not a rate limit.
+    # The prompt's rate-limit phrases must not leak into classification.
+    assert result.rate_limited is False, (
+        f"Prompt with inline dividers + rate-limit phrases poisoned "
+        f"classification. stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert result.ok is False
 
 
 def test_codex_parse_response_failed_call_with_prompt_echo_not_rate_limit(tmp_path):

@@ -280,6 +280,108 @@ def test_dispatch_refuses_to_clobber_running_task(tmp_tasks_dir, capsys):
     assert "already running" in captured.err
 
 
+def test_worker_sigterm_handler_raises_keyboard_interrupt():
+    """Regression (Gemini 2026-04-10 review, BUG #3): the worker's
+    SIGTERM handler must raise an exception so the runtime's finally
+    block unwinds. Without this, SIGTERM terminates Python abruptly
+    and the codex/gemini/claude subprocess gets orphaned.
+    """
+    with pytest.raises(KeyboardInterrupt, match="SIGTERM"):
+        delegate._worker_sigterm_handler(15, None)
+
+
+def test_write_state_atomic_uses_pid_suffixed_tmp(tmp_tasks_dir):
+    """Regression (Gemini 2026-04-10 review, BUG #2): concurrent writers
+    must not collide on a shared .json.tmp scratch file. Each writer
+    should use a PID-suffixed tmp filename.
+
+    Verification: after a write completes, no tmp file should be left
+    behind AND the scratch filename actually used should include the
+    current PID.
+    """
+    path = tmp_tasks_dir / "concurrency-test.json"
+
+    # Sneak in a peek at what filename _write_state_atomic picks by
+    # patching os.replace to capture the source path.
+    captured_tmps: list[Path] = []
+    real_replace = delegate.os.replace
+
+    def capturing_replace(src, dst):
+        captured_tmps.append(Path(src))
+        return real_replace(src, dst)
+
+    with patch.object(delegate.os, "replace", side_effect=capturing_replace):
+        delegate._write_state_atomic(path, {"status": "running"})
+
+    assert len(captured_tmps) == 1
+    tmp_name = captured_tmps[0].name
+    assert str(os.getpid()) in tmp_name, (
+        f"tmp filename should include PID for concurrency safety: {tmp_name}"
+    )
+    assert ".json.tmp" in tmp_name
+
+
+def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsys):
+    """Regression (Gemini 2026-04-10 review, BUG #1): if the worker
+    crashes before it has a chance to overwrite the state file with its
+    own PID, the PARENT must have already written the Popen child's
+    PID into state. Otherwise status/wait never detect the crash
+    because zombie detection is gated on 'if pid and not _pid_alive(pid)'.
+
+    Simulation: write a state file with a dead PID + status=spawning
+    (as if the parent wrote PID but the worker crashed before it could
+    run). status must flip it to crashed.
+    """
+    path = delegate._state_path("early-crash")
+    delegate._write_state_atomic(path, {
+        "task_id": "early-crash",
+        "status": "spawning",
+        "pid": 999_999_997,  # parent wrote this, worker never ran
+    })
+
+    import argparse
+    args = argparse.Namespace(task_id="early-crash")
+    delegate.cmd_status(args)
+
+    updated = delegate._read_state(path)
+    assert updated["status"] == "crashed", (
+        "early-crash state (parent wrote PID, worker died before "
+        "updating) must be detectable as crashed. Without the Gemini fix "
+        "this would be stuck in 'spawning' forever."
+    )
+
+
+def test_dispatch_clobber_guard_rejects_spawning_status(tmp_tasks_dir, capsys):
+    """Regression (Codex 2026-04-10 review): the clobber guard must
+    reject dispatch when an existing task is in EITHER 'running' OR
+    'spawning' state. Earlier version only checked 'running', leaving
+    a tiny window between Popen and the worker's first state-update
+    where a second dispatch could overwrite state and spawn a
+    duplicate worker for the same task_id.
+    """
+    path = delegate._state_path("spawning-clobber")
+    delegate._write_state_atomic(path, {
+        "task_id": "spawning-clobber",
+        "status": "spawning",
+        "pid": os.getpid(),  # alive
+    })
+    import argparse
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="spawning-clobber",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        hard_timeout=3600,
+    )
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 2, "must reject duplicate dispatch during spawning window"
+    captured = capsys.readouterr()
+    assert "spawning" in captured.err
+
+
 def test_dispatch_allows_new_task_when_prior_crashed(tmp_tasks_dir, capsys):
     """If the old state is terminal, dispatching should proceed (not tested
     end-to-end here — we just verify the guard doesn't trip). We patch
@@ -308,15 +410,22 @@ def test_dispatch_allows_new_task_when_prior_crashed(tmp_tasks_dir, capsys):
         def close(self): pass
 
     class _FakeProc:
+        pid = 12345  # parent writes this into state for zombie detection
         stdin = _FakeStdin()
 
     with patch("delegate.subprocess.Popen", return_value=_FakeProc()):
         rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
-    # State file should have been rewritten with status=spawning
+    # State file should have been rewritten with status=spawning AND
+    # the parent should have written the fake proc's PID into state
+    # immediately after Popen (Gemini fix: catches early-crash zombies).
     state = delegate._read_state(path)
     assert state["status"] == "spawning"
+    assert state["pid"] == 12345, (
+        "parent MUST write Popen child's PID into state file immediately "
+        "after spawn, before the worker gets a chance to run"
+    )
 
 
 # ---------------------------------------------------------------------------

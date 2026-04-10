@@ -264,8 +264,19 @@ def should_kill(state: WatchdogState, stall_timeout: int, hard_timeout: int) -> 
 # decoded. Adapters pass state_5.sqlite / logs_1.sqlite as
 # liveness paths for mtime-polling purposes, and those can be
 # the newest path at failure time.
+#
+# WAL mode note: SQLite in WAL mode writes to sibling files with
+# '-wal' and '-shm' suffixes. These often have the FRESHEST mtime
+# during active writes (newer than the main .sqlite file), so
+# filtering only the main .sqlite extension isn't enough.
+# Gemini 2026-04-10 review finding.
 _BINARY_LIVENESS_EXTS = frozenset({
-    ".sqlite", ".sqlite3", ".db", ".dbm", ".pack", ".idx",
+    ".sqlite", ".sqlite3", ".sqlite-wal", ".sqlite-shm",
+    ".sqlite-journal", ".sqlite3-wal", ".sqlite3-shm",
+    ".sqlite3-journal",
+    ".db", ".db-wal", ".db-shm", ".db-journal",
+    ".wal", ".shm",
+    ".dbm", ".pack", ".idx",
     ".bin", ".pyc", ".pyo",
 })
 

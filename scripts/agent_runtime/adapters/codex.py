@@ -51,30 +51,62 @@ _RATE_LIMIT_PATTERNS = (
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
-# Codex CLI (with -o <file>) wraps the echoed user prompt between
-# "--------\nuser\n" and the next "--------" marker in stderr. When we
-# classify errors, we must strip this block first — user prompts can
-# contain any human-language phrase, including "rate limit", and matching
-# against them would misclassify every failed call whose prompt mentions
-# rate limits as a real rate limit. The regex is multiline/dotall so the
-# content between markers can span any number of lines.
-_CODEX_PROMPT_ECHO_RE = re.compile(
-    r"-{3,}\s*\nuser\n.*?\n-{3,}",
-    re.DOTALL,
-)
+# Matches a dashes-only line (at least 3 dashes, nothing else on the
+# line). Used to split Codex's stderr into segments so we can isolate
+# the post-prompt portion for rate-limit pattern matching. MULTILINE
+# so ^/$ match at each line boundary.
+_CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 
 
 def _strip_codex_prompt_echo(stderr: str) -> str:
-    """Remove the echoed user prompt block from Codex CLI stderr.
+    """Return only the portion of Codex stderr that is safe to
+    pattern-match for rate-limit errors.
 
-    Codex writes the full user prompt back to stderr between two
-    "--------" dividers when invoked with ``-o <file>``. We strip that
-    block before running rate-limit pattern matching to prevent user
-    prompt text from poisoning error classification. See #1184.
+    Codex CLI (with -o <file>) lays out stderr as a sequence of
+    sections separated by dashes-only lines::
+
+        OpenAI Codex v0.118.0 ...       ← banner
+        --------
+        workdir: ...
+        model: ...
+        --------
+        user                            ← echoed prompt starts
+        <entire user prompt>
+        --------
+        codex                           ← Codex's own output
+        <reasoning + final message>
+        tokens used
+        <n>
+
+    On a rate-limit error, Codex exits non-zero and writes the error
+    message AFTER the last divider — in the "codex" or equivalent
+    section. The echoed user prompt can contain ANY text, including
+    legitimate inline dashes-only lines (a code block showing a
+    divider, a Markdown horizontal rule, a consultation prompt
+    literally discussing rate limits). Any regex that tries to
+    identify "the prompt block" by matching between two dividers can
+    be defeated by a prompt containing its own dividers.
+
+    Fix: don't try to strip the prompt at all. Instead, take the
+    stderr body AFTER the LAST divider line — that region is
+    guaranteed to be Codex's own output, never echoed prompt, because
+    the prompt echo always appears before Codex's response section.
+    If there are no dividers at all (degenerate cases: truncated
+    output, early crash before banner), fall back to the whole
+    stderr.
+
+    See #1184 Gemini 2026-04-10 review for the incident that led here.
     """
     if not stderr:
         return stderr
-    return _CODEX_PROMPT_ECHO_RE.sub("[user prompt echo stripped]", stderr)
+    # Find the position right after the LAST divider line.
+    last_divider = None
+    for m in _CODEX_DIVIDER_LINE_RE.finditer(stderr):
+        last_divider = m
+    if last_divider is None:
+        # No dividers — return as-is. Likely a very early crash.
+        return stderr
+    return stderr[last_divider.end():]
 
 
 class CodexAdapter:
@@ -168,7 +200,7 @@ class CodexAdapter:
             except OSError:
                 file_output = ""
 
-        # Rate-limit detection — with two CRITICAL caveats.
+        # Rate-limit detection — with THREE critical caveats.
         #
         # Codex CLI (with -o <file>) writes everything to stderr: the
         # startup banner, the echoed user prompt, the reasoning trace,
@@ -177,24 +209,41 @@ class CodexAdapter:
         # phrase, including "rate limit" and "usage limit reached" (our
         # own bridge standing rules literally do).
         #
-        # Fix 1 (prompt echo sanitization): strip the echoed user prompt
-        # section from stderr before pattern matching. The Codex CLI
-        # wraps the prompt between "--------\nuser\n" and the next
-        # "--------" marker. We remove the entire block so its content
-        # cannot poison classification.
+        # Fix 1 (prompt echo sanitization): take the stderr body AFTER
+        # the last "--------" divider line. The closing prompt divider
+        # always has Codex's own output after it, so anything past the
+        # last divider is guaranteed to be Codex's actual response,
+        # never echoed user prompt. See _strip_codex_prompt_echo.
         #
         # Fix 2 (success guard): even after sanitization, rate_limited
         # is only TRUE when the call actually failed (returncode != 0
         # OR empty output file). A successful Codex exec with a
         # non-empty final message in the -o file CANNOT be rate-limited,
         # period. This mirrors the same guard we have on GeminiAdapter.
-        stderr_for_check = _strip_codex_prompt_echo(stderr)
-        combined_for_rl_check = "\n".join(
-            part for part in (stdout, stderr_for_check, file_output) if part
-        )
-        pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
-        call_failed = returncode != 0 or not file_output
-        rate_limited = pattern_hit and call_failed
+        #
+        # Fix 3 (signal-killed processes, Codex 2026-04-10 review):
+        # a negative returncode means the process was killed by a
+        # signal (SIGTERM, SIGKILL, SIGINT — Python/POSIX convention
+        # reports -SIGNUM for signaled exits). If we killed the process
+        # ourselves (hard_timeout, cancel, exception mid-poll), its
+        # stderr may contain ONLY a partial prompt echo — no closing
+        # divider, no Codex response section — and my "take stderr
+        # after last divider" heuristic will return the prompt body
+        # itself. To prevent that class of false positive, skip
+        # pattern matching entirely on signaled exits. A signaled
+        # exit is classified as "failed", never as "rate_limited",
+        # because we KNOW why the process died: we killed it.
+        if returncode is not None and returncode < 0:
+            # Signaled exit — don't even look at stderr for rate limits.
+            rate_limited = False
+        else:
+            stderr_for_check = _strip_codex_prompt_echo(stderr)
+            combined_for_rl_check = "\n".join(
+                part for part in (stdout, stderr_for_check, file_output) if part
+            )
+            pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
+            call_failed = returncode != 0 or not file_output
+            rate_limited = pattern_hit and call_failed
 
         # Session id comes from stdout in Codex.
         session_id: str | None = None
@@ -281,23 +330,23 @@ class CodexAdapter:
         if sessions_today.exists():
             paths.append(sessions_today)
 
-            # Primary live signal: the newest rollout-*.jsonl inside
-            # today's sessions dir. Codex writes every reasoning line
-            # and tool-call event here during exec. Picking at plan
-            # build time means we may miss a rollout file created
-            # AFTER our call starts (possible if we're slow to start
-            # the poller) — the dir mtime signal above catches that
-            # creation event as a fallback.
-            try:
-                rollouts = sorted(
-                    sessions_today.glob("rollout-*.jsonl"),
-                    key=lambda p: p.stat().st_mtime,
-                    reverse=True,
-                )
-                if rollouts:
-                    paths.append(rollouts[0])
-            except OSError:
-                pass
+        # Note: we deliberately do NOT include the newest rollout-*.jsonl
+        # file here. Earlier versions tried to track it for
+        # last_activity updates, but glob-at-build-time is wrong: the
+        # file matching "newest" is the PREVIOUS run's rollout, not
+        # this run's (which doesn't exist yet). The wrong file both
+        # (a) never updates during our run so provides no liveness
+        # signal, and (b) would leak the wrong trace into
+        # tail_liveness_file_for_debug() on failure. Removed after
+        # Gemini review, 2026-04-10. The directory mtime above still
+        # bumps when Codex creates its new rollout file at startup,
+        # which is good enough for the dispatch-once-at-start signal
+        # the mtime poller actually uses.
+        #
+        # Proper fix (deferred): pass a glob pattern or a build-time
+        # snapshot into the runner and let the poller dynamically
+        # resolve "any file matching ROLLOUT_GLOB whose mtime changed
+        # after POLL_START". Bigger API change; filed as follow-up.
 
         return tuple(paths)
 

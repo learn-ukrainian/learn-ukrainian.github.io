@@ -110,9 +110,17 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     a partially-written file. Ensures the parent directory exists
     before writing — callers that bypass _state_path may not have
     created it yet.
+
+    Concurrency: each writer uses a PID-suffixed tmp filename so
+    multiple concurrent writers (e.g. two operators both running
+    status on the same zombie task) don't collide on a shared
+    ``.json.tmp`` scratch file. Without the PID suffix, one writer's
+    os.replace() would move the tmp file out from under another
+    writer that's still writing to it, causing FileNotFoundError on
+    the second os.replace. Fixed after Gemini review 2026-04-10.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".json.tmp")
+    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
     tmp.write_text(json.dumps(state, indent=2, default=str))
     os.replace(tmp, path)
 
@@ -147,6 +155,28 @@ def _pid_alive(pid: int) -> bool:
 # Worker entrypoint — runs inside the detached subprocess
 # ---------------------------------------------------------------------------
 
+def _worker_sigterm_handler(_signum, _frame):
+    """SIGTERM handler for the worker process.
+
+    Default Python SIGTERM behavior is to terminate abruptly WITHOUT
+    running any finally blocks — meaning a cancel via
+    ``delegate.py cancel`` would leave the child CLI subprocess
+    (codex exec, gemini, claude) orphaned. That's a real leak,
+    especially for workspace-write / danger modes.
+
+    Fix: install this handler in _run_worker. When the parent sends
+    SIGTERM, this raises KeyboardInterrupt, which propagates up
+    through runner.invoke()'s try/finally block, which kills the
+    subprocess and stops the watchdog cleanly. The worker's own
+    try/except in _run_worker catches the KeyboardInterrupt, writes
+    a final state file with status=failed + a "cancelled via SIGTERM"
+    stderr excerpt, and exits 1.
+
+    Added after Gemini review 2026-04-10.
+    """
+    raise KeyboardInterrupt("SIGTERM received; unwinding for cleanup")
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -164,6 +194,10 @@ def _run_worker(
     to show up correctly in ``ps`` and systemd-style supervisors if
     we ever wrap this in one.
     """
+    # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
+    # through the runtime's finally block (see handler docstring).
+    signal.signal(signal.SIGTERM, _worker_sigterm_handler)
+
     # Imports inside the function so the CLI startup path stays fast
     # and doesn't pay the cost of loading the runtime on 'status' calls.
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
@@ -192,6 +226,7 @@ def _run_worker(
     returncode: int | None = None
     rate_limited = False
 
+    cancelled = False
     try:
         result = runtime_invoke(
             agent,
@@ -210,6 +245,13 @@ def _run_worker(
         stderr_excerpt = result.stderr_excerpt
         returncode = result.returncode
         rate_limited = result.rate_limited
+    except KeyboardInterrupt as exc:
+        # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
+        # The runtime's finally block has already killed the CLI
+        # subprocess and stopped the watchdog by the time we catch
+        # this, so no extra cleanup is needed here. Mark as cancelled.
+        cancelled = True
+        stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
     except RateLimitedError as exc:
         rate_limited = True
         stderr_excerpt = str(exc)[:500]
@@ -236,7 +278,9 @@ def _run_worker(
             result_file = None
 
     # Classify final status
-    if rate_limited:
+    if cancelled:
+        final_status = "cancelled"
+    elif rate_limited:
         final_status = "rate_limited"
     elif ok_outcome:
         final_status = "done"
@@ -267,15 +311,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     task_id = args.task_id
     state_path = _state_path(task_id)
 
-    # Refuse to clobber a still-running task with the same id.
+    # Refuse to clobber a task that's still alive — whether it's in
+    # "running" (worker up and executing) OR "spawning" (worker created
+    # but not yet past its own state-update step). Without the
+    # "spawning" check, a fast second dispatch during the tiny window
+    # between Popen and _run_worker's first state write could overwrite
+    # state and launch a duplicate worker for the same task_id.
+    # Codex 2026-04-10 review finding.
     existing = _read_state(state_path)
-    if existing and existing.get("status") == "running":
+    if existing and existing.get("status") in ("running", "spawning"):
         pid = existing.get("pid")
         if pid and _pid_alive(int(pid)):
             print(
-                f"❌ task_id {task_id!r} is already running (pid={pid}). "
-                f"Use 'delegate.py status {task_id}' to check, or "
-                f"pick a different task-id.",
+                f"❌ task_id {task_id!r} is already {existing['status']} "
+                f"(pid={pid}). Use 'delegate.py status {task_id}' to check, "
+                f"or pick a different task-id.",
                 file=sys.stderr,
             )
             return 2
@@ -345,20 +395,43 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     stderr_fd = open(stderr_log, "ab", buffering=0)  # noqa: SIM115
 
     try:
+        # Explicit env=os.environ.copy() — makes the inherited env
+        # explicit rather than implicit. Callers that want to scrub
+        # secrets from the worker's env can override this here. The
+        # worker itself is trusted code (same repo, same git history)
+        # so we pass the full env rather than a filtered subset, but
+        # being explicit documents the inheritance. Codex 2026-04-10
+        # review finding (hardening, not a strict bug).
+        worker_env = os.environ.copy()
         proc = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
             stdout=stdout_fd,
             stderr=stderr_fd,
+            env=worker_env,
             start_new_session=True,  # detach from our process group
             close_fds=True,
         )
+
+        # CRITICAL: write the Popen child's PID into the state file
+        # RIGHT NOW, from the parent, before the worker has a chance
+        # to run. Without this, if the worker crashes before reaching
+        # _run_worker (e.g. top-level import error in delegate.py,
+        # syntax error on a future edit, env var issue), the state
+        # file stays at {"status": "spawning", "pid": null} forever
+        # and no subsequent status/wait call can detect the crash
+        # because zombie detection is gated on `pid and not _pid_alive(pid)`.
+        # Fixed after Gemini review 2026-04-10.
+        state_with_pid = _read_state(state_path) or initial_state
+        state_with_pid["pid"] = proc.pid
+        _write_state_atomic(state_path, state_with_pid)
+
         assert proc.stdin is not None  # we passed stdin=PIPE
         try:
             proc.stdin.write(prompt.encode("utf-8"))
             proc.stdin.close()
         except BrokenPipeError:
-            pass  # worker crashed before reading; state file will show "crashed"
+            pass  # worker crashed before reading; zombie detector will catch it
     finally:
         # The Popen child inherited these FDs via dup; our copies can
         # be closed immediately without affecting the child.
@@ -419,7 +492,9 @@ def cmd_status(args: argparse.Namespace) -> int:
 # Wait command — poll until terminal state or timeout
 # ---------------------------------------------------------------------------
 
-_TERMINAL_STATUSES = frozenset({"done", "failed", "rate_limited", "crashed"})
+_TERMINAL_STATUSES = frozenset(
+    {"done", "failed", "rate_limited", "crashed", "cancelled"}
+)
 
 
 def cmd_wait(args: argparse.Namespace) -> int:
@@ -603,7 +678,7 @@ def build_parser() -> argparse.ArgumentParser:
     l = sub.add_parser("list", help="List tasks (with optional status filter)")
     l.add_argument("--status", default=None,
                    choices=["spawning", "running", "done", "failed",
-                            "rate_limited", "crashed"])
+                            "rate_limited", "crashed", "cancelled"])
     l.set_defaults(func=cmd_list)
 
     # _worker (hidden — internal)
