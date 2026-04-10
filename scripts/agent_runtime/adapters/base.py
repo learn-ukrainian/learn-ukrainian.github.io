@@ -40,6 +40,13 @@ class InvocationPlan:
         cmd: The argv list, ready for Popen. Includes all flags, model
             overrides, output redirection, etc. First element is the binary
             name (e.g. ``"codex"``, ``"npx"``, ``"gemini"``).
+        cwd: Working directory the runner will set on Popen. Adapters must
+            stamp this with the ``cwd`` they received in ``build_invocation``
+            so that later protocol methods — particularly
+            ``liveness_signal_paths(plan)`` — can derive cwd-dependent paths
+            (e.g. Gemini's ``~/.gemini/tmp/<basename>/``) without reading
+            the ambient process cwd via ``os.getcwd()``. Added 2026-04-10
+            to remove the hack that coupled adapters to process state.
         stdin_payload: Text to pipe to the subprocess's stdin. Empty string
             if the prompt is embedded in ``cmd`` instead.
         output_file: Path where the subprocess will write its final output,
@@ -57,6 +64,7 @@ class InvocationPlan:
             streaming is used for liveness.
     """
     cmd: list[str]
+    cwd: Path
     stdin_payload: str = ""
     output_file: Path | None = None
     env_overrides: dict[str, str] = field(default_factory=dict)

@@ -174,6 +174,7 @@ class ClaudeAdapter:
 
         return InvocationPlan(
             cmd=cmd,
+            cwd=cwd,
             stdin_payload="",  # Claude -p takes prompt as positional arg, not stdin
             output_file=None,
             env_overrides={},

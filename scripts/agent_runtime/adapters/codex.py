@@ -113,6 +113,7 @@ class CodexAdapter:
 
         return InvocationPlan(
             cmd=cmd,
+            cwd=cwd,
             stdin_payload=prompt,
             output_file=output_path,
             env_overrides={},

@@ -123,19 +123,22 @@ class GeminiAdapter:
                     joined = str(mcp_server_names)
                 cmd.extend(["--allowed-mcp-server-names", joined])
 
-        # Silently ignore session_id (CLI has no equivalent), task_id
-        # (runner already logs it via usage record), and cwd (runner sets
-        # it on Popen — we don't bake it into the command).
+        # Silently ignore session_id (CLI has no equivalent) and task_id
+        # (runner already logs it via usage record). cwd IS stamped into
+        # the plan — liveness_signal_paths() needs it to derive the
+        # ~/.gemini/tmp/<basename>/ project dir without reading os.getcwd().
         _ = session_id
         _ = task_id
-        _ = cwd
 
         return InvocationPlan(
             cmd=cmd,
+            cwd=cwd,
             stdin_payload=prompt,
             output_file=None,  # Gemini writes to stdout only.
             env_overrides={},
-            liveness_paths=(),  # stdout streamer is sufficient.
+            liveness_paths=(),  # stdout streamer is not actually sufficient —
+            # see liveness_signal_paths() docstring — but we compute the
+            # real paths lazily there because they depend on cwd.
         )
 
     def parse_response(
@@ -225,28 +228,20 @@ class GeminiAdapter:
             session file grows as messages stream in.
 
         ``<project>`` is the cwd basename per gemini-cli convention. We
-        resolve it from ``plan.cmd`` by walking back to the runner's cwd
-        (not the adapter's cwd — they're the same when invoked through
-        runner.invoke, which is the only supported path).
+        read it from ``plan.cwd`` (stamped by the adapter in
+        ``build_invocation``) rather than ``os.getcwd()`` so the adapter
+        is not coupled to ambient process state. Refactored 2026-04-10
+        to drop the os.getcwd() hack.
         """
-        from pathlib import Path as _P
-
         paths: list[Path] = []
 
         # The gemini CLI stores project-scoped state under
         # ~/.gemini/tmp/<project-name>/ where project-name is the basename
-        # of the cwd the CLI was invoked from. We don't have cwd directly
-        # on the InvocationPlan (by design — it's a runner-level concern),
-        # so we try every subdirectory of ~/.gemini/tmp/ and pick the one
-        # whose basename matches our current process cwd. This keeps the
-        # adapter honest without coupling it to runner internals.
-        #
-        # If multiple projects exist we just use the current cwd basename —
-        # that's cheap and correct in practice.
-        import os
-        _ = plan
-        cwd_basename = _P(os.getcwd()).name
-        gemini_project_dir = _P.home() / ".gemini" / "tmp" / cwd_basename
+        # of the cwd the CLI was invoked from. plan.cwd carries the exact
+        # path the runner uses on Popen, so its .name matches what gemini
+        # will derive internally.
+        cwd_basename = plan.cwd.name
+        gemini_project_dir = Path.home() / ".gemini" / "tmp" / cwd_basename
 
         if gemini_project_dir.exists():
             # 1. The logs.json file — most reliable per-call signal.

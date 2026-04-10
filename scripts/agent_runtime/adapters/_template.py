@@ -116,9 +116,13 @@ class TemplateAdapter:
         # 5. Ignore tool_config keys you don't understand. Forward-compat.
         _ = tool_config  # template ignores entirely
 
-        # 6. Return the InvocationPlan.
+        # 6. Return the InvocationPlan. cwd MUST be stamped — the runner
+        #    uses it on Popen, and liveness_signal_paths(plan) can derive
+        #    cwd-scoped state directories from it without reading the
+        #    ambient process cwd.
         return InvocationPlan(
             cmd=cmd,
+            cwd=cwd,
             stdin_payload=prompt,
             output_file=None,  # or Path("/tmp/template-output.txt")
             env_overrides={},  # or {"TEMPLATE_API_KEY": "..."} if needed

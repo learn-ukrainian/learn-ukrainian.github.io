@@ -580,6 +580,9 @@ def test_gemini_liveness_paths_from_project_tmp(tmp_path, monkeypatch):
     silent for 5+ minutes during reasoning bursts, causing spurious
     stalls. It DOES write to ~/.gemini/tmp/<project>/logs.json and
     chats/ during exec, so we now watch those files via mtime polling.
+
+    Further updated: the adapter now reads cwd from plan.cwd rather than
+    os.getcwd(), so the test no longer needs monkeypatch.chdir().
     """
     adapter = GeminiAdapter()
 
@@ -591,7 +594,6 @@ def test_gemini_liveness_paths_from_project_tmp(tmp_path, monkeypatch):
     # cwd basename drives the lookup; create a matching gemini state dir.
     project_cwd = tmp_path / "learn-ukrainian"
     project_cwd.mkdir()
-    monkeypatch.chdir(project_cwd)
 
     gemini_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian"
     (gemini_dir / "chats").mkdir(parents=True)
@@ -623,7 +625,6 @@ def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
     # cwd basename with no corresponding gemini project dir
     empty_cwd = tmp_path / "no-such-project-xyz"
     empty_cwd.mkdir()
-    monkeypatch.chdir(empty_cwd)
 
     plan = adapter.build_invocation(
         prompt="x",
