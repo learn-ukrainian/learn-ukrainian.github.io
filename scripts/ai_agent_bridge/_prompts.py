@@ -200,10 +200,42 @@ Do NOT use MCP tools to send your response - just output your response directly.
     return prompt
 
 
+_CODEX_STANDING_RULES = """\
+# NON-NEGOTIABLE RULES FOR CODEX (apply to EVERY task from this bridge)
+
+## Git branch safety — HARD CONSTRAINT
+You are invoked from the caller's current working directory, which is normally on `main`.
+You MUST NOT leave `main` under any circumstances:
+
+- FORBIDDEN commands: `git checkout <branch>`, `git switch <branch>`, `git reset --hard`,
+  `git branch -D`, `git checkout .`, `git restore .`, `git clean -f`, `git rebase`,
+  `git merge`, `git pull` with rebase, `git push --force`.
+- If you need isolation for experimental work, create a dedicated worktree:
+    `git worktree add ../codex-wt-<task-id> -b codex/<task-id>`
+  then `cd` into that worktree and work there. Never modify the caller's branch state.
+- When you finish a worktree task, leave the worktree in place — the human will clean it up.
+- If a task seems to require switching the caller's branch, STOP and reply explaining
+  the conflict. Do not improvise.
+
+Violating this rule destroys the caller's work in progress. There is no exception.
+
+## Scope discipline
+- Stay strictly within the files the task names. Do not "clean up" unrelated code.
+- Do not run destructive operations (`rm -rf`, `git push --force`) without explicit approval in the task.
+- Reference the GH issue number in every commit message: `fix: X (#NNNN)`.
+
+## Reporting
+- If you hit a `usage limit reached` or rate-limit error, STOP and reply with the exact error
+  so the caller can reschedule. Do not retry silently.
+- Be concise. Report what you did, what you verified, and what remains.
+"""
+
+
 def build_codex_prompt(msg: dict) -> str:
     """Build prompt for Codex invocation."""
     prompt = f"""You are Codex, receiving a message from {msg['from'].title()} via the message broker.
 
+{_CODEX_STANDING_RULES}
 ---
 Task ID: {msg['task_id'] or 'none'}
 Type: {msg['type']}
