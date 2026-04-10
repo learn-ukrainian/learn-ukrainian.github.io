@@ -51,6 +51,8 @@ _GEMINI_INTER_CALL_DELAY = 3.0
 _last_gemini_call_time: float = 0.0
 
 _CODEX_MODES = {"safe", "workspace-write", "full-auto", "danger"}
+_CYRILLIC_RE = re.compile(r"[А-Яа-яЇїІіЄєҐґ]")
+_LATIN_RE = re.compile(r"[A-Za-z]")
 
 
 def _is_rate_limited(stderr: str) -> bool:
@@ -113,6 +115,46 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 def _log(msg: str) -> None:
     print(msg, flush=True)
+
+
+def _token_divisor_for_text(text: str | None) -> float:
+    """Estimate chars-per-token based on script mix in the text."""
+    if not text:
+        return 3.8
+    cyrillic = len(_CYRILLIC_RE.findall(text))
+    latin = len(_LATIN_RE.findall(text))
+    if cyrillic and not latin:
+        return 3.5
+    if latin and not cyrillic:
+        return 4.0
+    return 3.8
+
+
+def _estimate_tokens(char_count: int, text: str | None = None) -> int:
+    """Cheap token estimate for cost tracking; no external tokenizer."""
+    if char_count <= 0:
+        return 0
+    divisor = _token_divisor_for_text(text)
+    return round(char_count / divisor)
+
+
+def _get_gemini_fallback_chain(model: str) -> list[str]:
+    """Resolve Gemini fallback order without relying on optional helpers."""
+    try:
+        from batch_gemini_config import (
+            FALLBACK_MODEL,
+            FLASH_LITE_MODEL,
+            FLASH_MODEL,
+            PRO_MODEL,
+        )
+    except ImportError:
+        return ["auto"] if model != "auto" else []
+
+    ordered = [FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL, FALLBACK_MODEL]
+    if model in ordered:
+        start = ordered.index(model) + 1
+        return [candidate for candidate in ordered[start:] if candidate != model]
+    return [candidate for candidate in (PRO_MODEL, FALLBACK_MODEL) if candidate != model]
 
 
 # ---------------------------------------------------------------------------
@@ -184,6 +226,7 @@ def _save_dispatch_log(
     phase: str,
     agent: str,
     *,
+    model: str | None = None,
     prompt_chars: int = 0,
     response_chars: int = 0,
     stderr: str = "",
@@ -213,10 +256,13 @@ def _save_dispatch_log(
         "timestamp": datetime.now().isoformat(),
         "phase": phase,
         "agent": agent,
+        "model": model,
         "ok": ok,
         "returncode": returncode,
         "prompt_chars": prompt_chars,
         "response_chars": response_chars,
+        "prompt_tokens_est": _estimate_tokens(prompt_chars, prompt),
+        "response_tokens_est": _estimate_tokens(response_chars, response),
         "duration_s": round(duration_s, 1),
     }
 
@@ -405,6 +451,7 @@ def dispatch_agent(
 
             _save_dispatch_log(
                 orch_dir, phase, run_label,
+                model=model,
                 prompt_chars=len(prompt),
                 response_chars=len(raw),
                 stderr=stderr,
@@ -424,11 +471,14 @@ def dispatch_agent(
             partial_stdout = e.stdout.decode("utf-8") if isinstance(e.stdout, bytes) else (e.stdout or "")
             _save_dispatch_log(
                 orch_dir, phase, run_label,
+                model=model,
                 prompt_chars=len(prompt),
                 response_chars=len(partial_stdout),
                 stderr=partial_stderr,
                 duration_s=elapsed,
                 ok=False,
+                prompt=prompt,
+                response=partial_stdout,
             )
             return False, ""
         finally:
@@ -505,6 +555,7 @@ def _dispatch_claude_via_runtime(
         elapsed = time.monotonic() - t0
         _save_dispatch_log(
             orch_dir, phase, agent_label,
+            model=model,
             prompt_chars=len(prompt),
             response_chars=len(result.response),
             stderr=result.stderr_excerpt or "",
@@ -521,9 +572,10 @@ def _dispatch_claude_via_runtime(
         _log(f"  ⏳ {agent_label} rate limited: {exc}")
         _save_dispatch_log(
             orch_dir, phase, agent_label,
+            model=model,
             prompt_chars=len(prompt), response_chars=0,
             stderr=f"RateLimitedError: {exc}", returncode=None,
-            duration_s=elapsed, ok=False,
+            duration_s=elapsed, ok=False, prompt=prompt,
         )
         return False, "__RATE_LIMITED__"
     except (AgentStalledError, AgentTimeoutError) as exc:
@@ -531,9 +583,10 @@ def _dispatch_claude_via_runtime(
         _log(f"  ❌ {agent_label} {type(exc).__name__}: {exc}")
         _save_dispatch_log(
             orch_dir, phase, agent_label,
+            model=model,
             prompt_chars=len(prompt), response_chars=0,
             stderr=f"{type(exc).__name__}: {exc}", returncode=None,
-            duration_s=elapsed, ok=False,
+            duration_s=elapsed, ok=False, prompt=prompt,
         )
         return False, ""
 
@@ -606,6 +659,7 @@ def _dispatch_via_runtime(
             elapsed = time.monotonic() - t0
             _save_dispatch_log(
                 orch_dir, phase, label,
+                model=call_model,
                 prompt_chars=len(prompt),
                 response_chars=len(result.response),
                 stderr=result.stderr_excerpt or "",
@@ -622,12 +676,14 @@ def _dispatch_via_runtime(
             _log(f"  ⏳ {label} rate limited: {exc}")
             _save_dispatch_log(
                 orch_dir, phase, label,
+                model=call_model,
                 prompt_chars=len(prompt),
                 response_chars=0,
                 stderr=f"RateLimitedError: {exc}",
                 returncode=None,
                 duration_s=elapsed,
                 ok=False,
+                prompt=prompt,
             )
             # Use a special return tuple to signal rate limiting upstream.
             return False, "__RATE_LIMITED__", str(exc), elapsed, None
@@ -636,12 +692,14 @@ def _dispatch_via_runtime(
             _log(f"  ❌ {label} stalled: {exc}")
             _save_dispatch_log(
                 orch_dir, phase, label,
+                model=call_model,
                 prompt_chars=len(prompt),
                 response_chars=0,
                 stderr=f"AgentStalledError: {exc}",
                 returncode=None,
                 duration_s=elapsed,
                 ok=False,
+                prompt=prompt,
             )
             return False, "", str(exc), elapsed, None
         except AgentTimeoutError as exc:
@@ -649,12 +707,14 @@ def _dispatch_via_runtime(
             _log(f"  ❌ {label} hard timeout: {exc}")
             _save_dispatch_log(
                 orch_dir, phase, label,
+                model=call_model,
                 prompt_chars=len(prompt),
                 response_chars=0,
                 stderr=f"AgentTimeoutError: {exc}",
                 returncode=None,
                 duration_s=elapsed,
                 ok=False,
+                prompt=prompt,
             )
             return False, "", str(exc), elapsed, None
 
@@ -684,13 +744,10 @@ def _dispatch_via_runtime(
     # starve the remaining budget for downstream attempts. We also require
     # at least 30s of headroom before trying — a sub-30s attempt is useless.
     if is_gemini:
-        from batch_gemini_config import (
-            CASCADE_PER_CALL_MAX_S,
-            get_fallback_chain,
-        )
+        from batch_gemini_config import CASCADE_PER_CALL_MAX_S
         _MIN_ATTEMPT_S = 30
         elapsed_total = elapsed1
-        for fallback_model in get_fallback_chain(model):
+        for fallback_model in _get_gemini_fallback_chain(model):
             remaining_total = int(timeout - elapsed_total)
             if remaining_total < _MIN_ATTEMPT_S:
                 _log(

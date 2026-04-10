@@ -83,6 +83,7 @@ class TestSaveDispatchLog:
         orch_dir = tmp_path / "orchestration" / "test-slug"
         _save_dispatch_log(
             orch_dir, "write", "gemini-tools (gemini-3.1-pro-preview)",
+            model="gemini-3.1-pro-preview",
             prompt_chars=1000, response_chars=5000,
             stderr="tool call: verify_words", duration_s=45.3, ok=True,
         )
@@ -99,6 +100,7 @@ class TestSaveDispatchLog:
         orch_dir = tmp_path / "orch"
         _save_dispatch_log(
             orch_dir, "review", "claude-tools (claude-opus-4-6)",
+            model="claude-opus-4-6",
             prompt_chars=2000, response_chars=3000,
             returncode=0, duration_s=120.5, ok=True,
         )
@@ -107,10 +109,13 @@ class TestSaveDispatchLog:
 
         assert data["phase"] == "review"
         assert data["agent"] == "claude-tools (claude-opus-4-6)"
+        assert data["model"] == "claude-opus-4-6"
         assert data["ok"] is True
         assert data["returncode"] == 0
         assert data["prompt_chars"] == 2000
         assert data["response_chars"] == 3000
+        assert data["prompt_tokens_est"] == 526
+        assert data["response_tokens_est"] == 789
         assert data["duration_s"] == 120.5
         assert "timestamp" in data
 
@@ -158,6 +163,7 @@ class TestSaveDispatchLog:
         )
         _save_dispatch_log(
             orch_dir, "write", "gemini-tools (gemini-3.1-pro-preview)",
+            model="gemini-3.1-pro-preview",
             prompt_chars=len(prompt),
             response_chars=len(response),
             ok=True,
@@ -184,6 +190,7 @@ class TestSaveDispatchLog:
         orch_dir = tmp_path / "orch" / "test-slug"
         _save_dispatch_log(
             orch_dir, "write", "gemini-tools",
+            model="gemini-3.1-pro-preview",
             prompt_chars=100, response_chars=0, ok=False,
             prompt="prompt text", response="",
         )
@@ -198,6 +205,7 @@ class TestSaveDispatchLog:
         orch_dir = tmp_path / "orch" / "test-slug"
         _save_dispatch_log(
             orch_dir, "write", "codex (gpt-5.4)",
+            model="gpt-5.4",
             prompt_chars=100, response_chars=100, ok=True,
             prompt="## Plan\nsome plan content", response="some response",
         )
