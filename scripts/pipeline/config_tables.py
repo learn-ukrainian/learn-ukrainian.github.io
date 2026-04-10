@@ -1005,122 +1005,301 @@ def get_expansion_method(track: str, module_num: int) -> str:
         )
 
 
+# ---------------------------------------------------------------------------
+# Activity type taxonomy — where each type can appear
+# ---------------------------------------------------------------------------
+# INLINE = short, focused checks placed mid-prose after a teaching point
+# WORKBOOK = deeper, longer practice in the dedicated Зошит tab
+#
+# Some types only work in one context. This is enforced by the validator
+# independently of per-level allowlists.
+INLINE_ONLY_TYPES: set[str] = {
+    "image-to-letter",      # beginner visual aid (A1 only)
+    "letter-grid",          # alphabet reference (A1 only)
+    "watch-and-repeat",     # pronunciation video (A1-A2)
+}
+
+WORKBOOK_ONLY_TYPES: set[str] = {
+    "essay-response",       # 50-500w free writing — breaks prose flow
+    "reading",              # long passage + questions — too long for inline
+    "cloze",                # 14+ blank passage — too disruptive inline
+    "critical-analysis",    # deep argumentative response
+    "source-evaluation",    # scholarly evaluation of primary source
+    "debate",               # multi-turn argumentative exchange
+    "comparative-study",    # multi-text comparison
+    "authorial-intent",     # deep interpretation of author's choices
+    "translation-critique", # compare two translations of same text
+    "etymology-trace",      # historical linguistics exercise
+    "paleography-analysis", # script/manuscript analysis
+    "transcription",        # transcribe from old orthography
+    "dialect-comparison",   # compare dialect features
+}
+# All other types are BOTH_CONTEXTS — work in inline or workbook depending on
+# level-specific config.
+
+
 ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
-    # A1: beginners. 1200-word modules. 4+ inline + 6 workbook = 10 total.
-    # Early modules (1-7) use image-to-letter, letter-grid for alphabet.
-    # Later modules shift to fill-in, match-up, unjumble.
+    # =====================================================================
+    # A1 — Decoding + Recognition (10 total: 4 inline + 6 workbook)
+    # 1200-word modules, alphabet + first words + basic phrases
+    # =====================================================================
     "a1": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "15", "ITEMS_MIN": "6",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "4", "INLINE_MAX": "6",
+        "WORKBOOK_MIN": "6", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "6",
         "VOCAB_COUNT_TARGET": "20",
-        "FORBIDDEN_ACTIVITY_TYPES": "cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter, letter-grid, odd-one-out, divide-words, count-syllables, pick-syllables",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, match-up, quiz, true-false, unjumble, image-to-letter, watch-and-repeat",
+        "INLINE_ALLOWED_TYPES": "image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify",
+        "WORKBOOK_ALLOWED_TYPES": "fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out",
+        "INLINE_PRIORITY_TYPES": "image-to-letter, match-up, fill-in, quiz, watch-and-repeat",
+        "WORKBOOK_PRIORITY_TYPES": "fill-in, match-up, group-sort, anagram, unjumble",
+        # Backward compat — union of inline + workbook, used by legacy callers
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "15",
+        "ALLOWED_ACTIVITY_TYPES": "image-to-letter, letter-grid, watch-and-repeat, match-up, quiz, true-false, fill-in, classify, group-sort, anagram, unjumble, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out",
+        "FORBIDDEN_ACTIVITY_TYPES": "cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "fill-in, match-up, quiz, image-to-letter, watch-and-repeat",
     },
-    # A2: elementary. 2000-word modules. 4+ inline + 8 workbook = 12 total.
+    # =====================================================================
+    # A2 — Transformation + Basic Production (12 total: 4 inline + 8 workbook)
+    # 2000-word modules, case drills, verb conjugation, basic dialogues
+    # =====================================================================
     "a2": {
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "16", "ITEMS_MIN": "8",
+        "TOTAL_TARGET": "12",
+        "INLINE_MIN": "4", "INLINE_MAX": "6",
+        "WORKBOOK_MIN": "8", "WORKBOOK_MAX": "11",
+        "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "25",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, watch-and-repeat, classify, translate, highlight-morphemes",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "error-correction, cloze, fill-in, unjumble, mark-the-words",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words",
+        "INLINE_PRIORITY_TYPES": "fill-in, match-up, true-false, quiz",
+        "WORKBOOK_PRIORITY_TYPES": "error-correction, cloze, unjumble, translate, fill-in",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "16",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, classify, translate, odd-one-out, observe, phrase-table",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "error-correction, cloze, fill-in, unjumble, translate",
     },
-    # b1-bridge removed — bridge is now in A2. B1 starts at full core from module 1.
-    # Count: 12 workbook + 4 inline = 16 total. Ukrainian textbooks have 15-20 per topic.
+    # =====================================================================
+    # B1 — Production + Analysis (16 total: 5 inline + 11 workbook)
+    # 4000-word modules, full case system, aspect, motion verbs
+    # =====================================================================
     "b1-core": {
-        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20", "ITEMS_MIN": "8",
+        "TOTAL_TARGET": "16",
+        "INLINE_MIN": "5", "INLINE_MAX": "7",
+        "WORKBOOK_MIN": "11", "WORKBOOK_MAX": "15",
+        "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, critical-analysis, source-evaluation, comparative-study, authorial-intent, debate, paleography-analysis, dialect-comparison, transcription, translation-critique, etymology-trace",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, match-up, group-sort, mark-the-words, grammar-identify, highlight-morphemes",
+        "WORKBOOK_ALLOWED_TYPES": "cloze, error-correction, translate, fill-in, unjumble, essay-response, match-up, mark-the-words, grammar-identify, highlight-morphemes, group-sort",
+        "INLINE_PRIORITY_TYPES": "fill-in, match-up, mark-the-words, quiz",
+        "WORKBOOK_PRIORITY_TYPES": "cloze, error-correction, translate, essay-response, highlight-morphemes",
+        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, translate, essay-response, grammar-identify, highlight-morphemes",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "cloze, error-correction, translate, mark-the-words, essay-response",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, critical-analysis, source-evaluation, reading, comparative-study, authorial-intent, debate, paleography-analysis, dialect-comparison, transcription, translation-critique, etymology-trace, classify, observe, phrase-table, odd-one-out",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "cloze, error-correction, translate, mark-the-words, essay-response",
     },
+    # =====================================================================
+    # B2 — Register + Translation (16 total: 5 inline + 11 workbook)
+    # 4000-word modules, stylistic awareness, formal/informal
+    # =====================================================================
     "b2": {
-        # Upper-intermediate: production + analysis. 4000-word modules.
-        # Count: 12 workbook + 4 inline = 16 total.
-        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20", "ITEMS_MIN": "8",
+        "TOTAL_TARGET": "16",
+        "INLINE_MIN": "5", "INLINE_MAX": "7",
+        "WORKBOOK_MIN": "11", "WORKBOOK_MAX": "15",
+        "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, paleography-analysis, dialect-comparison, transcription",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate, essay-response, grammar-identify, highlight-morphemes, reading, translation-critique",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "cloze, error-correction, translate, essay-response, translation-critique, mark-the-words",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, match-up, mark-the-words, group-sort, grammar-identify",
+        "WORKBOOK_ALLOWED_TYPES": "cloze, error-correction, translate, translation-critique, essay-response, unjumble, reading, grammar-identify, highlight-morphemes, mark-the-words, fill-in, match-up",
+        "INLINE_PRIORITY_TYPES": "mark-the-words, fill-in, match-up, quiz",
+        "WORKBOOK_PRIORITY_TYPES": "cloze, error-correction, translate, translation-critique, essay-response",
+        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, translate, essay-response, grammar-identify, highlight-morphemes, reading, translation-critique",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, paleography-analysis, dialect-comparison, transcription, critical-analysis, debate, source-evaluation, etymology-trace, classify, observe, phrase-table, odd-one-out, select",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "cloze, error-correction, translate, essay-response, translation-critique",
     },
+    # =====================================================================
+    # C1 — Stylistics + Sophisticated Production (16 total: 5 inline + 11 workbook)
+    # 4000-word modules, academic register, literary features, morphology
+    # =====================================================================
     "c1-core": {
-        # Advanced: analytical depth. Unlock seminar-lite types.
-        # Count: 12 workbook + 4 inline = 16 total.
-        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20", "ITEMS_MIN": "8",
+        "TOTAL_TARGET": "16",
+        "INLINE_MIN": "5", "INLINE_MAX": "7",
+        "WORKBOOK_MIN": "11", "WORKBOOK_MAX": "15",
+        "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate, essay-response, grammar-identify, highlight-morphemes, reading, critical-analysis, translation-critique, etymology-trace",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "essay-response, critical-analysis, translation-critique, cloze, error-correction",
+        "INLINE_ALLOWED_TYPES": "mark-the-words, fill-in, match-up, grammar-identify, quiz, highlight-morphemes",
+        "WORKBOOK_ALLOWED_TYPES": "critical-analysis, essay-response, translation-critique, cloze, reading, error-correction, translate, etymology-trace, grammar-identify, highlight-morphemes, mark-the-words, fill-in",
+        "INLINE_PRIORITY_TYPES": "mark-the-words, grammar-identify, fill-in, match-up",
+        "WORKBOOK_PRIORITY_TYPES": "critical-analysis, essay-response, translation-critique, cloze, reading",
+        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, mark-the-words, cloze, error-correction, translate, essay-response, grammar-identify, highlight-morphemes, reading, critical-analysis, translation-critique, etymology-trace",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, true-false, unjumble, group-sort, classify, observe, phrase-table, odd-one-out, select, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, authorial-intent, comparative-study",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "critical-analysis, essay-response, translation-critique, reading",
     },
-    # C2 + seminar tracks: 5000-word modules. 4+ inline + workbook.
-    # Inline = comprehension checks after dense analytical sections.
-    # Workbook = deep analytical exercises (essay, critique, comparison).
+    # =====================================================================
+    # C2 — Mastery: Language-analytical (12 total: 4 inline + 8 workbook)
+    # 5000-word modules, near-native mastery, rare constructions
+    # Seminar-like but still about LANGUAGE mastery.
+    # =====================================================================
     "c2": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "12",
+        "INLINE_MIN": "4", "INLINE_MAX": "5",
+        "WORKBOOK_MIN": "8", "WORKBOOK_MAX": "10",
+        "ITEMS_MIN": "6",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, quiz, true-false, fill-in, cloze, translate, translation-critique, etymology-trace, mark-the-words",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "reading, essay-response, critical-analysis, translation-critique",
+        "INLINE_ALLOWED_TYPES": "mark-the-words, quiz, match-up, grammar-identify, fill-in",
+        "WORKBOOK_ALLOWED_TYPES": "reading, critical-analysis, essay-response, translation-critique, etymology-trace, cloze, comparative-study, error-correction, highlight-morphemes",
+        "INLINE_PRIORITY_TYPES": "mark-the-words, match-up, quiz",
+        "WORKBOOK_PRIORITY_TYPES": "reading, critical-analysis, essay-response, translation-critique, etymology-trace",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "15",
+        "ALLOWED_ACTIVITY_TYPES": "mark-the-words, quiz, match-up, grammar-identify, fill-in, reading, critical-analysis, essay-response, translation-critique, etymology-trace, cloze, comparative-study, error-correction, highlight-morphemes",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, true-false, unjumble, group-sort, classify, observe, phrase-table, odd-one-out, select, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, authorial-intent, translate",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "reading, critical-analysis, essay-response, translation-critique",
     },
+    # =====================================================================
+    # SEMINAR TRACKS (HIST, BIO, LIT, ISTORIO) — 10 total: 3 inline + 7 workbook
+    # 5000-word modules, primary source engagement, scholarly discourse
+    # Content-focused. Language is a tool, not the subject.
+    # =====================================================================
     "hist": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
         "VOCAB_COUNT_TARGET": "25",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, true-false, quiz, source-evaluation, fill-in",
-        "REQUIRED_TYPES": "reading, essay-response", "PRIORITY_TYPES": "reading, essay-response, critical-analysis, source-evaluation, comparative-study",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "reading, source-evaluation, essay-response, critical-analysis, comparative-study",
+        "INLINE_PRIORITY_TYPES": "quiz, true-false, fill-in",
+        "WORKBOOK_PRIORITY_TYPES": "reading, source-evaluation, essay-response, critical-analysis",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, mark-the-words, reading, source-evaluation, essay-response, critical-analysis, comparative-study",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, unjumble, cloze, error-correction, match-up, group-sort, classify, observe, phrase-table, odd-one-out, select, translate, translation-critique, etymology-trace, paleography-analysis, dialect-comparison, transcription, debate, authorial-intent, grammar-identify, highlight-morphemes",
+        "REQUIRED_TYPES": "reading, essay-response",
+        "PRIORITY_TYPES": "reading, source-evaluation, essay-response, critical-analysis",
     },
     "bio": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent, true-false, quiz, fill-in",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "reading, essay-response, critical-analysis, authorial-intent, comparative-study",
+        "INLINE_PRIORITY_TYPES": "quiz, true-false, fill-in",
+        "WORKBOOK_PRIORITY_TYPES": "reading, essay-response, critical-analysis, authorial-intent",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, mark-the-words, reading, essay-response, critical-analysis, authorial-intent, comparative-study",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, unjumble, cloze, error-correction, match-up, group-sort, classify, observe, phrase-table, odd-one-out, select, translate, translation-critique, etymology-trace, paleography-analysis, dialect-comparison, transcription, debate, source-evaluation, grammar-identify, highlight-morphemes",
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
-        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent",
+        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, authorial-intent",
     },
     "istorio": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, true-false, quiz, source-evaluation, fill-in",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "reading, source-evaluation, essay-response, critical-analysis, comparative-study",
+        "INLINE_PRIORITY_TYPES": "quiz, true-false, fill-in",
+        "WORKBOOK_PRIORITY_TYPES": "reading, source-evaluation, essay-response, critical-analysis",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, mark-the-words, reading, source-evaluation, essay-response, critical-analysis, comparative-study",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, unjumble, cloze, error-correction, match-up, group-sort, classify, observe, phrase-table, odd-one-out, select, translate, translation-critique, etymology-trace, paleography-analysis, dialect-comparison, transcription, debate, authorial-intent, grammar-identify, highlight-morphemes",
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
-        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, source-evaluation, comparative-study",
+        "PRIORITY_TYPES": "reading, source-evaluation, essay-response, critical-analysis",
     },
     "lit": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
         "VOCAB_COUNT_TARGET": "0",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent, true-false, quiz, fill-in, translation-critique",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "reading, essay-response, critical-analysis, authorial-intent, comparative-study, translation-critique, debate",
+        "INLINE_PRIORITY_TYPES": "quiz, true-false, mark-the-words",
+        "WORKBOOK_PRIORITY_TYPES": "reading, critical-analysis, essay-response, authorial-intent",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, mark-the-words, reading, essay-response, critical-analysis, authorial-intent, comparative-study, translation-critique, debate",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, unjumble, cloze, error-correction, match-up, group-sort, classify, observe, phrase-table, odd-one-out, select, translate, etymology-trace, paleography-analysis, dialect-comparison, transcription, source-evaluation, grammar-identify, highlight-morphemes",
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
-        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, authorial-intent, translation-critique",
+        "PRIORITY_TYPES": "reading, critical-analysis, essay-response, authorial-intent",
     },
+    # =====================================================================
+    # Professional tracks (B2-PRO, C1-PRO) — workplace Ukrainian
+    # =====================================================================
     "b2-pro": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "12",
+        "INLINE_MIN": "4", "INLINE_MAX": "5",
+        "WORKBOOK_MIN": "8", "WORKBOOK_MAX": "10",
+        "ITEMS_MIN": "6",
         "VOCAB_COUNT_TARGET": "35",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, quiz, true-false, fill-in, cloze, translate",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "reading, essay-response, critical-analysis, translate",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, match-up, mark-the-words",
+        "WORKBOOK_ALLOWED_TYPES": "reading, essay-response, critical-analysis, translate, cloze, error-correction, translation-critique",
+        "INLINE_PRIORITY_TYPES": "fill-in, match-up, quiz",
+        "WORKBOOK_PRIORITY_TYPES": "essay-response, translate, reading, critical-analysis",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, mark-the-words, reading, essay-response, critical-analysis, translate, cloze, error-correction, translation-critique",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, paleography-analysis, dialect-comparison, transcription, debate, source-evaluation, authorial-intent, etymology-trace, comparative-study, unjumble, group-sort, classify, observe, phrase-table, odd-one-out, select, grammar-identify, highlight-morphemes",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "essay-response, translate, reading, critical-analysis",
     },
     "c1-pro": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "12",
+        "INLINE_MIN": "4", "INLINE_MAX": "5",
+        "WORKBOOK_MIN": "8", "WORKBOOK_MAX": "10",
+        "ITEMS_MIN": "6",
         "VOCAB_COUNT_TARGET": "40",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, quiz, true-false, fill-in, cloze, translate, translation-critique",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "reading, essay-response, critical-analysis, translation-critique",
+        "INLINE_ALLOWED_TYPES": "quiz, fill-in, match-up, mark-the-words, grammar-identify",
+        "WORKBOOK_ALLOWED_TYPES": "reading, essay-response, critical-analysis, translate, translation-critique, cloze, error-correction",
+        "INLINE_PRIORITY_TYPES": "mark-the-words, fill-in, match-up",
+        "WORKBOOK_PRIORITY_TYPES": "essay-response, critical-analysis, translation-critique, reading",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, mark-the-words, grammar-identify, reading, essay-response, critical-analysis, translate, translation-critique, cloze, error-correction",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, paleography-analysis, dialect-comparison, transcription, debate, source-evaluation, authorial-intent, etymology-trace, comparative-study, true-false, unjumble, group-sort, classify, observe, phrase-table, odd-one-out, select, highlight-morphemes",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "essay-response, critical-analysis, translation-critique, reading",
     },
+    # =====================================================================
+    # OES / RUTH — Old East Slavonic / Ruthenian philology
+    # Specialized types: transcription, paleography-analysis, etymology-trace
+    # =====================================================================
     "oes": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
         "VOCAB_COUNT_TARGET": "35",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, etymology-trace, transcription, grammar-identify, phonology-lab, grammar-lab, parallel-text, paleography-analysis, historical-writing, loanword-trace, quiz, true-false",
-        "REQUIRED_TYPES": "transcription, etymology-trace, grammar-identify",
-        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, etymology-trace, transcription, grammar-identify, paleography-analysis",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, mark-the-words, grammar-identify, highlight-morphemes",
+        "WORKBOOK_ALLOWED_TYPES": "reading, essay-response, critical-analysis, etymology-trace, transcription, paleography-analysis, comparative-study",
+        "INLINE_PRIORITY_TYPES": "mark-the-words, grammar-identify, fill-in",
+        "WORKBOOK_PRIORITY_TYPES": "transcription, etymology-trace, paleography-analysis, reading, critical-analysis",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, mark-the-words, grammar-identify, highlight-morphemes, reading, essay-response, critical-analysis, etymology-trace, transcription, paleography-analysis, comparative-study",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, unjumble, cloze, error-correction, match-up, group-sort, classify, observe, phrase-table, odd-one-out, select, translate, translation-critique, debate, authorial-intent, source-evaluation, dialect-comparison",
+        "REQUIRED_TYPES": "transcription, etymology-trace",
+        "PRIORITY_TYPES": "transcription, etymology-trace, paleography-analysis, reading, critical-analysis",
     },
     "ruth": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "14", "ITEMS_MIN": "1",
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
         "VOCAB_COUNT_TARGET": "35",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, transcription, etymology-trace, grammar-identify, grammar-lab, parallel-text, paleography-analysis, historical-writing, register-identify, loanword-trace, comparative-style, quiz, true-false",
-        "REQUIRED_TYPES": "transcription, etymology-trace, grammar-identify",
-        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, etymology-trace, transcription, grammar-identify, paleography-analysis",
+        "INLINE_ALLOWED_TYPES": "quiz, true-false, fill-in, mark-the-words, grammar-identify, highlight-morphemes",
+        "WORKBOOK_ALLOWED_TYPES": "reading, essay-response, critical-analysis, etymology-trace, transcription, paleography-analysis, comparative-study, dialect-comparison",
+        "INLINE_PRIORITY_TYPES": "mark-the-words, grammar-identify, fill-in",
+        "WORKBOOK_PRIORITY_TYPES": "transcription, etymology-trace, paleography-analysis, reading, critical-analysis",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, mark-the-words, grammar-identify, highlight-morphemes, reading, essay-response, critical-analysis, etymology-trace, transcription, paleography-analysis, comparative-study, dialect-comparison",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, unjumble, cloze, error-correction, match-up, group-sort, classify, observe, phrase-table, odd-one-out, select, translate, translation-critique, debate, authorial-intent, source-evaluation",
+        "REQUIRED_TYPES": "transcription, etymology-trace",
+        "PRIORITY_TYPES": "transcription, etymology-trace, paleography-analysis, reading, critical-analysis",
     },
 }
 
