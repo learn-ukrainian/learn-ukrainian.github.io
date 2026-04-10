@@ -72,6 +72,7 @@ logger = logging.getLogger(__name__)
 
 # Rate limit backoff — shared by all retry loops
 _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
+REVIEW_TARGET_SCORE = 9.0
 
 
 def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase: str) -> bool:
@@ -186,6 +187,18 @@ class ModelFamily:
     thinking: str       # opus / pro — for write, review, rewrite
     fast: str           # sonnet / flash — for skeleton, activities, vocab
     tool_prefix: str    # "mcp__rag__" (Claude) or "mcp_rag_" (Gemini)
+
+
+@dataclass(frozen=True)
+class ReviewParseResult:
+    """Deterministic parse of a review markdown file."""
+
+    score: float
+    verdict: str
+    raw_scores: list[int]
+    parsed_scores: list[dict]
+    dim_floor_fail: bool
+    passed: bool
 
 
 CLAUDE_FAMILY = ModelFamily(
@@ -524,6 +537,120 @@ def _all_phases_complete(level: str, slug: str) -> bool:
     """Check if all pipeline phases are complete for a module."""
     completed = _load_completed_phases(level, slug)
     return all(p in completed for p in _ALL_PHASES)
+
+
+def _parse_review_result(review_text: str) -> ReviewParseResult:
+    """Parse the deterministic score/verdict gates from a review markdown file."""
+    # Dimension weights (must match v6-review.md)
+    dimension_weights = {
+        1: 0.15,  # Plan adherence
+        2: 0.15,  # Linguistic accuracy
+        3: 0.15,  # Pedagogical quality
+        4: 0.10,  # Vocabulary coverage
+        5: 0.15,  # Exercise quality
+        6: 0.10,  # Engagement & tone
+        7: 0.05,  # Structural integrity
+        8: 0.05,  # Cultural accuracy
+        9: 0.10,  # Dialogue & conversation quality
+    }
+
+    # Gemini sometimes outputs the score table twice. Only take the first 9.
+    score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
+    all_raw_scores = [int(m.group(1)) for m in score_pattern.finditer(review_text)]
+    raw_scores = all_raw_scores[:len(dimension_weights)]
+
+    full_score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
+    parsed_scores = []
+    seen_dims: set[int] = set()
+    for m in full_score_pattern.finditer(review_text):
+        dim_num = int(m.group(1))
+        if dim_num in seen_dims:
+            continue
+        seen_dims.add(dim_num)
+        parsed_scores.append({
+            "dimension": dim_num,
+            "name": m.group(2).strip(),
+            "score": int(m.group(3)),
+            "evidence": m.group(4).strip(),
+        })
+
+    if raw_scores:
+        available = min(len(raw_scores), len(dimension_weights))
+        used_weights = {k: v for k, v in dimension_weights.items() if k <= available}
+        weight_sum = sum(used_weights.values())
+        weighted = sum(
+            raw_scores[i] * dimension_weights.get(i + 1, 0)
+            for i in range(available)
+        )
+        score = round(weighted / weight_sum, 1) if weight_sum > 0 else 0.0
+    else:
+        score = 0.0
+
+    verdict = "UNKNOWN"
+    for value in ("PASS", "REVISE", "REJECT"):
+        if f"Verdict: {value}" in review_text or f"Verdict:{value}" in review_text:
+            verdict = value
+            break
+
+    dim_floor_fail = False
+    if parsed_scores:
+        error_keywords = (
+            "error", "incorrect", "wrong", "mistake", "factual",
+            "помилк", "невірн", "хибн", "contradictory",
+        )
+        for dim in parsed_scores:
+            dim_score = dim.get("score", 10)
+            evidence = dim.get("evidence", "").lower()
+            if dim_score < REVIEW_TARGET_SCORE and any(kw in evidence for kw in error_keywords):
+                dim_floor_fail = True
+                break
+
+    passed = score >= 8.0 and verdict == "PASS" and not dim_floor_fail
+    return ReviewParseResult(
+        score=score,
+        verdict=verdict,
+        raw_scores=raw_scores,
+        parsed_scores=parsed_scores,
+        dim_floor_fail=dim_floor_fail,
+        passed=passed,
+    )
+
+
+def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | None:
+    """Parse the latest saved review for a module, if present."""
+    review_dir = CURRICULUM_ROOT / level / "review"
+    review_path = review_dir / f"{slug}-review.md"
+    if not review_path.exists() and review_dir.exists():
+        versioned = sorted(review_dir.glob(f"{slug}-review-r*.md"))
+        if versioned:
+            review_path = versioned[-1]
+    if not review_path.exists():
+        return None
+    try:
+        return _parse_review_result(review_path.read_text("utf-8"))
+    except Exception:
+        return None
+
+
+def _should_skip_batch_module(level: str, slug: str, step: str,
+                              review_threshold: float) -> tuple[bool, str]:
+    """Decide whether batch mode should skip a module for the requested step."""
+    if step == "review":
+        completed = _load_completed_phases(level, slug)
+        if "review" not in completed:
+            return False, "review not complete yet"
+
+        latest_review = _load_latest_review_result(level, slug)
+        if latest_review is None:
+            return False, "no saved review found"
+        if latest_review.score < review_threshold:
+            return False, f"latest review {latest_review.score}/10 < {review_threshold:.1f}"
+        return True, f"latest review {latest_review.score}/10 >= {review_threshold:.1f}"
+
+    if _all_phases_complete(level, slug):
+        return True, "all phases complete"
+
+    return False, "module incomplete"
 
 
 def step_check(level: str, module_num: int, slug: str) -> bool:
@@ -2283,6 +2410,66 @@ def _post_process_content(content_path: Path) -> int:
     return fixes
 
 
+def step_audit(content_path: Path, level: str, slug: str) -> bool:
+    """Step 10: Full audit — writes status/{slug}.json with gate results.
+
+    Runs the deterministic audit (word count, activities, vocab, naturalness,
+    VESUM, stress, review violations) and saves the status cache that the
+    monitor API reads.
+
+    Non-blocking: a failing audit does NOT halt the build. The content is
+    already published. Audit captures quality metrics for reporting and
+    follow-up. Use the status file to find modules that need fixing.
+
+    Reason this is a separate step (not merged into verify): v6's step_verify
+    does quick VESUM+scope checks only. This runs the full gate battery
+    including activity/vocab minimums, naturalness scoring, and writes the
+    status JSON that monitor API consumes.
+    """
+    _log(f"\n{'='*60}")
+    _log(f"  Step 10: AUDIT — Full quality gates ({slug})")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False
+
+    try:
+        # Import lazily — audit has heavy deps (morphological analysis, etc.)
+        from audit.core import audit_module as run_audit
+
+        # audit_module() writes the status file as a side effect via
+        # generate_output_and_report(). Returns True on pass, False on fail.
+        # We don't halt on failure — just record the result in the status file.
+        run_audit(str(content_path), skip_activities=False, skip_review=False)
+
+        status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
+        if status_path.exists():
+            _log(f"  ✅ Status written: {status_path.name}")
+            # Report overall status from the file
+            try:
+                import json
+                data = json.loads(status_path.read_text("utf-8"))
+                overall = data.get("overall", {}).get("status", "unknown")
+                gates = data.get("gates", {})
+                failed = [k for k, v in gates.items() if isinstance(v, dict) and v.get("status") == "fail"]
+                if overall == "pass":
+                    _log("  🟢 All gates PASS")
+                else:
+                    _log(f"  🟡 Overall: {overall} — failed gates: {', '.join(failed) if failed else 'see status file'}")
+            except Exception as e:
+                _log(f"  ⚠️  Could not parse status file: {e}")
+        else:
+            _log("  ⚠️  Audit ran but no status file was written")
+
+        # Return True unconditionally — audit is reporting, not gating
+        return True
+    except Exception as e:
+        _log(f"  ⚠️  Audit failed with exception: {e}")
+        # Don't halt the build on audit exceptions — log and continue
+        return True
+
+
 def step_annotate(content_path: Path) -> bool:
     """Step 8b: Add stress marks (after review, before publish).
 
@@ -3656,96 +3843,46 @@ def step_review(content_path: Path, level: str, module_num: int,
     orch_dir.mkdir(parents=True, exist_ok=True)
     _save_structured_findings(raw, orch_dir, round_num)
 
-    # Parse raw dimension scores from review output and calculate weighted total
+    parsed = _parse_review_result(raw)
+    score = parsed.score
 
-    # Dimension weights (must match v6-review.md)
-    DIMENSION_WEIGHTS = {
-        1: 0.15,  # Plan adherence
-        2: 0.15,  # Linguistic accuracy
-        3: 0.15,  # Pedagogical quality
-        4: 0.10,  # Vocabulary coverage
-        5: 0.15,  # Exercise quality
-        6: 0.10,  # Engagement & tone
-        7: 0.05,  # Structural integrity
-        8: 0.05,  # Cultural accuracy
-        9: 0.10,  # Dialogue & conversation quality
-    }
-
-    # Extract per-dimension scores from the markdown table (with evidence for floor check)
-    # GUARD: Gemini sometimes outputs the score table twice. Only take first 9 dimensions.
-    score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
-    all_raw_scores = [int(m.group(1)) for m in score_pattern.finditer(raw)]
-    num_dims = len(DIMENSION_WEIGHTS)
-    if len(all_raw_scores) > num_dims:
-        _log(f"  ⚠️  Parsed {len(all_raw_scores)} scores — trimming to first {num_dims} (duplicate table in review)")
-    raw_scores = all_raw_scores[:num_dims]
-
-    # Also parse full scores with evidence for dimension floor check
-    # Same dedup: only first 9 dimensions
-    full_score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
-    parsed_scores = []
-    seen_dims: set[int] = set()
-    for m in full_score_pattern.finditer(raw):
-        dim_num = int(m.group(1))
-        if dim_num in seen_dims:
-            continue  # Skip duplicate dimension
-        seen_dims.add(dim_num)
-        parsed_scores.append({
-            "dimension": dim_num,
-            "name": m.group(2).strip(),
-            "score": int(m.group(3)),
-            "evidence": m.group(4).strip(),
-        })
-
-    if raw_scores:
-        # Use available scores even if fewer than 9 — normalize by available weights
-        available = min(len(raw_scores), len(DIMENSION_WEIGHTS))
-        used_weights = {k: v for k, v in DIMENSION_WEIGHTS.items() if k <= available}
-        weight_sum = sum(used_weights.values())
-        weighted = sum(
-            raw_scores[i] * DIMENSION_WEIGHTS.get(i + 1, 0)
-            for i in range(available)
+    all_score_matches = list(re.finditer(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|", raw))
+    if len(all_score_matches) > len(parsed.raw_scores):
+        _log(
+            f"  ⚠️  Parsed {len(all_score_matches)} scores — trimming to first {len(parsed.raw_scores)} "
+            "(duplicate table in review)"
         )
-        # Normalize: if only 8 of 9 dimensions, scale up proportionally
-        score = round(weighted / weight_sum * 1.0, 1) if weight_sum > 0 else 0.0
-        _log(f"  Raw scores: {raw_scores}")
-        if available < len(DIMENSION_WEIGHTS):
-            _log(f"  ⚠️  Only {available}/9 dimensions parsed — score normalized")
+
+    if parsed.raw_scores:
+        _log(f"  Raw scores: {parsed.raw_scores}")
+        if len(parsed.raw_scores) < 9:
+            _log(f"  ⚠️  Only {len(parsed.raw_scores)}/9 dimensions parsed — score normalized")
         _log(f"  Weighted score (calculated): {score}/10")
     else:
-        score = 0.0
         _log("  ⚠️  Could not parse any dimension scores")
 
-    # Parse verdict (reviewer judges severity, pipeline judges score)
-    verdict = "UNKNOWN"
-    for v in ("PASS", "REVISE", "REJECT"):
-        if f"Verdict: {v}" in raw or f"Verdict:{v}" in raw:
-            verdict = v
-            break
-
-    # Two independent gates
     score_pass = score >= 8.0
-    severity_pass = verdict == "PASS"
+    severity_pass = parsed.verdict == "PASS"
 
-    # Dimension floor: if ANY dimension scores <9 AND mentions errors/mistakes
-    # in evidence, force REVISE. A language curriculum cannot ship known errors.
-    dim_floor_fail = False
-    if parsed_scores:
-        error_keywords = ("error", "incorrect", "wrong", "mistake", "factual",
-                          "помилк", "невірн", "хибн", "contradictory")
-        for dim in parsed_scores:
-            dim_score = dim.get("score", 10)
-            evidence = dim.get("evidence", "").lower()
-            if dim_score < 9 and any(kw in evidence for kw in error_keywords):
-                dim_floor_fail = True
-                dim_name = dim.get("name", "?")
-                _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
+    for dim in parsed.parsed_scores:
+        dim_score = dim.get("score", 10)
+        evidence = dim.get("evidence", "").lower()
+        error_keywords = (
+            "error", "incorrect", "wrong", "mistake", "factual",
+            "помилк", "невірн", "хибн", "contradictory",
+        )
+        if dim_score < REVIEW_TARGET_SCORE and any(kw in evidence for kw in error_keywords):
+            dim_name = dim.get("name", "?")
+            _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
 
-    passed = score_pass and severity_pass and not dim_floor_fail
+    passed = parsed.passed
 
     icon = "✅" if passed else "❌"
-    floor_msg = " (dimension floor FAIL)" if dim_floor_fail else ""
-    _log(f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — {verdict} (severity gate: {'✅' if severity_pass else '❌'}){floor_msg}")
+    floor_msg = " (dimension floor FAIL)" if parsed.dim_floor_fail else ""
+    _log(
+        f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — "
+        f"{parsed.verdict} (severity gate: {'✅' if severity_pass else '❌'}){floor_msg}"
+    )
 
     return passed, score, raw
 
@@ -4717,7 +4854,7 @@ def main():
                         help="Default: gemini-tools. *-tools = with MCP (VESUM/RAG) access during writing")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "audit", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
@@ -4728,6 +4865,8 @@ def main():
                         help="Disable section-by-section chunked generation (always single-call)")
     parser.add_argument("--resume", action="store_true",
                         help="Resume from last completed phase (reads state.json, skips completed phases)")
+    parser.add_argument("--review-threshold", type=float, default=REVIEW_TARGET_SCORE,
+                        help="Batch review skip threshold: rerun review when latest score is below this value")
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
@@ -4750,8 +4889,11 @@ def main():
             _range_slugs = data.get("levels", {}).get(args.level, {}).get("modules", [])
             if n <= len(_range_slugs):
                 _range_slug = _range_slugs[n - 1]
-                if _all_phases_complete(args.level, _range_slug):
-                    _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — all phases complete, skipping")
+                skip_module, skip_reason = _should_skip_batch_module(
+                    args.level, _range_slug, args.step, args.review_threshold,
+                )
+                if skip_module:
+                    _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — {skip_reason}, skipping")
                     skipped.append(n)
                     continue
 
@@ -4760,11 +4902,13 @@ def main():
             _log(f"{'─'*60}")
             try:
                 result = _subprocess.run(
-                    [sys.executable, __file__, args.level, str(n),
+                    [str(PROJECT_ROOT / ".venv" / "bin" / "python"), __file__, args.level, str(n),
                      "--writer", args.writer,
                      "--step", args.step,
+                     "--review-threshold", str(args.review_threshold),
                      *(["--resume"] if args.resume else []),
                      *(["--reviewer", args.reviewer] if args.reviewer else []),
+                     *(["--skeleton"] if getattr(args, "skeleton", False) else []),
                      *(["--no-skeleton"] if getattr(args, "no_skeleton", False) else []),
                      *(["--no-chunk"] if args.no_chunk else []),
                      ],
@@ -5062,8 +5206,8 @@ def main():
 
         # Fix strategy:
         # 1. If PASSED → apply any <fixes> anyway (minor improvements), done.
-        # 2. If score ≥ 9.0 → apply <fixes>, done (no re-review, avoids degradation).
-        # 3. If score < 9.0 → apply <fixes>, re-review. If still failing, section rewrite + re-review.
+        # 2. If score ≥ target → apply <fixes>, done (no re-review, avoids degradation).
+        # 3. If score < target → apply <fixes>, re-review. If still failing, section rewrite + re-review.
         # 4. GUARANTEE: before leaving this block, ALWAYS apply the latest review's <fixes>.
         #    No review fix is ever left unapplied.
 
@@ -5078,9 +5222,11 @@ def main():
             _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R1")
             step_verify(content_path, args.level, args.module)
 
-        # R2 only if R1 < 9.0 — above 9, fixes are sufficient
-        if r1_score < 9.0:
-            _log(f"\n🔄 R1 score {r1_score}/10 < 9.0 — running R2 to measure improvement")
+        # R2 only if R1 is below the target threshold.
+        if r1_score < REVIEW_TARGET_SCORE:
+            _log(
+                f"\n🔄 R1 score {r1_score}/10 < {REVIEW_TARGET_SCORE:.1f} — running R2 to measure improvement"
+            )
             passed, score, review_text = step_review(
                 content_path, args.level, args.module, slug,
                 writer=args.writer, reviewer_override=args.reviewer,
@@ -5108,7 +5254,9 @@ def main():
                 _log("   Fix the plan or content manually, then re-run with --resume")
                 return  # Do not proceed to publish
         else:
-            _log(f"\n✅ R1 score {r1_score}/10 ≥ 9.0 — accepting with {fix_count} fix(es)")
+            _log(
+                f"\n✅ R1 score {r1_score}/10 ≥ {REVIEW_TARGET_SCORE:.1f} — accepting with {fix_count} fix(es)"
+            )
 
         # Run deterministic style cleanup if engagement is weak
         engagement_match = re.search(
@@ -5142,8 +5290,8 @@ def main():
         # Log final status
         if passed:
             _log(f"\n✅ Review PASSED ({score}/10)")
-        elif score >= 9.0:
-            _log(f"\n✅ Score {score}/10 ≥ 9.0 — accepting")
+        elif score >= REVIEW_TARGET_SCORE:
+            _log(f"\n✅ Score {score}/10 ≥ {REVIEW_TARGET_SCORE:.1f} — accepting")
         else:
             _log(f"\n⚠️  Score {score}/10 — accepting as final (fix rounds exhausted)")
 
@@ -5170,6 +5318,13 @@ def main():
     if steps in ("all", "review", "publish") and "publish" not in completed_phases:
         step_publish(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "publish")
+
+    # Step 10: AUDIT — deterministic quality gates + status file
+    # Runs after publish so all artifacts exist (content, activities, vocab, MDX).
+    # Non-blocking: records gate results in status/{slug}.json for monitor API.
+    if steps in ("all", "publish", "audit") and "audit" not in completed_phases:
+        step_audit(content_path, args.level, slug)
+        _save_v6_state(args.level, slug, "audit")
 
     # Generate orchestration index (#1029)
     from build.orch_index import generate_index
