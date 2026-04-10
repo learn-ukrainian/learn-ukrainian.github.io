@@ -11,15 +11,44 @@ Generate an `activities/{MODULE_SLUG}.yaml` file for module **{MODULE_NUM}: {TOP
 
 ---
 
-## Inline vs Workbook Split
+## Inline vs Workbook Split — REQUIRED STRUCTURE
 
-Activities have two placement categories:
+Activities have two placement categories with DIFFERENT purposes, DIFFERENT types allowed, and SEPARATE minimum counts. Read this carefully — violations cause build failures.
 
-1. **inline** — short, focused exercises placed directly in the lesson (Урок tab) at specific injection points. The writer has placed `<!-- INJECT_ACTIVITY: {id} -->` markers in the prose. Each inline activity MUST have an `id` that matches one of these markers.
+### 1. INLINE activities (Урок tab, mid-prose)
 
-2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
+Short, focused checks placed directly after a teaching point in the lesson flow.
 
-**Targets:** Generate **{ACTIVITY_COUNT_TARGET} activities total**: at least **4 inline** (quick checks after teaching points) AND at least **{WORKBOOK_MIN} workbook** (deeper practice). Count both before outputting — if under target, add more workbook activities. Ukrainian textbooks always practice right after theory — follow that pattern.
+- Purpose: immediate comprehension check — "did you understand what you just read?"
+- Duration: learner spends 30 seconds to 2 minutes per activity
+- Placement: at `<!-- INJECT_ACTIVITY: {id} -->` markers in the prose
+- **Each inline activity MUST have an `id`** matching one of the markers
+- **Count: minimum {INLINE_MIN}, maximum {INLINE_MAX}**
+- **Allowed types for inline at this level:** {INLINE_ALLOWED_TYPES}
+- **Priority types for inline (prefer these):** {INLINE_PRIORITY_TYPES}
+
+### 2. WORKBOOK activities (Зошит tab, deep practice)
+
+Extended practice exercises covering the full module topic.
+
+- Purpose: deep practice, skill consolidation, production
+- Duration: learner spends 5 to 15 minutes per activity
+- Placement: all in the workbook tab, no ids needed
+- **Count: minimum {WORKBOOK_MIN}, maximum {WORKBOOK_MAX}**
+- **Allowed types for workbook at this level:** {WORKBOOK_ALLOWED_TYPES}
+- **Priority types for workbook (prefer these):** {WORKBOOK_PRIORITY_TYPES}
+
+### Target totals
+
+**Generate {TOTAL_TARGET} activities total** across both sections: at least **{INLINE_MIN} inline + {WORKBOOK_MIN} workbook**. Ukrainian textbooks always practice right after theory — follow that pattern.
+
+### Type placement rules (enforced by validator)
+
+**INLINE-ONLY types** (NEVER in workbook): `image-to-letter`, `letter-grid`, `watch-and-repeat` — these are beginner visual aids that only make sense inline.
+
+**WORKBOOK-ONLY types** (NEVER in inline, always workbook): `essay-response`, `reading`, `cloze`, `critical-analysis`, `source-evaluation`, `debate`, `comparative-study`, `authorial-intent`, `translation-critique`, `etymology-trace`, `paleography-analysis`, `transcription`, `dialect-comparison` — these are too long or too deep for mid-prose placement.
+
+**Count BOTH sections before outputting.** If under minimum for either section, ADD more activities of the appropriate types. Do not pad by splitting one activity into two.
 
 ---
 

@@ -3049,10 +3049,22 @@ def step_activities(
     from pipeline.config_tables import get_activity_config, get_item_minimums_table
     item_minimums_table = get_item_minimums_table(level, module_num)
 
-    # Activity count targets from config
+    # Activity count targets from config — inline/workbook split is source of truth
     activity_config = get_activity_config(level, module_num)
-    activity_count_target = activity_config.get("ACTIVITY_COUNT_TARGET", "12")
-    workbook_min = str(int(activity_count_target) - 4)  # total minus 4 inline
+    total_target = activity_config.get("TOTAL_TARGET", activity_config.get("ACTIVITY_COUNT_TARGET", "12"))
+    inline_min = activity_config.get("INLINE_MIN", "4")
+    inline_max = activity_config.get("INLINE_MAX", "6")
+    workbook_min = activity_config.get("WORKBOOK_MIN", str(int(total_target) - int(inline_min)))
+    workbook_max = activity_config.get("WORKBOOK_MAX", str(int(total_target) + 4))
+    inline_allowed = activity_config.get("INLINE_ALLOWED_TYPES", activity_config.get("ALLOWED_ACTIVITY_TYPES", ""))
+    workbook_allowed = activity_config.get("WORKBOOK_ALLOWED_TYPES", activity_config.get("ALLOWED_ACTIVITY_TYPES", ""))
+    inline_priority = activity_config.get("INLINE_PRIORITY_TYPES", activity_config.get("PRIORITY_TYPES", ""))
+    workbook_priority = activity_config.get("WORKBOOK_PRIORITY_TYPES", activity_config.get("PRIORITY_TYPES", ""))
+    items_min = activity_config.get("ITEMS_MIN", "6")
+    vocab_count_target = activity_config.get("VOCAB_COUNT_TARGET", "25")
+    forbidden_types = activity_config.get("FORBIDDEN_ACTIVITY_TYPES", "")
+    allowed_types = activity_config.get("ALLOWED_ACTIVITY_TYPES", "")
+    required_types = activity_config.get("REQUIRED_TYPES", "")
 
     # Fill template
     prompt = template
@@ -3069,8 +3081,24 @@ def step_activities(
         "{LEVEL_CONTEXT}": level_context,
         "{PEDAGOGY_PATTERNS}": pedagogy_patterns,
         "{ITEM_MINIMUMS_TABLE}": item_minimums_table,
-        "{ACTIVITY_COUNT_TARGET}": activity_count_target,
+        # New inline/workbook split placeholders (preferred)
+        "{TOTAL_TARGET}": total_target,
+        "{INLINE_MIN}": inline_min,
+        "{INLINE_MAX}": inline_max,
         "{WORKBOOK_MIN}": workbook_min,
+        "{WORKBOOK_MAX}": workbook_max,
+        "{INLINE_ALLOWED_TYPES}": inline_allowed,
+        "{WORKBOOK_ALLOWED_TYPES}": workbook_allowed,
+        "{INLINE_PRIORITY_TYPES}": inline_priority,
+        "{WORKBOOK_PRIORITY_TYPES}": workbook_priority,
+        "{ITEMS_MIN}": items_min,
+        "{VOCAB_COUNT_TARGET}": vocab_count_target,
+        "{FORBIDDEN_ACTIVITY_TYPES}": forbidden_types,
+        "{ALLOWED_ACTIVITY_TYPES}": allowed_types,
+        "{REQUIRED_TYPES}": required_types,
+        # Backward compat
+        "{ACTIVITY_COUNT_TARGET}": total_target,
+        "{PRIORITY_TYPES}": activity_config.get("PRIORITY_TYPES", ""),
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)

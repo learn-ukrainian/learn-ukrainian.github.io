@@ -1,26 +1,33 @@
 """Activity validator — detect structural and pedagogical problems in activity YAML.
 
-Checks:
-- fill-in: answer in options, no trivial hints (hint = answer), blank present
-- quiz: correct index in range, options count
+Structural checks (per-item):
+- fill-in: answer in options, no parenthetical hints, blank present
+- quiz: correct index in range, no duplicate options
 - error-correction: error word in sentence, correction differs from error
 - unjumble: commas in tiles, positional anchors (delegated to exercise_verify)
 - match-up: no duplicate pairs
-- all types: item count meets schema minimums
+- true-false: correct field is boolean
+
+Section-level checks (requires level context):
+- Inline count within INLINE_MIN..INLINE_MAX
+- Workbook count within WORKBOOK_MIN..WORKBOOK_MAX
+- No INLINE_ONLY type appears in workbook section
+- No WORKBOOK_ONLY type appears in inline section
+- Per-section type only uses allowed types from config
 
 Usage:
     from build.activity_validator import validate_activities
-    issues = validate_activities("curriculum/l2-uk-en/a1/activities/where-to.yaml")
-
-    # Or batch:
-    from build.activity_validator import validate_all
-    all_issues = validate_all("a1")
+    issues = validate_activities(
+        "curriculum/l2-uk-en/a1/activities/where-to.yaml",
+        level="a1", module_num=1,
+    )
 """
 
 from __future__ import annotations
 
 import os
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -28,6 +35,10 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+
+# Ensure scripts/ on sys.path so we can import pipeline.config_tables
+if str(PROJECT_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 
 @dataclass
@@ -49,8 +60,35 @@ class ActivityIssue:
         return f"{icon} {self.slug} {loc}: {self.message}"
 
 
-def validate_activities(path: str | Path) -> list[ActivityIssue]:
-    """Validate a single activities YAML file. Returns list of issues."""
+def _infer_level_from_path(path: Path) -> tuple[str, int] | None:
+    """Best-effort level + module_num inference from file path."""
+    # curriculum/l2-uk-en/{level}/activities/{slug}.yaml
+    try:
+        parts = path.parts
+        if "activities" in parts:
+            level = parts[parts.index("activities") - 1]
+            slug = path.stem
+            try:
+                from batch_gemini_config import num_for_slug
+                return level, num_for_slug(level, slug)
+            except Exception:
+                return level, 1
+    except Exception:
+        pass
+    return None
+
+
+def validate_activities(
+    path: str | Path,
+    level: str | None = None,
+    module_num: int | None = None,
+) -> list[ActivityIssue]:
+    """Validate a single activities YAML file. Returns list of issues.
+
+    If level + module_num are provided (or can be inferred from path),
+    section-level checks are applied (count, inline/workbook type placement,
+    per-section allowlists).
+    """
     path = Path(path)
     slug = path.stem
     activities = yaml.safe_load(path.read_text("utf-8"))
@@ -59,6 +97,14 @@ def validate_activities(path: str | Path) -> list[ActivityIssue]:
 
     issues: list[ActivityIssue] = []
 
+    # Infer level/module_num from path if not provided
+    if level is None or module_num is None:
+        inferred = _infer_level_from_path(path)
+        if inferred:
+            level = level or inferred[0]
+            module_num = module_num or inferred[1]
+
+    # Structural per-item checks
     for section in ("inline", "workbook"):
         for act in activities.get(section, []) or []:
             if not isinstance(act, dict):
@@ -77,6 +123,129 @@ def validate_activities(path: str | Path) -> list[ActivityIssue]:
                 issues.extend(_check_match_up(slug, section, pairs))
             elif atype == "true-false":
                 issues.extend(_check_true_false(slug, section, items))
+
+    # Section-level checks (need level context)
+    if level and module_num:
+        issues.extend(_check_section_placement(slug, activities))
+        issues.extend(_check_section_counts_and_types(slug, activities, level, module_num))
+
+    return issues
+
+
+def _check_section_placement(slug: str, activities: dict) -> list[ActivityIssue]:
+    """Enforce INLINE_ONLY vs WORKBOOK_ONLY type placement rules.
+
+    Independent of per-level config — these are semantic rules
+    (essay-response never belongs inline, image-to-letter never in workbook).
+    """
+    try:
+        from pipeline.config_tables import INLINE_ONLY_TYPES, WORKBOOK_ONLY_TYPES
+    except ImportError:
+        return []  # Can't validate without config
+
+    issues: list[ActivityIssue] = []
+
+    # Inline section: reject WORKBOOK_ONLY types
+    for act in activities.get("inline", []) or []:
+        if not isinstance(act, dict):
+            continue
+        atype = act.get("type", "")
+        if atype in WORKBOOK_ONLY_TYPES:
+            issues.append(ActivityIssue(
+                slug, "inline", atype, -1, "error",
+                f"type '{atype}' is WORKBOOK-ONLY — move to workbook section",
+            ))
+
+    # Workbook section: reject INLINE_ONLY types
+    for act in activities.get("workbook", []) or []:
+        if not isinstance(act, dict):
+            continue
+        atype = act.get("type", "")
+        if atype in INLINE_ONLY_TYPES:
+            issues.append(ActivityIssue(
+                slug, "workbook", atype, -1, "error",
+                f"type '{atype}' is INLINE-ONLY — move to inline section",
+            ))
+
+    return issues
+
+
+def _check_section_counts_and_types(
+    slug: str, activities: dict, level: str, module_num: int,
+) -> list[ActivityIssue]:
+    """Enforce per-level inline/workbook count minimums and type allowlists."""
+    try:
+        from pipeline.config_tables import get_activity_config
+    except ImportError:
+        return []
+
+    try:
+        config = get_activity_config(level, module_num)
+    except Exception:
+        return []
+
+    issues: list[ActivityIssue] = []
+
+    inline_count = len(activities.get("inline", []) or [])
+    workbook_count = len(activities.get("workbook", []) or [])
+
+    # Count checks
+    try:
+        inline_min = int(config.get("INLINE_MIN", "0"))
+        inline_max = int(config.get("INLINE_MAX", "99"))
+        workbook_min = int(config.get("WORKBOOK_MIN", "0"))
+        workbook_max = int(config.get("WORKBOOK_MAX", "99"))
+    except (TypeError, ValueError):
+        inline_min = inline_max = workbook_min = workbook_max = 0
+
+    if inline_min and inline_count < inline_min:
+        issues.append(ActivityIssue(
+            slug, "inline", "-", -1, "error",
+            f"inline count {inline_count} below minimum {inline_min} for {level}",
+        ))
+    if inline_max and inline_count > inline_max:
+        issues.append(ActivityIssue(
+            slug, "inline", "-", -1, "warning",
+            f"inline count {inline_count} exceeds maximum {inline_max} for {level} — prose may be fragmented",
+        ))
+    if workbook_min and workbook_count < workbook_min:
+        issues.append(ActivityIssue(
+            slug, "workbook", "-", -1, "error",
+            f"workbook count {workbook_count} below minimum {workbook_min} for {level}",
+        ))
+    if workbook_max and workbook_count > workbook_max:
+        issues.append(ActivityIssue(
+            slug, "workbook", "-", -1, "warning",
+            f"workbook count {workbook_count} exceeds maximum {workbook_max} for {level}",
+        ))
+
+    # Per-section type allowlists
+    inline_allowed_str = config.get("INLINE_ALLOWED_TYPES", "")
+    workbook_allowed_str = config.get("WORKBOOK_ALLOWED_TYPES", "")
+    inline_allowed = {t.strip() for t in inline_allowed_str.split(",") if t.strip()}
+    workbook_allowed = {t.strip() for t in workbook_allowed_str.split(",") if t.strip()}
+
+    for act in activities.get("inline", []) or []:
+        if not isinstance(act, dict):
+            continue
+        atype = act.get("type", "")
+        if inline_allowed and atype and atype not in inline_allowed:
+            issues.append(ActivityIssue(
+                slug, "inline", atype, -1, "error",
+                f"type '{atype}' not in {level} inline allowlist "
+                f"(allowed: {', '.join(sorted(inline_allowed))})",
+            ))
+
+    for act in activities.get("workbook", []) or []:
+        if not isinstance(act, dict):
+            continue
+        atype = act.get("type", "")
+        if workbook_allowed and atype and atype not in workbook_allowed:
+            issues.append(ActivityIssue(
+                slug, "workbook", atype, -1, "error",
+                f"type '{atype}' not in {level} workbook allowlist "
+                f"(allowed: {', '.join(sorted(workbook_allowed))})",
+            ))
 
     return issues
 

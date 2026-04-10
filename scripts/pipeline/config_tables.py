@@ -1013,6 +1013,11 @@ def get_expansion_method(track: str, module_num: int) -> str:
 #
 # Some types only work in one context. This is enforced by the validator
 # independently of per-level allowlists.
+#
+# TODO (when B2 batch begins): add "zno" type (dedicated React component,
+# schema entry, 8 categories: наголос, пароніми, орфографія, case endings,
+# lexical choice, phonetics, word formation, punctuation). Add to B2 inline
+# + workbook lists. C1/C2 priority. See session notes 2026-04-10.
 INLINE_ONLY_TYPES: set[str] = {
     "image-to-letter",      # beginner visual aid (A1 only)
     "letter-grid",          # alphabet reference (A1 only)
