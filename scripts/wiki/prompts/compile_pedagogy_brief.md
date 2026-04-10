@@ -10,7 +10,22 @@ Tracks served: **{tracks}**
 
 ## Source Material
 
-The following source chunks come from Ukrainian textbooks (Большакова, Вашуленко Grades 1-2) and pedagogy resources. **Every claim MUST cite a specific source** using `(Source N)` or `(Джерело: chunk_id)`. If no source supports a claim, mark it `<!-- VERIFY -->`.
+The following source chunks come from Ukrainian textbooks (Большакова, Вашуленко Grades 1-2) and pedagogy resources. Source format:
+
+```
+### Source N: {work/grade metadata}
+Chunk ID: `{chunk_id}`
+
+{text}
+```
+
+**Every claim MUST cite a specific source** using the format `(Source N: {chunk_id})` — **BOTH** the ordinal AND the chunk_id are required. `(Source 5)` alone is insufficient. The chunk_id makes the claim traceable back to the exact textbook passage.
+
+If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
+
+### Source quality weighting
+
+Textbook chunks (Вашуленко, Большакова, Заболотний Grade 5) are **primary** — cite freely. Wikipedia and YouTube chunks are **background only**; A1 pedagogy should be driven by the school textbook progression, not by general-purpose sources.
 
 {sources}
 
@@ -76,12 +91,13 @@ Cross-links to other wiki articles that complement this one.
 ## Quality Standards
 
 ### ABSOLUTE REQUIREMENTS:
-1. **Source citations in every section.** Not just metadata — woven into claims.
+1. **Chunk-ID citations in every section.** Format: `(Source N: chunk_id)` — both ordinal and chunk_id, never just one.
 2. **Minimum 5 error pairs.** ❌ → ✅ format with explanations.
-3. **Minimum 4 textbook exercise examples.** Specific, not vague.
-4. **Decolonization section present and substantive.**
-5. **No Russianisms.** Not even in "also acceptable" framing.
-6. **Minimum 1,000 words.**
+3. **Minimum 4 textbook exercise examples.** Specific, not vague. Cite the textbook + chunk_id + grade for each.
+4. **Grade-level attribution.** When describing "how schools teach this," specify the exact grade and textbook author from the sources (e.g., "Вашуленко Grade 1 introduces А, О, У first (Source 3: 1-klas-ukrmova-vashulenko-2019_s0012)").
+5. **Decolonization section present and substantive.**
+6. **No Russianisms.** Not even in "also acceptable" framing.
+7. **Minimum 1,000 words.**
 
 ### STRONG PREFERENCES:
 - Practical, not theoretical. The writer needs actionable guidance, not linguistics lectures.
@@ -96,6 +112,16 @@ Cross-links to other wiki articles that complement this one.
 3. ❌ Mixing Cyrillic script systems (Ukrainian vs Russian И/І) → ✅ Only Ukrainian alphabet
 4. ❌ Vocabulary beyond A1 level → ✅ Stick to frequency-ranked A1 vocabulary
 5. ❌ Theoretical phonology → ✅ Practical pronunciation guidance the writer can use
+
+## Self-audit (run through this checklist before outputting)
+
+- [ ] Every paragraph has at least one `(Source N: chunk_id)` citation
+- [ ] Total word count ≥ 1000
+- [ ] ≥ 5 L2 error pairs in ❌/✅ format
+- [ ] ≥ 4 specific textbook exercise examples (grade + author + chunk_id)
+- [ ] Decolonization section present and substantive — not a token paragraph
+- [ ] No claim supported only by Wikipedia or YouTube (those get `<!-- VERIFY -->`)
+- [ ] No Russianisms in the teaching recommendations (no phonetic comparisons to Russian, no "like Russian X but…")
 
 ## Output
 

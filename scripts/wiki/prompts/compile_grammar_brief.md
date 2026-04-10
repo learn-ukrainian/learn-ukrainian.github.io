@@ -10,7 +10,22 @@ Tracks served: **{tracks}**
 
 ## Source Material
 
-The following source chunks come from Ukrainian textbooks (Заболотний Grades 5-9, Авраменко Grades 7-11, МійКлас) and grammar resources. **Every claim MUST cite a specific source** using `(Source N)` or `(Джерело: chunk_id)`. If no source supports a claim, mark it `<!-- VERIFY -->`.
+The following source chunks come from Ukrainian textbooks (Заболотний Grades 5-9, Авраменко Grades 7-11, Літвінова Grade 7, Глазова Grade 11, Карман Grade 10, МійКлас) and grammar resources. Source format:
+
+```
+### Source N: {work/grade metadata}
+Chunk ID: `{chunk_id}`
+
+{text}
+```
+
+**Every claim in your article MUST cite a specific source** using the format `(Source N: {chunk_id})` — **BOTH** the ordinal AND the chunk_id are required. `(Source 5)` alone or `(Джерело: ...)` alone is insufficient. The chunk_id makes the claim traceable back to the exact textbook passage and lets the reviewer verify it.
+
+If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
+
+### Source quality weighting
+
+Textbook chunks and МійКлас are **primary sources** — cite them freely. Wikipedia (`ext-wikipedia-*`) and YouTube transcripts (`ext-*_youtube-*`) are **background context only** — YouTube transcripts often contain speech errors and spoken-language pivots, so never quote them as examples of standard written grammar. If your only support for a claim is a Wikipedia or YouTube chunk, mark it `<!-- VERIFY -->`.
 
 {sources}
 
@@ -43,7 +58,8 @@ The Ukrainian textbook approach. What Grade introduces this? What sequence? What
 Tables showing all forms. Highlight patterns (which endings are predictable, which are exceptions). Group by declension/conjugation class.
 - Use TABLES — not prose — for paradigms
 - Mark irregular forms in **bold**
-- Show formation rules step-by-step: stem → suffix → ending
+- Show formation rules **as an explicit transformation chain**: `{infinitive} → {stem} → {+suffix} → {final form}`. Example: `посивіти → посиві- → +ідl- → посивілий`. Prose like "add -л-" is insufficient — show the mechanical step.
+- **State ALL restrictions explicitly**, not just formation rules. Examples: "active past participles form only from INTRANSITIVE perfective verbs — `*прочиталий книгу` is impossible" (cite the source that establishes the restriction). Missing a restriction is a failure mode that has historically tanked review scores.
 
 ## Частотність і пріоритети (Frequency & Priorities)
 Which forms appear most in real Ukrainian? What should the learner master first? What can wait? Cite frequency data if available.
@@ -85,13 +101,15 @@ Cross-links to other wiki articles.
 ## Quality Standards
 
 ### ABSOLUTE REQUIREMENTS:
-1. **Source citations in every section.** Woven into claims, not just in metadata.
+1. **Chunk-ID citations in every section.** Format: `(Source N: chunk_id)`. Not `(Source N)` alone, not `(Джерело 5)` alone. The chunk_id is mandatory and makes the claim traceable.
 2. **Complete paradigms in tables.** Don't summarize — show ALL forms.
-3. **Minimum 12 natural examples.** Source-attributed. Grouped by pattern.
-4. **Minimum 5 error pairs.** With explanations.
-5. **Decolonization section present and substantive.**
-6. **No Russianisms.** Not even as "also acceptable."
-7. **Minimum 1,500 words.**
+3. **Formation as transformation chain**: `{infinitive} → {stem} → {+suffix} → {final}`, not just "add suffix X".
+4. **ALL restrictions stated explicitly** (intransitive-only, perfective-only, etc.) with the source that establishes each.
+5. **Minimum 12 natural examples.** Source-attributed with chunk_id. Grouped by pattern. Textbook chunks only — not YouTube transcripts.
+6. **Minimum 5 error pairs.** With explanations.
+7. **Decolonization section present and substantive.**
+8. **No Russianisms.** Not even as "also acceptable."
+9. **Minimum 1,500 words.**
 
 ### STRONG PREFERENCES:
 - Frequency-driven: not every form is equally important. Highlight what matters most.
@@ -106,6 +124,20 @@ Cross-links to other wiki articles.
 4. ❌ Strikethrough corrections in example sections → ✅ Put corrections in the L2 Errors section
 5. ❌ Presenting every paradigm cell as equally important → ✅ Frequency-rank the forms
 6. ❌ "Like in Russian..." as explanation → ✅ Explain from Ukrainian internal logic
+
+## Self-audit (run through this checklist before outputting)
+
+Before emitting the final article, mentally verify:
+
+- [ ] Every paragraph has at least one `(Source N: chunk_id)` citation (both ordinal AND chunk_id)
+- [ ] Total word count ≥ 1500
+- [ ] Formation rules shown as transformation chains, not bare prose
+- [ ] ALL restrictions stated explicitly with source attribution
+- [ ] ≥ 12 natural examples, grouped by pattern, textbook-sourced
+- [ ] ≥ 5 error pairs in ❌/✅ table format
+- [ ] Decolonization section present and substantive
+- [ ] No claim endorsed solely by a Wikipedia or YouTube chunk (all such claims marked `<!-- VERIFY -->`)
+- [ ] No Russianisms endorsed in your own prose (включно з: `було встановлено`, `являти собою`, `в якості`, `відноситися до`, `на протязі`, `слідуючий`, `приймати участь`, `діючий`)
 
 ## Output
 
