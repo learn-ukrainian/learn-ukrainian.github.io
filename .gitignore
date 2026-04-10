@@ -94,6 +94,7 @@ issue_*_body.md
 !start-claude.sh
 /*.yaml
 !docker-compose.qdrant.yaml
+!.pre-commit-config.yaml
 /*.csv
 /*.json
 !package.json

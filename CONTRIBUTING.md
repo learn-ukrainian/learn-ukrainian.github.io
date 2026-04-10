@@ -114,7 +114,32 @@ Every non-trivial change needs a GH issue. Before starting: find or create an is
 .venv/bin/ruff check --fix scripts/    # Auto-fix
 ```
 
-Pre-commit hooks run ruff + pytest automatically on `git commit`.
+### Pre-commit hooks
+
+The repo ships a `.pre-commit-config.yaml` that mirrors the CI checks locally. Install once per clone:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+After that, every `git commit` runs:
+
+- `ruff check` on changed `scripts/` files (blocks bad imports, multi-statement lines, etc.)
+- `gitleaks` secret scan on staged changes
+- YAML syntax check + large-file / merge-conflict detection
+- Block `.yaml.bak` / `.yaml.orig` accidental commits
+- Block bare `python` / `python3` in new shell scripts
+
+Run manually across the whole repo:
+
+```bash
+pre-commit run --all-files
+```
+
+If a hook fires unexpectedly, fix the underlying issue — do NOT bypass with `--no-verify` unless there's a real emergency. Hooks that need updating belong in `.pre-commit-config.yaml`, not in commit messages.
+
+Claude Code also has its own in-session pre-commit logic that runs ruff + pytest on affected files when it commits. Both layers are intentional: Claude Code catches bugs at agent-commit time, and `pre-commit` catches them at human-commit time. They should never disagree — if they do, investigate.
 
 ---
 

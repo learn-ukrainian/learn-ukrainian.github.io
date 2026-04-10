@@ -1,0 +1,82 @@
+# Pre-commit hooks for learn-ukrainian.
+#
+# Install:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Or run manually on all files:
+#   pre-commit run --all-files
+#
+# These hooks mirror the checks CI runs on every push. Keeping them
+# local means bad code never leaves the laptop. CI is slower and
+# more expensive than catching a ruff error on save.
+#
+# Reference issue: #1081
+repos:
+
+  # --- Ruff: the primary linter (same rules as CI) ---
+  # Version pinned to match what scripts/api/requirements-dev.txt
+  # and the CI workflow install. Bump in lockstep.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.5
+    hooks:
+      - id: ruff
+        name: ruff (lint)
+        # CI runs `ruff check scripts/` — match that here.
+        args: [--config=pyproject.toml]
+        files: ^scripts/.*\.py$
+
+  # --- Gitleaks: prevent secrets from ever being committed ---
+  # The repository already has a .gitleaks.toml allowlist for the
+  # public Algolia keys. Pre-commit picks that up automatically.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+        name: gitleaks (secret scan)
+        # Scan staged files only — full-history scans happen in CI.
+
+  # --- YAML syntax sanity ---
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        name: check yaml syntax
+        # Ukrainian curriculum plans + activity files use multi-doc
+        # YAML in a few places.
+        args: [--allow-multiple-documents]
+        # Exclude generated/archive dirs to keep this fast.
+        exclude: ^(data/|\.venv/|node_modules/|scripts/_archived/|starlight/node_modules/|curriculum/l2-uk-en/plans/.*\.yaml\.bak$)
+      - id: check-added-large-files
+        name: block accidentally large files
+        args: [--maxkb=2000]
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|starlight/node_modules/|\.venv/)
+      - id: trailing-whitespace
+        exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|starlight/node_modules/|\.venv/)
+
+  # --- Local hooks (project-specific) ---
+  - repo: local
+    hooks:
+      # Prevent accidentally adding .yaml.bak / .yaml.orig files that
+      # our update_plan_activities.py / other tools create as safety
+      # backups. They're already in .gitignore but pre-commit is the
+      # second line of defence.
+      - id: no-yaml-backups
+        name: block .yaml.bak / .yaml.orig files
+        entry: bash -c 'files=$(git diff --cached --name-only --diff-filter=A | grep -E "\.(yaml|yml)\.(bak|orig)$" || true); if [ -n "$files" ]; then echo "ERROR: Do not commit plan backup files:"; echo "$files"; exit 1; fi'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
+      # Block bare `python3`/`python` in shell scripts we add.
+      # The project's venv is always at .venv/bin/python — use that
+      # instead. The existing enforce-venv.sh hook in Claude Code
+      # catches this at runtime; pre-commit catches it at check-in.
+      - id: no-bare-python
+        name: block bare python/python3 in new scripts
+        entry: bash -c 'files=$(git diff --cached --name-only --diff-filter=AM | grep -E "\.(sh|bash)$" || true); for f in $files; do if grep -nE "(^|[[:space:]])(python|python3)[[:space:]]" "$f" > /dev/null 2>&1; then echo "ERROR: $f uses bare python/python3, use .venv/bin/python instead"; grep -nE "(^|[[:space:]])(python|python3)[[:space:]]" "$f"; exit 1; fi; done'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
