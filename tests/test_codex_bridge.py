@@ -6,7 +6,10 @@ import argparse
 import io
 import json
 import os
+import re
+import sqlite3
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,17 +17,71 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.result import Result
-from ai_agent_bridge._cli import _handle_ask_codex
+from agent_runtime.usage import _reset_rate_limit_cache_for_tests
+from ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
 from ai_agent_bridge._codex import _codex_bridge_runtime_mode, process_for_codex
-from ai_agent_bridge._messaging import detect_sender
+from ai_agent_bridge._db import get_db, init_db
+from ai_agent_bridge._messaging import detect_sender, send_message
 
 
 @pytest.fixture(autouse=True)
 def _isolate_usage_log(tmp_path):
     """Ensure no test writes to the real batch_state/api_usage/ log."""
+    _reset_rate_limit_cache_for_tests()
     with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
+    _reset_rate_limit_cache_for_tests()
+
+
+@pytest.fixture
+def bridge_db(tmp_path):
+    """Use a temporary broker DB for bridge tests."""
+    db_path = tmp_path / "messages.db"
+    with patch("ai_agent_bridge._db.DB_PATH", db_path):
+        conn = init_db()
+        conn.close()
+        yield db_path
+
+
+def _message_acknowledged(message_id: int) -> int:
+    """Return the acknowledged flag for a message."""
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT acknowledged FROM messages WHERE id = ?", (message_id,))
+    row = cursor.fetchone()
+    conn.close()
+    assert row is not None
+    return int(row[0])
+
+
+def _task_messages(task_id: str) -> list[sqlite3.Row]:
+    """Fetch messages for a task ordered by ID."""
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT id, from_llm, to_llm, from_model, message_type, content, acknowledged
+        FROM (
+            SELECT
+                id,
+                from_llm,
+                to_llm,
+                json_extract(data, '$.from_model') AS from_model,
+                message_type,
+                content,
+                acknowledged
+            FROM messages
+            WHERE task_id = ?
+        )
+        ORDER BY id ASC
+        """,
+        (task_id,),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
 
 
 def test_detect_sender_codex():
@@ -193,3 +250,166 @@ def test_process_for_codex_uses_workspace_write_mode_and_never_resumes(
     )
     assert mock_acknowledge.call_args_list[0].args == (8,)
     assert mock_acknowledge.call_args_list[1].args == (100,)
+
+
+def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):
+    task_id = "issue-1183-short-circuit"
+    message_id = send_message(
+        "Please review the bridge",
+        task_id=task_id,
+        msg_type="query",
+        from_llm="gemini",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    with patch(
+        "ai_agent_bridge._codex.has_codex_headroom",
+        return_value=(False, "rate_limited 30s ago"),
+    ), patch(
+        "ai_agent_bridge._codex.build_codex_prompt",
+    ) as mock_prompt, patch(
+        "agent_runtime.runner.invoke",
+    ) as mock_invoke:
+        process_for_codex(message_id)
+
+    mock_prompt.assert_not_called()
+    mock_invoke.assert_not_called()
+    assert _message_acknowledged(message_id) == 0
+
+    rows = _task_messages(task_id)
+    assert len(rows) == 2
+    reply = rows[1]
+    assert reply[1] == "codex"
+    assert reply[2] == "gemini"
+    assert reply[3] == "codex-bridge-rate-limited"
+    assert reply[4] == "error"
+    assert "remains in Codex's inbox" in reply[5]
+    assert int(reply[6]) == 1
+
+
+def test_rate_limit_error_defers_message(bridge_db):
+    task_id = "issue-1183-rate-limit"
+    message_id = send_message(
+        "Please retry later",
+        task_id=task_id,
+        msg_type="query",
+        from_llm="gemini",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    with patch(
+        "ai_agent_bridge._codex.has_codex_headroom",
+        return_value=(True, ""),
+    ), patch(
+        "ai_agent_bridge._codex.build_codex_prompt",
+        return_value="bridge prompt",
+    ), patch(
+        "agent_runtime.runner.invoke",
+        side_effect=RateLimitedError("codex", "gpt-5.4", "quota exceeded"),
+    ):
+        process_for_codex(message_id)
+
+    assert _message_acknowledged(message_id) == 0
+
+    rows = _task_messages(task_id)
+    assert len(rows) == 2
+    reply = rows[1]
+    assert reply[3] == "codex-bridge-rate-limited"
+    assert "Sender should NOT retry manually." in reply[5]
+    assert int(reply[6]) == 1
+
+
+def test_other_errors_still_ack_inbound(bridge_db):
+    task_id = "issue-1183-stalled"
+    message_id = send_message(
+        "Please handle stall",
+        task_id=task_id,
+        msg_type="query",
+        from_llm="gemini",
+        to_llm="codex",
+        quiet=True,
+    )
+
+    with patch(
+        "ai_agent_bridge._codex.has_codex_headroom",
+        return_value=(True, ""),
+    ), patch(
+        "ai_agent_bridge._codex.build_codex_prompt",
+        return_value="bridge prompt",
+    ), patch(
+        "agent_runtime.runner.invoke",
+        side_effect=AgentStalledError("codex", 600, 601.0),
+    ):
+        process_for_codex(message_id)
+
+    assert _message_acknowledged(message_id) == 1
+
+    rows = _task_messages(task_id)
+    assert len(rows) == 2
+    reply = rows[1]
+    assert reply[3] == "codex-bridge-error"
+    assert "[Bridge Error] Codex CLI failed:" in reply[5]
+    assert int(reply[6]) == 1
+
+
+def test_codex_usage_cli_reports_counts(capsys, tmp_path):
+    usage_dir = tmp_path / "api_usage"
+    usage_dir.mkdir(parents=True, exist_ok=True)
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
+    usage_file = usage_dir / f"usage_codex-bridge_{today}.jsonl"
+    now = datetime.now(UTC)
+    records = [
+        {
+            "ts": (now - timedelta(minutes=3)).isoformat(),
+            "agent": "codex",
+            "entrypoint": "bridge",
+            "model": "gpt-5.4",
+            "mode": "read-only",
+            "duration_s": 12.3,
+            "outcome": "ok",
+            "rate_limited": False,
+            "stalled": False,
+        },
+        {
+            "ts": (now - timedelta(minutes=2)).isoformat(),
+            "agent": "codex",
+            "entrypoint": "bridge",
+            "model": "gpt-5.4",
+            "mode": "read-only",
+            "duration_s": 8.0,
+            "outcome": "ok",
+            "rate_limited": False,
+            "stalled": False,
+        },
+        {
+            "ts": (now - timedelta(minutes=1)).isoformat(),
+            "agent": "codex",
+            "entrypoint": "bridge",
+            "model": "gpt-5.4",
+            "mode": "read-only",
+            "duration_s": 0.0,
+            "outcome": "rate_limited",
+            "rate_limited": True,
+            "stalled": False,
+            "stderr_excerpt": "pre-call headroom check",
+        },
+    ]
+    usage_file.write_text(
+        "".join(json.dumps(record) + "\n" for record in records),
+        encoding="utf-8",
+    )
+
+    args = argparse.Namespace(
+        command="codex-usage",
+        window="5h",
+        entrypoint="all",
+        json=False,
+    )
+    _dispatch_command(args)
+
+    out = capsys.readouterr().out
+    assert "Total calls: 3" in out
+    assert re.search(r"ok\s+2", out)
+    assert re.search(r"rate_limited\s+1", out)

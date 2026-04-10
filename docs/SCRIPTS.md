@@ -696,12 +696,20 @@ All bridge commands route through the runtime at `scripts/agent_runtime/`.
   "Review posted on #1177. Please read and respond." \
   --task-id issue-1177
 
+# Recent Codex bridge/dispatch/delegate usage summary
+.venv/bin/python scripts/ai_agent_bridge/__main__.py codex-usage --window 5h
+.venv/bin/python scripts/ai_agent_bridge/__main__.py codex-usage --window 24h --entrypoint bridge --json
+
 # Threaded Gemini conversation
 .venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
   "Let's plan the A1/1 build" \
   --task-id a1-1-planning \
   --model gemini-3.1-pro-preview
 ```
+
+`codex-usage` reads recent `batch_state/api_usage/usage_codex-*.jsonl` records,
+groups them by outcome and entrypoint, lists recent rate-limit events, and
+reports whether `gpt-5.4` currently has bridge headroom.
 
 ### Codex sandbox control
 

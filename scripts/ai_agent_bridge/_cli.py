@@ -1,14 +1,22 @@
 """CLI entry point: argument parsing, interactive mode, batch processing."""
 
 import argparse
+import json
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
+from agent_runtime import usage as runtime_usage
 from batch_gemini_config import FLASH_MODEL
 
 from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
-from ._codex import ask_codex, process_all_codex, process_for_codex
+from ._codex import (
+    ask_codex,
+    has_codex_headroom,
+    process_all_codex,
+    process_for_codex,
+)
 from ._db import get_db
 from ._gemini import ask_gemini, converse_gemini, process_and_respond
 from ._messaging import (
@@ -150,6 +158,170 @@ def process_all_claude(new_session: bool = False):
 
     print(f"\n{'═' * 50}")
     print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+
+
+def _parse_usage_window(window: str) -> int:
+    """Return the reporting window in seconds."""
+    windows = {
+        "5h": 5 * 60 * 60,
+        "24h": 24 * 60 * 60,
+        "7d": 7 * 24 * 60 * 60,
+        "30d": 30 * 24 * 60 * 60,
+    }
+    return windows[window]
+
+
+def _iter_codex_usage_records(window: str, entrypoint: str):
+    """Yield Codex usage records within the reporting window."""
+    cutoff_ts = datetime.now(UTC).timestamp() - _parse_usage_window(window)
+
+    for path in runtime_usage._usage_dir().glob("usage_codex-*.jsonl"):
+        try:
+            if path.stat().st_mtime < cutoff_ts:
+                continue
+        except OSError:
+            continue
+
+        try:
+            with open(path, encoding="utf-8") as handle:
+                for raw in handle:
+                    raw = raw.strip()
+                    if not raw:
+                        continue
+                    try:
+                        record = json.loads(raw)
+                    except json.JSONDecodeError:
+                        continue
+                    if entrypoint != "all" and record.get("entrypoint") != entrypoint:
+                        continue
+                    ts_str = record.get("ts")
+                    if not ts_str:
+                        continue
+                    try:
+                        record_ts = datetime.fromisoformat(
+                            str(ts_str).replace("Z", "+00:00")
+                        ).timestamp()
+                    except (TypeError, ValueError):
+                        continue
+                    if record_ts < cutoff_ts:
+                        continue
+                    yield record
+        except OSError:
+            continue
+
+
+def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
+    """Aggregate usage records into a printable report."""
+    records = list(_iter_codex_usage_records(window, entrypoint))
+    outcomes = ("ok", "error", "rate_limited", "timeout")
+    by_outcome: dict[str, dict[str, object]] = {}
+    by_entrypoint: dict[str, int] = {}
+    recent_rate_limits: list[str] = []
+    total_duration_s = 0.0
+
+    for record in records:
+        outcome = str(record.get("outcome") or "error")
+        entry = str(record.get("entrypoint") or "unknown")
+        duration = float(record.get("duration_s") or 0.0)
+        total_duration_s += duration
+
+        outcome_bucket = by_outcome.setdefault(
+            outcome,
+            {"count": 0, "total_duration_s": 0.0, "recent_events": []},
+        )
+        outcome_bucket["count"] = int(outcome_bucket["count"]) + 1
+        outcome_bucket["total_duration_s"] = float(outcome_bucket["total_duration_s"]) + duration
+
+        by_entrypoint[entry] = by_entrypoint.get(entry, 0) + 1
+
+        if outcome == "rate_limited" and record.get("ts"):
+            ts = str(record["ts"])
+            recent_rate_limits.append(ts)
+            cast_events = outcome_bucket["recent_events"]
+            assert isinstance(cast_events, list)
+            cast_events.append(ts)
+
+    for outcome in outcomes:
+        bucket = by_outcome.setdefault(
+            outcome,
+            {"count": 0, "total_duration_s": 0.0, "recent_events": []},
+        )
+        count = int(bucket["count"])
+        bucket["avg_duration_s"] = round(
+            float(bucket["total_duration_s"]) / count, 1
+        ) if count else 0.0
+        bucket["total_duration_s"] = round(float(bucket["total_duration_s"]), 1)
+
+    has_room, headroom_reason = has_codex_headroom("gpt-5.4")
+    return {
+        "window": window,
+        "entrypoint": entrypoint,
+        "total_calls": len(records),
+        "total_duration_s": round(total_duration_s, 1),
+        "by_outcome": by_outcome,
+        "by_entrypoint": dict(sorted(by_entrypoint.items())),
+        "recent_rate_limits": sorted(recent_rate_limits),
+        "headroom": {
+            "model": "gpt-5.4",
+            "has_headroom": has_room,
+            "reason": headroom_reason,
+        },
+    }
+
+
+def _print_codex_usage_report(report: dict) -> None:
+    """Render a human-readable Codex usage report."""
+    print(
+        f"Codex usage report - window: {report['window']}, "
+        f"entrypoint: {report['entrypoint']}"
+    )
+    print("-" * 48)
+    print(f"Total calls: {report['total_calls']}")
+    print(f"Total duration: {report['total_duration_s']:.1f}s")
+    print("By outcome:")
+
+    for outcome in ("ok", "error", "rate_limited", "timeout"):
+        bucket = report["by_outcome"][outcome]
+        count = int(bucket["count"])
+        pct = ((count / report["total_calls"]) * 100.0) if report["total_calls"] else 0.0
+        line = f"  {outcome:<12} {count:>3}   ({pct:>4.1f}%)"
+        total_duration = float(bucket["total_duration_s"])
+        avg_duration = float(bucket["avg_duration_s"])
+        recent_events = bucket["recent_events"]
+        if outcome == "rate_limited" and recent_events:
+            joined = ", ".join(str(ts) for ts in recent_events)
+            line += f"   at {joined}"
+        elif count:
+            line += f"   total {total_duration:>6.1f}s"
+            if avg_duration:
+                line += f"   avg {avg_duration:.1f}s"
+        print(line)
+
+    print("\nBy entrypoint:")
+    if report["by_entrypoint"]:
+        for name, count in report["by_entrypoint"].items():
+            print(f"  {name:<10} {count}")
+    else:
+        print("  (none)")
+
+    headroom = report["headroom"]
+    symbol = "✓" if headroom["has_headroom"] else "✗"
+    line = (
+        f"\nHeadroom check: {headroom['model']} - "
+        f"has headroom {symbol}"
+    )
+    if not headroom["has_headroom"] and headroom["reason"]:
+        line += f" ({headroom['reason']})"
+    print(line)
+
+
+def _handle_codex_usage(args) -> None:
+    """Handle codex-usage subcommand."""
+    report = _build_codex_usage_report(args.window, args.entrypoint)
+    if args.json:
+        print(json.dumps(report, indent=2))
+        return
+    _print_codex_usage_report(report)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -294,6 +466,30 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_codex_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                        help="Force new sessions for each message")
 
+    # codex-usage
+    codex_usage_parser = subparsers.add_parser(
+        "codex-usage",
+        help="Summarize recent Codex runtime usage from batch_state/api_usage/",
+    )
+    codex_usage_parser.add_argument(
+        "--window",
+        default="5h",
+        choices=["5h", "24h", "7d", "30d"],
+        help="Reporting window (default: 5h)",
+    )
+    codex_usage_parser.add_argument(
+        "--entrypoint",
+        default="all",
+        choices=["bridge", "dispatch", "delegate", "all"],
+        help="Filter by Codex entrypoint (default: all)",
+    )
+    codex_usage_parser.add_argument(
+        "--json",
+        dest="json",
+        action="store_true",
+        help="Emit machine-readable JSON instead of text",
+    )
+
     # check-model
     check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
     check_model_parser.add_argument("model", help="Model name")
@@ -352,6 +548,8 @@ def _dispatch_command(args):
         process_all_claude(args.new_session)
     elif args.command == "process-codex-all":
         process_all_codex(args.new_session)
+    elif args.command == "codex-usage":
+        _handle_codex_usage(args)
     elif args.command == "check-model":
         ok = check_model(args.model, force=True)
         sys.exit(0 if ok else 1)

@@ -63,6 +63,14 @@ def ask_codex(content: str, task_id: str | None = None, msg_type: str = "query",
     return msg_id
 
 
+def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
+    """Return whether Codex has quota headroom for a new bridge call."""
+    from agent_runtime.usage import has_headroom
+
+    effective_model = model or "gpt-5.4"
+    return has_headroom("codex", effective_model)
+
+
 def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bool = False):
     """Read message addressed to Codex, invoke via agent_runtime, send response.
 
@@ -76,9 +84,14 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         return
 
     _ = new_session  # No-op: Codex always starts fresh (resume_policy="never")
-    prompt = build_codex_prompt(msg)
     timeout_val = 1800 if no_timeout else 900  # runner has its own hard_timeout
     model = _extract_target_model(msg)
+    has_room, reason = has_codex_headroom(model)
+    if not has_room:
+        _handle_codex_rate_limited(msg, message_id, reason)
+        return
+
+    prompt = build_codex_prompt(msg)
 
     print(f"📨 Message #{msg['id']}")
     print(f"   From: {msg['from']} → To: {msg['to']}")
@@ -107,7 +120,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
             stall_timeout=min(600, timeout_val),
         )
     except RateLimitedError as exc:
-        _handle_codex_error(msg, message_id, f"Rate limited: {exc}")
+        _handle_codex_rate_limited(msg, message_id, f"Rate limited: {exc}")
         return
     except AgentStalledError as exc:
         _handle_codex_error(msg, message_id, f"Codex stalled: {exc}")
@@ -200,6 +213,27 @@ def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:
         from_model="codex-bridge-error",
     )
     acknowledge(message_id)
+    acknowledge(err_id)
+
+
+def _handle_codex_rate_limited(msg: dict, message_id: int, reason: str) -> None:
+    """Defer a rate-limited message without acknowledging the inbound row."""
+    print(f"\n⛔ Codex rate limited - message {message_id} deferred")
+    print(f"   Reason: {reason}")
+    err_id = send_message(
+        content=(
+            "[Codex rate limited] Usage limit hit.\n"
+            f"Reason: {reason}\n\n"
+            f"The incoming message (id={message_id}) remains in Codex's "
+            "inbox and will be retried automatically when headroom returns. "
+            "Sender should NOT retry manually."
+        ),
+        task_id=msg["task_id"],
+        msg_type="error",
+        from_llm="codex",
+        to_llm=msg["from"],
+        from_model="codex-bridge-rate-limited",
+    )
     acknowledge(err_id)
 
 
