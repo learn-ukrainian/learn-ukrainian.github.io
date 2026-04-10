@@ -61,9 +61,122 @@ def test_parse_semver_invalid():
     assert _parse_claude_semver("abc.def.ghi") is None
 
 
-def test_parse_semver_four_part_version():
-    """Versions with 4+ parts (e.g. '2.1.98.1') still parse — first 3 parts used."""
-    assert _parse_claude_semver("2.1.98.1") == (2, 1, 98)
+def test_parse_semver_rejects_four_part_version():
+    """Four-part versions like '2.1.98.1' must NOT match as (2,1,98) — the
+    regex enforces word boundaries so 1.2.3.4 is not a valid 3-part semver.
+    This prevents ambiguous parses."""
+    assert _parse_claude_semver("2.1.98.1") is None
+
+
+def test_parse_semver_rejects_ip_address():
+    """IP address '192.168.1.1' must not be parsed as version (1,1,1)
+    or anything else. Four segments — regex rejects."""
+    assert _parse_claude_semver("host: 192.168.1.1") is None
+
+
+def test_parse_semver_skips_npm_notice():
+    """Gemini finding #2: npm update notices must NOT fool the parser.
+
+    The line 'npm notice New minor version of npm available! 10.2.4 -> 10.8.1'
+    contains valid-looking semvers but is not the Claude Code version.
+    """
+    noisy = (
+        "npm notice New minor version of npm available! 10.2.4 -> 10.8.1\n"
+        "2.1.98 (Claude Code)\n"
+    )
+    assert _parse_claude_semver(noisy) == (2, 1, 98)
+
+
+def test_parse_semver_skips_arrow_lines():
+    """Lines containing '->' (version-bump arrows) are treated as noise."""
+    assert _parse_claude_semver("3.0.0 -> 4.0.0") is None
+
+
+def test_parse_semver_only_noise_returns_none():
+    """If every line is noise, return None."""
+    noisy = (
+        "npm notice New version 10.2.4 -> 10.8.1\n"
+        "npm warn deprecated foo@1.0.0\n"
+    )
+    assert _parse_claude_semver(noisy) is None
+
+
+def test_parse_semver_empty_input():
+    """Empty / whitespace-only input returns None safely."""
+    assert _parse_claude_semver("") is None
+    assert _parse_claude_semver("   \n  \n") is None
+
+
+# ---------------------------------------------------------------------------
+# Gemini finding #1: combine stdout + stderr explicitly
+# ---------------------------------------------------------------------------
+
+def test_supports_reads_stderr_when_stdout_is_just_newline():
+    """Gemini finding #1: if stdout is '\\n' (truthy but blank), we must
+    still check stderr. Previous implementation with 'result.stdout or
+    result.stderr' would short-circuit because '\\n' is truthy.
+    """
+    with patch(
+        "utils.claude_version.subprocess.run",
+        return_value=_mock_run(stdout="\n", stderr="2.1.98"),
+    ):
+        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
+
+
+# ---------------------------------------------------------------------------
+# Gemini finding #3: bare string defensive handling
+# ---------------------------------------------------------------------------
+
+def test_supports_handles_bare_string_prefix():
+    """Gemini finding #3: passing a bare string 'claude' instead of ['claude']
+    must NOT unpack into individual characters and try to exec binary 'c'.
+    """
+    with patch(
+        "utils.claude_version.subprocess.run",
+        return_value=_mock_run(stdout="2.1.98"),
+    ) as mock:
+        result = supports_exclude_dynamic_system_prompt_sections("claude")
+        assert result is True
+        # Verify subprocess was called with ["claude", "--version"] not
+        # ["c", "l", "a", "u", "d", "e", "--version"]
+        call_args = mock.call_args[0][0]
+        assert call_args[0] == "claude"
+        assert call_args[-1] == "--version"
+        assert len(call_args) == 2
+
+
+# ---------------------------------------------------------------------------
+# Gemini residual risk: no caching of transient failures
+# ---------------------------------------------------------------------------
+
+def test_timeout_failure_not_cached():
+    """Gemini residual: TimeoutExpired must NOT be cached permanently.
+
+    A slow npx probe on first call should not disable the optimization
+    for the lifetime of the process. A later call should be able to retry.
+    """
+    timeout_mock = MagicMock(side_effect=subprocess.TimeoutExpired(cmd="claude", timeout=5))
+    with patch("utils.claude_version.subprocess.run", timeout_mock):
+        result1 = supports_exclude_dynamic_system_prompt_sections(["claude"])
+        assert result1 is False
+
+    # Now the network is back. A retry should re-probe, not return the
+    # cached False from the timeout.
+    success_mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
+    with patch("utils.claude_version.subprocess.run", success_mock):
+        result2 = supports_exclude_dynamic_system_prompt_sections(["claude"])
+        assert result2 is True, "timeout should not poison cache permanently"
+        assert success_mock.call_count == 1
+
+
+def test_file_not_found_is_cached():
+    """FileNotFoundError (binary genuinely missing) IS a definitive outcome
+    and should be cached to avoid re-probing repeatedly."""
+    missing_mock = MagicMock(side_effect=FileNotFoundError("claude not found"))
+    with patch("utils.claude_version.subprocess.run", missing_mock):
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+    assert missing_mock.call_count == 1, "FileNotFoundError should be cached"
 
 
 # ---------------------------------------------------------------------------
