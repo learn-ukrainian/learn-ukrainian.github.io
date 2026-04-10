@@ -111,24 +111,24 @@ You have access to RAG tools for linguistic verification. **Use them actively** 
 
 ### VESUM Dictionary Verification
 
-- **`mcp__rag__verify_word`**: Check if a specific Ukrainian word form exists in VESUM (500K+ forms). Use this for any word that looks suspicious or was flagged ❌ above.
-- **`mcp__rag__verify_lemma`**: Check if a lemma (dictionary form) exists. Use this to verify vocabulary items.
+- **`mcp__sources__verify_word`**: Check if a specific Ukrainian word form exists in VESUM (500K+ forms). Use this for any word that looks suspicious or was flagged ❌ above.
+- **`mcp__sources__verify_lemma`**: Check if a lemma (dictionary form) exists. Use this to verify vocabulary items.
 
 **When to verify**: Any Ukrainian word that (a) was flagged ❌ by pre-scan, (b) looks like a potential Russicism, (c) has an unusual declension/conjugation, or (d) you haven't encountered before.
 
 ### Textbook Cross-Reference
 
-- **`mcp__rag__search_text`**: Search Ukrainian school textbooks (1.2K+ chunks) for grammar explanations, vocabulary usage, and pedagogical approaches. Use this to verify grammar rules stated in the content.
-- **`mcp__rag__search_images`**: Search textbook illustrations for visual aids that could enhance the content.
-- **`mcp__rag__search_literary`**: Search primary literary sources for quote verification.
+- **`mcp__sources__search_text`**: Search Ukrainian school textbooks (1.2K+ chunks) for grammar explanations, vocabulary usage, and pedagogical approaches. Use this to verify grammar rules stated in the content.
+- **`mcp__sources__search_images`**: Search textbook illustrations for visual aids that could enhance the content.
+- **`mcp__sources__search_literary`**: Search primary literary sources for quote verification.
 
 **When to cross-reference**: (a) Grammar rule claims — verify they match textbook explanations, (b) cultural claims in callout boxes, (c) example sentences that seem unnatural — check if textbooks use similar patterns.
 
 ### Verification Protocol
 
-1. For each word flagged ❌ in pre-scan: call `mcp__rag__verify_word` to confirm/dismiss
-2. For grammar explanations: call `mcp__rag__search_text` with the grammar topic to verify accuracy
-3. For suspicious Russianisms: call `mcp__rag__verify_word` on the suspect word AND its Ukrainian alternative
+1. For each word flagged ❌ in pre-scan: call `mcp__sources__verify_word` to confirm/dismiss
+2. For grammar explanations: call `mcp__sources__search_text` with the grammar topic to verify accuracy
+3. For suspicious Russianisms: call `mcp__sources__verify_word` on the suspect word AND its Ukrainian alternative
 4. Report your RAG findings in the review — cite tool results as evidence
 
 ---
