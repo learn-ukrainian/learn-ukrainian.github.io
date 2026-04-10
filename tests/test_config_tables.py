@@ -100,11 +100,4 @@ class TestEdgeCases:
         result = get_golden_fragment("d1", 1)
         assert result == GOLDEN_FRAGMENTS["advanced"]
 
-    def test_b2_pro_returns_advanced(self):
-        """Professional tracks return advanced fragment."""
-        result = get_golden_fragment("b2-pro", 1)
-        assert result == GOLDEN_FRAGMENTS["advanced"]
-
-    def test_c1_pro_returns_advanced(self):
-        result = get_golden_fragment("c1-pro", 1)
-        assert result == GOLDEN_FRAGMENTS["advanced"]
+    # b2-pro / c1-pro tests removed 2026-04-10 — tracks deleted.

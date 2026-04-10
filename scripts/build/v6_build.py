@@ -39,12 +39,13 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import json
 import logging
 import os
 import re
 import sys
 import time
-from datetime import UTC
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -54,7 +55,10 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from batch_gemini_config import (
-    FLASH_MODEL,
+    # FLASH_MODEL removed from imports 2026-04-10 — Flash is unreliable and
+    # GEMINI_FAMILY.fast now points directly at PRO_MODEL. When Flash is
+    # stable again, re-add the import and flip v6_build.GEMINI_FAMILY.fast
+    # back to FLASH_MODEL.
     PRO_MODEL,
     TIMEOUT_ACTIVITIES,
     TIMEOUT_ANNOTATE,
@@ -211,7 +215,13 @@ CLAUDE_FAMILY = ModelFamily(
 GEMINI_FAMILY = ModelFamily(
     name="gemini",
     thinking=PRO_MODEL,
-    fast=FLASH_MODEL,
+    # 2026-04-10: Flash is unreliable right now (slow / intermittent 300s
+    # hard timeouts on every single call). The cascade (flash → pro → auto)
+    # DOES recover, but each step wastes 300s waiting for Flash to fail
+    # before falling back to Pro. Since the user's Google AI Pro quota is
+    # fine, we point `fast` directly at Pro. When Flash stabilizes, flip
+    # this back to FLASH_MODEL.
+    fast=PRO_MODEL,
     tool_prefix="mcp_rag_",
 )
 
@@ -364,6 +374,40 @@ def _get_immersion_target_short(level: str, module_num: int) -> str:
         return "60-90%+ Ukrainian"
 
 
+def _build_salad_phase_placeholders(level: str, module_num: int) -> dict[str, str]:
+    """Resolve SALAD_* placeholders from the paragraph-language phase config.
+
+    Uses audit/checks/language_salad.py:get_phase() as the source of truth.
+    """
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        from audit.checks.language_salad import get_phase
+        phase = get_phase(level, module_num)
+    except Exception:
+        # Fallback if detector import fails — use conservative defaults
+        return {
+            "{SALAD_PHASE_NUMBER}": "?",
+            "{SALAD_PHASE_NAME}": "unknown",
+            "{SALAD_UK_PARAGRAPHS_ALLOWED}": "yes",
+            "{SALAD_MIN_SENTENCES}": "3",
+            "{SALAD_MAX_SENTENCES}": "8",
+            "{SALAD_TRANSLATION_PCT}": "100",
+        }
+
+    return {
+        "{SALAD_PHASE_NUMBER}": str(phase.number),
+        "{SALAD_PHASE_NAME}": phase.name,
+        "{SALAD_UK_PARAGRAPHS_ALLOWED}": (
+            "YES — write Ukrainian paragraphs with full English translation blocks"
+            if phase.allow_uk_paragraphs
+            else "NO — isolated Ukrainian example sentences only, no multi-sentence UK prose paragraphs"
+        ),
+        "{SALAD_MIN_SENTENCES}": str(phase.min_paragraph_sentences),
+        "{SALAD_MAX_SENTENCES}": str(phase.max_paragraph_sentences),
+        "{SALAD_TRANSLATION_PCT}": f"{int(phase.translation_frequency * 100)}",
+    }
+
+
 def _build_dialogue_situations(plan: dict) -> str:
     """Build dialogue situation hints from plan's dialogue_situations field."""
     situations = plan.get("dialogue_situations", [])
@@ -476,9 +520,17 @@ def _log(msg: str):
     print(msg, flush=True)
 
 
+def emit_event(event: str, **fields):
+    line = json.dumps(
+        {"event": event, "ts": datetime.now(UTC).isoformat(), **fields},
+        ensure_ascii=False,
+        default=str,
+    )
+    print(line, flush=True)
+
+
 def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
     """Write V6 pipeline state in V5-compatible format."""
-    import json
     from datetime import datetime
 
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
@@ -510,12 +562,71 @@ def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
     state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
 
 
-# All phases in pipeline order (used by --resume)
+# All phases in pipeline order (used by --resume).
+#
+# Also exported as ``PHASES`` for out-of-process consumers that need the
+# canonical v6 phase list — specifically the monitor API's state_helpers
+# module, which used to import from the retired pipeline_v5 module. Do
+# NOT delete either alias — ``_ALL_PHASES`` is referenced locally by the
+# many resume/state helpers throughout this file, while ``PHASES`` is the
+# stable public name. They must stay in sync (which is free — they're
+# the same list object).
 _ALL_PHASES = [
     "check", "research", "skeleton", "pre-verify", "write",
-    "exercises", "activities", "verify-exercises", "annotate",
-    "vocab", "enrich", "verify", "review", "stress", "publish",
+    "exercises", "activities", "repair", "verify-exercises", "annotate",
+    "vocab", "enrich", "verify", "review", "stress", "publish", "audit",
 ]
+PHASES = _ALL_PHASES
+
+# Human-friendly labels for the v6 phases. Exposed alongside ``PHASES``
+# for API consumers that want to render a phase name in a UI. Keys match
+# ``PHASES`` exactly; any phase without an explicit label falls back to
+# its kebab-case id via ``PHASE_LABELS.get(name, name)``.
+PHASE_LABELS: dict[str, str] = {
+    "check": "Plan check",
+    "research": "Research",
+    "skeleton": "Skeleton",
+    "pre-verify": "Pre-verify",
+    "write": "Write content",
+    "exercises": "Exercises",
+    "activities": "Activities",
+    "repair": "Repair",
+    "verify-exercises": "Verify exercises",
+    "annotate": "Annotate",
+    "vocab": "Vocabulary",
+    "enrich": "Enrich",
+    "verify": "Verify content",
+    "review": "Review",
+    "stress": "Stress marks",
+    "publish": "Publish MDX",
+    "audit": "Audit",
+}
+
+
+def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> None:
+    """Mark downstream phases as incomplete so --resume re-runs them.
+
+    Used when an earlier step mutates artifacts (e.g., repair regenerates
+    activities) and downstream work (publish, audit) is now stale.
+    """
+    import json
+
+    state_path = CURRICULUM_ROOT / level / "orchestration" / slug / "state.json"
+    if not state_path.exists():
+        return
+    try:
+        state = json.loads(state_path.read_text())
+    except Exception:
+        return
+    phases = state.get("phases", {})
+    touched = False
+    for name in phases_to_clear:
+        if name in phases:
+            phases.pop(name)
+            touched = True
+    if touched:
+        state["phases"] = phases
+        state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
 
 
 def _load_completed_phases(level: str, slug: str) -> set[str]:
@@ -632,9 +743,88 @@ def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | Non
         return None
 
 
+def _audit_code_latest_mtime() -> float:
+    """Return the latest mtime across scripts/audit/**/*.py.
+
+    Used to detect when the audit engine itself has been updated since
+    the last time a module's status.json was written. If yes, the stale
+    status is not trustworthy — we must re-audit before deciding to skip.
+
+    Cached at module load time via functools.lru_cache wrapping is
+    deliberately avoided here: we want fresh values during long-running
+    --range batches where a hot-patched audit file MIGHT legitimately
+    exist. The scan is ~20 files and takes <5ms.
+    """
+    audit_dir = Path(__file__).resolve().parent.parent / "audit"
+    if not audit_dir.exists():
+        return 0.0
+    latest = 0.0
+    for py in audit_dir.rglob("*.py"):
+        try:
+            m = py.stat().st_mtime
+            if m > latest:
+                latest = m
+        except OSError:
+            continue
+    return latest
+
+
+def _is_status_stale(status_path: Path, content_path: Path) -> tuple[bool, str]:
+    """Check whether a status.json cache is too old to trust.
+
+    Stale if ANY of:
+      - status.json does not exist
+      - content.md mtime > status.json mtime (content was edited)
+      - scripts/audit/*.py latest mtime > status.json mtime (audit engine
+        was updated — previously-passing modules may now fail new checks,
+        e.g. the salad detector wired in on 2026-04-10)
+
+    Returns (is_stale, reason). Reason is empty when not stale.
+    """
+    if not status_path.exists():
+        return True, "no status file"
+    try:
+        status_mtime = status_path.stat().st_mtime
+    except OSError as exc:
+        return True, f"status file unreadable: {exc}"
+
+    if content_path.exists():
+        try:
+            content_mtime = content_path.stat().st_mtime
+            if content_mtime > status_mtime + 1:  # 1s fudge for fs precision
+                return True, "content edited since last audit"
+        except OSError:
+            pass  # tolerate — fall through to audit-code check
+
+    audit_mtime = _audit_code_latest_mtime()
+    if audit_mtime > status_mtime + 1:
+        return True, "audit engine updated since last audit"
+
+    return False, ""
+
+
 def _should_skip_batch_module(level: str, slug: str, step: str,
                               review_threshold: float) -> tuple[bool, str]:
-    """Decide whether batch mode should skip a module for the requested step."""
+    """Decide whether batch mode should skip a module for the requested step.
+
+    Skip policy — a module is ONLY skipped when ALL of these are true:
+
+      1. For `--step review`: latest saved review score ≥ threshold.
+         (Anything else means we need to run review again.)
+
+      2. For any other step:
+         - All pipeline phases complete
+         - Status cache is FRESH (content + audit engine both older than
+           status.json — otherwise re-audit before trusting it)
+         - Audit overall == "pass" AND every tracked gate has status "pass"
+           (gates in "info"/"pending" state are treated as unverified →
+           re-run, never skip)
+         - Latest review score ≥ review_threshold (default 9.0)
+
+    Design intent: the skip logic is the LAST line of defense against
+    shipping broken modules. Err on the side of re-running. User rule
+    (2026-04-10): "never skip if audit not passing or review below 9."
+    """
     if step == "review":
         completed = _load_completed_phases(level, slug)
         if "review" not in completed:
@@ -647,10 +837,63 @@ def _should_skip_batch_module(level: str, slug: str, step: str,
             return False, f"latest review {latest_review.score}/10 < {review_threshold:.1f}"
         return True, f"latest review {latest_review.score}/10 >= {review_threshold:.1f}"
 
-    if _all_phases_complete(level, slug):
-        return True, "all phases complete"
+    if not _all_phases_complete(level, slug):
+        return False, "module incomplete"
 
-    return False, "module incomplete"
+    status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
+    content_path = CURRICULUM_ROOT / level / f"{slug}.md"
+
+    # Staleness check — stale cache = untrustworthy, force re-run.
+    stale, stale_reason = _is_status_stale(status_path, content_path)
+    if stale:
+        return False, f"audit cache stale ({stale_reason})"
+
+    # Parse the (fresh) status file
+    try:
+        import json
+        status = json.loads(status_path.read_text("utf-8"))
+    except Exception as e:
+        return False, f"audit status unreadable: {e}"
+
+    overall = status.get("overall", {}).get("status", "unknown")
+
+    # Strict pass requirement: only `pass` counts. "content-complete" has
+    # deferred gates BY DESIGN, which means something is not done yet —
+    # so it's not skippable. User rule: never skip unless audit is truly
+    # passing.
+    if overall != "pass":
+        failed_gates = [
+            k for k, v in (status.get("gates") or {}).items()
+            if isinstance(v, dict) and v.get("status") == "fail"
+        ]
+        reason = f"audit {overall}"
+        if failed_gates:
+            reason += f" (failed: {', '.join(failed_gates)})"
+        return False, reason
+
+    # Even when overall == "pass", any gate that isn't strictly "pass"
+    # (e.g. "info"/"pending"/"deferred") is unverified and should force
+    # a re-run. Naturalness="info" was the specific bug — it left the
+    # overall at pass even though naturalness had never been scored.
+    gates_dict = status.get("gates") or {}
+    unverified_gates = [
+        k for k, v in gates_dict.items()
+        if isinstance(v, dict) and v.get("status") not in ("pass",)
+    ]
+    if unverified_gates:
+        return False, f"unverified gates: {', '.join(unverified_gates)}"
+
+    # Review score must meet the hard threshold.
+    latest_review = _load_latest_review_result(level, slug)
+    if latest_review is None:
+        return False, "no saved review found"
+    if latest_review.score < review_threshold:
+        return False, f"latest review {latest_review.score}/10 < {review_threshold:.1f}"
+
+    return True, (
+        f"phases complete + audit pass + all gates pass + "
+        f"review {latest_review.score}/10 >= {review_threshold:.1f}"
+    )
 
 
 def step_check(level: str, module_num: int, slug: str) -> bool:
@@ -1254,6 +1497,15 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 """
 
     # Add plan for reference (trimmed to content_outline for this section)
+    # Resolve language-salad phase placeholders (#1185)
+    _salad_vars = _build_salad_phase_placeholders(level, module_num)
+    _salad_phase_num = _salad_vars["{SALAD_PHASE_NUMBER}"]
+    _salad_phase_name = _salad_vars["{SALAD_PHASE_NAME}"]
+    _salad_uk_allowed = _salad_vars["{SALAD_UK_PARAGRAPHS_ALLOWED}"]
+    _salad_min_sent = _salad_vars["{SALAD_MIN_SENTENCES}"]
+    _salad_max_sent = _salad_vars["{SALAD_MAX_SENTENCES}"]
+    _salad_xlat_pct = _salad_vars["{SALAD_TRANSLATION_PCT}"]
+
     section_prompt += f"""## Full Plan (for reference)
 
 <plan_content>
@@ -1272,7 +1524,74 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 {{WIKI_CHUNK_CONTEXT}}
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE {_salad_phase_num}: {_salad_phase_name}**
+- Ukrainian prose paragraphs: {_salad_uk_allowed}
+- Paragraph length: {_salad_min_sent}–{_salad_max_sent} sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: {_salad_xlat_pct}%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — {_salad_xlat_pct}% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 {get_immersion_rule(level, module_num)}
 
@@ -1280,14 +1599,34 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 {get_pedagogical_constraints(level, module_num, plan)}
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
@@ -1579,6 +1918,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{EXACT_SECTION_TITLES}": "\n".join(section_titles),
         "{IMMERSION_RULE}": get_immersion_rule(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
+        **_build_salad_phase_placeholders(level, module_num),
         "{PEDAGOGICAL_CONSTRAINTS}": get_pedagogical_constraints(level, module_num, plan),
         "{LEVEL_CONSTRAINTS}": get_level_constraints(level, plan),
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
@@ -2408,6 +2748,55 @@ def _post_process_content(content_path: Path) -> int:
         content_path.write_text(text, "utf-8")
 
     return fixes
+
+
+def step_repair(level: str, module_num: int, slug: str) -> tuple[bool, bool]:
+    """Step 5f: Deterministic activity repair.
+
+    Runs after step_activities. Applies structural fixes that don't need an
+    LLM: strips parenthetical hints, deduplicates options, moves misplaced
+    section types, drops disallowed types, enforces answer-in-options, etc.
+
+    Returns (success, needs_regen):
+      success    — True if repair ran cleanly (even if it did nothing)
+      needs_regen — True if count fell below min and activities must be
+                    regenerated before the module can ship
+    """
+    _log(f"\n{'='*60}")
+    _log(f"  Step 5f: REPAIR — Deterministic activity fixes ({slug})")
+    _log(f"{'='*60}")
+
+    activity_path = CURRICULUM_ROOT / level / "activities" / f"{slug}.yaml"
+    if not activity_path.exists():
+        _log(f"  ⚠️  No activity file at {activity_path}, skipping")
+        return True, False
+
+    try:
+        from build.activity_repair import repair_activities
+        result = repair_activities(activity_path, level, module_num)
+    except Exception as e:
+        _log(f"  ⚠️  Repair failed with exception: {e}")
+        return False, False
+
+    if result.fixes_applied:
+        _log(f"  🔧 Applied {result.fixes_applied} fix(es):")
+        for line in result.fix_log:
+            _log(f"    • {line}")
+    else:
+        _log("  ✅ No repairs needed")
+
+    _log(
+        f"  Final counts: {result.inline_count_after} inline "
+        f"+ {result.workbook_count_after} workbook"
+    )
+
+    if result.needs_regen:
+        _log(f"  ⚠️  Regen required ({len(result.needs_regen)}):")
+        for reason in result.needs_regen:
+            _log(f"    → {reason}")
+        return True, True
+
+    return True, False
 
 
 def step_audit(content_path: Path, level: str, slug: str) -> bool:
@@ -3911,6 +4300,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — "
         f"{parsed.verdict} (severity gate: {'✅' if severity_pass else '❌'}){floor_msg}"
     )
+    emit_event("review_score", level=level, slug=slug, round=round_num, score=score)
 
     return passed, score, raw
 
@@ -4873,6 +5263,9 @@ build_status: draft
 
 
 def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+
     parser = argparse.ArgumentParser(description="V6 Pipeline Build")
     parser.add_argument("level", help="Level (e.g., a1)")
     parser.add_argument("module", type=int, help="Module number (or start of range with --range)")
@@ -4882,7 +5275,7 @@ def main():
                         help="Default: gemini-tools. *-tools = with MCP (VESUM/RAG) access during writing")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "audit", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "audit", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
@@ -4910,6 +5303,8 @@ def main():
         _log(f"\n{'='*60}")
         _log(f"  BATCH BUILD: {args.level.upper()} M{start:02d}–M{end:02d}")
         _log(f"{'='*60}")
+        total = end - start + 1
+        emit_event("batch_start", level=args.level, total=total)
         failed = []
         skipped = []
         for n in range(start, end + 1):
@@ -4954,12 +5349,18 @@ def main():
                 _log(f"  ❌ M{n:02d} error: {e}")
 
         _log(f"\n{'='*60}")
-        total = end - start + 1
         built = total - len(failed) - len(skipped)
         _log(f"  BATCH COMPLETE: {built}/{total} built, {len(skipped)} skipped (already complete)")
         if failed:
             _log(f"  Failed: {', '.join(f'M{n:02d}' for n in failed)}")
         _log(f"{'='*60}")
+        emit_event(
+            "batch_done",
+            level=args.level,
+            total=total,
+            succeeded=total - len(failed),
+            failed=len(failed),
+        )
         sys.exit(1 if failed else 0)
 
     # Resolve slug
@@ -4970,6 +5371,26 @@ def main():
         _log(f"Module {args.module} not found (max {len(slugs)})")
         sys.exit(1)
     slug = slugs[args.module - 1]
+    emit_event("module_start", level=args.level, slug=slug)
+
+    def _emit_phase_done(phase: str, started_at: float):
+        emit_event(
+            "phase_done",
+            level=args.level,
+            slug=slug,
+            phase=phase,
+            duration_s=round(time.monotonic() - started_at, 3),
+            ok=True,
+        )
+
+    def _emit_module_failed(phase: str, error: object):
+        emit_event(
+            "module_failed",
+            level=args.level,
+            slug=slug,
+            phase=phase,
+            error=str(error)[:200],
+        )
 
     # Acquire build lock — prevents two processes from racing on the same module
     build_lock = ModuleBuildLock(args.level, slug)
@@ -4985,9 +5406,42 @@ def main():
 
     # --resume: load completed phases and restore dependency variables
     completed_phases: set[str] = set()
-    if args.resume and steps == "all":
+    # Resume mode loads completed phases + restores dependency state.
+    # Note: even single-step invocations (--step audit, --step publish, etc.)
+    # need phases loaded so restoration + heal paths have context to work with.
+    if args.resume:
         completed_phases = _load_completed_phases(args.level, slug)
         if completed_phases:
+            # If the last audit says this module is failing, auto-invalidate
+            # the self-heal tail (audit + repair + publish + review) so the
+            # pipeline actually re-runs those phases. Without this, --resume
+            # on a failing module does nothing because every phase block is
+            # guarded by "X not in completed_phases".
+            _status_path = CURRICULUM_ROOT / args.level / "status" / f"{slug}.json"
+            if _status_path.exists():
+                try:
+                    import json as _json
+                    _status_data = _json.loads(_status_path.read_text("utf-8"))
+                    _overall = _status_data.get("overall", {}).get("status", "unknown")
+                    if _overall not in ("pass", "content-complete"):
+                        _failed_gates = [
+                            k for k, v in (_status_data.get("gates") or {}).items()
+                            if isinstance(v, dict) and v.get("status") == "fail"
+                        ]
+                        _log(
+                            f"   🩹 Status shows {_overall} "
+                            f"(failed gates: {', '.join(_failed_gates) or 'unknown'})"
+                        )
+                        _log("      Invalidating audit/repair/publish/review phases for retry")
+                        _invalidate_phases(
+                            args.level, slug,
+                            ["audit", "repair", "publish", "review"],
+                        )
+                        for _p in ("audit", "repair", "publish", "review"):
+                            completed_phases.discard(_p)
+                except Exception as _e:
+                    _log(f"   ⚠️  Could not inspect status for auto-invalidation: {_e}")
+
             _log(f"   Resuming — {len(completed_phases)} phase(s) already complete:")
             for p in _ALL_PHASES:
                 if p in completed_phases:
@@ -5003,6 +5457,7 @@ def main():
             _log(f"   MCP server: ✅ running ({resp.read().decode()})")
         except Exception:
             _log("   ❌ MCP server is not running. Start it: ./services.sh start")
+            _emit_module_failed("check", "MCP server is not running")
             sys.exit(1)
 
     # Clean previous build artifacts for a fresh full build (skip when resuming)
@@ -5015,6 +5470,8 @@ def main():
     skeleton_text = ""
     verification_text = ""
     content_path = None
+    final_score: float | None = None
+    publish_completed = False
 
     if completed_phases:
         # Restore packet_path (from research phase)
@@ -5047,18 +5504,24 @@ def main():
 
     # Step 2: CHECK
     if steps in ("all", "check") and "check" not in completed_phases:
+        _phase_start = time.monotonic()
         if not step_check(args.level, args.module, slug):
             _log("\n❌ Build FAILED at Step 2 (plan check)")
+            _emit_module_failed("check", "Build FAILED at Step 2 (plan check)")
             sys.exit(1)
         _save_v6_state(args.level, slug, "check")
+        _emit_phase_done("check", _phase_start)
 
     # Step 3: RESEARCH
     if steps in ("all", "research") and "research" not in completed_phases:
+        _phase_start = time.monotonic()
         packet_path = step_research(args.level, args.module, slug)
         if not packet_path:
             _log("\n❌ Build FAILED at Step 3 (research)")
+            _emit_module_failed("research", "Build FAILED at Step 3 (research)")
             sys.exit(1)
         _save_v6_state(args.level, slug, "research")
+        _emit_phase_done("research", _phase_start)
     elif steps not in ("all", "research") and packet_path is None:
         # Try to find existing packet (single-step mode, no resume)
         _p = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
@@ -5075,21 +5538,48 @@ def main():
     use_skeleton = not args.no_skeleton
 
     if steps in ("all", "skeleton") and use_skeleton and "skeleton" not in completed_phases:
+        _phase_start = time.monotonic()
         skeleton_text = step_skeleton(
             args.level, args.module, slug, packet_path,
             writer=args.writer,
         ) or ""
         if not skeleton_text and steps == "skeleton":
             _log("\n  SKELETON step returned empty — continuing without skeleton")
+        if skeleton_text or steps == "skeleton":
+            _emit_phase_done("skeleton", _phase_start)
     elif steps == "skeleton" and "skeleton" not in completed_phases:
         _log(f"\n  ℹ️  Skeleton skipped (word_target={word_target} < 3000, use --skeleton to force)")
 
     if use_skeleton and skeleton_text:
         _log(f"\n  📐 Skeleton active ({len(skeleton_text.split())} words) — will constrain writer")
     elif use_skeleton and not skeleton_text and "skeleton" not in completed_phases and steps == "all":
-        _log("\n  ❌ Skeleton was requested but generation failed — halting build")
-        _log("     Re-run with --no-skeleton to skip, or fix the skeleton timeout")
-        sys.exit(1)
+        # Skeleton failed. Decide whether to halt or limp onwards.
+        #
+        # Halting is appropriate ONLY on a fresh build (no existing content
+        # on disk). When resuming against an already-written module — the
+        # common case for batch heal/review passes — halting here means a
+        # transient Gemini failure at step 4 blocks the ENTIRE module from
+        # reaching audit / heal / review. That contradicts the "fix all
+        # modules" workflow.
+        #
+        # If content.md already exists, proceed without skeleton:
+        #   - step_write is guarded by `"write" not in completed_phases`,
+        #     so it gets skipped when write is already done.
+        #   - audit / heal / review still get to run against the existing
+        #     content, which is what the user wanted in the first place.
+        _existing_content = CURRICULUM_ROOT / args.level / f"{slug}.md"
+        _write_already_done = "write" in completed_phases and _existing_content.exists()
+        if _write_already_done:
+            _log("\n  ⚠️  Skeleton generation failed, but content.md already exists —")
+            _log("     proceeding without re-running skeleton. Audit + heal + review")
+            _log("     will still run against the existing content.")
+            content_path = _existing_content
+        else:
+            _log("\n  ❌ Skeleton was requested but generation failed — halting build")
+            _log("     (no existing content to fall back on)")
+            _log("     Re-run with --no-skeleton to skip, or fix the skeleton timeout")
+            _emit_module_failed("skeleton", "Skeleton was requested but generation failed")
+            sys.exit(1)
 
     # Try to load existing skeleton from disk if running single step
     if steps == "write" and not skeleton_text and use_skeleton:
@@ -5102,10 +5592,12 @@ def main():
     if steps in ("all", "write", "pre-verify") and "pre-verify" not in completed_phases:
         # Only run pre-verify when using -tools writers (tools must be available)
         if "tools" in args.writer or steps == "pre-verify":
+            _phase_start = time.monotonic()
             verification_text = step_pre_verify(
                 args.level, args.module, slug,
                 writer=args.writer if "tools" in args.writer else f"{args.writer}-tools",
             ) or ""
+            _emit_phase_done("pre-verify", _phase_start)
         else:
             _log("\n  ℹ️  Pre-verify skipped (writer has no tools — use --writer claude-tools)")
 
@@ -5118,6 +5610,7 @@ def main():
 
     # Step 5: WRITE + QUICK VERIFY + RETRY
     if steps in ("all", "write") and "write" not in completed_phases:
+        _phase_start = time.monotonic()
         content_path = step_write_with_retry(
             args.level, args.module, slug, packet_path,
             writer=args.writer, max_retries=4,
@@ -5127,16 +5620,20 @@ def main():
         )
         if not content_path:
             _log("\n❌ Build FAILED at Step 5 (write — all retries exhausted)")
+            _emit_module_failed("write", "Build FAILED at Step 5 (write — all retries exhausted)")
             sys.exit(1)
         _save_v6_state(args.level, slug, "write")
+        _emit_phase_done("write", _phase_start)
     elif content_path is None:
         content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
 
     # Step 5b: EXERCISES — legacy fallback (skip in full pipeline, ACTIVITIES replaces it)
     if steps == "exercises" and "exercises" not in completed_phases:
         # Only run when explicitly requested (single-step mode)
+        _phase_start = time.monotonic()
         step_exercises(content_path)
         _save_v6_state(args.level, slug, "exercises")
+        _emit_phase_done("exercises", _phase_start)
     elif steps == "all" and "exercises" not in completed_phases:
         _log(f"\n{'='*60}")
         _log("  Step 5b: EXERCISES — Skipped (ACTIVITIES step handles exercises)")
@@ -5166,6 +5663,7 @@ def main():
 
     # Step 5e: ACTIVITIES — structured YAML generation (#1042)
     if steps in ("all", "activities") and "activities" not in completed_phases:
+        _phase_start = time.monotonic()
         activity_path = step_activities(
             content_path, args.level, args.module, slug,
             writer=args.writer,
@@ -5174,14 +5672,64 @@ def main():
             # Inject deterministic abetka activities (letter-grid, watch-and-repeat)
             _inject_abetka_activities(activity_path, args.level, slug)
             _save_v6_state(args.level, slug, "activities")
+            _emit_phase_done("activities", _phase_start)
         else:
             _log("\n❌ Build FAILED at Step 5e (activity generation)")
+            _emit_module_failed("activities", "Build FAILED at Step 5e (activity generation)")
             sys.exit(1)
+
+    # Step 5f: REPAIR — deterministic activity fixes (#1185)
+    # Runs after activities. If repair drops count below minimum, regen
+    # once more (max 1 retry) and repair again. This is the self-healing
+    # loop: the first regen often produces structurally valid activities
+    # once the broken ones are known.
+    #
+    # --resume compatibility: when repair mutates activities, downstream
+    # phases (publish, audit) are stale and must be re-run. We invalidate
+    # them in state.json so a subsequent --resume pass picks them up.
+    if steps in ("all", "activities", "repair") and "repair" not in completed_phases:
+        _phase_start = time.monotonic()
+        _pre_activity_mtime = 0.0
+        _activity_path = CURRICULUM_ROOT / args.level / "activities" / f"{slug}.yaml"
+        if _activity_path.exists():
+            _pre_activity_mtime = _activity_path.stat().st_mtime
+
+        _repair_ok, needs_regen = step_repair(args.level, args.module, slug)
+        regen_fired = False
+        if needs_regen:
+            _log("\n🔄 Activity count below minimum — regenerating once")
+            regen_fired = True
+            activity_path = step_activities(
+                content_path, args.level, args.module, slug,
+                writer=args.writer,
+            )
+            if activity_path:
+                _inject_abetka_activities(activity_path, args.level, slug)
+                # Repair the fresh output too
+                _repair_ok, needs_regen = step_repair(args.level, args.module, slug)
+                if needs_regen:
+                    _log("\n⚠️  Still below minimum after regen — continuing anyway (audit will flag)")
+            else:
+                _log("\n⚠️  Activity regen failed — continuing with repaired but short output")
+
+        # Invalidate stale downstream phases if activities were actually changed.
+        _post_mtime = _activity_path.stat().st_mtime if _activity_path.exists() else 0.0
+        _activities_changed = regen_fired or _post_mtime > _pre_activity_mtime
+        if _activities_changed:
+            _log("  🔁 Activities changed — invalidating downstream phases (publish, audit) for --resume")
+            _invalidate_phases(args.level, slug, ["publish", "audit"])
+            completed_phases.discard("publish")
+            completed_phases.discard("audit")
+
+        _save_v6_state(args.level, slug, "repair")
+        _emit_phase_done("repair", _phase_start)
 
     # Step 5d: VERIFY EXERCISES — grounding check (informational, non-blocking)
     if steps in ("all", "exercises", "verify-exercises") and "verify-exercises" not in completed_phases:
+        _phase_start = time.monotonic()
         step_verify_exercises(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "verify-exercises")
+        _emit_phase_done("verify-exercises", _phase_start)
 
     # Step 6: POST-PROCESS (strip LLM artifacts — but NOT stress annotation yet)
     # Stress annotation moves to AFTER review to avoid wrong stress marks
@@ -5189,20 +5737,26 @@ def main():
     if steps == "all" and "annotate" not in completed_phases:
         if not content_path or not content_path.exists():
             _log("\n❌ Build FAILED — no content file exists (write step failed)")
+            _emit_module_failed("annotate", "Build FAILED — no content file exists (write step failed)")
             sys.exit(1)
+        _phase_start = time.monotonic()
         _post_process_content(content_path)
         _save_v6_state(args.level, slug, "annotate")
+        _emit_phase_done("annotate", _phase_start)
 
     # Step 5c: VOCAB — writer generates словник YAML
     if steps in ("all", "write") and "vocab" not in completed_phases:
+        _phase_start = time.monotonic()
         vocab_path = step_vocab(
             content_path, args.level, args.module, slug,
             writer=args.writer,
         )
         if vocab_path:
             _save_v6_state(args.level, slug, "vocab")
+            _emit_phase_done("vocab", _phase_start)
         else:
             _log("\n❌ Build FAILED at Step 5c (vocabulary generation)")
+            _emit_module_failed("vocab", "Build FAILED at Step 5c (vocabulary generation)")
             sys.exit(1)
 
     # Step 7b: ENRICH — SKIPPED (#1124: enrichment moved to publish step)
@@ -5215,22 +5769,27 @@ def main():
 
     # Step 7: VERIFY
     if steps in ("all", "verify") and "verify" not in completed_phases:
+        _phase_start = time.monotonic()
         step_verify(content_path, args.level, args.module)
         _save_v6_state(args.level, slug, "verify")
+        _emit_phase_done("verify", _phase_start)
 
     # Step 8: REVIEW + deterministic fix
     # If REVISE: reviewer outputs <fixes> with exact find/replace pairs.
     # We apply them deterministically — no LLM regeneration, no rewriting.
     # Then re-review to verify. No re-enrich needed (#1124).
     if steps in ("all", "review") and "review" not in completed_phases:
+        _phase_start = time.monotonic()
         passed, score, review_text = step_review(
             content_path, args.level, args.module, slug,
             writer=args.writer, reviewer_override=args.reviewer,
         )
         if score == 0.0 and not review_text:
             _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
+            _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
             sys.exit(1)
         _save_v6_state(args.level, slug, "review")
+        final_score = score
 
         # Fix strategy:
         # 1. If PASSED → apply any <fixes> anyway (minor improvements), done.
@@ -5280,6 +5839,7 @@ def main():
             else:
                 _log(f"\n❌ Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
                 _log("   Fix the plan or content manually, then re-run with --resume")
+                _emit_module_failed("review", f"Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
                 return  # Do not proceed to publish
         else:
             _log(
@@ -5322,6 +5882,8 @@ def main():
             _log(f"\n✅ Score {score}/10 ≥ {REVIEW_TARGET_SCORE:.1f} — accepting")
         else:
             _log(f"\n⚠️  Score {score}/10 — accepting as final (fix rounds exhausted)")
+        final_score = score
+        _emit_phase_done("review", _phase_start)
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Skip for: seminar tracks (B2+ immersion), A1/A2 (stress in словník only,
@@ -5339,19 +5901,251 @@ def main():
             reason = "seminar track" if args.level.lower() not in _SKIP_ANNOTATE_LEVELS else f"{args.level.upper()} — stress in словník only"
             _log(f"\n  ⏭️  Skipping stress marks ({reason})")
         else:
+            _phase_start = time.monotonic()
             step_annotate(content_path)
+            _emit_phase_done("stress", _phase_start)
         _save_v6_state(args.level, slug, "stress")
 
-    # Step 9: PUBLISH
-    if steps in ("all", "review", "publish") and "publish" not in completed_phases:
+    # Step 9: PRE-PUBLISH AUDIT — detect issues before publishing MDX (#1185)
+    # The proactive repair step earlier catches structural bugs, but the
+    # audit may still surface problems that repair CAN fix (e.g. true-false
+    # items with non-boolean `correct` field). Run audit first so those get
+    # healed BEFORE we freeze the published MDX.
+    #
+    # NOTE: We intentionally run audit UNCONDITIONALLY when steps includes
+    # audit/publish/all. The user explicitly asking for --step audit means
+    # "audit and fix what you can" — gating on "audit not in completed_phases"
+    # made the pipeline a no-op on already-built-but-failing modules.
+    _pre_audit_ran = False
+    if steps in ("all", "publish", "audit"):
+        _phase_start = time.monotonic()
+        step_audit(content_path, args.level, slug)
+        _pre_audit_ran = True
+
+        # Inspect the status file for activity-related failures. If any
+        # gate that repair knows how to fix is red, run a second repair
+        # pass and (if needed) regen activities.
+        _status_path = CURRICULUM_ROOT / args.level / "status" / f"{slug}.json"
+        _activity_gate_failed = False
+        _salad_gate_failed = False
+        _engagement_gate_failed = False
+        _overall_status = "unknown"
+        if _status_path.exists():
+            try:
+                import json
+                _status = json.loads(_status_path.read_text("utf-8"))
+                _overall_status = _status.get("overall", {}).get("status", "unknown")
+                _gates = _status.get("gates", {})
+                for _gname in ("activities", "density", "activity_quality", "structure"):
+                    _g = _gates.get(_gname)
+                    if isinstance(_g, dict) and _g.get("status") == "fail":
+                        _activity_gate_failed = True
+                        break
+                # Lesson gate carries several sub-signals in its message.
+                # Parse the ones that require a writer regen to fix.
+                _lesson = _gates.get("lesson", {})
+                if isinstance(_lesson, dict):
+                    _lesson_msg = _lesson.get("message", "")
+                    _lesson_status = _lesson.get("status")
+                    # Language salad — mixed paragraphs / inline-gloss overflow.
+                    if "salad:" in _lesson_msg.lower() or "SALAD" in _lesson_msg:
+                        _salad_gate_failed = True
+                    # Engagement callouts missing — writer produced no
+                    # :::note / :::tip / :::info boxes. Only trigger the
+                    # regen branch if the lesson gate is actually failing
+                    # (don't regen when the overall lesson passes but
+                    # engagement is just a soft warning somewhere).
+                    if (
+                        _lesson_status == "fail"
+                        and "engagement" in _lesson_msg.lower()
+                    ):
+                        # Look for the `engagement: X/Y` pattern and
+                        # trigger regen when X < Y.
+                        _eng_match = re.search(
+                            r"engagement:\s*(\d+)\s*/\s*(\d+)",
+                            _lesson_msg,
+                            re.IGNORECASE,
+                        )
+                        if _eng_match:
+                            _eng_have = int(_eng_match.group(1))
+                            _eng_need = int(_eng_match.group(2))
+                            if _eng_have < _eng_need:
+                                _engagement_gate_failed = True
+            except Exception as e:
+                _log(f"  ⚠️  Could not parse status file for heal check: {e}")
+
+        if _activity_gate_failed:
+            _log("\n🩹 Audit flagged activity gate(s) — running heal pass")
+            _activity_path = CURRICULUM_ROOT / args.level / "activities" / f"{slug}.yaml"
+            _pre_heal_mtime = _activity_path.stat().st_mtime if _activity_path.exists() else 0.0
+
+            _heal_ok, _heal_regen = step_repair(args.level, args.module, slug)
+            if _heal_regen:
+                _log("\n🔄 Heal pass requires regen — regenerating activities")
+                _new_path = step_activities(
+                    content_path, args.level, args.module, slug,
+                    writer=args.writer,
+                )
+                if _new_path:
+                    _inject_abetka_activities(_new_path, args.level, slug)
+                    step_repair(args.level, args.module, slug)
+
+            _post_heal_mtime = _activity_path.stat().st_mtime if _activity_path.exists() else 0.0
+            if _post_heal_mtime > _pre_heal_mtime:
+                _log("  🔁 Heal modified activities — re-auditing before publish")
+                step_audit(content_path, args.level, slug)
+                # Re-read status after re-audit
+                try:
+                    _status = json.loads(_status_path.read_text("utf-8"))
+                    _overall_status = _status.get("overall", {}).get("status", "unknown")
+                except Exception:
+                    pass
+
+        # Prose regen heal: triggered by either
+        #   (a) language salad in the lesson gate, OR
+        #   (b) missing engagement callouts (:::note/:::tip/:::info count
+        #       below the level's minimum).
+        #
+        # Both classes of failure are "the writer produced bad prose
+        # that deterministic repair can't fix". The fix is identical:
+        # re-run the chunked writer with the current prompt (which
+        # includes both the paragraph-language rule AND the callout
+        # requirement) and re-audit. Max 1 regen attempt per build
+        # invocation to prevent loops.
+        _salad_regen_ran = False
+        _prose_regen_needed = _salad_gate_failed or _engagement_gate_failed
+        if _prose_regen_needed and content_path and content_path.exists():
+            if _salad_gate_failed and _engagement_gate_failed:
+                _log("\n🥗 Audit flagged LANGUAGE SALAD + missing engagement callouts — regenerating prose")
+            elif _salad_gate_failed:
+                _log("\n🥗 Audit flagged LANGUAGE SALAD — regenerating prose")
+            else:
+                _log("\n🎨 Audit flagged MISSING ENGAGEMENT callouts — regenerating prose")
+            _log("   Writer prompt includes paragraph-language rule (#1185) and callout requirement.")
+            _log("   Reusing research/skeleton/plan — only prose will be rewritten.")
+            _pre_regen_mtime = content_path.stat().st_mtime
+
+            # Load skeleton + packet + verification from disk directly.
+            # --step audit without --step all doesn't restore main()'s
+            # skeleton_text/packet_path locals, so we reload here. We
+            # WANT the chunked writer path (which has the new salad rule),
+            # so skeleton MUST be non-empty.
+            _orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+            _heal_skeleton = skeleton_text
+            if not _heal_skeleton:
+                _sk_path = _orch_dir / "skeleton.md"
+                if _sk_path.exists():
+                    _heal_skeleton = _sk_path.read_text("utf-8")
+                    _log(f"   Loaded skeleton from disk ({len(_heal_skeleton.split())} words)")
+                else:
+                    _log(f"   ⚠️  No skeleton at {_sk_path} — will use single-shot path")
+
+            _heal_packet = packet_path
+            if _heal_packet is None:
+                _pk = CURRICULUM_ROOT / args.level / "research" / f"{slug}-knowledge-packet.md"
+                if _pk.exists():
+                    _heal_packet = _pk
+                    _log(f"   Loaded packet from disk ({_pk.name})")
+
+            _heal_verification = verification_text
+            if not _heal_verification:
+                _vp = _orch_dir / "pre-verify-results.md"
+                if _vp.exists():
+                    _heal_verification = _vp.read_text("utf-8")
+
+            # CRITICAL: step_write_chunked caches individual section chunks
+            # as chunk-NN.md files and reuses them on subsequent calls. We
+            # need ALL chunks to be rewritten with the new salad rule, so
+            # nuke the cache before regen.
+            _chunk_cache_count = 0
+            for _chunk_file in _orch_dir.glob("chunk-*.md"):
+                try:
+                    _chunk_file.unlink()
+                    _chunk_cache_count += 1
+                except OSError as _e:
+                    _log(f"   ⚠️  Could not delete {_chunk_file.name}: {_e}")
+            if _chunk_cache_count:
+                _log(f"   🗑️  Cleared {_chunk_cache_count} cached chunk(s) to force fresh regen")
+
+            try:
+                _new_content_path = step_write_with_retry(
+                    args.level, args.module, slug,
+                    packet_path=_heal_packet,
+                    writer=args.writer,
+                    max_retries=0,  # Single attempt — if it still salads, flag for human
+                    skeleton=_heal_skeleton,
+                    no_chunk=args.no_chunk,
+                    verification_text=_heal_verification,
+                )
+                if _new_content_path:
+                    content_path = _new_content_path
+                    _post_process_content(content_path)
+                    _salad_regen_ran = True
+                    _log("\n  🔁 Prose regenerated — re-auditing")
+                    step_audit(content_path, args.level, slug)
+                    # Re-check all the conditions that triggered the
+                    # regen and report what cleared vs. what's still
+                    # broken. If any blocker remains, the user will
+                    # see it clearly in the log.
+                    try:
+                        _status = json.loads(_status_path.read_text("utf-8"))
+                        _overall_status = _status.get("overall", {}).get("status", "unknown")
+                        _lesson = _status.get("gates", {}).get("lesson", {})
+                        _lesson_msg = _lesson.get("message", "") if isinstance(_lesson, dict) else ""
+                        _still_salad = "salad" in _lesson_msg.lower() or "SALAD" in _lesson_msg
+                        _still_eng_bad = False
+                        if "engagement" in _lesson_msg.lower():
+                            _m = re.search(
+                                r"engagement:\s*(\d+)\s*/\s*(\d+)",
+                                _lesson_msg, re.IGNORECASE,
+                            )
+                            if _m and int(_m.group(1)) < int(_m.group(2)):
+                                _still_eng_bad = True
+                        if _salad_gate_failed and _still_salad:
+                            _log("\n  ⚠️  Salad still present after regen — manual review needed")
+                        elif _salad_gate_failed:
+                            _log("\n  ✅ Salad cleared after regen")
+                        if _engagement_gate_failed and _still_eng_bad:
+                            _log("\n  ⚠️  Engagement still missing after regen — manual review needed")
+                        elif _engagement_gate_failed:
+                            _log("\n  ✅ Engagement callouts added after regen")
+                    except Exception:
+                        pass
+                else:
+                    _log("\n  ❌ Prose regen failed — leaving original content intact")
+            except Exception as _e:
+                _log(f"\n  ⚠️  Prose regen raised: {_e}")
+
+        # Other content-level failures (immersion %, robotic prose, inline
+        # English in UK paragraphs, etc.) still need a review+fix pass.
+        # Engagement + salad are handled by the regen branch above, so by
+        # the time we reach this block, any remaining failure is something
+        # the pipeline can't deterministically heal.
+        if (
+            _overall_status not in ("pass", "content-complete")
+            and not _activity_gate_failed
+            and not _salad_regen_ran
+        ):
+            _log(
+                f"\n⚠️  Audit still failing ({_overall_status}) with content-level issues "
+                "that the heal loop cannot fix automatically."
+            )
+            _log("   These need a writer/review pass: immersion %, robotic prose,")
+            _log("   inline English in UK prose — run `--step review` or regen prose.")
+        _emit_phase_done("audit", _phase_start)
+
+    # Step 10: PUBLISH — now runs AFTER audit + heal so MDX reflects final state
+    # Re-publishes if audit just ran, even if publish was marked complete —
+    # because the heal block may have modified activities.
+    if steps in ("all", "review", "publish") and (_pre_audit_ran or "publish" not in completed_phases):
+        _phase_start = time.monotonic()
         step_publish(content_path, args.level, slug)
         _save_v6_state(args.level, slug, "publish")
+        _emit_phase_done("publish", _phase_start)
+        publish_completed = True
 
-    # Step 10: AUDIT — deterministic quality gates + status file
-    # Runs after publish so all artifacts exist (content, activities, vocab, MDX).
-    # Non-blocking: records gate results in status/{slug}.json for monitor API.
-    if steps in ("all", "publish", "audit") and "audit" not in completed_phases:
-        step_audit(content_path, args.level, slug)
+    # Mark audit phase complete (it already ran pre-publish above)
+    if _pre_audit_ran:
         _save_v6_state(args.level, slug, "audit")
 
     # Generate orchestration index (#1029)
@@ -5365,6 +6159,19 @@ def main():
     _seconds = int(_build_elapsed % 60)
     _log(f"\n✅ V6 Build COMPLETE: {args.level.upper()} M{args.module:02d} ({slug})")
     _log(f"   Total time: {_minutes}m {_seconds}s")
+    if publish_completed:
+        if final_score is None:
+            _final_review = _load_latest_review_result(args.level, slug)
+            if _final_review:
+                final_score = _final_review.score
+        emit_event(
+            "module_done",
+            level=args.level,
+            slug=slug,
+            ok=True,
+            final_score=final_score,
+            duration_s=round(_build_elapsed, 3),
+        )
 
     # Release build lock
     build_lock.release()
