@@ -247,9 +247,21 @@ def _check_exercise_items(content: str, plan: dict) -> list[QuickVerifyError]:
     if not activity_hints:
         return errors
 
-    # Count INJECT_ACTIVITY markers (current pipeline) + legacy DSL blocks
+    # Count INJECT_ACTIVITY markers (current pipeline) + legacy DSL blocks.
+    #
+    # The strict regex only matched normalized kebab-case IDs like
+    # `<!-- INJECT_ACTIVITY: quiz-case-identification -->`, but writers also
+    # produce:
+    #   `<!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->`
+    #   `<!-- INJECT_ACTIVITY: quiz, Case Identification Drill, 8 items -->`
+    # The marker normalizer in v6_build.py converts these to kebab-case BEFORE
+    # step_activities() runs, but quick_verify runs FIRST, so the strict regex
+    # caused false EXERCISES failures (e.g. participles-passive reported 1/6
+    # despite the .md file containing all 6 markers in `type, description`
+    # form). Use the same loose extractor that step_activities() uses
+    # (v6_build.py:3445) so the verifier matches reality. (#1189)
     activity_markers = re.findall(
-        r"<!--\s*INJECT_ACTIVITY:\s*[a-z0-9][a-z0-9-]*\s*-->",
+        r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->",
         content,
     )
 

@@ -1468,6 +1468,70 @@ def _build_section_summary(sections_so_far: list[str], max_words: int = 500) -> 
     return f"[...previous sections truncated...]\n\n{truncated}"
 
 
+# --- B1 friction fixes (#1189) ---------------------------------------------
+# These constants/helpers feed _build_chunk_prompt() with the late-prompt
+# vocab checklist + Russianism blocklist that were missing from the chunked
+# write path. The non-chunked write path uses the same content via
+# v6-write.md template substitution. Both paths must stay in sync.
+
+_CHUNK_FORBIDDEN_WORDS_BLOCK = """## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere."""
+
+
+def _chunk_required_vocab_block(plan: dict, section_index: int, total_sections: int) -> str:
+    """Render the required-vocab checklist for a chunked section prompt.
+
+    Pattern B (#1189) — writers were dropping abstract grammatical metalanguage
+    (видова пара, дієвідміна, особове закінчення, прагматика, etc.) from the
+    final B1 modules. The chunked path didn't surface these as a checklist;
+    each section saw the full plan but no end-of-prompt reminder. We now
+    inject a markdown checkbox list near the end of every section's prompt
+    where Gemini's attention is highest, and on the FINAL section we add a
+    sweep-up reminder so any vocab that didn't fit earlier gets included.
+    """
+    raw = plan.get("vocabulary_hints", {})
+    words: list[str] = []
+    if isinstance(raw, list):
+        words = [v.get("word", str(v)) if isinstance(v, dict) else str(v) for v in raw]
+    elif isinstance(raw, dict):
+        words = [str(w) for w in (raw.get("required") or [])]
+    if not words:
+        return ""
+
+    checklist = "\n".join(f"- [ ] {w}" for w in words)
+    is_final = section_index + 1 >= total_sections
+    if is_final:
+        instruction = (
+            f"**This is the FINAL section ({total_sections}/{total_sections}).** "
+            "Before you stop writing, review the prose you've written across "
+            "this whole module. EVERY word in the checklist below MUST appear "
+            "at least once with a bold Ukrainian form and English translation "
+            "in a natural sentence. Sweep up any words that earlier sections "
+            "did not include — even if it means adding a sentence or short "
+            "paragraph that defines the term. Abstract grammatical metalanguage "
+            "(видова пара, дієвідміна, особове закінчення, etc.) is the most "
+            "frequently dropped category and the build hard-fails for it."
+        )
+    else:
+        instruction = (
+            "**Required module vocabulary** — every word below MUST appear "
+            "somewhere in the module before it ends. If a word fits naturally "
+            "in this section, include it now (bold + English translation). "
+            "Otherwise leave it for a later section. The FINAL section will "
+            "sweep up any unused words, but the more you place naturally now "
+            "the better the prose flows."
+        )
+
+    return f"## REQUIRED VOCABULARY CHECKLIST (#1189)\n\n{instruction}\n\n{checklist}"
+
+
 def _build_chunk_prompt(
     *,
     template: str,
@@ -1667,9 +1731,13 @@ in this paragraph the same language?" If no, fix it.
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+{_chunk_required_vocab_block(plan, section_index, total_sections)}
+
+{_CHUNK_FORBIDDEN_WORDS_BLOCK}
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## {section["title"]}`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.
 """
     # Wiki context is now in the knowledge packet (step_research handles it).
     # No separate chunk injection needed.
@@ -1897,17 +1965,34 @@ def step_write(level: str, module_num: int, slug: str,
     # Build vocabulary hints (v4: list of {word,pos,definition}, v3: {required:[],recommended:[]})
     raw_vocab = plan.get("vocabulary_hints", {})
     vocab_lines = []
+    # Required vocab list — used for the late-prompt MANDATORY checklist (#1189).
+    # Format: list of plain Ukrainian words; the checklist renders them as
+    # markdown checkboxes near the end of the prompt where Gemini's attention
+    # is highest. Empirically the writer drops abstract metalanguage first
+    # (видова пара, дієвідміна, etc.) so we need a hard final reminder.
+    required_vocab_words: list[str] = []
     if isinstance(raw_vocab, list):
         # v4 format
         words = [v.get("word", str(v)) if isinstance(v, dict) else str(v) for v in raw_vocab]
         if words:
             vocab_lines.append(f"**Vocabulary:** {', '.join(words)}")
+            required_vocab_words = words
     elif isinstance(raw_vocab, dict):
         # v3 format
         for category in ("required", "recommended"):
             items = raw_vocab.get(category, [])
             if items:
                 vocab_lines.append(f"**{category.capitalize()}:** {', '.join(str(i) for i in items)}")
+                if category == "required":
+                    required_vocab_words = [str(i) for i in items]
+
+    # Render the late-prompt checklist (markdown checkboxes for visibility)
+    if required_vocab_words:
+        vocabulary_checklist = "\n".join(
+            f"- [ ] {w}" for w in required_vocab_words
+        )
+    else:
+        vocabulary_checklist = "_(no required vocabulary defined for this module)_"
 
     # Build pronunciation videos
     pv = plan.get("pronunciation_videos", {})
@@ -1958,6 +2043,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{PEDAGOGICAL_CONSTRAINTS}": get_pedagogical_constraints(level, module_num, plan),
         "{LEVEL_CONSTRAINTS}": get_level_constraints(level, plan),
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
+        "{VOCABULARY_CHECKLIST}": vocabulary_checklist,
         "{PRONUNCIATION_VIDEOS}": "\n".join(pv_lines),
         "{GOLDEN_FRAGMENT}": get_golden_fragment(level, module_num),
         "{DIALOGUE_SITUATIONS}": _build_dialogue_situations(plan),

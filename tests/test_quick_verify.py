@@ -339,6 +339,42 @@ def test_exercises_inject_markers_zero_no_false_warning():
     assert len(ex_errors) == 0
 
 
+def test_exercises_unnormalized_markers_count():
+    """Unnormalized `type, description` form markers count too (#1189).
+
+    Regression test for the false EXERCISE failures on participles-passive
+    (1/6 reported), participle-phrases (2/6 reported), b1-baseline-past-present
+    (5/6 reported), and daily-life-and-routines (4/5 reported). The strict
+    regex `[a-z0-9][a-z0-9-]*` only matched normalized kebab-case IDs and
+    rejected the loose `type, description` form that the writer commonly
+    emits before the marker normalizer runs. Codex root-cause analysis in
+    issue #1189 task `b1-participles-exercises`.
+    """
+    plan = _make_plan_with_activities(activity_hints=[
+        {"type": "reading", "title": "T1"},
+        {"type": "essay-response", "title": "T2"},
+        {"type": "fill-in", "title": "T3"},
+        {"type": "error-correction", "title": "T4"},
+        {"type": "quiz", "title": "T5"},
+        {"type": "match-up", "title": "T6"},
+    ])
+    # All 6 markers in unnormalized "type, description" form
+    content = _make_content(extra=(
+        "\n<!-- INJECT_ACTIVITY: reading, Past participle reading -->\n"
+        "\n<!-- INJECT_ACTIVITY: essay-response, Compose 5 sentences -->\n"
+        "\n<!-- INJECT_ACTIVITY: fill-in, Past tense forms -->\n"
+        "\n<!-- INJECT_ACTIVITY: error-correction, Aspect mistakes -->\n"
+        "\n<!-- INJECT_ACTIVITY: quiz, Participle vs adjective -->\n"
+        "\n<!-- INJECT_ACTIVITY: match-up, Verb to participle -->\n"
+    ))
+    results = quick_verify(content, plan)
+    ex_errors = [r for r in results if r.check == "EXERCISES"]
+    assert ex_errors == [], (
+        f"Loose marker regex should match `type, description` form. "
+        f"Got: {[str(e) for e in ex_errors]}"
+    )
+
+
 def test_exercises_jsx_components_count():
     """Already-injected JSX activity components count (#1054)."""
     plan = _make_plan_with_activities(activity_hints=[
