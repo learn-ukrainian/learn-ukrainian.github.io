@@ -153,6 +153,46 @@ WAVE_10_SHEVCHENKO = [
     {"slug": "konysky-shevchenko-khronika", "url": f"{BASE}/shevchenko/kony.htm", "work": "Кониський — Шевченко-Грушівський: Хроніка життя", "author": "Кониський О.", "year": 1991, "genre": "biography", "period": "modern", "follow": True, "max_pages": 60},
 ]
 
+# ══════════════════════════════════════════════════════════════════════
+# Wave 11: Gap fills for #1026 — primary sources previously missed or
+# scraped incorrectly. Only the works actually available on
+# izbornyk.org.ua / litopys.org.ua are listed here; see
+# docs/rag-gap-1026.md for works that need external sources
+# (Wikisource / ukrlib / chtyvo / diasporiana).
+# ══════════════════════════════════════════════════════════════════════
+WAVE_11_GAP_FILLS = [
+    # Hrushevsky ІУР т.6 — the real gap between т5 and т7-10.
+    # Start at iur601.htm (first chapter) rather than iur6.htm (which is
+    # just the volume index, has no "Наступна" chain). Chapters iur601
+    # → iur602 → ... → iur699. Expected ~60-80 HTML pages, ~600-800 JSONL
+    # chunks based on т4 (606) and т5 (683).
+    {
+        "slug": "hrushevsky-iur-t6",
+        "url": f"{BASE}/hrushrus/iur601.htm",
+        "work": "Грушевський — Історія України-Руси, том 6",
+        "author": "Грушевський М.",
+        "year": 1907,
+        "genre": "scholarly",
+        "period": "modern",
+        "follow": True,
+        "max_pages": 120,
+    },
+    # Izbornyk Svyatoslava 1076 — excerpts only on izbornyk.org.ua
+    # (site labels the page as "уривки"). Single page, no Next chain.
+    # This is incremental coverage; the full Izbornyk is not digitized here.
+    {
+        "slug": "izbornyk-svyatoslava-uryvky",
+        "url": f"{BASE}/oldukr2/oldukr58.htm",
+        "work": "Ізборник Святослава 1076 року (уривки)",
+        "author": "Невідомий",
+        "year": 1076,
+        "genre": "religious",
+        "period": "old_east_slavic",
+        "follow": False,
+        "max_pages": 1,
+    },
+]
+
 ALL_WAVES = {
     5: WAVE_5_OLDLIT,
     6: WAVE_6_CHRONICLES,
@@ -160,6 +200,7 @@ ALL_WAVES = {
     8: WAVE_8_LITERARY,
     9: WAVE_9_LINGUISTICS,
     10: WAVE_10_SHEVCHENKO,
+    11: WAVE_11_GAP_FILLS,
 }
 
 
